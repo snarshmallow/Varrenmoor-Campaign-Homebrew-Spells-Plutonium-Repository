@@ -1,0 +1,1542 @@
+{
+  "_meta": {
+    "sources": [
+      {
+        "json": "VRM",
+        "abbreviation": "VRM",
+        "full": "Varrenmoor Campaign Homebrew",
+        "authors": [
+          "Trent's Dnd Campaign 2026"
+        ],
+        "convertedBy": [
+          "ChatGPT"
+        ],
+        "version": "1.0.0",
+        "color": "6b8f71"
+      }
+    ],
+    "dateAdded": 1778966556,
+    "dateLastModified": 1778966556
+  },
+  "spell": [
+    {
+      "name": "Bellglow",
+      "source": "VRM",
+      "page": 1,
+      "level": 0,
+      "school": "V",
+      "time": [
+        {
+          "number": 1,
+          "unit": "action"
+        }
+      ],
+      "range": {
+        "type": "point",
+        "distance": {
+          "type": "feet",
+          "amount": 30
+        }
+      },
+      "components": {
+        "v": true,
+        "m": {
+          "text": "a tiny bell, chime, or sliver of polished metal threaded with white cord"
+        }
+      },
+      "duration": [
+        {
+          "type": "timed",
+          "duration": {
+            "type": "round",
+            "amount": 1
+          }
+        }
+      ],
+      "classes": {
+        "fromClassList": [
+          {
+            "name": "Cleric",
+            "source": "PHB"
+          }
+        ]
+      },
+      "entries": [
+        "You ring, tap, or whisper into a small charm, causing pale bell-light to gather around one creature you can see within range.",
+        "The target gains one of the following benefits of your choice until the start of your next turn:",
+        {
+          "type": "list",
+          "items": [
+            "It gains a +1 bonus to AC against the next attack made against it.",
+            "It gains a +1d4 bonus to the next Wisdom saving throw it makes.",
+            "It sheds dim light in a 5-foot radius and cannot be hidden from you."
+          ]
+        },
+        "The protective AC bonus increases to +2 when you reach 5th level.",
+        {
+          "type": "entries",
+          "name": "Tradition",
+          "entries": [
+            "Eirwyn. This is young preservation magic: enough to make fate hesitate."
+          ]
+        }
+      ]
+    },
+    {
+      "name": "White Thread Stitch",
+      "source": "VRM",
+      "page": 1,
+      "level": 1,
+      "school": "A",
+      "time": [
+        {
+          "number": 1,
+          "unit": "action"
+        }
+      ],
+      "range": {
+        "type": "point",
+        "distance": {
+          "type": "touch"
+        }
+      },
+      "components": {
+        "v": true,
+        "s": true,
+        "m": {
+          "text": "white thread dipped in clean water"
+        }
+      },
+      "duration": [
+        {
+          "type": "instant"
+        }
+      ],
+      "classes": {
+        "fromClassList": [
+          {
+            "name": "Cleric",
+            "source": "PHB"
+          }
+        ]
+      },
+      "entries": [
+        "You press wet white thread to a wound and pull the body's pattern back together. The target regains hit points equal to {@dice 1d6} + your spellcasting ability modifier.",
+        "Until the start of your next turn, if the target would be reduced to 0 hit points but not killed outright, the target drops to 1 hit point instead and this protection ends. A creature can benefit from this protection only once per long rest.",
+        {
+          "type": "entries",
+          "name": "Tradition",
+          "entries": [
+            "Eirwyn. Stellan is literally stitching someone's Wyrd back into place."
+          ]
+        }
+      ],
+      "entriesHigherLevel": [
+        {
+          "type": "entries",
+          "name": "At Higher Levels",
+          "entries": [
+            "When you cast this spell using a spell slot of 2nd level or higher, the healing increases by {@dice 1d6} for each slot level above 1st."
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Gravewater Ward",
+      "source": "VRM",
+      "page": 1,
+      "level": 1,
+      "school": "A",
+      "time": [
+        {
+          "number": 1,
+          "unit": "reaction",
+          "condition": "which you take when a creature within range takes necrotic damage, fire damage, or damage from a cursed or magical source"
+        }
+      ],
+      "range": {
+        "type": "point",
+        "distance": {
+          "type": "feet",
+          "amount": 30
+        }
+      },
+      "components": {
+        "v": true,
+        "m": {
+          "text": "a drop of clean water touched to ash, bone, or burial linen"
+        }
+      },
+      "duration": [
+        {
+          "type": "instant"
+        }
+      ],
+      "classes": {
+        "fromClassList": [
+          {
+            "name": "Cleric",
+            "source": "PHB"
+          }
+        ]
+      },
+      "entries": [
+        "You call on an old funerary protection to keep the living from being claimed too early. Reduce the triggering damage by {@dice 1d10} + your spellcasting ability modifier.",
+        "If the damage is reduced to 0, the protected creature also gains temporary hit points equal to your proficiency bonus.",
+        {
+          "type": "entries",
+          "name": "Tradition",
+          "entries": [
+            "Eirwyn. The rite says, 'Not yet.'"
+          ]
+        }
+      ],
+      "entriesHigherLevel": [
+        {
+          "type": "entries",
+          "name": "At Higher Levels",
+          "entries": [
+            "When you cast this spell using a spell slot of 2nd level or higher, the damage reduction increases by {@dice 1d10} for each slot level above 1st."
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Fray the Name",
+      "source": "VRM",
+      "page": 1,
+      "level": 1,
+      "school": "E",
+      "time": [
+        {
+          "number": 1,
+          "unit": "action"
+        }
+      ],
+      "range": {
+        "type": "point",
+        "distance": {
+          "type": "feet",
+          "amount": 60
+        }
+      },
+      "components": {
+        "v": true,
+        "s": true,
+        "m": {
+          "text": "a black thread rubbed with soot"
+        }
+      },
+      "duration": [
+        {
+          "type": "timed",
+          "duration": {
+            "type": "round",
+            "amount": 1
+          }
+        }
+      ],
+      "classes": {
+        "fromClassList": [
+          {
+            "name": "Cleric",
+            "source": "PHB"
+          }
+        ]
+      },
+      "entries": [
+        "You speak a creature's name, title, or description and tug at the thread of its Wyrd. One creature you can see within range must make a Wisdom saving throw.",
+        "On a failed save, until the end of your next turn, the target subtracts {@dice 1d4} from the next attack roll or saving throw it makes, and it cannot take reactions. On a successful save, it suffers only one of those effects, chosen by you.",
+        {
+          "type": "entries",
+          "name": "Tradition",
+          "entries": [
+            "Mwooreth. It weakens the target's place in the pattern before it harms the body."
+          ]
+        }
+      ],
+      "entriesHigherLevel": [
+        {
+          "type": "entries",
+          "name": "At Higher Levels",
+          "entries": [
+            "When you cast this spell using a spell slot of 2nd level or higher, you may target one additional creature for each slot level above 1st."
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Hakon's Quieting Cord",
+      "source": "VRM",
+      "page": 1,
+      "level": 2,
+      "school": "A",
+      "time": [
+        {
+          "number": 1,
+          "unit": "action"
+        }
+      ],
+      "range": {
+        "type": "point",
+        "distance": {
+          "type": "feet",
+          "amount": 60
+        }
+      },
+      "components": {
+        "v": true,
+        "s": true,
+        "m": {
+          "text": "a strip of burial linen or bell-cord knotted around black thread"
+        }
+      },
+      "duration": [
+        {
+          "type": "timed",
+          "duration": {
+            "type": "minute",
+            "amount": 1
+          },
+          "concentration": true
+        }
+      ],
+      "classes": {
+        "fromClassList": [
+          {
+            "name": "Cleric",
+            "source": "PHB"
+          }
+        ]
+      },
+      "entries": [
+        "You bind a creature's voice to the silence of the grave. One creature you can see within range must make a Wisdom saving throw.",
+        "On a failed save, the target cannot speak, cannot provide verbal components for spells, and cannot use abilities that require a spoken command. At the end of each of its turns, the target may repeat the saving throw, ending the spell on a success.",
+        "If the target takes radiant damage while affected by this spell, it has disadvantage on its next saving throw against this spell.",
+        {
+          "type": "entries",
+          "name": "Tradition",
+          "entries": [
+            "Eirwyn and Mwooreth. It can be a protective silence or a sinister silencing."
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Winter Bell Benediction",
+      "source": "VRM",
+      "page": 1,
+      "level": 2,
+      "school": "A",
+      "time": [
+        {
+          "number": 1,
+          "unit": "minute"
+        }
+      ],
+      "range": {
+        "type": "point",
+        "distance": {
+          "type": "feet",
+          "amount": 30
+        }
+      },
+      "components": {
+        "v": true,
+        "s": true,
+        "m": {
+          "text": "snowmelt or clean water poured over bell metal; the water is consumed",
+          "consume": true
+        }
+      },
+      "duration": [
+        {
+          "type": "timed",
+          "duration": {
+            "type": "hour",
+            "amount": 8
+          }
+        }
+      ],
+      "classes": {
+        "fromClassList": [
+          {
+            "name": "Cleric",
+            "source": "PHB"
+          }
+        ]
+      },
+      "entries": [
+        "You perform a small village rite of preservation, binding warmth, breath, and memory into the targets. Choose up to six creatures within range. Each target gains 5 temporary hit points.",
+        "For the duration, each target may add {@dice 1d4} to one saving throw it makes against being frightened, charmed, poisoned, or cursed. Once a creature uses this bonus, it cannot use it again from this casting.",
+        {
+          "type": "entries",
+          "name": "Tradition",
+          "entries": [
+            "Eirwyn. This is a pre-winter, pre-battle, funeral, or protect-the-village blessing."
+          ]
+        }
+      ],
+      "entriesHigherLevel": [
+        {
+          "type": "entries",
+          "name": "At Higher Levels",
+          "entries": [
+            "When you cast this spell using a spell slot of 3rd level or higher, the temporary hit points increase by 5 for each slot level above 2nd."
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Silver Needles of Judgment",
+      "source": "VRM",
+      "page": 1,
+      "level": 2,
+      "school": "V",
+      "time": [
+        {
+          "number": 1,
+          "unit": "action"
+        }
+      ],
+      "range": {
+        "type": "point",
+        "distance": {
+          "type": "feet",
+          "amount": 90
+        }
+      },
+      "components": {
+        "v": true,
+        "s": true,
+        "m": {
+          "text": "three short lengths of silver or white thread"
+        }
+      },
+      "duration": [
+        {
+          "type": "instant"
+        }
+      ],
+      "classes": {
+        "fromClassList": [
+          {
+            "name": "Cleric",
+            "source": "PHB"
+          }
+        ]
+      },
+      "entries": [
+        "You cast silver-white threads of light that pierce a creature's pattern. Make a ranged spell attack against one creature within range. On a hit, the target takes {@dice 3d8} radiant damage.",
+        "If the target is concentrating on a spell, curse, ritual, or magical effect, it has disadvantage on the saving throw it makes to maintain concentration.",
+        "Until the end of your next turn, the next attack roll made against the target scores a critical hit on a roll of 19 or 20.",
+        {
+          "type": "entries",
+          "name": "Tradition",
+          "entries": [
+            "Eirwyn. This weaponizes weaving against things that should not be holding together."
+          ]
+        }
+      ],
+      "entriesHigherLevel": [
+        {
+          "type": "entries",
+          "name": "At Higher Levels",
+          "entries": [
+            "When you cast this spell using a spell slot of 3rd level or higher, the damage increases by {@dice 1d8} for each slot level above 2nd."
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Foxfire Prickle",
+      "source": "VRM",
+      "page": 1,
+      "level": 0,
+      "school": "V",
+      "time": [
+        {
+          "number": 1,
+          "unit": "action"
+        }
+      ],
+      "range": {
+        "type": "point",
+        "distance": {
+          "type": "feet",
+          "amount": 60
+        }
+      },
+      "components": {
+        "v": true,
+        "s": true,
+        "m": {
+          "text": "a foxglove petal, shed whisker, or pinch of glowing fungus"
+        }
+      },
+      "duration": [
+        {
+          "type": "timed",
+          "duration": {
+            "type": "round",
+            "amount": 1
+          }
+        }
+      ],
+      "classes": {
+        "fromClassList": [
+          {
+            "name": "Druid",
+            "source": "PHB"
+          }
+        ]
+      },
+      "entries": [
+        "You flick a spark of pale foxfire at a creature within range. The target must make a Dexterity saving throw. On a failed save, it takes {@dice 1d6} radiant damage.",
+        "The next beast, familiar, companion, or summoned creature that attacks the target before the end of your next turn gains a {@dice 1d4} bonus to the attack roll.",
+        "The damage increases by {@dice 1d6} when you reach 5th level, 11th level, and 17th level.",
+        {
+          "type": "entries",
+          "name": "Tradition",
+          "entries": [
+            "Vaelweyr. This is not fire; it is the wild marking prey."
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Fennfield Snare",
+      "source": "VRM",
+      "page": 1,
+      "level": 1,
+      "school": "T",
+      "time": [
+        {
+          "number": 1,
+          "unit": "action"
+        }
+      ],
+      "range": {
+        "type": "point",
+        "distance": {
+          "type": "feet",
+          "amount": 60
+        }
+      },
+      "components": {
+        "v": true,
+        "s": true,
+        "m": {
+          "text": "a root, grain stalk, or length of farm twine pressed into soil"
+        }
+      },
+      "duration": [
+        {
+          "type": "timed",
+          "duration": {
+            "type": "minute",
+            "amount": 1
+          },
+          "concentration": true
+        }
+      ],
+      "classes": {
+        "fromClassList": [
+          {
+            "name": "Druid",
+            "source": "PHB"
+          }
+        ]
+      },
+      "entries": [
+        "Choose a 10-foot square of ground you can see within range. Roots, weeds, straw, mud, and field-grass twist into a living snare.",
+        "The area becomes difficult terrain. When a creature enters the area for the first time on a turn or starts its turn there, it must make a Strength saving throw. On a failed save, it is restrained until the start of its next turn.",
+        "A restrained creature can use its action to make a Strength check against your spell save DC, freeing itself on a success.",
+        {
+          "type": "entries",
+          "name": "Tradition",
+          "entries": [
+            "Vaelweyr. The farm itself grabs intruders."
+          ]
+        }
+      ],
+      "entriesHigherLevel": [
+        {
+          "type": "entries",
+          "name": "At Higher Levels",
+          "entries": [
+            "When you cast this spell using a spell slot of 2nd level or higher, the affected area increases to a 15-foot square."
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Kenko's Warning",
+      "source": "VRM",
+      "page": 1,
+      "level": 1,
+      "school": "D",
+      "time": [
+        {
+          "number": 1,
+          "unit": "reaction",
+          "condition": "which you take when a creature you can see within range is hit by an attack"
+        }
+      ],
+      "range": {
+        "type": "point",
+        "distance": {
+          "type": "feet",
+          "amount": 30
+        }
+      },
+      "components": {
+        "v": true,
+        "m": {
+          "text": "shed fox fur, a fox whisker, or a charm tied with red-brown thread"
+        }
+      },
+      "duration": [
+        {
+          "type": "instant"
+        }
+      ],
+      "classes": {
+        "fromClassList": [
+          {
+            "name": "Druid",
+            "source": "PHB"
+          }
+        ]
+      },
+      "entries": [
+        "A flash of animal instinct warns the target a heartbeat before harm lands. Roll {@dice 1d6} and subtract the result from the triggering attack roll.",
+        "If this causes the attack to miss, the protected creature may move up to 5 feet without provoking opportunity attacks.",
+        "If Kenko or another bonded familiar or companion is within 30 feet of the target, roll {@dice 1d8} instead.",
+        {
+          "type": "entries",
+          "name": "Tradition",
+          "entries": [
+            "Vaelweyr. The fox saw the danger before anyone else did."
+          ]
+        }
+      ],
+      "entriesHigherLevel": [
+        {
+          "type": "entries",
+          "name": "At Higher Levels",
+          "entries": [
+            "When you cast this spell using a spell slot of 2nd level or higher, the die increases by one step for each slot level above 1st, to a maximum of {@dice 1d12}."
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Winterberry Compact",
+      "source": "VRM",
+      "page": 1,
+      "level": 1,
+      "school": "T",
+      "time": [
+        {
+          "number": 1,
+          "unit": "action"
+        }
+      ],
+      "range": {
+        "type": "point",
+        "distance": {
+          "type": "touch"
+        }
+      },
+      "components": {
+        "v": true,
+        "s": true,
+        "m": {
+          "text": "seven seeds, a drop of clean water, and a pinch of soil; the seeds are consumed",
+          "consume": true
+        }
+      },
+      "duration": [
+        {
+          "type": "timed",
+          "duration": {
+            "type": "day",
+            "amount": 1
+          }
+        }
+      ],
+      "classes": {
+        "fromClassList": [
+          {
+            "name": "Druid",
+            "source": "PHB"
+          }
+        ]
+      },
+      "entries": [
+        "You awaken a handful of hardy berries, rootlets, or seed pods with Vaelweyr's old promise: life survives winter.",
+        "You create a number of winterberries equal to your proficiency bonus + your spellcasting ability modifier. A creature can use an action to eat one berry. Eating a berry restores 1 hit point and provides enough nourishment to sustain a creature for one day.",
+        "A creature that eats one also gains advantage on its next saving throw against exhaustion caused by cold, hunger, or forced travel within the next 24 hours. The berries lose their magic after 24 hours.",
+        {
+          "type": "entries",
+          "name": "Tradition",
+          "entries": [
+            "Vaelweyr and Eirwyn. In a winter food-crisis story, this knowledge is social and political power."
+          ]
+        }
+      ],
+      "entriesHigherLevel": [
+        {
+          "type": "entries",
+          "name": "At Higher Levels",
+          "entries": [
+            "When you cast this spell using a spell slot of 2nd level or higher, you create two additional berries for each slot level above 1st."
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Root-Hush",
+      "source": "VRM",
+      "page": 1,
+      "level": 2,
+      "school": "I",
+      "time": [
+        {
+          "number": 1,
+          "unit": "action"
+        }
+      ],
+      "range": {
+        "type": "point",
+        "distance": {
+          "type": "feet",
+          "amount": 30
+        }
+      },
+      "components": {
+        "v": true,
+        "s": true,
+        "m": {
+          "text": "fox fur, damp soil, and ash"
+        }
+      },
+      "duration": [
+        {
+          "type": "timed",
+          "duration": {
+            "type": "minute",
+            "amount": 10
+          },
+          "concentration": true
+        }
+      ],
+      "classes": {
+        "fromClassList": [
+          {
+            "name": "Druid",
+            "source": "PHB"
+          }
+        ]
+      },
+      "entries": [
+        "Choose up to six willing creatures within range. For the duration, the targets move with the quiet of burrowing animals and bending grass.",
+        "Each target gains a +5 bonus to Dexterity (Stealth) checks while moving through natural terrain, farmland, snow, mud, forest, or ruined village ground. The targets leave no tracks unless they choose to.",
+        "If a target attacks or casts a damaging spell, the spell ends for that target.",
+        {
+          "type": "entries",
+          "name": "Tradition",
+          "entries": [
+            "Vaelweyr. This is quieter and more local than pass without trace."
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Moon-Thread Briar",
+      "source": "VRM",
+      "page": 1,
+      "level": 2,
+      "school": "C",
+      "time": [
+        {
+          "number": 1,
+          "unit": "action"
+        }
+      ],
+      "range": {
+        "type": "point",
+        "distance": {
+          "type": "feet",
+          "amount": 60
+        }
+      },
+      "components": {
+        "v": true,
+        "s": true,
+        "m": {
+          "text": "a thorn wrapped in white thread and touched with moonlit water"
+        }
+      },
+      "duration": [
+        {
+          "type": "timed",
+          "duration": {
+            "type": "minute",
+            "amount": 1
+          },
+          "concentration": true
+        }
+      ],
+      "classes": {
+        "fromClassList": [
+          {
+            "name": "Druid",
+            "source": "PHB"
+          }
+        ]
+      },
+      "entries": [
+        "You cause pale briars of moonlit root and thorn to erupt in a 5-foot-radius area centered on a point you can see within range.",
+        "Creatures in the area must make a Dexterity saving throw. On a failed save, a creature takes {@dice 2d6} radiant damage and is restrained until the start of your next turn. On a successful save, it takes half damage and is not restrained.",
+        "A creature that starts its turn in the briars must repeat the saving throw. As a bonus action on your turn, you may move the briar patch up to 10 feet along the ground.",
+        {
+          "type": "entries",
+          "name": "Tradition",
+          "entries": [
+            "Vaelweyr and Eirwyn. Beautiful, cold, living, and dangerous."
+          ]
+        }
+      ],
+      "entriesHigherLevel": [
+        {
+          "type": "entries",
+          "name": "At Higher Levels",
+          "entries": [
+            "When you cast this spell using a spell slot of 3rd level or higher, the damage increases by {@dice 1d6} for each slot level above 2nd."
+          ]
+        }
+      ]
+    },
+    {
+      "name": "The Field Remembers",
+      "source": "VRM",
+      "page": 1,
+      "level": 2,
+      "school": "D",
+      "time": [
+        {
+          "number": 10,
+          "unit": "minute"
+        }
+      ],
+      "range": {
+        "type": "point",
+        "distance": {
+          "type": "self"
+        }
+      },
+      "components": {
+        "v": true,
+        "s": true,
+        "m": {
+          "text": "soil from the location, a seed, and a drop of water"
+        }
+      },
+      "duration": [
+        {
+          "type": "instant"
+        }
+      ],
+      "classes": {
+        "fromClassList": [
+          {
+            "name": "Druid",
+            "source": "PHB"
+          }
+        ]
+      },
+      "entries": [
+        "You kneel and ask the land what passed over it. Choose one location no larger than a 100-foot square. You learn up to three of the following facts about the past 24 hours:",
+        {
+          "type": "list",
+          "items": [
+            "How many Small or larger creatures passed through.",
+            "Whether blood was spilled.",
+            "Whether fire, curse-magic, or unnatural magic touched the area.",
+            "The general direction the most recent group traveled.",
+            "Whether a familiar animal, such as Kenko, passed through.",
+            "Whether a creature was carried, dragged, or fleeing."
+          ]
+        },
+        "For the next hour, you have advantage on Wisdom (Survival) checks to track creatures connected to the vision.",
+        {
+          "type": "entries",
+          "name": "Tradition",
+          "entries": [
+            "Vaelweyr. The land speaks without becoming a generic investigation spell."
+          ]
+        }
+      ],
+      "entriesHigherLevel": [
+        {
+          "type": "entries",
+          "name": "At Higher Levels",
+          "entries": [
+            "When you cast this spell using a spell slot of 3rd level or higher, the time window expands by 24 hours for each slot level above 2nd."
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Stable Sense",
+      "source": "VRM",
+      "page": 1,
+      "level": 0,
+      "school": "D",
+      "time": [
+        {
+          "number": 1,
+          "unit": "action"
+        }
+      ],
+      "range": {
+        "type": "point",
+        "distance": {
+          "type": "feet",
+          "amount": 30
+        }
+      },
+      "components": {
+        "s": true,
+        "m": {
+          "text": "a grooming brush, bit of tack, feed, or shed animal hair"
+        }
+      },
+      "duration": [
+        {
+          "type": "instant"
+        }
+      ],
+      "classes": {
+        "fromClassList": [
+          {
+            "name": "Tamer",
+            "source": "VRM"
+          }
+        ]
+      },
+      "entries": [
+        "You read the body language, breath, posture, and spirit of one beast or bonded companion within range. You learn one of the following:",
+        {
+          "type": "list",
+          "items": [
+            "Whether it is frightened, injured, poisoned, diseased, charmed, or magically influenced.",
+            "Its strongest immediate emotion.",
+            "Whether it considers a visible creature hostile, trusted, or unfamiliar.",
+            "Whether it is hungry, exhausted, or in pain."
+          ]
+        },
+        "Before the end of your next turn, you gain a {@dice 1d4} bonus to one Wisdom (Animal Handling) check involving that creature.",
+        {
+          "type": "entries",
+          "name": "Tradition",
+          "entries": [
+            "Vaelweyr. Betsy is magically good at what she was already good at."
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Trusting Rein",
+      "source": "VRM",
+      "page": 1,
+      "level": 1,
+      "school": "E",
+      "time": [
+        {
+          "number": 1,
+          "unit": "bonus"
+        }
+      ],
+      "range": {
+        "type": "point",
+        "distance": {
+          "type": "feet",
+          "amount": 30
+        }
+      },
+      "components": {
+        "v": true,
+        "s": true,
+        "m": {
+          "text": "a strip of leather, rein, collar, or braided cord"
+        }
+      },
+      "duration": [
+        {
+          "type": "timed",
+          "duration": {
+            "type": "round",
+            "amount": 1
+          }
+        }
+      ],
+      "classes": {
+        "fromClassList": [
+          {
+            "name": "Tamer",
+            "source": "VRM"
+          }
+        ]
+      },
+      "entries": [
+        "Choose one willing creature you can see within range. The target immediately gains temporary hit points equal to {@dice 1d6} + your spellcasting ability modifier.",
+        "Until the end of its next turn, the target may move up to half its speed without provoking opportunity attacks from one creature of your choice. If the target is a beast, mount, familiar, or bonded companion, it may instead move up to its full speed.",
+        {
+          "type": "entries",
+          "name": "Tradition",
+          "entries": [
+            "Vaelweyr. This is not domination. It is trust: Go. I've got you."
+          ]
+        }
+      ],
+      "entriesHigherLevel": [
+        {
+          "type": "entries",
+          "name": "At Higher Levels",
+          "entries": [
+            "When you cast this spell using a spell slot of 2nd level or higher, the temporary hit points increase by {@dice 1d6} for each slot level above 1st."
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Herdline Ward",
+      "source": "VRM",
+      "page": 1,
+      "level": 1,
+      "school": "A",
+      "time": [
+        {
+          "number": 1,
+          "unit": "reaction",
+          "condition": "which you take when a creature within range takes damage"
+        }
+      ],
+      "range": {
+        "type": "point",
+        "distance": {
+          "type": "feet",
+          "amount": 30
+        }
+      },
+      "components": {
+        "v": true,
+        "m": {
+          "text": "a braided loop of stable twine or tack-leather"
+        }
+      },
+      "duration": [
+        {
+          "type": "instant"
+        }
+      ],
+      "classes": {
+        "fromClassList": [
+          {
+            "name": "Tamer",
+            "source": "VRM"
+          }
+        ]
+      },
+      "entries": [
+        "You bind nearby allies into a momentary herd-line, spreading panic and pain before it breaks one creature.",
+        "Reduce the triggering damage by {@dice 1d8} + your spellcasting ability modifier. If another friendly creature is within 5 feet of the target, the reduction increases by your proficiency bonus.",
+        "If the protected target is a beast, mount, familiar, or bonded companion, it may also move 5 feet without provoking opportunity attacks.",
+        {
+          "type": "entries",
+          "name": "Tradition",
+          "entries": [
+            "Vaelweyr and Eirwyn. Betsy protects people the way a herd protects its own."
+          ]
+        }
+      ],
+      "entriesHigherLevel": [
+        {
+          "type": "entries",
+          "name": "At Higher Levels",
+          "entries": [
+            "When you cast this spell using a spell slot of 2nd level or higher, the damage reduction increases by {@dice 1d8} for each slot level above 1st."
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Ironshoe Charge",
+      "source": "VRM",
+      "page": 1,
+      "level": 1,
+      "school": "T",
+      "time": [
+        {
+          "number": 1,
+          "unit": "bonus"
+        }
+      ],
+      "range": {
+        "type": "point",
+        "distance": {
+          "type": "feet",
+          "amount": 30
+        }
+      },
+      "components": {
+        "v": true,
+        "s": true,
+        "m": {
+          "text": "a horseshoe nail, boot nail, or small iron ring"
+        }
+      },
+      "duration": [
+        {
+          "type": "timed",
+          "duration": {
+            "type": "minute",
+            "amount": 1
+          }
+        }
+      ],
+      "classes": {
+        "fromClassList": [
+          {
+            "name": "Tamer",
+            "source": "VRM"
+          }
+        ]
+      },
+      "entries": [
+        "Choose one willing creature within range. Until the spell ends, the target's speed increases by 10 feet.",
+        "The first time before the spell ends that the target moves at least 15 feet straight toward a creature and hits it with a melee attack, the attack deals an extra {@dice 1d6} bludgeoning damage, and the target of the attack must succeed on a Strength saving throw or be pushed 5 feet.",
+        "If the enchanted creature is mounted or is a beast or companion, the extra damage becomes {@dice 1d8}. The spell then ends.",
+        {
+          "type": "entries",
+          "name": "Tradition",
+          "entries": [
+            "Ikkander and Vaelweyr. Stablecraft plus animal momentum."
+          ]
+        }
+      ],
+      "entriesHigherLevel": [
+        {
+          "type": "entries",
+          "name": "At Higher Levels",
+          "entries": [
+            "When you cast this spell using a spell slot of 2nd level or higher, the extra damage increases by {@dice 1d6}, or {@dice 1d8} if mounted/beast/companion, for each slot level above 1st."
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Companion's Second Breath",
+      "source": "VRM",
+      "page": 1,
+      "level": 2,
+      "school": "V",
+      "time": [
+        {
+          "number": 1,
+          "unit": "bonus"
+        }
+      ],
+      "range": {
+        "type": "point",
+        "distance": {
+          "type": "feet",
+          "amount": 30
+        }
+      },
+      "components": {
+        "v": true,
+        "s": true,
+        "m": {
+          "text": "warm cloth, feed, or a charm made from shed mane or fur"
+        }
+      },
+      "duration": [
+        {
+          "type": "instant"
+        }
+      ],
+      "classes": {
+        "fromClassList": [
+          {
+            "name": "Tamer",
+            "source": "VRM"
+          }
+        ]
+      },
+      "entries": [
+        "Choose one creature you can see within range. The target regains hit points equal to {@dice 2d6} + your spellcasting ability modifier.",
+        "If the target is prone, it may immediately stand without spending movement. If the target is a beast, mount, familiar, or bonded companion, it may also move up to 10 feet without provoking opportunity attacks.",
+        {
+          "type": "entries",
+          "name": "Tradition",
+          "entries": [
+            "Vaelweyr and Eirwyn. Betsy calls something back to its feet through bond and command."
+          ]
+        }
+      ],
+      "entriesHigherLevel": [
+        {
+          "type": "entries",
+          "name": "At Higher Levels",
+          "entries": [
+            "When you cast this spell using a spell slot of 3rd level or higher, the healing increases by {@dice 1d6} for each slot level above 2nd."
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Shared Saddle Oath",
+      "source": "VRM",
+      "page": 1,
+      "level": 2,
+      "school": "A",
+      "time": [
+        {
+          "number": 1,
+          "unit": "action"
+        }
+      ],
+      "range": {
+        "type": "point",
+        "distance": {
+          "type": "feet",
+          "amount": 30
+        }
+      },
+      "components": {
+        "v": true,
+        "s": true,
+        "m": {
+          "text": "two linked rings, bridle loops, or tied cords"
+        }
+      },
+      "duration": [
+        {
+          "type": "timed",
+          "duration": {
+            "type": "minute",
+            "amount": 10
+          },
+          "concentration": true
+        }
+      ],
+      "classes": {
+        "fromClassList": [
+          {
+            "name": "Tamer",
+            "source": "VRM"
+          }
+        ]
+      },
+      "entries": [
+        "Choose two willing creatures within range. For the duration, the creatures know the direction and distance to one another as long as they are on the same plane of existence.",
+        "Once per round, when one bonded creature takes damage while within 60 feet of the other, the other bonded creature may use its reaction to take some of that harm. The reacting creature may reduce the damage by an amount up to your spellcasting ability modifier + your proficiency bonus. The reacting creature then takes damage equal to the amount reduced; this transferred damage cannot be reduced further.",
+        "If one of the bonded creatures is your companion, mount, or bonded beast, the maximum amount reduced increases by {@dice 1d6}.",
+        {
+          "type": "entries",
+          "name": "Tradition",
+          "entries": [
+            "Vaelweyr. Shared danger is the purest form of tamer magic."
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Call of the Familiar Stable",
+      "source": "VRM",
+      "page": 1,
+      "level": 2,
+      "school": "C",
+      "time": [
+        {
+          "number": 10,
+          "unit": "minute"
+        }
+      ],
+      "range": {
+        "type": "point",
+        "distance": {
+          "type": "feet",
+          "amount": 30
+        }
+      },
+      "components": {
+        "v": true,
+        "s": true,
+        "m": {
+          "text": "a horseshoe, collar-ring, carved animal charm, or trusted tack-piece; consumed unless tied to a named companion",
+          "consume": true
+        }
+      },
+      "duration": [
+        {
+          "type": "timed",
+          "duration": {
+            "type": "hour",
+            "amount": 8
+          }
+        }
+      ],
+      "classes": {
+        "fromClassList": [
+          {
+            "name": "Tamer",
+            "source": "VRM"
+          }
+        ]
+      },
+      "entries": [
+        "You call a loyal beast-spirit shaped by your memory of stable, field, road, and home. Choose one form: pony, mule, riding horse, mastiff, goat, foxhound, or wolf if the story allows it.",
+        "The creature is a spirit with the chosen creature's statistics, but it is fey, primal, or spirit-touched rather than a normal beast. It understands your verbal commands.",
+        "In combat, the spirit acts on your initiative. It can move and take the Dodge action on its own. You can use a bonus action to command it to take another action from its stat block.",
+        "If reduced to 0 hit points, it vanishes, leaving behind the material component cracked or dulled.",
+        {
+          "type": "entries",
+          "name": "Tradition",
+          "entries": [
+            "Vaelweyr and Ikkander. This is the stable answering Betsy."
+          ]
+        }
+      ],
+      "entriesHigherLevel": [
+        {
+          "type": "entries",
+          "name": "At Higher Levels",
+          "entries": [
+            "When you cast this spell using a spell slot of 3rd level or higher, the duration becomes 24 hours."
+          ]
+        }
+      ]
+    }
+  ],
+  "feat": [
+    {
+      "name": "Granary Nail Ward",
+      "source": "VRM",
+      "page": 1,
+      "category": "OTH",
+      "entries": [
+        {
+          "type": "entries",
+          "name": "Rune-Rite Rules",
+          "entries": [
+            "These are Dale's barbarian rune-rites, not normal spells. They can be added as feats/features in Foundry. Unless changed by the DM, Dale can use rune-rites while raging.",
+            "Rune save DC = 8 + proficiency bonus + Constitution modifier. Rune attack modifier = proficiency bonus + Strength or Constitution modifier.",
+            "Suggested use limit: proficiency bonus rune-rites per long rest total, or each rite once per long rest if the DM wants them rarer."
+          ]
+        },
+        {
+          "type": "entries",
+          "name": "Minor Rune-Rite",
+          "entries": [
+            "Activation: Reaction, when Dale is hit by an attack. Range: Self. Material: an iron nail from a granary, mill, barn, or storehouse. Duration: Instantaneous. Tradition: Ikkander.",
+            "Dale gains a +2 bonus to AC against the triggering attack. If this causes the attack to miss, Dale gains temporary hit points equal to his Constitution modifier. If Dale is raging, the temporary hit points equal his Constitution modifier + proficiency bonus.",
+            "Flavor: the granary refuses to collapse."
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Millstone Momentum",
+      "source": "VRM",
+      "page": 1,
+      "category": "OTH",
+      "entries": [
+        {
+          "type": "entries",
+          "name": "Rune-Rite Rules",
+          "entries": [
+            "These are Dale's barbarian rune-rites, not normal spells. They can be added as feats/features in Foundry. Unless changed by the DM, Dale can use rune-rites while raging.",
+            "Rune save DC = 8 + proficiency bonus + Constitution modifier. Rune attack modifier = proficiency bonus + Strength or Constitution modifier.",
+            "Suggested use limit: proficiency bonus rune-rites per long rest total, or each rite once per long rest if the DM wants them rarer."
+          ]
+        },
+        {
+          "type": "entries",
+          "name": "Minor Rune-Rite",
+          "entries": [
+            "Activation: Bonus action. Range: Self. Material: millstone dust, road clay, or a cracked stone chip. Duration: until the end of Dale's turn. Tradition: Ikkander.",
+            "If Dale moves at least 10 feet straight toward a creature before hitting it with a melee attack this turn, the attack deals an extra {@dice 1d6} bludgeoning damage. The target must make a Strength saving throw. On a failed save, Dale may either push the target 10 feet or knock the target prone.",
+            "If Dale is raging, the extra damage becomes {@dice 1d8}. Flavor: Dale becomes the millstone."
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Ash-Twine Glare",
+      "source": "VRM",
+      "page": 1,
+      "category": "OTH",
+      "entries": [
+        {
+          "type": "entries",
+          "name": "Rune-Rite Rules",
+          "entries": [
+            "These are Dale's barbarian rune-rites, not normal spells. They can be added as feats/features in Foundry. Unless changed by the DM, Dale can use rune-rites while raging.",
+            "Rune save DC = 8 + proficiency bonus + Constitution modifier. Rune attack modifier = proficiency bonus + Strength or Constitution modifier.",
+            "Suggested use limit: proficiency bonus rune-rites per long rest total, or each rite once per long rest if the DM wants them rarer."
+          ]
+        },
+        {
+          "type": "entries",
+          "name": "Minor Rune-Rite",
+          "entries": [
+            "Activation: Bonus action. Range: 30 feet. Material: burnt twine, soot, or ash from a failed rune. Duration: until the end of Dale's next turn. Tradition: Mwooreth.",
+            "One creature Dale can see within range must make a Wisdom saving throw. On a failed save, it is frightened of Dale until the end of Dale's next turn.",
+            "If Dale damages the frightened creature before the effect ends, it also cannot take reactions until the end of its next turn.",
+            "Flavor: useful, but socially unsettling."
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Root-and-Rope Snare",
+      "source": "VRM",
+      "page": 1,
+      "category": "OTH",
+      "entries": [
+        {
+          "type": "entries",
+          "name": "Rune-Rite Rules",
+          "entries": [
+            "These are Dale's barbarian rune-rites, not normal spells. They can be added as feats/features in Foundry. Unless changed by the DM, Dale can use rune-rites while raging.",
+            "Rune save DC = 8 + proficiency bonus + Constitution modifier. Rune attack modifier = proficiency bonus + Strength or Constitution modifier.",
+            "Suggested use limit: proficiency bonus rune-rites per long rest total, or each rite once per long rest if the DM wants them rarer."
+          ]
+        },
+        {
+          "type": "entries",
+          "name": "Minor Rune-Rite",
+          "entries": [
+            "Activation: Action. Range: 15 feet. Material: rope fiber, root, grain stalk, or farm twine. Duration: 1 round. Tradition: Vaelweyr and Ikkander.",
+            "One creature within range must make a Strength saving throw. On a failed save, the creature is restrained until the start of Dale's next turn. A Large or larger creature has advantage on the save.",
+            "If Dale is raging, he may make one melee weapon attack as a bonus action after using this rite.",
+            "Flavor: farm material obeying a brute-force rune."
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Iron Door Oath",
+      "source": "VRM",
+      "page": 1,
+      "category": "OTH",
+      "entries": [
+        {
+          "type": "entries",
+          "name": "Rune-Rite Rules",
+          "entries": [
+            "These are Dale's barbarian rune-rites, not normal spells. They can be added as feats/features in Foundry. Unless changed by the DM, Dale can use rune-rites while raging.",
+            "Rune save DC = 8 + proficiency bonus + Constitution modifier. Rune attack modifier = proficiency bonus + Strength or Constitution modifier.",
+            "Suggested use limit: proficiency bonus rune-rites per long rest total, or each rite once per long rest if the DM wants them rarer."
+          ]
+        },
+        {
+          "type": "entries",
+          "name": "Greater Rune-Rite",
+          "entries": [
+            "Activation: Bonus action. Range: Self. Material: door hinge, chain link, iron spike, or lock fragment. Duration: 1 minute. Tradition: Ikkander.",
+            "For the duration, Dale has advantage on checks and saving throws against being pushed, pulled, knocked prone, or moved against his will. Dale counts as one size larger when determining what he can shove, grapple, carry, drag, or block. Allies within 5 feet of Dale gain half cover against ranged attacks if Dale is between them and the attacker.",
+            "If Dale is raging, the first creature that misses him with a melee attack each round takes bludgeoning damage equal to Dale's Constitution modifier.",
+            "Flavor: Dale becomes the thing that holds."
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Split-Thread Reprisal",
+      "source": "VRM",
+      "page": 1,
+      "category": "OTH",
+      "entries": [
+        {
+          "type": "entries",
+          "name": "Rune-Rite Rules",
+          "entries": [
+            "These are Dale's barbarian rune-rites, not normal spells. They can be added as feats/features in Foundry. Unless changed by the DM, Dale can use rune-rites while raging.",
+            "Rune save DC = 8 + proficiency bonus + Constitution modifier. Rune attack modifier = proficiency bonus + Strength or Constitution modifier.",
+            "Suggested use limit: proficiency bonus rune-rites per long rest total, or each rite once per long rest if the DM wants them rarer."
+          ]
+        },
+        {
+          "type": "entries",
+          "name": "Greater Rune-Rite",
+          "entries": [
+            "Activation: Reaction, when a creature Dale can see damages him. Range: 30 feet. Material: black thread tied around a splinter or nail; consumed. Duration: Instantaneous. Tradition: Mwooreth.",
+            "The creature that damaged Dale must make a Constitution saving throw. On a failed save, it takes {@dice 2d8} fire or necrotic damage, Dale's choice. On a successful save, it takes half damage.",
+            "If Dale is raging, the target also has disadvantage on the next attack roll it makes against a creature other than Dale before the end of its next turn.",
+            "Flavor: pain answered by pain."
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Stone-Lung Endurance",
+      "source": "VRM",
+      "page": 1,
+      "category": "OTH",
+      "entries": [
+        {
+          "type": "entries",
+          "name": "Rune-Rite Rules",
+          "entries": [
+            "These are Dale's barbarian rune-rites, not normal spells. They can be added as feats/features in Foundry. Unless changed by the DM, Dale can use rune-rites while raging.",
+            "Rune save DC = 8 + proficiency bonus + Constitution modifier. Rune attack modifier = proficiency bonus + Strength or Constitution modifier.",
+            "Suggested use limit: proficiency bonus rune-rites per long rest total, or each rite once per long rest if the DM wants them rarer."
+          ]
+        },
+        {
+          "type": "entries",
+          "name": "Greater Rune-Rite",
+          "entries": [
+            "Activation: Reaction, when Dale is reduced to 0 hit points but not killed outright. Range: Self. Material: a cracked millstone chip, iron nail, or carved stone rune; consumed. Duration: Instantaneous. Tradition: Ikkander.",
+            "Dale drops to 1 hit point instead of 0. He then gains temporary hit points equal to {@dice 1d8} + his Constitution modifier. Until the end of his next turn, Dale's speed is reduced by 10 feet, but he cannot be knocked prone.",
+            "Once Dale uses this rite, he cannot use it again until he finishes a long rest.",
+            "Flavor: stone holding breath."
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Forge-Heat Hand",
+      "source": "VRM",
+      "page": 1,
+      "category": "OTH",
+      "entries": [
+        {
+          "type": "entries",
+          "name": "Rune-Rite Rules",
+          "entries": [
+            "These are Dale's barbarian rune-rites, not normal spells. They can be added as feats/features in Foundry. Unless changed by the DM, Dale can use rune-rites while raging.",
+            "Rune save DC = 8 + proficiency bonus + Constitution modifier. Rune attack modifier = proficiency bonus + Strength or Constitution modifier.",
+            "Suggested use limit: proficiency bonus rune-rites per long rest total, or each rite once per long rest if the DM wants them rarer."
+          ]
+        },
+        {
+          "type": "entries",
+          "name": "Greater Rune-Rite",
+          "entries": [
+            "Activation: Bonus action. Range: Self. Material: coal dust and iron filings; consumed. Duration: 1 minute. Tradition: Ikkander and Mwooreth.",
+            "The next time Dale hits a creature with a melee attack before the rite ends, the attack deals an extra {@dice 2d6} fire damage. If the target is wearing metal armor or holding a metal weapon, it must make a Constitution saving throw. On a failed save, it has disadvantage on the next attack roll it makes before the end of its next turn.",
+            "If Dale is raging, he may choose for the extra damage to be fire or necrotic. The rite ends after the empowered attack hits.",
+            "Flavor: Ikkander craft starting to look uncomfortably like Mwooreth cruelty."
+          ]
+        }
+      ]
+    }
+  ]
+}
