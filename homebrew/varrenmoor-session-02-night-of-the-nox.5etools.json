@@ -1,0 +1,353 @@
+{
+  "_meta": {
+    "sources": [
+      {
+        "json": "VRM-S02",
+        "abbreviation": "VRM:S02",
+        "full": "Varrenmoor Session 2: The Night of the Nox",
+        "authors": [
+          "Trent",
+          "ChatGPT"
+        ],
+        "version": "0.1.0",
+        "url": "https://github.com/snarshmallow/Varrenmoor-Campaign-Homebrew-Spells-Plutonium-Repository"
+      }
+    ],
+    "dateAdded": 1779316021,
+    "dateLastModified": 1779316021
+  },
+  "spell": [
+    {
+      "name": "First Hearth Rite",
+      "source": "VRM-S02",
+      "level": 1,
+      "school": "A",
+      "time": [
+        {
+          "number": 10,
+          "unit": "minute"
+        }
+      ],
+      "range": {
+        "type": "point",
+        "distance": {
+          "type": "touch"
+        }
+      },
+      "components": {
+        "v": true,
+        "s": true,
+        "m": "ash from a true hearth, clean water or snowmelt, a nail or iron filing from the protected door, a living sprig of evergreen, and the spoken name of someone the household refuses to forget"
+      },
+      "duration": [
+        {
+          "type": "timed",
+          "duration": {
+            "amount": 8,
+            "type": "hour"
+          }
+        }
+      ],
+      "entries": [
+        "You mark a doorway, window, or other threshold with an older rite of preservation and naming. Until the spell ends, creatures of the Nox and similar voice-stealing shadow spirits cannot enter through the protected threshold unless a creature inside knowingly invites them by name.",
+        "A creature attempting to mimic a voice across the threshold must succeed on a Wisdom saving throw against your spell save DC or its disguise falters: its shadow bends the wrong way, its breath vanishes, or its answer fails a local custom.",
+        "The rite does not bar ordinary villagers, beasts, or invited guests. It strengthens the truth of a threshold rather than creating a wall."
+      ],
+      "entriesHigherLevel": [
+        {
+          "type": "entries",
+          "name": "At Higher Levels",
+          "entries": [
+            "When cast using a spell slot of 2nd level or higher, you may protect one additional connected threshold for each slot level above 1st."
+          ]
+        }
+      ],
+      "miscTags": [
+        "SGT"
+      ]
+    }
+  ],
+  "monster": [
+    {
+      "name": "Lesser Nox",
+      "source": "VRM-S02",
+      "size": [
+        "M"
+      ],
+      "type": "undead",
+      "alignment": [
+        "N",
+        "E"
+      ],
+      "ac": [
+        12
+      ],
+      "hp": {
+        "average": 7,
+        "formula": "2d8-2"
+      },
+      "speed": {
+        "walk": 30
+      },
+      "str": 8,
+      "dex": 14,
+      "con": 9,
+      "int": 7,
+      "wis": 10,
+      "cha": 12,
+      "resist": [
+        "necrotic",
+        "cold"
+      ],
+      "vulnerable": [
+        "radiant"
+      ],
+      "conditionImmune": [
+        "charmed",
+        "frightened"
+      ],
+      "senses": [
+        "darkvision 60 ft."
+      ],
+      "passive": 10,
+      "languages": [
+        "understands the languages it knew in life but speaks only in stolen voices"
+      ],
+      "cr": "1/4",
+      "trait": [
+        {
+          "name": "Mimic Voice",
+          "entries": [
+            "The Nox can imitate any voice it has heard since the previous dusk. A creature that succeeds on a DC 12 Wisdom (Insight) check notices a wrong cadence, missing breath, or false answer."
+          ]
+        },
+        {
+          "name": "Threshold Weakness",
+          "entries": [
+            "While inside a warded building through an invitation or broken threshold, the Nox takes 2 radiant damage at the start of its turn if a hearth rite is active."
+          ]
+        }
+      ],
+      "action": [
+        {
+          "name": "Cold Hand",
+          "entries": [
+            "{@atk mw} {@hit 4} to hit, reach 5 ft., one target. {@h}3 ({@damage 1d6}) necrotic damage."
+          ]
+        }
+      ],
+      "environment": [
+        "urban",
+        "underdark"
+      ],
+      "tokenUrl": "modules/canvas3dtokencompendium/miniatures/_Colorized/Monster Manual/S/MZ4250 - Shadow_2025.webp"
+    },
+    {
+      "name": "Hollow Nox",
+      "source": "VRM-S02",
+      "size": [
+        "M"
+      ],
+      "type": "undead",
+      "alignment": [
+        "N",
+        "E"
+      ],
+      "ac": [
+        13
+      ],
+      "hp": {
+        "average": 24,
+        "formula": "7d8-7"
+      },
+      "speed": {
+        "walk": 30
+      },
+      "str": 10,
+      "dex": 14,
+      "con": 9,
+      "int": 10,
+      "wis": 12,
+      "cha": 14,
+      "save": {
+        "wis": "+3"
+      },
+      "skill": {
+        "deception": "+4",
+        "stealth": "+4"
+      },
+      "resist": [
+        "necrotic",
+        "cold"
+      ],
+      "vulnerable": [
+        "radiant"
+      ],
+      "conditionImmune": [
+        "charmed",
+        "frightened"
+      ],
+      "senses": [
+        "darkvision 60 ft."
+      ],
+      "passive": 11,
+      "languages": [
+        "understands Common and one local language but speaks only in stolen voices"
+      ],
+      "cr": "1",
+      "trait": [
+        {
+          "name": "Borrowed Voice",
+          "entries": [
+            "As a bonus action, the Hollow Nox imitates a voice known to a creature within 60 feet. That creature must succeed on a DC 12 Wisdom saving throw or be unable to take reactions until the start of its next turn."
+          ]
+        },
+        {
+          "name": "Door-Scratcher",
+          "entries": [
+            "If the Hollow Nox spends its action clawing a ward, door rune, or threshold mark, the protection weakens until a creature repairs or reasserts the rite with an action and a successful DC 12 Religion check."
+          ]
+        },
+        {
+          "name": "True Name Weakness",
+          "entries": [
+            "If a creature speaks the true name of the person whose voice the Hollow Nox is wearing, the Hollow Nox has disadvantage on its next attack roll or saving throw before the end of its next turn."
+          ]
+        }
+      ],
+      "action": [
+        {
+          "name": "Grasping Shadow",
+          "entries": [
+            "{@atk mw} {@hit 4} to hit, reach 5 ft., one target. {@h}6 ({@damage 1d8 + 2}) necrotic damage, and the target's speed is reduced by 10 feet until the start of the Nox's next turn."
+          ]
+        }
+      ],
+      "environment": [
+        "urban",
+        "underdark"
+      ],
+      "tokenUrl": "modules/canvas3dtokencompendium/miniatures/_Colorized/Monster Manual/S/MZ4250 - Shadow.webp"
+    }
+  ],
+  "item": [
+    {
+      "name": "Marble-and-Brass Chest",
+      "source": "VRM-S02",
+      "type": "OTH",
+      "rarity": "rare",
+      "entries": [
+        "A carved chest of white marble veined with pale blue and bound in greened brass. Four circular keyholes surround a central knot of water, flame-shadow, iron, and root.",
+        "The chest does not open upward. When all four keys are turned together, it unfolds."
+      ]
+    },
+    {
+      "name": "Eirwyn Key",
+      "source": "VRM-S02",
+      "type": "OTH",
+      "rarity": "uncommon",
+      "entries": [
+        "A pale brass key, cold to the touch, shaped with flowing water and light motifs."
+      ]
+    },
+    {
+      "name": "Mwooreth Key",
+      "source": "VRM-S02",
+      "type": "OTH",
+      "rarity": "uncommon",
+      "entries": [
+        "A darkened brass or black iron key, warm in the hand and hooked like a thorn."
+      ]
+    },
+    {
+      "name": "Ikkander Key",
+      "source": "VRM-S02",
+      "type": "OTH",
+      "rarity": "uncommon",
+      "entries": [
+        "A heavy, squared key with gear-like teeth. It feels like a tool as much as a key."
+      ]
+    },
+    {
+      "name": "Vaelweyr Key",
+      "source": "VRM-S02",
+      "type": "OTH",
+      "rarity": "uncommon",
+      "entries": [
+        "A greened brass key wrapped in old root fibers, almost organic in shape."
+      ]
+    },
+    {
+      "name": "Maerwyn's Diary",
+      "source": "VRM-S02",
+      "type": "OTH",
+      "rarity": "rare",
+      "entries": [
+        "The diary of Maerwyn of the First Door, an ancient Eirwyn priest. It contains fragments on the four religions, the Nox, and the old winter stores along the eastern ridgeline.",
+        {
+          "type": "quote",
+          "entries": [
+            "If the dead knock, do not answer with grief. Answer with names. A thing of the Nox may steal a voice, but it cannot bear a true name spoken with love."
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Unknown Warm Egg",
+      "source": "VRM-S02",
+      "type": "OTH",
+      "rarity": "rare",
+      "entries": [
+        "A large pale gray egg, warm with living heat. Beneath the shell, faint veins of opal, brass, and green shimmer in candlelight.",
+        "Bones warns: Do not let the shadow things hear it crack."
+      ]
+    },
+    {
+      "name": "Bones' Gravekeeper Shovel",
+      "source": "VRM-S02",
+      "type": "OTH",
+      "rarity": "uncommon",
+      "entries": [
+        "A rusted shovel with a silver-gray wooden handle wrapped in old linen. Burned into the handle are the words: For the sleeping. Not the stealing."
+      ]
+    }
+  ],
+  "table": [
+    {
+      "name": "Varrenmoor Knock Customs",
+      "source": "VRM-S02",
+      "colLabels": [
+        "d4",
+        "Knock",
+        "Meaning",
+        "Expected Response"
+      ],
+      "rows": [
+        [
+          "1",
+          "Two slow knocks followed by two fast knocks",
+          "Hearth-Knock: shelter / hearth-right",
+          "Name your hearth."
+        ],
+        [
+          "2",
+          "Two rapid knocks",
+          "Kin-Knock: familiar person",
+          "Name yourself."
+        ],
+        [
+          "3",
+          "Three rapid knocks",
+          "Burden-Knock: urgent supplies/help",
+          "What burden?"
+        ],
+        [
+          "4",
+          "Four slow knocks",
+          "Bell-Knock: death, oath, birth, or church business",
+          "By whose name?"
+        ]
+      ]
+    }
+  ]
+}
