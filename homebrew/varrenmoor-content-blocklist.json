@@ -1,0 +1,77 @@
+{
+  "fileType": "content-blocklist",
+  "blocklist": [
+    {
+      "displayName": "Granary Nail Ward",
+      "hash": "granary%20nail%20ward_vrm",
+      "category": "feat",
+      "source": "VRM"
+    },
+    {
+      "displayName": "Millstone Momentum",
+      "hash": "millstone%20momentum_vrm",
+      "category": "feat",
+      "source": "VRM"
+    },
+    {
+      "displayName": "Ash-Twine Glare",
+      "hash": "ash-twine%20glare_vrm",
+      "category": "feat",
+      "source": "VRM"
+    },
+    {
+      "displayName": "Root-and-Rope Snare",
+      "hash": "root-and-rope%20snare_vrm",
+      "category": "feat",
+      "source": "VRM"
+    },
+    {
+      "displayName": "Iron Door Oath",
+      "hash": "iron%20door%20oath_vrm",
+      "category": "feat",
+      "source": "VRM"
+    },
+    {
+      "displayName": "Split-Thread Reprisal",
+      "hash": "split-thread%20reprisal_vrm",
+      "category": "feat",
+      "source": "VRM"
+    },
+    {
+      "displayName": "Stone-Lung Endurance",
+      "hash": "stone-lung%20endurance_vrm",
+      "category": "feat",
+      "source": "VRM"
+    },
+    {
+      "displayName": "Forge-Heat Hand",
+      "hash": "forge-heat%20hand_vrm",
+      "category": "feat",
+      "source": "VRM"
+    },
+    {
+      "displayName": "Foxfire Prickle",
+      "hash": "foxfire%20prickle_vrm",
+      "category": "spell",
+      "source": "VRM"
+    },
+    {
+      "displayName": "Kenko's Warning",
+      "hash": "kenko's%20warning_vrm",
+      "category": "spell",
+      "source": "VRM"
+    },
+    {
+      "displayName": "Root-Hush",
+      "hash": "root-hush_vrm",
+      "category": "spell",
+      "source": "VRM"
+    },
+    {
+      "displayName": "The Field Remembers",
+      "hash": "the%20field%20remembers_vrm",
+      "category": "spell",
+      "source": "VRM"
+    }
+  ]
+}
