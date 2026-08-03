@@ -1,0 +1,11 @@
+{
+  "name": "Varrenmoor Homebrew",
+  "description": "Campaign homebrew spells, Wyrdcraft features, session sources, and superseded-content blocklist for Plutonium/5eTools import.",
+  "files": [
+    "homebrew/varrenmoor-homebrew-spells.5etools.json",
+    "homebrew/varrenmoor-session-02-night-of-the-nox.5etools.json",
+    "homebrew/varrenmoor-wyrdcrafts-and-tier-2-3-spells-v2.5etools.json",
+    "homebrew/varrenmoor-content-blocklist.json"
+  ],
+  "source": "VRM"
+}
