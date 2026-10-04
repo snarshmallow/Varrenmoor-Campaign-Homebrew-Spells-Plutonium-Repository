@@ -22,3 +22,10 @@ Goal: turn a concept image (the PNGs already in `2026 Campaign`, e.g. `ossuary c
 - Model weights download from Hugging Face (several GB); keep them in the default HF cache and out of git.
 - Deliver a single entry point: `.\ai3d.ps1 -Image <png> -Name <name> -Folder "<campaign folder>"`.
 - Add `foundry-3d/ai/` venv and weights paths to `.gitignore`.
+
+## Status: installed (2026-10-04)
+- Env: `ai/.venv` (Python 3.11 via uv, torch 2.11+cu128, transformers pinned 4.49 and diffusers <0.33; newer transformers breaks the Hunyuan DINOv2 weights). `ai/repo` is a clone of Hunyuan3D-2. Both are gitignored.
+- Shape stage: `ai/shape.py` with Hunyuan3D-2mini, fp16, loaded straight onto the GPU (the repo's `enable_model_cpu_offload` is broken, and isn't needed: peak is low on the 10 GB 3080). About 15 s per shape after weights are cached.
+- Texture: `ai/cleanup.py` in Blender decimates (default 30k tris), scales to `-Height` metres (default 1.8), bases at Z=0, front-projects the source image, bakes to a 2048 UV texture, exports GLB and .blend. Back of the model gets the stretched front projection; hand-paint if it matters.
+- Entry point: `.\ai3d.ps1 -Image <png> -Name <name> -Folder "<campaign folder>" [-Tris 30000] [-Height 1.8]`.
+- No nvcc, so no CUDA extensions were built; shape-only path used. Verified end to end with a synthetic image only.
