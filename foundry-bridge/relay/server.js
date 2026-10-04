@@ -58,7 +58,9 @@ export function createRelay({ apiToken = API_TOKEN, moduleToken = MODULE_TOKEN, 
   });
 
   const wss = new WebSocketServer({ server, path: '/module', maxPayload: MAX_BODY });
-  wss.on('connection', (ws) => {
+  const log = (...a) => console.log(new Date().toLocaleTimeString(), ...a);
+  wss.on('connection', (ws, req) => {
+    log('module socket opened from', req.socket.remoteAddress, 'origin', req.headers.origin || '-');
     let authed = false;
     const deadline = setTimeout(() => { if (!authed) ws.close(4001, 'auth timeout'); }, 5000);
     ws.on('message', (data) => {
@@ -71,7 +73,8 @@ export function createRelay({ apiToken = API_TOKEN, moduleToken = MODULE_TOKEN, 
           if (moduleSocket && moduleSocket !== ws) moduleSocket.close(4002, 'replaced');
           moduleSocket = ws;
           ws.send(JSON.stringify({ type: 'welcome' }));
-        } else ws.close(4003, 'bad auth');
+          log('module authenticated');
+        } else { log('module rejected: bad token'); ws.close(4003, 'bad auth'); }
         return;
       }
       const p = pending.get(m.id);
@@ -80,7 +83,8 @@ export function createRelay({ apiToken = API_TOKEN, moduleToken = MODULE_TOKEN, 
       pending.delete(m.id);
       p.resolve(m.error ? { error: m.error } : { result: m.result });
     });
-    ws.on('close', () => {
+    ws.on('close', (code) => {
+      log('module socket closed', code);
       clearTimeout(deadline);
       if (moduleSocket === ws) moduleSocket = null;
     });

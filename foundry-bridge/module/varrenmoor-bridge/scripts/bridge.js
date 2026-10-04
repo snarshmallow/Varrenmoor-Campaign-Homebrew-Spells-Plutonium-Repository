@@ -5,7 +5,8 @@ const MAX_LIST = 500;
 
 Hooks.once('init', () => {
   game.settings.register(MOD, 'enabled', { name: 'Connect to relay', hint: 'Only this GM client connects. Off by default.', scope: 'client', config: true, type: Boolean, default: false, onChange: () => connect() });
-  game.settings.register(MOD, 'relayUrl', { name: 'Relay URL', hint: 'e.g. ws://127.0.0.1:3030/module (use wss:// across networks)', scope: 'client', config: true, type: String, default: 'ws://127.0.0.1:3030/module', onChange: () => connect() });
+  game.settings.register(MOD, 'autoUrl', { name: 'Use launcher relay URL', hint: 'Read the current tunnel URL that start.bat writes into this module folder (relay-url.json), so quick-tunnel restarts need no re-pasting. Falls back to Relay URL below.', scope: 'client', config: true, type: Boolean, default: true, onChange: () => connect() });
+  game.settings.register(MOD, 'relayUrl', { name: 'Relay URL', hint: 'e.g. wss://name.trycloudflare.com/module. Used when the launcher file is missing or the option above is off.', scope: 'client', config: true, type: String, default: 'ws://127.0.0.1:3030/module', onChange: () => connect() });
   game.settings.register(MOD, 'token', { name: 'Module token', hint: 'BRIDGE_MODULE_TOKEN from the relay.', scope: 'client', config: true, type: String, default: '', onChange: () => connect() });
   game.settings.register(MOD, 'allowWrites', { name: 'Allow writes', hint: 'Permit create/update requests. Never allows delete. Leave off for read-only.', scope: 'world', config: true, type: Boolean, default: false });
 });
@@ -15,14 +16,26 @@ Hooks.once('ready', () => { if (game.user.isGM) connect(); });
 let socket = null;
 let retry = 1000;
 let timer = null;
+let generation = 0;
 
-function connect() {
+// start.bat writes the live tunnel URL here; Foundry serves it from the module folder (same origin).
+async function launcherUrl() {
+  try {
+    const r = await fetch(`modules/${MOD}/relay-url.json?t=${Date.now()}`, { cache: 'no-store' });
+    if (!r.ok) return null;
+    const { url } = await r.json();
+    return typeof url === 'string' && /^wss?:\/\//.test(url) ? url : null;
+  } catch { return null; }
+}
+
+async function connect() {
   clearTimeout(timer);
+  const gen = ++generation;
   if (socket) { socket.onclose = null; socket.close(); socket = null; }
   if (!game.user?.isGM || !game.settings.get(MOD, 'enabled')) return;
-  const url = game.settings.get(MOD, 'relayUrl');
   const token = game.settings.get(MOD, 'token');
-  if (!url || !token) return;
+  const url = (game.settings.get(MOD, 'autoUrl') && await launcherUrl()) || game.settings.get(MOD, 'relayUrl');
+  if (gen !== generation || !url || !token) return;
   const ws = new WebSocket(url);
   socket = ws;
   ws.onopen = () => ws.send(JSON.stringify({ type: 'hello', token }));
@@ -92,22 +105,27 @@ const ops = {
     return {
       name: s.name, tokens: s.tokens.size, walls: s.walls.size, lights: s.lights.size,
       tokenVision: s.tokenVision, fog: s.fog?.exploration ?? null, globalLight: s.environment?.globalLight?.enabled ?? null,
-      renderer: canvas.app?.renderer?.name ?? null,
+      renderer: canvas.app?.renderer?.name ?? canvas.app?.renderer?.constructor?.name ?? null,
+      canvas3d: !!game.Levels3DPreview?._active,
     };
   },
 
   perf_sample: ({ ms = 5000 }) => new Promise((resolve) => {
     const dur = Math.min(Math.max(Number(ms) || 5000, 1000), 30000);
+    // requestAnimationFrame counts real browser frames for both the PIXI canvas and 3D Canvas (three.js),
+    // which renders on its own loop while the PIXI ticker sits idle.
     const gaps = [];
     let last = performance.now();
-    const tick = () => { const now = performance.now(); gaps.push(now - last); last = now; };
-    canvas.app.ticker.add(tick);
+    let raf = 0;
+    const tick = (now) => { gaps.push(now - last); last = now; raf = requestAnimationFrame(tick); };
+    raf = requestAnimationFrame(tick);
     setTimeout(() => {
-      canvas.app.ticker.remove(tick);
+      cancelAnimationFrame(raf);
       const sorted = [...gaps].sort((a, b) => a - b);
       const sum = gaps.reduce((a, b) => a + b, 0);
       resolve({
-        durationMs: Math.round(sum), frames: gaps.length, avgFps: +(gaps.length / (sum / 1000)).toFixed(1),
+        hidden: document.hidden, canvas3d: !!game.Levels3DPreview?._active,
+        durationMs: Math.round(sum), frames: gaps.length, avgFps: sum ? +(gaps.length / (sum / 1000)).toFixed(1) : null,
         p95FrameMs: +(sorted[Math.floor(sorted.length * 0.95)] ?? 0).toFixed(1), maxFrameMs: +(sorted.at(-1) ?? 0).toFixed(1),
         framesOver50ms: gaps.filter((g) => g > 50).length,
       });

@@ -74,17 +74,33 @@ if (publicUrl) {
     ok = await fetch(`${publicUrl}/health`).then((r) => r.ok).catch(() => false);
     if (!ok) await new Promise((r) => setTimeout(r, 2000));
   }
-  console.log(`Tunnel self-test (${publicUrl}/health): ${ok ? 'OK' : 'FAILED - tunnel not routing yet'}`);
+  console.log(`Tunnel self-test (${publicUrl}/health): ${ok ? 'OK' : 'not reachable from this PC yet. New quick-tunnel names often take a minute to resolve in local DNS; Claude can usually reach it already.'}`);
 }
+// --- hand the live URL to the Foundry module (same machine only) -----------
+const moduleUrl = publicUrl ? publicUrl.replace('https://', 'wss://') + '/module' : `ws://127.0.0.1:${PORT}/module`;
+let moduleDir = env.FOUNDRY_MODULE_DIR || '';
+if (!moduleDir) {
+  try {
+    const opts = JSON.parse(fs.readFileSync(path.join(process.env.LOCALAPPDATA || '', 'FoundryVTT', 'Config', 'options.json'), 'utf8'));
+    if (opts.dataPath) moduleDir = path.join(opts.dataPath, 'Data', 'modules', 'varrenmoor-bridge');
+  } catch {}
+}
+let wroteUrlFile = false;
+if (moduleDir && fs.existsSync(moduleDir)) {
+  fs.writeFileSync(path.join(moduleDir, 'relay-url.json'), JSON.stringify({ url: moduleUrl, updated: new Date().toISOString() }) + '\n');
+  wroteUrlFile = true;
+}
+
 const line = '='.repeat(70);
 console.log(`
 ${line}
-A) FOUNDRY (GM browser tab) -> Game Settings > Manage Modules > Varrenmoor Bridge
-   Connect to relay : ON
-   Relay URL        : ${publicUrl ? publicUrl.replace('https://', 'wss://') + '/module' : `ws://127.0.0.1:${PORT}/module`}
-   Module token     : ${env.BRIDGE_MODULE_TOKEN}
-   Allow writes     : OFF (turn on only when you want me to create/update)
-   (If Foundry runs on this same PC you may use ws://127.0.0.1:${PORT}/module instead.)
+A) FOUNDRY (GM browser tab) -> Game Settings > Configure Settings > Varrenmoor Bridge
+   Connect to relay        : ON
+   Use launcher relay URL  : ON ${wroteUrlFile ? `(URL written to ${moduleDir}\\relay-url.json; the module picks it up on reconnect)` : '(module folder not found; paste Relay URL below instead)'}
+   Relay URL (fallback)    : ${moduleUrl}
+   Module token            : ${env.BRIDGE_MODULE_TOKEN}
+   Allow writes            : OFF (turn on only when you want me to create/update)
+   (Use the wss:// URL even when Foundry is on this PC: Foundry's browser blocks ws://127.0.0.1 unless the page itself was opened from localhost.)
 
 B) CLAUDE ENVIRONMENT (claude.ai/code > environment settings)
    Secret  FOUNDRY_BRIDGE_TOKEN = ${env.BRIDGE_API_TOKEN}

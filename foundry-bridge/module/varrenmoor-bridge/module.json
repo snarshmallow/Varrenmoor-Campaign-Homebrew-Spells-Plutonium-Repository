@@ -2,7 +2,7 @@
   "id": "varrenmoor-bridge",
   "title": "Varrenmoor Bridge",
   "description": "Lets an authorized external assistant inspect (and, if enabled, edit) this world through a relay. Read-only by default.",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "compatibility": {
     "minimum": "14",
     "verified": "14"
