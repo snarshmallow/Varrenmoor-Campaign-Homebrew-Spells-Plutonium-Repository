@@ -32,7 +32,8 @@ class Kit:
         if name in self._mats:
             return self._mats[name]
         m = bpy.data.materials.new(name)
-        m.use_nodes = True
+        if m.node_tree is None:  # Blender 4.x; 5.x creates node materials by default (use_nodes is deprecated)
+            m.use_nodes = True
         bsdf = m.node_tree.nodes.get("Principled BSDF")
         r, g, b = color
         bsdf.inputs["Base Color"].default_value = (r, g, b, 1.0)
