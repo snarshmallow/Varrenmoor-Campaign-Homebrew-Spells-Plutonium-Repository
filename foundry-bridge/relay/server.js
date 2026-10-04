@@ -1,5 +1,6 @@
 import http from 'node:http';
 import crypto from 'node:crypto';
+import { pathToFileURL } from 'node:url';
 import { WebSocketServer } from 'ws';
 
 const PORT = Number(process.env.PORT) || 3030;
@@ -88,6 +89,6 @@ export function createRelay({ apiToken = API_TOKEN, moduleToken = MODULE_TOKEN, 
   return server;
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (import.meta.url === pathToFileURL(process.argv[1]).href) {
   createRelay().listen(PORT, HOST, () => console.log(`Varrenmoor bridge relay on ${HOST}:${PORT}`));
 }
