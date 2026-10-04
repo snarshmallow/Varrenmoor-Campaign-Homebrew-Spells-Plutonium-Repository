@@ -130,6 +130,22 @@ def ground_and_centre():
     return (max(xs) - min(xs), max(ys) - min(ys), max(zs) - min(zs))
 
 
+def merge_for_export(name):
+    """Apply modifiers and join every mesh into one object: one node and one draw call per material in 3D Canvas."""
+    meshes = [o for o in bpy.context.scene.objects if o.type == "MESH"]
+    bpy.ops.object.select_all(action="DESELECT")
+    for o in meshes:
+        bpy.context.view_layer.objects.active = o
+        for mod in list(o.modifiers):
+            bpy.ops.object.modifier_apply(modifier=mod.name)
+        o.select_set(True)
+    bpy.context.view_layer.objects.active = meshes[0]
+    bpy.ops.object.join()
+    merged = bpy.context.active_object
+    merged.name = merged.data.name = name
+    bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
+
+
 def export_glb(out_path):
     Path(out_path).parent.mkdir(parents=True, exist_ok=True)
     bpy.ops.export_scene.gltf(
@@ -146,9 +162,10 @@ def export_glb(out_path):
 def main():
     argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
     if len(argv) < 2:
-        raise SystemExit("usage: blender -b -P run.py -- <generator.py> <out.glb> [seed]")
+        raise SystemExit("usage: blender -b -P run.py -- <generator.py> <out.glb> [seed] [out.blend]")
     gen_path, out_path = Path(argv[0]).resolve(), Path(argv[1]).resolve()
     seed = int(argv[2]) if len(argv) > 2 else 0
+    blend_path = Path(argv[3]).resolve() if len(argv) > 3 else None
 
     spec = importlib.util.spec_from_file_location(gen_path.stem, gen_path)
     gen = importlib.util.module_from_spec(spec)
@@ -157,10 +174,15 @@ def main():
     clear_scene()
     gen.build(Kit(seed))
     size = ground_and_centre()
+    if blend_path:
+        # Editable source next to the export, saved before merging: separate parts, live modifiers.
+        blend_path.parent.mkdir(parents=True, exist_ok=True)
+        bpy.ops.wm.save_as_mainfile(filepath=str(blend_path), copy=True)
+    merge_for_export(out_path.stem)
     tris = sum(len(o.data.polygons) for o in bpy.context.scene.objects if o.type == "MESH")
     export_glb(out_path)
     print(f"[foundry-3d] wrote {out_path}  size(m)={size[0]:.2f}x{size[1]:.2f}x{size[2]:.2f}  "
-          f"grid={size[0]/GRID:.1f}x{size[1]/GRID:.1f} squares  faces(pre-modifier)={tris}")
+          f"grid={size[0]/GRID:.1f}x{size[1]/GRID:.1f} squares  faces={tris}")
 
 
 if __name__ == "__main__":

@@ -26,6 +26,12 @@ $opts = Get-Content "$env:LOCALAPPDATA\FoundryVTT\Config\options.json" -Raw | Co
 $assets = Join-Path $opts.dataPath 'Data\assets\varrenmoor-3d'
 New-Item -ItemType Directory -Force $assets | Out-Null
 Write-Host "Models folder: $assets  (in Foundry: assets/varrenmoor-3d/)"
+# Show the same files inside the campaign folder (a junction, so there is one copy, served by Foundry).
+$campaignLink = Join-Path $opts.dataPath '2026 Campaign\Generated 3D'
+if ((Test-Path (Split-Path $campaignLink)) -and -not (Test-Path $campaignLink)) {
+  New-Item -ItemType Junction -Path $campaignLink -Target $assets | Out-Null
+  Write-Host "Linked $campaignLink -> $assets"
+}
 
 # 3. Network share for the GPU PC ---------------------------------------------
 if (-not $SkipShare) {

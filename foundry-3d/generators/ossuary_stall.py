@@ -2,6 +2,9 @@
 Footprint about 2 x 1 grid squares (3.0 m x 1.5 m), about 2.6 m tall.
 """
 
+# Where the model is filed, mirroring C:\FoundryVTT resources\2026 Campaign.
+FOLDER = "Act 2 Road to Bridgehollow/Ossuary Exchange"
+
 
 def build(k):
     wood = k.mat("weathered_wood", (0.23, 0.16, 0.10), roughness=0.9)

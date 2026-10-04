@@ -21,5 +21,8 @@ generators/*.py --(blender/run.py)--> out/*.glb --(optional copy)--> Foundry Dat
 - Models are centred on their footprint with the base at Z=0. Modifiers are applied on export.
 - Keep props small, under about 20k faces each; 3D Canvas renders every tile every frame.
 
+## Filing
+Set `FOLDER = "Act 2 Road to Bridgehollow/Ossuary Exchange"` in a generator to file its `.glb` and editable `.blend` under that path. On the Foundry PC, `Data\assets\varrenmoor-3d` also appears as `2026 Campaign\Generated 3D`; both are the same files. The `.blend` keeps parts separate; the `.glb` merges them into one mesh for fewer draw calls.
+
 ## Writing a generator
 Make `generators/<name>.py` with a `build(k)` function. `k` provides `mat()`, `box()`, `cylinder()`, `cone()`, `sphere()`, `cloth()`, `jitter()` and a seeded `rng`. See `ossuary_stall.py`.
