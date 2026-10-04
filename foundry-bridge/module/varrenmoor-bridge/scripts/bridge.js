@@ -134,7 +134,7 @@ const ops = {
 
   create: async ({ documentName, data, parentUuid }) => {
     requireWrites();
-    if (!COLLECTIONS.has(documentName) && !['ActiveEffect', 'Wall', 'AmbientLight', 'Token'].includes(documentName)) throw new Error(`not allowed: ${documentName}`);
+    if (!COLLECTIONS.has(documentName) && !['ActiveEffect', 'Wall', 'AmbientLight', 'Token', 'Tile'].includes(documentName)) throw new Error(`not allowed: ${documentName}`);
     const parent = parentUuid ? await fromUuid(parentUuid) : null;
     const created = await getDocumentClass(documentName).create(data, parent ? { parent } : {});
     return { uuid: created.uuid };
