@@ -9,8 +9,8 @@ generators/*.py --(blender/run.py)--> out/*.glb --(optional copy)--> Foundry Dat
 ## GPU PC setup (once)
 1. Pull this repo, open PowerShell in `foundry-3d`, then run `.\setup.ps1`. It finds Blender, writes `.env` and builds the test model `out\ossuary_stall.glb`.
    - If PowerShell blocks scripts, run `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` once.
-2. Optional: share the Server PC's `C:\FoundryVTT resources\Data` folder on your network, then rerun setup with
-   `.\setup.ps1 -FoundryAssetsDir '\\SERVER-PC\Data\assets\varrenmoor-3d'` so models land in Foundry directly.
+2. Optional: run `host-setup.ps1` (repo root) on the Foundry PC to share its `assets\varrenmoor-3d` folder, then rerun setup with
+   `.\setup.ps1 -FoundryAssetsDir '\\<FOUNDRY-PC>\varrenmoor-3d'` so models land in Foundry directly.
 
 ## Use
 - `.\make.ps1` builds everything. `.\make.ps1 ossuary_stall -Seed 4` builds one model with a different random variation.
