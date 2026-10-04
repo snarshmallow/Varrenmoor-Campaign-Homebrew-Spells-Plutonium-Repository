@@ -10,7 +10,10 @@ Foundry modules run inside a GM's browser, so **a GM client must be open** (a de
 Read: `ping`, `world_info`, `list {collection,type?,nameContains?}`, `get {uuid}`, `audit_activities` (flags Activity IDs that are not 16 alphanumeric chars), `scene_stats`, `perf_sample {ms}` (FPS/long-frame sample; run it while moving a token with vision on).
 Write (off unless the world setting **Allow writes** is on): `create`, `update`. There is no delete op, and no arbitrary code execution.
 
-## Install
+## Quick start (recommended)
+Install Node 20+ and `cloudflared`, then run `start.bat` (Windows) or `./start.sh`. It installs deps, generates tokens into a git-ignored `.env`, starts the relay on 127.0.0.1, opens a Cloudflare quick tunnel, self-tests it, and prints exactly what to enter in Foundry and in the Claude environment.
+
+## Manual install
 1. In Foundry: Add-on Modules > Install Module > Manifest URL: `https://raw.githubusercontent.com/snarshmallow/Varrenmoor-Campaign-Homebrew-Spells-Plutonium-Repository/claude/adoring-shannon-yjixst/foundry-bridge/module/varrenmoor-bridge/module.json` (change `claude/adoring-shannon-yjixst` to `main` after merging; rebuild `module/varrenmoor-bridge.zip` whenever the module changes). Then enable it in the world.
 2. On a machine that can run Node 20+: `cd relay && npm install`, then set two different random tokens (24+ chars) and run:
    `BRIDGE_API_TOKEN=... BRIDGE_MODULE_TOKEN=... HOST=0.0.0.0 PORT=3030 node server.js`
