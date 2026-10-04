@@ -12,7 +12,7 @@ $blender = $cfg['BLENDER_PATH']
 if (-not $blender -or -not (Test-Path $blender)) { throw 'BLENDER_PATH not set or missing. Run .\setup.ps1 first.' }
 $py = "$root\ai\.venv\Scripts\python.exe"
 if (-not (Test-Path $py)) { throw 'AI venv missing. See AI-SETUP.md.' }
-$Image = (Resolve-Path $Image).Path
+$Image = (Resolve-Path -LiteralPath $Image).ProviderPath
 
 $rel = $Folder -replace '/', '\'
 $outDir = if ($rel) { Join-Path "$root\out" $rel } else { "$root\out" }

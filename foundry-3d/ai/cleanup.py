@@ -44,7 +44,8 @@ bpy.ops.object.transform_apply(location=True)
 # front projection of the concept image (viewed along +Y from -Y), simple and untextured-back tinted
 img = bpy.data.images.load(image)
 mat = bpy.data.materials.new("ai_tex")
-if mat.node_tree is None:\n    mat.use_nodes = True
+if mat.node_tree is None:
+    mat.use_nodes = True
 nt = mat.node_tree
 bsdf = nt.nodes["Principled BSDF"]
 bsdf.inputs["Roughness"].default_value = 0.85
