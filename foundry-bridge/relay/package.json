@@ -1,0 +1,9 @@
+{
+  "name": "varrenmoor-bridge-relay",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Relay between Claude (HTTPS JSON-RPC) and the Varrenmoor Bridge Foundry module (WebSocket).",
+  "scripts": { "start": "node server.js", "test": "node --test" },
+  "dependencies": { "ws": "^8.18.0" }
+}

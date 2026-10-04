@@ -1,0 +1,10 @@
+{
+  "id": "varrenmoor-bridge",
+  "title": "Varrenmoor Bridge",
+  "description": "Lets an authorized external assistant inspect (and, if enabled, edit) this world through a relay. Read-only by default.",
+  "version": "0.1.0",
+  "compatibility": { "minimum": "14", "verified": "14" },
+  "relationships": { "systems": [{ "id": "dnd5e", "type": "system", "compatibility": { "minimum": "5.3.1" } }] },
+  "esmodules": ["scripts/bridge.js"],
+  "authors": [{ "name": "Varrenmoor campaign" }]
+}
