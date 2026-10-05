@@ -208,6 +208,9 @@ def assign_world_uvs():
                 uv.data[li].uv = (a / tile, b / tile)
 
 
+_SHIFT = [0.0, 0.0, 0.0]
+
+
 def ground_and_centre(keep_z=False, keep_xy=False):
     """Move everything so the footprint is centred on the origin and the lowest point is Z=0 (unless keep_z)."""
     objs = [o for o in bpy.context.scene.objects if o.type == "MESH"]
@@ -220,6 +223,7 @@ def ground_and_centre(keep_z=False, keep_xy=False):
             xs.append(w.x); ys.append(w.y); zs.append(w.z)
         ev.to_mesh_clear()
     dx, dy, dz = (0 if keep_xy else -(min(xs) + max(xs)) / 2), (0 if keep_xy else -(min(ys) + max(ys)) / 2), (0 if keep_z else -min(zs))
+    _SHIFT[:] = [dx, dy, dz]
     for o in objs:
         if o.parent is None:
             o.location.x += dx; o.location.y += dy; o.location.z += dz
@@ -279,6 +283,21 @@ def export_glb(out_path):
     )
 
 
+def write_sidecar(gen, out_path, size):
+    """<name>.scene.json: model size and any generator-declared LIGHTS (x, y in model metres, z = height above the floor,
+    dim/bright in feet) shifted into the final, centred model coordinates. foundry-bridge/make-scene.ps1 reads it."""
+    import json
+    dx, dy, dz = _SHIFT
+    lights = []
+    for l in getattr(gen, "LIGHTS", []):
+        l = dict(l)
+        l["x"], l["y"], l["z"] = l["x"] + dx, l["y"] + dy, l.get("z", 2.4) + dz
+        lights.append(l)
+    meta = {"name": Path(out_path).stem, "folder": getattr(gen, "FOLDER", ""), "size_m": [round(v, 3) for v in size],
+            "lights": lights, "scene_note": getattr(gen, "SCENE_NOTE", "")}
+    Path(out_path).with_suffix(".scene.json").write_text(json.dumps(meta, indent=1))
+
+
 def main():
     argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
     if len(argv) < 2:
@@ -303,6 +322,7 @@ def main():
     merge_for_export(out_path.stem)
     tris = sum(len(o.data.polygons) for o in bpy.context.scene.objects if o.type == "MESH")
     export_glb(out_path)
+    write_sidecar(gen, out_path, size)
     print(f"[foundry-3d] wrote {out_path}  size(m)={size[0]:.2f}x{size[1]:.2f}x{size[2]:.2f}  "
           f"grid={size[0]/GRID:.1f}x{size[1]/GRID:.1f} squares  faces={tris}")
 
