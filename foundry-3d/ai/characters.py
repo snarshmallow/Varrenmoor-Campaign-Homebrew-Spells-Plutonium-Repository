@@ -19,6 +19,14 @@ CHARS = {
                     "heavy boots, stubble, weary expression, holding a small lit lantern, standing upright front view",
     "gerald": "painterly fantasy creature concept art, a small soft-shelled turtle, flat leathery olive-green shell, long fleshy pointed snout, a long pink grippy tongue "
               "sticking out, six legs with sticky pink toe pads, three-quarter view from the front, cute and skittish",
+    "brokka": "painterly fantasy character concept art, stout dwarf smith, bald head with a thick braided grey-red beard, heavy leather apron over a "
+              "rolled-sleeve shirt, muscular forearms, left hand missing two fingers, holding a smith's hammer, sooty boots, standing upright front view",
+    "pimm": "painterly fantasy character concept art, small goblin veterinary surgeon, green skin, big pointed ears, round brass goggles pushed up on the forehead, "
+            "stained white coat with many pockets, a satchel of tools, holding a small clipboard, standing upright front view",
+    "mottle": "painterly fantasy character concept art, a skeleton innkeeper, bare yellowed bones, empty eye sockets with a faint glow, wearing a stained white apron "
+              "and rolled shirt sleeves, a bar towel over one shoulder, holding a pewter tankard, standing upright front view",
+    "quill": "painterly fantasy character concept art, a skeleton runecrafter, bare ivory bones, dark ink-stained hooded scholar's robe with chalk dust, "
+             "a satchel of chalk sticks, holding a stick of chalk and a slate, spectacles on the skull, standing upright front view",
 }
 
 

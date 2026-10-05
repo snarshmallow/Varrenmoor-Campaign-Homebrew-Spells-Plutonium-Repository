@@ -8,6 +8,7 @@ import math
 import random
 
 from _props import F, Shop
+from _runes import NAMES, chevron, put
 
 FOLDER = "Act 2 Road to Bridgehollow/Ossuary Exchange"
 SCENE_NOTE = "Warehouse. Quest 1: read the Custodian Door (Stellan, Read Inscription DC 11). Kell's chalked route runs from the south doors to it."
@@ -24,22 +25,18 @@ LIGHTS = [
 
 
 def rune_surround(S, cx, y_face, r):
-    """Glowing glyph strokes in a ring around the door. One 'custodian' glyph is drawn with its strokes swapped."""
-    B, M = S.B, S.M
-    rng = random.Random(7)
-    for i in range(18):
-        a = math.pi * (0.1 + 0.8 * i / 17)
-        px = cx + 2.4 * math.cos(a) * (1.0 if i % 2 else 1.08)
-        pz = F + 0.2 + 3.4 * math.sin(a) + (0.0 if i != 9 else 0.0)
-        w, h = (0.35, 0.05) if i % 2 else (0.05, 0.35)
-        mat = M["rune"] if i != 9 else M["plaque"]                       # the amended glyph is gold: the one that means two things
-        B(px - w / 2, px + w / 2, y_face - 0.04, y_face - 0.01, pz - h / 2, pz + h / 2, mat, "rune")
-        if rng.random() < 0.6:
-            B(px - 0.04, px + 0.04, y_face - 0.04, y_face - 0.01, pz + 0.25, pz + 0.3, mat, "rune")
-    # the doubled glyph: two overlapping strokes where there should be one
-    B(cx - 0.28, cx + 0.28, y_face - 0.05, y_face - 0.02, F + 3.9, F + 3.95, M["plaque"], "custodian_glyph")
-    B(cx - 0.04, cx + 0.04, y_face - 0.05, y_face - 0.02, F + 3.65, F + 4.2, M["plaque"], "custodian_glyph")
-    B(cx - 0.2, cx + 0.2, y_face - 0.05, y_face - 0.02, F + 3.75, F + 3.8, M["rune"], "custodian_glyph")
+    """Carved, glowing Elder Futhark runes in an arch around the door. The 'custodian' glyph is drawn as two runes overlaid in gold:
+    it means two things, which is why a rat qualifies."""
+    M, k = S.M, S.k
+    seq = ["fehu", "uruz", "thurisaz", "ansuz", "raidho", "kenaz", "gebo", "wunjo", "hagalaz", "nauthiz", "isa", "jera", "eihwaz", "perthro", "algiz", "sowilo", "tiwaz"]
+    for i, name in enumerate(seq):
+        a = math.pi * (0.06 + 0.88 * i / (len(seq) - 1))
+        px = cx + 2.9 * math.cos(a)
+        pz = F + 0.5 + 3.3 * math.sin(a)
+        put(k, M["rune"], name, (px, y_face, pz), "s", h=0.5, width=0.04, thick=0.014, rot_deg=math.degrees(a) - 90)
+    # the amended glyph above the lintel: Ansuz and Algiz drawn over each other, in gold
+    put(k, M["plaque"], "ansuz", (cx, y_face, F + 4.15), "s", h=0.6, width=0.045, thick=0.016)
+    put(k, M["plaque"], "algiz", (cx, y_face, F + 4.15), "s", h=0.6, width=0.045, thick=0.016, offset=0.012)
 
 
 def build(k):
@@ -99,11 +96,9 @@ def build(k):
     B(7.45, 7.85, -4.08, -3.72, F + 1.1, F + 1.12, M["plaque"], "rat_tin_tag")
     B(8.2, 8.9, -4.2, -3.6, F + 1.01, F + 1.03, M["paper"], "tally_sheets")
     S.stool(8.2, -2.8)
-    # Kell's route: chalk arrows on the floor from the south doors to the custodian door
-    for i in range(8):
-        y = -5.5 + i * 1.6
-        B(-6.1 + 0.05 * i, -5.9 + 0.05 * i, y, y + 0.8, F + 0.003, F + 0.009, M["chalk"], "route_chalk")
-        B(-6.35 + 0.05 * i, -5.65 + 0.05 * i, y + 0.7, y + 0.78, F + 0.003, F + 0.009, M["chalk"], "route_arrow")
+    # Kell's route: pale chalk chevrons on the floor, from the south doors north toward the custodian door
+    for i in range(7):
+        chevron(k, M["chalk"], (-6.0 + 0.04 * i, -5.0 + i * 1.7, F + 0.004), 90, size=0.55, width=0.07)
     S.lantern(-6, 0, 4.2, hang=0.9)
     S.lantern(6, 0, 4.2, hang=0.9)
     S.lantern(0, -4, 3.6, hang=0.9)

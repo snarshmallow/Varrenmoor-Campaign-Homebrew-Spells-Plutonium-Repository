@@ -1,10 +1,11 @@
 """The Exchange's conveyor shafts and the Lost Property annex (Quest 2, "Gerald Has the Notebook"). Open-top corridors, 1.6 m wide:
-  west   cellar chamber under the bar: the brass drop-tube comes down here into a basket carrier
-  main   shaft east (rails, brass pipes, fungus lining; Violet can read where it was crushed)
-  north  a dead-end branch (grate)
-  south  the dusty old terminal (the "note lead", regular single clunk; never Gerald): a side chamber with the old terminal
-  east   the annex: a caged lost-and-found, shelves of unclaimed remains with expired tags; Gerald nests on the far shelf with the notebook
-Gate to the annex is a real swinging door. x east, y north.
+  west   ENTRANCE: the cellar chamber under the bar. The brass drop-tube comes down here and the hanging rail starts under it,
+         with a low basket the party climbs into. A ladder, a plaque and a bright lantern mark the way in.
+  main   shaft east (hanging rail, brass pipes, fungus lining; Violet can read where it was crushed)
+  north  a long dead-end branch with two corners, ending at a grate
+  south  a dogleg (two corners) to the dusty old terminal (the "note lead", regular single clunk; never Gerald)
+  east   the annex: a caged lost-and-found, shelves of unclaimed remains with expired tags; Gerald nests on the far shelf
+Gate to the annex is a real swinging door. The rail hangs from cross-beams, nothing runs on the floor. x east, y north.
 """
 import math
 import random
@@ -12,19 +13,23 @@ import random
 from _props import F, Shop
 
 FOLDER = "Act 2 Road to Bridgehollow/Ossuary Exchange"
-SCENE_NOTE = "Shafts. Gerald's noise is erratic; the terminal south clunks once, on schedule, and is NOT him."
+SCENE_NOTE = "Shafts. Enter at the west cellar (ladder, hanging basket on the rail). Gerald's noise is erratic; the terminal clunks once, on schedule, and is NOT him."
 
-H, T = 2.6, 0.4
+H, T, CW = 2.6, 0.4, 0.8          # wall height, wall thickness, corridor half-width
+RAIL_Z = 2.0                       # centre height of the hanging rail
 
 LIGHTS = [
+    dict(x=-9.9, y=2.8, z=2.2, dim=40, bright=16, color="#ffd18a"),          # ENTRANCE lantern
     dict(x=-9.5, y=0, z=1.8, dim=25, bright=8, color="#7fffa0"),            # cellar chamber (fungus glow)
     dict(x=0, y=0, z=1.6, dim=18, bright=5, color="#7fffa0"),
     dict(x=8, y=0, z=1.6, dim=18, bright=5, color="#7fffa0"),
     dict(x=4, y=5, z=1.6, dim=14, bright=4, color="#7fffa0"),
-    dict(x=4, y=-6, z=1.6, dim=14, bright=4, color="#9ac4ff"),
-    dict(x=4, y=-9.5, z=1.8, dim=22, bright=7, color="#a8b8d0"),            # the dusty terminal
-    dict(x=17.5, y=0, z=2.2, dim=40, bright=14, color="#ffc78a"),           # annex lantern
-    dict(x=20.5, y=2.5, z=1.6, dim=16, bright=5, color="#ffa24d"),          # Gerald's shelf
+    dict(x=8, y=8, z=1.6, dim=14, bright=4, color="#7fffa0"),
+    dict(x=11, y=11.5, z=1.6, dim=14, bright=4, color="#7fffa0"),
+    dict(x=-1, y=-5, z=1.6, dim=14, bright=4, color="#9ac4ff"),
+    dict(x=-5, y=-9.5, z=1.8, dim=22, bright=7, color="#a8b8d0"),           # the dusty terminal
+    dict(x=17.5, y=3.6, z=2.2, dim=40, bright=14, color="#ffc78a"),           # annex lantern
+    dict(x=21.2, y=-2.0, z=1.9, dim=16, bright=5, color="#ffa24d"),          # Gerald's shelf
 ]
 
 
@@ -37,13 +42,56 @@ def build(k):
     def floor(x0, x1, y0, y1):
         B(x0, x1, y0, y1, 0, F, M["paving"], "floor")
 
-    # floors
-    floor(-12.2, -7.0, -3.2, 3.2)          # cellar chamber
-    floor(-7.0, 13.0, -0.8, 0.8)           # main shaft
-    floor(3.2, 4.8, 0.8, 9.2)              # north branch
-    floor(3.2, 4.8, -8.2, -0.8)            # south branch
-    floor(1.2, 6.8, -11.4, -8.2)           # terminal chamber
-    floor(13.0, 22.2, -4.4, 4.4)           # annex
+    def sg(v):
+        return (v > 0) - (v < 0)
+
+    def corridor(pts, wall_start=0.4, end_cap=True, end_trim=0.0):
+        """Axis-aligned corridor through the waypoints, with corners. Floors and walls never overlap each other.
+        wall_start: the side walls begin this far past the first point (it sits on the parent shaft's inner wall face)."""
+        w = CW
+        n = len(pts) - 1
+        ds = [(sg(pts[i + 1][0] - pts[i][0]), sg(pts[i + 1][1] - pts[i][1])) for i in range(n)]
+
+        def rect(c, di, do, u0, u1, v0, v1, mat, name, z0=0.0, z1=H):
+            xs = [c[0] + di[0] * u + do[0] * v for u in (u0, u1) for v in (v0, v1)]
+            ys = [c[1] + di[1] * u + do[1] * v for u in (u0, u1) for v in (v0, v1)]
+            B(min(xs), max(xs), min(ys), max(ys), z0, z1, mat, name)
+
+        for i in range(n):
+            d = ds[i]
+            nrm = (-d[1], d[0])
+            s, e = pts[i], pts[i + 1]
+            L = abs(e[0] - s[0]) + abs(e[1] - s[1])
+            first, last = i == 0, i == n - 1
+            rect(s, d, nrm, 0 if first else w, L if last else L - w, -w, w, M["paving"], "floor", 0, F)
+            turn = 0 if last else sg(d[0] * ds[i + 1][1] - d[1] * ds[i + 1][0])
+            for sig in (-1, 1):
+                a = wall_start if first else w
+                if last:
+                    b = L - end_trim
+                else:
+                    b = L - (w + T if sig == turn else w)
+                v0, v1 = (w, w + T) if sig > 0 else (-w - T, -w)
+                if b > a:
+                    rect(s, d, nrm, a, b, v0, v1, wall_mat, "wall")
+            if last and end_cap:
+                rect(s, d, nrm, L, L + T, -w - T, w + T, wall_mat, "wall")
+        for i in range(1, n):
+            c, di, do = pts[i], ds[i - 1], ds[i]
+            rect(c, di, do, -w, w, -w, w, M["paving"], "floor", 0, F)
+            rect(c, di, do, -w, w + T, -w - T, -w, wall_mat, "wall")
+            rect(c, di, do, w, w + T, -w, w, wall_mat, "wall")
+
+    def wall_lantern(x, y, z, wx, wy):
+        """A lantern on a short bracket arm reaching to the wall point (wx, wy)."""
+        S.lantern(x, y, z)
+        B(min(x, wx) - 0.015, max(x, wx) + 0.015, min(y, wy) - 0.015, max(y, wy) + 0.015, z - 0.1, z - 0.07, M["iron"], "lantern_bracket")
+
+    # floors: cellar chamber (the entrance), main shaft, annex
+    floor(-12.2, -7.0, -3.2, 3.2)
+    floor(-7.0, 13.0, -0.8, 0.8)
+    floor(13.0, 22.2, -4.4, 4.4)
+    floor(-7.8, -2.2, -11.4, -8.2)          # terminal chamber
 
     # walls (open top)
     W.wall("y", -12.4, -3.4, 3.4, T, H, [], wall_mat, name="wall")                      # chamber west
@@ -52,19 +100,22 @@ def build(k):
     W.wall("y", -6.9, -3.4, 3.4, T, H, [(0, 1.6, 0, 2.2)], wall_mat, name="wall")      # chamber east, opening into the shaft
     W.wall("x", 1.0, -6.8, 13.0, T, H, [(4, 1.6, 0, H)], wall_mat, name="wall")         # shaft north wall, branch opening
     W.wall("x", -1.0, -6.8, 13.0, T, H, [(4, 1.6, 0, H)], wall_mat, name="wall")        # shaft south wall, branch opening
-    W.wall("y", 3.0, 1.0, 9.4, T, H, [], wall_mat, name="wall")                         # north branch walls
-    W.wall("y", 5.0, 1.0, 9.4, T, H, [], wall_mat, name="wall")
-    W.wall("x", 9.4, 2.8, 5.2, T, H, [], wall_mat, name="wall")                         # north branch end
-    W.wall("y", 3.0, -8.0, -1.0, T, H, [], wall_mat, name="wall")                       # south branch walls
-    W.wall("y", 5.0, -8.0, -1.0, T, H, [], wall_mat, name="wall")
-    W.wall("y", 1.0, -11.6, -8.0, T, H, [], wall_mat, name="wall")                      # terminal chamber walls
-    W.wall("y", 7.0, -11.6, -8.0, T, H, [], wall_mat, name="wall")
-    W.wall("x", -11.6, 0.8, 7.2, T, H, [], wall_mat, name="wall")
-    W.wall("x", -8.0, 0.8, 3.0, T, H, [], wall_mat, name="wall")
-    W.wall("x", -8.0, 5.0, 7.2, T, H, [], wall_mat, name="wall")
+    W.wall("y", -8.0, -11.6, -8.0, T, H, [], wall_mat, name="wall")                     # terminal chamber west / east / south / north
+    W.wall("y", -2.0, -11.6, -8.0, T, H, [], wall_mat, name="wall")
+    W.wall("x", -11.6, -8.2, -1.8, T, H, [], wall_mat, name="wall")
+    W.wall("x", -8.0, -8.2, -1.8, T, H, [(-5, 1.6, 0, H)], wall_mat, name="wall")
     W.wall("x", 4.6, 12.8, 22.4, T, H, [], wall_mat, name="wall")                       # annex north / south / east
     W.wall("x", -4.6, 12.8, 22.4, T, H, [], wall_mat, name="wall")
     W.wall("y", 22.4, -4.8, 4.8, T, H, [], wall_mat, name="wall")
+
+    # the two dead-end branches, each with corners
+    corridor([(4, 0.8), (4, 8), (11, 8), (11, 14), (6, 14)], wall_start=0.4)             # north: long, ends at a grate
+    corridor([(4, -0.8), (4, -5), (-5, -5), (-5, -8.2)], wall_start=0.4, end_cap=False, end_trim=0.4)   # south dogleg to the terminal
+
+    # north dead end: a grate across the end
+    for y in [13.25 + 0.12 * i for i in range(14)]:
+        B(5.94, 5.98, y - 0.012, y + 0.012, F, H - 0.4, M["iron"], "grate_bar")
+    B(5.92, 5.99, 13.2, 14.8, F + 1.0, F + 1.05, M["iron"], "grate_rail")
 
     # the cage between the shaft and the annex (x = 13), a door in it
     for y in [-4.4 + 0.13 * i for i in range(67)]:
@@ -76,19 +127,44 @@ def build(k):
     B(12.97, 13.03, -0.55, 0.55, H - 0.45, H - 0.4, M["iron"], "gate_lintel")
     S.door("annex_gate", "y", 13.0, 0, swing=(1, 0), w=1.1, h=2.15)
 
-    # cellar chamber: the drop-tube comes down into a basket carrier
-    S.k.cylinder(0.2, 2.4, loc=(-9.5, 0, F + 1.4), material=M["brass"], name="drop_tube", verts=14)
-    S.k.cylinder(0.32, 0.12, loc=(-9.5, 0, F + 0.3), material=M["brass"], name="tube_flare", verts=14)
-    B(-10.0, -9.0, -0.35, 0.35, F + 0.04, F + 0.3, M["dbone"], "basket_carrier", 0.01)
-    B(-10.05, -8.95, -0.4, 0.4, F + 0.28, F + 0.34, M["iron"], "basket_rim")
+    # ENTRANCE (cellar chamber): the drop-tube ends just above the rail, a low basket hangs under it, a ladder climbs out
+    S.k.cylinder(0.2, 3.2, loc=(-9.5, 0, RAIL_Z + 1.5), material=M["brass"], name="drop_tube", verts=14)
+    S.k.cylinder(0.32, 0.12, loc=(-9.5, 0, RAIL_Z - 0.1), material=M["brass"], name="tube_flare", verts=14)
+    B(-10.5, -9.0, -0.5, 0.5, 2.4, 2.5, M["iron"], "tube_cradle_beam")
+    for lx in (-10.9, -10.5):                                                          # ladder on the north wall
+        B(lx - 0.025, lx + 0.025, 3.14, 3.2, F, H + 0.9, M["iron"], "ladder_rail")
+    for i in range(10):
+        B(-10.9, -10.5, 3.14, 3.18, F + 0.3 + 0.27 * i, F + 0.33 + 0.27 * i, M["iron"], "ladder_rung")
+    B(-11.3, -10.1, 3.14, 3.2, F + 2.5, F + 2.75, M["plaque"], "entrance_plaque")
     S.crate(-11.4, 2.3)
     S.crate(-11.4, -2.3, 0.5)
     S.barrel(-11.2, 0.8)
-    # rails, sleepers and brass pipes along the main shaft
-    for sy in (-0.3, 0.3):
-        B(-7.0, 13.0, sy - 0.03, sy + 0.03, F, F + 0.07, M["iron"], "rail")
-    for x in [-6.8 + 0.5 * i for i in range(40)]:
-        B(x - 0.06, x + 0.06, -0.55, 0.55, F, F + 0.03, M["doak"], "sleeper")
+    wall_lantern(-9.9, 3.0, 2.2, -9.9, 3.2)
+
+    # the hanging rail: from the tube east to the annex cage, hung from cross-beams (nothing on the floor)
+    B(-9.6, 12.5, -0.05, 0.05, RAIL_Z - 0.05, RAIL_Z + 0.05, M["iron"], "rail")
+    B(-8.1, -7.9, -3.3, 3.3, 2.4, H + 0.06, M["coak"], "hang_beam", 0.01)
+    B(-8.02, -7.98, -0.02, 0.02, RAIL_Z, 2.45, M["iron"], "hanger")
+    for x in (-4.7, -2.2, 0.3, 2.7, 5.6, 8.1, 10.6):
+        B(x - 0.1, x + 0.1, -0.9, 0.9, 2.4, H + 0.06, M["coak"], "hang_beam", 0.01)
+        B(x - 0.02, x + 0.02, -0.02, 0.02, RAIL_Z, 2.45, M["iron"], "hanger")
+
+    def basket(x, zb):
+        """A hanging carrier basket: slatted box on a rod from the rail."""
+        B(x - 0.4, x + 0.4, -0.3, 0.3, zb, zb + 0.05, M["doak"], "basket_floor")
+        for sy in (-1, 1):
+            B(x - 0.4, x + 0.4, sy * 0.3 - (0.03 if sy > 0 else 0), sy * 0.3 + (0 if sy > 0 else 0.03), zb + 0.05, zb + 0.45, M["doak"], "basket_side")
+        for sx in (-1, 1):
+            B(x + sx * 0.4 - (0.03 if sx > 0 else 0), x + sx * 0.4 + (0 if sx > 0 else 0.03), -0.27, 0.27, zb + 0.05, zb + 0.45, M["doak"], "basket_end")
+        B(x - 0.015, x + 0.015, -0.015, 0.015, zb + 0.45, RAIL_Z, M["iron"], "basket_rod")
+
+    basket(-9.5, F + 0.45)          # the entrance basket, low enough to climb into
+    basket(-3.4, 1.2)
+    basket(1.7, 1.2)
+    basket(7.3, 1.2)
+    basket(11.2, 1.2)
+
+    # brass pipes along the main shaft
     for sy in (-0.7, 0.7):
         S.k.cylinder(0.08, 19.6, loc=(3, sy, H - 0.45), rot=(0, 90, 0), material=M["brass"], name="pipe", verts=10)
         for x in [-6 + 2.5 * i for i in range(8)]:
@@ -101,34 +177,24 @@ def build(k):
         if abs(x - 4) < 1.0:
             continue
         S.k.sphere(rng.uniform(0.08, 0.2), loc=(x, 0.8 if north else -0.8, F + z), scale=(1.2, 0.35, 0.8), material=M["fungus"], name="fungus", segments=7)
+    for i in range(14):                                                                  # a little fungus in the dead-end branches
+        S.k.sphere(rng.uniform(0.08, 0.16), loc=(3.2 if i % 2 else 4.8, rng.uniform(2.0, 7.0), F + rng.uniform(0.6, 1.8)), scale=(0.35, 1.2, 0.8), material=M["fungus"], name="fungus", segments=7)
     for i in range(6):
         S.k.sphere(0.12, loc=(-3 + 1.9 * i, 0.8 if i % 2 else -0.8, F + 0.25), scale=(1.4, 0.3, 0.5), material=M["soot"], name="crushed_fungus", segments=7)
     # a few wet small footprints along the south wall (Gerald)
     for i in range(10):
         B(-5 + 1.1 * i, -4.9 + 1.1 * i, -0.55 - 0.05 * (i % 2), -0.5 - 0.05 * (i % 2), F + 0.004, F + 0.009, M["water"], "wet_print")
-    # north branch: a grate at the dead end
-    for x in [3.15 + 0.12 * i for i in range(14)]:
-        B(x - 0.012, x + 0.012, 9.2, 9.32, F, H - 0.4, M["iron"], "grate_bar")
-    B(3.1, 4.9, 9.2, 9.32, F + 1.0, F + 1.05, M["iron"], "grate_rail")
 
-    # the dusty old terminal (the note lead): a capsule terminal under cobwebs, on no active route
-    B(3.3, 4.7, -11.2, -10.4, F, F + 0.6, M["granite"], "terminal_plinth", 0.02)
-    S.k.cylinder(0.22, 0.9, loc=(4.0, -10.8, F + 1.05), material=M["brass"], name="terminal_barrel", verts=14)
-    S.k.cylinder(0.26, 0.08, loc=(4.0, -10.8, F + 1.55), material=M["brass"], name="terminal_cap", verts=14)
-    B(3.8, 4.2, -10.55, -10.45, F + 0.8, F + 1.1, M["iron"], "capsule_slot")
-    B(3.85, 4.15, -10.5, -10.4, F + 0.82, F + 1.05, M["dbone"], "capsule")
-    for i in range(14):
-        B(1.2 + 0.4 * i, 1.22 + 0.4 * i, -11.38, -8.3, F + 0.001, F + 0.004, M["paper"], "dust_streak") if False else None
-    for sx in (-1, 1):
-        S.k.sphere(0.5, loc=(4.0 + sx * 0.5, -10.9, F + 1.9), scale=(1, 0.5, 0.6), material=M["linen"], name="cobweb", segments=6)
+    # the dusty old terminal (the note lead): a capsule terminal on no active route, at the end of the south dogleg
+    B(-5.7, -4.3, -11.2, -10.4, F, F + 0.6, M["granite"], "terminal_plinth", 0.02)
+    S.k.cylinder(0.22, 0.9, loc=(-5.0, -10.8, F + 1.05), material=M["brass"], name="terminal_barrel", verts=14)
+    S.k.cylinder(0.26, 0.08, loc=(-5.0, -10.8, F + 1.55), material=M["brass"], name="terminal_cap", verts=14)
+    B(-5.2, -4.8, -10.55, -10.45, F + 0.8, F + 1.1, M["iron"], "capsule_slot")
+    B(-5.15, -4.85, -10.5, -10.4, F + 0.82, F + 1.05, M["dbone"], "capsule")
 
     # annex: shelves of unclaimed remains with expired tags, a ledger table, Gerald's nest on the far shelf with the notebook
-    for y in (-3.2, 3.0):
-        S.shelf_unit(14.2, 21.0, y - 0.2, y + 0.2, 2.4, "s" if y > 0 else "n", rows=4, items="boxes")
-    for x in (14.6, 16.3, 18.0, 19.7):
-        for y, f in ((-3.25, "n"), (3.05, "s")):
-            for i in range(3):
-                B(x + 0.05 * i, x + 0.05 * i + 0.04, y + (0.28 if f == "n" else -0.28) - 0.0, y + (0.3 if f == "n" else -0.3), F + 1.1 + 0.4 * i, F + 1.3 + 0.4 * i, M["paper"], "notice_tag")
+    S.shelf_unit(14.2, 21.0, 4.1, 4.4, 2.4, "s", rows=4, items="boxes")           # shelving stands against the north and south walls
+    S.shelf_unit(14.2, 21.0, -4.4, -4.1, 2.4, "n", rows=4, items="boxes")
     S.table(15.5, 17.5, -0.6, 0.6, h=0.9, mat=M["doak"])
     B(15.8, 16.4, -0.3, 0.3, F + 0.96, F + 1.0, M["paper"], "annex_ledger")
     B(16.7, 17.3, -0.2, 0.2, F + 0.96, F + 0.99, M["red"], "annex_stamp")
@@ -136,9 +202,7 @@ def build(k):
     for i in range(6):
         B(21.5 + 0.1 * (i % 2), 21.9 + 0.1 * (i % 2), 1.6 + 0.3 * i, 1.85 + 0.3 * i, F + 1.0, F + 1.06, M["linen"], "straw")
     B(21.7, 21.95, 2.4, 2.75, F + 1.06, F + 1.12, M["red"], "pimm_notebook")             # the field notebook
-    B(21.45, 21.5, 0.8, 1.2, F + 1.7, F + 1.95, M["plaque"], "notice_board_plate")       # 'NOTICE EXPIRES' board
-    for i in range(10):
-        S.skulls.add(15.0 + 0.6 * i, 3.0, F + 2.4, face_to=(17.5, 0), s=0.06) if False else None
-    S.lantern(17.5, 0, 2.2, hang=0.3)
-    S.lantern(20.5, 2.5, 1.7)
+    B(22.14, 22.2, 0.6, 1.2, F + 1.7, F + 1.95, M["plaque"], "notice_board_plate")       # 'NOTICE EXPIRES' board
+    wall_lantern(17.5, 4.0, 2.2, 17.5, 4.1)          # lanterns on wall brackets (the shafts are open-topped, nothing to hang from)
+    wall_lantern(21.95, -2.0, 1.9, 22.2, -2.0)
     S.finish()

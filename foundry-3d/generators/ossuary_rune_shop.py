@@ -6,6 +6,7 @@ x east, y north.
 import math
 
 from _props import F, Shop
+from _runes import NAMES, put
 
 FOLDER = "Act 2 Road to Bridgehollow/Ossuary Exchange"
 SCENE_NOTE = "Quill's rune workshop. The door on the trestles is a repair job; the board east shows the COPY chalk."
@@ -21,23 +22,9 @@ LIGHTS = [
 
 
 def glyph(S, x, y, face, seed, mat=None, size=0.45, z=F + 1.6):
-    """A chalk glyph on a wall: a few thin strokes, 2 cm proud of the wall. face = 'n','s','e','w' (the side the viewer stands)."""
-    B = S.B
+    """A real Elder Futhark rune, chalked on a board. face = 'n','s','e','w' (the side the viewer stands on)."""
     mat = mat or S.M["chalk"]
-    import random
-    r = random.Random(seed)
-    for i in range(r.randint(3, 5)):
-        a, b = r.uniform(-size / 2, size / 2), r.uniform(-size / 2, size / 2)
-        w, h = (0.03, r.uniform(0.12, size)) if i % 2 else (r.uniform(0.12, size), 0.03)
-        zz = z + b
-        if face == "s":
-            B(x + a - w / 2, x + a + w / 2, y - 0.03, y - 0.01, zz - h / 2, zz + h / 2, mat, "glyph")
-        elif face == "n":
-            B(x + a - w / 2, x + a + w / 2, y + 0.01, y + 0.03, zz - h / 2, zz + h / 2, mat, "glyph")
-        elif face == "e":
-            B(x + 0.01, x + 0.03, y + a - w / 2, y + a + w / 2, zz - h / 2, zz + h / 2, mat, "glyph")
-        else:
-            B(x - 0.03, x - 0.01, y + a - w / 2, y + a + w / 2, zz - h / 2, zz + h / 2, mat, "glyph")
+    put(S.k, mat, NAMES[seed % len(NAMES)], (x, y, z), face, h=size * 1.3, width=0.03, thick=0.012)
 
 
 def build(k):
@@ -75,8 +62,8 @@ def build(k):
         B(-0.3 + sx - 0.1, -0.3 + sx + 0.1, -2.6, -1.0, F, F + 0.75, M["doak"], "trestle")
         B(-0.3 + sx - 0.3, -0.3 + sx + 0.3, -2.1, -1.5, F + 0.72, F + 0.78, M["doak"], "trestle_top")
     B(-2.3, 1.7, -2.4, -1.2, F + 0.78, F + 0.9, M["coak"], "door_on_trestles", 0.01)
-    for i in range(7):
-        B(-2.0 + i * 0.5, -1.92 + i * 0.5, -2.2, -1.4, F + 0.9, F + 0.92, M["rune"] if i < 4 else M["chalk"], "repair_stroke")
+    for i in range(7):                                                    # runes laid along the door: the first four redrawn (glowing), three still chalk
+        put(S.k, M["rune"] if i < 4 else M["chalk"], ("algiz", "tiwaz", "ansuz", "othala", "wunjo", "kenaz", "isa")[i], (-1.9 + i * 0.55, -1.8, F + 0.9), "up", h=0.5, width=0.035, thick=0.012)
     B(1.7, 2.1, -1.9, -1.7, F + 0.78, F + 0.84, M["iron"], "door_hinge_plate")
 
     # tracing desks with lamps; a stool each
