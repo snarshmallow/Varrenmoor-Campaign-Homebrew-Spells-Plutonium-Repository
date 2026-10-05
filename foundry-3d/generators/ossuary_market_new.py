@@ -170,9 +170,9 @@ def build(k):
                 pl.LB(cu - 0.8, cu + 0.8, -0.09, -0.06, 1.0, 2.4, glass, "shop_glass")
         # awning
         cloth = cloths[rng.randrange(4)]
-        x, y, z = pl.P(0, -0.9, G + 0.2)
-        wdt = min(pl.w0 - 0.6, 5.0)
-        box(x, y, z, 1.9, wdt, 0.05, cloth, "awning", rotz=pl.deg, roty=-14.0)
+        x, y, z = pl.P(0, -0.6, 2.95)                        # low and short, so it never hides the shop sign above
+        wdt = min(pl.w0 - 0.6, 4.2)
+        box(x, y, z, 1.2, wdt, 0.05, cloth, "awning", rotz=pl.deg, roty=-14.0)
         return u0
 
     def shop_door(pl, door_id, width=1.0):
@@ -185,62 +185,28 @@ def build(k):
         box(*pl.P(u, v / 2, z + 0.12)[:3], -v + 0.04 if v < 0 else v, 0.05, 0.05, iron, "lantern_arm", rotz=pl.deg)
 
     # ------------------------------------------------------------------ signs
-    def sign(pl, kind, z=3.45, u=0.0):
-        """Flush facade sign board with an icon built from primitives, plus a small hanging bracket sign."""
-        pl.LB(u - 1.0, u + 1.0, -0.14, -0.06, z - 0.5, z + 0.5, oak, "sign_board")
-        pl.LB(u - 1.07, u + 1.07, -0.17, -0.12, z - 0.57, z - 0.5, brass, "sign_frame_b")
-        pl.LB(u - 1.07, u + 1.07, -0.17, -0.12, z + 0.5, z + 0.57, brass, "sign_frame_t")
-        c = lambda uu, vv, zz: pl.P(uu, vv, zz)
-        if kind == "inn":                                    # skull and tankard
-            x, y, zz = c(u - 0.35, -0.2, z - 0.25)
-            skulls.add(x, y, zz, face_to=(x + math.cos(pl.am + math.pi), y + math.sin(pl.am + math.pi)), s=0.2)
-            x, y, zz = c(u + 0.45, -0.2, z - 0.1)
-            k.cylinder(0.15, 0.32, loc=(x, y, zz), material=brass, name="tankard", verts=12)
-            pl.LB(u + 0.6, u + 0.66, -0.34, -0.18, z - 0.1, z + 0.15, brass, "tankard_handle")
-            x, y, zz = c(u + 0.45, -0.2, z + 0.1)
-            k.sphere(0.13, loc=(x, y, zz), scale=(1, 1, 0.5), material=M["linen"], name="foam", segments=8)
-        elif kind == "forge":                                # anvil and hammer
-            pl.LB(u - 0.5, u + 0.5, -0.22, -0.14, z - 0.1, z + 0.02, iron, "anvil_face")
-            pl.LB(u - 0.25, u + 0.25, -0.22, -0.14, z - 0.32, z - 0.1, iron, "anvil_waist")
-            pl.LB(u - 0.4, u + 0.4, -0.22, -0.14, z - 0.42, z - 0.32, iron, "anvil_base")
-            pl.LB(u - 0.06, u + 0.06, -0.24, -0.16, z + 0.05, z + 0.45, oak, "hammer_shaft")
-            pl.LB(u - 0.2, u + 0.2, -0.26, -0.16, z + 0.4, z + 0.5, iron, "hammer_head")
-            pl.LB(u + 0.55, u + 0.6, -0.2, -0.14, z - 0.3, z + 0.3, M["hot"], "forge_glow")
-        elif kind == "clinic":                               # crossed bones and a paw
-            pl.LB(u - 0.55, u + 0.55, -0.21, -0.15, z - 0.04, z + 0.04, bone, "bone_a", tilt=0, tilty=0)
-            pl.LB(u - 0.04, u + 0.04, -0.21, -0.15, z - 0.45, z + 0.45, bone, "bone_b")
-            for dx, dz in ((-0.18, 0.28), (0.0, 0.36), (0.18, 0.28), (0.3, 0.1)):
-                x, y, zz = c(u + dx + 0.55, -0.2, z - 0.2 + dz * 0.5)
-                k.sphere(0.06, loc=(x, y, zz), material=bone, name="paw_toe", segments=6)
-            x, y, zz = c(u + 0.55, -0.2, z - 0.28)
-            k.sphere(0.12, loc=(x, y, zz), scale=(1.2, 0.5, 0.9), material=bone, name="paw_pad", segments=8)
-        elif kind == "rune":                                 # a glowing Elder Futhark rune (Othala), plus a quill
-            for (x1, y1), (x2, y2) in RUNES["othala"]:
-                ua, za = u + (x1 - 0.5) * 0.4, z + (y1 - 1.0) * 0.4
-                ub, zb = u + (x2 - 0.5) * 0.4, z + (y2 - 1.0) * 0.4
-                ln = math.hypot(ub - ua, zb - za) + 0.05
-                ang = math.degrees(math.atan2(zb - za, ub - ua))
-                x, y, zz = pl.P((ua + ub) / 2, -0.19, (za + zb) / 2)
-                box(x, y, zz, 0.025, ln, 0.05, M["rune"], "sign_rune", rotz=pl.deg, rotx=ang)
-            pl.LB(u + 0.65, u + 0.7, -0.22, -0.14, z - 0.45, z + 0.2, M["chalk"], "quill")
-        elif kind == "post":                                 # brass post-horn
-            x, y, zz = c(u, -0.25, z)
-            k.cone(0.28, 0.06, 0.7, loc=(x, y, zz), rot=(0, 90, pl.deg + 0), material=brass, name="horn_bell", verts=12)
-            pl.LB(u - 0.5, u + 0.5, -0.2, -0.15, z - 0.35, z - 0.28, brass, "horn_tube")
-        elif kind == "guild":                                # open ledger
-            pl.LB(u - 0.6, u - 0.02, -0.2, -0.14, z - 0.35, z + 0.35, M["paper"], "ledger_l")
-            pl.LB(u + 0.02, u + 0.6, -0.2, -0.14, z - 0.35, z + 0.35, M["paper"], "ledger_r")
-            pl.LB(u - 0.03, u + 0.03, -0.22, -0.14, z - 0.38, z + 0.38, M["red"], "ledger_spine")
-        elif kind == "warehouse":                            # a bone crate stencil
-            pl.LB(u - 0.45, u + 0.45, -0.2, -0.14, z - 0.35, z + 0.35, M["dbone"], "crate_stencil")
-        # hanging bracket sign with a lantern
-        for sgn in (-1,):
-            pl.LB(u + 1.2, u + 1.26, -1.2, -0.0, z + 0.55, z + 0.6, iron, "bracket_arm")
-            pl.LB(u + 1.2, u + 1.26, -1.2, -1.14, z - 0.1, z + 0.6, iron, "bracket_drop")
-            x, y, zz = pl.P(u + 1.23, -1.1, z - 0.2)
-            k.sphere(0.12, loc=(x, y, zz), material=M["candle"], name="bracket_lantern", segments=8)
-            LIGHTS.append(dict(x=x, y=y, z=zz, dim=30, bright=10, color={"inn": "#ffb066", "forge": "#ff8a2a", "clinic": "#d6ffe0", "rune": "#7fc8ff",
-                                                                          "post": "#ffd9a0", "guild": "#ffe6b0", "warehouse": "#ffc78a"}.get(kind, "#ffb066")))
+    def sign(pl, kind, z=3.55, u=0.0):
+        """Flush shop-name board (text texture, optional icon) above the awning, plus a lit bracket lantern at its side."""
+        hw, hh = 1.4, 0.49
+        z0, z1 = z - hh, z + hh
+        pl.LB(u - hw - 0.06, u + hw + 0.06, -0.34, -0.02, z0 - 0.06, z1 + 0.06, oak, "sign_board")     # backing, clear of the floor beam
+        mat = _image_material(k, f"sign_{kind}", f"sign_{kind}.png")
+        verts = [pl.P(u - hw, -0.345, z0), pl.P(u + hw, -0.345, z0), pl.P(u + hw, -0.345, z1), pl.P(u - hw, -0.345, z1)]
+        me = bpy.data.meshes.new(f"sign_{kind}")
+        me.from_pydata(verts, [], [(0, 1, 2, 3)])
+        uv = me.uv_layers.new(name="UVMap")
+        for li, uvc in zip(me.polygons[0].loop_indices, ((0, 0), (1, 0), (1, 1), (0, 1))):
+            uv.data[li].uv = uvc
+        me.update()
+        ob = bpy.data.objects.new(f"sign_{kind}", me)
+        bpy.context.scene.collection.objects.link(ob)
+        ob.data.materials.append(mat)
+        # lantern on a short bracket beside the board
+        pl.LB(u + hw + 0.1, u + hw + 0.14, -0.9, -0.02, z + 0.3, z + 0.34, iron, "bracket_arm")
+        x, y, zz = pl.P(u + hw + 0.12, -0.9, z + 0.18)
+        k.sphere(0.12, loc=(x, y, zz), material=M["candle"], name="bracket_lantern", segments=8)
+        LIGHTS.append(dict(x=x, y=y, z=zz, dim=30, bright=10, color={"inn": "#ffb066", "forge": "#ff8a2a", "clinic": "#d6ffe0", "rune": "#7fc8ff",
+                                                                      "post": "#ffd9a0", "guild": "#ffe6b0", "warehouse": "#ffc78a"}.get(kind, "#ffb066")))
 
     # ------------------------------------------------------------------ gate and arrival portal (tunnels through the ring)
     def tunnel(pl, name, door_ids=None):
@@ -289,7 +255,7 @@ def build(k):
             pl.LB(cu - 0.45, cu + 0.45, pl.depth * 0.6 - 0.45, pl.depth * 0.6 + 0.45, H + 4.3, H + 4.5, M["granite"], "chimney_cap")
         if kind != "house":
             storefront(pl, kind)
-            sign(pl, kind, z=3.45 if kind != "guild" else 3.9)
+            sign(pl, kind, z=3.55 if kind != "guild" else 5.9)
             if kind in ("forge", "inn", "clinic", "rune", "warehouse"):
                 shop_door(pl, f"{kind}_door", 1.0)
         elif rng.random() < 0.7:
