@@ -24,8 +24,14 @@ def build_item(k, slug):
 
     if slug == "rune_slip":
         B(0, 0, 0.003, 0.12, 0.2, 0.006, paper, "slip")
-        put(k, ink, "othala", (0, 0.01, 0.006), "up", h=0.1, width=0.006, thick=0.002)
-        B(-0.02, -0.07, 0.007, 0.05, 0.006, 0.002, ink, "signature_q")
+        # a 'Q.' in the corner (ring + tail + dot) and loose doodles that look like pieces of runes
+        k.cylinder(0.011, 0.002, loc=(-0.035, -0.075, 0.0066), material=ink, name="q_ring", verts=14)
+        k.cylinder(0.007, 0.0025, loc=(-0.035, -0.075, 0.0067), material=paper, name="q_hole", verts=12)
+        B(-0.026, -0.086, 0.0066, 0.014, 0.004, 0.002, ink, "q_tail")
+        B(-0.012, -0.088, 0.0066, 0.004, 0.004, 0.002, ink, "q_dot")
+        for (x, y, ln, rot) in ((0.02, 0.06, 0.05, 90), (0.035, 0.07, 0.03, 40), (0.035, 0.05, 0.03, -40), (-0.03, 0.03, 0.045, 90),
+                                (-0.018, 0.045, 0.03, 35), (0.01, -0.01, 0.04, 20), (0.0, -0.025, 0.03, -60), (0.04, -0.045, 0.04, 90)):
+            B(x, y, 0.0066, 0.002, ln, 0.002, ink, "doodle", rot)
     elif slug == "clinic_tag":
         B(0, 0, 0.0015, 0.05, 0.07, 0.003, tin, "tag", 12)
         k.cylinder(0.006, 0.004, loc=(0, 0.03, 0.003), material=brass, name="eyelet", verts=10)

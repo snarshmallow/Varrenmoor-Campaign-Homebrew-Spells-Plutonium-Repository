@@ -84,8 +84,8 @@ def loot(name, player_text, gm_text, quest, img="icons/svg/book.svg"):
     LOOT.append(it)
 
 
-loot("Rune Slip Signed 'Q.'", "A slip of paper with a rune drawn on it and one stroke crossed out, signed 'Q.'.",
-     "Found at the suite, bedroom 3 desk. Stellan has not met Quill and cannot place the hand; the 'Q.' initial is the only lead (Mottle, Pringus or Lil can say it means Quill Scratch). Hook for Quest 1.", "Quest 1: Rat on the Door Plate", "icons/svg/book.svg")
+loot("Rune Slip Signed 'Q.'", "A slip of paper with a 'Q.' in the corner and a scatter of doodles that look like pieces of runes.",
+     "Found at the suite, bedroom 3 desk. Stellan sees only the 'Q.' but recognizes the doodles as rune fragments; he has not met Quill and cannot place the hand, so the initial is the only lead (Mottle, Pringus or Lil can say it means Quill Scratch). Hook for Quest 1.", "Quest 1: Rat on the Door Plate", "icons/svg/book.svg")
 loot("Chewed Clinic Tag (Pimm's Mark)", "A small metal clinic tag, chewed at one corner, stamped with Doctor Pimm's mark.",
      "Found under a bed in suite bedroom 1. Points at Gerald.", "Quest 2: Gerald Has the Notebook")
 loot("Tin: 'S. RATTUS, CUSTODIAN (ACTING)'", "A small tin containing a dead rat with a tiny tag reading 'S. RATTUS, CUSTODIAN (ACTING).'",
