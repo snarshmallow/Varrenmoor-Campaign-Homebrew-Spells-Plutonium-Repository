@@ -1,0 +1,274 @@
+{
+  "_id": "bb11591af02ad612",
+  "name": "First Hearth Rite (Greater Inscription)",
+  "type": "spell",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "source": {
+      "custom": "Varrenmoor Session 2: The Night of the Nox",
+      "book": "VRM-S02",
+      "page": "",
+      "license": "",
+      "rules": "2014",
+      "revision": 1
+    },
+    "description": {
+      "value": "<p><strong>First Hearth Rite</strong> (greater inscription). Found in the chest at the old church ruins. A Runecrafting working of <strong>Eirwyn</strong>: Preserve + Threshold + Reveal.</p><p>You mark a doorway, window, or other threshold with an older rite of preservation and naming. For 8 hours, creatures of the Nox and similar voice-stealing shadow spirits cannot enter through a protected threshold unless a creature inside knowingly invites them by name. A creature attempting to mimic a voice across the threshold must succeed on a Wisdom saving throw or its disguise falters. The rite does not bar ordinary villagers, beasts, or invited guests; it strengthens the truth of a threshold rather than creating a wall. Up to three connected thresholds can be protected.</p><p><strong>Components.</strong> Ash from a true hearth, clean water or snowmelt, a nail or iron filing from the protected door, a living sprig of evergreen, and the spoken name of someone the household refuses to forget (all consumed).</p><p><strong>Stellan's limits.</strong> Not possible before character level 7 (a large Tier III inscription: Deep Inscription, 2 Rune Charges). He must know the Preserve, Threshold and Reveal glyphs. Runecrafting check against Wyrd DC 22. <strong>One use only, with no recovery</strong>: the rite is spent when attempted.</p>",
+      "chat": ""
+    },
+    "level": 3,
+    "school": "abj",
+    "properties": [
+      "vocal",
+      "somatic",
+      "material"
+    ],
+    "materials": {
+      "value": "ash from a true hearth, clean water or snowmelt, a nail or iron filing from the protected door, a living sprig of evergreen, and the spoken name of someone the household refuses to forget",
+      "consumed": true,
+      "cost": 0,
+      "supply": 0
+    },
+    "target": {
+      "template": {
+        "count": "",
+        "contiguous": false,
+        "type": "",
+        "size": "",
+        "width": "",
+        "height": "",
+        "units": "ft",
+        "stationary": false
+      },
+      "affects": {
+        "count": "3",
+        "type": "",
+        "choice": false,
+        "special": "connected thresholds"
+      }
+    },
+    "range": {
+      "value": "0",
+      "units": "touch"
+    },
+    "activation": {
+      "type": "minute",
+      "value": 10,
+      "condition": ""
+    },
+    "duration": {
+      "value": "8",
+      "units": "hour"
+    },
+    "uses": {
+      "max": "1",
+      "spent": 0,
+      "recovery": []
+    },
+    "method": "spell",
+    "prepared": 1,
+    "sourceItem": "",
+    "activities": {
+      "f8cdfb3bba869ce3": {
+        "_id": "f8cdfb3bba869ce3",
+        "type": "utility",
+        "name": "Perform the First Hearth Rite [2 charges, single use]",
+        "img": null,
+        "sort": 0,
+        "activation": {
+          "type": "minute",
+          "value": 10,
+          "condition": "",
+          "override": false
+        },
+        "consumption": {
+          "scaling": {
+            "allowed": false
+          },
+          "spellSlot": false,
+          "targets": [
+            {
+              "type": "itemUses",
+              "target": "",
+              "value": "1",
+              "scaling": {
+                "mode": "",
+                "formula": ""
+              }
+            },
+            {
+              "type": "itemUses",
+              "target": "dd7KaDt9dU3lzYkP",
+              "value": "2",
+              "scaling": {
+                "mode": "",
+                "formula": ""
+              }
+            }
+          ]
+        },
+        "description": {
+          "chatFlavor": "Ten minutes of careful work. Check against Wyrd DC 22 (GM may raise it if a required glyph or material is missing). The rite is spent whether or not it takes. On a success, up to three connected thresholds are marked for 8 hours."
+        },
+        "duration": {
+          "value": "8",
+          "units": "hour",
+          "concentration": false,
+          "override": false
+        },
+        "range": {
+          "units": "touch",
+          "override": false
+        },
+        "target": {
+          "template": {
+            "contiguous": false,
+            "stationary": false,
+            "units": "ft"
+          },
+          "affects": {
+            "choice": false
+          },
+          "prompt": true,
+          "override": false
+        },
+        "uses": {
+          "spent": 0,
+          "recovery": []
+        },
+        "effects": [],
+        "flags": {},
+        "visibility": {
+          "level": {
+            "min": 7,
+            "max": null
+          },
+          "requireAttunement": false,
+          "requireIdentification": false,
+          "requireMagic": false
+        },
+        "roll": {
+          "formula": "1d20 + @prof + @abilities.wis.mod",
+          "name": "Runecrafting check vs Wyrd DC 22",
+          "prompt": false,
+          "visible": false
+        }
+      },
+      "36257f97b6a89f96": {
+        "_id": "36257f97b6a89f96",
+        "type": "save",
+        "name": "Mimicked voice at the threshold",
+        "img": null,
+        "sort": 0,
+        "activation": {
+          "type": "action",
+          "value": 1,
+          "condition": "",
+          "override": false
+        },
+        "consumption": {
+          "scaling": {
+            "allowed": false
+          },
+          "spellSlot": false,
+          "targets": []
+        },
+        "description": {
+          "chatFlavor": "A creature mimicking a voice across the protected threshold: its disguise falters on a failed save (shadow bends the wrong way, breath vanishes, or its answer fails a local custom)."
+        },
+        "duration": {
+          "units": "inst",
+          "concentration": false,
+          "override": false
+        },
+        "range": {
+          "units": "ft",
+          "value": "60",
+          "override": false
+        },
+        "target": {
+          "template": {
+            "contiguous": false,
+            "stationary": false,
+            "units": "ft"
+          },
+          "affects": {
+            "choice": false
+          },
+          "prompt": true,
+          "override": false
+        },
+        "uses": {
+          "spent": 0,
+          "recovery": []
+        },
+        "effects": [
+          {
+            "_id": "b9a6ab9b0cf91ab8",
+            "onSave": false
+          }
+        ],
+        "flags": {},
+        "visibility": {
+          "level": {
+            "min": 7,
+            "max": null
+          },
+          "requireAttunement": false,
+          "requireIdentification": false,
+          "requireMagic": false
+        },
+        "save": {
+          "ability": [
+            "wis"
+          ],
+          "dc": {
+            "calculation": "",
+            "formula": "8 + @prof + @abilities.wis.mod"
+          }
+        },
+        "damage": {
+          "onSave": "none",
+          "parts": []
+        }
+      }
+    },
+    "identifier": "first-hearth-rite-greater"
+  },
+  "effects": [
+    {
+      "_id": "b9a6ab9b0cf91ab8",
+      "name": "Voice Falters",
+      "img": "icons/svg/aura.svg",
+      "type": "base",
+      "transfer": false,
+      "disabled": false,
+      "origin": null,
+      "duration": {
+        "rounds": 10,
+        "seconds": null,
+        "startRound": null,
+        "startTime": null,
+        "turns": null,
+        "startTurn": null
+      },
+      "changes": [],
+      "statuses": [],
+      "description": "<p>Its mimicry fails: the shadow bends the wrong way, the breath vanishes, or the answer fails a local custom.</p>",
+      "tint": "#ffffff",
+      "flags": {}
+    }
+  ],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "varrenmoor": {
+      "tradition": "Eirwyn",
+      "minLevel": 7,
+      "singleUse": true
+    }
+  }
+}

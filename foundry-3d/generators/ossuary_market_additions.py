@@ -22,7 +22,7 @@ R0 = 22.9
 # ring house angle (degrees) -> shop kind. House k stands at 9 + 18*k degrees.
 SHOPS = {-45: "forge", -81: "clinic", -117: "inn", -171: "rune"}              # the four real shops (full signs)
 UTILITY = {-9: "tube", -153: "dock"}                                          # utility plates on the post and warehouse houses
-PLATES = ["lodge", "cart", "tallow", "resid", "trolley", "notice", "intake", "wash", "ledger"]
+PLATES = ["cart", "tallow", "trolley", "notice", "intake", "wash", "ledger"]
 
 
 def build(k):
@@ -184,53 +184,49 @@ def build(k):
 
     def awning(P, LB, cloth, width=3.4):
         x, y, z = P(0, 0.55, 2.2)
-        box(x, y, z, 1.15, width, 0.05, cloth, "awning", rotz=frame_rz[0], roty=-14.0 if True else 0)
+        box(x, y, z, 1.15, width, 0.05, cloth, "awning", rotz=frame_rz[0], roty=14.0)
         for su in (-width / 2 + 0.1, width / 2 - 0.1):
-            LB(su - 0.04, su + 0.04, 1.05, 1.13, 0.0, 1.98, iron, "awning_post")
+            LB(su - 0.04, su + 0.04, 1.05, 1.13, 0.0, 2.07, iron, "awning_post")      # top meets the cloth (outer edge z ~2.06)
 
     frame_rz = [0.0]
 
     def goods(kind, P, LB, rr):
+        """Street goods stand to the RIGHT of the door (u from 1.0 to 3.0), so the doorway stays clear."""
         if kind == "forge":
-            LB(-0.6, 0.6, 0.3, 0.9, 0.0, 0.5, iron, "anvil_base")
-            LB(-0.75, 0.75, 0.25, 0.95, 0.5, 0.72, iron, "anvil_top")
-            for su in (-1.6, 1.6):
+            LB(1.2, 1.9, 0.3, 0.9, 0.0, 0.5, iron, "anvil_base")
+            LB(1.1, 2.0, 0.25, 0.95, 0.5, 0.72, iron, "anvil_top")
+            for su in (2.5, 3.0):
                 x, y, z = P(su, 0.55, 0.45)
-                k.cylinder(0.32, 0.9, loc=(x, y, z), material=oak, name="barrel", verts=12)
+                k.cylinder(0.28, 0.9, loc=(x, y, z), material=oak, name="barrel", verts=12)
         elif kind == "clinic":
-            for i in range(3):
-                LB(-1.4 + i * 0.95, -0.55 + i * 0.95, 0.35, 0.95, 0.0 + 0.0, 0.55, iron, "cage")
-                LB(-1.35 + i * 0.95, -0.6 + i * 0.95, 0.4, 0.9, 0.55, 0.62, oak, "cage_lid")
-            LB(0.6, 1.9, 0.3, 0.8, 0.0, 0.7, oak, "clinic_bench")
+            for i in range(2):
+                LB(1.1 + i * 0.85, 1.85 + i * 0.85, 0.35, 0.95, 0.0, 0.55, iron, "cage")
+                LB(1.15 + i * 0.85, 1.8 + i * 0.85, 0.4, 0.9, 0.55, 0.62, oak, "cage_lid")
+            LB(2.85, 3.2, 0.3, 0.8, 0.0, 0.7, oak, "clinic_bench")
         elif kind == "rune":
-            for i in range(3):
-                LB(-1.5 + i * 1.1, -0.7 + i * 1.1, 0.4 + 0.05 * i, 0.5 + 0.05 * i, 0.05, 1.4, slate, "slate_board", rotx=0.0, roty=-8.0)
+            for i in range(2):
+                LB(1.2 + i * 1.0, 2.0 + i * 1.0, 0.4 + 0.05 * i, 0.5 + 0.05 * i, 0.05, 1.4, slate, "slate_board", roty=-8.0)
         elif kind == "inn":
-            for su in (-1.6, 1.4):
-                LB(su - 0.5, su + 0.5, 0.3, 0.9, 0.7, 0.76, oak, "table_top")
-                LB(su - 0.45, su - 0.35, 0.35, 0.45, 0.0, 0.7, oak, "table_leg")
-                LB(su + 0.35, su + 0.45, 0.75, 0.85, 0.0, 0.7, oak, "table_leg")
-                x, y, z = P(su, 1.3, 0.2)
-                k.cylinder(0.2, 0.4, loc=(x, y, z), material=oak, name="stool", verts=10)
-            for i in range(3):
-                x, y, z = P(0.1 + 0.55 * (i % 2), 0.55, 0.4 + 0.8 * (i // 2))
+            LB(1.2, 2.2, 0.3, 0.9, 0.7, 0.76, oak, "table_top")
+            LB(1.25, 1.35, 0.35, 0.45, 0.0, 0.7, oak, "table_leg")
+            LB(2.05, 2.15, 0.75, 0.85, 0.0, 0.7, oak, "table_leg")
+            x, y, z = P(1.7, 1.3, 0.2)
+            k.cylinder(0.2, 0.4, loc=(x, y, z), material=oak, name="stool", verts=10)
+            for i in range(2):
+                x, y, z = P(2.7 + 0.55 * i, 0.55, 0.4)
                 k.cylinder(0.3, 0.8, loc=(x, y, z), material=oak, name="barrel", verts=12)
         elif kind == "post":
-            x, y, z = P(0.0, 0.9, 1.1)
+            x, y, z = P(1.8, 0.9, 1.1)
             k.cylinder(0.16, 2.2, loc=(x, y, z), material=brass, name="post_tube", verts=12)
-            LB(-0.5, 0.5, 0.5, 1.3, 0.0, 0.3, ashlar, "post_plinth")
-            LB(1.0, 1.7, 0.3, 0.9, 0.0, 0.5, oak, "parcel_crate")
+            LB(1.3, 2.3, 0.5, 1.3, 0.0, 0.3, ashlar, "post_plinth")
+            LB(2.6, 3.2, 0.3, 0.9, 0.0, 0.5, oak, "parcel_crate")
         elif kind == "warehouse":
-            for i, (u, z) in enumerate(((-1.4, 0.0), (-0.6, 0.0), (-1.0, 0.7), (1.3, 0.0))):
+            for u, z in ((1.3, 0.0), (2.1, 0.0), (1.7, 0.7), (2.9, 0.0)):
                 LB(u - 0.38, u + 0.38, 0.3, 1.0, z, z + 0.7, coak, "crate")
-            LB(0.2, 0.9, 0.3, 0.8, 0.0, 0.5, oak, "cart_bed")
-            for su in (0.15, 0.95):
-                x, y, z = P(su, 0.8, 0.3)
-                k.cylinder(0.3, 0.06, loc=(x, y, z), rot=(0, 0, rr), material=iron, name="cart_wheel", verts=12)
         else:                                                                   # general store goods, varied by the dice
-            n = rng.randint(2, 4)
+            n = rng.randint(2, 3)
             for i in range(n):
-                u = -1.5 + i * 1.0 + rng.uniform(-0.2, 0.2)
+                u = 1.3 + i * 0.85 + rng.uniform(-0.1, 0.1)
                 t = rng.choice(("crate", "sack", "barrel"))
                 if t == "crate":
                     LB(u - 0.3, u + 0.3, 0.3, 0.9, 0.0, 0.6, oak, "crate")
@@ -281,8 +277,10 @@ def build(k):
             sign(P, LB, kind)
         elif ang in UTILITY:
             plate(P, LB, UTILITY[ang])
-        elif i % 3 != 2:
-            plate(P, LB, PLATES[i % len(PLATES)])
+        elif i % 2 == 1:
+            plate(P, LB, f"res{i + 1}")                    # private residence: house number runs counter-clockwise round the circle, 20 wraps to 1
+        else:
+            plate(P, LB, PLATES[(i // 2) % len(PLATES)])
 
     # ---- four lamp posts: these are the scene's four lights
     for sx, sy in ((12, 12), (-12, 12), (12, -12), (-12, -12)):

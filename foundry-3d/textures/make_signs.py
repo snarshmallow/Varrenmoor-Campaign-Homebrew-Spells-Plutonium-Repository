@@ -12,8 +12,8 @@ SIGNS = {
 }
 # small utility plates (not shops): plain iron plates with stencilled text
 UTIL = {
-    "tube": "TUBE STATION 4", "dock": "WAREHOUSE 7 - REAR DOCK", "lodge": "LODGINGS BY THE NIGHT", "cart": "BONE CARTAGE", "tallow": "TALLOW & LAMP OIL",
-    "resid": "RESIDENTS ONLY", "trolley": "MIND THE TROLLEYS", "notice": "NOTICES EXPIRE WITHOUT NOTICE", "intake": "INTAKE 3", "wash": "WASH & FOLD", "ledger": "LEDGERS - 2ND FLOOR",
+    "tube": "TUBE STATION 4", "dock": "WAREHOUSE 7 - REAR DOCK", "cart": "BONE CARTAGE", "tallow": "TALLOW & LAMP OIL",
+    "trolley": "MIND THE TROLLEYS", "notice": "NOTICES EXPIRE WITHOUT NOTICE", "intake": "INTAKE 3", "wash": "WASH & FOLD", "ledger": "LEDGERS - 2ND FLOOR",
 }
 W, H = 2048, 700
 FONT = "C:/Windows/Fonts/georgiab.ttf"
@@ -58,3 +58,14 @@ for key, text in UTIL.items():
     f = fit(d, text, 120, 900)
     d.text((512, 150), text, font=f, fill=(206, 208, 200), anchor="mm")
     img.save(HERE / f"plate_{key}.png")
+
+
+# private residence plates: house k (counter-clockwise round the circle, 1..20, wrapping 20 -> 1) carries its address
+for n in range(1, 21):
+    img = Image.new("RGB", (1024, 300), (46, 48, 52))
+    d = ImageDraw.Draw(img)
+    d.rectangle([8, 8, 1016, 292], outline=(120, 124, 130), width=8)
+    d.text((512, 105), "PRIVATE RESIDENCE", font=fit(d, "PRIVATE RESIDENCE", 100, 900), fill=(206, 208, 200), anchor="mm")
+    d.line([(160, 168), (864, 168)], fill=(120, 124, 130), width=4)
+    d.text((512, 225), f"No. {n} Ossuary Circle", font=fit(d, f"No. {n} Ossuary Circle", 84, 880), fill=(180, 182, 176), anchor="mm")
+    img.save(HERE / f"plate_res{n}.png")

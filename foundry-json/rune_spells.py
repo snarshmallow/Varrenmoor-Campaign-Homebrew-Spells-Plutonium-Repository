@@ -138,3 +138,60 @@ if __name__ == "__main__":
     (SHARE / "Foundry JSON").mkdir(exist_ok=True)
     (SHARE / "Foundry JSON" / "Runes_FoundryVTT.json").write_text(out, encoding="utf-8")
     print("wrote", len(items), "rune spells")
+
+
+# ------------------------------------------------------------------------------------------------ First Hearth Rite (greater inscription)
+def build_first_hearth_rite():
+    """The First Hearth Rite (VRM-S02, level 1 spell found in the chest at the old church ruins) as a Runecrafting working for Stellan.
+    Level gate: 7. It protects whole thresholds for 8 hours, which is a large Tier III inscription: the progression table gives 'large or living inscriptions;
+    alter Tier III rune-work' at level 7, and level 6 only allows temporary three-rune sentences lasting to the next long rest. It is also single use with no recovery."""
+    a_rite, a_save, e_id = hid("rune", "first-hearth", "rite"), hid("rune", "first-hearth", "save"), hid("rune", "first-hearth", "effect")
+    wyrd = 22
+    rite = _act_base(a_rite, "utility", "Perform the First Hearth Rite [2 charges, single use]",
+                     activation={"type": "minute", "value": 10, "condition": "", "override": False},
+                     range={"units": "touch", "override": False},
+                     duration={"value": "8", "units": "hour", "concentration": False, "override": False},
+                     consumption={"scaling": {"allowed": False}, "spellSlot": False,
+                                  "targets": [{"type": "itemUses", "target": "", "value": "1", "scaling": {"mode": "", "formula": ""}},
+                                              {"type": "itemUses", "target": POOL_ITEM, "value": "2", "scaling": {"mode": "", "formula": ""}}]},
+                     roll={"formula": CHECK, "name": f"Runecrafting check vs Wyrd DC {wyrd}", "prompt": False, "visible": False},
+                     visibility={"level": {"min": 7, "max": None}, "requireAttunement": False, "requireIdentification": False, "requireMagic": False},
+                     description={"chatFlavor": f"Ten minutes of careful work. Check against Wyrd DC {wyrd} (GM may raise it if a required glyph or material is missing). The rite is spent whether or not it takes. "
+                                                "On a success, up to three connected thresholds are marked for 8 hours."})
+    save = _act_base(a_save, "save", "Mimicked voice at the threshold", range={"units": "ft", "value": "60", "override": False},
+                     save={"ability": ["wis"], "dc": {"calculation": "", "formula": DC}}, damage={"onSave": "none", "parts": []},
+                     effects=[{"_id": e_id, "onSave": False}],
+                     visibility={"level": {"min": 7, "max": None}, "requireAttunement": False, "requireIdentification": False, "requireMagic": False},
+                     description={"chatFlavor": "A creature mimicking a voice across the protected threshold: its disguise falters on a failed save (shadow bends the wrong way, breath vanishes, or its answer fails a local custom)."})
+    eff = {"_id": e_id, "name": "Voice Falters", "img": "icons/svg/aura.svg", "type": "base", "transfer": False, "disabled": False, "origin": None,
+           "duration": {"rounds": 10, "seconds": None, "startRound": None, "startTime": None, "turns": None, "startTurn": None}, "changes": [],
+           "statuses": [], "description": "<p>Its mimicry fails: the shadow bends the wrong way, the breath vanishes, or the answer fails a local custom.</p>", "tint": "#ffffff", "flags": {}}
+    desc = (para("<strong>First Hearth Rite</strong> (greater inscription). Found in the chest at the old church ruins. A Runecrafting working of <strong>Eirwyn</strong>: Preserve + Threshold + Reveal.") +
+            para("You mark a doorway, window, or other threshold with an older rite of preservation and naming. For 8 hours, creatures of the Nox and similar voice-stealing shadow spirits cannot enter "
+                 "through a protected threshold unless a creature inside knowingly invites them by name. A creature attempting to mimic a voice across the threshold must succeed on a Wisdom saving throw "
+                 "or its disguise falters. The rite does not bar ordinary villagers, beasts, or invited guests; it strengthens the truth of a threshold rather than creating a wall. "
+                 "Up to three connected thresholds can be protected.") +
+            para("<strong>Components.</strong> Ash from a true hearth, clean water or snowmelt, a nail or iron filing from the protected door, a living sprig of evergreen, and the spoken name of someone the household refuses to forget (all consumed).") +
+            para(f"<strong>Stellan's limits.</strong> Not possible before character level 7 (a large Tier III inscription: Deep Inscription, 2 Rune Charges). He must know the Preserve, Threshold and Reveal glyphs. "
+                 f"Runecrafting check against Wyrd DC {wyrd}. <strong>One use only, with no recovery</strong>: the rite is spent when attempted."))
+    return {
+        "_id": hid("rune", "first-hearth", "item"), "name": "First Hearth Rite (Greater Inscription)", "type": "spell", "img": "icons/svg/aura.svg",
+        "system": {"source": {"custom": "Varrenmoor Session 2: The Night of the Nox", "book": "VRM-S02", "page": "", "license": "", "rules": "2014", "revision": 1},
+                   "description": {"value": desc, "chat": ""}, "level": 3, "school": "abj", "properties": ["vocal", "somatic", "material"],
+                   "materials": {"value": "ash from a true hearth, clean water or snowmelt, a nail or iron filing from the protected door, a living sprig of evergreen, and the spoken name of someone the household refuses to forget",
+                                 "consumed": True, "cost": 0, "supply": 0},
+                   "target": {"template": {"count": "", "contiguous": False, "type": "", "size": "", "width": "", "height": "", "units": "ft", "stationary": False},
+                              "affects": {"count": "3", "type": "", "choice": False, "special": "connected thresholds"}},
+                   "range": {"value": "0", "units": "touch"}, "activation": {"type": "minute", "value": 10, "condition": ""}, "duration": {"value": "8", "units": "hour"},
+                   "uses": {"max": "1", "spent": 0, "recovery": []}, "method": "spell", "prepared": 1, "sourceItem": "",
+                   "activities": {a_rite: rite, a_save: save}, "identifier": "first-hearth-rite-greater"},
+        "effects": [eff], "folder": None, "sort": 0, "ownership": {"default": 0},
+        "flags": {"varrenmoor": {"tradition": "Eirwyn", "minLevel": 7, "singleUse": True}},
+    }
+
+
+if __name__ == "__main__":
+    fh = build_first_hearth_rite()
+    (ROOT / "spells" / "First_Hearth_Rite_FoundryVTT.json").write_text(json.dumps(fh, indent=2, ensure_ascii=False), encoding="utf-8")
+    (SHARE / "Foundry JSON" / "First_Hearth_Rite_FoundryVTT.json").write_text(json.dumps(fh, indent=2, ensure_ascii=False), encoding="utf-8")
+    print("wrote First Hearth Rite")
