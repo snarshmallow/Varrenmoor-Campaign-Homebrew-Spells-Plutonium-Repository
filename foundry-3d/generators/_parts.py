@@ -104,3 +104,63 @@ class Skulls:
 
     def finish(self, bone, dark, teeth, name="skulls"):
         return bm_to_obj(self.bm, name, [bone, dark, teeth])
+
+
+class Walls:
+    """Axis-aligned wall runs with openings, timber frames and box helper, shared by interior generators.
+    Faces never share a plane: frames are inset 2 cm into openings and stand proud of the wall; see the
+    z-fighting rule in the project notes."""
+
+    def __init__(self, k, wall_mat, frame_mat, trim_mat):
+        self.k, self.wall_mat, self.frame_mat, self.trim_mat = k, wall_mat, frame_mat, trim_mat
+
+    def B(self, x0, x1, y0, y1, z0, z1, mat, name="box", bevel=0.0, rot=(0, 0, 0)):
+        return self.k.box((x1 - x0, y1 - y0, z1 - z0), loc=((x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2),
+                          rot=rot, material=mat, name=name, bevel=bevel)
+
+    def wall(self, axis, pos, a0, a1, t, z1, openings=(), mat=None, z0=0.0, name="wall"):
+        """Wall of thickness t centred on `pos`, running a0..a1 along `axis` ('x': varying x at y=pos; 'y': varying y at
+        x=pos). openings = [(centre, width, sill, head)] become piers + sill piece + lintel piece."""
+        mat = mat or self.wall_mat
+
+        def seg(u0, u1, za, zb):
+            if u1 - u0 < 0.02 or zb - za < 0.02:
+                return
+            if axis == "x":
+                self.B(u0, u1, pos - t / 2, pos + t / 2, za, zb, mat, name)
+            else:
+                self.B(pos - t / 2, pos + t / 2, u0, u1, za, zb, mat, name)
+        cur = a0
+        for c, w, sill, head in sorted(openings):
+            seg(cur, c - w / 2, z0, z1)
+            seg(c - w / 2, c + w / 2, z0, sill)
+            seg(c - w / 2, c + w / 2, head, z1)
+            cur = c + w / 2
+        seg(cur, a1, z0, z1)
+
+    def frame(self, axis, pos, t, c, w, sill, head, mat=None, j=0.12):
+        mat = mat or self.frame_mat
+        d = t + 0.1
+        e = 0.02
+
+        def blk(u0, u1, za, zb):
+            if axis == "x":
+                self.B(u0, u1, pos - d / 2, pos + d / 2, za, zb, mat, "frame", bevel=0.008)
+            else:
+                self.B(pos - d / 2, pos + d / 2, u0, u1, za, zb, mat, "frame", bevel=0.008)
+        blk(c - w / 2 - j, c - w / 2 + e, sill, head + j)
+        blk(c + w / 2 - e, c + w / 2 + j, sill, head + j)
+        blk(c - w / 2 - j, c + w / 2 + j, head - e, head + j + 0.08)
+        if sill > 0.5:
+            blk(c - w / 2 - j, c + w / 2 + j, sill - 0.08, sill + e)
+
+    def window(self, axis, pos, t, c, w=1.2, sill=0.95, head=2.35):
+        self.frame(axis, pos, t, c, w, sill, head, self.trim_mat)
+        d = t + 0.03
+        zc = (sill + head) / 2
+        if axis == "x":
+            self.B(c - 0.025, c + 0.025, pos - d / 2, pos + d / 2, sill, head, self.trim_mat, "mullion")
+            self.B(c - w / 2, c + w / 2, pos - d / 2, pos + d / 2, zc - 0.025, zc + 0.025, self.trim_mat, "transom")
+        else:
+            self.B(pos - d / 2, pos + d / 2, c - 0.025, c + 0.025, sill, head, self.trim_mat, "mullion")
+            self.B(pos - d / 2, pos + d / 2, c - w / 2, c + w / 2, zc - 0.025, zc + 0.025, self.trim_mat, "transom")
