@@ -1,0 +1,20 @@
+{
+  "name": "Example Ambush",
+  "scene": "Ossuary Exchange Tavern",
+  "summary": "What the players see and why it happens.",
+  "tactics": "How the foes fight and when they flee.",
+  "rewards": "Loot, XP, leads.",
+  "gm_notes": "Secrets, DCs, scaling for a bigger party.",
+  "foes": [
+    {
+      "actor": "Gerald",
+      "count": 2,
+      "at": [
+        5.0,
+        3.0
+      ],
+      "spread": 1.2,
+      "hidden": false
+    }
+  ]
+}

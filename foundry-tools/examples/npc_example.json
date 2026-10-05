@@ -1,0 +1,56 @@
+{
+  "name": "Example Person",
+  "cr": 0.5,
+  "size": "med",
+  "type": "humanoid",
+  "subtype": "human",
+  "alignment": "neutral",
+  "hp": 22,
+  "hp_formula": "4d8+4",
+  "ac": 12,
+  "abilities": [
+    10,
+    12,
+    12,
+    10,
+    12,
+    10
+  ],
+  "speed": {
+    "walk": 30
+  },
+  "senses": {},
+  "languages": [
+    "common"
+  ],
+  "bio": "Player-facing description of who they are.",
+  "gm_notes": "GM-only notes: what they know, DCs, how they react.",
+  "features": [
+    {
+      "name": "Trait name",
+      "text": "What it does."
+    }
+  ],
+  "attacks": [
+    {
+      "name": "Club",
+      "ability": "str",
+      "dice": "1d4",
+      "dtype": "bludgeoning",
+      "bonus": 0,
+      "reach": 5
+    }
+  ],
+  "disposition": 0,
+  "named": true,
+  "folder": "Quest NPCs (Side Quests)",
+  "art": {
+    "prompt": "painterly fantasy character concept art, ...",
+    "image": null,
+    "height": 1.75,
+    "seed": 29,
+    "tris": 9000,
+    "seq_offload": true,
+    "scale": 1.0
+  }
+}

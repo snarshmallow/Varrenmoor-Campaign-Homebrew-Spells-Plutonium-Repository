@@ -104,3 +104,60 @@ def build_item(k, slug):
         B(0.04, -0.09, 0.0145, 0.03, 0.03, 0.002, red, "rat_mark")
     else:
         raise ValueError(slug)
+
+
+# ---------------------------------------------------------------------------------------------------------------------------------
+# generic parametric props, used by foundry-tools (vtt item): shapes paper, book, tag, tin, box, plate. p = dict(shape, w, d, h, color, texture, ...)
+# w = X (m), d = plan Y (m), h = height (m). 'texture' is a PNG in foundry-3d/textures mapped on the main face. A 'plate' stands upright, face toward +y.
+# ---------------------------------------------------------------------------------------------------------------------------------
+def _quad(name, verts, texfile, k):
+    import bpy
+    from _painting import _image_material
+    mat = _image_material(k, "gen_" + texfile, texfile)
+    me = bpy.data.meshes.new(name)
+    me.from_pydata(verts, [], [(0, 1, 2, 3)])
+    uv = me.uv_layers.new(name="UVMap")
+    for li, uvc in zip(me.polygons[0].loop_indices, ((0, 0), (1, 0), (1, 1), (0, 1))):
+        uv.data[li].uv = uvc
+    me.update()
+    ob = bpy.data.objects.new(name, me)
+    bpy.context.scene.collection.objects.link(ob)
+    ob.data.materials.append(mat)
+
+
+def build_generic(k, p):
+    shape = p.get("shape", "box")
+    w, d, h = float(p.get("w", 0.1)), float(p.get("d", 0.1)), float(p.get("h", 0.05))
+    col = p.get("color", "#8a6a3a").lstrip("#")
+    rgb = tuple(int(col[i:i + 2], 16) / 255 for i in (0, 2, 4))
+    base = k.mat("gen_base", rgb, roughness=0.8, metallic=float(p.get("metal", 0.0)))
+    dark = k.mat("gen_dark", tuple(c * 0.45 for c in rgb), roughness=0.9)
+    tex = p.get("texture")
+    B = lambda x, y, z, sx, sy, sz, m, n="part": k.box((sx, sy, sz), loc=(x, y, z), material=m, name=n)
+    if shape == "paper":
+        t = 0.004
+        B(0, 0, t / 2, w, d, t, base, "sheet")
+        if tex:
+            z = t + 0.0004
+            _quad("face", [(-w / 2, -d / 2, z), (w / 2, -d / 2, z), (w / 2, d / 2, z), (-w / 2, d / 2, z)], tex, k)
+    elif shape == "book":
+        B(0, 0, h / 2, w, d, h, dark, "cover")
+        B(0.004, 0, h / 2, w - 0.02, d - 0.012, h - 0.012, base, "pages")
+        B(-w / 2 + 0.006, 0, h / 2, 0.012, d, h + 0.002, dark, "spine")
+        if tex:
+            z = h + 0.0004
+            _quad("face", [(-w / 2, -d / 2, z), (w / 2, -d / 2, z), (w / 2, d / 2, z), (-w / 2, d / 2, z)], tex, k)
+    elif shape == "tag":
+        B(0, 0, h / 2, w, d, h, base, "tag")
+        k.cylinder(min(w, d) * 0.1, h + 0.001, loc=(0, d * 0.35, h / 2), material=dark, name="hole", verts=10)
+    elif shape == "tin":
+        k.cylinder(w / 2, h, loc=(0, 0, h / 2), material=base, name="tin", verts=20)
+        k.cylinder(w / 2 + 0.003, h * 0.2, loc=(0, 0, h), material=dark, name="lid", verts=20)
+    elif shape == "plate":
+        B(0, 0, h / 2, w, 0.012, h, base, "plate")
+        if tex:
+            _quad("face", [(w / 2, 0.0066, 0.002), (-w / 2, 0.0066, 0.002), (-w / 2, 0.0066, h - 0.002), (w / 2, 0.0066, h - 0.002)], tex, k)
+    else:
+        B(0, 0, h / 2, w, d, h, base, "box")
+        B(0, 0, h * 0.5, w + 0.004, 0.03, h * 0.2, dark, "band")
+        B(0, 0, h + 0.004, w * 0.9, d * 0.9, 0.008, dark, "lid")

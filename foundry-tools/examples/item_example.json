@@ -1,0 +1,17 @@
+{
+  "name": "Example Letter",
+  "description": "Player-facing text only (no GM notes, so it can be dragged to a player's sheet).",
+  "gm_notes": "GM-only: where it is found, DC, what it points to. Goes into the guide, never onto the item.",
+  "shape": "paper",
+  "w": 0.2,
+  "d": 0.28,
+  "h": 0.01,
+  "color": "#d8c9a0",
+  "text": "Line one\nLine two",
+  "wall": false,
+  "folder": "Quest Items (Side Quests)",
+  "weight": 0,
+  "price": 0,
+  "rarity": "",
+  "img": "icons/svg/book.svg"
+}
