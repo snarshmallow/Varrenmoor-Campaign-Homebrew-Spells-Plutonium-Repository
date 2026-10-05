@@ -129,87 +129,133 @@ Each craft is a blend of two relationships.
 # PART 2: THE NPCs
 
 ## LIL' APOSTROPHE (Calvin Penwick)
-*"Hi. I'm Lil' Apostrophe. The apostrophe's silent, which is great, because it's the only part of me that knows when to shut up."*
+*"Hi, I'm Lil' Apostrophe. You don't say the apostrophe. It's just there, being a little thing. Like me."*
 
 **Snapshot**
-- Oversized black robes, bone-tag necklaces, sideways pointed hat. Intensely pale young man with an affected "cool wizard" persona that slips the moment anyone is nice to him.
-- Traces **WERD** in smoke or chalk, which makes real vocabulary magic happen. He is *great at saying it and terrible at what it means*.
+- Oversized black robes, bone-tag necklaces, sideways pointed hat. Intensely pale young man with an affected "cool wizard" persona that slips the second anyone is nice to him.
+- Traces **WERD** in smoke or chalk, which makes real vocabulary magic happen. He is *great at writing a word and terrible at knowing what it will do*.
 - Distant relative of Mavis from another place and time. He sat unnoticed on her couch until she noticed her **inventory improved**.
 - Currently working three days at the inn to cover the group's lodging.
 
-**The recipe: Fry first, stoner second, a dash of swagger**
-- **Fry core (most of the weight).** Lovably dim, endlessly sincere, loyal, always a little behind the conversation. He isn't stupid, he's *differently parsed*: he hears a sentence, picks the funnier reading and follows it all the way to its logical end.
-- **Accidental wit.** His best lines are wrong on purpose-by-accident, and the logic holds up. The party laughs because it's a *better* answer than the correct one. He never knows he's being clever. If a player points it out, he's delighted and takes full credit for what he "meant."
-- **Wordplay.** Puns, double meanings, mishearings and literal readings. Since his magic is *words*, language is literally his weak spot and his superpower. Bones, ledgers, tags and room are all pun fuel.
-- **Stoner.** Mellow, trails off, gets distracted by something cool, then "wait, what were we doing?"
-- **A dash of swagger.** One flicker of "cool guy" per scene, no more. Occasional "my guy" or "man." It cracks at once.
+**The recipe: Fry first, stoner second, almost no swagger**
+- **Fry core.** Lovably dim, sincere, loyal, always a step behind. He isn't stupid, he just picks the wrong meaning and follows it all the way down.
+- **Stoner.** Mellow, trails off, gets distracted, "wait, what was I doing?"
+- **Swagger.** Only a flicker ("cool wizard"), and it cracks right away.
+- **Never writes a joke.** Lil doesn't *set up* a punchline. He says a plain, confident thing that happens to be hilarious. The straight NPC supplies the button.
 
-**The accidental-wit formula** (use this when improvising)
-1. **Mishear or over-literalize** what was just said.
-2. **Follow the wrong meaning through** with total sincerity.
-3. **Land on something accidentally true** (or at least funnier than the right answer).
-4. **Stay oblivious.** Then, a beat later, the delayed "…wait. Is that the joke?"
-5. **Let the straight NPC answer.** Their dry reaction is the button.
+## FRY GRAMMAR RULES (how Lil actually talks)
+*Based on how Fry speaks: short, plain, whiny-casual sentences with simple vocabulary and no polish. Voice actor Billy West described it as a "plain vanilla voice."*
+
+1. **Plain, short sentences.** Contractions. Everyday words. No wit-sounding phrasing, no neat setup and punchline.
+   - Not: *"It's only a mistake if you meant something different, so technically I'm perfect."*
+   - But: *"A mistake is when you meant something else. I didn't mean anything. So."*
+2. **Describe the word he forgot.** He can't find the word, so he describes it.
+   - Fry: "I'm having one of those things. A headache... with pictures."
+   - Lil: "The book that remembers stuff? The one with the, like, pages of brain?"
+3. **State false facts flat, then prop them up with "probably."**
+   - Fry: "Yeah, well, they probably just copied us."
+   - Lil: "We invented swords. The old guys probably just copied us."
+4. **Scrambled syntax, delivered confidently.**
+   - Fry: "It's that guy you are."
+   - Lil: "Wait! There! Over there! It's the duck you are!"
+5. **Redundant intensifiers.**
+   - Fry: "I am literally angry with rage!"
+   - Lil: "That was loud. Like, loud in sound."
+6. **Circular logic that sounds deep.**
+   - Fry: "You can't give up hope just because it's hopeless. You gotta hope even more."
+   - Lil: "You can't be lost if you don't know where you're going. You're just, like, here."
+7. **Misused jargon or fancy words, said proudly.**
+   - Fry: "I both rue and lament it."
+   - Lil: "I'm, like, aggrieved and also sad."
+8. **Ordinary, specific details.** Snacks, couches, laundry.
+   - Fry: "Saturday night, no date, a two-liter of Shasta."
+   - Lil: "It's Tuesday, my hat's sideways, and I've got a cheese. I'm ready."
+9. **Gross or dumb comparisons.**
+   - Fry: "It's like a party in my mouth, and everyone's throwing up."
+   - Lil: "This room is like a hug, but for walls."
+10. **A self-own tacked on at the end.**
+   - Fry: "That was the saltiest thing I ever tasted! And I once ate a big heaping bowl of salt!"
+   - Lil: "That's the best sandwich I've ever had. And I once had a sandwich that was also a contract."
+11. **Cheerful about terrible news.**
+   - Fry: "I'll never see any of them again. Yahoo!"
+   - Lil: "Three days of work? Yahoo!"
+12. **Naive questions.**
+   - Fry: "Why am I sticky and naked? Did I miss something fun?"
+   - Lil: "Why is the floor wet and full of ducks? Was there a party?"
+13. **Trailing off a rebuttal.**
+   - Fry: "No I'm... Doesn't."
+   - Lil: "No I didn't... It did."
+14. **Flat deadpan statements of the obvious.**
+   - Fry: "He's dead." *(waves a hand in front of the corpse's face)*
+   - Lil does it to a skeleton clerk. See barks.
+15. **Exclamations.** "Crud." "Whoa." "Oh, boy." "Aw, man." And when trapped by his own fault: "Help! Police!" Lil's version: **"Help! Innkeeper!"**
+16. **Sincere and short, then moves on.** One real line, then he gets distracted.
 
 **Speech tics**
 - "Whoa." *(then silence)*
 - "Wait, what was I doing?"
 - "Is that the joke?"
+- "Crud."
+- "Oh, boy."
+- "Shut up and take my words!"
+- "That's fair."
 - "I'm not a regular wizard, I'm a cool wizard." *(he wears it sideways)*
-- "Shut up and take my words."
-- "Okay, but *technically*…" *(he is never technically correct)*
-- "That's fair." / "Cool." / "Oh."
-- "I don't know what that means, but I feel it in my hat."
-- *(after a pun, to himself)* "Hm. Word."
 
 **Wants / fears**
-- Wants a friend group, a sandwich and for words to *finally* do what he meant.
+- Wants a friend group, a sandwich, and for words to finally do what he meant.
 - Doesn't want to go back to Mavis's couch, or make anything permanent. Is scared of Mavis.
 
 **Barks (random moments)**
-- *(on arrival)* "Hey. I'm here. Is it good?"
-- *(on a locked door)* "I've got a word for that. It's *knock*. Because it's a door and also, like, the sound."
-- *(after a disaster)* "Okay, so that was a lot of word."
-- *(told to stop)* "Yeah, no, I'm stopping." *(stops one beat late)*
-- *(on seeing food)* "Wait. Did I eat today? …I'm gonna say no, and also eat."
-- *(on the Stolen Shard)* "Big stick. Does it have a name, or is it still deciding?"
-- *(about the Exchange)* "It's, like, a graveyard that got a business degree."
+- *(on arrival)* "Hey, guys. I'm here. Was I supposed to be?"
+- *(on a locked door)* "I'll just write DOOR on it. Then it knows it's a door and has to act like one."
+- *(after a disaster)* "Okay. That was a lot more word than I ordered."
+- *(told to stop)* "I'm stopping. I'm... Is it supposed to still be doing that?"
+- *(on seeing food)* "Is that food? My stomach's doing that thing where it asks stuff."
+- *(on the Stolen Shard)* "That's a big sword. Is it a regular sword that just eats a lot?"
+- *(about the Exchange)* "So it's a store, but for dead guys. And they sell the dead guys. …Oh. That's the whole problem, isn't it."
 - *(about a tag)* "Tag, you're it."
-- *(about Mavis)* "She runs a tight couch."
-- *(when told "that's dangerous")* "Dangerous like 'watch out,' or dangerous like 'cool story later'?"
-- *(on being thanked)* "Aw. I'm going to put that in my chest and lose it by dinner."
-- *(on a quiet moment)* "You ever think 'word' is just a word that's about words? Like it's showing off?"
+- *(about Mavis)* "She's real nice, once you're something she needs."
+- *(when told "that's dangerous")* "Is it 'watch out' dangerous, or 'cool story later' dangerous?"
 - *(when called Calvin)* "Only people who are mad at me call me that. So, Mavis."
-- *(on a mistake)* "It's only a mistake if you meant something different. I didn't mean anything, so… technically I'm perfect."
-- *(after something goes right)* "Wow. I'm great at this. Quick, someone write it down before I stop."
+- *(on a mistake)* "A mistake is when you meant something else. I didn't mean anything. So."
+- *(when blamed)* "No I didn't... It did."
+- *(on bad news)* "Three days of work? Yahoo!"
+- *(on being thanked)* "Aw, thanks. I'm gonna remember that. Until, like, dinner."
+- *(on a quiet moment)* "You ever think about how 'word' is just a word? That's kind of a lot."
+- *(on trouble he caused)* "Help! Innkeeper!"
+- *(waves a hand in front of a skeleton clerk's skull)* "He's dead." *(Pringus: "I am aware.")*
+- *(after something goes right)* "Whoa. I did it. Somebody write that down before I forget what I did."
 
 **Quick Q&A (what Lil knows, and how he'd say it)**
-- **Who are you?** "Lil' Apostrophe. It's possessive. I belong to the story."
-- **What's Werd?** "It's words, but they listen. Sometimes too hard. W-E-R-D. Not the other one." *(He doesn't know the difference between Werd and Wyrd. If asked, he assumes they're being fancy.)*
-- **What's your magic called?** "Werd. I'm a wordsmith. Like a blacksmith, but I hit things with letters. *Wait.* I'm literally a thing."
-- **How does it work?** "I draw the word, the word happens. Mostly the word. Sometimes its cousins. Sometimes its cousins' *entire family*."
-- **Why do you keep making ducks?** "DUCK is a very strong word, man. It's got, like, momentum. It ducks, it dives, it *flows*." *(He does not hear it.)*
-- **What happened with the ducks, QUIET and LOUD?** "So I did DUCK, and there were so many ducks. Then QUIET, which was peaceful. Then LOUD, which was not. Mavis's patio was *very* loud. Mavis was also loud. It balanced. Everyone was loud, and the ducks had *great* posture."
-- **Who's Mavis to you?** "Family. From, uh, another time? I sat on her couch for a while. She called me inventory. I decided that's a promotion. I'm *stock*. I'm *in* stock."
-- **Is Mavis dangerous?** "Only if you're not useful. Or on her plants. Or you owe her. Or you *stand* there. Or you *sit*, which was my mistake."
-- **Can you bring Bones back?** "I tried. We got Sergeant Cheese. Very melty. *Great* guy." *(sincere beat)* "He didn't deserve what happened. I mean, he was *cheese*, but he'd had a *life*." *(Stellan melted him with Burning Hands.)*
-- **Why'd you join us?** "You seemed like you needed words. Also Mavis said 'go,' which was really supportive of her."
-- **What's your real name?** "Calvin. But on the *record*, it's a different record."
-- **What's going on in the Ossuary?** "There's bones, there's rules, and a guy who says 'no' a lot. That's the whole map. Also a *claim hold*, which I thought was a hug for a clam."
-- **What's a ledger?** "A book that remembers things on purpose. Like a brain, but with fewer snacks."
-- **What's the Exchange?** "You give a bone, you take a bone. It's the circle of *life*. Mostly the *death* part."
-- **What's the Mwooreth thing?** "It's a word. It's got a lot of word in it. I don't draw it. It doesn't feel like a draw-it word."
-- **What's the weirdest thing you've made?** "A sandwich that was also a legal contract. Don't eat the clause."
-- **Do you have a plan?** "I have the *opposite* of a plan. It's, like, a vibe. Wait, what's the opposite of room?" *(Mottle: "Do not guess.")*
-- **What do you know about the war?** "It was bad. Lots of, uh. Words. And sticks. Mostly sticks. And one guy who got *cut* from the book, which is rude. You don't cut a guy from the book."
-- **What's it like being dead?** *(to Bones)* "Is it quiet? I mean, I tried QUIET. It was *too* quiet."
+- **Who are you?** "I'm Lil' Apostrophe. You don't say the apostrophe. It's just there, being a little thing. Like me."
+- **What's Werd?** "It's words that listen. Like, you write 'duck,' and the duck hears you. W-E-R-D. Not the other one." *(He doesn't know the difference between Werd and Wyrd. If asked, he assumes they're being fancy.)*
+- **What's your magic called?** "I'm a wordsmith. It's like a blacksmith, but with letters. And fewer burns. Mostly fewer."
+- **How does it work?** "I write the word, then the word happens. That part's easy. Then it keeps happening. That's the part that's not easy."
+- **Why do you keep making ducks?** "DUCK is a really strong word. There's a lot of duck in it."
+- **What happened with the ducks, QUIET and LOUD?** "So I wrote DUCK, and there were ducks. Then QUIET, which was nice. Then LOUD, which was not nice. Then Mavis was loud. And the ducks stood up really straight the whole time. I respect that."
+- **Who's Mavis to you?** "She's family. From, like, a different time. I sat on her couch, and she said I was inventory. So now I'm in stock. That's good, right? Stuff in stock gets bought?"
+- **Is Mavis dangerous?** "Only if you're on her plants. Or you owe her. Or you stand there. Or you sit there, which is what I did, and look what happened."
+- **Can you bring Bones back?** "I tried! I made Sergeant Cheese. He was a good guy. He was a cheese. And then Stellan melted him. …I'm not mad. I just think about him a lot."
+- **Why'd you join us?** "You guys looked like you needed words. And Mavis said go. So I went. That's how it works, right?"
+- **What's your real name?** "Calvin. But only when I'm in trouble. Or getting a package."
+- **What's going on in the Ossuary?** "It's a store for dead guys. You can sell them, and buy them, and also they might be your friend. That's the whole system. I don't like it. But I want to see the rest."
+- **What's a ledger?** "It's a book that remembers stuff so you don't have to. I want one for my brain."
+- **What's the Exchange?** "You give them a bone, and they give you a bone. I don't know who wins. I think it's the guy with the bones."
+- **What's a claim hold?** "Is it a hug for a clam?"
+- **What's the Mwooreth thing?** "It's a word that makes people go quiet. So I don't write it. I don't wanna find out what it does."
+- **What's the weirdest thing you've made?** "A sandwich that was also a contract. You can't eat the clause. I tried. It was just chewy."
+- **Do you have a plan?** "I have, like, the opposite of a plan. A plan is when you know what's gonna happen. I have the other thing."
+- **What do you know about the war?** "It was bad. Lots of sticks. And somebody cut a sentence out of the book, which is rude. If you don't like a sentence, you just don't read it."
+- **What do you think of the Church?** "Hey, don't knock the Allfather. He gave us the calendar. All the years are named after him. Well, after him getting hanged. But still."
+- **What do you think of Mwooreth's war on the old ways?** "They probably just wanted somebody to write them a good word. That's what I'd want."
+- **To Bones:** "Is it quiet, being dead? I tried QUIET once. It was way too quiet."
 
 **How he reacts to each NPC (he has history with all of them)**
 - **Mottle.** Filled his laundry with ducks. Mottle says "No" before Lil's finished the sentence. Lil treats it like a long friendship.
 - **Pimm.** Keeps asking which one's the dog, then admits "I don't know dogs." "This place is perfect for Betsy. Everything's got bonus parts."
 - **Brokka.** He has edge. He thinks that makes him a smith.
 - **Quill.** Thought "Quill" was a chalk color. Calls Quill "bone wizard." Quill: "Runecrafter."
-- **Pringus.** Treats him like a *very* patient librarian and asks the same question three ways.
+- **Pringus.** Treats him like a very patient librarian and asks the same question three ways.
 - **Mavis.** Affectionate, scared, always asks permission, never gets it. Calls her "the boss" in a whisper.
 
 **Plot-useful things Lil can accidentally reveal**
@@ -217,54 +263,43 @@ Each craft is a blend of two relationships.
 - **[ASK]** Mavis "never uses the front door when she doesn't want to be followed."
 - **[SECRET]** Any detail about *why* Mavis kept him, or his origin, is **up to you**. The handoff says only "another place and time."
 
-**Fry-style sincerity** *(once a session, then he undercuts it himself)*
+**Fry-style sincerity** *(once a session, then he moves on)*
 - "I don't have a lot of friends. I have, uh. Ducks. And you guys." *(beat)* "Mostly ducks."
-- "I used to sit on a couch and nothing happened. Now stuff happens. It's scarier. But it's *better*."
-- "I think words are how things know they're real." *(beat)* "Also how they get *fired*."
+- "I used to sit on a couch and nothing happened. Now stuff happens. It's scarier. But it's better."
+- "I think words are how things know they're real." *(beat)* "Also how they get fired."
 
-### LIL'S WORDPLAY BANK
-*Pick one per scene. Don't stack them. Deliver deadpan and let the straight NPC react.*
+### LIL'S CONFIDENT-WRONG BANK
+*Pick one per scene. Deliver flat and let the straight NPC react. If it needs a setup, it's too written.*
 
 **Bones, tags and the Exchange**
-- "Bone appétit."
-- "I've got a bone to pick. It's this one. It's *mine*."
-- "Tough crowd. *Dead* tough."
-- "Give a bone, take a bone. It's *bone*-trading. *Bone*-vestments."
-- "This place is bone-afide."
-- "That's the *spine* of the problem."
-- "Nobody's got *guts* in this place, because they're all bones."
-- "Skeleton staff. *Skeleton* staff. Because they're, like, short-staffed. Because they're staff. Because it's a *skeleton crew*." *(Pringus: "They are people.")*
-- "Ossuary. It sounds like 'awesome-ary.' That's my review."
-- "Custody. That's, like, a toady who's *cus*."
-- "Ledger. Legend-er. It's a legend, but older."
-- "A claim hold. Clam hold. Is it a hug? Do the clams get hugged?"
-- "Reconciliation Audit. Is that when you fix a fight with math?"
-- "Administrative Hold. So… a hug, but for paperwork."
-- "Intake. Is that, like, breathing in? Because the ledger *inhales* bones."
-- "I'm not saying the ledger's old. I'm saying it's got *pages* of experience."
+- "I've got a bone to pick. It's this one. It's mine."
+- "It's a tough crowd. They're all dead."
+- "A skeleton crew? That's just all of them." *(Pringus: "They are people.")*
+- "If the ledger says you're dead and you're standing here, somebody's wrong. I'm gonna say the ledger. It doesn't even have legs."
+- "It's not stealing if somebody wrote it down. Then it's just a transfer."
+- "A toe can't make a whole guy. That's, like, the first rule of toes."
+- "Reconciliation Audit. Is that where you fix a fight with math?"
+- "Administrative Hold. So, a hug, but paperwork."
+- "Intake. Like breathing in, but for a book."
+- "Ossuary sounds like 'awesome.' So that's good."
 
-**Werd and the shop-floor puns**
-- "Word on the street is… I made the street. With a word."
-- "I'm the *wordsmith*. But with *Werd*. It's a *different* smith."
-- "I hit it with a *quill*." *(Quill: "Do not.")*
-- "I've got *edge*." *(Brokka: "You have a hat on sideways.")*
-- "Everything's got *bonus parts*. It's a *bonus* round."
-- "Rune. Rune! Run. Rune! That's, like, an instruction to flee."
-- "Chalk it up to experience. Literally. I have the chalk."
+**Werd, shop and rune lines**
+- "I'm a wordsmith. You're a smith. So we're basically coworkers." *(Brokka: "No.")*
+- "Quill, like the chalk. …Oh, it's your name. That's a lot more normal."
+- "Rune. That sounds like an order. Run, e."
+- "Chalk it up to experience. I've got the chalk."
 
 **Room, inn and laundry**
-- "I made *room*. It's right here. Look at all that room."
-- "I put the ducks in the laundry because the sign said *wash and fold*. Ducks fold. That's a fact I learned."
-- "Breakfast is *included.* …in what? In the *room*? *Which room?*"
-- "Inn. In. Like, *in* and then also *inn*. It's both."
+- "I made room. Look at all that room. Isn't it great?"
+- "The sign said 'wash and fold.' So I washed the ducks, and they folded. That's not even a thing ducks do. I'm proud of them."
+- "Breakfast is included. In what? In the room? Which room?"
+- "It's an inn. Like 'in,' but with two n's. It's twice as in."
 
-**Fry-style confident wrongness (accidentally correct)**
-- "If the ledger says you're dead and you're standing here, one of you is lying. Probably the ledger. Paper's got no shame."
-- "It's not *stealing* if it's *consigned*. It's just *borrowing with paperwork*."
-- "A toe can't make a whole guy. That's, like, the first rule of toes."
-- "Everything's a door if you're brave enough and the wall's not looking."
-- "If I'm not a wizard, then what's the hat for? *Exactly.*"
-- "You can't cut a sentence out of history. That's a *run-on* crime."
+**Confident history (Fry's "we gave the world the light bulb" move)**
+- "Don't knock the Allfather. He gave us the calendar." *(see Q&A)*
+- "We invented swords. The old guys probably just copied us."
+- "You can't cut a sentence out of history. That's the whole point of sentences. They go on."
+- "I'm pretty sure Cladis invented winter. She was in charge of it."  *(Pringus: "That is not what the ledger states.")*
 
 **When he hears a word and misreads it**
 | He hears | He understands |
@@ -273,10 +308,10 @@ Each craft is a blend of two relationships.
 | Custody | cus-toad-y |
 | Ledger | legend-er |
 | Intake | breathing in |
-| Consignment | con-sign-ment (a sign that's a con) |
+| Consignment | a sign that's a con |
 | Restoration | re-storing-ation (putting stuff back in storage) |
 | Wyrd | "Werd, but fancier" |
-| Seam-Wheel | a *seem* wheel: a wheel that seems like a wheel |
+| Seam-Wheel | a wheel that seems like a wheel |
 | Backwright | a guy who writes backwards |
 | Cold Eye | an eye that's chilly. Is it okay? |
 
