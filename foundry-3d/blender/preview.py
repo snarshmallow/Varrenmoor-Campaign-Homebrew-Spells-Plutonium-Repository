@@ -35,6 +35,9 @@ SHOTS = [  # name, camera location, target, lens, ortho scale
     ("bar", (5, -8, 2.2), (11, 3, 1.3), 20, None),
     ("outside", (34, -38, 20), (0, 0, 5), 30, None),
     ("under", (-9, 7, 1.7), (6, -4, 4.2), 18, None),
+    ("hearth", (-3, 5.6, 1.5), (-3, 9.4, 0.9), 30, None),
+    ("backbar", (9.0, -1.0, 2.0), (13.8, 0.5, 2.1), 24, None),
+    ("brazier", (0.0, -2.2, 1.6), (0.0, 0.0, 1.2), 28, None),
 ]
 for name, loc, target, lens, ortho in SHOTS:
     if ortho:

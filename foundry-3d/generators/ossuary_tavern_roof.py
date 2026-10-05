@@ -40,6 +40,12 @@ def build(k):
         return k.box((x1 - x0, y1 - y0, z1 - z0), loc=((x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2),
                      rot=rot, material=mat, name=name, bevel=bevel)
 
+    # Four 2 cm pegs at floor level under the eave corners: they put the model's bounding box on the ground, so a
+    # Foundry tile for this file grounds and scales exactly like any other model (the lowest real part hangs at 1.75 m).
+    for sx in (-1, 1):
+        for sy in (-1, 1):
+            B(sx * 15.4 - 0.01, sx * 15.4 + 0.01, sy * 11.4 - 0.01, sy * 11.4 + 0.01, 0, 0.02, iron, "ground_peg")
+
     # ----------------------------------------------------------- roof slabs
     slab_len = HALF / COS + 0.1
     roof_len_x = 2 * (EXT_X + OVER)
@@ -124,7 +130,7 @@ def build(k):
             bx, by = rx0, ry1 - (t - 2 * (rx1 - rx0) - (ry1 - ry0))
         B(bx - 0.01, bx + 0.01, by - 0.01, by + 0.01, rz - 0.5, rz - 0.06, iron, "basket_hanger")
         B(bx - 0.24, bx + 0.24, by - 0.17, by + 0.17, rz - 0.78, rz - 0.5, ibone, "bone_basket", bevel=0.01)
-        B(bx - 0.26, bx + 0.26, by - 0.19, by + 0.19, rz - 0.55, rz - 0.5, iron, "basket_rim")
+        B(bx - 0.26, bx + 0.26, by - 0.19, by + 0.19, rz - 0.56, rz - 0.45, iron, "basket_rim")   # rim stands proud of the basket top (no shared plane)
     # brass drop-tube from the loop to the bar-top stub (stub is at 9.8, -4.0 in the main model)
     B(9.8 - 0.35, 10.125 + 0.1, -4.0 - 0.09, -4.0 + 0.09, rz - 0.09, rz + 0.09, brass, "tube_branch", bevel=0.01)
     k.cylinder(0.1, rz - 1.75, loc=(9.8, -4.0, 1.75 + (rz - 1.75) / 2), material=brass, name="drop_tube", verts=12)

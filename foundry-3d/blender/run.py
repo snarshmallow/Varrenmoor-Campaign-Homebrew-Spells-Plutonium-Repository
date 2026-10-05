@@ -44,6 +44,7 @@ class Kit:
             sock = bsdf.inputs.get("Emission Color") or bsdf.inputs.get("Emission")
             sock.default_value = (*emission, 1.0)
             bsdf.inputs["Emission Strength"].default_value = 2.0
+        m.use_backface_culling = True   # exported single-sided: hidden faces (e.g. a bottom resting on a floor) never z-fight
         self._mats[name] = m
         return m
 
@@ -81,6 +82,7 @@ class Kit:
             nt.links.new(n.outputs["Color"], nm.inputs["Color"])
             nt.links.new(nm.outputs["Normal"], bsdf.inputs["Normal"])
         m["tile_m"] = tile
+        m.use_backface_culling = True
         self._mats[key] = m
         return m
 

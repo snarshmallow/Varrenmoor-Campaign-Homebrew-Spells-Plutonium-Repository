@@ -12,6 +12,7 @@ Layout (x east, y north; the south wall is the street/plaza side):
 """
 import math
 
+import bmesh
 import bpy
 
 FOLDER = "Act 2 Road to Bridgehollow/Ossuary Exchange"
@@ -45,13 +46,57 @@ def build(k):
     glass_a = k.mat("bottle_amber", (0.40, 0.18, 0.04), roughness=0.2)
     glass_b = k.mat("bottle_blue", (0.06, 0.12, 0.28), roughness=0.2)
     ember = k.mat("ember", (1.0, 0.30, 0.06), roughness=0.7, emission=(1.0, 0.35, 0.08))
-    flame = k.mat("flame", (1.0, 0.10, 0.0), roughness=0.5, emission=(1.0, 0.10, 0.0))
+    flame = k.mat("flame", (1.0, 0.12, 0.0), roughness=0.5, emission=(1.0, 0.12, 0.0))
+    flame_core = k.mat("flame_core", (1.0, 0.65, 0.12), roughness=0.5, emission=(1.0, 0.65, 0.12))
+    clay = k.mat("clay_jug", (0.30, 0.17, 0.09), roughness=0.8)
     candle = k.mat("candle", (0.95, 0.85, 0.6), roughness=0.5, emission=(1.0, 0.65, 0.25))
     plaque = k.mat("plaque", (0.7, 0.55, 0.2), roughness=0.4, emission=(0.9, 0.6, 0.15))
 
     def B(x0, x1, y0, y1, z0, z1, mat, name="box", bevel=0.0, rot=(0, 0, 0)):
         return k.box((x1 - x0, y1 - y0, z1 - z0), loc=((x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2),
                      rot=rot, material=mat, name=name, bevel=bevel)
+
+    def lathe(bm, profile, cx, cy, cz, seg=8, sway=(0.0, 0.0)):
+        """Spin a (radius, height) profile around Z into bm: closed flat base, pointed tip when the last radius is 0.
+        `sway` shifts the ring centres progressively (quadratic in height) so flames can lean and curl."""
+        top = profile[-1][1] or 1.0
+        rings = []
+        for r, h in profile:
+            t = h / top
+            ox, oy = sway[0] * t * math.sin(math.pi * 1.5 * t), sway[1] * t * math.sin(math.pi * 1.5 * t)   # S-curve lean
+            if r <= 1e-6:
+                rings.append(bm.verts.new((cx + ox, cy + oy, cz + h)))
+            else:
+                rings.append([bm.verts.new((cx + ox + r * math.cos(2 * math.pi * i / seg),
+                                            cy + oy + r * math.sin(2 * math.pi * i / seg), cz + h)) for i in range(seg)])
+        bm.faces.new(rings[0][::-1])
+        for j in range(len(rings) - 1):
+            a, b = rings[j], rings[j + 1]
+            for i in range(seg):
+                i2 = (i + 1) % seg
+                if isinstance(b, list):
+                    bm.faces.new((a[i], a[i2], b[i2], b[i]))
+                else:
+                    bm.faces.new((a[i], a[i2], b))
+        if isinstance(rings[-1], list):
+            bm.faces.new(rings[-1])
+
+    def bm_to_obj(bm, name, mat):
+        me = bpy.data.meshes.new(name)
+        bm.to_mesh(me)
+        bm.free()
+        ob = bpy.data.objects.new(name, me)
+        bpy.context.scene.collection.objects.link(ob)
+        ob.data.materials.append(mat)
+        return ob
+
+    def flame_tongue(x, y, z, height, radius, sway, mat, name):
+        """A teardrop flame leaning by `sway` metres at the tip (~40 triangles)."""
+        bm = bmesh.new()
+        fr = (0.55, 0.9, 1.0, 0.95, 0.8, 0.6, 0.38, 0.18, 0.0)
+        ht = (0.0, 0.1, 0.25, 0.4, 0.55, 0.7, 0.82, 0.93, 1.0)
+        lathe(bm, [(radius * a, height * b) for a, b in zip(fr, ht)], x, y, z, seg=6, sway=(sway, sway * 0.5))
+        return bm_to_obj(bm, name, mat)
 
     def torus(major, minor, loc, rot=(0, 0, 0), mat=None, name="ring"):
         bpy.ops.mesh.primitive_torus_add(major_radius=major, minor_radius=minor, major_segments=24, minor_segments=8,
@@ -86,11 +131,12 @@ def build(k):
                 B(u0, u1, pos - d / 2, pos + d / 2, za, zb, mat, "frame", bevel=0.01)
             else:
                 B(pos - d / 2, pos + d / 2, u0, u1, za, zb, mat, "frame", bevel=0.01)
-        blk(c - w / 2 - j, c - w / 2, sill, head + j)
-        blk(c + w / 2, c + w / 2 + j, sill, head + j)
-        blk(c - w / 2 - j, c + w / 2 + j, head, head + j + 0.1)
+        e = 0.02   # inset into the opening so frame faces never share a plane with the wall's opening faces
+        blk(c - w / 2 - j, c - w / 2 + e, sill, head + j)
+        blk(c + w / 2 - e, c + w / 2 + j, sill, head + j)
+        blk(c - w / 2 - j, c + w / 2 + j, head - e, head + j + 0.1)
         if sill > 0.5:
-            blk(c - w / 2 - j, c + w / 2 + j, sill - 0.1, sill)
+            blk(c - w / 2 - j, c + w / 2 + j, sill - 0.1, sill + e)
 
     def window(axis, pos, c, w=1.4, sill=1.3, head=3.6):
         frame(axis, pos, c, w, sill, head, iron)
@@ -130,20 +176,20 @@ def build(k):
     frame("y", xe, -8.5, 1.4, 0, 2.7)
 
     # wall plates and buttress pilasters (break up the long walls)
-    B(-IX, IX, -IY, -IY + 0.25, WALL_H - 0.3, WALL_H, coak, "plate")
-    B(-IX, IX, IY - 0.25, IY, WALL_H - 0.3, WALL_H, coak, "plate")
-    B(-IX, -IX + 0.25, -IY, IY, WALL_H - 0.3, WALL_H, coak, "plate")
-    B(IX - 0.25, IX, -IY, IY, WALL_H - 0.3, WALL_H, coak, "plate")
+    B(-IX, IX, -IY, -IY + 0.25, WALL_H - 0.3, WALL_H - 0.02, coak, "plate")
+    B(-IX, IX, IY - 0.25, IY, WALL_H - 0.3, WALL_H - 0.02, coak, "plate")
+    B(-IX, -IX + 0.25, -IY, IY, WALL_H - 0.3, WALL_H - 0.02, coak, "plate")
+    B(IX - 0.25, IX, -IY, IY, WALL_H - 0.3, WALL_H - 0.02, coak, "plate")
     for x in (-10, -3.75, 3.75, 10):
         B(x - 0.25, x + 0.25, -IY, -IY + 0.35, 0, WALL_H - 0.3, mortar, "pilaster")
     for x in (-12.5, -6.5, 8, 13):
         B(x - 0.25, x + 0.25, IY - 0.35, IY, 0, WALL_H - 0.3, mortar, "pilaster")
 
     # ------------------------------------------------------------- floor
-    B(-EXT, EXT, -IY - T, IY + T, 0, F, floor, "floor")
+    B(-IX, IX, -IY, IY, 0, F, floor, "floor")
     k.cylinder(3.62, 0.012, loc=(0, 0, F + 0.006), material=bone, name="inlay_edge", verts=48)
     k.cylinder(3.5, 0.012, loc=(0, 0, F + 0.012), material=inlay, name="inlay_disc", verts=48)
-    B(-1.1, 1.1, -IY, -3.2, F, F + 0.012, inlay, "inlay_runner")      # entrance runner, door to ring
+    B(-1.1, 1.1, -IY, -3.3, F, F + 0.016, inlay, "inlay_runner")      # entrance runner, door to ring
 
     # ------------------------------------------------------------ pillars + arcade beams
     px = (-6.5, 6.5)
@@ -155,7 +201,7 @@ def build(k):
             k.cylinder(0.43, 0.12, loc=(x, y, F + 1.6), material=brass, name="pillar_band", verts=14)
             B(x - 0.5, x + 0.5, y - 0.5, y + 0.5, F + 5.05, WALL_H - 0.05, granite, "pillar_cap", bevel=0.03)
     for x in px:
-        B(x - 0.2, x + 0.2, -IY, IY, WALL_H - 0.55, WALL_H - 0.05, coak, "arcade_beam", bevel=0.02)
+        B(x - 0.2, x + 0.2, -IY, IY, WALL_H - 0.55, WALL_H - 0.07, coak, "arcade_beam", bevel=0.02)
 
     # ------------------------------------------------------------- hearth (north wall, x=-3)
     hx = -3.0
@@ -166,13 +212,16 @@ def build(k):
     B(hx - 1.2, hx + 1.2, 8.3, IY, F, F + 0.3, granite, "firebox_floor")
     B(hx - 1.2, hx + 1.2, IY - 0.06, IY - 0.01, F + 0.3, F + 1.9, soot, "soot")
     B(hx - 3.0, hx + 3.0, 8.15, 8.55, F + 2.05, F + 2.25, doak, "mantel", bevel=0.02)
-    for i in range(5):
-        k.sphere(0.1, loc=(hx - 2.2 + i * 1.1, 8.35, F + 2.38), scale=(1, 1.1, 1), material=bone, name="mantel_skull")
+    for i in range(5):     # mantel top is at F + 2.25
+        k.sphere(0.1, loc=(hx - 2.2 + i * 1.1, 8.35, F + 2.25 + 0.095), scale=(1, 1.1, 1), material=bone, name="mantel_skull", segments=10)
     for dy in (-0.45, 0.0, 0.45):
         k.cylinder(0.12, 1.5, loc=(hx + dy * 0.4, 9.3 + dy * 0.7, F + 0.45), rot=(0, 90, 8 * dy * 10), material=coak, name="log", verts=10)
     B(hx - 0.9, hx + 0.9, 8.9, 9.7, F + 0.3, F + 0.36, ember, "embers")
-    for fx, fh in ((-0.5, 0.9), (0.2, 1.1), (0.7, 0.7)):
-        k.cone(0.26, 0.0, fh, loc=(hx + fx, 9.3, F + 0.4 + fh / 2), material=flame, name="flame", verts=8)
+    # hearth fire: swaying flame tongues (red-orange) with smaller yellow cores
+    for fx, fy, fh, sw in ((-0.8, 0.0, 0.7, -0.12), (-0.45, 0.1, 0.95, 0.15), (-0.1, -0.05, 1.2, -0.10), (0.25, 0.1, 1.0, 0.16),
+                           (0.6, 0.0, 0.8, -0.13), (0.85, 0.1, 0.55, 0.10), (0.05, 0.2, 0.7, 0.12)):
+        flame_tongue(hx + fx, 9.3 + fy, F + 0.34, fh, 0.2, sw, flame, "flame")
+        flame_tongue(hx + fx, 9.3 + fy, F + 0.34, fh * 0.6, 0.12, sw * 0.6, flame_core, "flame_core")
     for fx in (-0.8, 0.8):
         B(hx + fx - 0.04, hx + fx + 0.04, 8.8, 9.8, F + 0.3, F + 0.75, iron, "andiron")
     k.sphere(0.4, loc=(hx + 1.0, 8.95, F + 0.62), scale=(1, 1, 0.8), material=iron, name="cauldron")
@@ -213,18 +262,26 @@ def build(k):
     B(13.25, IX, -6.1, 8.3, 1.0, 1.06, granite, "backbar_top")
     for sy in range(-6, 9, 3):
         B(13.55, 13.65, sy - 0.05, sy + 0.05, 1.06, 3.1, doak, "shelf_post")
+    glass = {0: bmesh.new(), 1: bmesh.new(), 2: bmesh.new(), 3: bmesh.new()}   # one mesh per glass colour
+    # (radius, height-fraction) profiles, spun around Z: wine bottle, squat jug, tall flask
+    profiles = (
+        (0.30, ((0.050, 0), (0.050, 0.58), (0.040, 0.66), (0.020, 0.78), (0.020, 0.94), (0.026, 0.97), (0.026, 1.0))),
+        (0.22, ((0.062, 0), (0.076, 0.25), (0.076, 0.5), (0.052, 0.72), (0.028, 0.85), (0.032, 1.0))),
+        (0.34, ((0.036, 0), (0.036, 0.7), (0.020, 0.82), (0.020, 0.97), (0.026, 1.0))),
+    )
     for zi, zs in enumerate((1.6, 2.25, 2.9)):
         B(13.5, IX, -6.0, 8.2, zs, zs + 0.05, oak, "shelf", bevel=0.005)
         y = -5.8 + (zi % 2) * 0.2
         i = 0
         while y < 8.0:
-            bm = (glass_g, glass_a, glass_b)[(i + zi) % 3]
-            h = 0.22 + 0.1 * ((i * 7 + zi) % 3) / 2
-            k.cylinder(0.055, h, loc=(13.72, y, zs + 0.05 + h / 2), material=bm, name="bottle", verts=8)
+            H, prof = profiles[(i + zi) % 3]
+            lathe(glass[(i * 2 + zi) % 4], [(r, f * H * (1 + 0.1 * ((i * 7 + zi) % 3) / 2)) for r, f in prof], 13.72, y, zs + 0.05, seg=7)
             y += 0.5
             i += 1
-    for i in range(10):
-        k.sphere(0.1, loc=(13.7, -5.4 + i * 1.5, 3.2), scale=(1, 1.1, 1), material=bone, name="shelf_skull", segments=10)
+    for idx, mat in enumerate((glass_g, glass_a, glass_b, clay)):
+        bm_to_obj(glass[idx], "bottles", mat)
+    for i in range(10):    # skulls sit ON the top shelf (board top is at 2.95)
+        k.sphere(0.09, loc=(13.7, -5.4 + i * 1.5, 2.95 + 0.085), scale=(1, 1.1, 1), material=bone, name="shelf_skull", segments=8)
     for kx, kz in ((12.0, 0.55), (13.0, 0.55), (12.5, 1.4)):    # kegs, NE corner (staff side)
         k.cylinder(0.42, 0.85, loc=(kx, 9.2, F + kz - 0.1), rot=(90, 0, 0), material=oak, name="keg", verts=14)
         k.cylinder(0.43, 0.06, loc=(kx, 9.2 - 0.2, F + kz - 0.1), rot=(90, 0, 0), material=iron, name="keg_hoop", verts=14)
@@ -278,7 +335,7 @@ def build(k):
             B(cx - 0.74, cx + 0.74, ys - 0.1, ys - 0.07, zb, zb + 0.12, iron, "door_band")
         torus(0.1, 0.014, (sx * 0.2, ys + 0.1, 1.6), rot=(90, 0, 0), mat=brass, name="door_ring")
     for i in range(9):
-        B(-1.5 + i * 0.375 - 0.04, -1.5 + i * 0.375 + 0.04, ys - 0.11, ys - 0.05, 3.7, 3.78, bone, "lintel_stud")
+        B(-1.5 + i * 0.375 - 0.04, -1.5 + i * 0.375 + 0.04, ys - 0.45, ys - 0.40, 3.78, 3.88, bone, "lintel_stud")
     B(xw - 0.07, xw + 0.07, 1.5 - 0.76, 1.5 + 0.76, 0, 2.6, coak, "hall_door", bevel=0.01)
     B(xe - 0.07, xe + 0.07, -8.5 - 0.66, -8.5 + 0.66, 0, 2.6, coak, "service_door", bevel=0.01)
     B(11 - 0.66, 11 + 0.66, yn - 0.07, yn + 0.07, 0, 2.6, coak, "kitchen_door", bevel=0.01)
@@ -343,7 +400,9 @@ def build(k):
         k.cylinder(0.04, 0.9, loc=(0.35 * math.cos(ar), 0.35 * math.sin(ar), F + 0.4), rot=(15 * math.sin(ar), -15 * math.cos(ar), 0), material=iron, name="brazier_leg", verts=6)
     k.cylinder(0.5, 0.2, loc=(0, 0, F + 0.95), material=iron, name="brazier_bowl", verts=16)
     k.cylinder(0.42, 0.04, loc=(0, 0, F + 1.06), material=ember, name="brazier_coals", verts=16)
-    k.cone(0.2, 0.0, 0.6, loc=(0, 0, F + 1.35), material=flame, name="brazier_flame", verts=8)
+    for fx, fy, fh, sw in ((-0.15, 0.0, 0.5, 0.08), (0.12, 0.08, 0.7, -0.10), (0.05, -0.12, 0.45, 0.07)):
+        flame_tongue(fx, fy, F + 1.06, fh, 0.13, sw, flame, "brazier_flame")
+        flame_tongue(fx, fy, F + 1.06, fh * 0.6, 0.075, sw * 0.6, flame_core, "brazier_flame_core")
 
     # ------------------------------------------------------------- wall dressing
     for x in (-2.4, 2.4):
@@ -355,7 +414,7 @@ def build(k):
     for y in (-8, -2.5, 3.5, 8.5):
         B(IX - 0.1, IX, y - 0.04, y + 0.04, 3.3, 3.7, brass, "sconce_arm")
         k.sphere(0.1, loc=(IX - 0.18, y, 3.75), material=candle, name="sconce_lamp", segments=8)
-    for x, mat in ((-9.5, cloth_red), (-4.5, cloth_ochre), (4.0, cloth_red), (9.5, cloth_ochre)):    # banners, south wall
+    for x, mat in ((-9.75, cloth_red), (9.75, cloth_ochre)):    # banners, south wall (between windows)
         B(x - 0.5, x + 0.5, -IY, -IY + 0.04, 2.4, 4.9, mat, "banner")
         B(x - 0.55, x + 0.55, -IY, -IY + 0.08, 4.9, 5.0, bone, "banner_rod")
     for x, mat in ((-6.5, cloth_ochre), (1.8, cloth_red), (8.0, cloth_ochre)):   # banners, north wall (clear of the hearth)
