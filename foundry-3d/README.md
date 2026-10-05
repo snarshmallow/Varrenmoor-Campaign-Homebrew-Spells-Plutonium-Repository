@@ -26,3 +26,8 @@ Set `FOLDER = "Act 2 Road to Bridgehollow/Ossuary Exchange"` in a generator to f
 
 ## Writing a generator
 Make `generators/<name>.py` with a `build(k)` function. `k` provides `mat()`, `box()`, `cylinder()`, `cone()`, `sphere()`, `cloth()`, `jitter()` and a seeded `rng`. See `ossuary_stall.py`.
+
+## 3D maps (scenes)
+- `generators/ossuary_tavern.py` is a large interior (about 19 x 14 squares): Mottle's tavern, "The Last Respite Before Further Administrative Action". `ossuary_tavern_roof.py` is its roof, trusses, chandeliers and hanging conveyor, kept separate so it can be hidden. Place both tiles at the same position; the roof keeps its own height (`KEEP_Z = True` in a generator skips the drop-to-Z=0 step). Keep `IX, IY, T, WALL_H` and the hearth x in sync between the two files.
+- Scenes use the Ossuary Exchange plaza's own PBR textures from `textures/` (pulled out of the plaza GLB with `textures/extract.py`). `Kit.tex(name, slug, tile=metres)` makes a textured material and `run.py` assigns world-aligned UVs, so large walls and floors tile at a constant scale.
+- `blender/preview.py` renders review shots (top-down, interior views, outside) of one or more GLBs: `blender -b --factory-startup --python blender/preview.py -- a.glb [b.glb] <out_prefix>`.

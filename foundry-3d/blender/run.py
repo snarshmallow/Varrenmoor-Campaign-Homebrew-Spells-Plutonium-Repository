@@ -15,6 +15,7 @@ import bpy
 import bmesh
 
 GRID = 1.524  # metres per 5 ft square
+TEXTURES = Path(__file__).resolve().parent.parent / "textures"
 
 
 # ---------------------------------------------------------------- helpers ---
@@ -44,6 +45,43 @@ class Kit:
             sock.default_value = (*emission, 1.0)
             bsdf.inputs["Emission Strength"].default_value = 2.0
         self._mats[name] = m
+        return m
+
+    def tex(self, name, slug, tile=2.0, rough=0.8, metal=0.0, tint=None):
+        """Textured material from textures/<slug>.jpg (+ _n.jpg normal map). `tile` = metres per texture repeat.
+        UVs are assigned world-aligned at the end (assign_world_uvs), so any box/wall tiles at a constant scale."""
+        key = f"tex:{name}"
+        if key in self._mats:
+            return self._mats[key]
+        m = bpy.data.materials.new(name)
+        if m.node_tree is None:
+            m.use_nodes = True
+        nt = m.node_tree
+        bsdf = nt.nodes.get("Principled BSDF")
+        bsdf.inputs["Roughness"].default_value = rough
+        bsdf.inputs["Metallic"].default_value = metal
+        base = TEXTURES / f"{slug}.jpg"
+        t = nt.nodes.new("ShaderNodeTexImage")
+        t.image = bpy.data.images.load(str(base))
+        if tint:  # multiply the texture by a colour (to darken or warm a shared texture)
+            mix = nt.nodes.new("ShaderNodeMix")
+            mix.data_type = "RGBA"; mix.blend_type = "MULTIPLY"
+            mix.inputs[0].default_value = 1.0
+            mix.inputs[7].default_value = (*tint, 1.0)
+            nt.links.new(t.outputs["Color"], mix.inputs[6])
+            nt.links.new(mix.outputs[2], bsdf.inputs["Base Color"])
+        else:
+            nt.links.new(t.outputs["Color"], bsdf.inputs["Base Color"])
+        nrm = TEXTURES / f"{slug}_n.jpg"
+        if nrm.exists():
+            n = nt.nodes.new("ShaderNodeTexImage")
+            n.image = bpy.data.images.load(str(nrm))
+            n.image.colorspace_settings.name = "Non-Color"
+            nm = nt.nodes.new("ShaderNodeNormalMap")
+            nt.links.new(n.outputs["Color"], nm.inputs["Color"])
+            nt.links.new(nm.outputs["Normal"], bsdf.inputs["Normal"])
+        m["tile_m"] = tile
+        self._mats[key] = m
         return m
 
     def _finish(self, obj, name, material, bevel):
@@ -113,8 +151,32 @@ def clear_scene():
             block.remove(item)
 
 
-def ground_and_centre():
-    """Move everything so the footprint is centred on the origin and the lowest point is Z=0."""
+def assign_world_uvs():
+    """Box-project UVs from world space for every object whose first material came from Kit.tex()."""
+    for o in [o for o in bpy.context.scene.objects if o.type == "MESH"]:
+        m = o.data.materials[0] if o.data.materials else None
+        tile = m.get("tile_m") if m else None
+        if not tile:
+            continue
+        mw, rot = o.matrix_world, o.matrix_world.to_3x3()
+        uv = o.data.uv_layers.active or o.data.uv_layers.new(name="UVMap")
+        verts = o.data.vertices
+        for poly in o.data.polygons:
+            n = rot @ poly.normal
+            ax, ay, az = abs(n.x), abs(n.y), abs(n.z)
+            for li in poly.loop_indices:
+                v = mw @ verts[o.data.loops[li].vertex_index].co
+                if az >= ax and az >= ay:
+                    a, b = v.x, v.y
+                elif ax >= ay:
+                    a, b = v.y, v.z
+                else:
+                    a, b = v.x, v.z
+                uv.data[li].uv = (a / tile, b / tile)
+
+
+def ground_and_centre(keep_z=False):
+    """Move everything so the footprint is centred on the origin and the lowest point is Z=0 (unless keep_z)."""
     objs = [o for o in bpy.context.scene.objects if o.type == "MESH"]
     deps = bpy.context.evaluated_depsgraph_get()
     xs, ys, zs = [], [], []
@@ -124,7 +186,7 @@ def ground_and_centre():
             w = o.matrix_world @ v.co
             xs.append(w.x); ys.append(w.y); zs.append(w.z)
         ev.to_mesh_clear()
-    dx, dy, dz = -(min(xs) + max(xs)) / 2, -(min(ys) + max(ys)) / 2, -min(zs)
+    dx, dy, dz = -(min(xs) + max(xs)) / 2, -(min(ys) + max(ys)) / 2, (0 if keep_z else -min(zs))
     for o in objs:
         if o.parent is None:
             o.location.x += dx; o.location.y += dy; o.location.z += dz
@@ -174,7 +236,8 @@ def main():
 
     clear_scene()
     gen.build(Kit(seed))
-    size = ground_and_centre()
+    size = ground_and_centre(getattr(gen, "KEEP_Z", False))  # KEEP_Z: overlay parts (e.g. a roof) keep their own height
+    assign_world_uvs()
     if blend_path:
         # Editable source next to the export, saved before merging: separate parts, live modifiers.
         blend_path.parent.mkdir(parents=True, exist_ok=True)
