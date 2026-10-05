@@ -21,7 +21,7 @@ ORIG = "D:/Varrenmoor-Campaign-Homebrew-Spells-Plutonium-Repository/foundry-3d/o
 R0 = 22.9
 # ring house angle (degrees) -> shop kind. House k stands at 9 + 18*k degrees.
 SHOPS = {-45: "forge", -81: "clinic", -117: "inn", -171: "rune"}              # the four real shops (full signs)
-UTILITY = {-9: "tube", -153: "dock"}                                          # utility plates on the post and warehouse houses
+UTILITY = {-153: "dock"}                                          # utility plates on the post and warehouse houses
 PLATES = ["cart", "tallow", "trolley", "notice", "intake", "wash", "ledger"]
 
 
@@ -281,10 +281,12 @@ def build(k):
             plate(P, LB, "notice")                           # swapped with No. 6 at the user's request
         elif i == 6:
             plate(P, LB, "res6")
-        elif i % 2 == 1:
-            plate(P, LB, f"res{i + 1}")                    # private residence: house number runs counter-clockwise round the circle, 20 wraps to 1
+        elif i in (2, 16):
+            plate(P, LB, "tallow")                           # harmless utility plates; anything that could read as a quest lead became a residence
+        elif i in (4, 18):
+            plate(P, LB, "trolley")
         else:
-            plate(P, LB, PLATES[(i // 2) % len(PLATES)])
+            plate(P, LB, f"res{i + 1}")                      # house number runs counter-clockwise round the circle, 20 wraps to 1
 
     # ---- four lamp posts: these are the scene's four lights
     for sx, sy in ((12, 12), (-12, 12), (12, -12), (-12, -12)):
