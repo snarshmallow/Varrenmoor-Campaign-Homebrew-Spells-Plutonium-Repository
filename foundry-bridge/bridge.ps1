@@ -35,11 +35,18 @@ if ($env:FOUNDRY_BRIDGE_URL -and $env:FOUNDRY_BRIDGE_TOKEN) {
   $url = $cfg.url; $token = $cfg.token
 }
 $body = '{"op":' + ($Op | ConvertTo-Json -Compress) + ',"args":' + $Args + '}'
-try {
-  $r = Invoke-RestMethod -Method Post -Uri ($url.TrimEnd('/') + '/rpc') -Headers @{ Authorization = "Bearer $token" } `
-        -ContentType 'application/json' -Body ([Text.Encoding]::UTF8.GetBytes($body)) -TimeoutSec 60
-  $r.result | ConvertTo-Json -Depth 30
-} catch {
-  $msg = $_.ErrorDetails.Message; if (-not $msg) { $msg = $_.Exception.Message }
-  Write-Error "bridge $Op failed: $msg"
+# The module's socket can drop and reconnect (tab sleep, tunnel blip): retry 503s and timeouts a few times.
+for ($try = 1; $try -le 5; $try++) {
+  try {
+    $r = Invoke-RestMethod -Method Post -Uri ($url.TrimEnd('/') + '/rpc') -Headers @{ Authorization = "Bearer $token" } `
+          -ContentType 'application/json' -Body ([Text.Encoding]::UTF8.GetBytes($body)) -TimeoutSec 60
+    $r.result | ConvertTo-Json -Depth 30
+    break
+  } catch {
+    $msg = $_.ErrorDetails.Message; if (-not $msg) { $msg = $_.Exception.Message }
+    $transient = $msg -match '503|not connected|timed out|timeout'
+    if ($transient -and $try -lt 5) { Start-Sleep -Seconds 4; continue }
+    Write-Error "bridge $Op failed: $msg"
+    break
+  }
 }
