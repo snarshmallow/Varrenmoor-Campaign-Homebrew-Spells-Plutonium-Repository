@@ -50,13 +50,24 @@ def build_item(k, slug):
         B(-0.098, 0, 0.02, 0.012, 0.28, 0.042, leather, "spine")
         B(0.0, 0.0, 0.0415, 0.12, 0.05, 0.003, brass, "title_plate")
     elif slug == "brass_plate_6":
-        B(0, 0, 0.004, 0.1, 0.14, 0.008, brass, "plate")
+        # a wall plate: stands upright, front toward +y (mount it on a wall facing +y). The numeral is a real texture, not geometry.
+        import bpy
+        from _painting import _image_material
+        B(0, 0, 0.08, 0.12, 0.012, 0.16, brass, "plate")
+        mat = _image_material(k, "plate6", "item_plate6.png")
+        hw, hh, y = 0.058, 0.078, 0.0066
+        me = bpy.data.meshes.new("plate6_face")
+        me.from_pydata([(hw, y, 0.002), (-hw, y, 0.002), (-hw, y, 0.158), (hw, y, 0.158)], [], [(0, 1, 2, 3)])
+        uv = me.uv_layers.new(name="UVMap")
+        for li, uvc in zip(me.polygons[0].loop_indices, ((0, 0), (1, 0), (1, 1), (0, 1))):
+            uv.data[li].uv = uvc
+        me.update()
+        ob = bpy.data.objects.new("plate6_face", me)
+        bpy.context.scene.collection.objects.link(ob)
+        ob.data.materials.append(mat)
         for sx in (-1, 1):
-            for sy in (-1, 1):
-                k.cylinder(0.006, 0.004, loc=(sx * 0.04, sy * 0.06, 0.009), material=tin, name="screw", verts=8)
-        # a '6': bowl and stem, raised
-        k.cylinder(0.02, 0.004, loc=(0, -0.01, 0.01), material=ink, name="six_bowl", verts=14)
-        B(-0.012, 0.025, 0.01, 0.01, 0.045, 0.004, ink, "six_stem")
+            for sz in (0.02, 0.14):
+                k.cylinder(0.005, 0.004, loc=(sx * 0.05, 0.008, sz), rot=(90, 0, 0), material=tin, name="screw", verts=8)
     elif slug == "bone_tag":
         B(0, 0, 0.004, 0.035, 0.06, 0.008, bone, "tag", 8)
         k.cylinder(0.005, 0.01, loc=(0, 0.023, 0.004), material=ink, name="hole", verts=8)
