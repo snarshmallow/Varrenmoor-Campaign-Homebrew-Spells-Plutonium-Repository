@@ -1,6 +1,6 @@
 """The Exchange's conveyor shafts and the Lost Property annex (Quest 2, "Gerald Has the Notebook"). Open-top corridors, 1.6 m wide:
   west   ENTRANCE: the cellar chamber under the bar. The brass drop-tube comes down here and the hanging rail starts under it,
-         with a low basket the party climbs into. A ladder, a plaque and a bright lantern mark the way in.
+         with a low basket the party climbs into. A feeder track from the bar side joins the tube over the north wall and a bright lantern marks the way in.
   main   shaft east (hanging rail, brass pipes, fungus lining; Violet can read where it was crushed)
   north  a long dead-end branch with two corners, ending at a grate
   south  a dogleg (two corners) to the dusty old terminal (the "note lead", regular single clunk; never Gerald)
@@ -13,7 +13,7 @@ import random
 from _props import F, Shop
 
 FOLDER = "Act 2 Road to Bridgehollow/Ossuary Exchange"
-SCENE_NOTE = "Shafts. Enter at the west cellar (ladder, hanging basket on the rail). Gerald's noise is erratic; the terminal clunks once, on schedule, and is NOT him."
+SCENE_NOTE = "Shafts. Enter at the west cellar (feeder track and hanging basket on the rail). Gerald's noise is erratic; the terminal clunks once, on schedule, and is NOT him."
 
 H, T, CW = 2.6, 0.4, 0.8          # wall height, wall thickness, corridor half-width
 RAIL_Z = 2.0                       # centre height of the hanging rail
@@ -127,15 +127,23 @@ def build(k):
     B(12.97, 13.03, -0.55, 0.55, H - 0.45, H - 0.4, M["iron"], "gate_lintel")
     S.door("annex_gate", "y", 13.0, 0, swing=(1, 0), w=1.1, h=2.15)
 
-    # ENTRANCE (cellar chamber): the drop-tube ends just above the rail, a low basket hangs under it, a ladder climbs out
+    # ENTRANCE (cellar chamber): the drop-tube ends just above the rail, a low basket hangs under it; a feeder track joins it over the north wall
     S.k.cylinder(0.2, 3.2, loc=(-9.5, 0, RAIL_Z + 1.5), material=M["brass"], name="drop_tube", verts=14)
     S.k.cylinder(0.32, 0.12, loc=(-9.5, 0, RAIL_Z - 0.1), material=M["brass"], name="tube_flare", verts=14)
     B(-10.5, -9.0, -0.5, 0.5, 2.4, 2.5, M["iron"], "tube_cradle_beam")
-    for lx in (-10.9, -10.5):                                                          # ladder on the north wall
-        B(lx - 0.025, lx + 0.025, 3.14, 3.2, F, H + 0.9, M["iron"], "ladder_rail")
-    for i in range(10):
-        B(-10.9, -10.5, 3.14, 3.18, F + 0.3 + 0.27 * i, F + 0.33 + 0.27 * i, M["iron"], "ladder_rung")
-    B(-11.3, -10.1, 3.14, 3.2, F + 2.5, F + 2.75, M["plaque"], "entrance_plaque")
+    # feeder track: comes in from the bar side over the north wall at 90 degrees and merges into the drop tube (z 3.0, above the wall top)
+    FZ = 3.0
+    B(-9.55, -9.45, 0.0, 6.0, FZ - 0.05, FZ + 0.05, M["iron"], "feeder_rail")
+    B(-9.62, -9.38, -0.08, 0.08, FZ - 0.09, FZ + 0.09, M["brass"], "feeder_junction")                 # collar where it meets the tube
+    S.k.cylinder(0.22, 0.12, loc=(-9.5, 0, FZ), material=M["brass"], name="tube_collar", verts=14)
+    B(-9.62, -9.38, 1.7, 1.9, F, FZ - 0.05, M["iron"], "feeder_post")                                  # post inside the chamber
+    B(-9.7, -9.3, 1.65, 1.95, FZ - 0.05, FZ + 0.0, M["iron"], "feeder_post_cap")
+    B(-9.62, -9.38, 3.3, 3.5, 2.6, FZ - 0.05, M["iron"], "feeder_wall_bracket")                        # bracket standing on the wall
+    S.k.cylinder(0.12, 1.6, loc=(-9.5, 6.0, FZ + 0.85), material=M["brass"], name="feeder_riser", verts=12)   # the track continues up toward the bar
+    B(-9.62, -9.38, 5.9, 6.1, FZ - 0.05, FZ + 0.0, M["iron"], "feeder_riser_clamp")
+    for yy in (2.7, 4.6):                                                                               # carriers on the feeder
+        B(-9.9, -9.1, yy - 0.3, yy + 0.3, FZ - 0.85, FZ - 0.4, M["doak"], "feeder_basket")
+        B(-9.515, -9.485, yy - 0.015, yy + 0.015, FZ - 0.4, FZ, M["iron"], "feeder_basket_rod")
     S.crate(-11.4, 2.3)
     S.crate(-11.4, -2.3, 0.5)
     S.barrel(-11.2, 0.8)
