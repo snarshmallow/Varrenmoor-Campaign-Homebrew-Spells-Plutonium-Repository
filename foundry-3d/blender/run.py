@@ -145,10 +145,12 @@ class Kit:
         extends along local +X, so 3D Canvas rotates it about the hinge. `hinge` is the world position of the hinge at
         floor level, `yaw_deg` the direction the closed leaf points, `swing` a plan-view unit vector the door opens
         toward. Exported extras: isDoor, doorId, doorStyle (1 = swing), doorAnimateAngle (radians)."""
+        # ONE material only: a multi-material mesh exports as a glTF group whose children carry no extras, and 3D Canvas
+        # only recognises doors on real meshes (userData.isDoor). trim_mat is accepted for compatibility but unused.
         parts = [self.box((width, thick, height), loc=(width / 2, 0, height / 2), material=leaf_mat, name=name + "_leaf", bevel=0.01)]
-        for f in (0.18, 0.5, 0.82):     # iron straps
-            parts.append(self.box((width * 0.94, thick + 0.03, 0.09), loc=(width / 2, 0, height * f), material=trim_mat, name=name + "_strap"))
-        parts.append(self.box((0.06, thick + 0.07, 0.22), loc=(width - 0.14, 0, height * 0.46), material=trim_mat, name=name + "_handle"))
+        for f in (0.18, 0.5, 0.82):     # straps, same material (the charred-oak texture already carries bone straps)
+            parts.append(self.box((width * 0.94, thick + 0.03, 0.09), loc=(width / 2, 0, height * f), material=leaf_mat, name=name + "_strap"))
+        parts.append(self.box((0.06, thick + 0.07, 0.22), loc=(width - 0.14, 0, height * 0.46), material=leaf_mat, name=name + "_handle"))
         bpy.ops.object.select_all(action="DESELECT")
         for p in parts:
             p.select_set(True)

@@ -10,6 +10,7 @@ Open top (no ceiling) for top-down play; ceiling height 3.2 m. Plan (x east, y n
 import math
 
 import bpy
+from _painting import hang_painting
 from _parts import Skulls, Walls, flame_tongue
 
 FOLDER = "Act 2 Road to Bridgehollow/Ossuary Exchange"
@@ -386,5 +387,20 @@ def build(k):
     table(14.3, 15.5, 7.2, 7.8, h=0.75)
     chair(14.9, 6.7, (0, 1))
     rug(14.2, 17.4, 3.5, 6.4, navy, gold)
+
+    # ----------------------------------------------------------- "always watching" portraits (eyes are separate nodes)
+    pm = dict(brass=brass, doak=doak, iron=iron, soot=soot,
+              amber=k.mat("eye_amber", (1.0, 0.35, 0.03), roughness=0.3, emission=(1.0, 0.33, 0.03)))
+    BZ = F + 0.9                                    # frame bottom, so the portraits hang at eye level
+    # (image, wall point, facing, bottom, canvas w, canvas h)
+    for i, (img, wp, face, bottom, cw, ch) in enumerate([
+        ("monalisa", (-11.625, -1.5), (0, 1), BZ, 0.95, 1.39),     # corridor south wall, facing north
+        ("pearl", (-7.125, -1.5), (0, 1), BZ, 0.95, 1.39),
+        ("napoleon", (-2.625, -1.5), (0, 1), BZ, 0.95, 1.39),
+        ("vangogh", (7.75, 6.7), (0, -1), F + 2.1, 0.58, 0.85),    # over the living-room hearth, facing south
+        ("henry", (13.125, -2.7), (-1, 0), BZ, 0.95, 1.39),        # living room east wall, facing west
+        ("blueboy", (13.125, 2.7), (-1, 0), BZ, 0.95, 1.39),
+    ]):
+        hang_painting(k, pm, skulls, img, wp, face, bottom, cw, ch, i + 1)
 
     skulls.finish(bone, soot, k.mat("skull_teeth", (0.88, 0.84, 0.72), roughness=0.55), name="skulls")
