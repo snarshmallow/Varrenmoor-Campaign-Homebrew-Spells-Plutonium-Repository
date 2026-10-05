@@ -96,10 +96,11 @@ def hang_painting(k, mats, skulls, image_stem, wall_point, facing, bottom_z, can
         er_i = (e[2] / iw * canvas_w) if len(e) > 2 else er          # per-eye radius measured from the socket (px -> m)
         u = (px / iw - 0.5) * canvas_w
         h = z0 + (1 - py / ih) * canvas_h
-        x, y, z = P(u, 0.040, h)                       # centre just behind the canvas plane (v = 0.045): only a shallow cap shows
+        v_eye = min(0.040, 0.047 - er_i * flat)         # centre just behind the canvas plane (v = 0.045); small eyes sit a hair further out so at least ~2 mm of cap always shows
+        x, y, z = P(u, v_eye, h)
         eye = k.sphere(er_i, loc=(x, y, z), scale=((flat, 1, 1) if depth_axis_x else (1, flat, 1)), material=mats["amber"],
                        name=f"watcher_eye_{idx}{side}", segments=12)
-        px_, py_, pz_ = P(u, 0.040 + er_i * flat * 0.9, h)
+        px_, py_, pz_ = P(u, v_eye + er_i * flat * 0.9, h)
         pupil = k.sphere(er_i * 0.6, loc=(px_, py_, pz_), scale=((0.25, 0.2, 1.0) if depth_axis_x else (0.2, 0.25, 1.0)),
                          material=mats["soot"], name="pupil", segments=8)
         bpy.ops.object.select_all(action="DESELECT")
