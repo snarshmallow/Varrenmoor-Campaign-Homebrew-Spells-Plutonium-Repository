@@ -5,13 +5,15 @@ from PIL import Image, ImageDraw, ImageFont
 
 HERE = Path(__file__).resolve().parent
 SIGNS = {
-    "inn": ("MOTTLE'S MUGS", "Inn & Taproom"),
-    "forge": ("BROKKA'S FORGE", "Smithing & Appraisals"),
-    "clinic": ("DR. PIMM'S CLINIC", "Splicing & Specimen Supplies"),
-    "rune": ("SCRATCH RUNE REPAIR", "Glyph Copying & Door Mending"),
-    "post": ("PNEUMATIC POST", "Capsules Received Daily"),
-    "guild": ("EXCHANGE LEDGER HALL", "Registry of Remains"),
-    "warehouse": ("LOWER WAREHOUSE", "Custodian Door - Deliveries Rear"),
+    "inn": ("MOTTLE'S MUGS", "The Last Respite Before Further Administrative Action"),
+    "forge": ("BROKKA'S FORGE", "Smithing - Essences - Appraisals"),
+    "clinic": ("DR. PIMM'S CLINIC", "Adaptations by Appointment"),
+    "rune": ("SCRATCH & CO.", "Rune Repair - Glyph Copying"),
+}
+# small utility plates (not shops): plain iron plates with stencilled text
+UTIL = {
+    "tube": "TUBE STATION 4", "dock": "WAREHOUSE 7 - REAR DOCK", "lodge": "LODGINGS BY THE NIGHT", "cart": "BONE CARTAGE", "tallow": "TALLOW & LAMP OIL",
+    "resid": "RESIDENTS ONLY", "trolley": "MIND THE TROLLEYS", "notice": "NOTICES EXPIRE WITHOUT NOTICE", "intake": "INTAKE 3", "wash": "WASH & FOLD", "ledger": "LEDGERS - 2ND FLOOR",
 }
 W, H = 2048, 700
 FONT = "C:/Windows/Fonts/georgiab.ttf"
@@ -34,7 +36,7 @@ for kind, (title, sub) in SIGNS.items():
     x0 = 90
     icon = HERE / "icons" / f"{kind}.png"
     if icon.exists():
-        ic = Image.open(icon).convert("RGBA")
+        ic = Image.open(icon).convert("L")                  # white glyph on black: use it as the mask
         s = H - 190
         ic = ic.resize((s, s))
         img.paste(Image.new("RGB", ic.size, (232, 214, 170)), (90, 95), ic)
@@ -47,3 +49,12 @@ for kind, (title, sub) in SIGNS.items():
     d.text((x0 + maxw / 2, H * 0.74), sub, font=f2, fill=(200, 180, 140), anchor="mm")
     img.save(HERE / f"sign_{kind}.png")
 print("ok")
+
+
+for key, text in UTIL.items():
+    img = Image.new("RGB", (1024, 300), (46, 48, 52))
+    d = ImageDraw.Draw(img)
+    d.rectangle([8, 8, 1016, 292], outline=(120, 124, 130), width=8)
+    f = fit(d, text, 120, 900)
+    d.text((512, 150), text, font=f, fill=(206, 208, 200), anchor="mm")
+    img.save(HERE / f"plate_{key}.png")

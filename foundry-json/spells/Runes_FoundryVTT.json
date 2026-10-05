@@ -1,0 +1,3890 @@
+[
+  {
+    "_id": "1de1ec311a3404cb",
+    "name": "Rune: Preserve (Eirwyn)",
+    "type": "spell",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "source": {
+        "custom": "Varrenmoor DM Guide, Runecrafting",
+        "book": "",
+        "page": "",
+        "license": "",
+        "rules": "2014",
+        "revision": 1
+      },
+      "description": {
+        "value": "<p><strong>ᛁ Isa</strong> &mdash; Root Rune of <strong>Eirwyn</strong>. Tier I.</p><p>Hold something as it is. A creature you touch gains temporary hit points, or a dying creature is stabilized; food, remains, or a mended seam stop changing for 1 hour.</p><p><em>Learned only after Stellan discovers and studies this glyph. Use the first activity (1 Rune Charge) to trace the rune and roll the Runecrafting check against the GM's Wyrd DC; on a success, use the effect activity. The save DC is 8 + proficiency + Wisdom.</em></p>",
+        "chat": ""
+      },
+      "level": 0,
+      "school": "abj",
+      "properties": [
+        "somatic",
+        "material"
+      ],
+      "materials": {
+        "value": "chalk, ink, or a carving tool",
+        "consumed": false,
+        "cost": 0,
+        "supply": 0
+      },
+      "target": {
+        "template": {
+          "count": "",
+          "contiguous": false,
+          "type": "",
+          "size": "",
+          "width": "",
+          "height": "",
+          "units": "ft",
+          "stationary": false
+        },
+        "affects": {
+          "count": "1",
+          "type": "",
+          "choice": false,
+          "special": ""
+        }
+      },
+      "range": {
+        "value": "0",
+        "units": "touch"
+      },
+      "activation": {
+        "type": "action",
+        "value": 1,
+        "condition": ""
+      },
+      "duration": {
+        "value": "",
+        "units": "inst"
+      },
+      "uses": {
+        "max": "",
+        "spent": 0,
+        "recovery": []
+      },
+      "method": "spell",
+      "prepared": 1,
+      "sourceItem": "",
+      "activities": {
+        "26393a6bfcc34c83": {
+          "_id": "26393a6bfcc34c83",
+          "type": "utility",
+          "name": "Trace Preserve [1 charge]",
+          "img": null,
+          "sort": 0,
+          "activation": {
+            "type": "action",
+            "value": 1,
+            "condition": "",
+            "override": false
+          },
+          "consumption": {
+            "scaling": {
+              "allowed": false
+            },
+            "spellSlot": false,
+            "targets": [
+              {
+                "type": "itemUses",
+                "target": "dd7KaDt9dU3lzYkP",
+                "value": "1",
+                "scaling": {
+                  "mode": "",
+                  "formula": ""
+                }
+              }
+            ]
+          },
+          "description": {
+            "chatFlavor": "Spend 1 Rune Charge and make the Runecrafting check against the Wyrd DC (set by the GM) to trace ᛁ Isa. On a success, use the effect activity."
+          },
+          "duration": {
+            "units": "inst",
+            "concentration": false,
+            "override": false
+          },
+          "range": {
+            "units": "self",
+            "override": false
+          },
+          "target": {
+            "template": {
+              "contiguous": false,
+              "stationary": false,
+              "units": "ft"
+            },
+            "affects": {
+              "choice": false
+            },
+            "prompt": true,
+            "override": false
+          },
+          "uses": {
+            "spent": 0,
+            "recovery": []
+          },
+          "effects": [],
+          "flags": {},
+          "visibility": {
+            "level": {},
+            "requireAttunement": false,
+            "requireIdentification": false,
+            "requireMagic": false
+          },
+          "roll": {
+            "formula": "1d20 + @prof + @abilities.wis.mod",
+            "name": "Runecrafting check (Preserve) vs Wyrd DC",
+            "prompt": false,
+            "visible": false
+          }
+        },
+        "9606fa2639c3a46f": {
+          "_id": "9606fa2639c3a46f",
+          "type": "heal",
+          "name": "Preserve: temporary hit points",
+          "img": null,
+          "sort": 0,
+          "activation": {
+            "type": "action",
+            "value": 1,
+            "condition": "",
+            "override": false
+          },
+          "consumption": {
+            "scaling": {
+              "allowed": false
+            },
+            "spellSlot": false,
+            "targets": []
+          },
+          "description": {
+            "chatFlavor": "ᛁ Isa: Preserve."
+          },
+          "duration": {
+            "units": "inst",
+            "concentration": false,
+            "override": false
+          },
+          "range": {
+            "units": "touch",
+            "override": false
+          },
+          "target": {
+            "template": {
+              "contiguous": false,
+              "stationary": false,
+              "units": "ft"
+            },
+            "affects": {
+              "choice": false
+            },
+            "prompt": true,
+            "override": false
+          },
+          "uses": {
+            "spent": 0,
+            "recovery": []
+          },
+          "effects": [],
+          "flags": {},
+          "visibility": {
+            "level": {},
+            "requireAttunement": false,
+            "requireIdentification": false,
+            "requireMagic": false
+          },
+          "healing": {
+            "types": [
+              "temphp"
+            ],
+            "number": 1,
+            "denomination": 8,
+            "bonus": "@abilities.wis.mod",
+            "scaling": {
+              "mode": "",
+              "number": 1
+            },
+            "custom": {
+              "enabled": false
+            }
+          }
+        }
+      },
+      "identifier": "rune-preserve"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "varrenmoor": {
+        "tradition": "Eirwyn",
+        "glyph": "Isa"
+      }
+    }
+  },
+  {
+    "_id": "e4295d26db653918",
+    "name": "Rune: Mend (Eirwyn)",
+    "type": "spell",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "source": {
+        "custom": "Varrenmoor DM Guide, Runecrafting",
+        "book": "",
+        "page": "",
+        "license": "",
+        "rules": "2014",
+        "revision": 1
+      },
+      "description": {
+        "value": "<p><strong>ᛒ Berkano</strong> &mdash; Root Rune of <strong>Eirwyn</strong>. Tier I.</p><p>Draw a broken pattern back together. A creature you touch regains hit points, or a damaged object or inscription line is restored to its last whole form.</p><p><em>Learned only after Stellan discovers and studies this glyph. Use the first activity (1 Rune Charge) to trace the rune and roll the Runecrafting check against the GM's Wyrd DC; on a success, use the effect activity. The save DC is 8 + proficiency + Wisdom.</em></p>",
+        "chat": ""
+      },
+      "level": 0,
+      "school": "abj",
+      "properties": [
+        "somatic",
+        "material"
+      ],
+      "materials": {
+        "value": "chalk, ink, or a carving tool",
+        "consumed": false,
+        "cost": 0,
+        "supply": 0
+      },
+      "target": {
+        "template": {
+          "count": "",
+          "contiguous": false,
+          "type": "",
+          "size": "",
+          "width": "",
+          "height": "",
+          "units": "ft",
+          "stationary": false
+        },
+        "affects": {
+          "count": "1",
+          "type": "",
+          "choice": false,
+          "special": ""
+        }
+      },
+      "range": {
+        "value": "0",
+        "units": "touch"
+      },
+      "activation": {
+        "type": "action",
+        "value": 1,
+        "condition": ""
+      },
+      "duration": {
+        "value": "",
+        "units": "inst"
+      },
+      "uses": {
+        "max": "",
+        "spent": 0,
+        "recovery": []
+      },
+      "method": "spell",
+      "prepared": 1,
+      "sourceItem": "",
+      "activities": {
+        "aef68efdcb23aab0": {
+          "_id": "aef68efdcb23aab0",
+          "type": "utility",
+          "name": "Trace Mend [1 charge]",
+          "img": null,
+          "sort": 0,
+          "activation": {
+            "type": "action",
+            "value": 1,
+            "condition": "",
+            "override": false
+          },
+          "consumption": {
+            "scaling": {
+              "allowed": false
+            },
+            "spellSlot": false,
+            "targets": [
+              {
+                "type": "itemUses",
+                "target": "dd7KaDt9dU3lzYkP",
+                "value": "1",
+                "scaling": {
+                  "mode": "",
+                  "formula": ""
+                }
+              }
+            ]
+          },
+          "description": {
+            "chatFlavor": "Spend 1 Rune Charge and make the Runecrafting check against the Wyrd DC (set by the GM) to trace ᛒ Berkano. On a success, use the effect activity."
+          },
+          "duration": {
+            "units": "inst",
+            "concentration": false,
+            "override": false
+          },
+          "range": {
+            "units": "self",
+            "override": false
+          },
+          "target": {
+            "template": {
+              "contiguous": false,
+              "stationary": false,
+              "units": "ft"
+            },
+            "affects": {
+              "choice": false
+            },
+            "prompt": true,
+            "override": false
+          },
+          "uses": {
+            "spent": 0,
+            "recovery": []
+          },
+          "effects": [],
+          "flags": {},
+          "visibility": {
+            "level": {},
+            "requireAttunement": false,
+            "requireIdentification": false,
+            "requireMagic": false
+          },
+          "roll": {
+            "formula": "1d20 + @prof + @abilities.wis.mod",
+            "name": "Runecrafting check (Mend) vs Wyrd DC",
+            "prompt": false,
+            "visible": false
+          }
+        },
+        "3ee22b702ce3b6f8": {
+          "_id": "3ee22b702ce3b6f8",
+          "type": "heal",
+          "name": "Mend: restore hit points",
+          "img": null,
+          "sort": 0,
+          "activation": {
+            "type": "action",
+            "value": 1,
+            "condition": "",
+            "override": false
+          },
+          "consumption": {
+            "scaling": {
+              "allowed": false
+            },
+            "spellSlot": false,
+            "targets": []
+          },
+          "description": {
+            "chatFlavor": "ᛒ Berkano: Mend."
+          },
+          "duration": {
+            "units": "inst",
+            "concentration": false,
+            "override": false
+          },
+          "range": {
+            "units": "touch",
+            "override": false
+          },
+          "target": {
+            "template": {
+              "contiguous": false,
+              "stationary": false,
+              "units": "ft"
+            },
+            "affects": {
+              "choice": false
+            },
+            "prompt": true,
+            "override": false
+          },
+          "uses": {
+            "spent": 0,
+            "recovery": []
+          },
+          "effects": [],
+          "flags": {},
+          "visibility": {
+            "level": {},
+            "requireAttunement": false,
+            "requireIdentification": false,
+            "requireMagic": false
+          },
+          "healing": {
+            "types": [
+              "healing"
+            ],
+            "number": 1,
+            "denomination": 8,
+            "bonus": "@abilities.wis.mod",
+            "scaling": {
+              "mode": "",
+              "number": 1
+            },
+            "custom": {
+              "enabled": false
+            }
+          }
+        }
+      },
+      "identifier": "rune-mend"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "varrenmoor": {
+        "tradition": "Eirwyn",
+        "glyph": "Berkano"
+      }
+    }
+  },
+  {
+    "_id": "c25cfe4c3498d61f",
+    "name": "Rune: Reveal (Eirwyn)",
+    "type": "spell",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "source": {
+        "custom": "Varrenmoor DM Guide, Runecrafting",
+        "book": "",
+        "page": "",
+        "license": "",
+        "rules": "2014",
+        "revision": 1
+      },
+      "description": {
+        "value": "<p><strong>ᚲ Kenaz</strong> &mdash; Root Rune of <strong>Eirwyn</strong>. Tier I.</p><p>Throw light on what is hidden. A hidden, disguised, or invisible creature or object in range must succeed on a Dexterity save or be revealed for 1 minute. You also learn what a mark, door, or object is hiding from you.</p><p><em>Learned only after Stellan discovers and studies this glyph. Use the first activity (1 Rune Charge) to trace the rune and roll the Runecrafting check against the GM's Wyrd DC; on a success, use the effect activity. The save DC is 8 + proficiency + Wisdom.</em></p>",
+        "chat": ""
+      },
+      "level": 0,
+      "school": "div",
+      "properties": [
+        "somatic",
+        "material"
+      ],
+      "materials": {
+        "value": "chalk, ink, or a carving tool",
+        "consumed": false,
+        "cost": 0,
+        "supply": 0
+      },
+      "target": {
+        "template": {
+          "count": "",
+          "contiguous": false,
+          "type": "",
+          "size": "",
+          "width": "",
+          "height": "",
+          "units": "ft",
+          "stationary": false
+        },
+        "affects": {
+          "count": "1",
+          "type": "",
+          "choice": false,
+          "special": ""
+        }
+      },
+      "range": {
+        "value": "30",
+        "units": "ft"
+      },
+      "activation": {
+        "type": "action",
+        "value": 1,
+        "condition": ""
+      },
+      "duration": {
+        "value": "",
+        "units": "inst"
+      },
+      "uses": {
+        "max": "",
+        "spent": 0,
+        "recovery": []
+      },
+      "method": "spell",
+      "prepared": 1,
+      "sourceItem": "",
+      "activities": {
+        "caf36a72c1429344": {
+          "_id": "caf36a72c1429344",
+          "type": "utility",
+          "name": "Trace Reveal [1 charge]",
+          "img": null,
+          "sort": 0,
+          "activation": {
+            "type": "action",
+            "value": 1,
+            "condition": "",
+            "override": false
+          },
+          "consumption": {
+            "scaling": {
+              "allowed": false
+            },
+            "spellSlot": false,
+            "targets": [
+              {
+                "type": "itemUses",
+                "target": "dd7KaDt9dU3lzYkP",
+                "value": "1",
+                "scaling": {
+                  "mode": "",
+                  "formula": ""
+                }
+              }
+            ]
+          },
+          "description": {
+            "chatFlavor": "Spend 1 Rune Charge and make the Runecrafting check against the Wyrd DC (set by the GM) to trace ᚲ Kenaz. On a success, use the effect activity."
+          },
+          "duration": {
+            "units": "inst",
+            "concentration": false,
+            "override": false
+          },
+          "range": {
+            "units": "self",
+            "override": false
+          },
+          "target": {
+            "template": {
+              "contiguous": false,
+              "stationary": false,
+              "units": "ft"
+            },
+            "affects": {
+              "choice": false
+            },
+            "prompt": true,
+            "override": false
+          },
+          "uses": {
+            "spent": 0,
+            "recovery": []
+          },
+          "effects": [],
+          "flags": {},
+          "visibility": {
+            "level": {},
+            "requireAttunement": false,
+            "requireIdentification": false,
+            "requireMagic": false
+          },
+          "roll": {
+            "formula": "1d20 + @prof + @abilities.wis.mod",
+            "name": "Runecrafting check (Reveal) vs Wyrd DC",
+            "prompt": false,
+            "visible": false
+          }
+        },
+        "21d2fef754a48eae": {
+          "_id": "21d2fef754a48eae",
+          "type": "save",
+          "name": "Reveal: effect",
+          "img": null,
+          "sort": 0,
+          "activation": {
+            "type": "action",
+            "value": 1,
+            "condition": "",
+            "override": false
+          },
+          "consumption": {
+            "scaling": {
+              "allowed": false
+            },
+            "spellSlot": false,
+            "targets": []
+          },
+          "description": {
+            "chatFlavor": "ᚲ Kenaz: Runecrafting save DC (8 + proficiency + Wisdom)."
+          },
+          "duration": {
+            "units": "inst",
+            "concentration": false,
+            "override": false
+          },
+          "range": {
+            "units": "ft",
+            "value": "30",
+            "override": false
+          },
+          "target": {
+            "template": {
+              "contiguous": false,
+              "stationary": false,
+              "units": "ft"
+            },
+            "affects": {
+              "choice": false
+            },
+            "prompt": true,
+            "override": false
+          },
+          "uses": {
+            "spent": 0,
+            "recovery": []
+          },
+          "effects": [
+            {
+              "_id": "6b0a1bb702c859b7",
+              "onSave": false
+            }
+          ],
+          "flags": {},
+          "visibility": {
+            "level": {},
+            "requireAttunement": false,
+            "requireIdentification": false,
+            "requireMagic": false
+          },
+          "save": {
+            "ability": [
+              "dex"
+            ],
+            "dc": {
+              "calculation": "",
+              "formula": "8 + @prof + @abilities.wis.mod"
+            }
+          },
+          "damage": {
+            "onSave": "none",
+            "parts": []
+          }
+        }
+      },
+      "identifier": "rune-reveal"
+    },
+    "effects": [
+      {
+        "_id": "6b0a1bb702c859b7",
+        "name": "Revealed",
+        "img": "icons/svg/aura.svg",
+        "type": "base",
+        "transfer": false,
+        "disabled": false,
+        "origin": null,
+        "duration": {
+          "rounds": 10,
+          "seconds": null,
+          "startRound": null,
+          "startTime": null,
+          "turns": null,
+          "startTurn": null
+        },
+        "changes": [
+          {
+            "key": "system.attributes.ac.bonus",
+            "mode": 2,
+            "value": "-2",
+            "priority": null
+          }
+        ],
+        "statuses": [],
+        "description": "<p>Revealed: its cover, disguise and hiding are stripped (-2 AC).</p>",
+        "tint": "#ffffff",
+        "flags": {}
+      }
+    ],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "varrenmoor": {
+        "tradition": "Eirwyn",
+        "glyph": "Kenaz"
+      }
+    }
+  },
+  {
+    "_id": "55a85ed5023a9d8d",
+    "name": "Rune: Threshold (Eirwyn)",
+    "type": "spell",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "source": {
+        "custom": "Varrenmoor DM Guide, Runecrafting",
+        "book": "",
+        "page": "",
+        "license": "",
+        "rules": "2014",
+        "revision": 1
+      },
+      "description": {
+        "value": "<p><strong>ᛞ Dagaz</strong> &mdash; Root Rune of <strong>Eirwyn</strong>. Tier I.</p><p>Define an edge. Open, seal, or mark a doorway, window, or boundary within range for 1 hour. A creature crossing a sealed threshold without your leave needs a successful Runecrafting check (GM sets the Wyrd DC) to do so.</p><p><em>Learned only after Stellan discovers and studies this glyph. Use the first activity (1 Rune Charge) to trace the rune and roll the Runecrafting check against the GM's Wyrd DC; on a success, use the effect activity. The save DC is 8 + proficiency + Wisdom.</em></p>",
+        "chat": ""
+      },
+      "level": 0,
+      "school": "abj",
+      "properties": [
+        "somatic",
+        "material"
+      ],
+      "materials": {
+        "value": "chalk, ink, or a carving tool",
+        "consumed": false,
+        "cost": 0,
+        "supply": 0
+      },
+      "target": {
+        "template": {
+          "count": "",
+          "contiguous": false,
+          "type": "",
+          "size": "",
+          "width": "",
+          "height": "",
+          "units": "ft",
+          "stationary": false
+        },
+        "affects": {
+          "count": "1",
+          "type": "",
+          "choice": false,
+          "special": ""
+        }
+      },
+      "range": {
+        "value": "30",
+        "units": "ft"
+      },
+      "activation": {
+        "type": "action",
+        "value": 1,
+        "condition": ""
+      },
+      "duration": {
+        "value": "",
+        "units": "inst"
+      },
+      "uses": {
+        "max": "",
+        "spent": 0,
+        "recovery": []
+      },
+      "method": "spell",
+      "prepared": 1,
+      "sourceItem": "",
+      "activities": {
+        "68c32d591edc6c59": {
+          "_id": "68c32d591edc6c59",
+          "type": "utility",
+          "name": "Trace Threshold [1 charge]",
+          "img": null,
+          "sort": 0,
+          "activation": {
+            "type": "action",
+            "value": 1,
+            "condition": "",
+            "override": false
+          },
+          "consumption": {
+            "scaling": {
+              "allowed": false
+            },
+            "spellSlot": false,
+            "targets": [
+              {
+                "type": "itemUses",
+                "target": "dd7KaDt9dU3lzYkP",
+                "value": "1",
+                "scaling": {
+                  "mode": "",
+                  "formula": ""
+                }
+              }
+            ]
+          },
+          "description": {
+            "chatFlavor": "Spend 1 Rune Charge and make the Runecrafting check against the Wyrd DC (set by the GM) to trace ᛞ Dagaz. On a success, use the effect activity."
+          },
+          "duration": {
+            "units": "inst",
+            "concentration": false,
+            "override": false
+          },
+          "range": {
+            "units": "self",
+            "override": false
+          },
+          "target": {
+            "template": {
+              "contiguous": false,
+              "stationary": false,
+              "units": "ft"
+            },
+            "affects": {
+              "choice": false
+            },
+            "prompt": true,
+            "override": false
+          },
+          "uses": {
+            "spent": 0,
+            "recovery": []
+          },
+          "effects": [],
+          "flags": {},
+          "visibility": {
+            "level": {},
+            "requireAttunement": false,
+            "requireIdentification": false,
+            "requireMagic": false
+          },
+          "roll": {
+            "formula": "1d20 + @prof + @abilities.wis.mod",
+            "name": "Runecrafting check (Threshold) vs Wyrd DC",
+            "prompt": false,
+            "visible": false
+          }
+        },
+        "da7c981b50934666": {
+          "_id": "da7c981b50934666",
+          "type": "utility",
+          "name": "Threshold: use",
+          "img": null,
+          "sort": 0,
+          "activation": {
+            "type": "action",
+            "value": 1,
+            "condition": "",
+            "override": false
+          },
+          "consumption": {
+            "scaling": {
+              "allowed": false
+            },
+            "spellSlot": false,
+            "targets": []
+          },
+          "description": {
+            "chatFlavor": "ᛞ Dagaz: Define an edge. Open, seal, or mark a doorway, window, or boundary within range for 1 hour. A creature crossing a sealed threshold without your leave needs a successful Runecrafting check (GM sets the Wyrd DC) to do so."
+          },
+          "duration": {
+            "units": "inst",
+            "concentration": false,
+            "override": false
+          },
+          "range": {
+            "units": "ft",
+            "value": "30",
+            "override": false
+          },
+          "target": {
+            "template": {
+              "contiguous": false,
+              "stationary": false,
+              "units": "ft"
+            },
+            "affects": {
+              "choice": false
+            },
+            "prompt": true,
+            "override": false
+          },
+          "uses": {
+            "spent": 0,
+            "recovery": []
+          },
+          "effects": [],
+          "flags": {},
+          "visibility": {
+            "level": {},
+            "requireAttunement": false,
+            "requireIdentification": false,
+            "requireMagic": false
+          }
+        }
+      },
+      "identifier": "rune-threshold"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "varrenmoor": {
+        "tradition": "Eirwyn",
+        "glyph": "Dagaz"
+      }
+    }
+  },
+  {
+    "_id": "78bf0b3abd1ebe49",
+    "name": "Rune: Bind (Ikkander)",
+    "type": "spell",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "source": {
+        "custom": "Varrenmoor DM Guide, Runecrafting",
+        "book": "",
+        "page": "",
+        "license": "",
+        "rules": "2014",
+        "revision": 1
+      },
+      "description": {
+        "value": "<p><strong>ᚾ Nauthiz</strong> &mdash; Root Rune of <strong>Ikkander</strong>. Tier I.</p><p>Tie two things together. A creature or object you can see must succeed on a Strength save or be bound in place (restrained) until the end of its next turn.</p><p><em>Learned only after Stellan discovers and studies this glyph. Use the first activity (1 Rune Charge) to trace the rune and roll the Runecrafting check against the GM's Wyrd DC; on a success, use the effect activity. The save DC is 8 + proficiency + Wisdom.</em></p>",
+        "chat": ""
+      },
+      "level": 0,
+      "school": "abj",
+      "properties": [
+        "somatic",
+        "material"
+      ],
+      "materials": {
+        "value": "chalk, ink, or a carving tool",
+        "consumed": false,
+        "cost": 0,
+        "supply": 0
+      },
+      "target": {
+        "template": {
+          "count": "",
+          "contiguous": false,
+          "type": "",
+          "size": "",
+          "width": "",
+          "height": "",
+          "units": "ft",
+          "stationary": false
+        },
+        "affects": {
+          "count": "1",
+          "type": "",
+          "choice": false,
+          "special": ""
+        }
+      },
+      "range": {
+        "value": "30",
+        "units": "ft"
+      },
+      "activation": {
+        "type": "action",
+        "value": 1,
+        "condition": ""
+      },
+      "duration": {
+        "value": "",
+        "units": "inst"
+      },
+      "uses": {
+        "max": "",
+        "spent": 0,
+        "recovery": []
+      },
+      "method": "spell",
+      "prepared": 1,
+      "sourceItem": "",
+      "activities": {
+        "a5f24cdcc77957b7": {
+          "_id": "a5f24cdcc77957b7",
+          "type": "utility",
+          "name": "Trace Bind [1 charge]",
+          "img": null,
+          "sort": 0,
+          "activation": {
+            "type": "action",
+            "value": 1,
+            "condition": "",
+            "override": false
+          },
+          "consumption": {
+            "scaling": {
+              "allowed": false
+            },
+            "spellSlot": false,
+            "targets": [
+              {
+                "type": "itemUses",
+                "target": "dd7KaDt9dU3lzYkP",
+                "value": "1",
+                "scaling": {
+                  "mode": "",
+                  "formula": ""
+                }
+              }
+            ]
+          },
+          "description": {
+            "chatFlavor": "Spend 1 Rune Charge and make the Runecrafting check against the Wyrd DC (set by the GM) to trace ᚾ Nauthiz. On a success, use the effect activity."
+          },
+          "duration": {
+            "units": "inst",
+            "concentration": false,
+            "override": false
+          },
+          "range": {
+            "units": "self",
+            "override": false
+          },
+          "target": {
+            "template": {
+              "contiguous": false,
+              "stationary": false,
+              "units": "ft"
+            },
+            "affects": {
+              "choice": false
+            },
+            "prompt": true,
+            "override": false
+          },
+          "uses": {
+            "spent": 0,
+            "recovery": []
+          },
+          "effects": [],
+          "flags": {},
+          "visibility": {
+            "level": {},
+            "requireAttunement": false,
+            "requireIdentification": false,
+            "requireMagic": false
+          },
+          "roll": {
+            "formula": "1d20 + @prof + @abilities.wis.mod",
+            "name": "Runecrafting check (Bind) vs Wyrd DC",
+            "prompt": false,
+            "visible": false
+          }
+        },
+        "a7e962b1bc105691": {
+          "_id": "a7e962b1bc105691",
+          "type": "save",
+          "name": "Bind: effect",
+          "img": null,
+          "sort": 0,
+          "activation": {
+            "type": "action",
+            "value": 1,
+            "condition": "",
+            "override": false
+          },
+          "consumption": {
+            "scaling": {
+              "allowed": false
+            },
+            "spellSlot": false,
+            "targets": []
+          },
+          "description": {
+            "chatFlavor": "ᚾ Nauthiz: Runecrafting save DC (8 + proficiency + Wisdom)."
+          },
+          "duration": {
+            "units": "inst",
+            "concentration": false,
+            "override": false
+          },
+          "range": {
+            "units": "ft",
+            "value": "30",
+            "override": false
+          },
+          "target": {
+            "template": {
+              "contiguous": false,
+              "stationary": false,
+              "units": "ft"
+            },
+            "affects": {
+              "choice": false
+            },
+            "prompt": true,
+            "override": false
+          },
+          "uses": {
+            "spent": 0,
+            "recovery": []
+          },
+          "effects": [
+            {
+              "_id": "44c158353454e1d7",
+              "onSave": false
+            }
+          ],
+          "flags": {},
+          "visibility": {
+            "level": {},
+            "requireAttunement": false,
+            "requireIdentification": false,
+            "requireMagic": false
+          },
+          "save": {
+            "ability": [
+              "str"
+            ],
+            "dc": {
+              "calculation": "",
+              "formula": "8 + @prof + @abilities.wis.mod"
+            }
+          },
+          "damage": {
+            "onSave": "none",
+            "parts": []
+          }
+        }
+      },
+      "identifier": "rune-bind"
+    },
+    "effects": [
+      {
+        "_id": "44c158353454e1d7",
+        "name": "Bound",
+        "img": "icons/svg/aura.svg",
+        "type": "base",
+        "transfer": false,
+        "disabled": false,
+        "origin": null,
+        "duration": {
+          "rounds": 2,
+          "seconds": null,
+          "startRound": null,
+          "startTime": null,
+          "turns": null,
+          "startTurn": null
+        },
+        "changes": [],
+        "statuses": [
+          "restrained"
+        ],
+        "description": "<p>Bound: restrained until the end of its next turn.</p>",
+        "tint": "#ffffff",
+        "flags": {}
+      }
+    ],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "varrenmoor": {
+        "tradition": "Ikkander",
+        "glyph": "Nauthiz"
+      }
+    }
+  },
+  {
+    "_id": "65d1770318d1e4eb",
+    "name": "Rune: Measure (Ikkander)",
+    "type": "spell",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "source": {
+        "custom": "Varrenmoor DM Guide, Runecrafting",
+        "book": "",
+        "page": "",
+        "license": "",
+        "rules": "2014",
+        "revision": 1
+      },
+      "description": {
+        "value": "<p><strong>ᛗ Mannaz</strong> &mdash; Root Rune of <strong>Ikkander</strong>. Tier I.</p><p>Learn the true size of a thing. You learn exact distance, weight, capacity, or fit of one object or space, and whether something has been altered from its recorded measure. Your next attack against a measured target this turn has +1d4.</p><p><em>Learned only after Stellan discovers and studies this glyph. Use the first activity (1 Rune Charge) to trace the rune and roll the Runecrafting check against the GM's Wyrd DC; on a success, use the effect activity. The save DC is 8 + proficiency + Wisdom.</em></p>",
+        "chat": ""
+      },
+      "level": 0,
+      "school": "div",
+      "properties": [
+        "somatic",
+        "material"
+      ],
+      "materials": {
+        "value": "chalk, ink, or a carving tool",
+        "consumed": false,
+        "cost": 0,
+        "supply": 0
+      },
+      "target": {
+        "template": {
+          "count": "",
+          "contiguous": false,
+          "type": "",
+          "size": "",
+          "width": "",
+          "height": "",
+          "units": "ft",
+          "stationary": false
+        },
+        "affects": {
+          "count": "1",
+          "type": "",
+          "choice": false,
+          "special": ""
+        }
+      },
+      "range": {
+        "value": "0",
+        "units": "touch"
+      },
+      "activation": {
+        "type": "action",
+        "value": 1,
+        "condition": ""
+      },
+      "duration": {
+        "value": "",
+        "units": "inst"
+      },
+      "uses": {
+        "max": "",
+        "spent": 0,
+        "recovery": []
+      },
+      "method": "spell",
+      "prepared": 1,
+      "sourceItem": "",
+      "activities": {
+        "8778fb19a35757b9": {
+          "_id": "8778fb19a35757b9",
+          "type": "utility",
+          "name": "Trace Measure [1 charge]",
+          "img": null,
+          "sort": 0,
+          "activation": {
+            "type": "action",
+            "value": 1,
+            "condition": "",
+            "override": false
+          },
+          "consumption": {
+            "scaling": {
+              "allowed": false
+            },
+            "spellSlot": false,
+            "targets": [
+              {
+                "type": "itemUses",
+                "target": "dd7KaDt9dU3lzYkP",
+                "value": "1",
+                "scaling": {
+                  "mode": "",
+                  "formula": ""
+                }
+              }
+            ]
+          },
+          "description": {
+            "chatFlavor": "Spend 1 Rune Charge and make the Runecrafting check against the Wyrd DC (set by the GM) to trace ᛗ Mannaz. On a success, use the effect activity."
+          },
+          "duration": {
+            "units": "inst",
+            "concentration": false,
+            "override": false
+          },
+          "range": {
+            "units": "self",
+            "override": false
+          },
+          "target": {
+            "template": {
+              "contiguous": false,
+              "stationary": false,
+              "units": "ft"
+            },
+            "affects": {
+              "choice": false
+            },
+            "prompt": true,
+            "override": false
+          },
+          "uses": {
+            "spent": 0,
+            "recovery": []
+          },
+          "effects": [],
+          "flags": {},
+          "visibility": {
+            "level": {},
+            "requireAttunement": false,
+            "requireIdentification": false,
+            "requireMagic": false
+          },
+          "roll": {
+            "formula": "1d20 + @prof + @abilities.wis.mod",
+            "name": "Runecrafting check (Measure) vs Wyrd DC",
+            "prompt": false,
+            "visible": false
+          }
+        },
+        "c5d1531f9bf8b47d": {
+          "_id": "c5d1531f9bf8b47d",
+          "type": "utility",
+          "name": "Measure: use",
+          "img": null,
+          "sort": 0,
+          "activation": {
+            "type": "action",
+            "value": 1,
+            "condition": "",
+            "override": false
+          },
+          "consumption": {
+            "scaling": {
+              "allowed": false
+            },
+            "spellSlot": false,
+            "targets": []
+          },
+          "description": {
+            "chatFlavor": "ᛗ Mannaz: Learn the true size of a thing. You learn exact distance, weight, capacity, or fit of one object or space, and whether something has been altered from its recorded measure. Your next attack against a measured target this turn has +1d4."
+          },
+          "duration": {
+            "units": "inst",
+            "concentration": false,
+            "override": false
+          },
+          "range": {
+            "units": "touch",
+            "override": false
+          },
+          "target": {
+            "template": {
+              "contiguous": false,
+              "stationary": false,
+              "units": "ft"
+            },
+            "affects": {
+              "choice": false
+            },
+            "prompt": true,
+            "override": false
+          },
+          "uses": {
+            "spent": 0,
+            "recovery": []
+          },
+          "effects": [],
+          "flags": {},
+          "visibility": {
+            "level": {},
+            "requireAttunement": false,
+            "requireIdentification": false,
+            "requireMagic": false
+          }
+        }
+      },
+      "identifier": "rune-measure"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "varrenmoor": {
+        "tradition": "Ikkander",
+        "glyph": "Mannaz"
+      }
+    }
+  },
+  {
+    "_id": "8d61e33298c2e74b",
+    "name": "Rune: Weight (Ikkander)",
+    "type": "spell",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "source": {
+        "custom": "Varrenmoor DM Guide, Runecrafting",
+        "book": "",
+        "page": "",
+        "license": "",
+        "rules": "2014",
+        "revision": 1
+      },
+      "description": {
+        "value": "<p><strong>ᚦ Thurisaz</strong> &mdash; Root Rune of <strong>Ikkander</strong>. Tier I.</p><p>Make a thing heavier or lighter. A creature or object in range that fails a Strength save is weighed down: its speed is halved for 1 minute. You may instead halve an object's weight for 1 hour.</p><p><em>Learned only after Stellan discovers and studies this glyph. Use the first activity (1 Rune Charge) to trace the rune and roll the Runecrafting check against the GM's Wyrd DC; on a success, use the effect activity. The save DC is 8 + proficiency + Wisdom.</em></p>",
+        "chat": ""
+      },
+      "level": 0,
+      "school": "trs",
+      "properties": [
+        "somatic",
+        "material"
+      ],
+      "materials": {
+        "value": "chalk, ink, or a carving tool",
+        "consumed": false,
+        "cost": 0,
+        "supply": 0
+      },
+      "target": {
+        "template": {
+          "count": "",
+          "contiguous": false,
+          "type": "",
+          "size": "",
+          "width": "",
+          "height": "",
+          "units": "ft",
+          "stationary": false
+        },
+        "affects": {
+          "count": "1",
+          "type": "",
+          "choice": false,
+          "special": ""
+        }
+      },
+      "range": {
+        "value": "30",
+        "units": "ft"
+      },
+      "activation": {
+        "type": "action",
+        "value": 1,
+        "condition": ""
+      },
+      "duration": {
+        "value": "",
+        "units": "inst"
+      },
+      "uses": {
+        "max": "",
+        "spent": 0,
+        "recovery": []
+      },
+      "method": "spell",
+      "prepared": 1,
+      "sourceItem": "",
+      "activities": {
+        "b63148df9de4a8ad": {
+          "_id": "b63148df9de4a8ad",
+          "type": "utility",
+          "name": "Trace Weight [1 charge]",
+          "img": null,
+          "sort": 0,
+          "activation": {
+            "type": "action",
+            "value": 1,
+            "condition": "",
+            "override": false
+          },
+          "consumption": {
+            "scaling": {
+              "allowed": false
+            },
+            "spellSlot": false,
+            "targets": [
+              {
+                "type": "itemUses",
+                "target": "dd7KaDt9dU3lzYkP",
+                "value": "1",
+                "scaling": {
+                  "mode": "",
+                  "formula": ""
+                }
+              }
+            ]
+          },
+          "description": {
+            "chatFlavor": "Spend 1 Rune Charge and make the Runecrafting check against the Wyrd DC (set by the GM) to trace ᚦ Thurisaz. On a success, use the effect activity."
+          },
+          "duration": {
+            "units": "inst",
+            "concentration": false,
+            "override": false
+          },
+          "range": {
+            "units": "self",
+            "override": false
+          },
+          "target": {
+            "template": {
+              "contiguous": false,
+              "stationary": false,
+              "units": "ft"
+            },
+            "affects": {
+              "choice": false
+            },
+            "prompt": true,
+            "override": false
+          },
+          "uses": {
+            "spent": 0,
+            "recovery": []
+          },
+          "effects": [],
+          "flags": {},
+          "visibility": {
+            "level": {},
+            "requireAttunement": false,
+            "requireIdentification": false,
+            "requireMagic": false
+          },
+          "roll": {
+            "formula": "1d20 + @prof + @abilities.wis.mod",
+            "name": "Runecrafting check (Weight) vs Wyrd DC",
+            "prompt": false,
+            "visible": false
+          }
+        },
+        "e3d9a32c7ef63e1c": {
+          "_id": "e3d9a32c7ef63e1c",
+          "type": "save",
+          "name": "Weight: effect",
+          "img": null,
+          "sort": 0,
+          "activation": {
+            "type": "action",
+            "value": 1,
+            "condition": "",
+            "override": false
+          },
+          "consumption": {
+            "scaling": {
+              "allowed": false
+            },
+            "spellSlot": false,
+            "targets": []
+          },
+          "description": {
+            "chatFlavor": "ᚦ Thurisaz: Runecrafting save DC (8 + proficiency + Wisdom)."
+          },
+          "duration": {
+            "units": "inst",
+            "concentration": false,
+            "override": false
+          },
+          "range": {
+            "units": "ft",
+            "value": "30",
+            "override": false
+          },
+          "target": {
+            "template": {
+              "contiguous": false,
+              "stationary": false,
+              "units": "ft"
+            },
+            "affects": {
+              "choice": false
+            },
+            "prompt": true,
+            "override": false
+          },
+          "uses": {
+            "spent": 0,
+            "recovery": []
+          },
+          "effects": [
+            {
+              "_id": "182041ce4964dfdf",
+              "onSave": false
+            }
+          ],
+          "flags": {},
+          "visibility": {
+            "level": {},
+            "requireAttunement": false,
+            "requireIdentification": false,
+            "requireMagic": false
+          },
+          "save": {
+            "ability": [
+              "str"
+            ],
+            "dc": {
+              "calculation": "",
+              "formula": "8 + @prof + @abilities.wis.mod"
+            }
+          },
+          "damage": {
+            "onSave": "none",
+            "parts": []
+          }
+        }
+      },
+      "identifier": "rune-weight"
+    },
+    "effects": [
+      {
+        "_id": "182041ce4964dfdf",
+        "name": "Weighted",
+        "img": "icons/svg/aura.svg",
+        "type": "base",
+        "transfer": false,
+        "disabled": false,
+        "origin": null,
+        "duration": {
+          "rounds": 10,
+          "seconds": null,
+          "startRound": null,
+          "startTime": null,
+          "turns": null,
+          "startTurn": null
+        },
+        "changes": [
+          {
+            "key": "system.attributes.movement.walk",
+            "mode": 1,
+            "value": "0.5",
+            "priority": null
+          }
+        ],
+        "statuses": [],
+        "description": "<p>Weighted: speed halved.</p>",
+        "tint": "#ffffff",
+        "flags": {}
+      }
+    ],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "varrenmoor": {
+        "tradition": "Ikkander",
+        "glyph": "Thurisaz"
+      }
+    }
+  },
+  {
+    "_id": "ab8b428658373d7c",
+    "name": "Rune: Turn (Ikkander)",
+    "type": "spell",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "source": {
+        "custom": "Varrenmoor DM Guide, Runecrafting",
+        "book": "",
+        "page": "",
+        "license": "",
+        "rules": "2014",
+        "revision": 1
+      },
+      "description": {
+        "value": "<p><strong>ᛃ Jera</strong> &mdash; Root Rune of <strong>Ikkander</strong>. Tier I.</p><p>Turn the cycle. A creature or object that fails a Strength save is pushed up to 10 feet and turned, or the next use of a rune or missile aimed at it is redirected to another valid target.</p><p><em>Learned only after Stellan discovers and studies this glyph. Use the first activity (1 Rune Charge) to trace the rune and roll the Runecrafting check against the GM's Wyrd DC; on a success, use the effect activity. The save DC is 8 + proficiency + Wisdom.</em></p>",
+        "chat": ""
+      },
+      "level": 0,
+      "school": "trs",
+      "properties": [
+        "somatic",
+        "material"
+      ],
+      "materials": {
+        "value": "chalk, ink, or a carving tool",
+        "consumed": false,
+        "cost": 0,
+        "supply": 0
+      },
+      "target": {
+        "template": {
+          "count": "",
+          "contiguous": false,
+          "type": "",
+          "size": "",
+          "width": "",
+          "height": "",
+          "units": "ft",
+          "stationary": false
+        },
+        "affects": {
+          "count": "1",
+          "type": "",
+          "choice": false,
+          "special": ""
+        }
+      },
+      "range": {
+        "value": "30",
+        "units": "ft"
+      },
+      "activation": {
+        "type": "action",
+        "value": 1,
+        "condition": ""
+      },
+      "duration": {
+        "value": "",
+        "units": "inst"
+      },
+      "uses": {
+        "max": "",
+        "spent": 0,
+        "recovery": []
+      },
+      "method": "spell",
+      "prepared": 1,
+      "sourceItem": "",
+      "activities": {
+        "3bd27a9687abe188": {
+          "_id": "3bd27a9687abe188",
+          "type": "utility",
+          "name": "Trace Turn [1 charge]",
+          "img": null,
+          "sort": 0,
+          "activation": {
+            "type": "action",
+            "value": 1,
+            "condition": "",
+            "override": false
+          },
+          "consumption": {
+            "scaling": {
+              "allowed": false
+            },
+            "spellSlot": false,
+            "targets": [
+              {
+                "type": "itemUses",
+                "target": "dd7KaDt9dU3lzYkP",
+                "value": "1",
+                "scaling": {
+                  "mode": "",
+                  "formula": ""
+                }
+              }
+            ]
+          },
+          "description": {
+            "chatFlavor": "Spend 1 Rune Charge and make the Runecrafting check against the Wyrd DC (set by the GM) to trace ᛃ Jera. On a success, use the effect activity."
+          },
+          "duration": {
+            "units": "inst",
+            "concentration": false,
+            "override": false
+          },
+          "range": {
+            "units": "self",
+            "override": false
+          },
+          "target": {
+            "template": {
+              "contiguous": false,
+              "stationary": false,
+              "units": "ft"
+            },
+            "affects": {
+              "choice": false
+            },
+            "prompt": true,
+            "override": false
+          },
+          "uses": {
+            "spent": 0,
+            "recovery": []
+          },
+          "effects": [],
+          "flags": {},
+          "visibility": {
+            "level": {},
+            "requireAttunement": false,
+            "requireIdentification": false,
+            "requireMagic": false
+          },
+          "roll": {
+            "formula": "1d20 + @prof + @abilities.wis.mod",
+            "name": "Runecrafting check (Turn) vs Wyrd DC",
+            "prompt": false,
+            "visible": false
+          }
+        },
+        "62a6d071039ade39": {
+          "_id": "62a6d071039ade39",
+          "type": "save",
+          "name": "Turn: effect",
+          "img": null,
+          "sort": 0,
+          "activation": {
+            "type": "action",
+            "value": 1,
+            "condition": "",
+            "override": false
+          },
+          "consumption": {
+            "scaling": {
+              "allowed": false
+            },
+            "spellSlot": false,
+            "targets": []
+          },
+          "description": {
+            "chatFlavor": "ᛃ Jera: Runecrafting save DC (8 + proficiency + Wisdom). On a failure the target is turned 90 degrees and moved up to 10 feet, or one missile or inscription's next target is redirected."
+          },
+          "duration": {
+            "units": "inst",
+            "concentration": false,
+            "override": false
+          },
+          "range": {
+            "units": "ft",
+            "value": "30",
+            "override": false
+          },
+          "target": {
+            "template": {
+              "contiguous": false,
+              "stationary": false,
+              "units": "ft"
+            },
+            "affects": {
+              "choice": false
+            },
+            "prompt": true,
+            "override": false
+          },
+          "uses": {
+            "spent": 0,
+            "recovery": []
+          },
+          "effects": [],
+          "flags": {},
+          "visibility": {
+            "level": {},
+            "requireAttunement": false,
+            "requireIdentification": false,
+            "requireMagic": false
+          },
+          "save": {
+            "ability": [
+              "str"
+            ],
+            "dc": {
+              "calculation": "",
+              "formula": "8 + @prof + @abilities.wis.mod"
+            }
+          },
+          "damage": {
+            "onSave": "none",
+            "parts": []
+          }
+        }
+      },
+      "identifier": "rune-turn"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "varrenmoor": {
+        "tradition": "Ikkander",
+        "glyph": "Jera"
+      }
+    }
+  },
+  {
+    "_id": "e9c2f2004257b138",
+    "name": "Rune: Root (Vaelweyr)",
+    "type": "spell",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "source": {
+        "custom": "Varrenmoor DM Guide, Runecrafting",
+        "book": "",
+        "page": "",
+        "license": "",
+        "rules": "2014",
+        "revision": 1
+      },
+      "description": {
+        "value": "<p><strong>ᛟ Othala</strong> &mdash; Root Rune of <strong>Vaelweyr</strong>. Tier I.</p><p>Anchor something to the ground. A creature that fails a Strength save has its feet held fast: speed 0 until the end of its next turn. Alternatively, anchor a door, cart, or object so it cannot be moved for 1 hour.</p><p><em>Learned only after Stellan discovers and studies this glyph. Use the first activity (1 Rune Charge) to trace the rune and roll the Runecrafting check against the GM's Wyrd DC; on a success, use the effect activity. The save DC is 8 + proficiency + Wisdom.</em></p>",
+        "chat": ""
+      },
+      "level": 0,
+      "school": "trs",
+      "properties": [
+        "somatic",
+        "material"
+      ],
+      "materials": {
+        "value": "chalk, ink, or a carving tool",
+        "consumed": false,
+        "cost": 0,
+        "supply": 0
+      },
+      "target": {
+        "template": {
+          "count": "",
+          "contiguous": false,
+          "type": "",
+          "size": "",
+          "width": "",
+          "height": "",
+          "units": "ft",
+          "stationary": false
+        },
+        "affects": {
+          "count": "1",
+          "type": "",
+          "choice": false,
+          "special": ""
+        }
+      },
+      "range": {
+        "value": "30",
+        "units": "ft"
+      },
+      "activation": {
+        "type": "action",
+        "value": 1,
+        "condition": ""
+      },
+      "duration": {
+        "value": "",
+        "units": "inst"
+      },
+      "uses": {
+        "max": "",
+        "spent": 0,
+        "recovery": []
+      },
+      "method": "spell",
+      "prepared": 1,
+      "sourceItem": "",
+      "activities": {
+        "900b57f4c3430480": {
+          "_id": "900b57f4c3430480",
+          "type": "utility",
+          "name": "Trace Root [1 charge]",
+          "img": null,
+          "sort": 0,
+          "activation": {
+            "type": "action",
+            "value": 1,
+            "condition": "",
+            "override": false
+          },
+          "consumption": {
+            "scaling": {
+              "allowed": false
+            },
+            "spellSlot": false,
+            "targets": [
+              {
+                "type": "itemUses",
+                "target": "dd7KaDt9dU3lzYkP",
+                "value": "1",
+                "scaling": {
+                  "mode": "",
+                  "formula": ""
+                }
+              }
+            ]
+          },
+          "description": {
+            "chatFlavor": "Spend 1 Rune Charge and make the Runecrafting check against the Wyrd DC (set by the GM) to trace ᛟ Othala. On a success, use the effect activity."
+          },
+          "duration": {
+            "units": "inst",
+            "concentration": false,
+            "override": false
+          },
+          "range": {
+            "units": "self",
+            "override": false
+          },
+          "target": {
+            "template": {
+              "contiguous": false,
+              "stationary": false,
+              "units": "ft"
+            },
+            "affects": {
+              "choice": false
+            },
+            "prompt": true,
+            "override": false
+          },
+          "uses": {
+            "spent": 0,
+            "recovery": []
+          },
+          "effects": [],
+          "flags": {},
+          "visibility": {
+            "level": {},
+            "requireAttunement": false,
+            "requireIdentification": false,
+            "requireMagic": false
+          },
+          "roll": {
+            "formula": "1d20 + @prof + @abilities.wis.mod",
+            "name": "Runecrafting check (Root) vs Wyrd DC",
+            "prompt": false,
+            "visible": false
+          }
+        },
+        "482f87df8b4c1c38": {
+          "_id": "482f87df8b4c1c38",
+          "type": "save",
+          "name": "Root: effect",
+          "img": null,
+          "sort": 0,
+          "activation": {
+            "type": "action",
+            "value": 1,
+            "condition": "",
+            "override": false
+          },
+          "consumption": {
+            "scaling": {
+              "allowed": false
+            },
+            "spellSlot": false,
+            "targets": []
+          },
+          "description": {
+            "chatFlavor": "ᛟ Othala: Runecrafting save DC (8 + proficiency + Wisdom)."
+          },
+          "duration": {
+            "units": "inst",
+            "concentration": false,
+            "override": false
+          },
+          "range": {
+            "units": "ft",
+            "value": "30",
+            "override": false
+          },
+          "target": {
+            "template": {
+              "contiguous": false,
+              "stationary": false,
+              "units": "ft"
+            },
+            "affects": {
+              "choice": false
+            },
+            "prompt": true,
+            "override": false
+          },
+          "uses": {
+            "spent": 0,
+            "recovery": []
+          },
+          "effects": [
+            {
+              "_id": "48c4ae48165c4863",
+              "onSave": false
+            }
+          ],
+          "flags": {},
+          "visibility": {
+            "level": {},
+            "requireAttunement": false,
+            "requireIdentification": false,
+            "requireMagic": false
+          },
+          "save": {
+            "ability": [
+              "str"
+            ],
+            "dc": {
+              "calculation": "",
+              "formula": "8 + @prof + @abilities.wis.mod"
+            }
+          },
+          "damage": {
+            "onSave": "none",
+            "parts": []
+          }
+        }
+      },
+      "identifier": "rune-root"
+    },
+    "effects": [
+      {
+        "_id": "48c4ae48165c4863",
+        "name": "Rooted",
+        "img": "icons/svg/aura.svg",
+        "type": "base",
+        "transfer": false,
+        "disabled": false,
+        "origin": null,
+        "duration": {
+          "rounds": 2,
+          "seconds": null,
+          "startRound": null,
+          "startTime": null,
+          "turns": null,
+          "startTurn": null
+        },
+        "changes": [
+          {
+            "key": "system.attributes.movement.walk",
+            "mode": 5,
+            "value": "0",
+            "priority": null
+          }
+        ],
+        "statuses": [],
+        "description": "<p>Rooted: speed 0 until the end of its next turn.</p>",
+        "tint": "#ffffff",
+        "flags": {}
+      }
+    ],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "varrenmoor": {
+        "tradition": "Vaelweyr",
+        "glyph": "Othala"
+      }
+    }
+  },
+  {
+    "_id": "e4c9b88b9e9d9789",
+    "name": "Rune: Breath (Vaelweyr)",
+    "type": "spell",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "source": {
+        "custom": "Varrenmoor DM Guide, Runecrafting",
+        "book": "",
+        "page": "",
+        "license": "",
+        "rules": "2014",
+        "revision": 1
+      },
+      "description": {
+        "value": "<p><strong>ᚨ Ansuz</strong> &mdash; Root Rune of <strong>Vaelweyr</strong>. Tier I.</p><p>Give a creature you touch good air for 1 hour: it can breathe in smoke, dust, gas, or underwater. The same rune can also clear stale air from a 10-foot space.</p><p><em>Learned only after Stellan discovers and studies this glyph. Use the first activity (1 Rune Charge) to trace the rune and roll the Runecrafting check against the GM's Wyrd DC; on a success, use the effect activity. The save DC is 8 + proficiency + Wisdom.</em></p>",
+        "chat": ""
+      },
+      "level": 0,
+      "school": "trs",
+      "properties": [
+        "somatic",
+        "material"
+      ],
+      "materials": {
+        "value": "chalk, ink, or a carving tool",
+        "consumed": false,
+        "cost": 0,
+        "supply": 0
+      },
+      "target": {
+        "template": {
+          "count": "",
+          "contiguous": false,
+          "type": "",
+          "size": "",
+          "width": "",
+          "height": "",
+          "units": "ft",
+          "stationary": false
+        },
+        "affects": {
+          "count": "1",
+          "type": "",
+          "choice": false,
+          "special": ""
+        }
+      },
+      "range": {
+        "value": "0",
+        "units": "touch"
+      },
+      "activation": {
+        "type": "action",
+        "value": 1,
+        "condition": ""
+      },
+      "duration": {
+        "value": "",
+        "units": "inst"
+      },
+      "uses": {
+        "max": "",
+        "spent": 0,
+        "recovery": []
+      },
+      "method": "spell",
+      "prepared": 1,
+      "sourceItem": "",
+      "activities": {
+        "ef167e307b469360": {
+          "_id": "ef167e307b469360",
+          "type": "utility",
+          "name": "Trace Breath [1 charge]",
+          "img": null,
+          "sort": 0,
+          "activation": {
+            "type": "action",
+            "value": 1,
+            "condition": "",
+            "override": false
+          },
+          "consumption": {
+            "scaling": {
+              "allowed": false
+            },
+            "spellSlot": false,
+            "targets": [
+              {
+                "type": "itemUses",
+                "target": "dd7KaDt9dU3lzYkP",
+                "value": "1",
+                "scaling": {
+                  "mode": "",
+                  "formula": ""
+                }
+              }
+            ]
+          },
+          "description": {
+            "chatFlavor": "Spend 1 Rune Charge and make the Runecrafting check against the Wyrd DC (set by the GM) to trace ᚨ Ansuz. On a success, use the effect activity."
+          },
+          "duration": {
+            "units": "inst",
+            "concentration": false,
+            "override": false
+          },
+          "range": {
+            "units": "self",
+            "override": false
+          },
+          "target": {
+            "template": {
+              "contiguous": false,
+              "stationary": false,
+              "units": "ft"
+            },
+            "affects": {
+              "choice": false
+            },
+            "prompt": true,
+            "override": false
+          },
+          "uses": {
+            "spent": 0,
+            "recovery": []
+          },
+          "effects": [],
+          "flags": {},
+          "visibility": {
+            "level": {},
+            "requireAttunement": false,
+            "requireIdentification": false,
+            "requireMagic": false
+          },
+          "roll": {
+            "formula": "1d20 + @prof + @abilities.wis.mod",
+            "name": "Runecrafting check (Breath) vs Wyrd DC",
+            "prompt": false,
+            "visible": false
+          }
+        },
+        "8dfb0f8083b519a7": {
+          "_id": "8dfb0f8083b519a7",
+          "type": "utility",
+          "name": "Breath: apply effect",
+          "img": null,
+          "sort": 0,
+          "activation": {
+            "type": "action",
+            "value": 1,
+            "condition": "",
+            "override": false
+          },
+          "consumption": {
+            "scaling": {
+              "allowed": false
+            },
+            "spellSlot": false,
+            "targets": []
+          },
+          "description": {
+            "chatFlavor": "ᚨ Ansuz: Clean Breath: can breathe normally in smoke, dust, gas or underwater (GM adjudicates exotic hazards)."
+          },
+          "duration": {
+            "units": "inst",
+            "concentration": false,
+            "override": false
+          },
+          "range": {
+            "units": "touch",
+            "override": false
+          },
+          "target": {
+            "template": {
+              "contiguous": false,
+              "stationary": false,
+              "units": "ft"
+            },
+            "affects": {
+              "choice": false
+            },
+            "prompt": true,
+            "override": false
+          },
+          "uses": {
+            "spent": 0,
+            "recovery": []
+          },
+          "effects": [
+            {
+              "_id": "08c402e855e42148"
+            }
+          ],
+          "flags": {},
+          "visibility": {
+            "level": {},
+            "requireAttunement": false,
+            "requireIdentification": false,
+            "requireMagic": false
+          }
+        }
+      },
+      "identifier": "rune-breath"
+    },
+    "effects": [
+      {
+        "_id": "08c402e855e42148",
+        "name": "Clean Breath",
+        "img": "icons/svg/aura.svg",
+        "type": "base",
+        "transfer": false,
+        "disabled": false,
+        "origin": null,
+        "duration": {
+          "rounds": 600,
+          "seconds": null,
+          "startRound": null,
+          "startTime": null,
+          "turns": null,
+          "startTurn": null
+        },
+        "changes": [],
+        "statuses": [],
+        "description": "<p>Clean Breath: can breathe normally in smoke, dust, gas or underwater (GM adjudicates exotic hazards).</p>",
+        "tint": "#ffffff",
+        "flags": {}
+      }
+    ],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "varrenmoor": {
+        "tradition": "Vaelweyr",
+        "glyph": "Ansuz"
+      }
+    }
+  },
+  {
+    "_id": "fd6c8dfd62d295d0",
+    "name": "Rune: Track (Vaelweyr)",
+    "type": "spell",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "source": {
+        "custom": "Varrenmoor DM Guide, Runecrafting",
+        "book": "",
+        "page": "",
+        "license": "",
+        "rules": "2014",
+        "revision": 1
+      },
+      "description": {
+        "value": "<p><strong>ᚱ Raidho</strong> &mdash; Root Rune of <strong>Vaelweyr</strong>. Tier I.</p><p>Mark a trail. For 1 hour a creature you touch adds 1d4 to Survival and Perception checks to follow one chosen quarry, scent, or route you can describe.</p><p><em>Learned only after Stellan discovers and studies this glyph. Use the first activity (1 Rune Charge) to trace the rune and roll the Runecrafting check against the GM's Wyrd DC; on a success, use the effect activity. The save DC is 8 + proficiency + Wisdom.</em></p>",
+        "chat": ""
+      },
+      "level": 0,
+      "school": "div",
+      "properties": [
+        "somatic",
+        "material"
+      ],
+      "materials": {
+        "value": "chalk, ink, or a carving tool",
+        "consumed": false,
+        "cost": 0,
+        "supply": 0
+      },
+      "target": {
+        "template": {
+          "count": "",
+          "contiguous": false,
+          "type": "",
+          "size": "",
+          "width": "",
+          "height": "",
+          "units": "ft",
+          "stationary": false
+        },
+        "affects": {
+          "count": "1",
+          "type": "",
+          "choice": false,
+          "special": ""
+        }
+      },
+      "range": {
+        "value": "0",
+        "units": "touch"
+      },
+      "activation": {
+        "type": "action",
+        "value": 1,
+        "condition": ""
+      },
+      "duration": {
+        "value": "",
+        "units": "inst"
+      },
+      "uses": {
+        "max": "",
+        "spent": 0,
+        "recovery": []
+      },
+      "method": "spell",
+      "prepared": 1,
+      "sourceItem": "",
+      "activities": {
+        "99db1fd9dcd1bba8": {
+          "_id": "99db1fd9dcd1bba8",
+          "type": "utility",
+          "name": "Trace Track [1 charge]",
+          "img": null,
+          "sort": 0,
+          "activation": {
+            "type": "action",
+            "value": 1,
+            "condition": "",
+            "override": false
+          },
+          "consumption": {
+            "scaling": {
+              "allowed": false
+            },
+            "spellSlot": false,
+            "targets": [
+              {
+                "type": "itemUses",
+                "target": "dd7KaDt9dU3lzYkP",
+                "value": "1",
+                "scaling": {
+                  "mode": "",
+                  "formula": ""
+                }
+              }
+            ]
+          },
+          "description": {
+            "chatFlavor": "Spend 1 Rune Charge and make the Runecrafting check against the Wyrd DC (set by the GM) to trace ᚱ Raidho. On a success, use the effect activity."
+          },
+          "duration": {
+            "units": "inst",
+            "concentration": false,
+            "override": false
+          },
+          "range": {
+            "units": "self",
+            "override": false
+          },
+          "target": {
+            "template": {
+              "contiguous": false,
+              "stationary": false,
+              "units": "ft"
+            },
+            "affects": {
+              "choice": false
+            },
+            "prompt": true,
+            "override": false
+          },
+          "uses": {
+            "spent": 0,
+            "recovery": []
+          },
+          "effects": [],
+          "flags": {},
+          "visibility": {
+            "level": {},
+            "requireAttunement": false,
+            "requireIdentification": false,
+            "requireMagic": false
+          },
+          "roll": {
+            "formula": "1d20 + @prof + @abilities.wis.mod",
+            "name": "Runecrafting check (Track) vs Wyrd DC",
+            "prompt": false,
+            "visible": false
+          }
+        },
+        "e2e663f1ae3c4743": {
+          "_id": "e2e663f1ae3c4743",
+          "type": "utility",
+          "name": "Track: apply effect",
+          "img": null,
+          "sort": 0,
+          "activation": {
+            "type": "action",
+            "value": 1,
+            "condition": "",
+            "override": false
+          },
+          "consumption": {
+            "scaling": {
+              "allowed": false
+            },
+            "spellSlot": false,
+            "targets": []
+          },
+          "description": {
+            "chatFlavor": "ᚱ Raidho: On the Trail: +1d4 to Survival and Perception checks to follow the marked trail."
+          },
+          "duration": {
+            "units": "inst",
+            "concentration": false,
+            "override": false
+          },
+          "range": {
+            "units": "touch",
+            "override": false
+          },
+          "target": {
+            "template": {
+              "contiguous": false,
+              "stationary": false,
+              "units": "ft"
+            },
+            "affects": {
+              "choice": false
+            },
+            "prompt": true,
+            "override": false
+          },
+          "uses": {
+            "spent": 0,
+            "recovery": []
+          },
+          "effects": [
+            {
+              "_id": "73cc841f98fe7037"
+            }
+          ],
+          "flags": {},
+          "visibility": {
+            "level": {},
+            "requireAttunement": false,
+            "requireIdentification": false,
+            "requireMagic": false
+          }
+        }
+      },
+      "identifier": "rune-track"
+    },
+    "effects": [
+      {
+        "_id": "73cc841f98fe7037",
+        "name": "On the Trail",
+        "img": "icons/svg/aura.svg",
+        "type": "base",
+        "transfer": false,
+        "disabled": false,
+        "origin": null,
+        "duration": {
+          "rounds": 600,
+          "seconds": null,
+          "startRound": null,
+          "startTime": null,
+          "turns": null,
+          "startTurn": null
+        },
+        "changes": [
+          {
+            "key": "system.skills.sur.bonuses.check",
+            "mode": 2,
+            "value": "+1d4",
+            "priority": null
+          },
+          {
+            "key": "system.skills.prc.bonuses.check",
+            "mode": 2,
+            "value": "+1d4",
+            "priority": null
+          }
+        ],
+        "statuses": [],
+        "description": "<p>On the Trail: +1d4 to Survival and Perception checks to follow the marked trail.</p>",
+        "tint": "#ffffff",
+        "flags": {}
+      }
+    ],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "varrenmoor": {
+        "tradition": "Vaelweyr",
+        "glyph": "Raidho"
+      }
+    }
+  },
+  {
+    "_id": "e6616d01d0f76ab5",
+    "name": "Rune: Bloom (Vaelweyr)",
+    "type": "spell",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "source": {
+        "custom": "Varrenmoor DM Guide, Runecrafting",
+        "book": "",
+        "page": "",
+        "license": "",
+        "rules": "2014",
+        "revision": 1
+      },
+      "description": {
+        "value": "<p><strong>ᚠ Fehu</strong> &mdash; Root Rune of <strong>Vaelweyr</strong>. Tier I.</p><p>Coax growth. A creature you touch regains hit points as fungus, moss, or seedlings spring up around the wound or seam; or grow a patch of plants in a 5-foot area.</p><p><em>Learned only after Stellan discovers and studies this glyph. Use the first activity (1 Rune Charge) to trace the rune and roll the Runecrafting check against the GM's Wyrd DC; on a success, use the effect activity. The save DC is 8 + proficiency + Wisdom.</em></p>",
+        "chat": ""
+      },
+      "level": 0,
+      "school": "trs",
+      "properties": [
+        "somatic",
+        "material"
+      ],
+      "materials": {
+        "value": "chalk, ink, or a carving tool",
+        "consumed": false,
+        "cost": 0,
+        "supply": 0
+      },
+      "target": {
+        "template": {
+          "count": "",
+          "contiguous": false,
+          "type": "",
+          "size": "",
+          "width": "",
+          "height": "",
+          "units": "ft",
+          "stationary": false
+        },
+        "affects": {
+          "count": "1",
+          "type": "",
+          "choice": false,
+          "special": ""
+        }
+      },
+      "range": {
+        "value": "0",
+        "units": "touch"
+      },
+      "activation": {
+        "type": "action",
+        "value": 1,
+        "condition": ""
+      },
+      "duration": {
+        "value": "",
+        "units": "inst"
+      },
+      "uses": {
+        "max": "",
+        "spent": 0,
+        "recovery": []
+      },
+      "method": "spell",
+      "prepared": 1,
+      "sourceItem": "",
+      "activities": {
+        "f82bdce1270a57b0": {
+          "_id": "f82bdce1270a57b0",
+          "type": "utility",
+          "name": "Trace Bloom [1 charge]",
+          "img": null,
+          "sort": 0,
+          "activation": {
+            "type": "action",
+            "value": 1,
+            "condition": "",
+            "override": false
+          },
+          "consumption": {
+            "scaling": {
+              "allowed": false
+            },
+            "spellSlot": false,
+            "targets": [
+              {
+                "type": "itemUses",
+                "target": "dd7KaDt9dU3lzYkP",
+                "value": "1",
+                "scaling": {
+                  "mode": "",
+                  "formula": ""
+                }
+              }
+            ]
+          },
+          "description": {
+            "chatFlavor": "Spend 1 Rune Charge and make the Runecrafting check against the Wyrd DC (set by the GM) to trace ᚠ Fehu. On a success, use the effect activity."
+          },
+          "duration": {
+            "units": "inst",
+            "concentration": false,
+            "override": false
+          },
+          "range": {
+            "units": "self",
+            "override": false
+          },
+          "target": {
+            "template": {
+              "contiguous": false,
+              "stationary": false,
+              "units": "ft"
+            },
+            "affects": {
+              "choice": false
+            },
+            "prompt": true,
+            "override": false
+          },
+          "uses": {
+            "spent": 0,
+            "recovery": []
+          },
+          "effects": [],
+          "flags": {},
+          "visibility": {
+            "level": {},
+            "requireAttunement": false,
+            "requireIdentification": false,
+            "requireMagic": false
+          },
+          "roll": {
+            "formula": "1d20 + @prof + @abilities.wis.mod",
+            "name": "Runecrafting check (Bloom) vs Wyrd DC",
+            "prompt": false,
+            "visible": false
+          }
+        },
+        "283493caeaf54d40": {
+          "_id": "283493caeaf54d40",
+          "type": "heal",
+          "name": "Bloom: restore hit points",
+          "img": null,
+          "sort": 0,
+          "activation": {
+            "type": "action",
+            "value": 1,
+            "condition": "",
+            "override": false
+          },
+          "consumption": {
+            "scaling": {
+              "allowed": false
+            },
+            "spellSlot": false,
+            "targets": []
+          },
+          "description": {
+            "chatFlavor": "ᚠ Fehu: Bloom. Plants and fungus sprout quickly around the touch."
+          },
+          "duration": {
+            "units": "inst",
+            "concentration": false,
+            "override": false
+          },
+          "range": {
+            "units": "touch",
+            "override": false
+          },
+          "target": {
+            "template": {
+              "contiguous": false,
+              "stationary": false,
+              "units": "ft"
+            },
+            "affects": {
+              "choice": false
+            },
+            "prompt": true,
+            "override": false
+          },
+          "uses": {
+            "spent": 0,
+            "recovery": []
+          },
+          "effects": [],
+          "flags": {},
+          "visibility": {
+            "level": {},
+            "requireAttunement": false,
+            "requireIdentification": false,
+            "requireMagic": false
+          },
+          "healing": {
+            "types": [
+              "healing"
+            ],
+            "number": 1,
+            "denomination": 4,
+            "bonus": "@abilities.wis.mod",
+            "scaling": {
+              "mode": "",
+              "number": 1
+            },
+            "custom": {
+              "enabled": false
+            }
+          }
+        }
+      },
+      "identifier": "rune-bloom"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "varrenmoor": {
+        "tradition": "Vaelweyr",
+        "glyph": "Fehu"
+      }
+    }
+  },
+  {
+    "_id": "5057e879baf5934f",
+    "name": "Rune: Sever (Mwooreth)",
+    "type": "spell",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "source": {
+        "custom": "Varrenmoor DM Guide, Runecrafting",
+        "book": "",
+        "page": "",
+        "license": "",
+        "rules": "2014",
+        "revision": 1
+      },
+      "description": {
+        "value": "<p><strong>ᚺ Hagalaz</strong> &mdash; Root Rune of <strong>Mwooreth</strong>. Tier I.</p><p>Cut one thing from another. A creature or object in range makes a Dexterity save, taking 2d6 force damage on a failure and half as much on a success. The same rune can sever one rope, chain, or inscription link.</p><p><em>Learned only after Stellan discovers and studies this glyph. Use the first activity (1 Rune Charge) to trace the rune and roll the Runecrafting check against the GM's Wyrd DC; on a success, use the effect activity. The save DC is 8 + proficiency + Wisdom.</em></p>",
+        "chat": ""
+      },
+      "level": 0,
+      "school": "evo",
+      "properties": [
+        "somatic",
+        "material"
+      ],
+      "materials": {
+        "value": "chalk, ink, or a carving tool",
+        "consumed": false,
+        "cost": 0,
+        "supply": 0
+      },
+      "target": {
+        "template": {
+          "count": "",
+          "contiguous": false,
+          "type": "",
+          "size": "",
+          "width": "",
+          "height": "",
+          "units": "ft",
+          "stationary": false
+        },
+        "affects": {
+          "count": "1",
+          "type": "",
+          "choice": false,
+          "special": ""
+        }
+      },
+      "range": {
+        "value": "30",
+        "units": "ft"
+      },
+      "activation": {
+        "type": "action",
+        "value": 1,
+        "condition": ""
+      },
+      "duration": {
+        "value": "",
+        "units": "inst"
+      },
+      "uses": {
+        "max": "",
+        "spent": 0,
+        "recovery": []
+      },
+      "method": "spell",
+      "prepared": 1,
+      "sourceItem": "",
+      "activities": {
+        "5a0e8e4140ed9b8b": {
+          "_id": "5a0e8e4140ed9b8b",
+          "type": "utility",
+          "name": "Trace Sever [1 charge]",
+          "img": null,
+          "sort": 0,
+          "activation": {
+            "type": "action",
+            "value": 1,
+            "condition": "",
+            "override": false
+          },
+          "consumption": {
+            "scaling": {
+              "allowed": false
+            },
+            "spellSlot": false,
+            "targets": [
+              {
+                "type": "itemUses",
+                "target": "dd7KaDt9dU3lzYkP",
+                "value": "1",
+                "scaling": {
+                  "mode": "",
+                  "formula": ""
+                }
+              }
+            ]
+          },
+          "description": {
+            "chatFlavor": "Spend 1 Rune Charge and make the Runecrafting check against the Wyrd DC (set by the GM) to trace ᚺ Hagalaz. On a success, use the effect activity."
+          },
+          "duration": {
+            "units": "inst",
+            "concentration": false,
+            "override": false
+          },
+          "range": {
+            "units": "self",
+            "override": false
+          },
+          "target": {
+            "template": {
+              "contiguous": false,
+              "stationary": false,
+              "units": "ft"
+            },
+            "affects": {
+              "choice": false
+            },
+            "prompt": true,
+            "override": false
+          },
+          "uses": {
+            "spent": 0,
+            "recovery": []
+          },
+          "effects": [],
+          "flags": {},
+          "visibility": {
+            "level": {},
+            "requireAttunement": false,
+            "requireIdentification": false,
+            "requireMagic": false
+          },
+          "roll": {
+            "formula": "1d20 + @prof + @abilities.wis.mod",
+            "name": "Runecrafting check (Sever) vs Wyrd DC",
+            "prompt": false,
+            "visible": false
+          }
+        },
+        "426007f669627b74": {
+          "_id": "426007f669627b74",
+          "type": "save",
+          "name": "Sever: effect",
+          "img": null,
+          "sort": 0,
+          "activation": {
+            "type": "action",
+            "value": 1,
+            "condition": "",
+            "override": false
+          },
+          "consumption": {
+            "scaling": {
+              "allowed": false
+            },
+            "spellSlot": false,
+            "targets": []
+          },
+          "description": {
+            "chatFlavor": "ᚺ Hagalaz: Runecrafting save DC (8 + proficiency + Wisdom). Cuts cords, locks, ties and links as readily as flesh."
+          },
+          "duration": {
+            "units": "inst",
+            "concentration": false,
+            "override": false
+          },
+          "range": {
+            "units": "ft",
+            "value": "30",
+            "override": false
+          },
+          "target": {
+            "template": {
+              "contiguous": false,
+              "stationary": false,
+              "units": "ft"
+            },
+            "affects": {
+              "choice": false
+            },
+            "prompt": true,
+            "override": false
+          },
+          "uses": {
+            "spent": 0,
+            "recovery": []
+          },
+          "effects": [],
+          "flags": {},
+          "visibility": {
+            "level": {},
+            "requireAttunement": false,
+            "requireIdentification": false,
+            "requireMagic": false
+          },
+          "save": {
+            "ability": [
+              "dex"
+            ],
+            "dc": {
+              "calculation": "",
+              "formula": "8 + @prof + @abilities.wis.mod"
+            }
+          },
+          "damage": {
+            "onSave": "half",
+            "parts": [
+              {
+                "number": 2,
+                "denomination": 6,
+                "bonus": "",
+                "types": [
+                  "force"
+                ],
+                "custom": {
+                  "enabled": false
+                },
+                "scaling": {
+                  "mode": "",
+                  "number": 1
+                }
+              }
+            ]
+          }
+        }
+      },
+      "identifier": "rune-sever"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "varrenmoor": {
+        "tradition": "Mwooreth",
+        "glyph": "Hagalaz"
+      }
+    }
+  },
+  {
+    "_id": "770c1a6f9359164c",
+    "name": "Rune: Hunger (Mwooreth)",
+    "type": "spell",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "source": {
+        "custom": "Varrenmoor DM Guide, Runecrafting",
+        "book": "",
+        "page": "",
+        "license": "",
+        "rules": "2014",
+        "revision": 1
+      },
+      "description": {
+        "value": "<p><strong>ᚢ Uruz</strong> &mdash; Root Rune of <strong>Mwooreth</strong>. Tier I.</p><p>Make a thing hunger. A creature in range makes a Constitution save, taking 1d8 necrotic damage on a failure and half as much on a success. Food, fuel, or rations in range may be consumed instead.</p><p><em>Learned only after Stellan discovers and studies this glyph. Use the first activity (1 Rune Charge) to trace the rune and roll the Runecrafting check against the GM's Wyrd DC; on a success, use the effect activity. The save DC is 8 + proficiency + Wisdom.</em></p>",
+        "chat": ""
+      },
+      "level": 0,
+      "school": "nec",
+      "properties": [
+        "somatic",
+        "material"
+      ],
+      "materials": {
+        "value": "chalk, ink, or a carving tool",
+        "consumed": false,
+        "cost": 0,
+        "supply": 0
+      },
+      "target": {
+        "template": {
+          "count": "",
+          "contiguous": false,
+          "type": "",
+          "size": "",
+          "width": "",
+          "height": "",
+          "units": "ft",
+          "stationary": false
+        },
+        "affects": {
+          "count": "1",
+          "type": "",
+          "choice": false,
+          "special": ""
+        }
+      },
+      "range": {
+        "value": "30",
+        "units": "ft"
+      },
+      "activation": {
+        "type": "action",
+        "value": 1,
+        "condition": ""
+      },
+      "duration": {
+        "value": "",
+        "units": "inst"
+      },
+      "uses": {
+        "max": "",
+        "spent": 0,
+        "recovery": []
+      },
+      "method": "spell",
+      "prepared": 1,
+      "sourceItem": "",
+      "activities": {
+        "8e62330991ade57d": {
+          "_id": "8e62330991ade57d",
+          "type": "utility",
+          "name": "Trace Hunger [1 charge]",
+          "img": null,
+          "sort": 0,
+          "activation": {
+            "type": "action",
+            "value": 1,
+            "condition": "",
+            "override": false
+          },
+          "consumption": {
+            "scaling": {
+              "allowed": false
+            },
+            "spellSlot": false,
+            "targets": [
+              {
+                "type": "itemUses",
+                "target": "dd7KaDt9dU3lzYkP",
+                "value": "1",
+                "scaling": {
+                  "mode": "",
+                  "formula": ""
+                }
+              }
+            ]
+          },
+          "description": {
+            "chatFlavor": "Spend 1 Rune Charge and make the Runecrafting check against the Wyrd DC (set by the GM) to trace ᚢ Uruz. On a success, use the effect activity."
+          },
+          "duration": {
+            "units": "inst",
+            "concentration": false,
+            "override": false
+          },
+          "range": {
+            "units": "self",
+            "override": false
+          },
+          "target": {
+            "template": {
+              "contiguous": false,
+              "stationary": false,
+              "units": "ft"
+            },
+            "affects": {
+              "choice": false
+            },
+            "prompt": true,
+            "override": false
+          },
+          "uses": {
+            "spent": 0,
+            "recovery": []
+          },
+          "effects": [],
+          "flags": {},
+          "visibility": {
+            "level": {},
+            "requireAttunement": false,
+            "requireIdentification": false,
+            "requireMagic": false
+          },
+          "roll": {
+            "formula": "1d20 + @prof + @abilities.wis.mod",
+            "name": "Runecrafting check (Hunger) vs Wyrd DC",
+            "prompt": false,
+            "visible": false
+          }
+        },
+        "ed1b19394496839e": {
+          "_id": "ed1b19394496839e",
+          "type": "save",
+          "name": "Hunger: effect",
+          "img": null,
+          "sort": 0,
+          "activation": {
+            "type": "action",
+            "value": 1,
+            "condition": "",
+            "override": false
+          },
+          "consumption": {
+            "scaling": {
+              "allowed": false
+            },
+            "spellSlot": false,
+            "targets": []
+          },
+          "description": {
+            "chatFlavor": "ᚢ Uruz: Runecrafting save DC (8 + proficiency + Wisdom)."
+          },
+          "duration": {
+            "units": "inst",
+            "concentration": false,
+            "override": false
+          },
+          "range": {
+            "units": "ft",
+            "value": "30",
+            "override": false
+          },
+          "target": {
+            "template": {
+              "contiguous": false,
+              "stationary": false,
+              "units": "ft"
+            },
+            "affects": {
+              "choice": false
+            },
+            "prompt": true,
+            "override": false
+          },
+          "uses": {
+            "spent": 0,
+            "recovery": []
+          },
+          "effects": [],
+          "flags": {},
+          "visibility": {
+            "level": {},
+            "requireAttunement": false,
+            "requireIdentification": false,
+            "requireMagic": false
+          },
+          "save": {
+            "ability": [
+              "con"
+            ],
+            "dc": {
+              "calculation": "",
+              "formula": "8 + @prof + @abilities.wis.mod"
+            }
+          },
+          "damage": {
+            "onSave": "half",
+            "parts": [
+              {
+                "number": 1,
+                "denomination": 8,
+                "bonus": "",
+                "types": [
+                  "necrotic"
+                ],
+                "custom": {
+                  "enabled": false
+                },
+                "scaling": {
+                  "mode": "",
+                  "number": 1
+                }
+              }
+            ]
+          }
+        }
+      },
+      "identifier": "rune-hunger"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "varrenmoor": {
+        "tradition": "Mwooreth",
+        "glyph": "Uruz"
+      }
+    }
+  },
+  {
+    "_id": "25d775dd82cf37a0",
+    "name": "Rune: Silence (Mwooreth)",
+    "type": "spell",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "source": {
+        "custom": "Varrenmoor DM Guide, Runecrafting",
+        "book": "",
+        "page": "",
+        "license": "",
+        "rules": "2014",
+        "revision": 1
+      },
+      "description": {
+        "value": "<p><strong>ᛈ Perthro</strong> &mdash; Root Rune of <strong>Mwooreth</strong>. Tier I.</p><p>Take the sound out of something. A creature in range that fails a Constitution save is silenced for 1 minute. A door, object, or 10-foot space can be silenced for 1 hour.</p><p><em>Learned only after Stellan discovers and studies this glyph. Use the first activity (1 Rune Charge) to trace the rune and roll the Runecrafting check against the GM's Wyrd DC; on a success, use the effect activity. The save DC is 8 + proficiency + Wisdom.</em></p>",
+        "chat": ""
+      },
+      "level": 0,
+      "school": "ill",
+      "properties": [
+        "somatic",
+        "material"
+      ],
+      "materials": {
+        "value": "chalk, ink, or a carving tool",
+        "consumed": false,
+        "cost": 0,
+        "supply": 0
+      },
+      "target": {
+        "template": {
+          "count": "",
+          "contiguous": false,
+          "type": "",
+          "size": "",
+          "width": "",
+          "height": "",
+          "units": "ft",
+          "stationary": false
+        },
+        "affects": {
+          "count": "1",
+          "type": "",
+          "choice": false,
+          "special": ""
+        }
+      },
+      "range": {
+        "value": "30",
+        "units": "ft"
+      },
+      "activation": {
+        "type": "action",
+        "value": 1,
+        "condition": ""
+      },
+      "duration": {
+        "value": "",
+        "units": "inst"
+      },
+      "uses": {
+        "max": "",
+        "spent": 0,
+        "recovery": []
+      },
+      "method": "spell",
+      "prepared": 1,
+      "sourceItem": "",
+      "activities": {
+        "aebf5fa05dbbb861": {
+          "_id": "aebf5fa05dbbb861",
+          "type": "utility",
+          "name": "Trace Silence [1 charge]",
+          "img": null,
+          "sort": 0,
+          "activation": {
+            "type": "action",
+            "value": 1,
+            "condition": "",
+            "override": false
+          },
+          "consumption": {
+            "scaling": {
+              "allowed": false
+            },
+            "spellSlot": false,
+            "targets": [
+              {
+                "type": "itemUses",
+                "target": "dd7KaDt9dU3lzYkP",
+                "value": "1",
+                "scaling": {
+                  "mode": "",
+                  "formula": ""
+                }
+              }
+            ]
+          },
+          "description": {
+            "chatFlavor": "Spend 1 Rune Charge and make the Runecrafting check against the Wyrd DC (set by the GM) to trace ᛈ Perthro. On a success, use the effect activity."
+          },
+          "duration": {
+            "units": "inst",
+            "concentration": false,
+            "override": false
+          },
+          "range": {
+            "units": "self",
+            "override": false
+          },
+          "target": {
+            "template": {
+              "contiguous": false,
+              "stationary": false,
+              "units": "ft"
+            },
+            "affects": {
+              "choice": false
+            },
+            "prompt": true,
+            "override": false
+          },
+          "uses": {
+            "spent": 0,
+            "recovery": []
+          },
+          "effects": [],
+          "flags": {},
+          "visibility": {
+            "level": {},
+            "requireAttunement": false,
+            "requireIdentification": false,
+            "requireMagic": false
+          },
+          "roll": {
+            "formula": "1d20 + @prof + @abilities.wis.mod",
+            "name": "Runecrafting check (Silence) vs Wyrd DC",
+            "prompt": false,
+            "visible": false
+          }
+        },
+        "a8a864429bfd57a6": {
+          "_id": "a8a864429bfd57a6",
+          "type": "save",
+          "name": "Silence: effect",
+          "img": null,
+          "sort": 0,
+          "activation": {
+            "type": "action",
+            "value": 1,
+            "condition": "",
+            "override": false
+          },
+          "consumption": {
+            "scaling": {
+              "allowed": false
+            },
+            "spellSlot": false,
+            "targets": []
+          },
+          "description": {
+            "chatFlavor": "ᛈ Perthro: Runecrafting save DC (8 + proficiency + Wisdom)."
+          },
+          "duration": {
+            "units": "inst",
+            "concentration": false,
+            "override": false
+          },
+          "range": {
+            "units": "ft",
+            "value": "30",
+            "override": false
+          },
+          "target": {
+            "template": {
+              "contiguous": false,
+              "stationary": false,
+              "units": "ft"
+            },
+            "affects": {
+              "choice": false
+            },
+            "prompt": true,
+            "override": false
+          },
+          "uses": {
+            "spent": 0,
+            "recovery": []
+          },
+          "effects": [
+            {
+              "_id": "04f34cd825447049",
+              "onSave": false
+            }
+          ],
+          "flags": {},
+          "visibility": {
+            "level": {},
+            "requireAttunement": false,
+            "requireIdentification": false,
+            "requireMagic": false
+          },
+          "save": {
+            "ability": [
+              "con"
+            ],
+            "dc": {
+              "calculation": "",
+              "formula": "8 + @prof + @abilities.wis.mod"
+            }
+          },
+          "damage": {
+            "onSave": "none",
+            "parts": []
+          }
+        }
+      },
+      "identifier": "rune-silence"
+    },
+    "effects": [
+      {
+        "_id": "04f34cd825447049",
+        "name": "Silenced",
+        "img": "icons/svg/aura.svg",
+        "type": "base",
+        "transfer": false,
+        "disabled": false,
+        "origin": null,
+        "duration": {
+          "rounds": 10,
+          "seconds": null,
+          "startRound": null,
+          "startTime": null,
+          "turns": null,
+          "startTurn": null
+        },
+        "changes": [],
+        "statuses": [],
+        "description": "<p>Silenced: cannot speak or cast spells with a verbal component; makes no sound for 1 minute.</p>",
+        "tint": "#ffffff",
+        "flags": {}
+      }
+    ],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "varrenmoor": {
+        "tradition": "Mwooreth",
+        "glyph": "Perthro"
+      }
+    }
+  },
+  {
+    "_id": "793d933659ae5f17",
+    "name": "Rune: False Hearth (Mwooreth)",
+    "type": "spell",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "source": {
+        "custom": "Varrenmoor DM Guide, Runecrafting",
+        "book": "",
+        "page": "",
+        "license": "",
+        "rules": "2014",
+        "revision": 1
+      },
+      "description": {
+        "value": "<p><strong>ᛊ Sowilo</strong> &mdash; Root Rune of <strong>Mwooreth</strong>. Tier I.</p><p>Offer a warmth that is not there. A creature in range that fails a Wisdom save is charmed by a false sense of shelter and belonging until the end of its next turn, and is drawn toward the rune.</p><p><em>Learned only after Stellan discovers and studies this glyph. Use the first activity (1 Rune Charge) to trace the rune and roll the Runecrafting check against the GM's Wyrd DC; on a success, use the effect activity. The save DC is 8 + proficiency + Wisdom.</em></p>",
+        "chat": ""
+      },
+      "level": 0,
+      "school": "enc",
+      "properties": [
+        "somatic",
+        "material"
+      ],
+      "materials": {
+        "value": "chalk, ink, or a carving tool",
+        "consumed": false,
+        "cost": 0,
+        "supply": 0
+      },
+      "target": {
+        "template": {
+          "count": "",
+          "contiguous": false,
+          "type": "",
+          "size": "",
+          "width": "",
+          "height": "",
+          "units": "ft",
+          "stationary": false
+        },
+        "affects": {
+          "count": "1",
+          "type": "",
+          "choice": false,
+          "special": ""
+        }
+      },
+      "range": {
+        "value": "30",
+        "units": "ft"
+      },
+      "activation": {
+        "type": "action",
+        "value": 1,
+        "condition": ""
+      },
+      "duration": {
+        "value": "",
+        "units": "inst"
+      },
+      "uses": {
+        "max": "",
+        "spent": 0,
+        "recovery": []
+      },
+      "method": "spell",
+      "prepared": 1,
+      "sourceItem": "",
+      "activities": {
+        "35df888c725a465d": {
+          "_id": "35df888c725a465d",
+          "type": "utility",
+          "name": "Trace False Hearth [1 charge]",
+          "img": null,
+          "sort": 0,
+          "activation": {
+            "type": "action",
+            "value": 1,
+            "condition": "",
+            "override": false
+          },
+          "consumption": {
+            "scaling": {
+              "allowed": false
+            },
+            "spellSlot": false,
+            "targets": [
+              {
+                "type": "itemUses",
+                "target": "dd7KaDt9dU3lzYkP",
+                "value": "1",
+                "scaling": {
+                  "mode": "",
+                  "formula": ""
+                }
+              }
+            ]
+          },
+          "description": {
+            "chatFlavor": "Spend 1 Rune Charge and make the Runecrafting check against the Wyrd DC (set by the GM) to trace ᛊ Sowilo. On a success, use the effect activity."
+          },
+          "duration": {
+            "units": "inst",
+            "concentration": false,
+            "override": false
+          },
+          "range": {
+            "units": "self",
+            "override": false
+          },
+          "target": {
+            "template": {
+              "contiguous": false,
+              "stationary": false,
+              "units": "ft"
+            },
+            "affects": {
+              "choice": false
+            },
+            "prompt": true,
+            "override": false
+          },
+          "uses": {
+            "spent": 0,
+            "recovery": []
+          },
+          "effects": [],
+          "flags": {},
+          "visibility": {
+            "level": {},
+            "requireAttunement": false,
+            "requireIdentification": false,
+            "requireMagic": false
+          },
+          "roll": {
+            "formula": "1d20 + @prof + @abilities.wis.mod",
+            "name": "Runecrafting check (False Hearth) vs Wyrd DC",
+            "prompt": false,
+            "visible": false
+          }
+        },
+        "e066afaf6bb353a0": {
+          "_id": "e066afaf6bb353a0",
+          "type": "save",
+          "name": "False Hearth: effect",
+          "img": null,
+          "sort": 0,
+          "activation": {
+            "type": "action",
+            "value": 1,
+            "condition": "",
+            "override": false
+          },
+          "consumption": {
+            "scaling": {
+              "allowed": false
+            },
+            "spellSlot": false,
+            "targets": []
+          },
+          "description": {
+            "chatFlavor": "ᛊ Sowilo: Runecrafting save DC (8 + proficiency + Wisdom)."
+          },
+          "duration": {
+            "units": "inst",
+            "concentration": false,
+            "override": false
+          },
+          "range": {
+            "units": "ft",
+            "value": "30",
+            "override": false
+          },
+          "target": {
+            "template": {
+              "contiguous": false,
+              "stationary": false,
+              "units": "ft"
+            },
+            "affects": {
+              "choice": false
+            },
+            "prompt": true,
+            "override": false
+          },
+          "uses": {
+            "spent": 0,
+            "recovery": []
+          },
+          "effects": [
+            {
+              "_id": "dc6d01f1cb723a03",
+              "onSave": false
+            }
+          ],
+          "flags": {},
+          "visibility": {
+            "level": {},
+            "requireAttunement": false,
+            "requireIdentification": false,
+            "requireMagic": false
+          },
+          "save": {
+            "ability": [
+              "wis"
+            ],
+            "dc": {
+              "calculation": "",
+              "formula": "8 + @prof + @abilities.wis.mod"
+            }
+          },
+          "damage": {
+            "onSave": "none",
+            "parts": []
+          }
+        }
+      },
+      "identifier": "rune-false-hearth"
+    },
+    "effects": [
+      {
+        "_id": "dc6d01f1cb723a03",
+        "name": "Drawn to the False Hearth",
+        "img": "icons/svg/aura.svg",
+        "type": "base",
+        "transfer": false,
+        "disabled": false,
+        "origin": null,
+        "duration": {
+          "rounds": 2,
+          "seconds": null,
+          "startRound": null,
+          "startTime": null,
+          "turns": null,
+          "startTurn": null
+        },
+        "changes": [],
+        "statuses": [
+          "charmed"
+        ],
+        "description": "<p>Charmed: drawn toward a false warmth until the end of its next turn.</p>",
+        "tint": "#ffffff",
+        "flags": {}
+      }
+    ],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "varrenmoor": {
+        "tradition": "Mwooreth",
+        "glyph": "Sowilo"
+      }
+    }
+  }
+]

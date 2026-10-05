@@ -74,7 +74,7 @@ def loot(name, player_text, gm_text, quest, img="icons/svg/book.svg"):
     it = {
         "_id": hid("quest", name, "item"), "name": name, "type": "loot", "img": img,
         "system": {
-            "description": {"value": p(player_text) + "<hr>" + p(f"<em>GM ({quest}):</em> {gm_text}"), "chat": ""},
+            "description": {"value": p(player_text), "chat": ""},          # player-facing only: no GM notes, so it can be dragged to a character sheet
             "source": {"custom": "Varrenmoor DM Guide, Part 6", "book": "", "page": "", "license": "", "rules": "2014", "revision": 1},
             "quantity": 1, "weight": {"value": 0, "units": "lb"}, "price": {"value": 0, "denomination": "gp"},
             "rarity": "", "identified": True, "type": {"value": "gear", "subtype": ""}, "properties": [], "container": None, "activities": {},

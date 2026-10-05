@@ -159,28 +159,47 @@ def painting_creature(k, stem, canvas_w, canvas_h, accessory, frame_key="brass",
 
 # ----------------------------------------------------------------------------------------------- turtle (Gerald)
 def turtle(k):
-    """Gerald: a soft-shelled turtle about 0.5 m long with a long grippy tongue and extra climbing toes (six legs).
-    Origin at the middle of the body footprint; head toward -Y."""
+    """Gerald: a cartoony soft-shelled turtle about 0.6 m long with a long grippy tongue and SIX stubby legs (three a side), each ending in sticky pink
+    toe pads. Rounded shell with raised scutes, bulging eyes, long fleshy snout. Origin at the middle of the body footprint; head toward -Y."""
+    import math
     M = mats(k)
-    body_z = 0.09
-    k.sphere(0.22, loc=(0, 0.02, body_z + 0.03), scale=(0.9, 1.15, 0.38), material=M["olive"], name="shell", segments=12)
-    k.sphere(0.2, loc=(0, 0.02, body_z - 0.02), scale=(0.88, 1.12, 0.22), material=M["cream"], name="plastron", segments=10)
-    # long neck, head, tongue (toward -Y)
-    limb(k, (0, -0.2, body_z + 0.04), (0, -0.34, body_z + 0.1), 0.04, M["olive"], "neck", 8)
-    k.sphere(0.06, loc=(0, -0.38, body_z + 0.11), scale=(1, 1.3, 0.9), material=M["olive"], name="head", segments=10)
+    dark = k.mat("shell_dark", (0.17, 0.22, 0.08), roughness=0.75)
+    z0 = 0.13                                                   # body height above the ground
+    # shell: low dome, pale rim, plastron underneath
+    k.sphere(0.25, loc=(0, 0.02, z0 + 0.03), scale=(0.95, 1.2, 0.5), material=M["olive"], name="shell", segments=16)
+    k.sphere(0.265, loc=(0, 0.02, z0 - 0.02), scale=(0.97, 1.22, 0.16), material=M["cream"], name="shell_rim", segments=16)
+    k.sphere(0.22, loc=(0, 0.02, z0 - 0.05), scale=(0.9, 1.15, 0.2), material=M["cream"], name="plastron", segments=12)
+    # raised scutes: a centre plate, a ring of six around it, a ridge of marginals
+    def scute(x, y, z, r, tilt):
+        k.cylinder(r, 0.012, loc=(x, y, z), rot=tilt, material=dark, name="scute", verts=6)
+    top = z0 + 0.03 + 0.25 * 0.5
+    scute(0, 0.02, top - 0.006, 0.09, (0, 0, 0))
+    for i in range(6):
+        a_ = math.radians(60 * i + 30)
+        x, y = 0.15 * math.cos(a_) * 0.95, 0.02 + 0.15 * math.sin(a_) * 1.2
+        scute(x, y, top - 0.04, 0.07, (math.degrees(math.sin(a_)) * 0.0 + (-14 * math.sin(a_)), 14 * math.cos(a_), 0))
+    # neck, head with a long snout, bulging eyes, nostrils, long pink tongue
+    limb(k, (0, -0.24, z0 + 0.02), (0, -0.36, z0 + 0.08), 0.055, M["olive"], "neck", 10)
+    k.sphere(0.075, loc=(0, -0.4, z0 + 0.1), scale=(1, 1.15, 0.9), material=M["olive"], name="head", segments=12)
+    k.sphere(0.045, loc=(0, -0.49, z0 + 0.085), scale=(0.85, 1.5, 0.75), material=M["olive"], name="snout", segments=10)
     for sx in (-1, 1):
-        k.sphere(0.014, loc=(sx * 0.035, -0.42, body_z + 0.15), material=M["soot"], name="eye", segments=6)
-    limb(k, (0, -0.43, body_z + 0.09), (0, -0.56, body_z + 0.07), 0.01, M["pink"], "tongue", 6)
-    k.sphere(0.022, loc=(0, -0.57, body_z + 0.07), material=M["pink"], name="tongue_pad", segments=6)
-    # six legs (two pairs plus Gerald's bonus pair), each ending in a three-toed sticky pad
-    for y in (-0.1, 0.05, 0.19):
+        k.sphere(0.03, loc=(sx * 0.055, -0.41, z0 + 0.16), material=M["white"], name="eye_white", segments=10)
+        k.sphere(0.017, loc=(sx * 0.06, -0.435, z0 + 0.165), material=M["soot"], name="eye", segments=8)
+        k.sphere(0.006, loc=(sx * 0.016, -0.545, z0 + 0.1), material=M["soot"], name="nostril", segments=6)
+    limb(k, (0, -0.53, z0 + 0.065), (0, -0.66, z0 + 0.045), 0.014, M["pink"], "tongue", 8)
+    k.sphere(0.03, loc=(0, -0.665, z0 + 0.045), scale=(1.3, 1.0, 0.6), material=M["pink"], name="tongue_tip", segments=8)
+    # six legs: three a side, stubby, bent out and down, each with four sticky pink toe pads
+    for y in (-0.15, 0.04, 0.23):
         for sx in (-1, 1):
-            hip = (sx * 0.17, y, body_z)
-            foot = (sx * 0.27, y - 0.02, 0.025)
-            limb(k, hip, foot, 0.028, M["olive"], "leg", 6)
-            for t in (-0.03, 0.0, 0.03):
-                k.sphere(0.014, loc=(foot[0] + sx * 0.01, foot[1] + t * 1.5, 0.02), scale=(1, 1, 0.6), material=M["pink"], name="toe_pad", segments=6)
-    k.cone(0.04, 0.0, 0.1, loc=(0, 0.3, body_z), rot=(-90, 0, 0), material=M["olive"], name="tail", verts=6)
+            hip = (sx * 0.2, y, z0 - 0.01)
+            knee = (sx * 0.3, y - 0.01, z0 - 0.02)
+            foot = (sx * 0.33, y - 0.02, 0.03)
+            limb(k, hip, knee, 0.042, M["olive"], "thigh", 8)
+            limb(k, knee, foot, 0.034, M["olive"], "shin", 8)
+            k.sphere(0.04, loc=foot, scale=(1.3, 1.5, 0.45), material=M["pink"], name="foot", segments=8)
+            for t in (-1.5, -0.5, 0.5, 1.5):
+                k.sphere(0.014, loc=(foot[0] + sx * 0.012, foot[1] - 0.045 + t * 0.012, 0.018), scale=(1, 1.4, 0.6), material=M["pink"], name="toe_pad", segments=6)
+    k.cone(0.05, 0.0, 0.14, loc=(0, 0.36, z0 - 0.01), rot=(-90, 0, 0), material=M["olive"], name="tail", verts=8)
 
 
 # ----------------------------------------------------------------------------------------------- humanoid

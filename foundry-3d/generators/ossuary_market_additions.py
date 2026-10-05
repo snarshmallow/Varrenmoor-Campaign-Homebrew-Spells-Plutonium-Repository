@@ -20,7 +20,9 @@ LIGHTS = []
 ORIG = "D:/Varrenmoor-Campaign-Homebrew-Spells-Plutonium-Repository/foundry-3d/out/orig_market.glb"
 R0 = 22.9
 # ring house angle (degrees) -> shop kind. House k stands at 9 + 18*k degrees.
-SHOPS = {-9: "post", -45: "forge", -81: "clinic", -117: "inn", -153: "warehouse", -171: "rune"}
+SHOPS = {-45: "forge", -81: "clinic", -117: "inn", -171: "rune"}              # the four real shops (full signs)
+UTILITY = {-9: "tube", -153: "dock"}                                          # utility plates on the post and warehouse houses
+PLATES = ["lodge", "cart", "tallow", "resid", "trolley", "notice", "intake", "wash", "ledger"]
 
 
 def build(k):
@@ -43,6 +45,8 @@ def build(k):
     cloths = [k.mat(f"mk_awning{i}", c, roughness=0.95) for i, c in enumerate(((0.32, 0.07, 0.06), (0.07, 0.12, 0.25), (0.08, 0.22, 0.13), (0.42, 0.32, 0.1), (0.25, 0.1, 0.3)))]
     brass = k.mat("mk_brass", (0.55, 0.4, 0.12), roughness=0.4, metallic=0.9)
     lamp = k.mat("mk_lamp", (1.0, 0.7, 0.35), roughness=0.5, emission=(1.0, 0.65, 0.3))
+    glass = k.mat("mk_glass", (0.03, 0.05, 0.07), roughness=0.15)
+    doak = mats.get("Dark antique oak", oak)
     sack = k.mat("mk_sack", (0.45, 0.38, 0.26), roughness=1.0)
 
     def box(cx, cy, cz, sx, sy, sz, mat, name, rotz=0.0, rotx=0.0, roty=0.0):
@@ -160,6 +164,24 @@ def build(k):
             _sm[name] = m
         return _sm[name]
 
+    def plate(P, LB, key):
+        """A small iron utility plate over the door, on two short arms."""
+        hw, hh, z = 0.6, 0.18, 2.95
+        mat = _sign_material(f"plate_{key}")
+        verts = [P(-hw, 0.2, z - hh), P(hw, 0.2, z - hh), P(hw, 0.2, z + hh), P(-hw, 0.2, z + hh)]
+        me = bpy.data.meshes.new(f"plate_{key}")
+        me.from_pydata(verts, [], [(0, 1, 2, 3)])
+        uv = me.uv_layers.new(name="UVMap")
+        for li, uvc in zip(me.polygons[0].loop_indices, ((0, 0), (1, 0), (1, 1), (0, 1))):
+            uv.data[li].uv = uvc
+        me.update()
+        ob = bpy.data.objects.new(f"plate_{key}", me)
+        bpy.context.scene.collection.objects.link(ob)
+        ob.data.materials.append(mat)
+        LB(-hw - 0.03, hw + 0.03, 0.16, 0.19, z - hh - 0.03, z + hh + 0.03, iron, "plate_back")
+        for su in (-0.45, 0.45):
+            LB(su - 0.02, su + 0.02, -0.65, 0.17, z + 0.05, z + 0.09, iron, "plate_arm")
+
     def awning(P, LB, cloth, width=3.4):
         x, y, z = P(0, 0.55, 2.2)
         box(x, y, z, 1.15, width, 0.05, cloth, "awning", rotz=frame_rz[0], roty=-14.0 if True else 0)
@@ -219,15 +241,68 @@ def build(k):
                     x, y, z = P(u, 0.6, 0.3)
                     k.sphere(0.32, loc=(x, y, z), scale=(1, 0.8, 1.0), material=sack, name="sack", segments=8)
 
+    def door_and_windows(P, LB, idx, kind):
+        """Non-functional door and shop windows set into a stone porch block proud of the house front."""
+        LB(-0.85, 0.85, -0.5, 0.12, 0.0, 2.65, ashlar, "porch_block")
+        LB(-0.62, 0.62, 0.12, 0.17, 0.0, 2.35, coak, "door_frame")
+        LB(-0.52, 0.52, 0.17, 0.21, 0.0, 2.25, doak, "door_leaf")
+        LB(-0.52, 0.52, 0.21, 0.23, 0.9, 0.97, iron, "door_strap_a")
+        LB(-0.52, 0.52, 0.21, 0.23, 1.6, 1.67, iron, "door_strap_b")
+        x, y, z = P(0.38, 0.27, 1.1)
+        k.sphere(0.05, loc=(x, y, z), material=brass, name="door_handle", segments=8)
+        for sx in (-1, 1):
+            if kind == "general" and (idx + (sx > 0)) % 3 == 0:
+                continue
+            u0 = sx * 2.0
+            LB(u0 - 0.65, u0 + 0.65, -0.5, 0.1, 0.55, 1.95, ashlar, "window_block")
+            LB(u0 - 0.6, u0 + 0.6, 0.1, 0.15, 0.62, 1.85, coak, "window_frame")
+            LB(u0 - 0.5, u0 + 0.5, 0.1, 0.17, 0.72, 1.75, glass, "window_glass")
+            LB(u0 - 0.04, u0 + 0.04, 0.15, 0.18, 0.72, 1.75, coak, "window_mullion")
+            LB(u0 - 0.5, u0 + 0.5, 0.15, 0.18, 1.2, 1.26, coak, "window_transom")
+            LB(u0 - 0.7, u0 + 0.7, 0.1, 0.3, 0.5, 0.57, ashlar, "window_sill")
+            if (idx + sx) % 2 == 0:
+                for ss in (-1, 1):
+                    LB(u0 + ss * 0.72 - 0.12, u0 + ss * 0.72 + 0.12, 0.1, 0.14, 0.62, 1.85, doak, "shutter")
+
     for i in range(20):
         ang = 9 + 18 * i
         if ang > 180:
             ang -= 360
         kind = SHOPS.get(ang, "general")
+        if ang in UTILITY:
+            kind = "general"
         p, P, LB = front(ang)
         frame_rz[0] = ang + 180.0
         if kind != "general" or i % 3 != 1:
             awning(P, LB, cloths[(i * 2 + 1) % len(cloths)])
+        door_and_windows(P, LB, i, kind)
         goods(kind, P, LB, ang + 180.0)
         if kind != "general":
             sign(P, LB, kind)
+        elif ang in UTILITY:
+            plate(P, LB, UTILITY[ang])
+        elif i % 3 != 2:
+            plate(P, LB, PLATES[i % len(PLATES)])
+
+    # ---- four lamp posts: these are the scene's four lights
+    for sx, sy in ((12, 12), (-12, 12), (12, -12), (-12, -12)):
+        k.cylinder(0.11, 3.6, loc=(sx, sy, 1.8), material=iron, name="lamp_post", verts=10)
+        k.cylinder(0.28, 0.12, loc=(sx, sy, 0.06), material=ashlar, name="lamp_base", verts=10)
+        k.cylinder(0.22, 0.5, loc=(sx, sy, 3.85), material=lamp, name="lamp_lantern", verts=10)
+        k.cone(0.34, 0.04, 0.35, loc=(sx, sy, 4.28), material=iron, name="lamp_cap", verts=10)
+        LIGHTS.append(dict(x=sx, y=sy, z=3.85, dim=95, bright=45, color="#ffb066"))
+
+    # ---- ring of party walls behind the storefronts, closing the see-through gaps at the 2nd and 3rd storeys
+    n = 36
+    rr, th, wh = 27.7, 0.7, 10.8
+    for i in range(n):
+        a = math.radians(i * 10 + 5)
+        cx, cy = rr * math.cos(a), rr * math.sin(a)
+        ch = 2 * rr * math.tan(math.radians(5)) + 0.02
+        deg = i * 10 + 5
+        box(cx, cy, wh / 2, th, ch, wh, ashlar if i % 3 else coak, "ring_wall", rotz=deg)
+        ix, iy = (rr - th / 2 - 0.03) * math.cos(a), (rr - th / 2 - 0.03) * math.sin(a)
+        for z in (6.8, 9.3):
+            box(ix, iy, z, 0.05, 1.0, 1.4, glass, "ring_window", rotz=deg)
+            box(ix, iy, z, 0.04, 1.2, 1.6, coak, "ring_window_frame", rotz=deg)
+        box(ix, iy, wh - 0.1, 0.12, ch, 0.2, coak, "ring_cornice", rotz=deg)
