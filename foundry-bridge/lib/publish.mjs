@@ -11,9 +11,13 @@ export function foundryDataPath() {
   } catch { return ''; }
 }
 
-export function publishClient({ publicUrl, apiToken, dir = process.env.CLIENT_CONFIG_DIR || '' }) {
+export function publishClient({ publicUrl, apiToken, dir = process.env.CLIENT_CONFIG_DIR || '', fallbackDir = '', localUrl = '' }) {
   if (!publicUrl || !apiToken) return { ok: false, reason: 'no public URL or token yet' };
-  const base = dir || (foundryDataPath() && path.join(foundryDataPath(), 'bridge'));
+  const usingFallback = !dir && !foundryDataPath();
+  if (usingFallback && localUrl) publicUrl = localUrl;   // same-PC client: skip the tunnel (its DNS name can lag locally)
+  // Relay on the Foundry PC: <dataPath>\bridge. Relay on any other PC: next to the launcher (git-ignored), which
+  // bridge.ps1 on that same PC reads first.
+  const base = dir || (foundryDataPath() && path.join(foundryDataPath(), 'bridge')) || fallbackDir;
   if (!base) return { ok: false, reason: 'Foundry dataPath not found (set CLIENT_CONFIG_DIR in .env)' };
   fs.mkdirSync(base, { recursive: true });
   const file = path.join(base, 'client.json');

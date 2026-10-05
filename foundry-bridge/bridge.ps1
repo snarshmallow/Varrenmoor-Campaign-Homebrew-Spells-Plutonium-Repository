@@ -12,6 +12,8 @@ $ErrorActionPreference = 'Stop'
 function Find-Config {
   if ($Config) { return $Config }
   if ($env:FOUNDRY_BRIDGE_CONFIG) { return $env:FOUNDRY_BRIDGE_CONFIG }
+  $local = Join-Path $PSScriptRoot 'client.json'     # written by start.mjs when the relay runs on this PC
+  if (Test-Path $local) { return $local }
   $hostName = 'VEGA'
   $envFile = Join-Path $PSScriptRoot '..\foundry-3d\.env'
   if (Test-Path $envFile) {
