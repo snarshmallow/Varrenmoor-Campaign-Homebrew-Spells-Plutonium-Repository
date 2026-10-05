@@ -344,14 +344,14 @@ Prepared: **DROP, CHILL, LEAVE, FIRE.**
 - **Do you have rooms?** [COMMON] "Yes. For people who ask the right way, and a deposit."
 - **Why does the slate move things?** [ASK] "It's a reservation slate. It does what is written. That is the problem."
 - **What about Lil?** [COMMON] "Lil works the morning rush for three days. No ducks in the laundry. No more room-resizing. If he breaks that, he works four."
-- **Prepared inn content: Room 6.** [ASK] *The Last Respite Before Further Administrative Action.* A guest has been in Room 6 for **43 years** and disputes his bill because **his body was replaced** during his stay. Mottle's line: "He claims he is a different man. I charge the same man. The ledger agrees with me."
+- **Prepared inn content: Room 6.** [ASK] A guest has been in Room 6 for **43 years** and disputes his bill because **his body was replaced** during his stay. Mottle's line: "He claims he is a different man. I charge the same man. The ledger agrees with me."
 - **Who's staying here?** [COMMON] "Bone traders, restoration clerks, a lot of people waiting on paperwork."
 - **Do you know about the Exchange rules?** [ASK] "I know the ones that touch my beds."
 - **Do you know about the war or Mwooreth?** [COMMON] "I know the war ended. Whoever won, they still need beds."
-- **Rumors.** [ASK] Offer one per night from this closed list: the tubes rattle all night and the Exchange blames the weather; a rat once had a legal job; something small has been using his conveyor. **Do not** offer "the tubes carry things the clerks haven't logged" unless you decide it feeds the note-leaving lead.
+- **Rumors.** [ASK] Offer one per night from this closed list, in this order: (1) a rat once had a legal job *(feeds Quest 1)*; (2) something small has been using his conveyor *(feeds Quest 2)*; (3) **"The tubes carry things the clerks haven't logged. Always at the same hour. I have not agreed to that."** *(feeds the note-leaving lead, see 6.4)*. Mottle never explains #3 and never says who sends it.
 
 **Reward:** lodging, rumors, an introduction. **No craft feature.**
-**[UNSETTLED]** In Session 13 the DM reads a market sign as "Model and Mugs, a tavern," and a player says "one of the people we need to visit is named model." Both are almost certainly speech-to-text for **Mottle**, so treat them as the same place unless you say otherwise. The prepared inn name is *The Last Respite Before Further Administrative Action*. Decide whether that is the formal name and "Mottle's Mugs" the sign.
+**[SETTLED]** The inn is **Mottle's Mugs**. ("Model and Mugs" in the Session 13 transcript is speech-to-text.) *The Last Respite Before Further Administrative Action* is the **motto on the bottom of the sign.** The room the Foundry map calls 206 is **Room 6** at the table. Always say "Room 6".
 
 ---
 
@@ -631,7 +631,7 @@ Roll a d12 whenever Lil traces a word. Each result is *literal, brief and fixabl
 # PART 5: OPEN QUESTIONS TO SETTLE BEFORE THESE NPCs HIT THEM
 1. Where does **Cladis's war** fall relative to the Hanging?
 2. What is **Venfyura's reason for leaving?** (Spring Queen is only a plan.)
-3. Is **Mottle's inn** the same place as the played **"Model and Mugs"?**
+3. ~~Is Mottle's inn the same as "Model and Mugs"?~~ **Settled:** Mottle's Mugs.
 4. What is the **content of the tagged pneumatic message?** (Not captured. The transcript says only: dust on the terminal, a squeaky door, a message with tags like the ones on the bones, and a letter. Don't assume it is the same lead as the notes in the Ossuary until you decide.)
 5. What does the **exact Talskc ingredient list** say?
 6. What is **Lil's origin** (another place and time), and what does Mavis know about it?
@@ -657,11 +657,11 @@ Room numbers follow the inn model: upstairs corridor rooms **201–204 (north)**
 | Where | What the players find | Quest |
 |---|---|---|
 | **Suite, bedroom 3 (desk)** | A slip of paper with a rune drawn on it and one stroke crossed out, signed "Q." | 1: Rat on the Door |
-| **Suite living room (bookcases)** | A guest book of past suite occupants. One old entry mentions "the man down the hall in six." | 3: Man in 206 |
+| **Suite living room (bookcases)** | A guest book of past suite occupants. One old entry mentions "the man down the hall in six." | 3: Man in Room 6 |
 | **Suite, bedroom 1 (under a bed)** | A chewed clinic tag stamped with Pimm's mark | 2: Gerald |
 | **Room 203** | Small wet footprints on the rug and a half-eaten something | 2: Gerald |
-| **Room 206 (corridor door plate)** | Under the brass "206" plate is an older, scratched plate reading just "6." Pigeonhole bills pile up outside. | 3: Man in 206 |
-| **Room 205 (next door)** | The guest says: "He talks to the chair. It talks back, I think." | 3: Man in 206 |
+| **Room 6 (corridor door plate)** | A brass "6" plate, scratched and older than the rest. Pigeonhole bills pile up outside. | 3: Man in Room 6 |
+| **Room 205 (next door)** | The guest says: "He talks to the chair. It talks back, I think." | 3: Man in Room 6 |
 | **Room 207 (under the bed)** | A tin containing a dead rat with a tiny tag: "S. RATTUS, CUSTODIAN (ACTING)." | 1: Rat on the Door |
 | **Landing plate** | A new notice pinned beside the upstairs door: "No spelling on the premises. By order." Lil is already in trouble. | Flavor, ties to all three |
 | **Notices desk (pigeonholes)** | A notice for a warehouse door asks custodians to "confirm their authorization." Another is an overdue lodging bill, 43 years deep. | 1 and 3 |
@@ -701,7 +701,7 @@ Room numbers follow the inn model: upstairs corridor rooms **201–204 (north)**
 **Scene 2: The rat**
 - The tin in 207 holds **S. Rattus, Custodian (Acting).** Lil: "Rat-us. Like, he's ours."
 - **Pringus's clerks (or Pringus):** the **tag** is real, but the **intake ledger** lists the rat as *unclaimed after notice, vermin, 1*. The **custody ledger** lists it as *named custodian*. Two of three records disagree. *"A transfer requires all three to agree. Two is a rumor."*
-- **[SUGGESTED]** The holder is **Dunmore Kell, a night porter** lodging in 207. He named the rat so the door would let him wheel unlisted small bones through at night. Insight or Persuasion **DC 12** gets a full confession. *He is not malicious. He is tired and underpaid.* **Kell is a self-contained petty offender, not a suspect in the note-leaving lead.** He only wheels small bones across the market at night by the door. He leaves no notes, uses no tubes, and knows nothing about them. If asked, he says so plainly and his story checks out.
+- **[SUGGESTED]** The holder is **Dunmore Kell, a night porter** lodging in 207. He named the rat so the door would let him wheel unlisted small bones through at night. Insight or Persuasion **DC 12** gets a full confession. *He is not malicious. He is tired and underpaid.* **Kell is a petty offender, not the note-leaver.** He wheels small bones across the market at night by the door. He leaves no notes and uses no tubes. If asked, he says so and points at the lead: *"The tubes aren't mine. Something clunks down that old terminal at the same hour every night."* (See 6.4.)
 
 **Scene 3: Fix it (pick one)**
 - **Clean fix (Stellan):** **Trace Rune** or **Countermark** on the amended glyph, with Quill supervising. Check vs. suggested **DC 11**. On a failure the door reverts to ignoring *everyone* for a minute. Mild, fixable.
@@ -754,7 +754,7 @@ Footprints in 203. Flour in the kitchen. The rattling tube stub at the bar. Scra
 
 **Scene 3: The Lost Property shelf**
 The shaft ends at a **small caged annex** on a minor threshold: a *lost-and-found for the Exchange.* Shelves of **unclaimed remains** with dates and "notice expires" tags. Gerald is curled around the notebook on a shelf.
-- This is the **unclaimed-after-notice** category made visible. Every tag is **long past its notice date**, so the shelf shows what "unclaimed after notice" means and nothing more. *(Bones's stakes are not hinted here. Add a recent date only if you design that thread.)*
+- This is the **unclaimed-after-notice** category made visible. Gerald nests in the shafts, **not the dusty terminal**, and his noise is erratic (see 6.4). Every tag is **long past its notice date**, so the shelf shows what "unclaimed after notice" means and nothing more. *(Bones's stakes are not hinted here. Add a recent date only if you design that thread.)*
 - **Exchange lesson:** the Exchange sits in a **stable Wyrd knot with multiple thresholds.** The shafts connect them. That's why one building has many doors.
 
 **Scene 4: The notebook**
@@ -776,17 +776,17 @@ Pimm's field notes contain three things:
 
 ---
 
-## 6.3 QUEST THREE: "THE MAN IN 206"
+## 6.3 QUEST THREE: "THE MAN IN ROOM 6"
 **Giver:** Mottle (or the clues, or Lil) | **Spotlight:** the whole party, Lil as comic relief | **Teaches:** identity vs. body, custody costs, and what the Bones claim will look like
 
-**Summary.** A long-term guest in room 206 has been lodging **43 years** and disputes the bill because **his body was replaced.** Mottle says *"same man."* The party sorts out who is right, and learns the logic they will need for Bones.
+**Summary.** A long-term guest in Room 6 has been lodging **43 years** and disputes the bill because **his body was replaced.** Mottle says *"same man."* The party sorts out who is right, and learns the logic they will need for Bones.
 
 **Hooks**
-- **Mottle (direct):** *"The man in 206 claims he is a different man. I charge the same man. The ledger agrees with me. I would like it to stop disagreeing at my counter."*
+- **Mottle (direct):** *"The man in Room 6 claims he is a different man. I charge the same man. The ledger agrees with me. I would like it to stop disagreeing at my counter."*
 - **The clues:** the old "6" plate, the suite guest book, the neighbor in 205 who hears him talk to a chair, the 43-year bill at the notices desk.
 - **Lil:** "He's nice. He taught me a card game with no rules. I'm winning."
 
-**Room 206 and the guest [SUGGESTED]:** an old-looking man named **Tobias Wren**, a former gravewright. He's gentle, sad, and has an excellent memory for details. The chair he talks to is his old body's favorite chair.
+**Room 6 and the guest [SUGGESTED]:** an old-looking man named **Tobias Wren**, a former gravewright. He's gentle, sad, and has an excellent memory for details. The chair he talks to is his old body's favorite chair.
 
 **Objectives**
 1. Interview the guest and decide whether he's honest.
@@ -822,15 +822,40 @@ Pimm's field notes contain three things:
 
 ---
 
-## 6.4 RUNNING THE THREE TOGETHER
-- **Order doesn't matter.** Quest 1 and Quest 2 both use the building's back-spaces. Quest 3 stays in the corridor.
-- **Keep the quests separate.** Kell (Quest 1), Gerald (Quest 2) and Wren (Quest 3) are **unconnected to each other and to the note-leaving lead in the Ossuary.** Gerald never touches the dusty terminal or the notes. Kell never uses the shafts or tubes. If the party suspects any of them, the clues should clear them, not confirm. Add a link only if you design one.
+## 6.4 RUNNING THE THREE TOGETHER (AND THE NOTE LEAD)
+**Recommendation: keep Quests 1 and 2 as two quests, but run them off one shared hook, "the night traffic."** They differ in spotlight (Stellan vs. Betsy), place (warehouse door vs. shafts) and skill, so merging them would make one long, crowded quest. Instead, Mottle's rumor opens a single question, *"what is moving through this building at night?"*, and the party **eliminates sources one by one.** What is left over is the real note lead.
+
+**The shared hook: Mottle's rumor #3.** *"The tubes carry things the clerks haven't logged. Always at the same hour."*
+
+**The three sources, and how to tell them apart at the table.** Give each lead one physical signature and never mix them.
+
+| Source | Signature | When | Resolves as |
+|---|---|---|---|
+| **Gerald** (Quest 2) | Wet prints, flour tracks, a chewed **clinic tag** with Pimm's mark; rattling is **erratic and scratchy** | Any time, mostly daytime | Solved: a harmless turtle in the shafts |
+| **Kell** (Quest 1) | A **bone cart**, the rat tin, the amended door; **wheels and boots, never tubes** | Late night | Solved: petty off-books bone moving |
+| **The note lead** | A **capsule** that arrives with a **bone-style tag and a letter**, with a **regular, single clunk** at the dusty terminal | **Always the same hour** | **Unsolved.** Stays open. |
+
+**The elimination clues (these are what connect the quests).**
+- **Kell, if asked:** he is a wheeler, not a tube man. *"I use the door. The tubes aren't mine. Something clunks down that old terminal at the same hour every night. I don't go near it."* This clears Kell **and** points at the lead.
+- **Gerald, if asked (via Pimm or the scene):** he nests in the **shafts**, not the dusty terminal. His noise is erratic. *"Gerald does not keep hours. Whatever is on a schedule is not Gerald."* This clears Gerald **and** points at the lead.
+- **Pringus or a clerk:** the dusty terminal is on no active route, and nothing is logged to it.
+
+**The note [SUGGESTED, you don't remember the exact text].** Keep it short and ordinary, with no names: ***"Drop off at the usual time."*** Add a bone-style tag. It never says who, what or where. Replace it with the real text if you recover it.
+
+**Rules to keep the leads straight**
+- **The note lead has its own paper and tag.** No other quest uses tagged capsules or letters. Wren's referral is a card he hands over in person. Pimm's page is in a notebook. Quill's rune slip is chalk-marked.
+- **Never put the capsule near Gerald, Kell or Wren,** and never resolve the lead. The party can *stake out the terminal* at the usual hour, but give them only a glimpse, a hand, or a retreating cart. Who, what and where stay your call.
+- **Call it "the notes" or "the usual time" at the table,** never "the tubes". "Tubes" is where Gerald and Kell get mixed up.
+
+**Other running notes**
+- **Order doesn't matter.** Quest 3 stays in the corridor.
 - **Pacing:** each quest is about 30 to 45 minutes of table time.
 - **If the party skips one:** the clue stays on the map. Mottle, Pimm or Quill will mention it again when the party passes through.
 
 ## 6.5 NEW OPEN QUESTIONS (add to Part 5)
-10. Is "Room 6" in the prepared Mottle JSON the same as room **206** in the model? (This guide assumes yes.)
+10. ~~Room 6 vs. 206~~ **Settled:** Room 6 (206 on the Foundry map).
 11. Who taught the amender the **Mwooreth + Ikkander grammar** on the warehouse door?
 12. What is **Gerald**, exactly? (Suggested: a soft-shelled turtle.)
 13. Whose is the **old animal-box drawing** in Pimm's notebook?
 14. Which **licensed restoration house** is Wren's, and does it handle Bones?
+15. What did the Ossuary **note** actually say, and who sends it? (Suggested text: "Drop off at the usual time." Keep it unresolved.)
