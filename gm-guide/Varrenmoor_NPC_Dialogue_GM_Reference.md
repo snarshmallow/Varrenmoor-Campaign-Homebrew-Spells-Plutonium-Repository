@@ -348,7 +348,7 @@ Prepared: **DROP, CHILL, LEAVE, FIRE.**
 - **Who's staying here?** [COMMON] "Bone traders, restoration clerks, a lot of people waiting on paperwork."
 - **Do you know about the Exchange rules?** [ASK] "I know the ones that touch my beds."
 - **Do you know about the war or Mwooreth?** [COMMON] "I know the war ended. Whoever won, they still need beds."
-- **Rumors.** [ASK] Offer one per night from this closed list, in this order: (1) a rat once had a legal job *(feeds Quest 1)*; (2) something small has been using his conveyor *(feeds Quest 2)*; (3) **"The tubes carry things the clerks haven't logged. Always at the same hour. I have not agreed to that."** *(feeds the note-leaving lead, see 6.4)*. Mottle never explains #3 and never says who sends it.
+- **Rumors.** [ASK] Offer one per night from this closed list, in this order: (1) a rat once had a legal job *(feeds Quest 1)*; (2) something small has been using his conveyor *(feeds Quest 2)*; (3) **"The tubes carry things the clerks haven't logged. Always at the same hour. They are the Exchange's tubes. I only hear them through the wall."** *(feeds the note-leaving lead, see 6.4)*. Mottle never explains #3 and never says who sends it.
 
 **Reward:** lodging, rumors, an introduction. **No craft feature.**
 **[SETTLED]** The inn is **Mottle's Mugs**. ("Model and Mugs" in the Session 13 transcript is speech-to-text.) *The Last Respite Before Further Administrative Action* is the **motto on the bottom of the sign.** The room the Foundry map calls 206 is **Room 6** at the table. Always say "Room 6".
