@@ -171,16 +171,16 @@ Each craft is a blend of two relationships.
 - *(on a locked door)* "I've got a word for that. It's *knock*. Because it's a door and also, like, the sound."
 - *(after a disaster)* "Okay, so that was a lot of word."
 - *(told to stop)* "Yeah, no, I'm stopping." *(stops one beat late)*
-- *(on seeing food)* "Is that a snack or a legal situation?"
+- *(on seeing food)* "Wait. Did I eat today? …I'm gonna say no, and also eat."
 - *(on the Stolen Shard)* "Big stick. Does it have a name, or is it still deciding?"
 - *(about the Exchange)* "It's, like, a graveyard that got a business degree."
-- *(about a tag)* "Tag, you're it. That's a bone joke now."
+- *(about a tag)* "Tag, you're it."
 - *(about Mavis)* "She runs a tight couch."
-- *(when told "that's dangerous")* "Cool. Dangerous *and* cool. Two for one."
+- *(when told "that's dangerous")* "Dangerous like 'watch out,' or dangerous like 'cool story later'?"
 - *(on being thanked)* "Aw. I'm going to put that in my chest and lose it by dinner."
 - *(on a quiet moment)* "You ever think 'word' is just a word that's about words? Like it's showing off?"
-- *(when called Calvin)* "Oh. *That* one. That's from before I was a guy."
-- *(on a mistake)* "That was a mistake in the sense that it was a *make* and then a *stake*."
+- *(when called Calvin)* "Only people who are mad at me call me that. So, Mavis."
+- *(on a mistake)* "It's only a mistake if you meant something different. I didn't mean anything, so… technically I'm perfect."
 - *(after something goes right)* "Wow. I'm great at this. Quick, someone write it down before I stop."
 
 **Quick Q&A (what Lil knows, and how he'd say it)**
