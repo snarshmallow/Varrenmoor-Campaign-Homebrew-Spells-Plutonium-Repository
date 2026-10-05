@@ -29,3 +29,9 @@ Goal: turn a concept image (the PNGs already in `2026 Campaign`, e.g. `ossuary c
 - Texture: `ai/cleanup.py` in Blender decimates (default 30k tris), scales to `-Height` metres (default 1.8), bases at Z=0, front-projects the source image, bakes to a 2048 UV texture, exports GLB and .blend. Back of the model gets the stretched front projection; hand-paint if it matters.
 - Entry point: `.\ai3d.ps1 -Image <png> -Name <name> -Folder "<campaign folder>" [-Tris 30000] [-Height 1.8]`.
 - No nvcc, so no CUDA extensions were built; shape-only path used. Verified end to end with a synthetic image only.
+
+## Update: Stable Fast 3D is now the default engine
+- Compared on the ossuary clerk: Hunyuan shape plus front projection came out near-black and smeared; SF3D gave a clearly better textured result and a recognisable back. `ai3d.ps1` now defaults to `-Engine sf3d`; `-Engine hunyuan` keeps the old path.
+- Installed in `ai/.venv` from `ai/sf3d/` (gitignored clone). Weights are gated: the HF account must have accepted the licence, and a read token is stored by `hf auth login`. SF3D is non-commercial under US$1M revenue; see the model card.
+- `uv_unwrapper` and `texture_baker` were built CPU-only (no nvcc) from a VS 2022 Build Tools prompt with `USE_NATIVE_ARCH=0 USE_CUDA=0 DISTUTILS_USE_SDK=1` and `--no-build-isolation`. The installed `texture_baker/baker.py` in the venv is patched to move tensors to CPU for rasterize/interpolate and back. Rebuilding the venv means redoing that patch.
+- Peak VRAM about 8 GB of the 10 GB.

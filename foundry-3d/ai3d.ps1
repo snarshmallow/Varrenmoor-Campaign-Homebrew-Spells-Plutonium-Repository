@@ -1,7 +1,7 @@
-﻿# Image -> Foundry-ready textured GLB (Hunyuan3D-2mini shape + Blender projection texture).
+﻿# Image -> Foundry-ready textured GLB. Engines: sf3d (Stable Fast 3D, default) or hunyuan (Hunyuan3D-2mini shape + projected texture).
 #   .\ai3d.ps1 -Image "ossuary clerk.png" -Name ossuary_clerk -Folder "Act 2 Road to Bridgehollow/Ossuary Exchange"
 param([Parameter(Mandatory)][string]$Image, [Parameter(Mandatory)][string]$Name, [string]$Folder = '',
-      [int]$Tris = 30000, [double]$Height = 1.8)
+      [ValidateSet('sf3d','hunyuan')][string]$Engine = 'sf3d', [int]$Tris = 30000, [double]$Height = 1.8)
 $ErrorActionPreference = 'Continue'  # native stderr (progress/download notices) must not abort; exit codes are checked
 $root = $PSScriptRoot
 $cfg = @{}
@@ -20,11 +20,25 @@ New-Item -ItemType Directory -Force $outDir | Out-Null
 $raw = Join-Path $env:TEMP "$Name.shape.glb"
 $out = Join-Path $outDir "$Name.glb"; $blend = Join-Path $outDir "$Name.blend"
 
-Write-Host "Shape stage (Hunyuan3D-2mini)..."
-& $py "$root\ai\shape.py" $Image $raw
-if ($LASTEXITCODE -ne 0 -or -not (Test-Path $raw)) { throw 'Shape stage failed' }
+if ($Engine -eq 'sf3d') {
+  # Stable Fast 3D: textured mesh in one pass (better texture; ~8 GB peak VRAM).
+  Write-Host "Stable Fast 3D..."
+  $sfOut = Join-Path $env:TEMP "$Name.sf3d"
+  Remove-Item $sfOut -Recurse -Force -ErrorAction SilentlyContinue
+  Push-Location "$root\ai\sf3d"; $env:PYTHONPATH = '.'
+  & $py run.py $Image --output-dir $sfOut --texture-resolution 2048
+  Pop-Location
+  $raw = Join-Path $sfOut '0\mesh.glb'
+  if (-not (Test-Path $raw)) { throw 'Stable Fast 3D failed' }
+  $tex = '-'
+} else {
+  Write-Host "Shape stage (Hunyuan3D-2mini)..."
+  & $py "$root\ai\shape.py" $Image $raw
+  if ($LASTEXITCODE -ne 0 -or -not (Test-Path $raw)) { throw 'Shape stage failed' }
+  $tex = $Image
+}
 Write-Host "Clean-up in Blender..."
-& $blender --background --factory-startup --python "$root\ai\cleanup.py" -- $raw $Image $out $blend $Tris $Height |
+& $blender --background --factory-startup --python "$root\ai\cleanup.py" -- $raw $tex $out $blend $Tris $Height |
   Where-Object { $_ -match '\[foundry-3d\]|Error|Traceback|File "' } | ForEach-Object { Write-Host "  $_" }
 if ($LASTEXITCODE -ne 0 -or -not (Test-Path $out)) { throw 'Blender clean-up failed' }
 
