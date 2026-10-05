@@ -153,7 +153,8 @@ async function dropItemAsProp(event, data) {
   }
   canvas.tiles.activate();
   const obj = await game.Levels3DPreview.helpers.loadModel(model);
-  const bb = new THREE.Box3().setFromObject(obj.model);
+  const T = game.Levels3DPreview.THREE;
+  const bb = new T.Box3().setFromObject(obj.model);
   const k = (canvas.grid.size / 1.524) * ITEM_PROP_SCALE;                        // px per model metre (1 m = grid.size / 1.524 px), enlarged
   const w = Math.max(4, Math.round((bb.max.x - bb.min.x) * k));
   const h = Math.max(4, Math.round((bb.max.z - bb.min.z) * k));
