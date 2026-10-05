@@ -294,7 +294,7 @@ def write_sidecar(gen, out_path, size):
         l["x"], l["y"], l["z"] = l["x"] + dx, l["y"] + dy, l.get("z", 2.4) + dz
         lights.append(l)
     meta = {"name": Path(out_path).stem, "folder": getattr(gen, "FOLDER", ""), "size_m": [round(v, 3) for v in size],
-            "lights": lights, "scene_note": getattr(gen, "SCENE_NOTE", "")}
+            "lights": lights, "scene_note": getattr(gen, "SCENE_NOTE", ""), "shift": [round(dx, 4), round(dy, 4), round(dz, 4)]}
     Path(out_path).with_suffix(".scene.json").write_text(json.dumps(meta, indent=1))
 
 

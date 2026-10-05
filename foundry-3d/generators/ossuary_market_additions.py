@@ -277,6 +277,10 @@ def build(k):
             sign(P, LB, kind)
         elif ang in UTILITY:
             plate(P, LB, UTILITY[ang])
+        elif i == 5:
+            plate(P, LB, "notice")                           # swapped with No. 6 at the user's request
+        elif i == 6:
+            plate(P, LB, "res6")
         elif i % 2 == 1:
             plate(P, LB, f"res{i + 1}")                    # private residence: house number runs counter-clockwise round the circle, 20 wraps to 1
         else:
@@ -292,7 +296,7 @@ def build(k):
 
     # ---- ring of party walls behind the storefronts, closing the see-through gaps at the 2nd and 3rd storeys
     n = 36
-    rr, th, wh = 27.7, 0.7, 10.8
+    rr, th, wh = 27.7, 0.7, 16.0
     for i in range(n):
         a = math.radians(i * 10 + 5)
         cx, cy = rr * math.cos(a), rr * math.sin(a)
@@ -300,7 +304,55 @@ def build(k):
         deg = i * 10 + 5
         box(cx, cy, wh / 2, th, ch, wh, ashlar if i % 3 else coak, "ring_wall", rotz=deg)
         ix, iy = (rr - th / 2 - 0.03) * math.cos(a), (rr - th / 2 - 0.03) * math.sin(a)
-        for z in (6.8, 9.3):
+        for z in (6.8, 9.3, 12.0):
             box(ix, iy, z, 0.05, 1.0, 1.4, glass, "ring_window", rotz=deg)
             box(ix, iy, z, 0.04, 1.2, 1.6, coak, "ring_window_frame", rotz=deg)
         box(ix, iy, wh - 0.1, 0.12, ch, 0.2, coak, "ring_cornice", rotz=deg)
+
+    # ---- conveyor line ends: every line is carried on in a wide brass tube that rises over the rooftops and disappears into the ring wall, so from the
+    # tokens' point of view the lines run off into tunnels in the walls. A dark mouth and collar sit where the rail enters the tube; a flange where the
+    # tube meets the wall.
+    from mathutils import Vector
+    dark = k.mat("tube_mouth", (0.005, 0.005, 0.006), roughness=1.0)
+    R_MOUTH = rr - th / 2 - 0.05
+
+    def tube(ex, ey, dx, dy, z0, zt):
+        """Tube from the rail end (ex, ey at height z0) outward along (dx, dy) to the wall, rising to height zt there."""
+        d = math.hypot(dx, dy)
+        dx, dy = dx / d, dy / d
+        # distance to the wall circle along the line
+        b = ex * dx + ey * dy
+        t_end = -b + math.sqrt(b * b - (ex * ex + ey * ey - R_MOUTH ** 2))
+        t0 = 0.35                                                    # the mouth stands a little beyond the rail's end
+        r_t = 0.9
+        zc0, zc1 = z0 - 0.4, zt - 0.4                                # tube axis (centred on the rail and the basket path)
+        p0 = Vector((ex + dx * t0, ey + dy * t0, zc0))
+        p1 = Vector((ex + dx * (t_end + 0.5), ey + dy * (t_end + 0.5), zc0 + (zc1 - zc0) * (t_end + 0.5 - t0) / (t_end - t0)))
+        v = p1 - p0
+        L = v.length
+        eul = Vector((0, 0, 1)).rotation_difference(v.normalized()).to_euler()
+        rot = tuple(math.degrees(a) for a in eul)
+        mid = (p0 + p1) / 2
+        k.cylinder(r_t, L, loc=tuple(mid), rot=rot, material=brass, name="line_tube", verts=16)
+        n = int(L // 2.6)
+        for i in range(1, n + 1):                                    # iron bands
+            c = p0 + v * (i / (n + 1))
+            k.cylinder(r_t + 0.05, 0.18, loc=tuple(c), rot=rot, material=iron, name="tube_band", verts=16)
+        k.cylinder(r_t + 0.09, 0.28, loc=tuple(p0 + v.normalized() * 0.1), rot=rot, material=iron, name="tube_collar", verts=16)       # collar at the mouth
+        k.cylinder(r_t - 0.02, 0.04, loc=tuple(p0 - v.normalized() * 0.04), rot=rot, material=dark, name="tube_mouth", verts=16)       # the dark opening the rail enters
+        p_w = p0 + v * ((t_end - t0) / (p1 - p0).length * 0 + (t_end - t0) / L * 0 + 0)
+        w_c = Vector((ex + dx * (t_end - 0.1), ey + dy * (t_end - 0.1), zc0 + (zc1 - zc0) * (t_end - 0.1 - t0) / (t_end - t0)))
+        k.cylinder(r_t + 0.22, 0.3, loc=tuple(w_c), rot=rot, material=iron, name="wall_flange", verts=16)                              # flange where it meets the wall
+        return Vector((ex + dx * t_end, ey + dy * t_end))
+
+    mouths = []
+    z_end = 12.6                                                     # grid lines (rail at 9.7) climb to this height at the wall
+    for y in (9.0, 3.0, -3.0, -9.0):
+        for sgn in (-1, 1):
+            mouths.append(tube(sgn * 16.2, y, sgn, 0.0, 9.7, z_end))
+    for x in (9.0, 3.0, -3.0, -9.0):
+        for sgn in (-1, 1):
+            mouths.append(tube(x, sgn * 16.2, 0.0, sgn, 9.7, z_end))
+    for ang, z in ((157.5, 11.5), (-22.5, 11.5), (112.5, 12.3), (-67.5, 12.3), (67.5, 13.1), (-112.5, 13.1), (22.5, 13.9), (-157.5, 13.9)):
+        a = math.radians(ang)
+        mouths.append(tube(18.0 * math.cos(a), 18.0 * math.sin(a), math.cos(a), math.sin(a), z, z))

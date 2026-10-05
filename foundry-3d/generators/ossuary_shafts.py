@@ -10,6 +10,8 @@ Gate to the annex is a real swinging door. The rail hangs from cross-beams, noth
 import math
 import random
 
+import bpy
+
 from _props import F, Shop
 
 FOLDER = "Act 2 Road to Bridgehollow/Ossuary Exchange"
@@ -31,6 +33,31 @@ LIGHTS = [
     dict(x=17.5, y=3.6, z=2.2, dim=40, bright=14, color="#ffc78a"),           # annex lantern
     dict(x=21.2, y=-2.0, z=1.9, dim=16, bright=5, color="#ffa24d"),          # Gerald's shelf
 ]
+
+
+MARKET_GLB = "D:/Varrenmoor-Campaign-Homebrew-Spells-Plutonium-Repository/foundry-3d/out/orig_market.glb"
+
+
+def import_market_parts():
+    """Pull one conveyor straight and one bone-basket carrier out of the original market model; everything else imported is discarded."""
+    before = set(bpy.data.objects)
+    bpy.ops.import_scene.gltf(filepath=MARKET_GLB)
+    new = [o for o in bpy.data.objects if o not in before]
+    straight = next(o for o in new if o.name.startswith("Conveyor_Grid_Row_01_Straight"))
+    carrier = next(o for o in new if o.name.startswith("Carrier_Grid_Bone_Basket"))
+    parts = {}
+    for key, src in (("straight", straight), ("carrier", carrier)):
+        o = src.copy()
+        o.data = src.data
+        o.name = f"tpl_{key}"
+        o.matrix_world = src.matrix_world.copy()
+        parts[key] = o
+    for o in new:
+        bpy.data.objects.remove(o, do_unlink=True)
+    for o in parts.values():                      # templates only; copies are linked by the caller
+        o.parent = None
+        o.matrix_parent_inverse.identity()
+    return parts
 
 
 def build(k):
@@ -131,19 +158,29 @@ def build(k):
     S.k.cylinder(0.2, 3.2, loc=(-9.5, 0, RAIL_Z + 1.5), material=M["brass"], name="drop_tube", verts=14)
     S.k.cylinder(0.32, 0.12, loc=(-9.5, 0, RAIL_Z - 0.1), material=M["brass"], name="tube_flare", verts=14)
     B(-10.5, -9.0, -0.5, 0.5, 2.4, 2.5, M["iron"], "tube_cradle_beam")
-    # feeder track: comes in from the bar side over the north wall at 90 degrees and merges into the drop tube (z 3.0, above the wall top)
-    FZ = 3.0
-    B(-9.55, -9.45, 0.0, 6.0, FZ - 0.05, FZ + 0.05, M["iron"], "feeder_rail")
-    B(-9.62, -9.38, -0.08, 0.08, FZ - 0.09, FZ + 0.09, M["brass"], "feeder_junction")                 # collar where it meets the tube
-    S.k.cylinder(0.22, 0.12, loc=(-9.5, 0, FZ), material=M["brass"], name="tube_collar", verts=14)
-    B(-9.62, -9.38, 1.7, 1.9, F, FZ - 0.05, M["iron"], "feeder_post")                                  # post inside the chamber
-    B(-9.7, -9.3, 1.65, 1.95, FZ - 0.05, FZ + 0.0, M["iron"], "feeder_post_cap")
-    B(-9.62, -9.38, 3.3, 3.5, 2.6, FZ - 0.05, M["iron"], "feeder_wall_bracket")                        # bracket standing on the wall
-    S.k.cylinder(0.12, 1.6, loc=(-9.5, 6.0, FZ + 0.85), material=M["brass"], name="feeder_riser", verts=12)   # the track continues up toward the bar
-    B(-9.62, -9.38, 5.9, 6.1, FZ - 0.05, FZ + 0.0, M["iron"], "feeder_riser_clamp")
-    for yy in (2.7, 4.6):                                                                               # carriers on the feeder
-        B(-9.9, -9.1, yy - 0.3, yy + 0.3, FZ - 0.85, FZ - 0.4, M["doak"], "feeder_basket")
-        B(-9.515, -9.485, yy - 0.015, yy + 0.015, FZ - 0.4, FZ, M["iron"], "feeder_basket_rod")
+    # feeder track (the market's own conveyor straights and bone-basket carriers): comes in from the bar side over the north wall at 90 degrees and merges
+    # into the drop tube. Track base height FZ is set so the hanging baskets (1.09 m deep) clear the wall top (2.6 m).
+    FZ = 3.85
+    templ = import_market_parts()
+
+    def place(src, x, y, z, rot_deg):
+        o = src.copy()
+        o.data = src.data.copy()                      # one mesh per placed copy (the engine applies transforms)
+        bpy.context.scene.collection.objects.link(o)
+        o.rotation_mode = "XYZ"
+        o.location = (x, y, z)
+        o.rotation_euler = (0, 0, math.radians(rot_deg))
+        return o
+
+    for yy in (1.5, 4.5):                                                                              # two 3 m straights along y, from the tube out past the wall
+        place(templ["straight"], -9.5, yy, FZ, 90)
+    S.k.cylinder(0.22, 0.12, loc=(-9.5, 0, FZ + 0.2), material=M["brass"], name="tube_collar", verts=14)
+    B(-9.62, -9.38, 1.7, 1.9, F, FZ - 0.02, M["iron"], "feeder_post")                                  # post inside the chamber
+    B(-9.7, -9.3, 1.65, 1.95, FZ - 0.05, FZ, M["iron"], "feeder_post_cap")
+    B(-9.62, -9.38, 3.3, 3.5, 2.6, FZ - 0.02, M["iron"], "feeder_wall_bracket")                        # bracket standing on the wall
+    S.k.cylinder(0.12, 1.8, loc=(-9.5, 6.0, FZ + 0.9), material=M["brass"], name="feeder_riser", verts=12)   # the track continues up toward the bar
+    for yy in (2.4, 4.9):                                                                              # carriers hang below the track
+        place(templ["carrier"], -9.5, yy, FZ, 90)
     S.crate(-11.4, 2.3)
     S.crate(-11.4, -2.3, 0.5)
     S.barrel(-11.2, 0.8)
