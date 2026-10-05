@@ -25,3 +25,6 @@ Install Node 20+ and `cloudflared`, then run `start.bat` (Windows) or `./start.s
 - Two separate tokens; compare in constant time; module auth times out after 5 s; one module connection at a time.
 - Use a dedicated GM user for the bridge tab if you want it distinguishable in logs.
 - Rotate tokens if the tab is ever left open on a shared machine.
+
+## Auto-config for Claude Code on another PC (no secrets to paste)
+`start.bat` (and `node publish-client.mjs`, if the relay is already running) writes `<Foundry dataPath>\bridge\client.json` with the live tunnel URL and API token. It sits outside `Data/`, which Foundry serves to players. On the other PC, `foundry-bridge\bridge.ps1 <op> [-Args '<json>']` finds it at `\\<host>\C\FoundryVTT resources\bridge\client.json` by itself (host guessed from `foundry-3d\.env`, default VEGA). Quick-tunnel URLs change on restart; `start.bat` rewrites the file each time. Overrides: `-Config <file>`, or env `FOUNDRY_BRIDGE_URL` + `FOUNDRY_BRIDGE_TOKEN`. The Claude environment secrets screen is for cloud sessions only; a local CLI session does not read it.

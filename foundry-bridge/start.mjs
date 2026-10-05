@@ -6,6 +6,7 @@ import crypto from 'node:crypto';
 import http from 'node:http';
 import { spawn, spawnSync } from 'node:child_process';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { publishClient } from './lib/publish.mjs';
 
 const root = path.dirname(fileURLToPath(import.meta.url));
 const relayDir = path.join(root, 'relay');
@@ -85,6 +86,7 @@ if (!moduleDir) {
     if (opts.dataPath) moduleDir = path.join(opts.dataPath, 'Data', 'modules', 'varrenmoor-bridge');
   } catch {}
 }
+const published = publishClient({ publicUrl, apiToken: env.BRIDGE_API_TOKEN, dir: env.CLIENT_CONFIG_DIR });
 let wroteUrlFile = false;
 if (moduleDir && fs.existsSync(moduleDir)) {
   fs.writeFileSync(path.join(moduleDir, 'relay-url.json'), JSON.stringify({ url: moduleUrl, updated: new Date().toISOString() }) + '\n');
@@ -102,7 +104,9 @@ A) FOUNDRY (GM browser tab) -> Game Settings > Configure Settings > Varrenmoor B
    Allow writes            : OFF (turn on only when you want me to create/update)
    (Use the wss:// URL even when Foundry is on this PC: Foundry's browser blocks ws://127.0.0.1 unless the page itself was opened from localhost.)
 
-B) CLAUDE ENVIRONMENT (claude.ai/code > environment settings)
+B0) CLAUDE CODE ON ANOTHER PC (CLI): ${published.ok ? `configured automatically. ${published.file} now holds the URL and API token; foundry-bridge\\bridge.ps1 reads it from \\\\<this-pc>\\C\\...\\bridge\\client.json. Nothing to paste.` : `not written (${published.reason}).`}
+
+B) CLAUDE ENVIRONMENT, cloud sessions only (claude.ai/code > environment settings)
    Secret  FOUNDRY_BRIDGE_TOKEN = ${env.BRIDGE_API_TOKEN}
    Secret/var FOUNDRY_BRIDGE_URL = ${publicUrl || '(needs tunnel)'}
    Allowed domain               = ${host}
