@@ -42,6 +42,17 @@ SHOTS = [  # name, camera location, target, lens, ortho scale
     ("backbar", (9.0, -1.0, 2.0), (13.8, 0.5, 2.1), 24, None),
     ("brazier", (0.0, -2.2, 1.6), (0.0, 0.0, 1.2), 28, None),
 ]
+import json
+import os
+if os.environ.get("PREVIEW_SHOTS"):          # JSON list of [name, [x,y,z], [x,y,z], lens, orthoScale|null]
+    SHOTS = [tuple(s) for s in json.loads(os.environ["PREVIEW_SHOTS"])]
+if os.environ.get("PREVIEW_LIGHTS"):         # JSON list of [x,y,z]: replaces the tavern light rig
+    for o in [o for o in sc.objects if o.type == "LIGHT" and o.data.type == "POINT"]:
+        bpy.data.objects.remove(o)
+    for p in json.loads(os.environ["PREVIEW_LIGHTS"]):
+        l = bpy.data.objects.new("p", bpy.data.lights.new("p", "POINT")); l.data.energy = 500
+        l.data.color = (1, 0.75, 0.5); l.data.use_shadow = False; l.location = p; sc.collection.objects.link(l)
+
 for name, loc, target, lens, ortho in SHOTS:
     if ortho:
         cam.data.type = "ORTHO"; cam.data.ortho_scale = ortho

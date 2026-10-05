@@ -4,3 +4,5 @@ out/
 ai/.venv/
 ai/repo/
 ai/sf3d/
+
+generators/__pycache__/
