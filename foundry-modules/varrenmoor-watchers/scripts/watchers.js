@@ -136,3 +136,38 @@ Hooks.once("ready", () => {
   const mod = game.modules.get(MOD);
   if (mod) mod.api = { collect, eyes: () => eyes, targets: targetPositions };   // for debugging from the console
 });
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Drag an Item onto the 3D scene. 3D Canvas has drop handlers for Tile/Actor/Journal but none for Items ("No target found for drag
+// and drop"). Items that carry flags["levels-3d-preview"].model3d (the quest loot props) are placed as a small model Tile, scaled
+// up 3x so a 20 cm slip of paper is readable on the map. The Tile remembers the item in flags.varrenmoor.itemUuid.
+// ---------------------------------------------------------------------------------------------------------------------
+const ITEM_PROP_SCALE = 3;
+
+async function dropItemAsProp(event, data) {
+  const item = await fromUuid(data.uuid);
+  const model = item?.getFlag?.("levels-3d-preview", "model3d");
+  if (!model) {
+    ui.notifications.warn(`${item?.name ?? "This item"} has no 3D model (flags.levels-3d-preview.model3d), so it can't be dropped on the 3D scene.`);
+    return false;
+  }
+  canvas.tiles.activate();
+  const obj = await game.Levels3DPreview.helpers.loadModel(model);
+  const bb = new THREE.Box3().setFromObject(obj.model);
+  const k = (canvas.grid.size / 1.524) * ITEM_PROP_SCALE;                        // px per model metre (1 m = grid.size / 1.524 px), enlarged
+  const w = Math.max(4, Math.round((bb.max.x - bb.min.x) * k));
+  const h = Math.max(4, Math.round((bb.max.z - bb.min.z) * k));
+  const depth = Math.max(2, Math.round((bb.max.y - bb.min.y) * k));
+  return await canvas.scene.createEmbeddedDocuments("Tile", [{
+    x: Math.round(data.x), y: Math.round(data.y), width: w, height: h, elevation: data.elevation,
+    texture: { src: "modules/levels-3d-preview/assets/blank.webp" },
+    flags: { "levels-3d-preview": { model3d: model, autoGround: true, autoCenter: false, depth }, varrenmoor: { itemUuid: data.uuid } },
+  }]);
+}
+
+function registerItemDrop() {
+  const drops = game.Levels3DPreview?.CONFIG?.INTERACTIONS?.dropFunctions;
+  if (drops && !drops.Item) drops.Item = dropItemAsProp;
+}
+Hooks.once("ready", registerItemDrop);
+Hooks.on("3DCanvasSceneReady", registerItemDrop);
