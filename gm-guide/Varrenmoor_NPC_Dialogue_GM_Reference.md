@@ -656,7 +656,7 @@ Room numbers follow the inn model: upstairs corridor rooms **201–204 (north)**
 
 | Where | What the players find | Quest |
 |---|---|---|
-| **Suite, bedroom 3 (desk)** | A slip of paper with a rune drawn on it and one stroke crossed out, signed "Q." | 1: Rat on the Door |
+| **Suite, bedroom 3 (desk)** | A slip of paper with a rune drawn on it and one stroke crossed out, signed "Q." Stellan cannot place the hand; the initial is the lead (ask around: Quill). | 1: Rat on the Door |
 | **Suite living room (bookcases)** | A guest book of past suite occupants. One old entry mentions "the man down the hall in six." | 3: Man in Room 6 |
 | **Suite, bedroom 1 (under a bed)** | A chewed clinic tag stamped with Pimm's mark | 2: Gerald |
 | **Room 203** | Small wet footprints on the rug and a half-eaten something | 2: Gerald |
@@ -680,7 +680,7 @@ Room numbers follow the inn model: upstairs corridor rooms **201–204 (north)**
 
 **Hooks (any one starts it)**
 - **Quill (direct):** *"I was hired to repair a warehouse door. The door now believes a rat is in charge. I will not erase a clause I cannot read. Stellan may assist. You may stay."*
-- **The suite desk:** Stellan finds the marked-up rune slip in bedroom 3 and recognizes the style as Quill's shorthand.
+- **The suite desk:** Stellan finds the marked-up rune slip in bedroom 3: a rune with one stroke crossed out, signed "Q." He can tell it is a *correction* made by someone who knows Runecraft, but he has **not met Quill and cannot place the hand**. The only lead is the initial. Asking around (Mottle, Pringus, or Lil) gets "Q." = Quill Scratch, the rune repairer in the Lower market, and Quill's workshop is the next stop.
 - **Lil:** "There's a door that likes a rat. I don't know why. It doesn't like *me*." *(Plain Fry: he doesn't know why it doesn't like him.)*
 - **The tin in 207:** the party finds the rat first and works backward.
 
