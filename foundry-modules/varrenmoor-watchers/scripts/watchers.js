@@ -151,7 +151,7 @@ async function dropItemAsProp(event, data) {
     ui.notifications.warn(`${item?.name ?? "This item"} has no 3D model (flags.levels-3d-preview.model3d), so it can't be dropped on the 3D scene.`);
     return false;
   }
-  canvas.tiles.activate();
+  // (do not switch the active layer: 3D Canvas only opens doors while the Tokens layer is active)
   const obj = await game.Levels3DPreview.helpers.loadModel(model);
   const T = game.Levels3DPreview.THREE;
   const bb = new T.Box3().setFromObject(obj.model);
