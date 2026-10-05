@@ -159,8 +159,9 @@ class Kit:
         obj = bpy.context.active_object
         bpy.context.scene.cursor.location = (0, 0, 0)
         bpy.ops.object.origin_set(type="ORIGIN_CURSOR")
-        obj.location = hinge
         obj.rotation_euler = (0, 0, math.radians(yaw_deg))
+        bpy.ops.object.transform_apply(location=False, rotation=True, scale=False)   # yaw baked about the hinge; node rotation stays 0
+        obj.location = hinge
         ux, uy = math.cos(math.radians(yaw_deg)), math.sin(math.radians(yaw_deg))
         cross = ux * swing[1] - uy * swing[0]          # +: the leaf turns counter-clockwise toward `swing`
         obj.name = f"door_{door_id}"
@@ -247,7 +248,23 @@ def merge_for_export(name):
     bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
 
 
+def add_pivot_keeper():
+    """3D Canvas (helpers.applyTransforms) bakes every node's transform into its geometry unless the glTF contains
+    animations, which destroys the hinge pivot of doors and the centre of rotating eyes. If the scene has such nodes,
+    add an invisible Empty with a 1 mm two-frame animation so the file carries an animation and keeps its pivots."""
+    if not any(o.get("isDoor") or o.get("separate") for o in bpy.context.scene.objects):
+        return
+    e = bpy.data.objects.new("pivot_keeper", None)
+    bpy.context.scene.collection.objects.link(e)
+    e.location = (0, 0, -50)                      # far below the model, so it never touches the bounding box
+    e.keyframe_insert("location", frame=1)
+    e.location = (0, 0, -50.001)
+    e.keyframe_insert("location", frame=2)
+    bpy.context.scene.frame_start, bpy.context.scene.frame_end = 1, 2
+
+
 def export_glb(out_path):
+    add_pivot_keeper()
     Path(out_path).parent.mkdir(parents=True, exist_ok=True)
     bpy.ops.export_scene.gltf(
         filepath=str(out_path),
@@ -257,6 +274,7 @@ def export_glb(out_path):
         use_selection=False,
         export_cameras=False,
         export_lights=False,
+        export_animations=True,
         export_extras=True,      # custom properties (isDoor, doorId, ...) become glTF extras for 3D Canvas
     )
 

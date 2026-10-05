@@ -176,9 +176,9 @@ def build(k):
     B(hx - 2.9, hx + 2.9, 7.2, 8.3, F, F + 0.22, granite, "hearth_apron", bevel=0.02)
     B(hx - 1.2, hx + 1.2, 8.3, IY, F, F + 0.3, granite, "firebox_floor")
     B(hx - 1.2, hx + 1.2, IY - 0.06, IY - 0.01, F + 0.3, F + 1.9, soot, "soot")
-    B(hx - 3.0, hx + 3.0, 8.15, 8.55, F + 2.05, F + 2.25, doak, "mantel", bevel=0.02)
+    B(hx - 3.0, hx + 3.0, 8.0, 8.55, F + 2.05, F + 2.25, doak, "mantel", bevel=0.02)   # protrudes 0.3 m from the breast face (y 8.3)
     for i in range(5):     # mantel top is at F + 2.25
-        skulls.add(hx - 2.2 + i * 1.1, 8.35, F + 2.25, face_to=(0, 0), s=0.1)
+        skulls.add(hx - 2.2 + i * 1.1, 8.15, F + 2.25, face_to=(0, 0), s=0.1)
     for dy in (-0.45, 0.0, 0.45):
         k.cylinder(0.12, 1.5, loc=(hx + dy * 0.4, 9.3 + dy * 0.7, F + 0.45), rot=(0, 90, 8 * dy * 10), material=coak, name="log", verts=10)
     B(hx - 0.9, hx + 0.9, 8.9, 9.7, F + 0.3, F + 0.36, ember, "embers")

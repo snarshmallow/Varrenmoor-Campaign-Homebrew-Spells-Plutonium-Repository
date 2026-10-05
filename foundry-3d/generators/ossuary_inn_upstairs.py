@@ -319,9 +319,9 @@ def build(k):
     B(hx - 2.9, hx + 2.9, 5.6, 6.7, F, F + 0.18, granite, "hearth_apron", 0.01)
     B(hx - 1.3, hx + 1.3, 6.7, 8.0, F, F + 0.25, granite, "firebox_floor")
     B(hx - 1.3, hx + 1.3, 7.94, 7.99, F + 0.25, F + 1.5, soot, "soot")
-    B(hx - 3.0, hx + 3.0, 6.55, 6.95, F + 1.65, F + 1.8, doak, "mantel", 0.015)
+    B(hx - 3.0, hx + 3.0, 6.4, 6.95, F + 1.65, F + 1.8, doak, "mantel", 0.015)       # protrudes 0.3 m from the breast face (y 6.7)
     for i in range(3):
-        skulls.add(hx - 1.6 + i * 1.6, 6.78, F + 1.8, face_to=(hx, 0), s=0.1)
+        skulls.add(hx - 1.6 + i * 1.6, 6.55, F + 1.8, face_to=(hx, 0), s=0.1)
     for fx, fy, fh, sw in ((-0.7, 0.0, 0.6, -0.1), (-0.3, 0.1, 0.85, 0.12), (0.1, -0.05, 1.0, -0.09), (0.45, 0.1, 0.8, 0.13), (0.8, 0.0, 0.55, -0.1)):
         flame_tongue(hx + fx, 7.4 + fy, F + 0.3, fh, 0.18, sw, flame, "flame")
         flame_tongue(hx + fx, 7.4 + fy, F + 0.3, fh * 0.6, 0.11, sw * 0.6, flame_core, "flame_core")
@@ -355,8 +355,8 @@ def build(k):
     B(5.45, 10.05, -7.99, -7.95, F, F + 1.1, doak, "wainscot")
     B(5.45, 10.05, -7.99, -7.93, F + 1.1, F + 1.16, oak, "wainscot_cap")
     # chandelier over the rug, hung from a ceiling beam
-    for bx in (4.5, 7.75, 11.0):
-        B(bx - 0.14, bx + 0.14, -8.0, 8.0, H - 0.34, H - 0.02, coak, "beam", 0.01)
+    for bx in (4.5, 7.75, 11.0):                     # the middle beam (chandelier) stops short of the hearth painting
+        B(bx - 0.14, bx + 0.14, -8.0, (4.8 if bx == 7.75 else 8.0), H - 0.34, H - 0.02, coak, "beam", 0.01)
     k.cylinder(0.02, 0.9, loc=(7.75, 0.0, H - 0.34 - 0.45), material=iron, name="chandelier_chain", verts=6)
     bpy.ops.mesh.primitive_torus_add(major_radius=0.9, minor_radius=0.03, major_segments=24, minor_segments=8, location=(7.75, 0, H - 1.0))
     k._finish(bpy.context.active_object, "chandelier_ring", brass, 0)

@@ -88,14 +88,17 @@ def hang_painting(k, mats, skulls, image_stem, wall_point, facing, bottom_z, can
 
     # eyes: separate nodes at the glowing sockets (positions measured from the generated image)
     (iw, ih), eyes = eyes_for(image_stem)
-    er = 0.028 * (canvas_w / 0.95) ** 0.5
+    er = 0.026 * (canvas_w / 0.95) ** 0.5
+    depth_axis_x = abs(fx) > 0.5                       # the facing axis is X for east/west walls, otherwise Y
+    flat = 0.4                                         # eyeballs are flattened along the facing axis: they sit in the canvas, not on it
     for side, (px, py) in zip(("L", "R"), eyes):
         u = (px / iw - 0.5) * canvas_w
         h = z0 + (1 - py / ih) * canvas_h
-        x, y, z = P(u, 0.075, h)
-        eye = k.sphere(er, loc=(x, y, z), material=mats["amber"], name=f"watcher_eye_{idx}{side}", segments=12)
-        px_, py_, pz_ = P(u, 0.075 + er * 0.97, h)
-        pupil = k.sphere(er * 0.62, loc=(px_, py_, pz_), scale=(0.2 if abs(fx) < 0.5 else 0.4, 0.4 if abs(fx) < 0.5 else 0.2, 1.0),
+        x, y, z = P(u, 0.040, h)                       # centre just behind the canvas plane (v = 0.045): only a shallow cap shows
+        eye = k.sphere(er, loc=(x, y, z), scale=((flat, 1, 1) if depth_axis_x else (1, flat, 1)), material=mats["amber"],
+                       name=f"watcher_eye_{idx}{side}", segments=12)
+        px_, py_, pz_ = P(u, 0.040 + er * flat * 0.9, h)
+        pupil = k.sphere(er * 0.6, loc=(px_, py_, pz_), scale=((0.25, 0.2, 1.0) if depth_axis_x else (0.2, 0.25, 1.0)),
                          material=mats["soot"], name="pupil", segments=8)
         bpy.ops.object.select_all(action="DESELECT")
         eye.select_set(True)

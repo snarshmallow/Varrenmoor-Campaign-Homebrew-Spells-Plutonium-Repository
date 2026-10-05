@@ -27,15 +27,25 @@ function collect() {
     const root = tile?.mesh;
     if (!root) continue;
     root.traverse((o) => {
-      if (!o.isMesh || !(o.userData?.watcher || (o.name && o.name.startsWith("watcher_eye")))) return;
+      // an eye with two materials (ball + pupil) is a Group whose children are the meshes; extras sit on the Group
+      if (!(o.userData?.watcher || (o.name && o.name.startsWith("watcher_eye")))) return;
+      if (o.parent?.userData?.watcher) return;                                  // already handled through its parent
       const V = o.position.constructor;
-      if (!o.geometry.boundingSphere) o.geometry.computeBoundingSphere();
+      let pivot = null;
+      let radius = -1;
+      o.traverse((c) => {                                                       // eyeball centre = centre of the largest mesh
+        if (!c.isMesh) return;
+        if (!c.geometry.boundingSphere) c.geometry.computeBoundingSphere();
+        const bs = c.geometry.boundingSphere;
+        if (bs.radius > radius) { radius = bs.radius; pivot = bs.center.clone().add(c === o ? new V() : c.position); }
+      });
+      if (!pivot) return;
       const look = o.userData?.lookDir ?? [0, 0, 1];
       eyes.push({
         o,
         restPos: o.position.clone(),
         restQ: o.quaternion.clone(),
-        pivot: o.geometry.boundingSphere.center.clone(),                         // eye centre in the mesh's local space
+        pivot,                                                                  // in the eye node's local space
         restForward: new V(look[0], look[1], look[2]).normalize(),
         max: ((o.userData?.maxAngle ?? 45) * Math.PI) / 180,
       });
