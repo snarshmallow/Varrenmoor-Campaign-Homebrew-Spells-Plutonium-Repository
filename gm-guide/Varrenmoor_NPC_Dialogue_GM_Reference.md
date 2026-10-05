@@ -259,8 +259,8 @@ Each craft is a blend of two relationships.
 - **Mavis.** Affectionate, scared, always asks permission, never gets it. Calls her "the boss" in a whisper.
 
 **Plot-useful things Lil can accidentally reveal**
-- **[ASK]** That Mavis's inventory is "weirdly good right now." That points at his working there.
-- **[ASK]** Mavis "never uses the front door when she doesn't want to be followed."
+- **[ASK]** That Mavis's inventory is "weirdly good right now." Lil takes it as a compliment and doesn't know why.
+- **[ASK]** Mavis "is really particular about her doors." Lil doesn't know more.
 - **[SECRET]** Any detail about *why* Mavis kept him, or his origin, is **up to you**. The handoff says only "another place and time."
 
 **Fry-style sincerity** *(once a session, then he moves on)*
@@ -348,10 +348,10 @@ Prepared: **DROP, CHILL, LEAVE, FIRE.**
 - **Who's staying here?** [COMMON] "Bone traders, restoration clerks, a lot of people waiting on paperwork."
 - **Do you know about the Exchange rules?** [ASK] "I know the ones that touch my beds."
 - **Do you know about the war or Mwooreth?** [COMMON] "I know the war ended. Whoever won, they still need beds."
-- **Rumors.** [ASK] Offer one per night: the pneumatic tubes carry things the clerks haven't logged, and a rat once had a legal job.
+- **Rumors.** [ASK] Offer one per night from this closed list: the tubes rattle all night and the Exchange blames the weather; a rat once had a legal job; something small has been using his conveyor. **Do not** offer "the tubes carry things the clerks haven't logged" unless you decide it feeds the note-leaving lead.
 
 **Reward:** lodging, rumors, an introduction. **No craft feature.**
-**[UNSETTLED]** The inn is referred to in the transcript as "Model and Mugs" and may be a speech-to-text version of "Mottle." Keep both until you decide.
+**[UNSETTLED]** In Session 13 the DM reads a market sign as "Model and Mugs, a tavern," and a player says "one of the people we need to visit is named model." Both are almost certainly speech-to-text for **Mottle**, so treat them as the same place unless you say otherwise. The prepared inn name is *The Last Respite Before Further Administrative Action*. Decide whether that is the formal name and "Mottle's Mugs" the sign.
 
 ---
 
@@ -406,7 +406,7 @@ Prepared: **DROP, CHILL, LEAVE, FIRE.**
 - "Calvin."
 - "Stop it."
 - *(approving Dale)* "Hold it like that. *That.* Where'd you learn that?"
-- *(about her hand)* "I had four. It was a bad bargain. Good iron."
+- *(about her hand)* "The forge takes what it takes. Good iron."
 
 **Q&A**
 - **What's Essence of Edge?** [ASK] "A trace of isolated sharpness. Bottled. It does one thing and does it forever if you are rude."
@@ -416,7 +416,7 @@ Prepared: **DROP, CHILL, LEAVE, FIRE.**
 - **The old hammer head.** [EARN] An old hammer head has **an Essence deliberately removed.** "Someone took the *reason* out of it and left the shape. Careful work. Not cruel."
 - **What does a Backwright do?** [SECRET/EARN] Dale's lineage synthesizes **Eirwyn preservation with Mwooreth severance.** She knows pieces, not the whole. She does **not** know about the Great Work.
 - **Can Dale take the sword's cold?** [ASK] "Existing cold, perhaps. *Frozen time*, no. That is beyond what I can lift."
-- **Dale's elf ears?** "They are not mine to cut. I'd pay for the voice."
+- **Dale's elf ears?** "They are not mine to cut. Leave them on."
 
 **Reward:** forge access, samples, a family breadcrumb. **No charge increase.**
 
@@ -632,7 +632,7 @@ Roll a d12 whenever Lil traces a word. Each result is *literal, brief and fixabl
 1. Where does **Cladis's war** fall relative to the Hanging?
 2. What is **Venfyura's reason for leaving?** (Spring Queen is only a plan.)
 3. Is **Mottle's inn** the same place as the played **"Model and Mugs"?**
-4. What is the **content of the tagged pneumatic message?** (Not captured.)
+4. What is the **content of the tagged pneumatic message?** (Not captured. The transcript says only: dust on the terminal, a squeaky door, a message with tags like the ones on the bones, and a letter. Don't assume it is the same lead as the notes in the Ossuary until you decide.)
 5. What does the **exact Talskc ingredient list** say?
 6. What is **Lil's origin** (another place and time), and what does Mavis know about it?
 7. What, if anything, does **Brokka** say about the **Great Work**?
@@ -701,7 +701,7 @@ Room numbers follow the inn model: upstairs corridor rooms **201–204 (north)**
 **Scene 2: The rat**
 - The tin in 207 holds **S. Rattus, Custodian (Acting).** Lil: "Rat-us. Like, he's ours."
 - **Pringus's clerks (or Pringus):** the **tag** is real, but the **intake ledger** lists the rat as *unclaimed after notice, vermin, 1*. The **custody ledger** lists it as *named custodian*. Two of three records disagree. *"A transfer requires all three to agree. Two is a rumor."*
-- **[SUGGESTED]** The holder is **Dunmore Kell, a night porter** lodging in 207. He named the rat so the door would let him wheel unlisted small bones through at night. Insight or Persuasion **DC 12** gets a full confession. *He is not malicious. He is tired and underpaid.*
+- **[SUGGESTED]** The holder is **Dunmore Kell, a night porter** lodging in 207. He named the rat so the door would let him wheel unlisted small bones through at night. Insight or Persuasion **DC 12** gets a full confession. *He is not malicious. He is tired and underpaid.* **Kell is a self-contained petty offender, not a suspect in the note-leaving lead.** He only wheels small bones across the market at night by the door. He leaves no notes, uses no tubes, and knows nothing about them. If asked, he says so plainly and his story checks out.
 
 **Scene 3: Fix it (pick one)**
 - **Clean fix (Stellan):** **Trace Rune** or **Countermark** on the amended glyph, with Quill supervising. Check vs. suggested **DC 11**. On a failure the door reverts to ignoring *everyone* for a minute. Mild, fixable.
@@ -754,7 +754,7 @@ Footprints in 203. Flour in the kitchen. The rattling tube stub at the bar. Scra
 
 **Scene 3: The Lost Property shelf**
 The shaft ends at a **small caged annex** on a minor threshold: a *lost-and-found for the Exchange.* Shelves of **unclaimed remains** with dates and "notice expires" tags. Gerald is curled around the notebook on a shelf.
-- This is the **unclaimed-after-notice** category made visible. One tag has *a very recent date*. *(Hint at Bones's stakes.)*
+- This is the **unclaimed-after-notice** category made visible. Every tag is **long past its notice date**, so the shelf shows what "unclaimed after notice" means and nothing more. *(Bones's stakes are not hinted here. Add a recent date only if you design that thread.)*
 - **Exchange lesson:** the Exchange sits in a **stable Wyrd knot with multiple thresholds.** The shafts connect them. That's why one building has many doors.
 
 **Scene 4: The notebook**
@@ -816,15 +816,15 @@ Pimm's field notes contain three things:
 - **Backstory [SUGGESTED]:** Wren used to dig on the road beyond Varrenmoor. He says: *"Three graveyards. All three tended the same week. The tenders never spoke, but they left each other bread."* This fits your canon that the three traditions were **hidden side by side, not replaced.**
 
 **Reward**
-- **From Mottle:** free lodging for the rest of the stay, a **rumor of the party's choice**, and **Lil's three days of work cut to one.** (Lil: "Yahoo! …wait, is that good?")
-- **An introduction to a licensed restoration house:** Wren was restored there. He'll write them a note. This sets up Bones's restoration without guaranteeing success.
+- **From Mottle:** free lodging for the rest of the stay, **one rumor from Mottle's closed list** (GM picks which, see his Q&A), and **Lil's three days of work cut to one.** (Lil: "Yahoo! …wait, is that good?")
+- **An introduction to a licensed restoration house:** Wren was restored there. He gives the party his **stamped referral card**, handed over in person and presented at the house's front desk. It is a printed card with his seal and the house's name, never a loose or anonymous note, so it can't be confused with the notes in the Ossuary. This sets up Bones's restoration without guaranteeing success.
 - **Practical advice for Bones:** *"They will ask for the name three times. Bring the name."*
 
 ---
 
 ## 6.4 RUNNING THE THREE TOGETHER
 - **Order doesn't matter.** Quest 1 and Quest 2 both use the building's back-spaces. Quest 3 stays in the corridor.
-- **Natural overlap:** Dunmore Kell (Quest 1) might be the "something small and offended" Mottle mentions, and he could be using the same shafts. Gerald could pass the rat's door. Pick the connections you like.
+- **Keep the quests separate.** Kell (Quest 1), Gerald (Quest 2) and Wren (Quest 3) are **unconnected to each other and to the note-leaving lead in the Ossuary.** Gerald never touches the dusty terminal or the notes. Kell never uses the shafts or tubes. If the party suspects any of them, the clues should clear them, not confirm. Add a link only if you design one.
 - **Pacing:** each quest is about 30 to 45 minutes of table time.
 - **If the party skips one:** the clue stays on the map. Mottle, Pimm or Quill will mention it again when the party passes through.
 
