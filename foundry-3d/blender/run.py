@@ -208,7 +208,7 @@ def assign_world_uvs():
                 uv.data[li].uv = (a / tile, b / tile)
 
 
-def ground_and_centre(keep_z=False):
+def ground_and_centre(keep_z=False, keep_xy=False):
     """Move everything so the footprint is centred on the origin and the lowest point is Z=0 (unless keep_z)."""
     objs = [o for o in bpy.context.scene.objects if o.type == "MESH"]
     deps = bpy.context.evaluated_depsgraph_get()
@@ -219,7 +219,7 @@ def ground_and_centre(keep_z=False):
             w = o.matrix_world @ v.co
             xs.append(w.x); ys.append(w.y); zs.append(w.z)
         ev.to_mesh_clear()
-    dx, dy, dz = -(min(xs) + max(xs)) / 2, -(min(ys) + max(ys)) / 2, (0 if keep_z else -min(zs))
+    dx, dy, dz = (0 if keep_xy else -(min(xs) + max(xs)) / 2), (0 if keep_xy else -(min(ys) + max(ys)) / 2), (0 if keep_z else -min(zs))
     for o in objs:
         if o.parent is None:
             o.location.x += dx; o.location.y += dy; o.location.z += dz
@@ -294,7 +294,7 @@ def main():
 
     clear_scene()
     gen.build(Kit(seed))
-    size = ground_and_centre(getattr(gen, "KEEP_Z", False))  # KEEP_Z: overlay parts (e.g. a roof) keep their own height
+    size = ground_and_centre(getattr(gen, "KEEP_Z", False), getattr(gen, "KEEP_XY", False))  # KEEP_Z: overlay parts (e.g. a roof) keep their own height
     assign_world_uvs()
     if blend_path:
         # Editable source next to the export, saved before merging: separate parts, live modifiers.

@@ -1,0 +1,632 @@
+[
+  {
+    "_id": "2bd3a11ec0ae327b",
+    "name": "Rune Slip Signed 'Q.'",
+    "type": "loot",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "description": {
+        "value": "<p>A slip of paper with a rune drawn on it and one stroke crossed out, signed 'Q.'.</p><hr><p><em>GM (Quest 1: Rat on the Door Plate):</em> Found at the suite, bedroom 3 desk. Stellan recognizes Quill's shorthand. Hook for Quest 1.</p>",
+        "chat": ""
+      },
+      "source": {
+        "custom": "Varrenmoor DM Guide, Part 6",
+        "book": "",
+        "page": "",
+        "license": "",
+        "rules": "2014",
+        "revision": 1
+      },
+      "quantity": 1,
+      "weight": {
+        "value": 0,
+        "units": "lb"
+      },
+      "price": {
+        "value": 0,
+        "denomination": "gp"
+      },
+      "rarity": "",
+      "identified": true,
+      "type": {
+        "value": "gear",
+        "subtype": ""
+      },
+      "properties": [],
+      "container": null,
+      "activities": {}
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {}
+  },
+  {
+    "_id": "0c5855b8f4437528",
+    "name": "Chewed Clinic Tag (Pimm's Mark)",
+    "type": "loot",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "description": {
+        "value": "<p>A small metal clinic tag, chewed at one corner, stamped with Doctor Pimm's mark.</p><hr><p><em>GM (Quest 2: Gerald Has the Notebook):</em> Found under a bed in suite bedroom 1. Points at Gerald.</p>",
+        "chat": ""
+      },
+      "source": {
+        "custom": "Varrenmoor DM Guide, Part 6",
+        "book": "",
+        "page": "",
+        "license": "",
+        "rules": "2014",
+        "revision": 1
+      },
+      "quantity": 1,
+      "weight": {
+        "value": 0,
+        "units": "lb"
+      },
+      "price": {
+        "value": 0,
+        "denomination": "gp"
+      },
+      "rarity": "",
+      "identified": true,
+      "type": {
+        "value": "gear",
+        "subtype": ""
+      },
+      "properties": [],
+      "container": null,
+      "activities": {}
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {}
+  },
+  {
+    "_id": "84d5f9f842d99a02",
+    "name": "Tin: 'S. RATTUS, CUSTODIAN (ACTING)'",
+    "type": "loot",
+    "img": "icons/svg/skull.svg",
+    "system": {
+      "description": {
+        "value": "<p>A small tin containing a dead rat with a tiny tag reading 'S. RATTUS, CUSTODIAN (ACTING).'</p><hr><p><em>GM (Quest 1):</em> Under the bed in room 207. The tag is real; the intake ledger lists the rat as 'unclaimed after notice, vermin, 1'; the custody ledger lists a named custodian. Two of three records disagree.</p>",
+        "chat": ""
+      },
+      "source": {
+        "custom": "Varrenmoor DM Guide, Part 6",
+        "book": "",
+        "page": "",
+        "license": "",
+        "rules": "2014",
+        "revision": 1
+      },
+      "quantity": 1,
+      "weight": {
+        "value": 0,
+        "units": "lb"
+      },
+      "price": {
+        "value": 0,
+        "denomination": "gp"
+      },
+      "rarity": "",
+      "identified": true,
+      "type": {
+        "value": "gear",
+        "subtype": ""
+      },
+      "properties": [],
+      "container": null,
+      "activities": {}
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {}
+  },
+  {
+    "_id": "7616d4b84d89e78a",
+    "name": "Notice: Confirm Authorization (Warehouse Door)",
+    "type": "loot",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "description": {
+        "value": "<p>A notice pinned at the notices desk asking custodians to 'confirm their authorization' at a warehouse door.</p><hr><p><em>GM (Quest 1):</em> Clue for Quest 1; the door now believes a dead rat is its authorized custodian. Quill won't remove a clause they can't read.</p>",
+        "chat": ""
+      },
+      "source": {
+        "custom": "Varrenmoor DM Guide, Part 6",
+        "book": "",
+        "page": "",
+        "license": "",
+        "rules": "2014",
+        "revision": 1
+      },
+      "quantity": 1,
+      "weight": {
+        "value": 0,
+        "units": "lb"
+      },
+      "price": {
+        "value": 0,
+        "denomination": "gp"
+      },
+      "rarity": "",
+      "identified": true,
+      "type": {
+        "value": "gear",
+        "subtype": ""
+      },
+      "properties": [],
+      "container": null,
+      "activities": {}
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {}
+  },
+  {
+    "_id": "d8d0e686fbc0303c",
+    "name": "Overdue Lodging Bill (43 Years)",
+    "type": "loot",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "description": {
+        "value": "<p>An overdue lodging bill for a room, 43 years deep.</p><hr><p><em>GM (Quest 3: The Man in Room 6):</em> The bill for room 6 (206). Hook for Quest 3.</p>",
+        "chat": ""
+      },
+      "source": {
+        "custom": "Varrenmoor DM Guide, Part 6",
+        "book": "",
+        "page": "",
+        "license": "",
+        "rules": "2014",
+        "revision": 1
+      },
+      "quantity": 1,
+      "weight": {
+        "value": 0,
+        "units": "lb"
+      },
+      "price": {
+        "value": 0,
+        "denomination": "gp"
+      },
+      "rarity": "",
+      "identified": true,
+      "type": {
+        "value": "gear",
+        "subtype": ""
+      },
+      "properties": [],
+      "container": null,
+      "activities": {}
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {}
+  },
+  {
+    "_id": "af539442d32c30c3",
+    "name": "Suite Guest Book",
+    "type": "loot",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "description": {
+        "value": "<p>A guest book of past suite occupants. One old entry mentions 'the man down the hall in six.'</p><hr><p><em>GM (Quest 3):</em> Found in the suite living room bookcases. Hook for Quest 3.</p>",
+        "chat": ""
+      },
+      "source": {
+        "custom": "Varrenmoor DM Guide, Part 6",
+        "book": "",
+        "page": "",
+        "license": "",
+        "rules": "2014",
+        "revision": 1
+      },
+      "quantity": 1,
+      "weight": {
+        "value": 0,
+        "units": "lb"
+      },
+      "price": {
+        "value": 0,
+        "denomination": "gp"
+      },
+      "rarity": "",
+      "identified": true,
+      "type": {
+        "value": "gear",
+        "subtype": ""
+      },
+      "properties": [],
+      "container": null,
+      "activities": {}
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {}
+  },
+  {
+    "_id": "892255196abfc2db",
+    "name": "Brass Plate '6'",
+    "type": "loot",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "description": {
+        "value": "<p>A brass '6' door plate, scratched and older than the rest.</p><hr><p><em>GM (Quest 3):</em> Room 6 / 206 door plate; pigeonhole bills pile up outside.</p>",
+        "chat": ""
+      },
+      "source": {
+        "custom": "Varrenmoor DM Guide, Part 6",
+        "book": "",
+        "page": "",
+        "license": "",
+        "rules": "2014",
+        "revision": 1
+      },
+      "quantity": 1,
+      "weight": {
+        "value": 0,
+        "units": "lb"
+      },
+      "price": {
+        "value": 0,
+        "denomination": "gp"
+      },
+      "rarity": "",
+      "identified": true,
+      "type": {
+        "value": "gear",
+        "subtype": ""
+      },
+      "properties": [],
+      "container": null,
+      "activities": {}
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {}
+  },
+  {
+    "_id": "c0f4e231b45d4c56",
+    "name": "Bone Tag (Wren's Identity Anchor)",
+    "type": "loot",
+    "img": "icons/svg/skull.svg",
+    "system": {
+      "description": {
+        "value": "<p>A small bone tag, worn smooth, hidden under a floorboard.</p><hr><p><em>GM (Quest 3):</em> Perception DC 12 in Wren's room. His original identity anchor. A Witness memory (Rite of the Remaining Bone, one copper) confirms a continuous mind.</p>",
+        "chat": ""
+      },
+      "source": {
+        "custom": "Varrenmoor DM Guide, Part 6",
+        "book": "",
+        "page": "",
+        "license": "",
+        "rules": "2014",
+        "revision": 1
+      },
+      "quantity": 1,
+      "weight": {
+        "value": 0,
+        "units": "lb"
+      },
+      "price": {
+        "value": 0,
+        "denomination": "gp"
+      },
+      "rarity": "",
+      "identified": true,
+      "type": {
+        "value": "gear",
+        "subtype": ""
+      },
+      "properties": [],
+      "container": null,
+      "activities": {}
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {}
+  },
+  {
+    "_id": "43dc782ee194cb03",
+    "name": "Wren's Stamped Referral Card",
+    "type": "loot",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "description": {
+        "value": "<p>A printed card bearing a seal and the name of a licensed restoration house. Present it at the front desk.</p><hr><p><em>GM (Quest 3):</em> Reward from Quest 3. Handed over in person, never loose or anonymous, so it cannot be confused with the notes in the Ossuary. Sets up Bones's restoration without guaranteeing success. 'They will ask for the name three times. Bring the name.'</p>",
+        "chat": ""
+      },
+      "source": {
+        "custom": "Varrenmoor DM Guide, Part 6",
+        "book": "",
+        "page": "",
+        "license": "",
+        "rules": "2014",
+        "revision": 1
+      },
+      "quantity": 1,
+      "weight": {
+        "value": 0,
+        "units": "lb"
+      },
+      "price": {
+        "value": 0,
+        "denomination": "gp"
+      },
+      "rarity": "",
+      "identified": true,
+      "type": {
+        "value": "gear",
+        "subtype": ""
+      },
+      "properties": [],
+      "container": null,
+      "activities": {}
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {}
+  },
+  {
+    "_id": "67fd45256fa42be3",
+    "name": "Doctor Pimm's Field Notebook",
+    "type": "loot",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "description": {
+        "value": "<p>A well-used field notebook of adaptation notes: rules for a viable adaptation, and a list of rejected adaptations with reasons.</p><hr><p><em>GM (Quest 2):</em> Gerald took it. Contains: (1) rules for a viable adaptation (body health, anatomy, scale, environmental need); (2) rejected adaptations; (3) the loose page below. Lesson: splicing chooses among viable continuations; it does not invent.</p>",
+        "chat": ""
+      },
+      "source": {
+        "custom": "Varrenmoor DM Guide, Part 6",
+        "book": "",
+        "page": "",
+        "license": "",
+        "rules": "2014",
+        "revision": 1
+      },
+      "quantity": 1,
+      "weight": {
+        "value": 0,
+        "units": "lb"
+      },
+      "price": {
+        "value": 0,
+        "denomination": "gp"
+      },
+      "rarity": "",
+      "identified": true,
+      "type": {
+        "value": "gear",
+        "subtype": ""
+      },
+      "properties": [],
+      "container": null,
+      "activities": {}
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {}
+  },
+  {
+    "_id": "987146f8cc1b7324",
+    "name": "Loose Page: Animal-Holding Box",
+    "type": "loot",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "description": {
+        "value": "<p>A very old drawing of an animal-holding box with a music mechanism, close to Betsy's own. Pimm: 'Not mine. Older than the licensing. I never found whose.'</p><hr><p><em>GM (Quest 2):</em> [UNSETTLED] Betsy's genealogy is not yet recovered. A breadcrumb, not an answer. Betsy keeps it.</p>",
+        "chat": ""
+      },
+      "source": {
+        "custom": "Varrenmoor DM Guide, Part 6",
+        "book": "",
+        "page": "",
+        "license": "",
+        "rules": "2014",
+        "revision": 1
+      },
+      "quantity": 1,
+      "weight": {
+        "value": 0,
+        "units": "lb"
+      },
+      "price": {
+        "value": 0,
+        "denomination": "gp"
+      },
+      "rarity": "",
+      "identified": true,
+      "type": {
+        "value": "gear",
+        "subtype": ""
+      },
+      "properties": [],
+      "container": null,
+      "activities": {}
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {}
+  },
+  {
+    "_id": "f9a692eb7e3ad567",
+    "name": "Capsule: 'Drop off at the usual time.'",
+    "type": "loot",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "description": {
+        "value": "<p>A capsule with a bone-style tag and a short letter reading: 'Drop off at the usual time.'</p><hr><p><em>GM (6.4 The note lead):</em> The note lead (6.4). Never put it near Gerald, Kell or Wren and never resolve who sends it. Always arrives at the same hour at the dusty terminal, a single regular clunk.</p>",
+        "chat": ""
+      },
+      "source": {
+        "custom": "Varrenmoor DM Guide, Part 6",
+        "book": "",
+        "page": "",
+        "license": "",
+        "rules": "2014",
+        "revision": 1
+      },
+      "quantity": 1,
+      "weight": {
+        "value": 0,
+        "units": "lb"
+      },
+      "price": {
+        "value": 0,
+        "denomination": "gp"
+      },
+      "rarity": "",
+      "identified": true,
+      "type": {
+        "value": "gear",
+        "subtype": ""
+      },
+      "properties": [],
+      "container": null,
+      "activities": {}
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {}
+  },
+  {
+    "_id": "3c0bca1d9850e654",
+    "name": "Lost Property Tag: Unclaimed After Notice",
+    "type": "loot",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "description": {
+        "value": "<p>A tag on a shelf of unclaimed remains, with a date and 'notice expires' long past.</p><hr><p><em>GM (Quest 2):</em> Lost Property annex at the end of the shafts. Every tag is long past its notice date; it shows what 'unclaimed after notice' means. Add a recent date only if you design that thread for Bones.</p>",
+        "chat": ""
+      },
+      "source": {
+        "custom": "Varrenmoor DM Guide, Part 6",
+        "book": "",
+        "page": "",
+        "license": "",
+        "rules": "2014",
+        "revision": 1
+      },
+      "quantity": 1,
+      "weight": {
+        "value": 0,
+        "units": "lb"
+      },
+      "price": {
+        "value": 0,
+        "denomination": "gp"
+      },
+      "rarity": "",
+      "identified": true,
+      "type": {
+        "value": "gear",
+        "subtype": ""
+      },
+      "properties": [],
+      "container": null,
+      "activities": {}
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {}
+  },
+  {
+    "_id": "90dd2eb894c32120",
+    "name": "Pringus's Ledger Excerpt: The Rat",
+    "type": "loot",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "description": {
+        "value": "<p>An excerpt: the intake ledger lists the rat as 'unclaimed after notice, vermin, 1'; the custody ledger lists it as 'named custodian'. The tag is real.</p><hr><p><em>GM (Quest 1):</em> 'A transfer requires all three to agree. Two is a rumor.'</p>",
+        "chat": ""
+      },
+      "source": {
+        "custom": "Varrenmoor DM Guide, Part 6",
+        "book": "",
+        "page": "",
+        "license": "",
+        "rules": "2014",
+        "revision": 1
+      },
+      "quantity": 1,
+      "weight": {
+        "value": 0,
+        "units": "lb"
+      },
+      "price": {
+        "value": 0,
+        "denomination": "gp"
+      },
+      "rarity": "",
+      "identified": true,
+      "type": {
+        "value": "gear",
+        "subtype": ""
+      },
+      "properties": [],
+      "container": null,
+      "activities": {}
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {}
+  }
+]

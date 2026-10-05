@@ -1,5 +1,5 @@
 const MOD = 'varrenmoor-bridge';
-const COLLECTIONS = new Set(['Actor', 'Item', 'Scene', 'JournalEntry', 'Macro', 'RollTable', 'Playlist']);
+const COLLECTIONS = new Set(['Actor', 'Item', 'Scene', 'JournalEntry', 'Macro', 'RollTable', 'Playlist', 'Folder']);   // Folder: list/get/create/update only (no delete op exists)
 const ACTIVITY_ID = /^[A-Za-z0-9]{16}$/;
 const MAX_LIST = 500;
 
