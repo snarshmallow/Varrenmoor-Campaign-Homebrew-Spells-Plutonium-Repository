@@ -16,15 +16,15 @@ from scipy import ndimage as ndi
 OUT = Path(__file__).resolve().parent.parent / "textures"
 STYLE = ("oil painting, museum masterpiece, cracked varnish, rich dark palette, a skeleton as the sitter, bare skull face "
          "with two small glowing amber lights deep in the eye sockets, ornate period clothing, looking straight at the viewer")
-NEG = "photo, modern, text, watermark, signature, blurry, extra limbs, deformed, cartoon, anime, lowres, cropped face"
+NEG = "photo, modern, text, watermark, signature, blurry, extra limbs, deformed, cartoon, anime, lowres, cropped face, skin, flesh, living face, human face, beard, hair on face, eyeballs"
 
 PORTRAITS = {
     "monalisa": "portrait of a skeleton in the style of Leonardo da Vinci's Mona Lisa, enigmatic skull smile, brown renaissance gown, folded bony hands on a chair arm, hazy winding landscape behind, sfumato",
     "pearl": "portrait of a skeleton in the style of Vermeer's Girl with a Pearl Earring, blue and yellow turban, large pearl earring hanging from a skull, dark plain background, soft window light",
     "napoleon": "portrait of a skeleton in the style of Jacques-Louis David's Napoleon in His Study, blue general's uniform with white breeches, hand tucked into the waistcoat, candlelit study, gold braid",
     "vangogh": "self-portrait of a skeleton in the style of Vincent van Gogh, bandaged head, blue coat, swirling turquoise brushstroke background, thick impasto",
-    "henry": "portrait of a skeleton in the style of Hans Holbein's Henry VIII, jewelled doublet, broad shoulders, feathered hat, gold chains, green background, stern stance",
-    "blueboy": "portrait of a skeleton in the style of Gainsborough's The Blue Boy, shimmering blue satin suit, lace collar, plumed hat, stormy landscape background",
+    "henry": "portrait of a skeleton wearing Henry VIII's costume in the style of Hans Holbein, the head is a bare yellowed human skull with empty eye sockets and exposed teeth, no skin, no beard, black feathered cap, jewelled green doublet, gold chains, bony hands, green background",
+    "blueboy": "a full skeleton, human skull for a head with empty black eye sockets and bare teeth, no skin, no flesh, no hair, bony hand on hip, dressed in the shimmering blue satin suit with lace collar and large black plumed hat of Gainsborough's The Blue Boy, stormy landscape background, oil painting",
 }
 
 
@@ -59,7 +59,7 @@ def main():
     eyes = json.loads(eyes_path.read_text()) if eyes_path.exists() else {}
     for name in names:
         best = None
-        for seed in (11, 23, 37, 51):                       # keep the first seed that yields two clear eye lights
+        for seed in (int(__import__('os').environ.get('SEED', 11)),):
             img = pipe(prompt=f"{PORTRAITS[name]}, {STYLE}", negative_prompt=NEG, width=832, height=1216,
                        num_inference_steps=32, guidance_scale=6.5, generator=torch.manual_seed(seed)).images[0]
             found = find_eyes(img)
