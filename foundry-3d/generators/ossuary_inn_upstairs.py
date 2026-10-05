@@ -278,7 +278,6 @@ def build(k):
     rug(-15.8, 1.8, -0.7, 0.7, red, gold)                                  # runner
     for px in (xs[0] + 4.375, xs[1] + 4.375, xs[2] + 4.375):
         sconce(px, 1.5, (0, -1))
-        sconce(px, -1.5, (0, 1))
     for bx in (-13.0, -6.0):                                               # ceiling beams across the corridor
         B(bx - 0.12, bx + 0.12, -1.5, 1.5, H - 0.3, H - 0.02, coak, "beam")
     table(0.0, 1.2, -1.45, -0.95)

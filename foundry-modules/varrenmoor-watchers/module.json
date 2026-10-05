@@ -1,0 +1,12 @@
+{
+  "id": "varrenmoor-watchers",
+  "title": "Varrenmoor Watchers",
+  "description": "Makes glTF nodes named watcher_eye_* inside 3D Canvas tiles (paintings, statues) turn toward the nearest player token, so portraits seem to be always watching.",
+  "version": "0.1.0",
+  "compatibility": { "minimum": "13", "verified": "14.360" },
+  "authors": [{ "name": "Varrenmoor" }],
+  "esmodules": ["scripts/watchers.js"],
+  "relationships": {
+    "requires": [{ "id": "levels-3d-preview", "type": "module" }]
+  }
+}
