@@ -640,3 +640,197 @@ Roll a d12 whenever Lil traces a word. Each result is *literal, brief and fixabl
 9. **Joram/Joran:** spelling, title, role.
 
 *Prepared from your Session 13 handoff, the history chart, and your NPC dialogue sample. Facts follow the handoff; lines are flavor to adapt.*
+
+---
+
+# PART 6: THREE SIDE QUESTS FROM THE INN
+*Written for a level-4 party in the Lower Ossuary market. Each is moderately easy: one session or less, DC 10–13, no combat required. Each can be picked up from an NPC, found by wandering the inn, or both.*
+
+**Ground rules (from your handoff)**
+- Rewards stay inside canon limits: Mottle gives lodging, rumors and introductions. Pimm gives a supervised study with **no extra charges or actions**. Quill gives **one GM-selected Tier I glyph** after Stellan discovers and studies it, with no extra charges. Brokka is not used here.
+- Items marked **[SUGGESTED]** are new NPCs or details I invented to make the quest run. Rename or cut them freely. Items marked **[UNSETTLED]** are open canon.
+- Tags (`[ASK]`, `[EARN]`, `[SECRET]`) work the same as in the rest of the guide.
+
+## 6.0 CLUE MAP: WHERE EACH QUEST CAN BE FOUND
+Room numbers follow the inn model: upstairs corridor rooms **201–204 (north)** and **205–208 (south)**, plus the party **suite** (living room with hearth and three bedrooms). Each small room has a bed, a small table and chair under the window, and a rug.
+
+| Where | What the players find | Quest |
+|---|---|---|
+| **Suite, bedroom 3 (desk)** | A slip of paper with a rune drawn on it and one stroke crossed out, signed "Q." | 1: Rat on the Door |
+| **Suite living room (bookcases)** | A guest book of past suite occupants. One old entry mentions "the man down the hall in six." | 3: Man in 206 |
+| **Suite, bedroom 1 (under a bed)** | A chewed clinic tag stamped with Pimm's mark | 2: Gerald |
+| **Room 203** | Small wet footprints on the rug and a half-eaten something | 2: Gerald |
+| **Room 206 (corridor door plate)** | Under the brass "206" plate is an older, scratched plate reading just "6." Pigeonhole bills pile up outside. | 3: Man in 206 |
+| **Room 205 (next door)** | The guest says: "He talks to the chair. It talks back, I think." | 3: Man in 206 |
+| **Room 207 (under the bed)** | A tin containing a dead rat with a tiny tag: "S. RATTUS, CUSTODIAN (ACTING)." | 1: Rat on the Door |
+| **Landing plate** | A new notice pinned beside the upstairs door: "No spelling on the premises. By order." Lil is already in trouble. | Flavor, ties to all three |
+| **Notices desk (pigeonholes)** | A notice for a warehouse door asks custodians to "confirm their authorization." Another is an overdue lodging bill, 43 years deep. | 1 and 3 |
+| **Bar (brass tube stub, hanging conveyor)** | The bone baskets are rocking even though nobody's near them. The tube stub rattles. | 2: Gerald |
+| **Kitchen door / cook** | Flour tracks across the floor. "Something small and offended." | 2: Gerald |
+| **Cellar hatch ring (bar side)** | Fresh scratches around the hatch ring | 2: Gerald |
+
+**Passive Perception guidelines:** 12 notices the footprints, tag or notices. A deliberate search (Investigation DC 11) finds the rest. Give the first clue for free so nobody stalls.
+
+---
+
+## 6.1 QUEST ONE: "THE RAT ON THE DOOR PLATE"
+**Giver:** Quill Scratch (or Lil, or the clues above) | **Spotlight:** Stellan | **Teaches:** Runecrafting, the three-ledger rule, Mwooreth as a craft
+
+**Summary.** An amended warehouse door in the Lower market now recognizes a **dead rat** as its authorized custodian. Quill won't remove a clause they can't read. Stellan reads the door, the party finds the rat, and everyone works out who rewrote the rules.
+
+**Hooks (any one starts it)**
+- **Quill (direct):** *"I was hired to repair a warehouse door. The door now believes a rat is in charge. I will not erase a clause I cannot read. Stellan may assist. You may stay."*
+- **The suite desk:** Stellan finds the marked-up rune slip in bedroom 3 and recognizes the style as Quill's shorthand.
+- **Lil:** "There's a door that likes a rat. I don't know why. It doesn't like *me*." *(Plain Fry: he doesn't know why it doesn't like him.)*
+- **The tin in 207:** the party finds the rat first and works backward.
+
+**Objectives (give the players this list)**
+1. Find the warehouse door and read its inscription.
+2. Identify the rat and who is holding it.
+3. Work out who amended the door, and why.
+4. Fix it, or file it. Report to Quill.
+
+**Scene 1: Read the door (Stellan)**
+- **Read Inscription** is free, and takes an action or a careful 10 minutes. Suggested **DC 11**. One property on a success, +1 per 5 above.
+- First property: the rune is **Tier I** and an *amendment* to an existing clause. It wasn't carved from scratch.
+- Second: the amendment mixes **Mwooreth (False Hearth)** with **Ikkander (Bind)**. That is the grammar of Stellan's own craft.
+- Third (+5 over DC): the glyph for "custodian" was **drawn in the wrong order**, so it reads as *two* meanings. That is why a rat qualifies.
+- Quill, if asked: *"Every mark must mean exactly one thing. This one means two. The door chose the cheaper reading."*
+- **[UNSETTLED]** Who taught the amender the Mwooreth + Ikkander grammar? Leave it open. A strong hint for later, nothing more.
+
+**Scene 2: The rat**
+- The tin in 207 holds **S. Rattus, Custodian (Acting).** Lil: "Rat-us. Like, he's ours."
+- **Pringus's clerks (or Pringus):** the **tag** is real, but the **intake ledger** lists the rat as *unclaimed after notice, vermin, 1*. The **custody ledger** lists it as *named custodian*. Two of three records disagree. *"A transfer requires all three to agree. Two is a rumor."*
+- **[SUGGESTED]** The holder is **Dunmore Kell, a night porter** lodging in 207. He named the rat so the door would let him wheel unlisted small bones through at night. Insight or Persuasion **DC 12** gets a full confession. *He is not malicious. He is tired and underpaid.*
+
+**Scene 3: Fix it (pick one)**
+- **Clean fix (Stellan):** **Trace Rune** or **Countermark** on the amended glyph, with Quill supervising. Check vs. suggested **DC 11**. On a failure the door reverts to ignoring *everyone* for a minute. Mild, fixable.
+- **Paper fix (Pringus):** file a correction so the three records agree. Takes a day, costs a small fee, is perfectly legal.
+- **Lenient fix:** report Kell and let the Exchange handle him. Quill will grumble that the door still believes in the rat.
+
+**What the players learn**
+- **Exchange:** the three-ledger rule in practice. *Wards stop violence, not lies.* A tired clerk bending a clause is the Exchange's real weakness.
+- **Craft (Stellan):** a rune is an instruction with exactly one meaning. A rune amendment is an *edit*, which means someone chose it.
+- **Backstory:** severance isn't destruction. A record cut or amended *deliberately* looks like this. Quill privately compares it to the **Missing Sentence** (see Part 1.4). *"A cut like that is not damage. It is drafting."*
+
+**Reward**
+- **Quill teaches Stellan one GM-selected Tier I glyph** after he discovers and studies it. **Suggested: Threshold (Eirwyn)**, a door glyph that fits the quest. No extra charges.
+- Pringus's good opinion.
+- Optional: Quill returns one of the copied chalk sticks from the COPY incident.
+
+**Complications (optional)**
+- Lil wants to help: "I'll write RAT on the door. Then it knows it's a rat." Roll on the Part 3 table. Quill: "No."
+
+---
+
+## 6.2 QUEST TWO: "GERALD HAS THE NOTEBOOK"
+**Giver:** Doctor Pimm (or the clues, or Mottle's rumor) | **Spotlight:** Betsy (with Violet and Dale) | **Teaches:** Splicing's limits, how the Exchange moves things, the Lost Property shelf
+
+**Summary.** **Gerald**, one of Pimm's patients, escaped into the **conveyor shafts** with her **field notebook**. The party tracks him through the inn, down the shafts and into a corner of the Exchange most visitors never see.
+
+**Hooks**
+- **Pimm (direct):** *"Gerald is not dangerous. Gerald is annotated. He took my field notebook. I need it back. Do not touch any animal."*
+- **Mottle's rumor:** "Something small has been using my conveyor. I have not agreed to that."
+- **The clues:** chewed clinic tag in suite bedroom 1, wet prints in 203, flour tracks in the kitchen, rattling bone baskets at the bar.
+- **Lil:** "There's a little guy in the tube. I think he's a guy. He's got, like, bonus feet."
+
+**Objectives**
+1. Find three signs of Gerald around the inn.
+2. Follow Gerald into the shafts.
+3. Calm and catch Gerald without hurting him.
+4. Return Gerald and the notebook to Pimm.
+
+**Gerald [SUGGESTED]:** a small soft-shelled turtle with a long grippy tongue and extra climbing toes, adapted for walls. Skittish, harmless, very good at ducking into pipes. Swap him for any animal that fits your table.
+
+**Scene 1: The signs** (any three, Perception or Investigation **DC 10–12**)
+Footprints in 203. Flour in the kitchen. The rattling tube stub at the bar. Scratches on the cellar hatch ring. Each tells you he's moving up, through and out of the building.
+
+**Scene 2: The shafts**
+- The **hanging conveyor** loop over the bar feeds a **brass drop-tube**, which leads down to the cellar and into the Exchange's own shafts.
+- **Violet (Read Green Pattern, free, 30 ft):** the **fungus lining the shafts** shows crushed patches where something small passed. Vitality is *Strained* from conveyor oil. She cannot track Gerald with her craft, but she can read where the fungus was *disturbed*. A good use of Starweaving's limits.
+- **Dale (Analyze, free):** the shaft grease is **Iron**, Potency 1, Stable. It tells him which way the chain runs.
+- **Betsy / Biscuit:** Biscuit can scout. **Animal Handling DC 12** (or a calming approach) settles Gerald when he's cornered.
+- **Lil's offer:** "I'll just write GERALD on him so he knows his name." Roll on Part 3 if the party lets him.
+
+**Scene 3: The Lost Property shelf**
+The shaft ends at a **small caged annex** on a minor threshold: a *lost-and-found for the Exchange.* Shelves of **unclaimed remains** with dates and "notice expires" tags. Gerald is curled around the notebook on a shelf.
+- This is the **unclaimed-after-notice** category made visible. One tag has *a very recent date*. *(Hint at Bones's stakes.)*
+- **Exchange lesson:** the Exchange sits in a **stable Wyrd knot with multiple thresholds.** The shafts connect them. That's why one building has many doors.
+
+**Scene 4: The notebook**
+Pimm's field notes contain three things:
+1. Her rules for a **viable adaptation**: body health, anatomy, scale, environmental need. *A coherent problem, not arbitrary monster powers.*
+2. A list of rejected adaptations with reasons. This is the lesson: **Splicing chooses among viable continuations. It does not invent.**
+3. **A loose page that isn't Pimm's.** A very old drawing of an **animal-holding box with a music mechanism**, close to Betsy's own. Pimm: *"Not mine. Older than the licensing. I never found whose."*
+   - **[UNSETTLED]** Betsy's family genealogy is not yet recovered. The page is a breadcrumb, not an answer. Do not fix a family line.
+
+**What the players learn**
+- **Exchange:** how the building moves things, the multiple thresholds, and what "unclaimed after notice" means in practice.
+- **Craft (Betsy):** what a viable continuation is, and why constraints are the craft.
+- **Backstory:** Betsy's box has a lineage. Someone, long ago, drew *the same kind of thing* on purpose.
+
+**Reward**
+- **Pimm's supervised adaptation study:** Betsy walks through one adaptation for Biscuit or a companion (cold, climbing, breath or sense) with Pimm critiquing. **No extra charges or actions.** A clean dry run with no backlash, as a demonstration.
+- Pimm's regard and a standing invitation to ask her about anatomy.
+- The loose page. Betsy keeps it.
+
+---
+
+## 6.3 QUEST THREE: "THE MAN IN 206"
+**Giver:** Mottle (or the clues, or Lil) | **Spotlight:** the whole party, Lil as comic relief | **Teaches:** identity vs. body, custody costs, and what the Bones claim will look like
+
+**Summary.** A long-term guest in room 206 has been lodging **43 years** and disputes the bill because **his body was replaced.** Mottle says *"same man."* The party sorts out who is right, and learns the logic they will need for Bones.
+
+**Hooks**
+- **Mottle (direct):** *"The man in 206 claims he is a different man. I charge the same man. The ledger agrees with me. I would like it to stop disagreeing at my counter."*
+- **The clues:** the old "6" plate, the suite guest book, the neighbor in 205 who hears him talk to a chair, the 43-year bill at the notices desk.
+- **Lil:** "He's nice. He taught me a card game with no rules. I'm winning."
+
+**Room 206 and the guest [SUGGESTED]:** an old-looking man named **Tobias Wren**, a former gravewright. He's gentle, sad, and has an excellent memory for details. The chair he talks to is his old body's favorite chair.
+
+**Objectives**
+1. Interview the guest and decide whether he's honest.
+2. Check the ledgers for what actually happened.
+3. Work out a fair bill and settle it with Mottle.
+4. Report back, and get an introduction.
+
+**Scene 1: The guest**
+- **Insight DC 11:** he isn't lying. He *feels* like a different man, and he is also the same one.
+- He says: *"The old body wore out. The new one fits badly. I remember everything. That's the problem. I remember it as someone else."*
+
+**Scene 2: Evidence**
+- **Pringus (or a clerk):** *"The ledger states that a restoration was recorded. The name persisted. I infer that Mr. Wren is a continuing claimant in a separated state. I do not know how long he was separated."* This is the **same logic as the Bones claim.**
+- **Perception DC 12** in the room finds a **bone tag** under a floorboard. It is his original **identity anchor.**
+- **Rite of the Remaining Bone** (if the party uses it): **Witness memory** confirms a continuous mind. Optional and flavorful. *(It costs a copper coin and uses no charges or slots.)*
+- **The twist:** the custody ledger shows the body was away at a **licensed restoration house for six years.** Wren *wasn't in the room.* Mottle billed lodging for those years.
+
+**Scene 3: The fair settlement**
+- **Name persists = same man.** Wren owes the lodging for the years he was present.
+- **For the six years he was separated,** the room was empty. Those were **custody costs**, not lodging. A much lower rate.
+- Mottle grumbles but accepts. *"I have not agreed. I have, however, been correct in part."*
+- Persuasion **DC 11** gets Mottle to waive the interest. Insight shows he's relieved someone settled it.
+
+**What the players learn**
+- **Exchange:** **name persists = same person**, **claim vs. restoration are separate**, **separated-state costs are custody costs.** This is the legal logic behind Bones. *(Handoff: "retained name means continuing claimant in separated state.")*
+- **Craft:** memory-bearing remains are evidence, and identity anchors hold the name steady during restoration. Dale (Bone Essence) and Violet (seed of life) see what restoration needs.
+- **Backstory [SUGGESTED]:** Wren used to dig on the road beyond Varrenmoor. He says: *"Three graveyards. All three tended the same week. The tenders never spoke, but they left each other bread."* This fits your canon that the three traditions were **hidden side by side, not replaced.**
+
+**Reward**
+- **From Mottle:** free lodging for the rest of the stay, a **rumor of the party's choice**, and **Lil's three days of work cut to one.** (Lil: "Yahoo! …wait, is that good?")
+- **An introduction to a licensed restoration house:** Wren was restored there. He'll write them a note. This sets up Bones's restoration without guaranteeing success.
+- **Practical advice for Bones:** *"They will ask for the name three times. Bring the name."*
+
+---
+
+## 6.4 RUNNING THE THREE TOGETHER
+- **Order doesn't matter.** Quest 1 and Quest 2 both use the building's back-spaces. Quest 3 stays in the corridor.
+- **Natural overlap:** Dunmore Kell (Quest 1) might be the "something small and offended" Mottle mentions, and he could be using the same shafts. Gerald could pass the rat's door. Pick the connections you like.
+- **Pacing:** each quest is about 30 to 45 minutes of table time.
+- **If the party skips one:** the clue stays on the map. Mottle, Pimm or Quill will mention it again when the party passes through.
+
+## 6.5 NEW OPEN QUESTIONS (add to Part 5)
+10. Is "Room 6" in the prepared Mottle JSON the same as room **206** in the model? (This guide assumes yes.)
+11. Who taught the amender the **Mwooreth + Ikkander grammar** on the warehouse door?
+12. What is **Gerald**, exactly? (Suggested: a soft-shelled turtle.)
+13. Whose is the **old animal-box drawing** in Pimm's notebook?
+14. Which **licensed restoration house** is Wren's, and does it handle Bones?
