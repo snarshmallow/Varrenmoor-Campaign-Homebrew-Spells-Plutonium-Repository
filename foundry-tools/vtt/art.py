@@ -3,7 +3,7 @@ import os
 import subprocess
 import sys
 
-from .common import G3D, MODELS, OUT, DEFAULT_FOLDER, slug
+from .common import G3D, MODELS, OUT, DEFAULT_FOLDER, run_stream, slug
 
 VENV_PY = G3D / "ai" / ".venv" / "Scripts" / "python.exe"
 
@@ -15,15 +15,15 @@ def concept(name, prompt, seed=29, seq_offload=True, neg=""):
         cmd.append("--seq-offload")
     if neg:
         cmd += ["--neg", neg]
-    subprocess.run(cmd, check=True, cwd=str(G3D / "ai"))
+    run_stream(cmd, cwd=str(G3D / "ai"))
     return G3D / "ai" / "characters" / f"{slug(name)}_{seed}.png"
 
 
 def model_from_image(image, name, height_m, tris=9000, folder=DEFAULT_FOLDER + "/Tokens", turn=True):
     """Run SF3D on an image. Returns the file name (e.g. 'token_pimm_ai.glb'). The model is turned 180 degrees (SF3D faces +Y, tokens must face -Y)."""
     fname = f"token_{slug(name)}_ai"
-    subprocess.run(["powershell", "-NoProfile", "-File", str(G3D / "ai3d.ps1"), "-Image", str(image), "-Name", fname, "-Folder", folder,
-                    "-Tris", str(tris), "-Height", str(height_m)], check=True, cwd=str(G3D))
+    run_stream(["powershell", "-NoProfile", "-File", str(G3D / "ai3d.ps1"), "-Image", str(image), "-Name", fname, "-Folder", folder,
+                "-Tris", str(tris), "-Height", str(height_m)], cwd=str(G3D))
     glb = OUT / folder.replace("/", os.sep) / f"{fname}.glb"
     if turn:
         subprocess.run([_blender(), "-b", "--factory-startup", "--python", str(G3D / "blender" / "turn180.py"), "--", str(glb)], check=True, capture_output=True)

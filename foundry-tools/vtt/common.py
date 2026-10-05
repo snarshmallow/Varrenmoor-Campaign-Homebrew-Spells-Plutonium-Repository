@@ -31,6 +31,19 @@ def slug(s):
     return re.sub(r"[^a-z0-9]+", "_", s.lower()).strip("_")
 
 
+def run_stream(cmd, cwd=None):
+    """Run a command and print its output line by line as it arrives (so a GUI log can show progress); raises if it fails."""
+    pr = subprocess.Popen(cmd, cwd=cwd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, encoding="utf-8", errors="ignore", bufsize=1)
+    tail = []
+    for line in pr.stdout:
+        line = line.rstrip()
+        if line:
+            tail = (tail + [line])[-12:]
+            print(line[-220:])
+    if pr.wait() != 0:
+        raise RuntimeError("command failed (%s): %s | %s" % (pr.returncode, " ".join(map(str, cmd))[:120], " / ".join(tail[-6:])))
+
+
 def bridge(op, **args):
     """Call foundry-bridge/bridge.ps1 (the relay must be running). Returns parsed JSON."""
     r = subprocess.run(["powershell", "-NoProfile", "-File", str(BRIDGE), "-Op", op, "-Args", json.dumps(args)], capture_output=True)

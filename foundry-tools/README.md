@@ -9,6 +9,13 @@ python foundry-tools/vtt.py <command> ...        (or foundry-tools\vtt.cmd <comm
 
 Every command takes `--dry` where it can (prints what it would do, changes nothing). Use `--at=-9.5,-4` (with `=`) for negative coordinates.
 
+## GUI
+
+`foundry-toolstt_gui.cmd` (or `python foundry-tools/vtt_gui.py`) opens a window with a tab per tool: **NPC, Item, Scene, Encounter, Place / Where, Publish**.
+It connects to Foundry on start (File > Refresh reloads the lists), so scenes, actors, items, folders and playlists are picked from drop-downs. Each create tab has a
+**Dry run** beside the create button, **Load / Save spec** (the same JSON the command line uses), and a "Document in the GM guide" tick. The NPC tab has a
+**Generate concept image** button that shows the picture before you commit to the 3D step. Long jobs run in the background and stream to the log at the bottom.
+
 ## Commands
 
 | Command | What it does |
