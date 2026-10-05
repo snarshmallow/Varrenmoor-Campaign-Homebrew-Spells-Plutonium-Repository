@@ -12,14 +12,14 @@ Layout (x east, y north; the south wall is the street/plaza side):
 """
 import math
 
-import bmesh
 import bpy
+from _parts import BOTTLE_PROFILES, Skulls, bm_to_obj, flame_tongue, lathe
 
 FOLDER = "Act 2 Road to Bridgehollow/Ossuary Exchange"
 
 IX, IY = 14.0, 10.0      # half-extents of the clear interior
 T = 0.7                  # wall thickness
-WALL_H = 5.4
+WALL_H = 6.0              # tall enough for a 2.3 m door on the mezzanine (deck at 3.3)
 F = 0.1                  # floor top
 MEZ = 3.3                # mezzanine deck top
 
@@ -52,51 +52,12 @@ def build(k):
     candle = k.mat("candle", (0.95, 0.85, 0.6), roughness=0.5, emission=(1.0, 0.65, 0.25))
     plaque = k.mat("plaque", (0.7, 0.55, 0.2), roughness=0.4, emission=(0.9, 0.6, 0.15))
 
+    skulls = Skulls()
+    skull_teeth = k.mat("skull_teeth", (0.88, 0.84, 0.72), roughness=0.55)
+
     def B(x0, x1, y0, y1, z0, z1, mat, name="box", bevel=0.0, rot=(0, 0, 0)):
         return k.box((x1 - x0, y1 - y0, z1 - z0), loc=((x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2),
                      rot=rot, material=mat, name=name, bevel=bevel)
-
-    def lathe(bm, profile, cx, cy, cz, seg=8, sway=(0.0, 0.0)):
-        """Spin a (radius, height) profile around Z into bm: closed flat base, pointed tip when the last radius is 0.
-        `sway` shifts the ring centres progressively (quadratic in height) so flames can lean and curl."""
-        top = profile[-1][1] or 1.0
-        rings = []
-        for r, h in profile:
-            t = h / top
-            ox, oy = sway[0] * t * math.sin(math.pi * 1.5 * t), sway[1] * t * math.sin(math.pi * 1.5 * t)   # S-curve lean
-            if r <= 1e-6:
-                rings.append(bm.verts.new((cx + ox, cy + oy, cz + h)))
-            else:
-                rings.append([bm.verts.new((cx + ox + r * math.cos(2 * math.pi * i / seg),
-                                            cy + oy + r * math.sin(2 * math.pi * i / seg), cz + h)) for i in range(seg)])
-        bm.faces.new(rings[0][::-1])
-        for j in range(len(rings) - 1):
-            a, b = rings[j], rings[j + 1]
-            for i in range(seg):
-                i2 = (i + 1) % seg
-                if isinstance(b, list):
-                    bm.faces.new((a[i], a[i2], b[i2], b[i]))
-                else:
-                    bm.faces.new((a[i], a[i2], b))
-        if isinstance(rings[-1], list):
-            bm.faces.new(rings[-1])
-
-    def bm_to_obj(bm, name, mat):
-        me = bpy.data.meshes.new(name)
-        bm.to_mesh(me)
-        bm.free()
-        ob = bpy.data.objects.new(name, me)
-        bpy.context.scene.collection.objects.link(ob)
-        ob.data.materials.append(mat)
-        return ob
-
-    def flame_tongue(x, y, z, height, radius, sway, mat, name):
-        """A teardrop flame leaning by `sway` metres at the tip (~40 triangles)."""
-        bm = bmesh.new()
-        fr = (0.55, 0.9, 1.0, 0.95, 0.8, 0.6, 0.38, 0.18, 0.0)
-        ht = (0.0, 0.1, 0.25, 0.4, 0.55, 0.7, 0.82, 0.93, 1.0)
-        lathe(bm, [(radius * a, height * b) for a, b in zip(fr, ht)], x, y, z, seg=6, sway=(sway, sway * 0.5))
-        return bm_to_obj(bm, name, mat)
 
     def torus(major, minor, loc, rot=(0, 0, 0), mat=None, name="ring"):
         bpy.ops.mesh.primitive_torus_add(major_radius=major, minor_radius=minor, major_segments=24, minor_segments=8,
@@ -166,11 +127,14 @@ def build(k):
     for x in (-9, 5):
         window("x", yn, x)
     # west wall: hallway door under the mezzanine, 3 high windows above it
-    w_open = [(1.5, 1.6, 0, 2.7)] + [(y, 1.2, 3.9, 4.9) for y in (-6.5, -0.5, 6)]
+    UP_Y = -1.0                       # the upstairs door, at the top of the stair
+    UP_H = 2.3
+    w_open = [(1.5, 1.6, 0, 2.7), (UP_Y, 1.4, MEZ, MEZ + UP_H)] + [(y, 1.2, MEZ + 0.9, MEZ + 2.2) for y in (-6.5, 4, 7.5)]
     wall("y", xw, -IY, IY, ashlar, w_open)
     frame("y", xw, 1.5, 1.6, 0, 2.7)
-    for y in (-6.5, -0.5, 6):
-        window("y", xw, y, w=1.2, sill=3.9, head=4.9)
+    frame("y", xw, UP_Y, 1.4, MEZ, MEZ + UP_H)
+    for y in (-6.5, 4, 7.5):
+        window("y", xw, y, w=1.2, sill=MEZ + 0.9, head=MEZ + 2.2)
     # east wall: cellar/service door
     wall("y", xe, -IY, IY, ashlar, [(-8.5, 1.4, 0, 2.7)])
     frame("y", xe, -8.5, 1.4, 0, 2.7)
@@ -196,10 +160,11 @@ def build(k):
     py = (-3.5, 4.0)
     for x in px:
         for y in py:
+            shaft = WALL_H - 0.35 - (F + 0.35)           # base 0.35 tall, cap 0.3 tall, 5 cm under the wall top
             B(x - 0.5, x + 0.5, y - 0.5, y + 0.5, F, F + 0.35, granite, "pillar_base", bevel=0.03)
-            k.cylinder(0.38, 4.7, loc=(x, y, F + 0.35 + 2.35), material=ashlar, name="pillar", verts=14)
+            k.cylinder(0.38, shaft, loc=(x, y, F + 0.35 + shaft / 2), material=ashlar, name="pillar", verts=14)
             k.cylinder(0.43, 0.12, loc=(x, y, F + 1.6), material=brass, name="pillar_band", verts=14)
-            B(x - 0.5, x + 0.5, y - 0.5, y + 0.5, F + 5.05, WALL_H - 0.05, granite, "pillar_cap", bevel=0.03)
+            B(x - 0.5, x + 0.5, y - 0.5, y + 0.5, WALL_H - 0.35, WALL_H - 0.05, granite, "pillar_cap", bevel=0.03)
     for x in px:
         B(x - 0.2, x + 0.2, -IY, IY, WALL_H - 0.55, WALL_H - 0.07, coak, "arcade_beam", bevel=0.02)
 
@@ -213,7 +178,7 @@ def build(k):
     B(hx - 1.2, hx + 1.2, IY - 0.06, IY - 0.01, F + 0.3, F + 1.9, soot, "soot")
     B(hx - 3.0, hx + 3.0, 8.15, 8.55, F + 2.05, F + 2.25, doak, "mantel", bevel=0.02)
     for i in range(5):     # mantel top is at F + 2.25
-        k.sphere(0.1, loc=(hx - 2.2 + i * 1.1, 8.35, F + 2.25 + 0.095), scale=(1, 1.1, 1), material=bone, name="mantel_skull", segments=10)
+        skulls.add(hx - 2.2 + i * 1.1, 8.35, F + 2.25, face_to=(0, 0), s=0.1)
     for dy in (-0.45, 0.0, 0.45):
         k.cylinder(0.12, 1.5, loc=(hx + dy * 0.4, 9.3 + dy * 0.7, F + 0.45), rot=(0, 90, 8 * dy * 10), material=coak, name="log", verts=10)
     B(hx - 0.9, hx + 0.9, 8.9, 9.7, F + 0.3, F + 0.36, ember, "embers")
@@ -262,13 +227,9 @@ def build(k):
     B(13.25, IX, -6.1, 8.3, 1.0, 1.06, granite, "backbar_top")
     for sy in range(-6, 9, 3):
         B(13.55, 13.65, sy - 0.05, sy + 0.05, 1.06, 3.1, doak, "shelf_post")
-    glass = {0: bmesh.new(), 1: bmesh.new(), 2: bmesh.new(), 3: bmesh.new()}   # one mesh per glass colour
-    # (radius, height-fraction) profiles, spun around Z: wine bottle, squat jug, tall flask
-    profiles = (
-        (0.30, ((0.050, 0), (0.050, 0.58), (0.040, 0.66), (0.020, 0.78), (0.020, 0.94), (0.026, 0.97), (0.026, 1.0))),
-        (0.22, ((0.062, 0), (0.076, 0.25), (0.076, 0.5), (0.052, 0.72), (0.028, 0.85), (0.032, 1.0))),
-        (0.34, ((0.036, 0), (0.036, 0.7), (0.020, 0.82), (0.020, 0.97), (0.026, 1.0))),
-    )
+    import bmesh as _bm
+    glass = {i: _bm.new() for i in range(4)}   # one mesh per glass colour
+    profiles = BOTTLE_PROFILES
     for zi, zs in enumerate((1.6, 2.25, 2.9)):
         B(13.5, IX, -6.0, 8.2, zs, zs + 0.05, oak, "shelf", bevel=0.005)
         y = -5.8 + (zi % 2) * 0.2
@@ -280,8 +241,8 @@ def build(k):
             i += 1
     for idx, mat in enumerate((glass_g, glass_a, glass_b, clay)):
         bm_to_obj(glass[idx], "bottles", mat)
-    for i in range(10):    # skulls sit ON the top shelf (board top is at 2.95)
-        k.sphere(0.09, loc=(13.7, -5.4 + i * 1.5, 2.95 + 0.085), scale=(1, 1.1, 1), material=bone, name="shelf_skull", segments=8)
+    for i in range(10):    # skulls sit ON the top shelf (board top is at 2.95), faces toward the room centre
+        skulls.add(13.7, -5.4 + i * 1.5, 2.95, face_to=(0, 0), s=0.1)
     for kx, kz in ((12.0, 0.55), (13.0, 0.55), (12.5, 1.4)):    # kegs, NE corner (staff side)
         k.cylinder(0.42, 0.85, loc=(kx, 9.2, F + kz - 0.1), rot=(90, 0, 0), material=oak, name="keg", verts=14)
         k.cylinder(0.43, 0.06, loc=(kx, 9.2 - 0.2, F + kz - 0.1), rot=(90, 0, 0), material=iron, name="keg_hoop", verts=14)
@@ -317,15 +278,11 @@ def build(k):
     for i in range(0, n_steps, 3):
         zt = F + 0.2 * (i + 1)
         B(x1 + 0.01, x1 + 0.05, y_start + (i + 0.5) * run - 0.025, y_start + (i + 0.5) * run + 0.025, zt, zt + 0.95, iron, "stair_baluster")
-    # beds, screens and a chest on the gallery
-    for by in (1.0, 4.4, 7.6):
-        B(-13.9, -11.9, by - 0.5, by + 0.5, MEZ, MEZ + 0.3, doak, "bed_frame", bevel=0.01)
-        B(-13.85, -11.95, by - 0.45, by + 0.45, MEZ + 0.3, MEZ + 0.42, linen, "mattress", bevel=0.03)
-        B(-13.85, -13.35, by - 0.35, by + 0.35, MEZ + 0.42, MEZ + 0.52, paper, "pillow", bevel=0.04)
-        B(-13.9, -13.8, by - 0.5, by + 0.5, MEZ + 0.3, MEZ + 0.9, doak, "bed_head")
-    for sy in (2.7, 6.0):
-        B(-13.9, -10.6, sy - 0.03, sy + 0.03, MEZ, MEZ + 1.8, cloth_ochre, "screen")
-    B(-11.6, -10.7, 9.0, 9.8, MEZ, MEZ + 0.6, coak, "gallery_chest", bevel=0.02)
+    # landing at the top of the stair: a lantern bracket either side of the upstairs door and a brass room-plate
+    for dy in (-1.0, 1.0):
+        B(-IX, -IX + 0.1, UP_Y + dy * 1.15 - 0.04, UP_Y + dy * 1.15 + 0.04, MEZ + 1.6, MEZ + 2.0, brass, "landing_arm")
+        k.sphere(0.1, loc=(-IX + 0.18, UP_Y + dy * 1.15, MEZ + 2.05), material=candle, name="landing_lamp", segments=8)
+    B(-IX, -IX + 0.03, UP_Y - 0.3, UP_Y + 0.3, MEZ + 2.45, MEZ + 2.65, plaque, "upstairs_plate")
 
     # ------------------------------------------------------------- doors (closed leaves)
     for sx in (-1, 1):   # main entrance
@@ -337,6 +294,8 @@ def build(k):
     for i in range(9):
         B(-1.5 + i * 0.375 - 0.04, -1.5 + i * 0.375 + 0.04, ys - 0.45, ys - 0.40, 3.78, 3.88, bone, "lintel_stud")
     B(xw - 0.07, xw + 0.07, 1.5 - 0.76, 1.5 + 0.76, 0, 2.6, coak, "hall_door", bevel=0.01)
+    # upstairs door: a real swinging door node (hinge on the south jamb, opens into the gallery)
+    k.door(1.3, UP_H - 0.05, hinge=(xw, UP_Y - 0.65, MEZ), yaw_deg=90, swing=(1, 0), leaf_mat=coak, trim_mat=iron, door_id="upstairs")
     B(xe - 0.07, xe + 0.07, -8.5 - 0.66, -8.5 + 0.66, 0, 2.6, coak, "service_door", bevel=0.01)
     B(11 - 0.66, 11 + 0.66, yn - 0.07, yn + 0.07, 0, 2.6, coak, "kitchen_door", bevel=0.01)
 
@@ -422,9 +381,13 @@ def build(k):
             continue
         B(x - 0.5, x + 0.5, IY - 0.04, IY, 2.4, 4.9, mat, "banner")
         B(x - 0.55, x + 0.55, IY - 0.08, IY, 4.9, 5.0, bone, "banner_rod")
-    for i in range(7):      # skull plaques along the north wall above the windows
-        k.sphere(0.12, loc=(-13 + i * 1.4, IY - 0.1, 4.7), scale=(1, 0.7, 1.1), material=bone, name="wall_skull", segments=10)
+    for i in range(7):      # skulls on little shelves along the north wall above the windows
+        sx = -13 + i * 1.4
+        B(sx - 0.14, sx + 0.14, IY - 0.22, IY, 4.62, 4.66, doak, "skull_bracket")
+        skulls.add(sx, IY - 0.12, 4.66, face_to=(0, 0), s=0.09)
     # crates and a barrel by the hallway door
     B(-13.4, -12.4, 3.4, 4.2, F, F + 0.7, coak, "crate", bevel=0.02)
     B(-13.2, -12.5, 3.5, 4.1, F + 0.7, F + 1.3, coak, "crate", bevel=0.02)
     k.cylinder(0.35, 0.8, loc=(-13.4, -2.5, F + 0.4), material=oak, name="barrel", verts=12)
+
+    skulls.finish(bone, soot, skull_teeth, name="skulls")

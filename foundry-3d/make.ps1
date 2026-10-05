@@ -14,7 +14,7 @@ if (Test-Path "$root\.env") {
 $blender = $cfg['BLENDER_PATH']
 if (-not $blender -or -not (Test-Path $blender)) { throw 'BLENDER_PATH not set or missing. Run .\setup.ps1 first.' }
 
-$gens = if ($Name) { @(Get-Item "$root\generators\$Name.py") } else { @(Get-ChildItem "$root\generators\*.py") }
+$gens = if ($Name) { @(Get-Item "$root\generators\$Name.py") } else { @(Get-ChildItem "$root\generators\*.py" | Where-Object { $_.Name -notlike '_*' }) }
 New-Item -ItemType Directory -Force "$root\out" | Out-Null
 
 foreach ($g in $gens) {

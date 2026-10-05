@@ -140,6 +140,34 @@ class Kit:
         obj.modifiers.new("thick", "SOLIDIFY").thickness = 0.01
         return self._finish(obj, name, material, 0)
 
+    def door(self, width, height, hinge, yaw_deg, swing, leaf_mat, trim_mat, door_id, thick=0.1, name="door", style=1):
+        """A swinging door as its OWN object (not merged on export). Its origin sits on the hinge edge and the leaf
+        extends along local +X, so 3D Canvas rotates it about the hinge. `hinge` is the world position of the hinge at
+        floor level, `yaw_deg` the direction the closed leaf points, `swing` a plan-view unit vector the door opens
+        toward. Exported extras: isDoor, doorId, doorStyle (1 = swing), doorAnimateAngle (radians)."""
+        parts = [self.box((width, thick, height), loc=(width / 2, 0, height / 2), material=leaf_mat, name=name + "_leaf", bevel=0.01)]
+        for f in (0.18, 0.5, 0.82):     # iron straps
+            parts.append(self.box((width * 0.94, thick + 0.03, 0.09), loc=(width / 2, 0, height * f), material=trim_mat, name=name + "_strap"))
+        parts.append(self.box((0.06, thick + 0.07, 0.22), loc=(width - 0.14, 0, height * 0.46), material=trim_mat, name=name + "_handle"))
+        bpy.ops.object.select_all(action="DESELECT")
+        for p in parts:
+            p.select_set(True)
+        bpy.context.view_layer.objects.active = parts[0]
+        bpy.ops.object.join()
+        obj = bpy.context.active_object
+        bpy.context.scene.cursor.location = (0, 0, 0)
+        bpy.ops.object.origin_set(type="ORIGIN_CURSOR")
+        obj.location = hinge
+        obj.rotation_euler = (0, 0, math.radians(yaw_deg))
+        ux, uy = math.cos(math.radians(yaw_deg)), math.sin(math.radians(yaw_deg))
+        cross = ux * swing[1] - uy * swing[0]          # +: the leaf turns counter-clockwise toward `swing`
+        obj.name = f"door_{door_id}"
+        obj["isDoor"] = 1
+        obj["doorId"] = door_id
+        obj["doorStyle"] = style
+        obj["doorAnimateAngle"] = math.radians(90 if cross > 0 else -90)
+        return obj
+
     def jitter(self, amount):
         return self.rng.uniform(-amount, amount)
 
@@ -196,13 +224,19 @@ def ground_and_centre(keep_z=False):
 
 
 def merge_for_export(name):
-    """Apply modifiers and join every mesh into one object: one node and one draw call per material in 3D Canvas."""
-    meshes = [o for o in bpy.context.scene.objects if o.type == "MESH"]
+    """Apply modifiers and join every mesh into one object: one node and one draw call per material in 3D Canvas.
+    Objects flagged with a custom property `isDoor` or `separate` (doors, painting eyes) stay their own nodes so
+    3D Canvas can animate them about their origin; their custom properties are exported as glTF extras."""
+    allm = [o for o in bpy.context.scene.objects if o.type == "MESH"]
+    keep = [o for o in allm if o.get("isDoor") or o.get("separate")]
+    meshes = [o for o in allm if o not in keep]
     bpy.ops.object.select_all(action="DESELECT")
-    for o in meshes:
+    for o in allm:
         bpy.context.view_layer.objects.active = o
         for mod in list(o.modifiers):
             bpy.ops.object.modifier_apply(modifier=mod.name)
+    bpy.ops.object.select_all(action="DESELECT")
+    for o in meshes:
         o.select_set(True)
     bpy.context.view_layer.objects.active = meshes[0]
     bpy.ops.object.join()
@@ -221,6 +255,7 @@ def export_glb(out_path):
         use_selection=False,
         export_cameras=False,
         export_lights=False,
+        export_extras=True,      # custom properties (isDoor, doorId, ...) become glTF extras for 3D Canvas
     )
 
 
@@ -232,6 +267,7 @@ def main():
     seed = int(argv[2]) if len(argv) > 2 else 0
     blend_path = Path(argv[3]).resolve() if len(argv) > 3 else None
 
+    sys.path.insert(0, str(gen_path.parent))     # shared helpers such as generators/_parts.py
     spec = importlib.util.spec_from_file_location(gen_path.stem, gen_path)
     gen = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(gen)

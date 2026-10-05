@@ -11,7 +11,7 @@ import bpy
 FOLDER = "Act 2 Road to Bridgehollow/Ossuary Exchange"
 KEEP_Z = True
 
-IX, IY, T, WALL_H = 14.0, 10.0, 0.7, 5.4
+IX, IY, T, WALL_H = 14.0, 10.0, 0.7, 6.0
 HX = -3.0                      # hearth x
 PITCH = 28.0
 TAN, COS = math.tan(math.radians(PITCH)), math.cos(math.radians(PITCH))
@@ -86,7 +86,7 @@ def build(k):
             zc = z_under(yc) - 0.17 / COS
             B(x - 0.1, x + 0.1, yc - (EXT_Y / COS) / 2, yc + (EXT_Y / COS) / 2, zc - 0.15, zc + 0.15, coak, "rafter",
               rot=(-PITCH if side > 0 else PITCH, 0, 0))
-            B(x - 0.08, x + 0.08, side * 1.7 - 1.92, side * 1.7 + 1.92, 6.7 - 0.1, 6.7 + 0.1, coak, "strut",
+            B(x - 0.08, x + 0.08, side * 1.7 - 1.92, side * 1.7 + 1.92, WALL_H + 1.2, WALL_H + 1.4, coak, "strut",
               rot=(-ang_strut if side > 0 else ang_strut, 0, 0))
     B(-EXT_X, EXT_X, -0.2, 0.2, ridge_z - 0.5, ridge_z - 0.05, coak, "ridge_beam", bevel=0.02)
 
