@@ -311,50 +311,33 @@ def build(k):
             box(ix, iy, z, 0.04, 1.2, 1.6, coak, "ring_window_frame", rotz=deg)
         box(ix, iy, wh - 0.1, 0.12, ch, 0.2, coak, "ring_cornice", rotz=deg)
 
-    # ---- conveyor line ends: every line is carried on in a wide brass tube that rises over the rooftops and disappears into the ring wall, so from the
-    # tokens' point of view the lines run off into tunnels in the walls. A dark mouth and collar sit where the rail enters the tube; a flange where the
-    # tube meets the wall.
+    # ---- conveyor line ends: the original model ends every line in a gold hatch ring set into r = 22.7 (24 of them: 16 grid lines at rail height 9.73 and 8 express
+    # lines at 11.5-13.9, each facing radially). A brass tube of the same bore starts right at each ring and runs outward and up over the rooftops into the ring
+    # wall, so the lines appear to run off into tunnels in the walls. The original's curved feeders end at those rings, so nothing curves outside the tubes.
     from mathutils import Vector
-    dark = k.mat("tube_mouth", (0.005, 0.005, 0.006), roughness=1.0)
     R_MOUTH = rr - th / 2 - 0.05
+    R_HATCH = 22.92                                                  # outer face of the hatch rings
 
-    def tube(ex, ey, dx, dy, z0, zt):
-        """Tube from the rail end (ex, ey at height z0) outward along (dx, dy) to the wall, rising to height zt there."""
-        d = math.hypot(dx, dy)
-        dx, dy = dx / d, dy / d
-        # distance to the wall circle along the line
-        b = ex * dx + ey * dy
-        t_end = -b + math.sqrt(b * b - (ex * ex + ey * ey - R_MOUTH ** 2))
-        t0 = 0.35                                                    # the mouth stands a little beyond the rail's end
-        r_t = 0.9
-        zc0, zc1 = z0 - 0.4, zt - 0.4                                # tube axis (centred on the rail and the basket path)
-        p0 = Vector((ex + dx * t0, ey + dy * t0, zc0))
-        p1 = Vector((ex + dx * (t_end + 0.5), ey + dy * (t_end + 0.5), zc0 + (zc1 - zc0) * (t_end + 0.5 - t0) / (t_end - t0)))
+    def tube(ang_deg, z0, zt):
+        a = math.radians(ang_deg)
+        dx, dy = math.cos(a), math.sin(a)
+        r_t = 0.6
+        p0 = Vector((R_HATCH * dx, R_HATCH * dy, z0))
+        t_len = (R_MOUTH + 0.5) - R_HATCH
+        p1 = Vector(((R_MOUTH + 0.5) * dx, (R_MOUTH + 0.5) * dy, z0 + (zt - z0) * t_len / (R_MOUTH - R_HATCH)))
         v = p1 - p0
         L = v.length
-        eul = Vector((0, 0, 1)).rotation_difference(v.normalized()).to_euler()
-        rot = tuple(math.degrees(a) for a in eul)
-        mid = (p0 + p1) / 2
-        k.cylinder(r_t, L, loc=tuple(mid), rot=rot, material=brass, name="line_tube", verts=16)
-        n = int(L // 2.6)
+        rot = tuple(math.degrees(e) for e in Vector((0, 0, 1)).rotation_difference(v.normalized()).to_euler())
+        k.cylinder(r_t, L, loc=tuple((p0 + p1) / 2), rot=rot, material=brass, name="line_tube", verts=16)
+        n = int(L // 1.8)
         for i in range(1, n + 1):                                    # iron bands
-            c = p0 + v * (i / (n + 1))
-            k.cylinder(r_t + 0.05, 0.18, loc=tuple(c), rot=rot, material=iron, name="tube_band", verts=16)
-        k.cylinder(r_t + 0.09, 0.28, loc=tuple(p0 + v.normalized() * 0.1), rot=rot, material=iron, name="tube_collar", verts=16)       # collar at the mouth
-        k.cylinder(r_t - 0.02, 0.04, loc=tuple(p0 - v.normalized() * 0.04), rot=rot, material=dark, name="tube_mouth", verts=16)       # the dark opening the rail enters
-        p_w = p0 + v * ((t_end - t0) / (p1 - p0).length * 0 + (t_end - t0) / L * 0 + 0)
-        w_c = Vector((ex + dx * (t_end - 0.1), ey + dy * (t_end - 0.1), zc0 + (zc1 - zc0) * (t_end - 0.1 - t0) / (t_end - t0)))
-        k.cylinder(r_t + 0.22, 0.3, loc=tuple(w_c), rot=rot, material=iron, name="wall_flange", verts=16)                              # flange where it meets the wall
-        return Vector((ex + dx * t_end, ey + dy * t_end))
+            k.cylinder(r_t + 0.04, 0.14, loc=tuple(p0 + v * (i / (n + 1))), rot=rot, material=iron, name="tube_band", verts=16)
+        k.cylinder(r_t + 0.06, 0.16, loc=tuple(p0 + v.normalized() * 0.08), rot=rot, material=iron, name="tube_collar", verts=16)       # collar against the ring
+        w_c = p0 + v * ((R_MOUTH - 0.1 - R_HATCH) / (R_MOUTH - R_HATCH) * t_len / L)
+        k.cylinder(r_t + 0.2, 0.26, loc=tuple(w_c), rot=rot, material=iron, name="wall_flange", verts=16)                              # flange where it meets the wall
 
-    mouths = []
-    z_end = 12.6                                                     # grid lines (rail at 9.7) climb to this height at the wall
-    for y in (9.0, 3.0, -3.0, -9.0):
-        for sgn in (-1, 1):
-            mouths.append(tube(sgn * 16.2, y, sgn, 0.0, 9.7, z_end))
-    for x in (9.0, 3.0, -3.0, -9.0):
-        for sgn in (-1, 1):
-            mouths.append(tube(x, sgn * 16.2, 0.0, sgn, 9.7, z_end))
-    for ang, z in ((157.5, 11.5), (-22.5, 11.5), (112.5, 12.3), (-67.5, 12.3), (67.5, 13.1), (-112.5, 13.1), (22.5, 13.9), (-157.5, 13.9)):
-        a = math.radians(ang)
-        mouths.append(tube(18.0 * math.cos(a), 18.0 * math.sin(a), math.cos(a), math.sin(a), z, z))
+    z_end = 12.2                                                     # grid lines (hatch at 9.73) climb to this height at the wall, clear of the roof ridges
+    for ang in (11.3, 31.0, 59.1, 78.7, 101.3, 121.0, 149.1, 168.7, -11.3, -31.0, -59.1, -78.7, -101.3, -121.0, -149.1, -168.7):
+        tube(ang, 9.73, z_end)
+    for ang, z in ((22.5, 13.93), (67.5, 13.13), (112.5, 12.33), (157.5, 11.53), (-157.5, 13.93), (-112.5, 13.13), (-67.5, 12.33), (-22.5, 11.53)):
+        tube(ang, z, z)
