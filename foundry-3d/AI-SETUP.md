@@ -35,3 +35,5 @@ Goal: turn a concept image (the PNGs already in `2026 Campaign`, e.g. `ossuary c
 - Installed in `ai/.venv` from `ai/sf3d/` (gitignored clone). Weights are gated: the HF account must have accepted the licence, and a read token is stored by `hf auth login`. SF3D is non-commercial under US$1M revenue; see the model card.
 - `uv_unwrapper` and `texture_baker` were built CPU-only (no nvcc) from a VS 2022 Build Tools prompt with `USE_NATIVE_ARCH=0 USE_CUDA=0 DISTUTILS_USE_SDK=1` and `--no-build-isolation`. The installed `texture_baker/baker.py` in the venv is patched to move tensors to CPU for rasterize/interpolate and back. Rebuilding the venv means redoing that patch.
 - Peak VRAM about 8 GB of the 10 GB.
+
+- SF3D GLBs come out fully metallic with roughness 0 (glTF's default when metallic is absent), which renders near-black. cleanup.py now forces Metallic 0 and Roughness 0.85 on every material.

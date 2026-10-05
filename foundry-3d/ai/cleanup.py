@@ -78,6 +78,14 @@ if image != "-":  # "-" keeps the source GLB's own texture (Stable Fast 3D)
     nt.links.new(bn.outputs["Color"], bsdf.inputs["Base Color"])
     bake.pack()
 
+# AI meshes can arrive fully metallic / mirror-smooth, which renders near-black in Foundry: force matte
+for m in obj.data.materials:
+    if m and m.node_tree:
+        b = m.node_tree.nodes.get("Principled BSDF")
+        if b:
+            b.inputs["Metallic"].default_value = 0.0
+            b.inputs["Roughness"].default_value = 0.85
+
 bpy.ops.wm.save_as_mainfile(filepath=blend)
 bpy.ops.export_scene.gltf(filepath=out, export_format="GLB", use_selection=False)
 print("[foundry-3d] wrote", out, sum(len(p.vertices) - 2 for p in obj.data.polygons), "tris")
