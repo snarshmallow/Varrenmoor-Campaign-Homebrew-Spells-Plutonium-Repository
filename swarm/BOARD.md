@@ -9,3 +9,4 @@ Each member edits only its own rows. Status: `todo`, `doing`, `blocked`, `done`.
 | S4 | User | Start the Desktop operator session (Claude desktop app, Computer use on) | todo | See PROTOCOL.md |
 | S5 | Desktop operator | Confirm ChatGPT and Gemini apps open and signed in | todo | |
 | S6 | 3D pipeline | Verify AI image-to-3D install (AI-SETUP.md) | done | Already installed; smoke test 2026-11-06: SF3D 46 s, 7.7 GB peak VRAM, Blender cleanup 7 s, 12.7k-tri GLB. Use `foundry-3d/ai3d.ps1` |
+| G01-G05 | DND Coordinator | Gemini source images (swarm/jobs) | blocked | ON HOLD by user to save quota. Do not run. |
