@@ -40,4 +40,4 @@ File `jobs/<id>.json`; `actions` run in order and stop at the first failure unle
 Result file: `{"id","ok","finished","results":[{"action","ok","error"?,...}]}`.
 
 ## Status
-Written without running Illustrator: the panel, host script, and install scripts are untested. The generator output is validated as XML.
+Tested 2026-11-06 in Illustrator 28.2.0: ping and the full test_guide job succeed.
