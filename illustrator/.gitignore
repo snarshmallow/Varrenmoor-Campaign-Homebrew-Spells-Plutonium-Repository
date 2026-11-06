@@ -1,0 +1,6 @@
+panel/config.json
+jobs/*.json
+jobs/done/*
+!jobs/.gitkeep
+!jobs/done/.gitkeep
+__pycache__/
