@@ -44,6 +44,13 @@ Result file: `{"id","ok","finished","results":[{"action","ok","error"?,...}]}`.
 - `python illustrator/generators/render_world.py --view town` writes `illustrator/out/bridgehollow_town.svg` with the layer tree from DESIGN.md section 3. Other views: `--view street:<street_id>` (1 in = 20 ft), `--view building:<building_id>` (1 in = 5 ft); output defaults to `illustrator/out/bridgehollow_<view>.svg` (`--out` overrides).
 - Every shape is a closed path with `id` = entity id; strokes use classes `guide-line`, `wall`, `road`, `water`, `proposed`.
 
+## Terrain and contours (step 1; all proposed)
+- `world/bridgehollow/terrain_spec.json`: artist constraints (ridges, peaks, valleys, passes as polylines with heights, base plane, noise, erosion, seed).
+- `python illustrator/generators/terrain.py [--cell 10]` writes `world/bridgehollow/terrain/heightmap.npy` (float32 feet), `heightmap_16.png` (16-bit, scaled by `terrain_meta.json`) and `terrain_meta.json`. Deterministic; about 0.2 s at 10 ft cells.
+- `generators/contours.py`: contourpy lines (smoothed, Chaikin), minor/index intervals, collision-aware elevation labels on index contours, optional mask polygons.
+- `python illustrator/generators/render_world.py --terrain` (regenerates heightmap + `out/bridgehollow_height.png` hillshade, overlays contours) or `--contours` (reuses the saved heightmap). Options: `--no-contour-mask`, `--contour-interval 10`, `--index-interval 50`, `--label-size 6`, `--units ft|m`. Output `out/bridgehollow_terrain.svg`.
+- New layers (always present, empty without the flags): `LINES/Terrain/Contours - Minor`, `LINES/Terrain/Contours - Index`, `LABELS/Labels - Elevation`. `LayerTree` now supports nested sublayers. The panel's `replace_layer` has not been tested on the third nesting level.
+
 ## More panel actions
 - `replace_layer`: `{"action":"replace_layer","path":"illustrator/out/bridgehollow_town.svg","names":["Roads","Buildings","Labels - Buildings","NOTES"]}`. Opens the SVG, and for each named layer (sublayers are named individually, parents are not recursed) clears that layer's own items and redraws them from the SVG, creating the layer if missing. Layers named `ART ...` are refused and never touched. Lock state and visibility of the target layer are restored afterwards (`"restore_lock": false` leaves it unlocked). Fails if a name is not in the SVG unless `"strict": false`.
 - `lock_layers`: `{"action":"lock_layers","names":["GUIDES","Grid"],"locked":true}` (`locked` defaults to true; false unlocks). Works on layers and sublayers.

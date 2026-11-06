@@ -1,6 +1,9 @@
 """Render a world/<place> JSON model to a layered SVG for Illustrator.
 
   python illustrator/generators/render_world.py [--place bridgehollow] [--view town|street:<id>|building:<id>] [--out PATH]
+      [--terrain] [--contours] [--no-contour-mask] [--contour-interval 10] [--index-interval 50] [--label-size 6] [--units ft|m]
+  --terrain regenerates world/<place>/terrain/ from terrain_spec.json and writes illustrator/out/<place>_height.png (hillshade);
+  --terrain or --contours overlays contours + elevation labels (default output illustrator/out/<place>_terrain.svg for the town view).
 
 Default output for the town view: illustrator/out/bridgehollow_town.svg
 Layer tree: see illustrator/DESIGN.md section 3. GEN layers are rewritten; ART layers are emitted empty.
@@ -15,6 +18,8 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 from lib_svg import LayerTree  # noqa: E402
+import contours as ct  # noqa: E402
+import terrain as tr  # noqa: E402
 from xml.sax.saxutils import escape  # noqa: E402
 
 REPO = os.path.abspath(os.path.join(HERE, "..", ".."))
@@ -22,12 +27,12 @@ PAGE_W_IN, PAGE_H_IN, MARGIN_IN = 17, 11, 0.5
 
 SPEC = [
     ("NOTES", []),
-    ("LABELS", ["Labels - Districts", "Labels - Streets", "Labels - Buildings", "Labels - Rooms"]),
+    ("LABELS", ["Labels - Districts", "Labels - Streets", "Labels - Buildings", "Labels - Rooms", ct.LAYER_LABELS]),
     ("ART - Top", []),
     ("ART - Fills", []),
     ("ART - Textures", []),
     ("ART - Masks", []),
-    ("LINES", ["Walls", "Buildings", "Roads", "Water", "Terrain", "Fences"]),
+    ("LINES", ["Walls", "Buildings", "Roads", "Water", ("Terrain", [ct.LAYER_MINOR, ct.LAYER_INDEX]), "Fences"]),
     ("GUIDES", ["Grid", "Scale bar", "North arrow", "Bounds"]),
 ]
 
@@ -38,7 +43,8 @@ path { fill: none; }
 .road { fill: none; stroke: #000000; stroke-width: 0.75; }
 .water { fill: none; stroke: #1a4f8a; stroke-width: 0.75; }
 .proposed { stroke-dasharray: 3 1.5; }
-text { fill: #000000; stroke: none; font-family: Arial, sans-serif; }"""
+text { fill: #000000; stroke: none; font-family: Arial, sans-serif; }
+""" + ct.CSS
 
 
 # ------------------------------------------------------------------ model
@@ -161,7 +167,7 @@ def text(id_, x, y, s, size, rot=None, bold=False, anchor="middle"):
 
 
 # ------------------------------------------------------------------ render
-def render(model, view_arg, out_path):
+def render(model, view_arg, out_path, topts=None):
     place = model["place"]
     bw, bh = place["bounds"]["width_ft"], place["bounds"]["height_ft"]
     kind, _, ident = view_arg.partition(":")
@@ -211,6 +217,23 @@ def render(model, view_arg, out_path):
             for dr in e.get("doors", []):
                 if "geometry" in dr:
                     draw("Walls", dr, "guide-line")
+
+    # TERRAIN contours + elevation labels (heightmap from world/<place>/terrain/)
+    if topts is not None:
+        h, meta = tr.load_heightmap(place["id"])
+        mask = []
+        if topts["use_mask"]:
+            from shapely.geometry import Polygon
+            for e in model["buildings"] + model["streets"]:
+                pg = entity_polygon(e)
+                if len(pg) >= 3:
+                    mask.append(Polygon(pg).buffer(0))
+        frame = ct.Frame(v.x0, v.y0, v.x1, v.y1, v.k, MARGIN_IN * 72, MARGIN_IN * 72)
+        cp = ct.ContourParams(minor=topts["minor"], index=topts["index"], font_size=topts["label_size"],
+                              units=topts["units"], use_mask=topts["use_mask"])
+        cs = ct.build(h, meta["cell_ft"], frame, cp, mask)
+        ct.emit(t, cs)
+        print(f"contours: {len(cs.pieces)} paths, {len(cs.labels)} labels, relief {meta['elev_min']:.0f}-{meta['elev_max']:.0f} ft")
 
     # LABELS
     def anchor(poly):
@@ -311,7 +334,23 @@ if __name__ == "__main__":
     ap.add_argument("--place", default="bridgehollow")
     ap.add_argument("--view", default="town")
     ap.add_argument("--out")
+    ap.add_argument("--terrain", action="store_true", help="regenerate heightmap + hillshade preview, overlay contours")
+    ap.add_argument("--contours", action="store_true", help="overlay contours and elevation labels")
+    ap.add_argument("--no-contour-mask", action="store_true", help="do not subtract buildings/streets from contours")
+    ap.add_argument("--contour-interval", type=float, default=10.0)
+    ap.add_argument("--index-interval", type=float, default=50.0)
+    ap.add_argument("--label-size", type=float, default=6.0)
+    ap.add_argument("--units", choices=["ft", "m"], default="ft")
     a = ap.parse_args()
-    suffix = a.view.replace(":", "_")
+    topts = None
+    if a.terrain or a.contours:
+        troot = os.path.join(REPO, "world", a.place)
+        if a.terrain or not os.path.exists(os.path.join(troot, "terrain", "heightmap.npy")):
+            hm, meta = tr.generate(tr.load_spec(os.path.join(troot, "terrain_spec.json")), verbose=True)
+            tr.save(hm, meta, os.path.join(troot, "terrain"))
+            tr.save_preview(hm, meta, os.path.join(REPO, "illustrator", "out", f"{a.place}_height.png"))
+        topts = {"minor": a.contour_interval, "index": a.index_interval, "label_size": a.label_size,
+                 "units": a.units, "use_mask": not a.no_contour_mask}
+    suffix = "terrain" if topts and a.view == "town" else a.view.replace(":", "_")
     out = a.out or os.path.join(REPO, "illustrator", "out", f"{a.place}_{suffix}.svg")
-    render(load_place(a.place), a.view, out)
+    render(load_place(a.place), a.view, out, topts)

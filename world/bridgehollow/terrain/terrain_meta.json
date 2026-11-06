@@ -1,0 +1,15 @@
+{
+ "size_ft": [
+  2400,
+  1500
+ ],
+ "cell_ft": 10.0,
+ "nx": 241,
+ "ny": 151,
+ "seed": 1103,
+ "elev_min": 619.1509399414062,
+ "elev_max": 1048.382568359375,
+ "relief_ft": 429.23162841796875,
+ "units": "feet",
+ "node_convention": "h[i,j] at x=j*cell_ft, y=i*cell_ft (y down)"
+}

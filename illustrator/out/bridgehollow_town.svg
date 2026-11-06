@@ -8,6 +8,9 @@ path { fill: none; }
 .water { fill: none; stroke: #1a4f8a; stroke-width: 0.75; }
 .proposed { stroke-dasharray: 3 1.5; }
 text { fill: #000000; stroke: none; font-family: Arial, sans-serif; }
+.contour-minor { fill: none; stroke: #8a5a2b; stroke-width: 0.3; }
+.contour-index { fill: none; stroke: #8a5a2b; stroke-width: 0.75; }
+.contour-label { fill: #6b4423; stroke: none; font-family: Arial, sans-serif; }
 ]]></style>
 <g id="GUIDES" inkscape:groupmode="layer" inkscape:label="GUIDES" sodipodi:insensitive="true">
   <g id="Bounds" inkscape:groupmode="layer" inkscape:label="Bounds" sodipodi:insensitive="true">
@@ -37,6 +40,10 @@ text { fill: #000000; stroke: none; font-family: Arial, sans-serif; }
   <g id="Fences" inkscape:groupmode="layer" inkscape:label="Fences">
   </g>
   <g id="Terrain" inkscape:groupmode="layer" inkscape:label="Terrain">
+    <g id="Contours - Index" inkscape:groupmode="layer" inkscape:label="Contours - Index">
+    </g>
+    <g id="Contours - Minor" inkscape:groupmode="layer" inkscape:label="Contours - Minor">
+    </g>
     <path id="dis_west_bank" class="guide-line proposed" fill="none" d="M280.80,129.60 L525.60,129.60 L525.60,590.40 L280.80,590.40 Z"/>
     <path id="dis_east_bank" class="guide-line proposed" fill="none" d="M705.60,129.60 L950.40,129.60 L950.40,590.40 L705.60,590.40 Z"/>
     <path id="dis_mill_reach" class="guide-line proposed" fill="none" d="M540.00,619.20 L698.40,619.20 L698.40,705.60 L540.00,705.60 Z"/>
@@ -204,6 +211,8 @@ text { fill: #000000; stroke: none; font-family: Arial, sans-serif; }
 <g id="ART - Top" inkscape:groupmode="layer" inkscape:label="ART - Top">
 </g>
 <g id="LABELS" inkscape:groupmode="layer" inkscape:label="LABELS">
+  <g id="Labels - Elevation" inkscape:groupmode="layer" inkscape:label="Labels - Elevation">
+  </g>
   <g id="Labels - Rooms" inkscape:groupmode="layer" inkscape:label="Labels - Rooms">
   </g>
   <g id="Labels - Buildings" inkscape:groupmode="layer" inkscape:label="Labels - Buildings">

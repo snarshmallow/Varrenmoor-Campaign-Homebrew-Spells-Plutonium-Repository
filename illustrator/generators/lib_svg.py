@@ -64,22 +64,33 @@ class LayeredSVG:
 
 
 class LayerTree:
-    """Nested layered SVG (layer groups may contain sublayer groups).
+    """Nested layered SVG (layer groups may contain sublayer groups, to any depth).
 
     `spec` lists layers TOP to BOTTOM as Illustrator's Layers panel shows them:
-    [("NOTES", []), ("LABELS", ["Labels - Districts", ...]), ...]. The SVG is written
+    [("NOTES", []), ("LABELS", ["Labels - Districts", ...]), ("LINES", ["Walls", ("Terrain", ["Contours - Minor"])])].
+    A sublayer is either a name or a (name, sublayers) tuple. The SVG is written
     bottom-first (later groups paint on top), so the panel order matches `spec`.
-    Items are raw SVG strings added to a leaf layer (or to a parent with no sublayers).
+    Items are raw SVG strings added to a layer by name (names must be unique).
+    A parent layer's own items are written after (on top of) its sublayers.
     """
 
     def __init__(self, spec, width_in=17, height_in=11, css="", locked=()):
         self.w, self.h = width_in * 72.0, height_in * 72.0
         self.spec, self.css, self.locked = spec, css, set(locked)
         self.items = {}
-        for name, subs in spec:
+        self._register(spec)
+
+    def _register(self, nodes):
+        for node in nodes:
+            name, subs = self._split(node)
+            if name in self.items:
+                raise ValueError(f"duplicate layer name: {name}")
             self.items[name] = []
-            for s in subs:
-                self.items[s] = []
+            self._register(subs)
+
+    @staticmethod
+    def _split(node):
+        return (node, []) if isinstance(node, str) else (node[0], node[1])
 
     def add(self, layer, svg):
         self.items[layer].append(svg)
@@ -91,6 +102,15 @@ class LayerTree:
         out.extend(body)
         out.append(f"{indent}</g>")
 
+    def _emit(self, node, out, depth):
+        name, subs = self._split(node)
+        ind = "  " * depth
+        body = []
+        for s in reversed(subs):
+            self._emit(s, body, depth + 1)
+        body.extend(ind + "  " + i for i in self.items[name])
+        self._group(name, body, out, ind)
+
     def write(self, path):
         out = ['<?xml version="1.0" encoding="UTF-8"?>',
                f'<svg xmlns="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" '
@@ -98,13 +118,8 @@ class LayerTree:
                f'width="{self.w:g}pt" height="{self.h:g}pt" viewBox="0 0 {self.w:g} {self.h:g}">']
         if self.css:
             out.append(f"<style><![CDATA[\n{self.css}\n]]></style>")
-        for name, subs in reversed(self.spec):
-            body = []
-            for s in reversed(subs):
-                sub = ["    " + i for i in self.items[s]]
-                self._group(s, sub, body, "  ")
-            body.extend("  " + i for i in self.items[name])
-            self._group(name, body, out, "")
+        for node in reversed(self.spec):
+            self._emit(node, out, 0)
         out.append("</svg>")
         with open(path, "w", encoding="utf-8") as f:
             f.write("\n".join(out) + "\n")
