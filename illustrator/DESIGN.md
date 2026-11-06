@@ -26,7 +26,7 @@ Everything toggles from the Layers panel. Only the layers marked GEN are rewritt
 4. `ART - Fills` (USER, empty), `ART - Textures` (USER, empty), `ART - Masks` (USER, empty).
 5. `LINES` (GEN) with sublayers `Walls`, `Buildings`, `Roads`, `Water`, `Terrain`, `Fences`. Each shape is a **closed path or compound path named by its entity id**, so it can be used directly as a clipping mask, Live Paint region or fill target.
 6. `GUIDES` (GEN, locked): `Grid` (5/20/100 ft depending on view), `Scale bar`, `North arrow`, `Bounds`. Grid lines are real Illustrator guides where practical.
-Rules: no unnamed objects; no open-path area outlines; strokes use named Graphic Styles (`guide-line`, `wall`, `proposed`, `road`, `water`) so the user can restyle everything from one place; Swatches named by purpose (`water`, `stone`, `timber`, `road`, `grass`).
+Rules: no unnamed objects; no open-path area outlines; strokes use named Graphic Styles (`guide-line`, `wall`, `proposed`, `road`, `water`) so the user can restyle everything from one place (graphic styles come from a seeded template, see section 8); Swatches named by purpose (`water`, `stone`, `timber`, `road`, `grass`).
 
 ## 4. Regeneration rule
 The panel gets a `replace_layer` action: it clears and redraws only GEN layers, leaving ART layers untouched. User edits made to GEN layers are lost on regeneration; to keep a hand-edit, move it to an ART layer.
@@ -48,3 +48,12 @@ Reading hand edits back from Illustrator into JSON (possible later through a pan
 - **Mapping:** stored in Foundry as `scene.flags.varrenmoor.worldId` and `tile.flags.varrenmoor.layerId`. Foundry is the source of truth; `links.foundry_scene` in the model is an optional mirror.
 - **Tile coordinates:** 2D tiles use top-left x,y; 3D Canvas tiles use the centre. One GM client connects at a time.
 - **Panel actions to add:** `export_view` (layer set + px per ft, writes the versioned WebP/PNG to the share) and `push_scene` (writes a job for the Foundry bridge). On-save auto push comes last, after confirming the panel can hear Illustrator's save event.
+
+## 8. Symbols, scatter, brushes and styles (what scripting can and cannot do)
+- **Can:** create symbols (`doc.symbols.add`), place symbol instances, create swatches, apply existing brushes and styles by name.
+- **Cannot:** create new brushes, graphic styles or pattern swatches from a script.
+- **Symbols from prompts:** assets are generated as vector code (seeded variants, e.g. oak_a/b/c, pine_dead) into `world/assets/<library>.json` plus an SVG per variant. Panel action `define_symbol` imports each SVG as a named symbol.
+- **Scatter:** panel action `scatter` places instances of named symbols in a polygon (area id from the model) with density, min spacing, random scale/rotation and a fixed seed. Instances go on a GEN layer (`LINES/Vegetation`), never an ART layer. Each placement list is saved to `world/<place>/scatter/<area>.json` so 3D generators and Foundry can use the same positions.
+- **Brushes:** brush artwork is generated as vector shapes in a `BRUSH ARTWORK` document. The user drags each into the Brushes panel once and picks the brush type; a numbered checklist is written next to the artwork. After that, strokes can be assigned by brush name.
+- **Styles:** a template file `illustrator/templates/varrenmoor.ait` carries the graphic styles and base swatches; new documents are created from it.
+- **Not used:** Illustrator's own random scatter brushes cannot be set from a script; our `scatter` action replaces them and is reproducible.
