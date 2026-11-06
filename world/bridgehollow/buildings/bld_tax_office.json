@@ -1,0 +1,36 @@
+{
+ "id": "bld_tax_office",
+ "name": "Tax and Permit Office",
+ "kind": "civic",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    1375.0,
+    630.0
+   ],
+   [
+    1425.0,
+    630.0
+   ],
+   [
+    1425.0,
+    670.0
+   ],
+   [
+    1375.0,
+    670.0
+   ]
+  ]
+ },
+ "notes": "Tolls, permits and levies, first stop east of the bridge.",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": []
+}

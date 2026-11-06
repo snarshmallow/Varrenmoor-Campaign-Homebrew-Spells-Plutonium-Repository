@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" width="1224pt" height="792pt" viewBox="0 0 1224 792">
+<style><![CDATA[
+path { fill: none; }
+.guide-line { fill: none; stroke: #7a7a7a; stroke-width: 0.35; }
+.wall { fill: none; stroke: #000000; stroke-width: 1.25; }
+.road { fill: none; stroke: #000000; stroke-width: 0.75; }
+.water { fill: none; stroke: #1a4f8a; stroke-width: 0.75; }
+.proposed { stroke-dasharray: 3 1.5; }
+text { fill: #000000; stroke: none; font-family: Arial, sans-serif; }
+]]></style>
+<g id="GUIDES" inkscape:groupmode="layer" inkscape:label="GUIDES" sodipodi:insensitive="true">
+  <g id="Bounds" inkscape:groupmode="layer" inkscape:label="Bounds" sodipodi:insensitive="true">
+    <path id="bounds_place" class="guide-line" fill="none" d="M36.00,756.00 L36.00,36.00 L1188.00,36.00 L1188.00,756.00 Z"/>
+    <path id="bounds_view" class="wall" fill="none" d="M36.00,36.00 L1188.00,36.00 L1188.00,756.00 L36.00,756.00 Z"/>
+  </g>
+  <g id="North arrow" inkscape:groupmode="layer" inkscape:label="North arrow" sodipodi:insensitive="true">
+    <path id="north_arrow" class="wall" fill="none" d="M1164.00,724.00 L1171.00,758.00 L1164.00,752.00 L1157.00,758.00 Z"/>
+    <text id="north_label" x="1164.00" y="719.00" font-size="9" text-anchor="middle" font-weight="bold">N</text>
+  </g>
+  <g id="Scale bar" inkscape:groupmode="layer" inkscape:label="Scale bar" sodipodi:insensitive="true">
+    <path id="scalebar_a" class="wall" fill="none" d="M40.00,766.00 L112.00,766.00 L112.00,771.00 L40.00,771.00 Z M184.00,766.00 L256.00,766.00 L256.00,771.00 L184.00,771.00 Z M328.00,766.00 L400.00,766.00 L400.00,771.00 L328.00,771.00 Z"/>
+    <path id="scalebar_b" class="guide-line" fill="none" d="M112.00,766.00 L184.00,766.00 L184.00,771.00 L112.00,771.00 Z M256.00,766.00 L328.00,766.00 L328.00,771.00 L256.00,771.00 Z"/>
+    <text id="scalebar_t0" x="40.00" y="782.00" font-size="7" text-anchor="middle">0</text>
+    <text id="scalebar_t1" x="112.00" y="782.00" font-size="7" text-anchor="middle">100</text>
+    <text id="scalebar_t2" x="184.00" y="782.00" font-size="7" text-anchor="middle">200</text>
+    <text id="scalebar_t3" x="256.00" y="782.00" font-size="7" text-anchor="middle">300</text>
+    <text id="scalebar_t4" x="328.00" y="782.00" font-size="7" text-anchor="middle">400</text>
+    <text id="scalebar_t5" x="400.00" y="782.00" font-size="7" text-anchor="middle">500</text>
+    <text id="scalebar_unit" x="410.00" y="771.00" font-size="8" text-anchor="start">ft   (1 in = 100 ft)</text>
+  </g>
+  <g id="Grid" inkscape:groupmode="layer" inkscape:label="Grid" sodipodi:insensitive="true">
+    <path id="grid_100ft" class="guide-line" fill="none" d="M36.00,36.00 L36.00,756.00 M108.00,36.00 L108.00,756.00 M180.00,36.00 L180.00,756.00 M252.00,36.00 L252.00,756.00 M324.00,36.00 L324.00,756.00 M396.00,36.00 L396.00,756.00 M468.00,36.00 L468.00,756.00 M540.00,36.00 L540.00,756.00 M612.00,36.00 L612.00,756.00 M684.00,36.00 L684.00,756.00 M756.00,36.00 L756.00,756.00 M828.00,36.00 L828.00,756.00 M900.00,36.00 L900.00,756.00 M972.00,36.00 L972.00,756.00 M1044.00,36.00 L1044.00,756.00 M1116.00,36.00 L1116.00,756.00 M1188.00,36.00 L1188.00,756.00 M36.00,72.00 L1188.00,72.00 M36.00,144.00 L1188.00,144.00 M36.00,216.00 L1188.00,216.00 M36.00,288.00 L1188.00,288.00 M36.00,360.00 L1188.00,360.00 M36.00,432.00 L1188.00,432.00 M36.00,504.00 L1188.00,504.00 M36.00,576.00 L1188.00,576.00 M36.00,648.00 L1188.00,648.00 M36.00,720.00 L1188.00,720.00"/>
+  </g>
+</g>
+<g id="LINES" inkscape:groupmode="layer" inkscape:label="LINES">
+  <g id="Fences" inkscape:groupmode="layer" inkscape:label="Fences">
+  </g>
+  <g id="Terrain" inkscape:groupmode="layer" inkscape:label="Terrain">
+    <path id="dis_west_bank" class="guide-line proposed" fill="none" d="M280.80,129.60 L525.60,129.60 L525.60,590.40 L280.80,590.40 Z"/>
+    <path id="dis_east_bank" class="guide-line proposed" fill="none" d="M705.60,129.60 L950.40,129.60 L950.40,590.40 L705.60,590.40 Z"/>
+    <path id="dis_mill_reach" class="guide-line proposed" fill="none" d="M540.00,619.20 L698.40,619.20 L698.40,705.60 L540.00,705.60 Z"/>
+    <path id="sqr_market" class="guide-line proposed" fill="none" d="M730.80,370.80 L853.20,370.80 L853.20,421.20 L730.80,421.20 Z"/>
+  </g>
+  <g id="Water" inkscape:groupmode="layer" inkscape:label="Water">
+    <path id="wat_river" class="water proposed" fill="none" d="M625.97,36.00 L625.97,36.00 L629.93,72.00 L632.30,108.00 L632.81,144.00 L631.30,180.00 L627.84,216.00 L622.44,252.00 L615.24,288.00 L606.60,324.00 L596.88,360.00 L586.66,396.00 L576.50,432.00 L566.93,468.00 L558.58,504.00 L551.88,540.00 L547.20,576.00 L544.82,612.00 L544.97,648.00 L547.42,684.00 L552.02,720.00 L558.50,756.00 L558.50,756.00 L600.62,756.00 L600.62,756.00 L596.38,720.00 L593.78,684.00 L592.85,648.00 L593.64,612.00 L596.09,576.00 L599.98,540.00 L605.23,504.00 L611.57,468.00 L618.98,432.00 L627.05,396.00 L635.54,360.00 L644.26,324.00 L652.68,288.00 L660.53,252.00 L667.30,216.00 L672.70,180.00 L676.37,144.00 L678.02,108.00 L677.38,72.00 L674.57,36.00 L674.57,36.00 Z"/>
+  </g>
+  <g id="Roads" inkscape:groupmode="layer" inkscape:label="Roads">
+    <path id="str_pilgrim_road_west" class="road proposed" fill="none" d="M36.00,323.06 L120.06,341.74 L250.81,370.80 L586.80,370.80 L586.80,349.20 L253.19,349.20 L124.74,320.66 L36.00,300.94 Z"/>
+    <path id="str_pilgrim_bridge" class="wall proposed" fill="none" d="M586.80,369.36 L645.62,369.36 L645.62,350.64 L586.80,350.64 Z"/>
+    <path id="str_pilgrim_road_east" class="road proposed" fill="none" d="M645.62,370.80 L971.57,370.80 L1149.90,385.07 L1188.00,397.26 L1188.00,374.58 L1154.10,363.73 L972.43,349.20 L645.62,349.20 Z"/>
+    <path id="str_ew_400_w" class="road proposed" fill="none" d="M295.20,152.64 L511.20,152.64 L511.20,135.36 L295.20,135.36 Z"/>
+    <path id="str_ew_500_w" class="road proposed" fill="none" d="M295.20,224.64 L511.20,224.64 L511.20,207.36 L295.20,207.36 Z"/>
+    <path id="str_ew_600_w" class="road proposed" fill="none" d="M295.20,296.64 L511.20,296.64 L511.20,279.36 L295.20,279.36 Z"/>
+    <path id="str_ew_800_w" class="road proposed" fill="none" d="M295.20,440.64 L511.20,440.64 L511.20,423.36 L295.20,423.36 Z"/>
+    <path id="str_ew_900_w" class="road proposed" fill="none" d="M295.20,512.64 L511.20,512.64 L511.20,495.36 L295.20,495.36 Z"/>
+    <path id="str_ew_1000_w" class="road proposed" fill="none" d="M295.20,584.64 L511.20,584.64 L511.20,567.36 L295.20,567.36 Z"/>
+    <path id="str_ns_w0" class="road proposed" fill="none" d="M286.56,144.00 L286.56,576.00 L303.84,576.00 L303.84,144.00 Z"/>
+    <path id="str_ns_w1" class="road proposed" fill="none" d="M358.56,144.00 L358.56,576.00 L375.84,576.00 L375.84,144.00 Z"/>
+    <path id="str_ns_w2" class="road proposed" fill="none" d="M430.56,144.00 L430.56,576.00 L447.84,576.00 L447.84,144.00 Z"/>
+    <path id="str_ns_w3" class="road proposed" fill="none" d="M502.56,144.00 L502.56,576.00 L519.84,576.00 L519.84,144.00 Z"/>
+    <path id="str_ew_400_e" class="road proposed" fill="none" d="M720.00,152.64 L936.00,152.64 L936.00,135.36 L720.00,135.36 Z"/>
+    <path id="str_ew_500_e" class="road proposed" fill="none" d="M720.00,224.64 L936.00,224.64 L936.00,207.36 L720.00,207.36 Z"/>
+    <path id="str_ew_600_e" class="road proposed" fill="none" d="M720.00,296.64 L936.00,296.64 L936.00,279.36 L720.00,279.36 Z"/>
+    <path id="str_ew_800_e" class="road proposed" fill="none" d="M720.00,440.64 L936.00,440.64 L936.00,423.36 L720.00,423.36 Z"/>
+    <path id="str_ew_900_e" class="road proposed" fill="none" d="M720.00,512.64 L936.00,512.64 L936.00,495.36 L720.00,495.36 Z"/>
+    <path id="str_ew_1000_e" class="road proposed" fill="none" d="M720.00,584.64 L936.00,584.64 L936.00,567.36 L720.00,567.36 Z"/>
+    <path id="str_ns_e0" class="road proposed" fill="none" d="M711.36,144.00 L711.36,576.00 L728.64,576.00 L728.64,144.00 Z"/>
+    <path id="str_ns_e1" class="road proposed" fill="none" d="M783.36,144.00 L783.36,576.00 L800.64,576.00 L800.64,144.00 Z"/>
+    <path id="str_ns_e2" class="road proposed" fill="none" d="M855.36,144.00 L855.36,576.00 L872.64,576.00 L872.64,144.00 Z"/>
+    <path id="str_ns_e3" class="road proposed" fill="none" d="M927.36,144.00 L927.36,576.00 L944.64,576.00 L944.64,144.00 Z"/>
+  </g>
+  <g id="Buildings" inkscape:groupmode="layer" inkscape:label="Buildings">
+    <path id="bld_gate_watch" class="wall proposed" fill="none" d="M172.80,311.04 L191.52,311.04 L191.52,328.32 L172.80,328.32 Z"/>
+    <path id="bld_house_001" class="wall proposed" fill="none" d="M311.11,156.89 L330.55,156.89 L330.55,176.33 L311.11,176.33 Z"/>
+    <path id="bld_house_002" class="wall proposed" fill="none" d="M315.22,188.78 L331.06,188.78 L331.06,204.62 L315.22,204.62 Z"/>
+    <path id="bld_house_003" class="wall proposed" fill="none" d="M337.18,160.63 L353.02,160.63 L353.02,177.91 L337.18,177.91 Z"/>
+    <path id="bld_house_004" class="wall proposed" fill="none" d="M336.24,185.40 L355.68,185.40 L355.68,204.84 L336.24,204.84 Z"/>
+    <path id="bld_house_005" class="wall proposed" fill="none" d="M310.18,232.63 L328.18,232.63 L328.18,251.35 L310.18,251.35 Z"/>
+    <path id="bld_house_006" class="wall proposed" fill="none" d="M311.04,257.83 L327.60,257.83 L327.60,275.83 L311.04,275.83 Z"/>
+    <path id="bld_house_007" class="wall proposed" fill="none" d="M341.93,229.10 L356.33,229.10 L356.33,244.94 L341.93,244.94 Z"/>
+    <path id="bld_house_008" class="wall proposed" fill="none" d="M334.66,258.77 L351.22,258.77 L351.22,275.33 L334.66,275.33 Z"/>
+    <path id="bld_house_009" class="wall proposed" fill="none" d="M308.16,303.62 L325.44,303.62 L325.44,323.06 L308.16,323.06 Z"/>
+    <path id="bld_house_010" class="wall proposed" fill="none" d="M313.27,332.28 L329.83,332.28 L329.83,348.84 L313.27,348.84 Z"/>
+    <path id="bld_house_011" class="wall proposed" fill="none" d="M339.62,308.09 L354.02,308.09 L354.02,323.21 L339.62,323.21 Z"/>
+    <path id="bld_house_012" class="wall proposed" fill="none" d="M333.58,329.40 L353.02,329.40 L353.02,348.84 L333.58,348.84 Z"/>
+    <path id="bld_house_013" class="wall proposed" fill="none" d="M314.86,449.14 L330.70,449.14 L330.70,466.42 L314.86,466.42 Z"/>
+    <path id="bld_house_014" class="wall proposed" fill="none" d="M313.99,474.55 L330.55,474.55 L330.55,490.39 L313.99,490.39 Z"/>
+    <path id="bld_house_015" class="wall proposed" fill="none" d="M338.47,450.65 L355.03,450.65 L355.03,467.93 L338.47,467.93 Z"/>
+    <path id="bld_house_016" class="wall proposed" fill="none" d="M335.88,470.81 L356.04,470.81 L356.04,488.81 L335.88,488.81 Z"/>
+    <path id="bld_house_017" class="wall proposed" fill="none" d="M308.59,518.54 L328.75,518.54 L328.75,537.98 L308.59,537.98 Z"/>
+    <path id="bld_house_018" class="wall proposed" fill="none" d="M309.96,543.17 L330.12,543.17 L330.12,560.45 L309.96,560.45 Z"/>
+    <path id="bld_house_019" class="wall proposed" fill="none" d="M334.66,516.89 L355.54,516.89 L355.54,534.17 L334.66,534.17 Z"/>
+    <path id="bld_house_020" class="wall proposed" fill="none" d="M336.46,547.85 L353.02,547.85 L353.02,564.41 L336.46,564.41 Z"/>
+    <path id="bld_house_021" class="wall proposed" fill="none" d="M382.54,181.87 L397.66,181.87 L397.66,199.87 L382.54,199.87 Z"/>
+    <path id="bld_house_022" class="wall proposed" fill="none" d="M406.22,157.25 L424.22,157.25 L424.22,177.41 L406.22,177.41 Z"/>
+    <path id="bld_house_023" class="wall proposed" fill="none" d="M408.24,189.79 L427.68,189.79 L427.68,204.91 L408.24,204.91 Z"/>
+    <path id="bld_house_024" class="wall proposed" fill="none" d="M380.45,229.39 L401.33,229.39 L401.33,245.95 L380.45,245.95 Z"/>
+    <path id="bld_house_025" class="wall proposed" fill="none" d="M381.31,259.85 L397.15,259.85 L397.15,277.13 L381.31,277.13 Z"/>
+    <path id="bld_house_026" class="wall proposed" fill="none" d="M407.95,230.33 L426.67,230.33 L426.67,245.45 L407.95,245.45 Z"/>
+    <path id="bld_house_027" class="wall proposed" fill="none" d="M410.40,254.30 L425.52,254.30 L425.52,270.14 L410.40,270.14 Z"/>
+    <path id="bld_house_028" class="wall proposed" fill="none" d="M384.12,302.62 L399.96,302.62 L399.96,318.46 L384.12,318.46 Z"/>
+    <path id="bld_house_029" class="wall proposed" fill="none" d="M383.83,330.62 L399.67,330.62 L399.67,345.02 L383.83,345.02 Z"/>
+    <path id="bld_house_030" class="wall proposed" fill="none" d="M405.36,303.48 L426.24,303.48 L426.24,323.64 L405.36,323.64 Z"/>
+    <path id="bld_house_031" class="wall proposed" fill="none" d="M408.46,327.46 L427.90,327.46 L427.90,344.02 L408.46,344.02 Z"/>
+    <path id="bld_house_032" class="wall proposed" fill="none" d="M381.96,444.82 L402.84,444.82 L402.84,460.66 L381.96,460.66 Z"/>
+    <path id="bld_house_033" class="wall proposed" fill="none" d="M382.61,469.80 L399.17,469.80 L399.17,489.24 L382.61,489.24 Z"/>
+    <path id="bld_house_034" class="wall proposed" fill="none" d="M407.16,445.54 L424.44,445.54 L424.44,462.10 L407.16,462.10 Z"/>
+    <path id="bld_house_035" class="wall proposed" fill="none" d="M410.04,473.90 L424.44,473.90 L424.44,489.74 L410.04,489.74 Z"/>
+    <path id="bld_house_036" class="wall proposed" fill="none" d="M379.87,518.90 L400.75,518.90 L400.75,536.18 L379.87,536.18 Z"/>
+    <path id="bld_house_037" class="wall proposed" fill="none" d="M384.12,542.66 L400.68,542.66 L400.68,562.82 L384.12,562.82 Z"/>
+    <path id="bld_house_038" class="wall proposed" fill="none" d="M405.79,520.34 L425.95,520.34 L425.95,536.90 L405.79,536.90 Z"/>
+    <path id="bld_house_039" class="wall proposed" fill="none" d="M405.58,543.10 L422.86,543.10 L422.86,557.50 L405.58,557.50 Z"/>
+    <path id="bld_house_040" class="wall proposed" fill="none" d="M452.59,163.01 L466.99,163.01 L466.99,179.57 L452.59,179.57 Z"/>
+    <path id="bld_house_041" class="wall proposed" fill="none" d="M457.49,182.74 L474.05,182.74 L474.05,199.30 L457.49,199.30 Z"/>
+    <path id="bld_house_042" class="wall proposed" fill="none" d="M480.17,159.05 L495.29,159.05 L495.29,178.49 L480.17,178.49 Z"/>
+    <path id="bld_house_043" class="wall proposed" fill="none" d="M484.20,188.93 L498.60,188.93 L498.60,203.33 L484.20,203.33 Z"/>
+    <path id="bld_house_044" class="wall proposed" fill="none" d="M452.30,372.24 L471.74,372.24 L471.74,388.08 L452.30,388.08 Z"/>
+    <path id="bld_house_045" class="wall proposed" fill="none" d="M455.11,401.47 L472.39,401.47 L472.39,420.91 L455.11,420.91 Z"/>
+    <path id="bld_house_046" class="wall proposed" fill="none" d="M477.79,375.55 L495.79,375.55 L495.79,394.27 L477.79,394.27 Z"/>
+    <path id="bld_house_047" class="wall proposed" fill="none" d="M478.15,401.98 L494.71,401.98 L494.71,419.98 L478.15,419.98 Z"/>
+    <path id="bld_house_048" class="wall proposed" fill="none" d="M455.76,445.39 L475.20,445.39 L475.20,461.95 L455.76,461.95 Z"/>
+    <path id="bld_house_049" class="wall proposed" fill="none" d="M458.06,474.62 L473.90,474.62 L473.90,489.74 L458.06,489.74 Z"/>
+    <path id="bld_house_050" class="wall proposed" fill="none" d="M479.95,446.69 L500.11,446.69 L500.11,464.69 L479.95,464.69 Z"/>
+    <path id="bld_house_051" class="wall proposed" fill="none" d="M478.58,471.46 L497.30,471.46 L497.30,488.74 L478.58,488.74 Z"/>
+    <path id="bld_house_052" class="wall proposed" fill="none" d="M453.82,524.52 L474.70,524.52 L474.70,539.64 L453.82,539.64 Z"/>
+    <path id="bld_house_053" class="wall proposed" fill="none" d="M452.16,542.66 L471.60,542.66 L471.60,562.10 L452.16,562.10 Z"/>
+    <path id="bld_house_054" class="wall proposed" fill="none" d="M478.80,517.61 L499.68,517.61 L499.68,534.89 L478.80,534.89 Z"/>
+    <path id="bld_house_055" class="wall proposed" fill="none" d="M479.38,546.26 L495.94,546.26 L495.94,563.54 L479.38,563.54 Z"/>
+    <path id="bld_house_056" class="wall proposed" fill="none" d="M733.75,157.61 L749.59,157.61 L749.59,173.45 L733.75,173.45 Z"/>
+    <path id="bld_house_057" class="wall proposed" fill="none" d="M733.10,185.54 L752.54,185.54 L752.54,202.82 L733.10,202.82 Z"/>
+    <path id="bld_house_058" class="wall proposed" fill="none" d="M758.95,158.83 L779.11,158.83 L779.11,176.83 L758.95,176.83 Z"/>
+    <path id="bld_house_059" class="wall proposed" fill="none" d="M758.30,182.88 L779.18,182.88 L779.18,202.32 L758.30,202.32 Z"/>
+    <path id="bld_house_060" class="wall proposed" fill="none" d="M732.60,234.72 L750.60,234.72 L750.60,249.12 L732.60,249.12 Z"/>
+    <path id="bld_house_061" class="wall proposed" fill="none" d="M733.10,259.34 L748.22,259.34 L748.22,275.90 L733.10,275.90 Z"/>
+    <path id="bld_house_062" class="wall proposed" fill="none" d="M760.90,232.49 L777.46,232.49 L777.46,246.89 L760.90,246.89 Z"/>
+    <path id="bld_house_063" class="wall proposed" fill="none" d="M761.04,260.35 L778.32,260.35 L778.32,275.47 L761.04,275.47 Z"/>
+    <path id="bld_house_064" class="wall proposed" fill="none" d="M739.73,471.82 L755.57,471.82 L755.57,491.98 L739.73,491.98 Z"/>
+    <path id="bld_house_065" class="wall proposed" fill="none" d="M764.14,447.91 L780.70,447.91 L780.70,463.75 L764.14,463.75 Z"/>
+    <path id="bld_house_066" class="wall proposed" fill="none" d="M759.02,469.94 L774.86,469.94 L774.86,487.22 L759.02,487.22 Z"/>
+    <path id="bld_house_067" class="wall proposed" fill="none" d="M734.18,517.10 L752.18,517.10 L752.18,533.66 L734.18,533.66 Z"/>
+    <path id="bld_house_068" class="wall proposed" fill="none" d="M733.54,544.68 L749.38,544.68 L749.38,564.84 L733.54,564.84 Z"/>
+    <path id="bld_house_069" class="wall proposed" fill="none" d="M759.17,518.40 L779.33,518.40 L779.33,534.24 L759.17,534.24 Z"/>
+    <path id="bld_house_070" class="wall proposed" fill="none" d="M759.74,542.81 L780.62,542.81 L780.62,558.65 L759.74,558.65 Z"/>
+    <path id="bld_house_071" class="wall proposed" fill="none" d="M807.62,157.03 L824.90,157.03 L824.90,174.31 L807.62,174.31 Z"/>
+    <path id="bld_house_072" class="wall proposed" fill="none" d="M806.04,185.47 L824.76,185.47 L824.76,204.91 L806.04,204.91 Z"/>
+    <path id="bld_house_073" class="wall proposed" fill="none" d="M830.45,157.39 L846.29,157.39 L846.29,173.23 L830.45,173.23 Z"/>
+    <path id="bld_house_074" class="wall proposed" fill="none" d="M830.38,184.39 L849.82,184.39 L849.82,200.95 L830.38,200.95 Z"/>
+    <path id="bld_house_075" class="wall proposed" fill="none" d="M810.50,231.55 L824.90,231.55 L824.90,250.99 L810.50,250.99 Z"/>
+    <path id="bld_house_076" class="wall proposed" fill="none" d="M809.78,257.83 L827.06,257.83 L827.06,275.11 L809.78,275.11 Z"/>
+    <path id="bld_house_077" class="wall proposed" fill="none" d="M833.33,229.61 L852.77,229.61 L852.77,245.45 L833.33,245.45 Z"/>
+    <path id="bld_house_078" class="wall proposed" fill="none" d="M829.80,255.17 L846.36,255.17 L846.36,274.61 L829.80,274.61 Z"/>
+    <path id="bld_house_079" class="wall proposed" fill="none" d="M806.18,517.68 L826.34,517.68 L826.34,534.24 L806.18,534.24 Z"/>
+    <path id="bld_house_080" class="wall proposed" fill="none" d="M808.42,544.68 L827.14,544.68 L827.14,564.84 L808.42,564.84 Z"/>
+    <path id="bld_house_081" class="wall proposed" fill="none" d="M829.94,520.56 L847.22,520.56 L847.22,540.00 L829.94,540.00 Z"/>
+    <path id="bld_house_082" class="wall proposed" fill="none" d="M835.99,547.20 L851.83,547.20 L851.83,563.04 L835.99,563.04 Z"/>
+    <path id="bld_house_083" class="wall proposed" fill="none" d="M877.75,158.04 L897.91,158.04 L897.91,178.20 L877.75,178.20 Z"/>
+    <path id="bld_house_084" class="wall proposed" fill="none" d="M880.20,185.26 L896.76,185.26 L896.76,201.10 L880.20,201.10 Z"/>
+    <path id="bld_house_085" class="wall proposed" fill="none" d="M904.54,159.62 L920.38,159.62 L920.38,179.78 L904.54,179.78 Z"/>
+    <path id="bld_house_086" class="wall proposed" fill="none" d="M904.54,183.02 L923.98,183.02 L923.98,201.02 L904.54,201.02 Z"/>
+    <path id="bld_house_087" class="wall proposed" fill="none" d="M878.76,229.39 L899.64,229.39 L899.64,244.51 L878.76,244.51 Z"/>
+    <path id="bld_house_088" class="wall proposed" fill="none" d="M880.42,260.42 L899.14,260.42 L899.14,276.26 L880.42,276.26 Z"/>
+    <path id="bld_house_089" class="wall proposed" fill="none" d="M904.46,229.90 L921.74,229.90 L921.74,250.06 L904.46,250.06 Z"/>
+    <path id="bld_house_090" class="wall proposed" fill="none" d="M904.25,256.68 L920.09,256.68 L920.09,276.12 L904.25,276.12 Z"/>
+    <path id="bld_house_091" class="wall proposed" fill="none" d="M881.21,305.06 L899.21,305.06 L899.21,323.78 L881.21,323.78 Z"/>
+    <path id="bld_house_092" class="wall proposed" fill="none" d="M881.14,327.67 L897.70,327.67 L897.70,346.39 L881.14,346.39 Z"/>
+    <path id="bld_house_093" class="wall proposed" fill="none" d="M905.47,302.83 L924.19,302.83 L924.19,322.27 L905.47,322.27 Z"/>
+    <path id="bld_house_094" class="wall proposed" fill="none" d="M902.30,327.17 L922.46,327.17 L922.46,345.17 L902.30,345.17 Z"/>
+    <path id="bld_house_095" class="wall proposed" fill="none" d="M880.92,375.70 L899.64,375.70 L899.64,391.54 L880.92,391.54 Z"/>
+    <path id="bld_house_096" class="wall proposed" fill="none" d="M876.96,398.81 L891.36,398.81 L891.36,413.93 L876.96,413.93 Z"/>
+    <path id="bld_house_097" class="wall proposed" fill="none" d="M903.82,375.48 L922.54,375.48 L922.54,393.48 L903.82,393.48 Z"/>
+    <path id="bld_house_098" class="wall proposed" fill="none" d="M903.02,398.66 L921.02,398.66 L921.02,416.66 L903.02,416.66 Z"/>
+    <path id="bld_house_099" class="wall proposed" fill="none" d="M877.03,446.26 L897.19,446.26 L897.19,466.42 L877.03,466.42 Z"/>
+    <path id="bld_house_100" class="wall proposed" fill="none" d="M880.85,472.03 L898.85,472.03 L898.85,492.19 L880.85,492.19 Z"/>
+    <path id="bld_house_101" class="wall proposed" fill="none" d="M910.73,447.62 L925.13,447.62 L925.13,467.06 L910.73,467.06 Z"/>
+    <path id="bld_house_102" class="wall proposed" fill="none" d="M908.50,472.25 L925.06,472.25 L925.06,486.65 L908.50,486.65 Z"/>
+    <path id="bld_house_103" class="wall proposed" fill="none" d="M880.70,518.69 L896.54,518.69 L896.54,535.25 L880.70,535.25 Z"/>
+    <path id="bld_house_104" class="wall proposed" fill="none" d="M879.55,545.40 L899.71,545.40 L899.71,561.96 L879.55,561.96 Z"/>
+    <path id="bld_house_105" class="wall proposed" fill="none" d="M903.67,518.18 L920.23,518.18 L920.23,536.90 L903.67,536.90 Z"/>
+    <path id="bld_house_106" class="wall proposed" fill="none" d="M904.10,545.90 L922.10,545.90 L922.10,563.18 L904.10,563.18 Z"/>
+    <path id="bld_house_108" class="wall proposed" fill="none" d="M36.00,337.61 L40.32,337.61 L40.32,354.89 L36.00,354.89 Z"/>
+    <path id="bld_house_109" class="wall proposed" fill="none" d="M79.20,272.66 L97.92,272.66 L97.92,289.94 L79.20,289.94 Z"/>
+    <path id="bld_house_110" class="wall proposed" fill="none" d="M1044.00,394.56 L1062.72,394.56 L1062.72,411.84 L1044.00,411.84 Z"/>
+    <path id="bld_house_111" class="wall proposed" fill="none" d="M1159.20,329.18 L1177.92,329.18 L1177.92,346.46 L1159.20,346.46 Z"/>
+    <path id="bld_inn" class="wall proposed" fill="none" d="M380.88,372.96 L425.52,372.96 L425.52,397.44 L380.88,397.44 Z"/>
+    <path id="bld_lockup" class="wall proposed" fill="none" d="M462.24,241.20 L488.16,241.20 L488.16,262.80 L462.24,262.80 Z"/>
+    <path id="bld_magistrate_court" class="wall proposed" fill="none" d="M805.68,306.72 L850.32,306.72 L850.32,341.28 L805.68,341.28 Z"/>
+    <path id="bld_meeting_hall" class="wall proposed" fill="none" d="M806.40,452.16 L849.60,452.16 L849.60,483.84 L806.40,483.84 Z"/>
+    <path id="bld_mill" class="wall proposed" fill="none" d="M601.49,637.20 L633.17,637.20 L633.17,660.24 L601.49,660.24 Z"/>
+    <path id="bld_smithy" class="wall proposed" fill="none" d="M316.80,385.20 L345.60,385.20 L345.60,406.80 L316.80,406.80 Z"/>
+    <path id="bld_stables" class="wall proposed" fill="none" d="M383.76,400.32 L422.64,400.32 L422.64,417.60 L383.76,417.60 Z"/>
+    <path id="bld_tax_office" class="wall proposed" fill="none" d="M738.00,309.60 L774.00,309.60 L774.00,338.40 L738.00,338.40 Z"/>
+    <path id="bld_warden_hall" class="wall proposed" fill="none" d="M453.60,306.00 L496.80,306.00 L496.80,342.00 L453.60,342.00 Z"/>
+  </g>
+  <g id="Walls" inkscape:groupmode="layer" inkscape:label="Walls">
+  </g>
+</g>
+<g id="ART - Masks" inkscape:groupmode="layer" inkscape:label="ART - Masks">
+</g>
+<g id="ART - Textures" inkscape:groupmode="layer" inkscape:label="ART - Textures">
+</g>
+<g id="ART - Fills" inkscape:groupmode="layer" inkscape:label="ART - Fills">
+</g>
+<g id="ART - Top" inkscape:groupmode="layer" inkscape:label="ART - Top">
+</g>
+<g id="LABELS" inkscape:groupmode="layer" inkscape:label="LABELS">
+  <g id="Labels - Rooms" inkscape:groupmode="layer" inkscape:label="Labels - Rooms">
+  </g>
+  <g id="Labels - Buildings" inkscape:groupmode="layer" inkscape:label="Labels - Buildings">
+    <text id="lbl_bld_gate_watch" x="182.16" y="322.13" font-size="7" text-anchor="middle">Gate Watch Post *</text>
+    <text id="lbl_bld_inn" x="403.20" y="387.65" font-size="7" text-anchor="middle">Inn *</text>
+    <text id="lbl_bld_lockup" x="475.20" y="254.45" font-size="7" text-anchor="middle">Lockup *</text>
+    <text id="lbl_bld_magistrate_court" x="828.00" y="326.45" font-size="7" text-anchor="middle">Magistrate's Court *</text>
+    <text id="lbl_bld_meeting_hall" x="828.00" y="470.45" font-size="7" text-anchor="middle">Meeting Hall *</text>
+    <text id="lbl_bld_mill" x="617.33" y="651.17" font-size="7" text-anchor="middle">Mill *</text>
+    <text id="lbl_bld_smithy" x="331.20" y="398.45" font-size="7" text-anchor="middle">Smithy *</text>
+    <text id="lbl_bld_stables" x="403.20" y="411.41" font-size="7" text-anchor="middle">Stables *</text>
+    <text id="lbl_bld_tax_office" x="756.00" y="326.45" font-size="7" text-anchor="middle">Tax and Permit Office *</text>
+    <text id="lbl_bld_warden_hall" x="475.20" y="326.45" font-size="7" text-anchor="middle">Warden's Hall *</text>
+  </g>
+  <g id="Labels - Streets" inkscape:groupmode="layer" inkscape:label="Labels - Streets">
+    <text id="lbl_str_pilgrim_road_west" x="419.40" y="345.60" font-size="6" text-anchor="middle">Pilgrim Road (west approach) *</text>
+    <text id="lbl_str_pilgrim_bridge" x="616.21" y="347.04" font-size="6" text-anchor="middle">Pilgrim Bridge *</text>
+    <text id="lbl_str_pilgrim_road_east" x="808.81" y="345.60" font-size="6" text-anchor="middle">Pilgrim Road (east) *</text>
+    <text id="lbl_str_ew_400_w" x="403.20" y="131.76" font-size="6" text-anchor="middle">North Row (west) *</text>
+    <text id="lbl_str_ew_500_w" x="403.20" y="203.76" font-size="6" text-anchor="middle">Ledger Street (west) *</text>
+    <text id="lbl_str_ew_600_w" x="403.20" y="275.76" font-size="6" text-anchor="middle">Warden Street (west) *</text>
+    <text id="lbl_str_ew_800_w" x="403.20" y="419.76" font-size="6" text-anchor="middle">Cartwright Street (west) *</text>
+    <text id="lbl_str_ew_900_w" x="403.20" y="491.76" font-size="6" text-anchor="middle">Tanners Row (west) *</text>
+    <text id="lbl_str_ew_1000_w" x="403.20" y="563.76" font-size="6" text-anchor="middle">South Row (west) *</text>
+    <text id="lbl_str_ns_w0" x="307.44" y="360.00" font-size="6" text-anchor="middle" transform="rotate(-90 307.44 360.00)">West Lane 1 *</text>
+    <text id="lbl_str_ns_w1" x="379.44" y="360.00" font-size="6" text-anchor="middle" transform="rotate(-90 379.44 360.00)">West Lane 2 *</text>
+    <text id="lbl_str_ns_w2" x="451.44" y="360.00" font-size="6" text-anchor="middle" transform="rotate(-90 451.44 360.00)">West Lane 3 *</text>
+    <text id="lbl_str_ns_w3" x="523.44" y="360.00" font-size="6" text-anchor="middle" transform="rotate(-90 523.44 360.00)">West Lane 4 *</text>
+    <text id="lbl_str_ew_400_e" x="828.00" y="131.76" font-size="6" text-anchor="middle">North Row (east) *</text>
+    <text id="lbl_str_ew_500_e" x="828.00" y="203.76" font-size="6" text-anchor="middle">Ledger Street (east) *</text>
+    <text id="lbl_str_ew_600_e" x="828.00" y="275.76" font-size="6" text-anchor="middle">Warden Street (east) *</text>
+    <text id="lbl_str_ew_800_e" x="828.00" y="419.76" font-size="6" text-anchor="middle">Cartwright Street (east) *</text>
+    <text id="lbl_str_ew_900_e" x="828.00" y="491.76" font-size="6" text-anchor="middle">Tanners Row (east) *</text>
+    <text id="lbl_str_ew_1000_e" x="828.00" y="563.76" font-size="6" text-anchor="middle">South Row (east) *</text>
+    <text id="lbl_str_ns_e0" x="732.24" y="360.00" font-size="6" text-anchor="middle" transform="rotate(-90 732.24 360.00)">East Lane 1 *</text>
+    <text id="lbl_str_ns_e1" x="804.24" y="360.00" font-size="6" text-anchor="middle" transform="rotate(-90 804.24 360.00)">East Lane 2 *</text>
+    <text id="lbl_str_ns_e2" x="876.24" y="360.00" font-size="6" text-anchor="middle" transform="rotate(-90 876.24 360.00)">East Lane 3 *</text>
+    <text id="lbl_str_ns_e3" x="948.24" y="360.00" font-size="6" text-anchor="middle" transform="rotate(-90 948.24 360.00)">East Lane 4 *</text>
+  </g>
+  <g id="Labels - Districts" inkscape:groupmode="layer" inkscape:label="Labels - Districts">
+    <text id="lbl_dis_west_bank" x="403.20" y="363.15" font-size="9" text-anchor="middle" font-weight="bold">WEST BANK (WARDENS' WARD)</text>
+    <text id="lbl_dis_east_bank" x="828.00" y="363.15" font-size="9" text-anchor="middle" font-weight="bold">EAST BANK (MARKET WARD)</text>
+    <text id="lbl_dis_mill_reach" x="619.20" y="665.55" font-size="9" text-anchor="middle" font-weight="bold">MILL REACH</text>
+    <text id="lbl_sqr_market" x="792.00" y="398.45" font-size="7" text-anchor="middle" font-weight="bold">Market Square</text>
+  </g>
+</g>
+<g id="NOTES" inkscape:groupmode="layer" inkscape:label="NOTES">
+  <text id="note_title" x="36.00" y="22.00" font-size="11" text-anchor="start" font-weight="bold">Bridgehollow (draft) - town view</text>
+  <text id="note_status" x="36.00" y="34.00" font-size="7" text-anchor="start">DRAFT - every entity is PROPOSED (no canon layout). * = proposed. Dashed strokes = proposed.</text>
+  <text id="note_regen" x="1188.00" y="22.00" font-size="7" text-anchor="end">GEN layers are rewritten on regeneration; draw in ART layers.</text>
+</g>
+</svg>

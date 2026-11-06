@@ -1,0 +1,36 @@
+{
+ "id": "bld_house_042",
+ "name": "House 42",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    1016.9,
+    420.9
+   ],
+   [
+    1037.9,
+    420.9
+   ],
+   [
+    1037.9,
+    447.9
+   ],
+   [
+    1016.9,
+    447.9
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": []
+}

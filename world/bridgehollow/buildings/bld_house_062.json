@@ -1,0 +1,36 @@
+{
+ "id": "bld_house_062",
+ "name": "House 62",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    1406.8,
+    522.9
+   ],
+   [
+    1429.8,
+    522.9
+   ],
+   [
+    1429.8,
+    542.9
+   ],
+   [
+    1406.8,
+    542.9
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": []
+}

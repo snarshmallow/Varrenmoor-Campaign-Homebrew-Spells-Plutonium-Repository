@@ -1,0 +1,36 @@
+{
+ "id": "bld_house_090",
+ "name": "House 90",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    1605.9,
+    556.5
+   ],
+   [
+    1627.9,
+    556.5
+   ],
+   [
+    1627.9,
+    583.5
+   ],
+   [
+    1605.9,
+    583.5
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": []
+}

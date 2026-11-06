@@ -1,0 +1,36 @@
+{
+ "id": "bld_house_082",
+ "name": "House 82",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    1511.1,
+    960.0
+   ],
+   [
+    1533.1,
+    960.0
+   ],
+   [
+    1533.1,
+    982.0
+   ],
+   [
+    1511.1,
+    982.0
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": []
+}

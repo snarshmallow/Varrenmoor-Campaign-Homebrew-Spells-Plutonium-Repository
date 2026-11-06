@@ -1,0 +1,36 @@
+{
+ "id": "bld_house_059",
+ "name": "House 59",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    1403.2,
+    454.0
+   ],
+   [
+    1432.2,
+    454.0
+   ],
+   [
+    1432.2,
+    481.0
+   ],
+   [
+    1403.2,
+    481.0
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": []
+}

@@ -1,0 +1,628 @@
+{
+ "place": "bridgehollow",
+ "streets": [
+  {
+   "id": "str_pilgrim_road_west",
+   "name": "Pilgrim Road (west approach)",
+   "kind": "road",
+   "status": "proposed",
+   "geometry": {
+    "type": "polyline",
+    "points": [
+     [
+      0,
+      590
+     ],
+     [
+      250,
+      600
+     ],
+     [
+      520,
+      660
+     ],
+     [
+      700,
+      700
+     ],
+     [
+      1165.0,
+      700
+     ]
+    ],
+    "width_ft": 30
+   },
+   "notes": "Enters the hollow from the west; gate watch post stands on it.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   }
+  },
+  {
+   "id": "str_pilgrim_bridge",
+   "name": "Pilgrim Bridge",
+   "kind": "bridge",
+   "status": "proposed",
+   "geometry": {
+    "type": "polyline",
+    "points": [
+     [
+      1165.0,
+      700
+     ],
+     [
+      1246.7,
+      700
+     ]
+    ],
+    "width_ft": 26
+   },
+   "notes": "The one main stone bridge over the river.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "material": "stone"
+  },
+  {
+   "id": "str_pilgrim_road_east",
+   "name": "Pilgrim Road (east)",
+   "kind": "road",
+   "status": "proposed",
+   "geometry": {
+    "type": "polyline",
+    "points": [
+     [
+      1246.7,
+      700
+     ],
+     [
+      1700,
+      700
+     ],
+     [
+      1950,
+      720
+     ],
+     [
+      2200,
+      800
+     ],
+     [
+      2400,
+      830
+     ]
+    ],
+    "width_ft": 30
+   },
+   "notes": "Continues east past the market square.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   }
+  },
+  {
+   "id": "str_ew_400_w",
+   "name": "North Row (west)",
+   "kind": "street",
+   "status": "proposed",
+   "geometry": {
+    "type": "polyline",
+    "points": [
+     [
+      760,
+      400
+     ],
+     [
+      1060,
+      400
+     ]
+    ],
+    "width_ft": 24
+   },
+   "notes": "Orderly grid street.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   }
+  },
+  {
+   "id": "str_ew_500_w",
+   "name": "Ledger Street (west)",
+   "kind": "street",
+   "status": "proposed",
+   "geometry": {
+    "type": "polyline",
+    "points": [
+     [
+      760,
+      500
+     ],
+     [
+      1060,
+      500
+     ]
+    ],
+    "width_ft": 24
+   },
+   "notes": "Orderly grid street.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   }
+  },
+  {
+   "id": "str_ew_600_w",
+   "name": "Warden Street (west)",
+   "kind": "street",
+   "status": "proposed",
+   "geometry": {
+    "type": "polyline",
+    "points": [
+     [
+      760,
+      600
+     ],
+     [
+      1060,
+      600
+     ]
+    ],
+    "width_ft": 24
+   },
+   "notes": "Orderly grid street.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   }
+  },
+  {
+   "id": "str_ew_800_w",
+   "name": "Cartwright Street (west)",
+   "kind": "street",
+   "status": "proposed",
+   "geometry": {
+    "type": "polyline",
+    "points": [
+     [
+      760,
+      800
+     ],
+     [
+      1060,
+      800
+     ]
+    ],
+    "width_ft": 24
+   },
+   "notes": "Orderly grid street.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   }
+  },
+  {
+   "id": "str_ew_900_w",
+   "name": "Tanners Row (west)",
+   "kind": "street",
+   "status": "proposed",
+   "geometry": {
+    "type": "polyline",
+    "points": [
+     [
+      760,
+      900
+     ],
+     [
+      1060,
+      900
+     ]
+    ],
+    "width_ft": 24
+   },
+   "notes": "Orderly grid street.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   }
+  },
+  {
+   "id": "str_ew_1000_w",
+   "name": "South Row (west)",
+   "kind": "street",
+   "status": "proposed",
+   "geometry": {
+    "type": "polyline",
+    "points": [
+     [
+      760,
+      1000
+     ],
+     [
+      1060,
+      1000
+     ]
+    ],
+    "width_ft": 24
+   },
+   "notes": "Orderly grid street.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   }
+  },
+  {
+   "id": "str_ns_w0",
+   "name": "West Lane 1",
+   "kind": "street",
+   "status": "proposed",
+   "geometry": {
+    "type": "polyline",
+    "points": [
+     [
+      760,
+      400
+     ],
+     [
+      760,
+      1000
+     ]
+    ],
+    "width_ft": 24
+   },
+   "notes": "Orderly grid street.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   }
+  },
+  {
+   "id": "str_ns_w1",
+   "name": "West Lane 2",
+   "kind": "street",
+   "status": "proposed",
+   "geometry": {
+    "type": "polyline",
+    "points": [
+     [
+      860,
+      400
+     ],
+     [
+      860,
+      1000
+     ]
+    ],
+    "width_ft": 24
+   },
+   "notes": "Orderly grid street.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   }
+  },
+  {
+   "id": "str_ns_w2",
+   "name": "West Lane 3",
+   "kind": "street",
+   "status": "proposed",
+   "geometry": {
+    "type": "polyline",
+    "points": [
+     [
+      960,
+      400
+     ],
+     [
+      960,
+      1000
+     ]
+    ],
+    "width_ft": 24
+   },
+   "notes": "Orderly grid street.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   }
+  },
+  {
+   "id": "str_ns_w3",
+   "name": "West Lane 4",
+   "kind": "street",
+   "status": "proposed",
+   "geometry": {
+    "type": "polyline",
+    "points": [
+     [
+      1060,
+      400
+     ],
+     [
+      1060,
+      1000
+     ]
+    ],
+    "width_ft": 24
+   },
+   "notes": "Orderly grid street.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   }
+  },
+  {
+   "id": "str_ew_400_e",
+   "name": "North Row (east)",
+   "kind": "street",
+   "status": "proposed",
+   "geometry": {
+    "type": "polyline",
+    "points": [
+     [
+      1350,
+      400
+     ],
+     [
+      1650,
+      400
+     ]
+    ],
+    "width_ft": 24
+   },
+   "notes": "Orderly grid street.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   }
+  },
+  {
+   "id": "str_ew_500_e",
+   "name": "Ledger Street (east)",
+   "kind": "street",
+   "status": "proposed",
+   "geometry": {
+    "type": "polyline",
+    "points": [
+     [
+      1350,
+      500
+     ],
+     [
+      1650,
+      500
+     ]
+    ],
+    "width_ft": 24
+   },
+   "notes": "Orderly grid street.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   }
+  },
+  {
+   "id": "str_ew_600_e",
+   "name": "Warden Street (east)",
+   "kind": "street",
+   "status": "proposed",
+   "geometry": {
+    "type": "polyline",
+    "points": [
+     [
+      1350,
+      600
+     ],
+     [
+      1650,
+      600
+     ]
+    ],
+    "width_ft": 24
+   },
+   "notes": "Orderly grid street.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   }
+  },
+  {
+   "id": "str_ew_800_e",
+   "name": "Cartwright Street (east)",
+   "kind": "street",
+   "status": "proposed",
+   "geometry": {
+    "type": "polyline",
+    "points": [
+     [
+      1350,
+      800
+     ],
+     [
+      1650,
+      800
+     ]
+    ],
+    "width_ft": 24
+   },
+   "notes": "Orderly grid street.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   }
+  },
+  {
+   "id": "str_ew_900_e",
+   "name": "Tanners Row (east)",
+   "kind": "street",
+   "status": "proposed",
+   "geometry": {
+    "type": "polyline",
+    "points": [
+     [
+      1350,
+      900
+     ],
+     [
+      1650,
+      900
+     ]
+    ],
+    "width_ft": 24
+   },
+   "notes": "Orderly grid street.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   }
+  },
+  {
+   "id": "str_ew_1000_e",
+   "name": "South Row (east)",
+   "kind": "street",
+   "status": "proposed",
+   "geometry": {
+    "type": "polyline",
+    "points": [
+     [
+      1350,
+      1000
+     ],
+     [
+      1650,
+      1000
+     ]
+    ],
+    "width_ft": 24
+   },
+   "notes": "Orderly grid street.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   }
+  },
+  {
+   "id": "str_ns_e0",
+   "name": "East Lane 1",
+   "kind": "street",
+   "status": "proposed",
+   "geometry": {
+    "type": "polyline",
+    "points": [
+     [
+      1350,
+      400
+     ],
+     [
+      1350,
+      1000
+     ]
+    ],
+    "width_ft": 24
+   },
+   "notes": "Orderly grid street.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   }
+  },
+  {
+   "id": "str_ns_e1",
+   "name": "East Lane 2",
+   "kind": "street",
+   "status": "proposed",
+   "geometry": {
+    "type": "polyline",
+    "points": [
+     [
+      1450,
+      400
+     ],
+     [
+      1450,
+      1000
+     ]
+    ],
+    "width_ft": 24
+   },
+   "notes": "Orderly grid street.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   }
+  },
+  {
+   "id": "str_ns_e2",
+   "name": "East Lane 3",
+   "kind": "street",
+   "status": "proposed",
+   "geometry": {
+    "type": "polyline",
+    "points": [
+     [
+      1550,
+      400
+     ],
+     [
+      1550,
+      1000
+     ]
+    ],
+    "width_ft": 24
+   },
+   "notes": "Orderly grid street.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   }
+  },
+  {
+   "id": "str_ns_e3",
+   "name": "East Lane 4",
+   "kind": "street",
+   "status": "proposed",
+   "geometry": {
+    "type": "polyline",
+    "points": [
+     [
+      1650,
+      400
+     ],
+     [
+      1650,
+      1000
+     ]
+    ],
+    "width_ft": 24
+   },
+   "notes": "Orderly grid street.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   }
+  }
+ ]
+}

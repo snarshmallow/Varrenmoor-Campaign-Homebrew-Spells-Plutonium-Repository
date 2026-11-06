@@ -61,3 +61,50 @@ class LayeredSVG:
         out.append("</svg>")
         with open(path, "w", encoding="utf-8") as f:
             f.write("\n".join(out) + "\n")
+
+
+class LayerTree:
+    """Nested layered SVG (layer groups may contain sublayer groups).
+
+    `spec` lists layers TOP to BOTTOM as Illustrator's Layers panel shows them:
+    [("NOTES", []), ("LABELS", ["Labels - Districts", ...]), ...]. The SVG is written
+    bottom-first (later groups paint on top), so the panel order matches `spec`.
+    Items are raw SVG strings added to a leaf layer (or to a parent with no sublayers).
+    """
+
+    def __init__(self, spec, width_in=17, height_in=11, css="", locked=()):
+        self.w, self.h = width_in * 72.0, height_in * 72.0
+        self.spec, self.css, self.locked = spec, css, set(locked)
+        self.items = {}
+        for name, subs in spec:
+            self.items[name] = []
+            for s in subs:
+                self.items[s] = []
+
+    def add(self, layer, svg):
+        self.items[layer].append(svg)
+
+    def _group(self, name, body, out, indent):
+        a = quoteattr(name)
+        lock = ' sodipodi:insensitive="true"' if name in self.locked else ""
+        out.append(f'{indent}<g id={a} inkscape:groupmode="layer" inkscape:label={a}{lock}>')
+        out.extend(body)
+        out.append(f"{indent}</g>")
+
+    def write(self, path):
+        out = ['<?xml version="1.0" encoding="UTF-8"?>',
+               f'<svg xmlns="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" '
+               f'xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" '
+               f'width="{self.w:g}pt" height="{self.h:g}pt" viewBox="0 0 {self.w:g} {self.h:g}">']
+        if self.css:
+            out.append(f"<style><![CDATA[\n{self.css}\n]]></style>")
+        for name, subs in reversed(self.spec):
+            body = []
+            for s in reversed(subs):
+                sub = ["    " + i for i in self.items[s]]
+                self._group(s, sub, body, "  ")
+            body.extend("  " + i for i in self.items[name])
+            self._group(name, body, out, "")
+        out.append("</svg>")
+        with open(path, "w", encoding="utf-8") as f:
+            f.write("\n".join(out) + "\n")

@@ -1,0 +1,36 @@
+{
+ "id": "bld_warden_hall",
+ "name": "Warden's Hall",
+ "kind": "civic",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    980.0,
+    625.0
+   ],
+   [
+    1040.0,
+    625.0
+   ],
+   [
+    1040.0,
+    675.0
+   ],
+   [
+    980.0,
+    675.0
+   ]
+  ]
+ },
+ "notes": "Seat of the wardens; beside the bridge. Layout proposed.",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 2,
+ "rooms": [],
+ "doors": []
+}

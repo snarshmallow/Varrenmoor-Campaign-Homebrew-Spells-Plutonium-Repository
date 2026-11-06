@@ -1,0 +1,36 @@
+{
+ "id": "bld_house_023",
+ "name": "House 23",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    917.0,
+    463.6
+   ],
+   [
+    944.0,
+    463.6
+   ],
+   [
+    944.0,
+    484.6
+   ],
+   [
+    917.0,
+    484.6
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 2,
+ "rooms": [],
+ "doors": []
+}

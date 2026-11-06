@@ -11,6 +11,37 @@ function VB_layer(doc, name) {
   try { return doc.layers.getByName(name); } catch (e) {}
   var l = doc.layers.add(); l.name = name; return l;
 }
+// Recursive lookup of a (sub)layer by name; returns null if absent.
+function VB_find(container, name) {
+  for (var i = 0; i < container.layers.length; i++) {
+    var l = container.layers[i];
+    if (l.name === name) return l;
+    var r = VB_find(l, name);
+    if (r) return r;
+  }
+  return null;
+}
+// Direct children of a layer only (pageItems of a layer can include sublayer items).
+function VB_direct(layer) {
+  var items = [];
+  for (var i = 0; i < layer.pageItems.length; i++) {
+    var it = layer.pageItems[i], ok = true;
+    try { ok = (it.layer.name === layer.name); } catch (e) { ok = true; }
+    if (ok) items.push(it);
+  }
+  return items;
+}
+function VB_isArt(name) { return /^ART(\s|$|-)/i.test(name); }
+// Return the target layer for a source layer, creating it (and its parent) when missing.
+function VB_ensureLike(doc, src) {
+  var t = VB_find(doc, src.name);
+  if (t) return t;
+  var par = null;
+  try { if (src.parent && src.parent.typename === "Layer") par = VB_ensureLike(doc, src.parent); } catch (e) {}
+  t = par ? par.layers.add() : doc.layers.add();
+  t.name = src.name;
+  return t;
+}
 function VB_run(json) {
   try {
     var a = eval("(" + json + ")");
@@ -47,6 +78,55 @@ function VB_run(json) {
         svg.close(SaveOptions.DONOTSAVECHANGES);
         app.activeDocument = target;
         out.items = n; break;
+      }
+      case "replace_layer": {
+        // Clear and redraw only the named GEN layers from an SVG; ART layers are never touched.
+        if (!a.path) throw new Error("path required");
+        var names = a.names || [];
+        if (!names.length) throw new Error("names required");
+        for (var ni = 0; ni < names.length; ni++) if (VB_isArt(names[ni])) throw new Error("refusing to replace ART layer: " + names[ni]);
+        if (app.documents.length === 0) throw new Error("no open document");
+        var rf = new File(a.path);
+        if (!rf.exists) throw new Error("file not found: " + a.path);
+        var tdoc = app.activeDocument;
+        var rsvg = app.open(rf);
+        var replaced = [], missing = [], moved = 0;
+        for (var ri = 0; ri < names.length; ri++) {
+          var sl2 = VB_find(rsvg, names[ri]);
+          if (!sl2) { missing.push(names[ri]); continue; }
+          var tl2 = VB_ensureLike(tdoc, sl2);
+          var wasLocked = tl2.locked, wasVisible = tl2.visible;
+          tl2.locked = false; tl2.visible = true;
+          var old = VB_direct(tl2);
+          for (var oi = old.length - 1; oi >= 0; oi--) {
+            try { old[oi].locked = false; old[oi].hidden = false; } catch (e) {}
+            old[oi].remove();
+          }
+          var srcItems = VB_direct(sl2);
+          for (var si = srcItems.length - 1; si >= 0; si--) {
+            srcItems[si].duplicate(tl2, ElementPlacement.PLACEATBEGINNING); moved++;
+          }
+          tl2.locked = (a.restore_lock === false) ? false : wasLocked;
+          tl2.visible = wasVisible;
+          replaced.push(names[ri]);
+        }
+        rsvg.close(SaveOptions.DONOTSAVECHANGES);
+        app.activeDocument = tdoc;
+        out.replaced = replaced; out.missing = missing; out.items = moved;
+        if (missing.length && a.strict !== false) out.ok = false, out.error = "layers not in SVG: " + missing.join(", ");
+        break;
+      }
+      case "lock_layers": {
+        if (app.documents.length === 0) throw new Error("no open document");
+        var ld = app.activeDocument, lnames = a.names || [], lk = (a.locked !== false), done = [], nf = [];
+        for (var li2 = 0; li2 < lnames.length; li2++) {
+          var ll = VB_find(ld, lnames[li2]);
+          if (!ll) { nf.push(lnames[li2]); continue; }
+          ll.locked = lk; done.push(lnames[li2]);
+        }
+        out.locked = lk; out.layers = done; out.not_found = nf;
+        if (nf.length) out.ok = false, out.error = "layers not found: " + nf.join(", ");
+        break;
       }
       case "save_ai": {
         if (app.documents.length === 0) throw new Error("no open document");

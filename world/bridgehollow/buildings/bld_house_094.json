@@ -1,0 +1,36 @@
+{
+ "id": "bld_house_094",
+ "name": "House 94",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    1603.2,
+    654.4
+   ],
+   [
+    1631.2,
+    654.4
+   ],
+   [
+    1631.2,
+    679.4
+   ],
+   [
+    1603.2,
+    679.4
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": []
+}

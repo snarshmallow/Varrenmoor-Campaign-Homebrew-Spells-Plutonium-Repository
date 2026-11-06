@@ -1,0 +1,36 @@
+{
+ "id": "bld_magistrate_court",
+ "name": "Magistrate's Court",
+ "kind": "civic",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    1469.0,
+    626.0
+   ],
+   [
+    1531.0,
+    626.0
+   ],
+   [
+    1531.0,
+    674.0
+   ],
+   [
+    1469.0,
+    674.0
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 2,
+ "rooms": [],
+ "doors": []
+}

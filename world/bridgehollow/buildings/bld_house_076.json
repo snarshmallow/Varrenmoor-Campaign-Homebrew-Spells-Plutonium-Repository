@@ -1,0 +1,36 @@
+{
+ "id": "bld_house_076",
+ "name": "House 76",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    1474.7,
+    558.1
+   ],
+   [
+    1498.7,
+    558.1
+   ],
+   [
+    1498.7,
+    582.1
+   ],
+   [
+    1474.7,
+    582.1
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": []
+}

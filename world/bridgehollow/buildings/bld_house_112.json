@@ -1,0 +1,36 @@
+{
+ "id": "bld_house_112",
+ "name": "House 112",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    2100,
+    808.0
+   ],
+   [
+    2126,
+    808.0
+   ],
+   [
+    2126,
+    832.0
+   ],
+   [
+    2100,
+    832.0
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 2,
+ "rooms": [],
+ "doors": []
+}

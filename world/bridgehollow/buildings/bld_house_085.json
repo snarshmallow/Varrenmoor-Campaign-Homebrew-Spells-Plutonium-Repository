@@ -1,0 +1,36 @@
+{
+ "id": "bld_house_085",
+ "name": "House 85",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    1606.3,
+    421.7
+   ],
+   [
+    1628.3,
+    421.7
+   ],
+   [
+    1628.3,
+    449.7
+   ],
+   [
+    1606.3,
+    449.7
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": []
+}

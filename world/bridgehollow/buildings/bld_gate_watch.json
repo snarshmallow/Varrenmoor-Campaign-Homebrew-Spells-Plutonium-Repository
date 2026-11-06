@@ -1,0 +1,36 @@
+{
+ "id": "bld_gate_watch",
+ "name": "Gate Watch Post",
+ "kind": "civic",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    590,
+    632
+   ],
+   [
+    616,
+    632
+   ],
+   [
+    616,
+    656
+   ],
+   [
+    590,
+    656
+   ]
+  ]
+ },
+ "notes": "Checks travelers entering on Pilgrim Road.",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": []
+}

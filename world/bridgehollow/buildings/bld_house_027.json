@@ -1,0 +1,36 @@
+{
+ "id": "bld_house_027",
+ "name": "House 27",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    920.0,
+    553.2
+   ],
+   [
+    941.0,
+    553.2
+   ],
+   [
+    941.0,
+    575.2
+   ],
+   [
+    920.0,
+    575.2
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": []
+}

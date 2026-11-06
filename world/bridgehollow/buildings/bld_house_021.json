@@ -1,0 +1,36 @@
+{
+ "id": "bld_house_021",
+ "name": "House 21",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    881.3,
+    452.6
+   ],
+   [
+    902.3,
+    452.6
+   ],
+   [
+    902.3,
+    477.6
+   ],
+   [
+    881.3,
+    477.6
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": []
+}

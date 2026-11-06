@@ -1,0 +1,36 @@
+{
+ "id": "bld_house_079",
+ "name": "House 79",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    1469.7,
+    919.0
+   ],
+   [
+    1497.7,
+    919.0
+   ],
+   [
+    1497.7,
+    942.0
+   ],
+   [
+    1469.7,
+    942.0
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": []
+}

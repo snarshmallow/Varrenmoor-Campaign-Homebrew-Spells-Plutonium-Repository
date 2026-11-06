@@ -1,0 +1,36 @@
+{
+ "id": "bld_house_047",
+ "name": "House 47",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    1014.1,
+    758.3
+   ],
+   [
+    1037.1,
+    758.3
+   ],
+   [
+    1037.1,
+    783.3
+   ],
+   [
+    1014.1,
+    783.3
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": []
+}

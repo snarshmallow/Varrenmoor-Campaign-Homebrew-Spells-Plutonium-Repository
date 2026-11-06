@@ -1,0 +1,36 @@
+{
+ "id": "bld_house_013",
+ "name": "House 13",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    787.3,
+    823.8
+   ],
+   [
+    809.3,
+    823.8
+   ],
+   [
+    809.3,
+    847.8
+   ],
+   [
+    787.3,
+    847.8
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": []
+}

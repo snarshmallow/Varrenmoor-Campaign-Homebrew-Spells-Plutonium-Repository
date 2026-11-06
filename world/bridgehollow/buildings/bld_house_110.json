@@ -1,0 +1,36 @@
+{
+ "id": "bld_house_110",
+ "name": "House 110",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    1800,
+    748.0
+   ],
+   [
+    1826,
+    748.0
+   ],
+   [
+    1826,
+    772.0
+   ],
+   [
+    1800,
+    772.0
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": []
+}

@@ -1,0 +1,137 @@
+{
+ "place": "bridgehollow",
+ "districts": [
+  {
+   "id": "dis_west_bank",
+   "name": "West Bank (Wardens' Ward)",
+   "kind": "district",
+   "status": "proposed",
+   "geometry": {
+    "type": "polygon",
+    "points": [
+     [
+      740,
+      380
+     ],
+     [
+      1080,
+      380
+     ],
+     [
+      1080,
+      1020
+     ],
+     [
+      740,
+      1020
+     ]
+    ]
+   },
+   "notes": "Warden's hall, lockup, inn, smithy and homes.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   }
+  },
+  {
+   "id": "dis_east_bank",
+   "name": "East Bank (Market Ward)",
+   "kind": "district",
+   "status": "proposed",
+   "geometry": {
+    "type": "polygon",
+    "points": [
+     [
+      1330,
+      380
+     ],
+     [
+      1670,
+      380
+     ],
+     [
+      1670,
+      1020
+     ],
+     [
+      1330,
+      1020
+     ]
+    ]
+   },
+   "notes": "Tax office, court, market square, meeting hall and homes.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   }
+  },
+  {
+   "id": "dis_mill_reach",
+   "name": "Mill Reach",
+   "kind": "district",
+   "status": "proposed",
+   "geometry": {
+    "type": "polygon",
+    "points": [
+     [
+      1100,
+      1060
+     ],
+     [
+      1320,
+      1060
+     ],
+     [
+      1320,
+      1180
+     ],
+     [
+      1100,
+      1180
+     ]
+    ]
+   },
+   "notes": "River frontage south of the town.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   }
+  },
+  {
+   "id": "sqr_market",
+   "name": "Market Square",
+   "kind": "square",
+   "status": "proposed",
+   "geometry": {
+    "type": "polygon",
+    "points": [
+     [
+      1365,
+      715
+     ],
+     [
+      1535,
+      715
+     ],
+     [
+      1535,
+      785
+     ],
+     [
+      1365,
+      785
+     ]
+    ]
+   },
+   "notes": "Open market, south of Pilgrim Road, east of the bridge.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   }
+  }
+ ]
+}

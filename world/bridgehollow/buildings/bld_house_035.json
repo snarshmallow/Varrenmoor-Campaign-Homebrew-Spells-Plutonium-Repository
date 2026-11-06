@@ -1,0 +1,36 @@
+{
+ "id": "bld_house_035",
+ "name": "House 35",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    919.5,
+    858.2
+   ],
+   [
+    939.5,
+    858.2
+   ],
+   [
+    939.5,
+    880.2
+   ],
+   [
+    919.5,
+    880.2
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": []
+}

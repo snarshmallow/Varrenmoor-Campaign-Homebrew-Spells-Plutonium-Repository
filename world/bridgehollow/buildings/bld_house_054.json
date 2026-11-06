@@ -1,0 +1,36 @@
+{
+ "id": "bld_house_054",
+ "name": "House 54",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    1015.0,
+    918.9
+   ],
+   [
+    1044.0,
+    918.9
+   ],
+   [
+    1044.0,
+    942.9
+   ],
+   [
+    1015.0,
+    942.9
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 2,
+ "rooms": [],
+ "doors": []
+}

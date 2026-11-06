@@ -1,0 +1,36 @@
+{
+ "id": "bld_house_043",
+ "name": "House 43",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    1022.5,
+    462.4
+   ],
+   [
+    1042.5,
+    462.4
+   ],
+   [
+    1042.5,
+    482.4
+   ],
+   [
+    1022.5,
+    482.4
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 2,
+ "rooms": [],
+ "doors": []
+}

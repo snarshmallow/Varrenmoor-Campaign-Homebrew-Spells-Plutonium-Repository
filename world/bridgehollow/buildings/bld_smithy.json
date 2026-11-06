@@ -1,0 +1,36 @@
+{
+ "id": "bld_smithy",
+ "name": "Smithy",
+ "kind": "craft",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    790.0,
+    735.0
+   ],
+   [
+    830.0,
+    735.0
+   ],
+   [
+    830.0,
+    765.0
+   ],
+   [
+    790.0,
+    765.0
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": []
+}

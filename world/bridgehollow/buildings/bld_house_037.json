@@ -1,0 +1,36 @@
+{
+ "id": "bld_house_037",
+ "name": "House 37",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    883.5,
+    953.7
+   ],
+   [
+    906.5,
+    953.7
+   ],
+   [
+    906.5,
+    981.7
+   ],
+   [
+    883.5,
+    981.7
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": []
+}

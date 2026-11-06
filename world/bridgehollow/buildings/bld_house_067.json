@@ -1,0 +1,36 @@
+{
+ "id": "bld_house_067",
+ "name": "House 67",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    1369.7,
+    918.2
+   ],
+   [
+    1394.7,
+    918.2
+   ],
+   [
+    1394.7,
+    941.2
+   ],
+   [
+    1369.7,
+    941.2
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": []
+}

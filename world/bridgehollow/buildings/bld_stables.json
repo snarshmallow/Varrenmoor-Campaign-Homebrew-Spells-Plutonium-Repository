@@ -1,0 +1,36 @@
+{
+ "id": "bld_stables",
+ "name": "Stables",
+ "kind": "stable",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    883,
+    756
+   ],
+   [
+    937,
+    756
+   ],
+   [
+    937,
+    780
+   ],
+   [
+    883,
+    780
+   ]
+  ]
+ },
+ "notes": "Stables behind the inn.",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": []
+}

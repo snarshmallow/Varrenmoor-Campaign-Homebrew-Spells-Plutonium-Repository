@@ -1,0 +1,36 @@
+{
+ "id": "bld_mill",
+ "name": "Mill",
+ "kind": "craft",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    1185.4,
+    1085
+   ],
+   [
+    1229.4,
+    1085
+   ],
+   [
+    1229.4,
+    1117
+   ],
+   [
+    1185.4,
+    1117
+   ]
+  ]
+ },
+ "notes": "Water mill on the east bank.",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 2,
+ "rooms": [],
+ "doors": []
+}

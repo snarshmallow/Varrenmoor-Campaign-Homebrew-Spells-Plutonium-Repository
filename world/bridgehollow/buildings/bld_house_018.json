@@ -1,0 +1,36 @@
+{
+ "id": "bld_house_018",
+ "name": "House 18",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    780.5,
+    954.4
+   ],
+   [
+    808.5,
+    954.4
+   ],
+   [
+    808.5,
+    978.4
+   ],
+   [
+    780.5,
+    978.4
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": []
+}

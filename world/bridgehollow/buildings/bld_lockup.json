@@ -1,0 +1,36 @@
+{
+ "id": "bld_lockup",
+ "name": "Lockup",
+ "kind": "civic",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    992.0,
+    535.0
+   ],
+   [
+    1028.0,
+    535.0
+   ],
+   [
+    1028.0,
+    565.0
+   ],
+   [
+    992.0,
+    565.0
+   ]
+  ]
+ },
+ "notes": "Cells; kept near the warden's hall.",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": []
+}

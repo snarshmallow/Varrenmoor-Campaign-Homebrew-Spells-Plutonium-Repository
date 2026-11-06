@@ -1,0 +1,36 @@
+{
+ "id": "bld_house_032",
+ "name": "House 32",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    880.5,
+    817.8
+   ],
+   [
+    909.5,
+    817.8
+   ],
+   [
+    909.5,
+    839.8
+   ],
+   [
+    880.5,
+    839.8
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": []
+}

@@ -1,0 +1,36 @@
+{
+ "id": "bld_inn",
+ "name": "Inn",
+ "kind": "inn",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    879,
+    718
+   ],
+   [
+    941,
+    718
+   ],
+   [
+    941,
+    752
+   ],
+   [
+    879,
+    752
+   ]
+  ]
+ },
+ "notes": "Inn on Pilgrim Road near the bridge.",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 2,
+ "rooms": [],
+ "doors": []
+}

@@ -1,0 +1,36 @@
+{
+ "id": "bld_house_028",
+ "name": "House 28",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    883.5,
+    620.3
+   ],
+   [
+    905.5,
+    620.3
+   ],
+   [
+    905.5,
+    642.3
+   ],
+   [
+    883.5,
+    642.3
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 2,
+ "rooms": [],
+ "doors": []
+}

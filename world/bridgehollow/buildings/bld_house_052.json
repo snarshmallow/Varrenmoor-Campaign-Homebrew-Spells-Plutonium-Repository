@@ -1,0 +1,36 @@
+{
+ "id": "bld_house_052",
+ "name": "House 52",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    980.3,
+    928.5
+   ],
+   [
+    1009.3,
+    928.5
+   ],
+   [
+    1009.3,
+    949.5
+   ],
+   [
+    980.3,
+    949.5
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": []
+}

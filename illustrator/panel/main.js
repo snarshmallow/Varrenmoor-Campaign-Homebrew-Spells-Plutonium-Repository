@@ -38,6 +38,7 @@ async function runJob(job, root) {
   for (var i = 0; i < actions.length; i++) {
     var a = JSON.parse(JSON.stringify(actions[i])), r;
     try {
+      // replace_layer / place_svg / save_ai / export_png take a repo-relative or absolute `path`; lock_layers takes `names`.
       if (a.path) a.path = absPath(a.path, root);
       if (a.path && (a.action === "save_ai" || a.action === "export_png")) {
         fs.mkdirSync(path.dirname(a.path), { recursive: true });
@@ -46,6 +47,7 @@ async function runJob(job, root) {
       try { r = JSON.parse(raw); } catch (e) { r = { ok: false, error: "bad host reply: " + raw }; }
     } catch (e) { r = { ok: false, error: String(e) }; }
     r.action = a.action; results.push(r);
+    if (a.action === "replace_layer" && r.ok) log("replace_layer: " + (r.replaced || []).join(", ") + " (" + r.items + " items)");
     if (!r.ok) { ok = false; if (!job.continue_on_error) break; }
   }
   return { id: job.id, ok: ok, finished: new Date().toISOString(), results: results };

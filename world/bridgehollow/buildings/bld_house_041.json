@@ -1,0 +1,36 @@
+{
+ "id": "bld_house_041",
+ "name": "House 41",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    985.4,
+    453.8
+   ],
+   [
+    1008.4,
+    453.8
+   ],
+   [
+    1008.4,
+    476.8
+   ],
+   [
+    985.4,
+    476.8
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": []
+}

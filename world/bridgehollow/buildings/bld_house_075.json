@@ -1,0 +1,36 @@
+{
+ "id": "bld_house_075",
+ "name": "House 75",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    1475.7,
+    521.6
+   ],
+   [
+    1495.7,
+    521.6
+   ],
+   [
+    1495.7,
+    548.6
+   ],
+   [
+    1475.7,
+    548.6
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 2,
+ "rooms": [],
+ "doors": []
+}

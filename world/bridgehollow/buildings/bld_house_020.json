@@ -1,0 +1,36 @@
+{
+ "id": "bld_house_020",
+ "name": "House 20",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    817.3,
+    960.9
+   ],
+   [
+    840.3,
+    960.9
+   ],
+   [
+    840.3,
+    983.9
+   ],
+   [
+    817.3,
+    983.9
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": []
+}

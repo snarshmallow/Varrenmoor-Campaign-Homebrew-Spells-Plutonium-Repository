@@ -1,0 +1,36 @@
+{
+ "id": "bld_house_024",
+ "name": "House 24",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    878.4,
+    518.6
+   ],
+   [
+    907.4,
+    518.6
+   ],
+   [
+    907.4,
+    541.6
+   ],
+   [
+    878.4,
+    541.6
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 2,
+ "rooms": [],
+ "doors": []
+}

@@ -1,0 +1,36 @@
+{
+ "id": "bld_house_017",
+ "name": "House 17",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    778.6,
+    920.2
+   ],
+   [
+    806.6,
+    920.2
+   ],
+   [
+    806.6,
+    947.2
+   ],
+   [
+    778.6,
+    947.2
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": []
+}

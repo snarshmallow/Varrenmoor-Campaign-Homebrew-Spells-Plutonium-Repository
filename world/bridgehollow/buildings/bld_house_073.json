@@ -1,0 +1,36 @@
+{
+ "id": "bld_house_073",
+ "name": "House 73",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    1503.4,
+    418.6
+   ],
+   [
+    1525.4,
+    418.6
+   ],
+   [
+    1525.4,
+    440.6
+   ],
+   [
+    1503.4,
+    440.6
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": []
+}

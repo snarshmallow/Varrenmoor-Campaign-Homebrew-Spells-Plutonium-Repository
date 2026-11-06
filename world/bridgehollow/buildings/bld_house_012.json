@@ -1,0 +1,36 @@
+{
+ "id": "bld_house_012",
+ "name": "House 12",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    813.3,
+    657.5
+   ],
+   [
+    840.3,
+    657.5
+   ],
+   [
+    840.3,
+    684.5
+   ],
+   [
+    813.3,
+    684.5
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": []
+}
