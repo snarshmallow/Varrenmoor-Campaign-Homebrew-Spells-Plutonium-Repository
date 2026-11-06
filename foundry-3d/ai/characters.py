@@ -18,7 +18,7 @@ CHARS = {
     "dunmore_kell": "painterly fantasy character concept art, tired middle-aged night porter, flat grey cap, cream work apron over a brown shirt and trousers, "
                     "heavy boots, stubble, weary expression, holding a small lit lantern, standing upright front view",
     "gerald": "painterly fantasy creature concept art, a small soft-shelled turtle, flat leathery olive-green shell, long fleshy pointed snout, a long pink grippy tongue "
-              "sticking out, six legs with sticky pink toe pads, three-quarter view from the front, cute and skittish",
+              "sticking out, four legs with extra sticky climbing toes, three-quarter view from the front, cute and skittish",
     "brokka": "painterly fantasy character concept art, stout dwarf smith, bald head with a thick braided grey-red beard, heavy leather apron over a "
               "rolled-sleeve shirt, muscular forearms, left hand missing two fingers, holding a smith's hammer, sooty boots, standing upright front view",
     "pimm": "painterly fantasy character concept art, a small skinny goblin surgeon the height of a child, yellow-green skin, bald head with a few wisps of hair, "

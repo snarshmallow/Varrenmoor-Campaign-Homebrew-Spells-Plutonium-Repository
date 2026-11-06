@@ -11,7 +11,7 @@ Source images in the repo: `foundry-3d/ai/characters/` only. They are SDXL conce
 | Doctor Pimm (goblin surgeon) | `pimm_{3,17,29}.png` | Maybe | `sheet.png` shows SDXL drift: one candidate has horns and looks like a dwarf. Pick carefully or have Gemini make one |
 | Pimm's pets/specimens? | `pimm_s_fish_0.png`, `pimm_s_salamander_{0,29}.png` (untracked) | Unknown | Purpose unclear. Probably Pimm's specimens. User to confirm whether they're wanted. Used `pimm_s_salamander_0` as the SF3D smoke test, which worked |
 | Mottle (skeleton innkeeper) | `mottle_{3,17,29}.png` | Only if off-model | |
-| Gerald (soft-shelled turtle) | `gerald_{3,17,29}.png` | Probably | Six legs, sticky toe pads and a long tongue: SDXL rarely gets six legs right. Three-quarter view; SF3D prefers front or three-quarter, so that's fine |
+| Gerald (soft-shelled turtle) | `gerald_{3,17,29}.png` | Maybe | Four legs with extra climbing toes, plus a long grippy tongue (Coordinator correction). `ai/characters.py` prompted "six legs", so the seeds may show six. Use one only if it reads as four-legged |
 | Dunmore Kell (night porter) | `dunmore_kell_{3,17,29}.png` | Only if off-model | Cap, cream apron, lantern |
 | Tobias Wren (old gravewright) | `tobias_wren_{3,17,29}.png` | Only if off-model | Frock coat, shovel |
 | Lil' Apostrophe | none | **Yes** | No concept in the repo. Need a description from the campaign notes for the Gemini prompt |
