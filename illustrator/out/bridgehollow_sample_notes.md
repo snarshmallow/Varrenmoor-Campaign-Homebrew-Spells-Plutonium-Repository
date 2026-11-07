@@ -17,3 +17,6 @@ Files: `illustrator/out/bridgehollow_sample_full.ai` / `.png` (bowl, 1 in = 200 
 1. `place_image` ignored `below` when the target layer already existed (e.g. after `ensure_layers`); with ART - Textures above LINES the opaque shading covered the linework. Fixed in `panel/jsx/host.jsx` (reposition existing layer; takes effect after the panel is reopened). The sample uses the panel's own `ART - Shading` layer created with `below: GUIDES`, which puts the image under linework and grid.
 2. The SVG art is outline-only by design (water is a blue outline, streets and buildings dashed "proposed" outlines, no fills); Illustrator shows the same. Fills come from the panel's apply_fills.
 3. At 100 ft/in the shading image is larger than the artboard (it covers the whole 2400x1500 ft place) and is cropped by the artboard in exports.
+
+## Foundry push test: NOT RUN (waiting)
+`bridge.ps1 version` still returned `unknown op: version` for over 20 minutes of retries (world_info lists varrenmoor-bridge 0.2.0). The GM browser on Arcturus needs Ctrl+F5 (and possibly a world relaunch) so module 0.3.0 loads. Nothing was created or deleted in Foundry. Then run: push-scene to a new scene "ZZ Bridgehollow Sample Push" with the bowl image, verify, push again, push-token, delete-scene for that scene and `Scene.SLPM8ihlgzcIzRaM`.
