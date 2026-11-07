@@ -1,0 +1,14 @@
+{"id":"sample_bowl","continue_on_error":false,"actions":[
+{"action":"place_svg","path":"illustrator/out/sample/bowl.svg","mode":"open"},
+{"action":"ensure_layers","names":["ART - Textures"]},
+{"action":"place_image","path":"illustrator/out/sample/shading_bowl.png","rect":[180,126,1044,666],"layer":"ART - Textures","below":"LINES","name":"shading_png","lock":true},
+{"action":"get_layer_tree"},
+{"action":"set_visible","names":["LABELS"],"visible":false},
+{"action":"export_png","path":"illustrator/out/sample/bowl_nolabels.png","scale":100},
+{"action":"set_visible","names":["LABELS"],"visible":true},
+{"action":"set_visible","names":["Leaders"],"visible":false},
+{"action":"export_png","path":"illustrator/out/sample/bowl_noleaders.png","scale":100},
+{"action":"set_visible","names":["Leaders"],"visible":true},
+{"action":"save_ai","path":"illustrator/out/bridgehollow_sample_full.ai"},
+{"action":"export_png","path":"illustrator/out/bridgehollow_sample_full.png","scale":100}
+]}

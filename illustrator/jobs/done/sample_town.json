@@ -1,0 +1,7 @@
+{"id":"sample_town","continue_on_error":false,"actions":[
+{"action":"place_svg","path":"illustrator/out/sample/town.svg","mode":"open"},
+{"action":"place_image","path":"illustrator/out/sample/shading_town.png","rect":[-252,-144,1476,936],"layer":"ART - Shading","below":"GUIDES","name":"shading_png","lock":true},
+{"action":"get_layer_tree"},
+{"action":"save_ai","path":"illustrator/out/bridgehollow_sample_full_town.ai"},
+{"action":"export_png","path":"illustrator/out/bridgehollow_sample_full_town.png","scale":100}
+]}

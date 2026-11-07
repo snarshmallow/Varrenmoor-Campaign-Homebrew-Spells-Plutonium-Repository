@@ -1,0 +1,481 @@
+{
+  "id": "sample_bowl2",
+  "ok": true,
+  "finished": "2026-11-07T15:44:06.634Z",
+  "results": [
+    {
+      "ok": true,
+      "mode": "opened",
+      "action": "place_svg"
+    },
+    {
+      "ok": true,
+      "layer": "ART - Shading",
+      "width": 864,
+      "height": 540,
+      "action": "place_image"
+    },
+    {
+      "ok": true,
+      "doc": "bowl.svg",
+      "tree": [
+        {
+          "name": "NOTES",
+          "visible": true,
+          "locked": false,
+          "items": 3,
+          "children": []
+        },
+        {
+          "name": "LABELS",
+          "visible": true,
+          "locked": false,
+          "items": 0,
+          "children": [
+            {
+              "name": "Leaders",
+              "visible": true,
+              "locked": false,
+              "items": 24,
+              "children": []
+            },
+            {
+              "name": "Labels - Districts",
+              "visible": true,
+              "locked": false,
+              "items": 5,
+              "children": []
+            },
+            {
+              "name": "Labels - Streets",
+              "visible": true,
+              "locked": false,
+              "items": 3,
+              "children": []
+            },
+            {
+              "name": "Labels - Buildings",
+              "visible": true,
+              "locked": false,
+              "items": 10,
+              "children": []
+            },
+            {
+              "name": "Labels - Rooms",
+              "visible": true,
+              "locked": false,
+              "items": 0,
+              "children": []
+            },
+            {
+              "name": "Labels - Elevation",
+              "visible": true,
+              "locked": false,
+              "items": 59,
+              "children": []
+            }
+          ]
+        },
+        {
+          "name": "ART - Top",
+          "visible": true,
+          "locked": false,
+          "items": 0,
+          "children": []
+        },
+        {
+          "name": "ART - Fills",
+          "visible": true,
+          "locked": false,
+          "items": 0,
+          "children": []
+        },
+        {
+          "name": "ART - Textures",
+          "visible": true,
+          "locked": false,
+          "items": 0,
+          "children": []
+        },
+        {
+          "name": "ART - Masks",
+          "visible": true,
+          "locked": false,
+          "items": 0,
+          "children": []
+        },
+        {
+          "name": "LINES",
+          "visible": true,
+          "locked": false,
+          "items": 0,
+          "children": [
+            {
+              "name": "Walls",
+              "visible": true,
+              "locked": false,
+              "items": 0,
+              "children": []
+            },
+            {
+              "name": "Buildings",
+              "visible": true,
+              "locked": false,
+              "items": 139,
+              "children": []
+            },
+            {
+              "name": "Blocks",
+              "visible": true,
+              "locked": false,
+              "items": 0,
+              "children": []
+            },
+            {
+              "name": "Roads",
+              "visible": true,
+              "locked": false,
+              "items": 39,
+              "children": []
+            },
+            {
+              "name": "Water",
+              "visible": true,
+              "locked": false,
+              "items": 1,
+              "children": []
+            },
+            {
+              "name": "Terrain",
+              "visible": true,
+              "locked": false,
+              "items": 3,
+              "children": [
+                {
+                  "name": "Contours - Minor",
+                  "visible": true,
+                  "locked": false,
+                  "items": 104,
+                  "children": []
+                },
+                {
+                  "name": "Contours - Index",
+                  "visible": true,
+                  "locked": false,
+                  "items": 81,
+                  "children": []
+                }
+              ]
+            },
+            {
+              "name": "Fences",
+              "visible": true,
+              "locked": false,
+              "items": 7,
+              "children": []
+            }
+          ]
+        },
+        {
+          "name": "GUIDES",
+          "visible": true,
+          "locked": false,
+          "items": 0,
+          "children": [
+            {
+              "name": "Grid",
+              "visible": true,
+              "locked": false,
+              "items": 2,
+              "children": []
+            },
+            {
+              "name": "Scale bar",
+              "visible": true,
+              "locked": false,
+              "items": 9,
+              "children": []
+            },
+            {
+              "name": "North arrow",
+              "visible": true,
+              "locked": false,
+              "items": 2,
+              "children": []
+            },
+            {
+              "name": "Bounds",
+              "visible": true,
+              "locked": false,
+              "items": 2,
+              "children": []
+            }
+          ]
+        },
+        {
+          "name": "ART - Shading",
+          "visible": true,
+          "locked": true,
+          "items": 1,
+          "children": []
+        }
+      ],
+      "action": "get_layer_tree"
+    },
+    {
+      "ok": true,
+      "layers": [
+        "LABELS"
+      ],
+      "not_found": [],
+      "action": "set_visible"
+    },
+    {
+      "ok": true,
+      "action": "export_png"
+    },
+    {
+      "ok": true,
+      "layers": [
+        "LABELS"
+      ],
+      "not_found": [],
+      "action": "set_visible"
+    },
+    {
+      "ok": true,
+      "layers": [
+        "Leaders"
+      ],
+      "not_found": [],
+      "action": "set_visible"
+    },
+    {
+      "ok": true,
+      "action": "export_png"
+    },
+    {
+      "ok": true,
+      "layers": [
+        "Leaders"
+      ],
+      "not_found": [],
+      "action": "set_visible"
+    },
+    {
+      "ok": true,
+      "doc": "bowl.svg",
+      "tree": [
+        {
+          "name": "NOTES",
+          "visible": true,
+          "locked": false,
+          "items": 3,
+          "children": []
+        },
+        {
+          "name": "LABELS",
+          "visible": true,
+          "locked": false,
+          "items": 0,
+          "children": [
+            {
+              "name": "Leaders",
+              "visible": true,
+              "locked": false,
+              "items": 24,
+              "children": []
+            },
+            {
+              "name": "Labels - Districts",
+              "visible": true,
+              "locked": false,
+              "items": 5,
+              "children": []
+            },
+            {
+              "name": "Labels - Streets",
+              "visible": true,
+              "locked": false,
+              "items": 3,
+              "children": []
+            },
+            {
+              "name": "Labels - Buildings",
+              "visible": true,
+              "locked": false,
+              "items": 10,
+              "children": []
+            },
+            {
+              "name": "Labels - Rooms",
+              "visible": true,
+              "locked": false,
+              "items": 0,
+              "children": []
+            },
+            {
+              "name": "Labels - Elevation",
+              "visible": true,
+              "locked": false,
+              "items": 59,
+              "children": []
+            }
+          ]
+        },
+        {
+          "name": "ART - Top",
+          "visible": true,
+          "locked": false,
+          "items": 0,
+          "children": []
+        },
+        {
+          "name": "ART - Fills",
+          "visible": true,
+          "locked": false,
+          "items": 0,
+          "children": []
+        },
+        {
+          "name": "ART - Textures",
+          "visible": true,
+          "locked": false,
+          "items": 0,
+          "children": []
+        },
+        {
+          "name": "ART - Masks",
+          "visible": true,
+          "locked": false,
+          "items": 0,
+          "children": []
+        },
+        {
+          "name": "LINES",
+          "visible": true,
+          "locked": false,
+          "items": 0,
+          "children": [
+            {
+              "name": "Walls",
+              "visible": true,
+              "locked": false,
+              "items": 0,
+              "children": []
+            },
+            {
+              "name": "Buildings",
+              "visible": true,
+              "locked": false,
+              "items": 139,
+              "children": []
+            },
+            {
+              "name": "Blocks",
+              "visible": true,
+              "locked": false,
+              "items": 0,
+              "children": []
+            },
+            {
+              "name": "Roads",
+              "visible": true,
+              "locked": false,
+              "items": 39,
+              "children": []
+            },
+            {
+              "name": "Water",
+              "visible": true,
+              "locked": false,
+              "items": 1,
+              "children": []
+            },
+            {
+              "name": "Terrain",
+              "visible": true,
+              "locked": false,
+              "items": 3,
+              "children": [
+                {
+                  "name": "Contours - Minor",
+                  "visible": true,
+                  "locked": false,
+                  "items": 104,
+                  "children": []
+                },
+                {
+                  "name": "Contours - Index",
+                  "visible": true,
+                  "locked": false,
+                  "items": 81,
+                  "children": []
+                }
+              ]
+            },
+            {
+              "name": "Fences",
+              "visible": true,
+              "locked": false,
+              "items": 7,
+              "children": []
+            }
+          ]
+        },
+        {
+          "name": "GUIDES",
+          "visible": true,
+          "locked": false,
+          "items": 0,
+          "children": [
+            {
+              "name": "Grid",
+              "visible": true,
+              "locked": false,
+              "items": 2,
+              "children": []
+            },
+            {
+              "name": "Scale bar",
+              "visible": true,
+              "locked": false,
+              "items": 9,
+              "children": []
+            },
+            {
+              "name": "North arrow",
+              "visible": true,
+              "locked": false,
+              "items": 2,
+              "children": []
+            },
+            {
+              "name": "Bounds",
+              "visible": true,
+              "locked": false,
+              "items": 2,
+              "children": []
+            }
+          ]
+        },
+        {
+          "name": "ART - Shading",
+          "visible": true,
+          "locked": true,
+          "items": 1,
+          "children": []
+        }
+      ],
+      "action": "get_layer_tree"
+    },
+    {
+      "ok": true,
+      "action": "save_ai"
+    },
+    {
+      "ok": true,
+      "action": "export_png"
+    }
+  ]
+}
