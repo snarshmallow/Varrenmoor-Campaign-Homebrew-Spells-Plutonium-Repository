@@ -153,7 +153,7 @@ class _Line:
     override: dict = None
 
 
-SCORE_W = {"building": 1.0, "plaza": 0.45, "road": 0.6, "water": 0.35, "junction": 0.35}
+SCORE_W = {"building": 1.0, "plaza": 0.45, "road": 1.0, "water": 4.0, "junction": 0.5}
 
 
 def route_leader(anchor, b, style="elbow", shelf=7.0, gap=2.0):
@@ -505,18 +505,21 @@ class Placer:
                         continue
                     if not self.score:
                         return (*res, 0.0)
-                    cov = self.cost_of(res[1], it.id)
+                    cd = self.cover(res[1], it.id)
+                    if strict >= 1 and cd.get("water", 0) > 0.0:
+                        continue                      # never on water (river / lake) unless there is no alternative at all
+                    cov = sum(self.weights.get(k_, 1.0) * f_ for k_, f_ in cd.items())
                     if it.max_cover is not None and cov > it.max_cover:
                         continue
                     lead_pen = 0.0
                     ln = res[2]
                     if ln.length > 0:
-                        for kind in ("building", "plaza"):
+                        for kind, wk in (("building", 0.3), ("plaza", 0.3), ("water", 1.2), ("road", 0.2)):
                             ids, geoms, tree = self._feat.get(kind, (None, None, None))
                             if tree is not None:
                                 for j in tree.query(ln):
                                     if ids[int(j)] != it.id:
-                                        lead_pen += geoms[int(j)].intersection(ln).length / ln.length * 0.3
+                                        lead_pen += geoms[int(j)].intersection(ln).length / ln.length * wk
                     c = cov + lead_pen + 0.004 * r
                     if best is None or c < best[0]:
                         best = (c, res)

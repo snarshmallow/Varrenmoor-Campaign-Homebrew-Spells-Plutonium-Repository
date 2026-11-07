@@ -353,6 +353,7 @@
     if (guides) steps.push(host({ action: "lock_layers", names: GUIDE_LAYERS, locked: false }, "unlock GUIDES", true));
     steps.push(host({ action: "replace_layer", path: svgAbs, names: names, restore_lock: !guides }, label || "replace layers", true));
     if (guides) steps.push(host({ action: "lock_layers", names: GUIDE_LAYERS, locked: true }, "lock GUIDES", true));
+    if (names.indexOf("Label Backing") >= 0) steps.push(host({ action: "finalize_labels" }, "group labels (halo + text = one item)", true));
     return steps;
   };
   VB.fillAssignments = function (st, textures) {
@@ -421,7 +422,7 @@
   // re-route every leader to its (moved) label. only_changed = the live poll. Style options come from the Labels tab.
   VB.rerouteAction = function (st, only_changed) {
     var o = st.label_offset || {};
-    return { action: "reroute_leaders", changed_only: !!only_changed, style: { style: o.style || "elbow", color: o.match_text ? undefined : o.color, casing_color: o.casing_color,
+    return { action: "reroute_leaders", changed_only: !!only_changed, group: true, style: { style: o.style || "elbow", color: o.match_text ? undefined : o.color, casing_color: o.casing_color,
       width: o.stroke_width, casing_width: o.casing_width } };
   };
   VB.jobReroute = function (st, d) {
@@ -660,6 +661,7 @@
   };
   VB.jobLayers = function (act, st) {
     var m = {
+      group_labels: host({ action: "finalize_labels" }, "group labels"),
       lock_leaders: host({ action: "lock_leaders", locked: true }, "lock leaders"),
       unlock_leaders: host({ action: "lock_leaders", locked: false }, "unlock leaders"),
       lock_guides: host({ action: "lock_layers", names: GUIDE_LAYERS, locked: true }, "lock GUIDES"),

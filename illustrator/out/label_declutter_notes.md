@@ -5,11 +5,11 @@ Before = `--label-preset legacy` (old first-fit placement, black 0.4 pt leaders,
 | View | | shown | hidden (scale / no room) | with leader | text over map features | labels over 25 % | label overlaps | leaders crossing labels |
 |---|---|---|---|---|---|---|---|---|
 | Bowl 200 ft/in | before | 23 | 0 (0 / 0) | 14 | 45.9 % | 16 | 0 | 1 |
-| Bowl 200 ft/in | after | 21 | 136 (136 / 0) | 19 | 17.0 % | 8 | 0 | 0 |
+| Bowl 200 ft/in | after | 21 | 136 (136 / 0) | 19 | 4.1 % | 3 | 0 | 0 |
 | Town 100 ft/in | before | 33 | 0 (0 / 0) | 13 | 51.0 % | 23 | 1 | 0 |
-| Town 100 ft/in | after | 33 | 133 (133 / 0) | 14 | 28.5 % | 15 | 0 | 2 |
+| Town 100 ft/in | after | 33 | 133 (133 / 0) | 14 | 22.9 % | 14 | 0 | 1 |
 | Town 40 ft/in | before | 31 | 0 (0 / 0) | 6 | 40.4 % | 17 | 1 | 0 |
-| Town 40 ft/in | after | 33 | 76 (0 / 76) | 6 | 19.7 % | 10 | 0 | 0 |
+| Town 40 ft/in | after | 31 | 78 (0 / 78) | 6 | 15.5 % | 8 | 0 | 0 |
 
 Features counted: buildings, plazas, road surfaces, water (the river). A label inside its own building does not count against it. The river is wide at 40 ft/in, so most of the remaining overlap is names sitting on or beside the water (Town Treasury, Meeting Hall).
 
@@ -26,3 +26,7 @@ Full pages (Illustrator export, embedded rasters, .ai saved with them): `label_d
 ## Not verified live
 
 The new Illustrator host actions (`reroute_leaders`, `read_label_positions`, `move_item`, `read_items`, `lock_leaders`) and the panel live mode load only when the panel is reopened; they are covered by a mock-Illustrator test (`node illustrator/panel/test/test_host_reroute.js`). See the report for the live check that was run.
+
+## Update: water and grouping
+
+Offset labels never sit on water now (water weight 4.0, hard rejection unless no alternative; leaders crossing water/roads are penalised): text over water is 0 % in all three views (it was 12-17 %). Roads weigh 1.0. Each label is grouped halo + text as `<id>_callout` (host `finalize_labels`). Check image: `label_declutter_town40_v2.png/.ai`.

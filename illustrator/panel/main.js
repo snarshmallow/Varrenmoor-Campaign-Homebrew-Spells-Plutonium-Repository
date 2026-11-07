@@ -183,10 +183,20 @@
   }
 
   // ------------------------------------------------------------ host bridge
-  function evalHost(a) {
+  // Illustrator keeps the ExtendScript engine (and the host.jsx it first loaded) for the whole session, so reopening the panel does NOT load an
+  // updated host.jsx. Reload it explicitly: once at startup, and once more when the host reports an action it does not know.
+  var hostReloads = 0;
+  function reloadHost() {
+    return new Promise(function (res) {
+      var f = (root + "/illustrator/panel/jsx/host.jsx").split("\\").join("/");
+      try { cs.evalScript('$.evalFile(new File(' + JSON.stringify(f) + ')); "reloaded"', function (r) { hostReloads++; res(r); }); } catch (e) { res(String(e)); }
+    });
+  }
+  function evalHost(a, again) {
     return new Promise(function (res) {
       cs.evalScript("VB_run(" + JSON.stringify(JSON.stringify(a)) + ")", function (r) {
         var o; try { o = JSON.parse(r); } catch (e) { o = { ok: false, error: "bad host reply: " + String(r).slice(0, 200) }; }
+        if (!o.ok && /unknown action/.test(String(o.error)) && !again && hostReloads < 3) { reloadHost().then(function () { logLine("host.jsx reloaded (" + a.action + " was unknown)"); evalHost(a, true).then(res); }); return; }
         res(o);
       });
     });
@@ -466,6 +476,7 @@
     labels_pin: function () { return startJob(VB.jobPinLabels(state, d)); },
     labels_clear_overrides: function () { return startJob(VB.jobClearOverrides(state, d)); },
     labels_apply_preset: function () { applyLabelPreset(state.labels.preset); },
+    group_labels: function () { return startJob(VB.jobLayers("group_labels", state)); },
     lock_leaders: function () { return startJob(VB.jobLayers("lock_leaders", state)); },
     unlock_leaders: function () { return startJob(VB.jobLayers("unlock_leaders", state)); },
     labels_reset_cat: function () { var c = state.labels.cat; if (c && c !== "default") { state.labels.styles[c] = VB.labelDefaults()[c]; save(); paintLabelStyle(); } },
@@ -738,7 +749,7 @@
     fPaint(); fSetupAuto();
     setStatus("idle", false);
     loadTextures();
-    setInterval(pollJobs, 2000); pollJobs(); setTimeout(liveTick, 3000);
+    reloadHost().then(function () { setInterval(pollJobs, 2000); pollJobs(); setTimeout(liveTick, 3000); });
   }
   init().catch(function (e) { showError("startup failed: " + (e && e.stack || e)); });
 })();

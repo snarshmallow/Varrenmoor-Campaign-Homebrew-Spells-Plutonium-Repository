@@ -15,6 +15,13 @@ class Item {
   setEntirePath(a) { if (this.layer.locked) throw new Error("layer locked"); this.pts = a.map(p => p.slice()); }
   translate(dx, dy) { if (this.layer.locked) throw new Error("layer locked"); this.gb = [this.gb[0] + dx, this.gb[1] + dy, this.gb[2] + dx, this.gb[3] + dy]; this.pts = this.pts.map(p => [p[0] + dx, p[1] + dy]); }
 }
+class Group extends Item {
+  constructor(layer) { super(layer, "", "GroupItem", [0, 0, 0, 0]); this.pageItems = []; }
+  translate(dx, dy) { if (this.layer.locked) throw new Error("layer locked"); this.pageItems.forEach(c => c.translate(dx, dy)); }
+  get geometricBounds() { return this.pageItems.length ? this.pageItems[0].geometricBounds : [0, 0, 0, 0]; }
+}
+Item.prototype.move = function (g) { this.layer.pageItems.splice(this.layer.pageItems.indexOf(this), 1); g.pageItems.push(this); };
+Layer.prototype.groupItems = null;
 const AB = [0, 792, 1224, 0];
 const root = { layers: [], artboards: [{ artboardRect: AB }], selection: [] };
 const mk = (name, parent) => { const l = new Layer(name, parent || root); (parent || root).layers.push(l); return l; };
@@ -29,6 +36,7 @@ const D = new Item(Lan, "bld_a_leader_dot", "PathItem", [198.5, 792 - 298.5, 201
 const Lw = new Item(Lds, "bld_a_leader", "PathItem", null); Lw.pts = [page2doc(200, 300), page2doc(224, 280), page2doc(229, 280)];
 const Lc = new Item(Lds, "bld_a_leader_casing", "PathItem", null); Lc.pts = Lw.pts.map(p => p.slice());
 
+Object.defineProperty(Layer.prototype, "groupItems", { get() { const l = this; return { add() { return new Group(l); } }; } });
 global.app = { documents: { length: 1 }, activeDocument: root, version: "mock" };
 root.layers.getByName = undefined;
 Object.defineProperty(app.documents, "length", { value: 1 });
@@ -93,5 +101,26 @@ check("ids filter", r.ok && r.callouts === 0);
 r = run({ action: "lock_leaders", locked: false });
 check("lock_leaders action", r.ok && Lds.locked === false);
 
+// ---- grouping: halo + text become one <id>_callout; moving the group moves both and the leader follows
+let r2 = run({ action: "finalize_labels" });
+check("finalize_labels groups halo + text", r2.ok && r2.grouped === 1 && r2.callouts === 1, JSON.stringify(r2));
+const grp = Lb.pageItems.find(i => i.name === "bld_a_callout");
+check("group holds both items, halo under text", grp && grp.pageItems.length === 2 && grp.pageItems[0].name === "bld_a_label_halo" && grp.pageItems[1].name === "bld_a_label");
+r2 = run({ action: "finalize_labels" });
+check("finalize is idempotent", r2.grouped === 0 && r2.callouts === 1, JSON.stringify(r2));
+run({ action: "reroute_leaders", changed_only: true, group: true }); // record state
+run({ action: "lock_leaders", locked: true });
+run({ action: "move_item", name: "bld_a_callout", dx: 200, dy: 50 });
+const gb = grp.pageItems.map(c => (c.geometricBounds[0] + c.geometricBounds[2]) / 2);
+check("one drag of the group moves text and halo together", Math.abs(gb[0] - gb[1]) < 0.01, JSON.stringify(gb));
+r2 = run({ action: "reroute_leaders", changed_only: true, group: true });
+const li = run({ action: "read_items", names: ["bld_a_leader"] }).items.bld_a_leader;
+const tt = grp.pageItems[1].geometricBounds;
+check("leader follows the moved group (ends beside the text, anchor unchanged)", r2.rerouted === 1 && Math.abs(li.points[0][0] - 230) < 0.01 && Math.abs(li.points[0][1] - 280) < 0.01 &&
+  Math.abs(li.points[li.points.length - 1][1] - (792 - (tt[1] + tt[3]) / 2)) < 0.5, JSON.stringify([li.points, tt]));
+// text frames without usable names: matched to the leader by position
+T.name = ""; 
+r2 = run({ action: "read_label_positions" });
+check("name fallback keeps the callout findable (text nearest the leader end)", r2.labels.length === 1, JSON.stringify(r2.labels));
 console.log(fails ? fails + " FAILED" : "all host reroute checks passed");
 process.exit(fails ? 1 : 0);

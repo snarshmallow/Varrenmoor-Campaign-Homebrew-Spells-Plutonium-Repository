@@ -135,28 +135,74 @@ function VB_rgbOf(hex) {
   var h = String(hex).replace("#", ""); if (h.length === 3) h = h.charAt(0) + h.charAt(0) + h.charAt(1) + h.charAt(1) + h.charAt(2) + h.charAt(2);
   return [parseInt(h.substr(0, 2), 16), parseInt(h.substr(2, 2), 16), parseInt(h.substr(4, 2), 16)];
 }
-// Collect callout parts of the document: {texts:{id:item}, leaders, casings, dots, backing}
+// Collect callout parts of the document: {texts:{id:item}, groups:{id:group}, leaders, casings, dots, backing}
+// A label is either loose (text on its label layer, halo/box on Label Backing) or grouped as <id>_callout (halo + text inside one group,
+// created by finalize_labels): one Selection-tool drag moves both. Text found by name <id>_label; if Illustrator did not keep the names, by
+// position: the text frame nearest the end of each leader.
 function VB_callouts(doc) {
-  var m = { texts: {}, leaders: {}, casings: {}, dots: {}, backing: {}, layers: [] }, i, k, ids = {};
-  var tmp = {}, ll = VB_find(doc, "Leaders"), al = VB_find(doc, "Leader Anchors"), bl = VB_find(doc, "Label Backing");
+  var m = { texts: {}, groups: {}, leaders: {}, casings: {}, dots: {}, backing: {}, layers: [], unnamed: 0 }, i, j, k;
+  var ll = VB_find(doc, "Leaders"), al = VB_find(doc, "Leader Anchors"), bl = VB_find(doc, "Label Backing"), loose = [];
   for (i = 0; i < VB_LABEL_LAYERS.length; i++) {
     var lay = VB_find(doc, VB_LABEL_LAYERS[i]);
-    if (lay) { VB_nameMap(lay, tmp, ["_label"]); m.layers.push(lay); }
+    if (!lay) continue;
+    m.layers.push(lay);
+    var items = VB_direct(lay);
+    for (j = 0; j < items.length; j++) {
+      var it = items[j], n = String(it.name), id;
+      if (it.typename === "GroupItem" && /_callout$/.test(n)) {
+        id = n.substr(0, n.length - 8); m.groups[id] = it;
+        for (k = 0; k < it.pageItems.length; k++) {
+          var ch = String(it.pageItems[k].name);
+          if (/_label$/.test(ch)) m.texts[id] = it.pageItems[k];
+          else if (/_label_(halo|box)$/.test(ch)) m.backing[id] = it.pageItems[k];
+          else if (it.pageItems[k].typename === "TextFrame") m.texts[id] = it.pageItems[k];
+        }
+      } else if (/_label$/.test(n) && n.length > 6) m.texts[n.substr(0, n.length - 6)] = it;
+      else if (it.typename === "TextFrame" && n.indexOf("hidden") < 0) loose.push(it);
+    }
   }
-  for (k in tmp) if (tmp.hasOwnProperty(k)) m.texts[k.substr(0, k.length - 6)] = tmp[k];
-  var t2 = {};
+  var t2 = {}, t3 = {}, t4 = {};
   if (ll) { VB_nameMap(ll, t2, ["_leader", "_leader_casing"]); m.layers.push(ll); }
   for (k in t2) if (t2.hasOwnProperty(k)) { if (/_leader_casing$/.test(k)) m.casings[k.substr(0, k.length - 14)] = t2[k]; else m.leaders[k.substr(0, k.length - 7)] = t2[k]; }
-  var t3 = {};
   if (al) { VB_nameMap(al, t3, ["_leader_dot"]); m.layers.push(al); }
   for (k in t3) if (t3.hasOwnProperty(k)) m.dots[k.substr(0, k.length - 11)] = t3[k];
-  var t4 = {};
   if (bl) { VB_nameMap(bl, t4, ["_label_halo", "_label_box"]); m.layers.push(bl); }
   for (k in t4) if (t4.hasOwnProperty(k)) m.backing[k.replace(/_label_(halo|box)$/, "")] = t4[k];
+  // fallback when text frames carry no usable name: leader end -> nearest loose text frame
+  for (k in m.leaders) {
+    if (!m.leaders.hasOwnProperty(k) || m.texts[k] || !loose.length) continue;
+    var lp = m.leaders[k].pathPoints; if (!lp.length) continue;
+    var e = VB_page(doc, lp[lp.length - 1].anchor), best = null, bd = 1e9;
+    for (j = 0; j < loose.length; j++) {
+      var b2 = VB_pageBounds(doc, loose[j]), dx = Math.max(b2[0] - e[0], 0, e[0] - b2[2]), dy = Math.max(b2[1] - e[1], 0, e[1] - b2[3]), d = Math.sqrt(dx * dx + dy * dy);
+      if (d < bd) { bd = d; best = loose[j]; }
+    }
+    if (best && bd < 14) { m.texts[k] = best; m.unnamed++; try { best.name = k + "_label"; } catch (e2) {} }
+  }
   return m;
 }
+// Group halo/box + text of every label that is not yet grouped into <id>_callout (on the text's layer). -> number grouped
+function VB_finalizeLabels(doc, m) {
+  var n = 0, id, undo = [], i;
+  for (id in m.texts) {
+    if (!m.texts.hasOwnProperty(id) || m.groups[id]) continue;
+    var tx = m.texts[id], hal = m.backing[id];
+    if (!hal) continue;
+    if (!n) for (i = 0; i < m.layers.length; i++) VB_unlockChain(m.layers[i], undo);
+    try {
+      var lay = tx.layer, g = lay.groupItems.add();
+      g.name = id + "_callout";
+      hal.move(g, ElementPlacement.PLACEATEND);
+      tx.move(g, ElementPlacement.PLACEATEND);
+      m.groups[id] = g; n++;
+    } catch (e) {}
+  }
+  for (i = 0; i < undo.length; i++) { try { undo[i].locked = true; } catch (e) {} }
+  return n;
+}
 function VB_rerouteLeaders(doc, a) {
-  var m = VB_callouts(doc), out = { callouts: 0, rerouted: 0, hidden_leaders: 0, synced_backing: 0, unchanged: 0, ids: [] };
+  var m = VB_callouts(doc), out = { callouts: 0, rerouted: 0, hidden_leaders: 0, synced_backing: 0, unchanged: 0, ids: [], grouped: 0 };
+  if (a.group) { out.grouped = VB_finalizeLabels(doc, m); }
   var st = a.style || {}, styleName = st.style || "elbow", shelf = st.shelf === undefined ? 7 : st.shelf, gap = st.gap === undefined ? 2 : st.gap;
   var only = null, i, id;
   if (a.ids && a.ids.length) { only = {}; for (i = 0; i < a.ids.length; i++) only[a.ids[i]] = true; }
@@ -184,7 +230,7 @@ function VB_rerouteLeaders(doc, a) {
       if (a.changed_only && VB_lc[id] === undefined) { VB_lc[id] = sig; if (!(hal && (Math.abs(oc[0] - tcx) > 0.3 || Math.abs(oc[1] - tcy) > 0.3))) continue; }
     }
     // the halo / box copy follows its text (it is a separate item on Label Backing)
-    if (hal && a.sync_backing !== false) {
+    if (hal && !m.groups[id] && a.sync_backing !== false) {
       var hb2 = VB_pageBounds(doc, hal), dx = tcx - (hb2[0] + hb2[2]) / 2, dy = tcy - (hb2[1] + hb2[3]) / 2;
       if (Math.abs(dx) > 0.25 || Math.abs(dy) > 0.25) { try { hal.translate(dx, -dy); out.synced_backing++; } catch (e) {} }
     }
@@ -574,6 +620,17 @@ function VB_run(json) {
         var rr = VB_rerouteLeaders(rdoc, a);
         for (var rk in rr) if (rr.hasOwnProperty(rk)) out[rk] = rr[rk];
         break;
+      }
+      case "finalize_labels": {
+        // group each label's halo/box and text as <id>_callout so one drag moves both (run after placing an SVG from render_world)
+        if (app.documents.length === 0) throw new Error("no open document");
+        var fdoc = app.activeDocument;
+        if (!VB_find(fdoc, "Leaders") && !VB_find(fdoc, "Label Backing")) { out.skipped = "not a generated map"; break; }
+        var fm = VB_callouts(fdoc);
+        out.grouped = VB_finalizeLabels(fdoc, fm);
+        var fc = 0, fk; for (fk in fm.groups) if (fm.groups.hasOwnProperty(fk)) fc++;
+        out.callouts = fc; out.texts = 0; for (fk in fm.texts) if (fm.texts.hasOwnProperty(fk)) out.texts++;
+        out.unnamed_fallback = fm.unnamed; break;
       }
       case "read_label_positions": {
         if (app.documents.length === 0) throw new Error("no open document");

@@ -39,7 +39,7 @@ DEFAULT = {
     },
     "collision": "hide",            # a label that finds no free spot: hide (hidden sublayer) | number (marker + legend) | keep (overlap)
     "score": True,                  # place by how little of the map the text covers
-    "weights": {"building": 1.0, "plaza": 0.45, "road": 0.6, "water": 0.35, "junction": 0.35},
+    "weights": {"building": 1.0, "plaza": 0.45, "road": 1.0, "water": 4.0, "junction": 0.5},
     "area_move": 0.30,              # an area label that still covers this much (weighted) inside its shape is tried outside with a leader
     "legend": True,
     "legend_title": "Key",

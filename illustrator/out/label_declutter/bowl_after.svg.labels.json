@@ -8,8 +8,8 @@
  "margin_pt": 36.0,
  "labels": {
   "dis_farm": {
-   "cx": 734.24,
-   "cy": 527.37,
+   "cx": 537.7,
+   "cy": 616.59,
    "w": 64.88,
    "h": 10.45,
    "layer": "Labels - Districts",
@@ -53,8 +53,8 @@
    "pinned": false
   },
   "sqr_court": {
-   "cx": 473.04,
-   "cy": 347.58,
+   "cx": 470.57,
+   "cy": 345.1,
    "w": 58.92,
    "h": 8.14,
    "layer": "Labels - Districts",
@@ -146,8 +146,8 @@
    "pinned": false
   },
   "bld_inn": {
-   "cx": 603.88,
-   "cy": 396.93,
+   "cx": 569.23,
+   "cy": 431.58,
    "w": 16.61,
    "h": 7.15,
    "layer": "Labels - Buildings",
@@ -162,8 +162,8 @@
    "pinned": false
   },
   "bld_smithy": {
-   "cx": 595.16,
-   "cy": 455.03,
+   "cx": 488.95,
+   "cy": 518.44,
    "w": 24.8,
    "h": 7.15,
    "layer": "Labels - Buildings",
@@ -194,8 +194,8 @@
    "pinned": false
   },
   "bld_wardens_barracks": {
-   "cx": 601.76,
-   "cy": 380.3,
+   "cx": 487.19,
+   "cy": 335.07,
    "w": 64.65,
    "h": 7.15,
    "layer": "Labels - Buildings",
@@ -210,8 +210,8 @@
    "pinned": false
   },
   "bld_treasury": {
-   "cx": 637.19,
-   "cy": 326.75,
+   "cx": 679.26,
+   "cy": 284.67,
    "w": 51.69,
    "h": 7.15,
    "layer": "Labels - Buildings",
@@ -226,7 +226,7 @@
    "pinned": false
   },
   "bld_stables": {
-   "cx": 622.9,
+   "cx": 710.4,
    "cy": 353.66,
    "w": 28.35,
    "h": 7.15,
@@ -274,8 +274,8 @@
    "pinned": false
   },
   "bld_records_house": {
-   "cx": 588.31,
-   "cy": 433.36,
+   "cx": 512.63,
+   "cy": 421.81,
    "w": 51.69,
    "h": 7.15,
    "layer": "Labels - Buildings",
@@ -290,8 +290,8 @@
    "pinned": false
   },
   "bld_warden_hall": {
-   "cx": 473.78,
-   "cy": 337.87,
+   "cx": 707.87,
+   "cy": 388.84,
    "w": 48.0,
    "h": 7.15,
    "layer": "Labels - Buildings",
@@ -306,8 +306,8 @@
    "pinned": false
   },
   "bld_lockup": {
-   "cx": 595.66,
-   "cy": 423.95,
+   "cx": 490.56,
+   "cy": 404.01,
    "w": 27.25,
    "h": 7.15,
    "layer": "Labels - Buildings",
@@ -346,92 +346,61 @@
   "numbered": 0,
   "with_leader": 19,
   "pinned": 0,
-  "text_over_features_pct": 17.0,
+  "text_over_features_pct": 4.1,
   "over_features_by_kind_pct": {
-   "building": 0.0,
-   "road": 5.0,
-   "water": 12.0
+   "building": 1.7,
+   "road": 2.3
   },
-  "labels_over_25pct": 8,
+  "labels_over_25pct": 3,
   "label_label_overlaps": 0,
   "labels_over_contour_labels": 0,
   "leaders_crossing_other_labels": 0,
   "worst": [
    {
-    "id": "bld_lockup",
-    "text": "Lockup *",
+    "id": "bld_inn",
+    "text": "Inn *",
     "tier": "civic",
-    "over_pct": 99.2,
+    "over_pct": 52.1,
     "by_kind": {
-     "road": 0.14,
-     "water": 0.85
-    }
-   },
-   {
-    "id": "bld_smithy",
-    "text": "Smithy *",
-    "tier": "civic",
-    "over_pct": 93.0,
-    "by_kind": {
-     "water": 0.93
-    }
-   },
-   {
-    "id": "bld_stables",
-    "text": "Stables *",
-    "tier": "civic",
-    "over_pct": 90.9,
-    "by_kind": {
-     "water": 0.91
+     "road": 0.52
     }
    },
    {
     "id": "bld_records_house",
     "text": "Records House *",
     "tier": "civic",
-    "over_pct": 62.8,
+    "over_pct": 50.9,
     "by_kind": {
-     "building": 0.01,
-     "road": 0.17,
-     "water": 0.45
+     "building": 0.33,
+     "road": 0.18
     }
    },
    {
-    "id": "bld_wardens_barracks",
-    "text": "Wardens' Barracks *",
+    "id": "bld_lockup",
+    "text": "Lockup *",
     "tier": "civic",
-    "over_pct": 59.6,
+    "over_pct": 32.8,
     "by_kind": {
-     "road": 0.22,
-     "water": 0.38,
-     "junction": 1.0
+     "building": 0.17,
+     "road": 0.16
     }
    },
    {
-    "id": "bld_inn",
-    "text": "Inn *",
+    "id": "bld_warden_hall",
+    "text": "Warden's Hall *",
     "tier": "civic",
-    "over_pct": 44.9,
+    "over_pct": 13.5,
     "by_kind": {
-     "water": 0.45
+     "road": 0.14
     }
    },
    {
-    "id": "bld_treasury",
-    "text": "Town Treasury *",
+    "id": "bld_smithy",
+    "text": "Smithy *",
     "tier": "civic",
-    "over_pct": 40.8,
+    "over_pct": 0.3,
     "by_kind": {
-     "water": 0.41
-    }
-   },
-   {
-    "id": "dis_farm",
-    "text": "FARMLAND",
-    "tier": "districts",
-    "over_pct": 36.4,
-    "by_kind": {
-     "road": 0.36
+     "road": 0.0
     }
    }
   ],

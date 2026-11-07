@@ -8,7 +8,7 @@
  "margin_pt": 36.0,
  "labels": {
   "dis_authority": {
-   "cx": 278.87,
+   "cx": 360.16,
    "cy": 387.32,
    "w": 158.08,
    "h": 15.62,
@@ -99,21 +99,21 @@
    "pinned": false
   },
   "str_pilgrim_road_bridge": {
-   "cx": 588.77,
-   "cy": 476.16,
+   "cx": 547.1,
+   "cy": 457.3,
    "w": 73.32,
    "h": 10.45,
    "layer": "Labels - Streets",
    "tier": "civic",
-   "status": "placed",
+   "status": "hidden",
    "text": "Pilgrim Bridge *",
    "anchor": null,
    "offset": false,
    "pinned": false
   },
   "bld_meeting_hall": {
-   "cx": 496.06,
-   "cy": 739.47,
+   "cx": 325.6,
+   "cy": 688.13,
    "w": 73.46,
    "h": 12.21,
    "layer": "Labels - Buildings",
@@ -129,7 +129,7 @@
   },
   "bld_customs_house": {
    "cx": 231.01,
-   "cy": 431.04,
+   "cy": 377.81,
    "w": 85.81,
    "h": 12.21,
    "layer": "Labels - Buildings",
@@ -160,8 +160,8 @@
    "pinned": false
   },
   "bld_treasury": {
-   "cx": 522.87,
-   "cy": 276.05,
+   "cx": 475.85,
+   "cy": 229.03,
    "w": 87.91,
    "h": 12.21,
    "layer": "Labels - Buildings",
@@ -176,8 +176,8 @@
    "pinned": false
   },
   "bld_stables": {
-   "cx": 556.38,
-   "cy": 200.53,
+   "cx": 559.81,
+   "cy": 164.69,
    "w": 48.05,
    "h": 12.21,
    "layer": "Labels - Buildings",
@@ -192,7 +192,7 @@
    "pinned": false
   },
   "bld_magistrate_court": {
-   "cx": 479.76,
+   "cx": 406.26,
    "cy": 556.65,
    "w": 107.73,
    "h": 12.21,
@@ -390,13 +390,13 @@
    "pinned": false
   },
   "str_019": {
-   "cx": 347.67,
-   "cy": 686.7,
+   "cx": 266.46,
+   "cy": 715.49,
    "w": 58.15,
    "h": 9.9,
    "layer": "Labels - Streets",
    "tier": "streets",
-   "status": "placed",
+   "status": "hidden",
    "text": "Potters Row *",
    "anchor": null,
    "offset": false,
@@ -1444,51 +1444,24 @@
   }
  },
  "qa": {
-  "labels_shown": 33,
-  "labels_hidden": 76,
+  "labels_shown": 31,
+  "labels_hidden": 78,
   "hidden_by_scale": 0,
-  "hidden_by_collision": 76,
+  "hidden_by_collision": 78,
   "numbered": 0,
   "with_leader": 6,
   "pinned": 0,
-  "text_over_features_pct": 19.7,
+  "text_over_features_pct": 15.5,
   "over_features_by_kind_pct": {
-   "building": 2.4,
-   "road": 7.9,
-   "water": 9.4
+   "building": 2.6,
+   "plaza": 3.6,
+   "road": 9.4
   },
-  "labels_over_25pct": 10,
+  "labels_over_25pct": 8,
   "label_label_overlaps": 0,
   "labels_over_contour_labels": 0,
   "leaders_crossing_other_labels": 0,
   "worst": [
-   {
-    "id": "bld_treasury",
-    "text": "Town Treasury *",
-    "tier": "civic",
-    "over_pct": 73.8,
-    "by_kind": {
-     "water": 0.74
-    }
-   },
-   {
-    "id": "bld_meeting_hall",
-    "text": "Meeting Hall *",
-    "tier": "civic",
-    "over_pct": 72.2,
-    "by_kind": {
-     "water": 0.72
-    }
-   },
-   {
-    "id": "bld_magistrate_court",
-    "text": "Magistrate's Court *",
-    "tier": "civic",
-    "over_pct": 59.2,
-    "by_kind": {
-     "water": 0.59
-    }
-   },
    {
     "id": "str_016",
     "text": "Dyers Walk *",
@@ -1499,21 +1472,40 @@
     }
    },
    {
-    "id": "bld_customs_house",
-    "text": "Customs House *",
-    "tier": "civic",
-    "over_pct": 43.0,
-    "by_kind": {
-     "road": 0.43
-    }
-   },
-   {
     "id": "bld_wardens_barracks",
     "text": "Wardens' Barracks *",
     "tier": "civic",
     "over_pct": 42.7,
     "by_kind": {
      "road": 0.43
+    }
+   },
+   {
+    "id": "bld_customs_house",
+    "text": "Customs House *",
+    "tier": "civic",
+    "over_pct": 42.4,
+    "by_kind": {
+     "road": 0.42
+    }
+   },
+   {
+    "id": "dis_authority",
+    "text": "AUTHORITY WARD",
+    "tier": "districts",
+    "over_pct": 41.3,
+    "by_kind": {
+     "building": 0.05,
+     "plaza": 0.36
+    }
+   },
+   {
+    "id": "bld_magistrate_court",
+    "text": "Magistrate's Court *",
+    "tier": "civic",
+    "over_pct": 40.2,
+    "by_kind": {
+     "road": 0.4
     }
    },
    {
@@ -1527,17 +1519,39 @@
     }
    },
    {
-    "id": "str_pilgrim_road_bridge",
-    "text": "Pilgrim Bridge *",
+    "id": "bld_treasury",
+    "text": "Town Treasury *",
     "tier": "civic",
-    "over_pct": 32.6,
+    "over_pct": 31.6,
     "by_kind": {
-     "water": 0.33
+     "road": 0.32
+    }
+   },
+   {
+    "id": "str_008",
+    "text": "Hollow Way *",
+    "tier": "streets",
+    "over_pct": 28.9,
+    "by_kind": {
+     "building": 0.15,
+     "road": 0.14
     }
    }
   ],
   "overlapping_pairs": [],
   "hidden": [
+   {
+    "id": "str_pilgrim_road_bridge",
+    "text": "Pilgrim Bridge *",
+    "tier": "civic",
+    "why": "collision"
+   },
+   {
+    "id": "str_019",
+    "text": "Potters Row *",
+    "tier": "streets",
+    "why": "collision"
+   },
    {
     "id": "str_021",
     "text": "Cartwright Lane 2 *",
@@ -1763,18 +1777,6 @@
    {
     "id": "bld_house_038",
     "text": "House 38 *",
-    "tier": "houses",
-    "why": "collision"
-   },
-   {
-    "id": "bld_house_030",
-    "text": "House 30 *",
-    "tier": "houses",
-    "why": "collision"
-   },
-   {
-    "id": "bld_house_012",
-    "text": "House 12 *",
     "tier": "houses",
     "why": "collision"
    }
