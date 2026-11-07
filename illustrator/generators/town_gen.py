@@ -51,9 +51,11 @@ DEFAULTS = {
     "output": {"streets": True, "plazas": True, "blocks": False, "buildings": True, "fields": True, "districts": True},
     "limits": {"max_street_grade": 0.09, "max_main_grade": 0.07, "max_build_slope": 0.17, "max_build_relief_ft": 5.0,
                "max_field_slope": 0.13, "hard_slope": 0.30, "water_margin_ft": 14.0, "bank_margin_ft": 8.0,
-               "below_datum_is_water": True, "dry_basin_polys": [], "flood_ft": 60.0, "min_street_width_ft": 10.0},
+               "below_datum_is_water": True, "dry_basin_polys": [], "flood_ft": 60.0, "min_street_width_ft": 10.0,
+               "bank_fill_ft": 45.0, "max_cut_fill_ft": 3.0},
     "entry": {"point": None, "via": [], "name": "Pilgrim Road", "id": "pilgrim_road", "width_ft": 30.0,
-              "bridge_width_ft": 26.0, "bridge_cost_per_ft": 6.0},
+              "bridge_width_ft": 26.0, "bridge_cost_per_ft": 6.0,
+              "grade_weight": 0.8, "grade_exp": 2.0},
     "ring_spec": {
         "centre": [1200, 750], "aspect": [1.0, 1.0], "noise": 0.12, "noise_period_ft": 320, "feather_ft": 90,
         "rings": [
@@ -67,12 +69,14 @@ DEFAULTS = {
     "streets": {"step_ft": 10.0, "min_length_ft": 70.0, "snap_ft": 70.0, "seed_jitter": 0.35, "noise_angle_deg": 35, "grid_weight": 0.9,
                 "contour_weight": 3.0, "slope_lo": 0.03, "slope_hi": 0.10, "road_weight": 2.0, "road_decay_ft": 150,
                 "river_weight": 2.0, "river_decay_ft": 80, "ring_weight": 0.7, "simplify_ft": None, "chaikin": 1,
-                "cross_dsep_factor": 1.0},
+                "cross_dsep_factor": 1.0,
+                "trace_grade_margin": 1.0, "stub_min_ft": 0.0, "loop_max_area_ft2": 0.0, "loop_compact": 0.3, "split_steep_factor": 0.0, "smooth_sigma_ft": 0.0},
     "plazas": {"enabled": True, "min_area_ft2": 150000, "per_area_ft2": 450000, "max": 4, "radius_ft": [38, 62],
                "min_sep_ft": 260, "anchors": []},
     "lots": {"spread": 0.18, "angle_jitter_deg": 8, "min_frontage_ft": 14, "front_setback_ft": [2, 6],
              "house_fill_w": [0.62, 0.88], "house_fill_d": [0.5, 0.8], "min_house_ft": [16, 14],
-             "field_bend_ft": 18, "field_hedge_ft": 2.0, "farmstead_prob": 0.4, "floors": [1, 1, 1, 2]},
+             "field_bend_ft": 18, "field_hedge_ft": 2.0, "farmstead_prob": 0.4, "floors": [1, 1, 1, 2],
+             "max_house_ft": [90, 90], "backland_ft": 0.0, "backland_min_area_ft2": 400, "shed_detail": 3, "shed_min_area_ft2": 1500, "shed_prob": 0.4},
     "named": {},
 }
 
@@ -279,9 +283,10 @@ class TownGen:
         self.dwater = ndi.distance_transform_edt(~wet) * c
         # deck/bank height: heights with wet cells replaced by the nearest dry height
         dr = ndi.distance_transform_edt(~wet_river) * c
-        dil = dr < L.get("bank_fill_ft", 45.0)        # the carved river trench is bridged/filled for road grades
+        dil = dr < L["bank_fill_ft"]        # the carved river trench is bridged/filled for road grades
         idx = ndi.distance_transform_edt(dil, return_distances=False, return_indices=True)
         self.hroad = self.hs[idx[0], idx[1]]
+        self.hbed = self.h[idx[0], idx[1]]            # raw terrain with the river trench bridged: base for the graded road bed
         # ring radius with organic noise
         rs = self.P["ring_spec"]
         cx, cy = rs["centre"]
@@ -327,6 +332,7 @@ class TownGen:
         if not allow_bridge:
             blocked = blocked | self.wet_river
         outside = ~self.area_mask
+        gw, gp = float(self.P["entry"].get("grade_weight", 0.8)), float(self.P["entry"].get("grade_exp", 2.0))
         moves = [(di, dj) for di in range(-4, 5) for dj in range(-4, 5) if (di or dj) and math.gcd(abs(di), abs(dj)) == 1]
         INF = float("inf")
         g = np.full((ny, nx), INF)
@@ -349,7 +355,7 @@ class TownGen:
                 if gr > max_grade and not wet_step:
                     continue
                 sm = 0.5 * (slope[a, b] + slope[i, j])
-                m = 1.0 + 25.0 * sm * sm + 0.8 * (gr / max_grade) ** 2
+                m = 1.0 + 25.0 * sm * sm + gw * (gr / max_grade) ** gp
                 if wet_step:
                     m += bridge_cost
                 if outside[a, b]:
@@ -576,7 +582,7 @@ class TownGen:
             for it in range(400):
                 x, y = pts[-1]
                 ds, rp = dsep_at(x, y, fam)
-                gmax = L["max_street_grade"]
+                gmax = L["max_street_grade"] * S.get("trace_grade_margin", 1.0)
                 d = self.heading(x, y, fam)
                 if prev is None:
                     d = (d[0] * sign, d[1] * sign)
@@ -668,7 +674,7 @@ class TownGen:
                     else:
                         pts.append((q.x, q.y))
             pts = self.trim_steep_ends(list(LineString(pts).segmentize(8.0).coords))
-            g["line"] = LineString(pts).simplify(0.6)
+            g["line"] = self.smooth_line(LineString(pts).simplify(0.6), S.get("smooth_sigma_ft", 0.0))
         if not self.water.polygon.is_empty:           # streets never enter water (plus half their width and a margin)
             wb = self.water.polygon
             out = []
@@ -679,6 +685,21 @@ class TownGen:
             geoms = out
         geoms = [g for g in geoms if g["line"].length >= S["min_length_ft"] * 0.6]
         return geoms
+
+    @staticmethod
+    def smooth_line(ln, sigma_ft, step=5.0):
+        """Gaussian-smooth a street centreline (ends pinned) to remove the zig-zag the heading search leaves on rough ground."""
+        if not sigma_ft or ln.length < 4 * step:
+            return ln
+        n = int(ln.length // step) + 1
+        ss = np.linspace(0.0, ln.length, n + 1)
+        pts = np.array([ln.interpolate(v).coords[0] for v in ss])
+        k = max(sigma_ft / (ln.length / n), 0.5)
+        pad = int(k * 3) + 2
+        pp = np.pad(pts, ((pad, pad), (0, 0)), mode="reflect", reflect_type="odd")
+        sm = np.stack([ndi.gaussian_filter1d(pp[:, c], k) for c in (0, 1)], 1)[pad:-pad]
+        sm[0], sm[-1] = pts[0], pts[-1]
+        return LineString(sm).simplify(0.3)
 
     def trim_steep_ends(self, pts, win=40.0):
         """Drop end vertices while the last `win` feet climb steeper than 1.25x the street grade cap."""
@@ -693,7 +714,7 @@ class TownGen:
                     k += 1
                 if acc < win * 0.6:
                     break
-                dh = abs(float(self.bil(self.hs, *seq[0])) - float(self.bil(self.hs, *seq[k])))
+                dh = abs(float(self.bil(self.hbed, *seq[0])) - float(self.bil(self.hbed, *seq[k])))
                 if dh / acc <= G:
                     break
                 pts.pop(0 if end == 0 else -1)
@@ -726,6 +747,95 @@ class TownGen:
         keep = [g for i, g in enumerate(geoms) if find(i) in rootset]
         self.log(f"streets kept {len(keep)}/{n} (connected to the main road)")
         return keep
+
+    def split_steep(self, geoms, _depth=0):
+        """Cut out interior stretches whose raw-terrain grade over 40 ft exceeds streets.split_steep_factor x cap (0 = off).
+        What is left is stub-cleaned and re-pruned by the caller; a street never keeps a stretch the cut/fill limit cannot fix."""
+        f = float(self.P["streets"].get("split_steep_factor", 0.0))
+        if not f:
+            return geoms
+        lim = self.L["max_street_grade"] * f
+        out, n = [], 0
+        for g in geoms:
+            ln = g["line"]
+            ss = np.arange(0.0, ln.length + 1e-6, 5.0)
+            if len(ss) < 10:
+                out.append(g)
+                continue
+            el = np.array([float(self.bil(self.hbed, *ln.interpolate(v).coords[0])) for v in ss])
+            bad = np.zeros(len(ss), bool)
+            for i in range(len(ss) - 8):
+                if abs(el[i + 8] - el[i]) / 40.0 > lim:
+                    bad[i:i + 9] = True
+            if not bad.any():
+                out.append(g)
+                continue
+            n += 1
+            i = 0
+            while i < len(ss):
+                if bad[i]:
+                    i += 1
+                    continue
+                j = i
+                while j < len(ss) and not bad[j]:
+                    j += 1
+                a, b = ss[i], ss[j - 1]
+                if b - a >= max(self.P["streets"]["min_length_ft"] * 0.6, 40.0):
+                    out.append({**g, "line": LineString([ln.interpolate(v).coords[0] for v in np.arange(a, b, 5.0)] + [ln.interpolate(b).coords[0]]).simplify(0.15)})
+                i = j
+        self.log(f"split {n} streets at steep stretches (raw grade over {lim:.3f})")
+        return self.split_steep(out, _depth + 1) if n and _depth < 3 else out
+
+    def clean_network(self, geoms, plaza_polys):
+        """Remove stub streets (short, one free end) and thin loops/teardrops (small or very pointed faces) so the
+        network reads as a grown street plan. streets.stub_min_ft / loop_max_area_ft2 / loop_compact; 0 disables."""
+        from shapely.ops import polygonize
+        S = self.P["streets"]
+        smin, lmax = float(S.get("stub_min_ft", 0.0)), float(S.get("loop_max_area_ft2", 0.0))
+        if not smin and not lmax:
+            return geoms
+        fixed = list(self.main_lines_road) + [LineString(b) for k, b in self.main_parts if k == "bridge"]
+        fixed += [LineString(p.exterior.coords) for p in plaza_polys]
+        inner = self.area.buffer(-10)
+        geoms = list(geoms)
+        removed = 0
+        for _ in range(6):
+            changed = False
+            if smin:
+                for i, g in enumerate(geoms):
+                    ln = g["line"]
+                    if ln.length >= smin:
+                        continue
+                    others = unary_union([o["line"] for j, o in enumerate(geoms) if j != i] + fixed)
+                    ends = [Point(ln.coords[0]), Point(ln.coords[-1])]
+                    dang = [others.distance(e) > 6.0 and inner.contains(e) for e in ends]
+                    if any(dang):
+                        geoms.pop(i)
+                        changed = True
+                        removed += 1
+                        break
+            if changed:
+                continue
+            if lmax:
+                faces = list(polygonize(unary_union([g["line"] for g in geoms] + fixed)))
+                for f in faces:
+                    if f.area > lmax * 4 or any(p.intersects(f.buffer(-1)) for p in plaza_polys):
+                        continue
+                    compact = 4 * math.pi * f.area / max(f.length ** 2, 1.0)
+                    if not (f.area < lmax or compact < S.get("loop_compact", 0.3)):
+                        continue
+                    cand = [(k, g) for k, g in enumerate(geoms) if g["line"].buffer(2.0).intersection(f.exterior).length > 12.0]
+                    if not cand:
+                        continue
+                    k, _ = min(cand, key=lambda kg: kg[1]["line"].length)
+                    geoms.pop(k)
+                    changed = True
+                    removed += 1
+                    break
+            if not changed:
+                break
+        self.log(f"network cleanup: removed {removed} stub/loop streets")
+        return geoms
 
     def cut_main(self, poly):
         """The main road ends at the plaza edge instead of running through it."""
@@ -977,6 +1087,7 @@ class TownGen:
         for pl in plazas:
             if pl["id"] in getattr(self, "cut_main_ids", []):
                 self.cut_main(pl["poly"])
+        cut = self.clean_network(self.split_steep(cut), [p["poly"] for p in plazas])
         geoms = self.prune_connected(cut, [p["poly"] for p in plazas])
         # drop streets that mostly run through water margin / outside the area
         self.streets = geoms
@@ -1178,12 +1289,14 @@ class TownGen:
             if self.detail == 1 and lot["kind"] != "civic":
                 continue
             rp = lot["rp"]
-            if lot["front"] < LT["min_frontage_ft"]:
+            if lot["front"] < LT["min_frontage_ft"] and not (
+                    LT["backland_ft"] and lot["area"] >= LT["backland_min_area_ft2"] and lot["poly"].distance(su) <= LT["backland_ft"]):
                 continue
             if self.rand.random() > rp["build_prob"]:
                 continue
             fp = self.footprint(lot["poly"], su, LT["house_fill_w"], LT["house_fill_d"],
-                                self.rand.uniform(*LT["front_setback_ft"]), tuple(LT["min_house_ft"]))
+                                self.rand.uniform(*LT["front_setback_ft"]), tuple(LT["min_house_ft"]),
+                                maxsize=tuple(LT["max_house_ft"]))
             if fp is None:
                 continue
             n += 1
@@ -1192,7 +1305,7 @@ class TownGen:
                 n -= 1
                 continue
             lot["used"] = True
-            if self.detail >= 3 and lot["area"] > 1500 and self.rand.random() < 0.4:
+            if self.detail >= LT["shed_detail"] and lot["area"] > LT["shed_min_area_ft2"] and self.rand.random() < LT["shed_prob"]:
                 rest = lot["poly"].difference(fp.buffer(5))
                 ps = polys_of(rest, 200)
                 if ps:
@@ -1310,18 +1423,43 @@ class TownGen:
             return [r1(ha + (hb - ha) * i / max(n - 1, 1)) for i in range(n)]
         return [r1(float(self.bil(self.hroad, x, y))) for x, y in pts]    # graded road bed = smoothed terrain
 
-    @staticmethod
-    def grade_of(pts, el, win=40.0):
+    def bed_profile(self, pts):
+        """Graded road bed: the terrain profile along the street (river trench bridged) smoothed over about 45 ft, with
+        cut and fill limited to limits.max_cut_fill_ft. Returns (bed elevations at the vertices, terrain elevations at the
+        vertices, max |cut or fill| in ft)."""
         d = [0.0]
         for a, b in zip(pts[:-1], pts[1:]):
             d.append(d[-1] + math.hypot(b[0] - a[0], b[1] - a[1]))
-        gm, j = 0.0, 0
-        for i in range(len(pts)):
-            while j < len(pts) - 1 and d[j] - d[i] < win:
-                j += 1
-            if d[j] - d[i] >= win * 0.7:
-                gm = max(gm, abs(el[j] - el[i]) / (d[j] - d[i]))
-        return round(gm, 3)
+        terr_v = [float(self.bil(self.hbed, x, y)) for x, y in pts]
+        if d[-1] < 10:
+            return terr_v, terr_v, 0.0
+        ln = LineString(pts)
+        ss = np.linspace(0.0, d[-1], max(int(d[-1] // 5) + 1, 3))
+        terr = np.array([float(self.bil(self.hbed, *ln.interpolate(v).coords[0])) for v in ss])
+        cut = float(self.L.get("max_cut_fill_ft", 3.0))
+        b = terr.copy()
+        for _ in range(30):
+            b = ndi.uniform_filter1d(b, 9, mode="nearest")
+            b = np.clip(b, terr - cut, terr + cut)
+        bed_v = np.interp(d, ss, b)
+        return [float(v) for v in bed_v], terr_v, float(np.abs(b - terr).max())
+
+    @staticmethod
+    def grade_of(pts, el, win=40.0):
+        """Max grade over any `win`-ft stretch, profile resampled every 5 ft (vertex spacing would hide steep bits)."""
+        d = [0.0]
+        for a, b in zip(pts[:-1], pts[1:]):
+            d.append(d[-1] + math.hypot(b[0] - a[0], b[1] - a[1]))
+        if d[-1] < win * 0.7:
+            return 0.0
+        ss = np.arange(0.0, d[-1] + 1e-6, 5.0)
+        e = np.interp(ss, d, el)
+        k = max(int(round(win / 5.0)), 1)
+        if len(e) <= k:
+            k = len(e) - 1
+            if k < 1 or k * 5.0 < win * 0.7:
+                return 0.0
+        return round(float(np.abs(e[k:] - e[:-k]).max() / (k * 5.0)), 3)
 
     def links(self):
         return {"foundry_scene": None, "model3d": None, "ai_layer": None}
@@ -1335,6 +1473,9 @@ class TownGen:
             pts = [[r1(x), r1(y)] for x, y in pts]
             br = kind == "bridge"
             el = self.elev_line(pts, br)
+            if not br:
+                bed, terr_v, cutfill = self.bed_profile(pts)
+                el = [r1(v) for v in bed]
             idn = f"str_{E['id']}_{k + 1}" if not br else f"str_{E['id']}_bridge" if sum(1 for q, _ in self.main_parts if q == "bridge") == 1 else f"str_{E['id']}_bridge_{k + 1}"
             nm = E["name"] + (" (bridge)" if br else "")
             if br:
@@ -1344,6 +1485,9 @@ class TownGen:
                  "notes": "Main road in from the entry." if not br else "The one stone bridge over the river.",
                  "links": self.links(), "elevations_ft": el, "elevation_ft": r1(float(np.mean(el))),
                  "grade_max": 0.0 if br else self.grade_of(pts, el)}
+            if not br:
+                e["grade_raw_max"] = self.grade_of(pts, [r1(v) for v in terr_v])
+                e["cut_fill_ft"] = r1(cutfill)
             if br:
                 e["material"] = "stone"
             ents.append(e)
@@ -1354,7 +1498,8 @@ class TownGen:
             c = ln.interpolate(0.5, normalized=True)
             rp = self.ring_params(self.r_at(c.x, c.y))
             pts = [[r1(x), r1(y)] for x, y in ln.coords]
-            el = self.elev_line(pts)
+            el, terr_v, cutfill = self.bed_profile(pts)
+            el = [r1(v) for v in el]
             counters[rp["kind"]] += 1
             n = len(ents) + 1
             nm = self.street_name(rp["kind"], g["fam"], counters[rp["kind"]] - 1) if ln.length > 120 else f"Alley {n}"
@@ -1363,16 +1508,34 @@ class TownGen:
                          "geometry": {"type": "polyline", "points": pts, "width_ft": r1(g["w"])},
                          "notes": f"{rp['name']}; {'follows the contours' if g['fam'] == 0 else 'runs across the slope'}.",
                          "links": self.links(), "elevations_ft": el, "elevation_ft": r1(float(np.mean(el))),
-                         "grade_max": self.grade_of(pts, el), "ring": rp["id"]})
+                         "grade_max": self.grade_of(pts, el), "grade_raw_max": self.grade_of(pts, [r1(v) for v in terr_v]),
+                         "cut_fill_ft": r1(cutfill), "ring": rp["id"]})
         self.street_ents = ents
         return ents
 
-    def _label_pt(self, pg):
+    def _label_pt(self, pg, toward=None):
+        """Label anchor: representative point clear of the plazas; with `toward` (x, y), the point of the district
+        nearest that spot, so a ring's label sits on its side of the ward instead of on top of the ward label."""
         pz = unary_union([p["poly"].buffer(45) for p in self.plazas]) if self.plazas else Polygon()
         g = pg.difference(pz)
         ps = polys_of(g, 500)
-        q = (max(ps, key=lambda p: p.area) if ps else pg).representative_point()
+        big = max(ps, key=lambda p: p.area) if ps else pg
+        if toward is not None:
+            inner = big.buffer(-18)
+            if not inner.is_empty:
+                q = nearest_points(inner, Point(toward))[0]
+                return [r1(q.x), r1(q.y)]
+        q = big.representative_point()
         return [r1(q.x), r1(q.y)]
+
+    def _ring_label_target(self, i, r):
+        rs = self.P["ring_spec"]
+        if i == 0 or r["kind"] == "farm":
+            return None
+        cx, cy = rs["centre"]
+        ax = rs.get("aspect", [1, 1])[0]
+        mid = 0.5 * (rs["rings"][i - 1]["r_max"] + r["r_max"])
+        return (cx - mid * ax, cy)
 
     def district_ents(self):
         P = self.P
@@ -1409,7 +1572,7 @@ class TownGen:
                             "notes": {"civic": "Wardens, court, tax office and lockup on the low rise.",
                                       "residential": "Commoners' homes and trades around the centre.",
                                       "farm": "Fields and farmsteads feathering out toward the hills."}[r["kind"]],
-                            "links": self.links(), "ring": r["id"], "label_point": self._label_pt(pg),
+                            "links": self.links(), "ring": r["id"], "label_point": self._label_pt(pg, self._ring_label_target(i, r)) if k == 0 else self._label_pt(pg),
                             "elevation_ft": r1(self.height(*pg.representative_point().coords[0]))})
         for p in self.plazas:
             pts = [[r1(x), r1(y)] for x, y in list(p["poly"].simplify(0.8).exterior.coords)[:-1]]
@@ -1491,11 +1654,15 @@ class TownGen:
                 ln = LineString(s_["geometry"]["points"]).buffer(s_["geometry"]["width_ft"] / 2 - 1.0)
                 if ln.intersects(wp) and ln.intersection(wp).area > 3.0:
                     issues.append(f"{s_['id']} runs into water ({ln.intersection(wp).area:.0f} ft2)")
-        cap = self.L["max_street_grade"] * 1.15
+        cap = self.L["max_street_grade"]
         over = [f"{s_['id']} {s_['grade_max']}" for s_ in streets if s_["kind"] != "bridge" and s_["grade_max"] > cap]
         if over:
-            self.warnings.append("street grade over cap (40 ft window): " + ", ".join(over))
+            self.warnings.append("street grade (graded bed, 40 ft window) over cap %.3f: " % cap + ", ".join(over))
+        rawo = [f"{s_['id']} {s_['grade_raw_max']}" for s_ in streets if s_["kind"] != "bridge" and s_.get("grade_raw_max", 0) > cap]
         mx = max([s["grade_max"] for s in streets if s["kind"] != "bridge"] or [0])
+        mxr = max([s.get("grade_raw_max", 0) for s in streets if s["kind"] != "bridge"] or [0])
+        slen = sum(LineString(s["geometry"]["points"]).length for s in streets if s["kind"] != "bridge")
+        olen = sum(LineString(s["geometry"]["points"]).length for s in streets if s["kind"] != "bridge" and s["grade_max"] > cap)
         kinds = {}
         for b in self.buildings:
             kinds[b["e"]["kind"]] = kinds.get(b["e"]["kind"], 0) + 1
@@ -1503,7 +1670,10 @@ class TownGen:
                 "sea_level_ft": self.sea, "warnings": self.warnings, "issues": issues,
                 "counts": {"streets": len(streets), "buildings": len(self.buildings), "fields": len(self.fields),
                            "plazas": len(self.plazas), "blocks": len(self.blocks), "by_kind": kinds},
-                "street_grade_max": mx}
+                "street_grade_max": mx, "street_grade_raw_max": mxr, "street_grade_cap": cap,
+                "streets_over_cap_bed": len(over), "streets_over_cap_raw": len(rawo), "street_length_ft": round(slen),
+                "street_length_over_cap_ft": round(olen),
+                "max_cut_fill_ft": max([s.get("cut_fill_ft", 0) for s in streets] or [0])}
 
 
 def LT_MIN(g):

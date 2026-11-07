@@ -1,0 +1,39 @@
+{
+ "id": "bld_house_105",
+ "name": "House 105",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    1090.8,
+    1017.5
+   ],
+   [
+    1057.8,
+    1012.5
+   ],
+   [
+    1056.3,
+    1022.5
+   ],
+   [
+    1089.3,
+    1027.4
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 638.7,
+ "site_slope": 0.116,
+ "site_relief_ft": 3.6
+}

@@ -1,0 +1,39 @@
+{
+ "id": "bld_house_100",
+ "name": "House 100",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    1285.5,
+    992.8
+   ],
+   [
+    1291.7,
+    1005.3
+   ],
+   [
+    1306.6,
+    997.9
+   ],
+   [
+    1300.3,
+    985.4
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 647.0,
+ "site_slope": 0.091,
+ "site_relief_ft": 1.5
+}

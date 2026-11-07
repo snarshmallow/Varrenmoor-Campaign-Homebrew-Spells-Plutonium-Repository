@@ -1,26 +1,26 @@
 {
- "id": "bld_barn_004",
- "name": "Barn 4",
- "kind": "barn",
+ "id": "bld_house_088",
+ "name": "House 88",
+ "kind": "house",
  "status": "proposed",
  "geometry": {
   "type": "polygon",
   "points": [
    [
-    1314.7,
-    1406.8
+    907.1,
+    939.7
    ],
    [
-    1310.8,
-    1372.0
+    919.6,
+    955.0
    ],
    [
-    1288.2,
-    1374.5
+    933.5,
+    943.5
    ],
    [
-    1292.0,
-    1409.3
+    921.0,
+    928.3
    ]
   ]
  },
@@ -30,10 +30,10 @@
   "model3d": null,
   "ai_layer": null
  },
- "floors": 1,
+ "floors": 2,
  "rooms": [],
  "doors": [],
- "elevation_ft": 620.6,
- "site_slope": 0.089,
- "site_relief_ft": 3.3
+ "elevation_ft": 649.8,
+ "site_slope": 0.053,
+ "site_relief_ft": 1.3
 }

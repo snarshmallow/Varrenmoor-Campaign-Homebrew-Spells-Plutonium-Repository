@@ -1,26 +1,26 @@
 {
- "id": "bld_farm_004",
- "name": "Farmhouse 4",
- "kind": "farmhouse",
+ "id": "bld_house_079",
+ "name": "House 79",
+ "kind": "house",
  "status": "proposed",
  "geometry": {
   "type": "polygon",
   "points": [
    [
-    1282.3,
-    1287.3
+    1404.1,
+    892.5
    ],
    [
-    1276.6,
-    1257.6
+    1411.5,
+    918.3
    ],
    [
-    1255.7,
-    1261.6
+    1423.1,
+    915.0
    ],
    [
-    1261.4,
-    1291.3
+    1415.6,
+    889.2
    ]
   ]
  },
@@ -30,10 +30,10 @@
   "model3d": null,
   "ai_layer": null
  },
- "floors": 1,
+ "floors": 2,
  "rooms": [],
  "doors": [],
- "elevation_ft": 626.7,
- "site_slope": 0.094,
- "site_relief_ft": 3.3
+ "elevation_ft": 654.5,
+ "site_slope": 0.054,
+ "site_relief_ft": 1.1
 }

@@ -1,0 +1,39 @@
+{
+ "id": "bld_house_118",
+ "name": "House 118",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    993.5,
+    1141.0
+   ],
+   [
+    1001.8,
+    1121.9
+   ],
+   [
+    992.3,
+    1117.7
+   ],
+   [
+    984.0,
+    1136.8
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 638.0,
+ "site_slope": 0.065,
+ "site_relief_ft": 0.7
+}

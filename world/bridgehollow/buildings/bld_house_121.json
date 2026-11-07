@@ -1,0 +1,39 @@
+{
+ "id": "bld_house_121",
+ "name": "House 121",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    1001.1,
+    1147.6
+   ],
+   [
+    994.1,
+    1160.1
+   ],
+   [
+    1008.8,
+    1168.3
+   ],
+   [
+    1015.8,
+    1155.8
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 636.5,
+ "site_slope": 0.072,
+ "site_relief_ft": 1.3
+}

@@ -1,0 +1,39 @@
+{
+ "id": "bld_house_084",
+ "name": "House 84",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    971.7,
+    930.3
+   ],
+   [
+    962.6,
+    911.2
+   ],
+   [
+    952.9,
+    915.8
+   ],
+   [
+    962.0,
+    934.9
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 650.1,
+ "site_slope": 0.051,
+ "site_relief_ft": 1.1
+}

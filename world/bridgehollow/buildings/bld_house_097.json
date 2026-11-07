@@ -1,0 +1,39 @@
+{
+ "id": "bld_house_097",
+ "name": "House 97",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    1253.7,
+    992.7
+   ],
+   [
+    1246.8,
+    975.9
+   ],
+   [
+    1235.1,
+    980.7
+   ],
+   [
+    1242.1,
+    997.5
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 644.2,
+ "site_slope": 0.094,
+ "site_relief_ft": 1.4
+}

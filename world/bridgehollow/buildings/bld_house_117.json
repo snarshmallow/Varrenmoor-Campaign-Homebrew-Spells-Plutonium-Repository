@@ -1,0 +1,39 @@
+{
+ "id": "bld_house_117",
+ "name": "House 117",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    979.2,
+    1132.6
+   ],
+   [
+    987.4,
+    1115.6
+   ],
+   [
+    977.4,
+    1110.8
+   ],
+   [
+    969.2,
+    1127.8
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 638.9,
+ "site_slope": 0.065,
+ "site_relief_ft": 0.7
+}

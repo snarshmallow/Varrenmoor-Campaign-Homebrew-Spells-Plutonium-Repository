@@ -1,0 +1,39 @@
+{
+ "id": "bld_house_099",
+ "name": "House 99",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    820.5,
+    1006.3
+   ],
+   [
+    845.8,
+    993.3
+   ],
+   [
+    840.8,
+    983.5
+   ],
+   [
+    815.5,
+    996.5
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 648.8,
+ "site_slope": 0.086,
+ "site_relief_ft": 1.6
+}

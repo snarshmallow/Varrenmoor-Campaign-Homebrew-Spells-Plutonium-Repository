@@ -1,0 +1,39 @@
+{
+ "id": "bld_shed_043",
+ "name": "Shed 43",
+ "kind": "shed",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    1016.4,
+    731.3
+   ],
+   [
+    1022.1,
+    725.7
+   ],
+   [
+    1014.7,
+    718.1
+   ],
+   [
+    1009.0,
+    723.7
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 657.6,
+ "site_slope": 0.078,
+ "site_relief_ft": 0.8
+}

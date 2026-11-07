@@ -1,0 +1,39 @@
+{
+ "id": "bld_house_093",
+ "name": "House 93",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    1406.0,
+    980.3
+   ],
+   [
+    1428.2,
+    973.9
+   ],
+   [
+    1424.7,
+    962.0
+   ],
+   [
+    1402.5,
+    968.4
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 652.7,
+ "site_slope": 0.047,
+ "site_relief_ft": 1.1
+}

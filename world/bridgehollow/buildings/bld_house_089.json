@@ -1,0 +1,39 @@
+{
+ "id": "bld_house_089",
+ "name": "House 89",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    1351.1,
+    957.3
+   ],
+   [
+    1339.9,
+    934.6
+   ],
+   [
+    1325.9,
+    941.5
+   ],
+   [
+    1337.2,
+    964.2
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 650.6,
+ "site_slope": 0.058,
+ "site_relief_ft": 1.1
+}

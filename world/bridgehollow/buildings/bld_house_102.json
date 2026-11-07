@@ -1,0 +1,39 @@
+{
+ "id": "bld_house_102",
+ "name": "House 102",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    1279.7,
+    1010.1
+   ],
+   [
+    1273.2,
+    999.8
+   ],
+   [
+    1256.9,
+    1010.1
+   ],
+   [
+    1263.4,
+    1020.5
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 2,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 644.4,
+ "site_slope": 0.103,
+ "site_relief_ft": 2.1
+}

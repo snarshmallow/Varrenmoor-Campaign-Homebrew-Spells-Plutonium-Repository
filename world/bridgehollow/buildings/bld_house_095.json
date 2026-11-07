@@ -1,0 +1,39 @@
+{
+ "id": "bld_house_095",
+ "name": "House 95",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    1264.6,
+    986.2
+   ],
+   [
+    1289.1,
+    974.3
+   ],
+   [
+    1284.2,
+    964.4
+   ],
+   [
+    1259.8,
+    976.3
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 646.6,
+ "site_slope": 0.083,
+ "site_relief_ft": 1.9
+}

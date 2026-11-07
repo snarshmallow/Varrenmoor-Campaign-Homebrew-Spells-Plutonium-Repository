@@ -1,0 +1,39 @@
+{
+ "id": "bld_house_083",
+ "name": "House 83",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    1330.1,
+    911.2
+   ],
+   [
+    1337.9,
+    929.3
+   ],
+   [
+    1353.5,
+    922.6
+   ],
+   [
+    1345.7,
+    904.5
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 652.1,
+ "site_slope": 0.067,
+ "site_relief_ft": 1.5
+}

@@ -1,0 +1,39 @@
+{
+ "id": "bld_shed_098",
+ "name": "Shed 98",
+ "kind": "shed",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    865.7,
+    980.0
+   ],
+   [
+    866.9,
+    985.9
+   ],
+   [
+    876.9,
+    983.9
+   ],
+   [
+    875.7,
+    977.9
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 647.4,
+ "site_slope": 0.038,
+ "site_relief_ft": 0.3
+}

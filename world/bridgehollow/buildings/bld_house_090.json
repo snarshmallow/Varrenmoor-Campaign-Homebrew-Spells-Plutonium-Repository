@@ -1,0 +1,39 @@
+{
+ "id": "bld_house_090",
+ "name": "House 90",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    810.1,
+    946.4
+   ],
+   [
+    799.9,
+    946.9
+   ],
+   [
+    800.4,
+    957.7
+   ],
+   [
+    810.7,
+    957.1
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 2,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 650.3,
+ "site_slope": 0.139,
+ "site_relief_ft": 1.2
+}

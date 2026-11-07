@@ -1,0 +1,39 @@
+{
+ "id": "bld_house_091",
+ "name": "House 91",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    927.7,
+    958.0
+   ],
+   [
+    939.1,
+    971.8
+   ],
+   [
+    952.7,
+    960.6
+   ],
+   [
+    941.4,
+    946.8
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 648.7,
+ "site_slope": 0.062,
+ "site_relief_ft": 1.5
+}

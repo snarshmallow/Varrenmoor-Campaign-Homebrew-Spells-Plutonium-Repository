@@ -1,0 +1,39 @@
+{
+ "id": "bld_house_096",
+ "name": "House 96",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    1080.4,
+    995.4
+   ],
+   [
+    1088.7,
+    966.2
+   ],
+   [
+    1069.8,
+    960.8
+   ],
+   [
+    1061.5,
+    990.0
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 641.7,
+ "site_slope": 0.113,
+ "site_relief_ft": 3.0
+}

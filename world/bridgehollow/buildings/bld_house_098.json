@@ -1,0 +1,39 @@
+{
+ "id": "bld_house_098",
+ "name": "House 98",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    876.5,
+    990.7
+   ],
+   [
+    861.6,
+    993.3
+   ],
+   [
+    863.4,
+    1003.3
+   ],
+   [
+    878.3,
+    1000.7
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 2,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 647.0,
+ "site_slope": 0.047,
+ "site_relief_ft": 0.5
+}

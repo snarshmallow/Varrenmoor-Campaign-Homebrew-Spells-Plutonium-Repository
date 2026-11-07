@@ -1,0 +1,39 @@
+{
+ "id": "bld_house_081",
+ "name": "House 81",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    805.2,
+    899.4
+   ],
+   [
+    806.9,
+    913.3
+   ],
+   [
+    820.8,
+    911.6
+   ],
+   [
+    819.1,
+    897.7
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 652.2,
+ "site_slope": 0.08,
+ "site_relief_ft": 1.4
+}

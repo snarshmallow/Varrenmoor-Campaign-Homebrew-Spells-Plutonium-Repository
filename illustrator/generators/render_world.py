@@ -304,7 +304,7 @@ def render(model, view_arg, out_path, topts=None, cfg_over=None, lopts=None):
 
     # LINES
     for e in model["water"]:
-        addpoly("Water", e["id"], entity_polygon(e), "water", e.get("status"))
+        addpoly("Water", e["id"], entity_polygon(e), "water", None)     # solid bank line: a dashed outline made the river read as a wide dashed band
     for e in model["districts"]:
         k = e["kind"]
         layer, cls = {"square": ("Roads", "road"), "field": ("Fences", "field"),

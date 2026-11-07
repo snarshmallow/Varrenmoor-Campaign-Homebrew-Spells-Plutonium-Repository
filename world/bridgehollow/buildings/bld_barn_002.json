@@ -1,0 +1,39 @@
+{
+ "id": "bld_barn_002",
+ "name": "Barn 2",
+ "kind": "barn",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    1063.5,
+    1278.4
+   ],
+   [
+    1065.6,
+    1260.2
+   ],
+   [
+    1042.9,
+    1257.7
+   ],
+   [
+    1040.9,
+    1275.8
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 629.8,
+ "site_slope": 0.095,
+ "site_relief_ft": 2.5
+}

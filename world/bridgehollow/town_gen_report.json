@@ -3,25 +3,31 @@
  "detail": 2,
  "scale_ft_per_in": 100,
  "sea_level_ft": 0.0,
- "warnings": [
-  "street grade over cap (40 ft window): str_006 0.128"
- ],
+ "warnings": [],
  "issues": [],
  "counts": {
-  "streets": 31,
-  "buildings": 91,
-  "fields": 6,
-  "plazas": 3,
-  "blocks": 37,
+  "streets": 37,
+  "buildings": 139,
+  "fields": 7,
+  "plazas": 2,
+  "blocks": 42,
   "by_kind": {
    "civic": 6,
    "inn": 1,
    "stable": 1,
    "craft": 2,
-   "house": 75,
-   "farmhouse": 4,
+   "house": 122,
+   "shed": 3,
+   "farmhouse": 2,
    "barn": 2
   }
  },
- "street_grade_max": 0.128
+ "street_grade_max": 0.06,
+ "street_grade_raw_max": 0.081,
+ "street_grade_cap": 0.08,
+ "streets_over_cap_bed": 0,
+ "streets_over_cap_raw": 1,
+ "street_length_ft": 10573,
+ "street_length_over_cap_ft": 0,
+ "max_cut_fill_ft": 3.0
 }
