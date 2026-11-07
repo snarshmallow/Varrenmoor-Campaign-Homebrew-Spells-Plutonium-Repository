@@ -18,3 +18,8 @@ General rule: towns and features should be natural and flowing, not boxy. Less g
 - Authority (warden's hall, court, tax office, lockup) in the middle; commoners in a ring around; farms feathered out beyond.
 - Mountains steep behind (default: north) and on both east and west sides. River and one stone bridge and the Pilgrim Road still need a way in (a pass or valley mouth, default: south or west-south).
 - Still: no church, no Gerald/Dunmore Kell/Tobias Wren.
+
+## Landscape diffusion generation (added 2026-11-06)
+- A lasso-able area (closed path on a `DIFFUSION AREA` layer, or the selected path) in which a diffusion model generates landscape, with a panel GUI exposing adjustable parameters: prompt, negative prompt, seed, steps, guidance, denoise strength, resolution, style preset, and how strongly the result follows the existing terrain (hillshade/depth conditioning).
+- Interpretation (confirm with user): conditioned on the rule-based heightmap + hillshade of the area so the art matches the real contours, output is a painted/textured landscape image placed under the line work and masked to the lasso path (feathered edge option). Optionally also proposes a refined heightmap patch, shown as a preview and accepted or rejected before it changes the terrain.
+- Runs locally on the RTX 3080 (10 GB) via the existing AI environment (`foundry-3d/ai`), jobs queued as JSON like other panel actions, results saved versioned under `illustrator/out/` and logged with their parameters so any result can be reproduced.
