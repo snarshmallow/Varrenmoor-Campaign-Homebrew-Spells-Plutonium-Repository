@@ -314,6 +314,19 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
   <h4>Layers</h4>
   <div class="btns">
     <button data-act="lock_guides">Lock GUIDES</button><button data-act="unlock_guides">Unlock GUIDES</button>
+  <h4>Town area (irregular lasso fitted to the terrain)</h4>
+  <div class="grid">
+    <label>Slope limit <input type="number" data-s="town.aa.slope_limit" min="0.03" step="0.01"></label>
+    <label>River buffer (ft) <input type="number" data-s="town.aa.river_buffer_ft" min="0" step="2"></label>
+    <label>Smoothing (ft) <input type="number" data-s="town.aa.smoothing_ft" min="5" step="5"></label>
+    <label>Min width (ft) <input type="number" data-s="town.aa.min_width_ft" min="20" step="10"></label>
+    <label>Edge wobble (ft) <input type="number" data-s="town.aa.noise_ft" min="0" step="2"></label>
+    <label>Target area (ft2, 0 = all) <input type="number" data-s="town.aa.target_area_ft2" min="0" step="50000"></label>
+    <label>Area seed <input type="number" data-s="town.aa.seed" step="1"></label>
+  </div>
+  <div class="btns"><button data-act="town_area_auto" title="Compute the lasso from slope, water and flood level; draws it on layer TOWN AREA">Auto lasso from terrain</button>
+    <button data-act="town_area_snap" title="Settle the captured/loaded lasso onto the buildable terrain">Smooth/snap my lasso</button></div>
+  <p class="note">The outline is drawn on layers TOWN AREA (editable closed path) and TOWN AREA RINGS (authority/commoner guides). Edit it with the Direct Selection tool, press Capture lasso, then Generate. A lasso you draw yourself is used as drawn.</p>
     <button data-act="show_labels">Show LABELS</button><button data-act="hide_labels">Hide LABELS</button>
   </div>
   <div class="btns">
@@ -380,3 +393,4 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
 <script src="lib/runner.js"></script>
 <script src="main.js"></script>
 </body></html>
+<script src="lib/townarea.js"></script>

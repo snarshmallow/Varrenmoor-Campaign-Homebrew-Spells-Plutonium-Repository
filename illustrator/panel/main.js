@@ -432,6 +432,8 @@
 
   // ------------------------------------------------------------ Foundry tab (all reads/writes run in foundry_push.py; the panel only spawns it)
   var fBusy = false, autoTimer = null, autoMtime = 0, autoPending = 0;
+    town_area_auto: function () { return startJob(VB.jobTownArea(state, d, "auto")); },
+    town_area_snap: function () { return startJob(VB.jobTownArea(state, d, "snap")); },
   function fOut(msg, level) { var e = $("fOut"); e.textContent = msg || ""; e.style.color = level === "bad" ? "var(--bad)" : level === "warn" ? "var(--warn)" : ""; }
   async function fPy(args) {
     var r = await runner.execPy(VB.FOUNDRY_PY, args, function (l, isErr) { if (l.charAt(0) !== "{") logLine((isErr ? "! " : "  ") + l); });

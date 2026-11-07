@@ -1,26 +1,26 @@
 {
- "id": "bld_house_122",
- "name": "House 122",
- "kind": "house",
+ "id": "bld_farm_003",
+ "name": "Farmhouse 3",
+ "kind": "farmhouse",
  "status": "proposed",
  "geometry": {
   "type": "polygon",
   "points": [
    [
-    962.0,
-    1162.9
+    978.1,
+    1144.2
    ],
    [
-    954.8,
-    1179.8
+    985.0,
+    1123.4
    ],
    [
-    970.0,
-    1186.3
+    967.6,
+    1117.7
    ],
    [
-    977.2,
-    1169.4
+    960.8,
+    1138.5
    ]
   ]
  },
@@ -33,7 +33,7 @@
  "floors": 2,
  "rooms": [],
  "doors": [],
- "elevation_ft": 638.6,
- "site_slope": 0.063,
- "site_relief_ft": 1.1
+ "elevation_ft": 639.0,
+ "site_slope": 0.064,
+ "site_relief_ft": 1.2
 }

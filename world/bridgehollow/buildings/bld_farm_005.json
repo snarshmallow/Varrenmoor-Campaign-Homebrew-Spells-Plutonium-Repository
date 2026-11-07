@@ -1,26 +1,26 @@
 {
- "id": "bld_shed_043",
- "name": "Shed 43",
- "kind": "shed",
+ "id": "bld_farm_005",
+ "name": "Farmhouse 5",
+ "kind": "farmhouse",
  "status": "proposed",
  "geometry": {
   "type": "polygon",
   "points": [
    [
-    1016.4,
-    731.3
+    1285.8,
+    1247.8
    ],
    [
-    1022.1,
-    725.7
+    1258.8,
+    1254.7
    ],
    [
-    1014.7,
-    718.1
+    1267.0,
+    1286.8
    ],
    [
-    1009.0,
-    723.7
+    1294.0,
+    1279.9
    ]
   ]
  },
@@ -30,10 +30,10 @@
   "model3d": null,
   "ai_layer": null
  },
- "floors": 1,
+ "floors": 2,
  "rooms": [],
  "doors": [],
- "elevation_ft": 657.6,
- "site_slope": 0.078,
- "site_relief_ft": 0.8
+ "elevation_ft": 627.6,
+ "site_slope": 0.104,
+ "site_relief_ft": 4.0
 }

@@ -1,26 +1,26 @@
 {
- "id": "bld_house_110",
- "name": "House 110",
- "kind": "house",
+ "id": "bld_barn_003",
+ "name": "Barn 3",
+ "kind": "barn",
  "status": "proposed",
  "geometry": {
   "type": "polygon",
   "points": [
    [
-    1046.3,
-    1058.5
+    995.2,
+    1113.0
    ],
    [
-    1048.5,
-    1068.7
+    1003.0,
+    1096.5
    ],
    [
-    1062.5,
-    1065.7
+    982.4,
+    1086.8
    ],
    [
-    1060.2,
-    1055.4
+    974.6,
+    1103.3
    ]
   ]
  },
@@ -33,7 +33,7 @@
  "floors": 1,
  "rooms": [],
  "doors": [],
- "elevation_ft": 636.9,
- "site_slope": 0.096,
- "site_relief_ft": 1.5
+ "elevation_ft": 639.1,
+ "site_slope": 0.071,
+ "site_relief_ft": 1.6
 }

@@ -48,6 +48,8 @@ REPO = os.path.abspath(os.path.join(HERE, "..", ".."))
 DEFAULTS = {
     "place": "bridgehollow", "seed": 1, "detail": 2, "view_preset": "town",
     "area_ft": None,
+    "area_mode": "manual",      # manual (area_ft as drawn) | auto (terrain-fitted, town_area.py) | snap (area_ft settled onto the terrain)
+    "area_auto": {},            # town_area.DEFAULTS overrides (slope_limit, river_buffer_ft, smoothing_ft, min_width_ft, noise_ft, target_area_ft2...)
     "output": {"streets": True, "plazas": True, "blocks": False, "buildings": True, "fields": True, "districts": True},
     "limits": {"max_street_grade": 0.09, "max_main_grade": 0.07, "max_build_slope": 0.17, "max_build_relief_ft": 5.0,
                "max_field_slope": 0.13, "hard_slope": 0.30, "water_margin_ft": 14.0, "bank_margin_ft": 8.0,
@@ -236,7 +238,8 @@ class TownGen:
         self.W, self.H = meta["size_ft"]
         import worldio
         self.water = load_water(place_dir, worldio.water_path(params["place"]))
-        self.area = Polygon(params["area_ft"]).buffer(0)
+        self.area_info = {"mode": "manual"}
+        self.area = self._make_area(params)
         if self.area.is_empty:
             raise SystemExit("town_params.area_ft is empty or invalid")
         self.names_used = set()
@@ -244,6 +247,23 @@ class TownGen:
         k = float(self.view["scale_ft_per_in"]) / 100.0
         self.simplify = params["streets"].get("simplify_ft") or {1: 5.0, 2: 2.5, 3: 1.2}.get(self.detail, 2.5) * k
         self._grids()
+
+    def _make_area(self, params):
+        """area_mode: manual (default; area_ft is used as drawn), auto (terrain-fitted lasso from town_area.py, ignoring
+        area_ft), snap (area_ft settled onto the buildable terrain). Parameters in params["area_auto"]."""
+        import town_area as ta
+        mode = params.get("area_mode") or "manual"
+        if mode == "manual" and params.get("area_ft"):
+            return Polygon(params["area_ft"]).buffer(0)
+        ap = dict(params.get("area_auto") or {})
+        ap.setdefault("seed", self.seed)
+        rs = params.get("ring_spec") or {}
+        user = params.get("area_ft") if mode == "snap" else None
+        if mode == "snap" and not user:
+            raise SystemExit("area_mode snap needs area_ft")
+        res = ta.build(self.h, self.meta, self.water.polygon, ap, ap.get("centre") or rs.get("centre"), user)
+        self.area_info = {"mode": mode, "stats": res["stats"], "area_ft": res["area_ft"]}
+        return Polygon(res["area_ft"]).buffer(0)
 
     # ------------------------------------------------------------ grids
     def bil(self, arr, x, y):
@@ -292,7 +312,12 @@ class TownGen:
         cx, cy = rs["centre"]
         ax, ay = rs.get("aspect", [1, 1])
         n = smooth_noise(self.rng, (ny, nx), rs["noise_period_ft"] / c)
-        self.r_eff = np.hypot((self.X - cx) / ax, (self.Y - cy) / ay) * (1 + rs["noise"] * n)
+        if rs.get("mode") == "terrain":
+            import town_area as ta
+            self.r_eff = ta.ring_field(self.h, c, self.wet, rs["centre"], ta.merged(dict(self.P.get("area_auto") or {}, seed=self.seed)),
+                                       self.seed, rs["noise"], rs["noise_period_ft"])
+        else:
+            self.r_eff = np.hypot((self.X - cx) / ax, (self.Y - cy) / ay) * (1 + rs["noise"] * n)
         self.ang_noise = smooth_noise(self.rng, (ny, nx), 260 / c)
 
     # ------------------------------------------------------------ rings
@@ -681,6 +706,15 @@ class TownGen:
             for g in geoms:
                 clipped = g["line"].difference(wb.buffer(g["w"] / 2 + 2.0))
                 for part in lines_of(clipped):
+                    out.append({**g, "line": part})
+            geoms = out
+        if S.get("edge_inset"):          # streets stop inside the organic boundary (their width never pokes out of it)
+            out = []
+            for g in geoms:
+                if self.area.buffer(-(g["w"] / 2 + 2.0)).contains(g["line"]):
+                    out.append(g)
+                    continue
+                for part in lines_of(g["line"].intersection(self.area.buffer(-(g["w"] / 2 + 2.0)))):
                     out.append({**g, "line": part})
             geoms = out
         geoms = [g for g in geoms if g["line"].length >= S["min_length_ft"] * 0.6]
@@ -1292,7 +1326,10 @@ class TownGen:
             if lot["front"] < LT["min_frontage_ft"] and not (
                     LT["backland_ft"] and lot["area"] >= LT["backland_min_area_ft2"] and lot["poly"].distance(su) <= LT["backland_ft"]):
                 continue
-            if self.rand.random() > rp["build_prob"]:
+            bp = rp["build_prob"]
+            if LT.get("edge_fade_ft") and lot["kind"] != "civic":       # lots thin out and break up toward the organic boundary
+                bp *= 0.25 + 0.75 * smoothstep(self.area.exterior.distance(Point(lot["c"])) / LT["edge_fade_ft"])
+            if self.rand.random() > bp:
                 continue
             fp = self.footprint(lot["poly"], su, LT["house_fill_w"], LT["house_fill_d"],
                                 self.rand.uniform(*LT["front_setback_ft"]), tuple(LT["min_house_ft"]),
@@ -1367,11 +1404,11 @@ class TownGen:
         import contourpy
         ok = (self.slope_raw < self.L["max_field_slope"]) & ~self.wet & (self.dwater > 8) & self.area_mask
         ok = ndi.binary_opening(ok, iterations=2)
-        z = np.pad(ok.astype(float), 1)
+        z = np.pad(ndi.gaussian_filter(ok.astype(float), self.L.get("field_smooth_cells", 0.0)) if self.L.get("field_smooth_cells") else ok.astype(float), 1)
         xs = (np.arange(self.nx + 2) - 1) * self.cell
         ys = (np.arange(self.ny + 2) - 1) * self.cell
         gen = contourpy.contour_generator(xs, ys, z, fill_type=contourpy.FillType.OuterCode)
-        pts, codes = gen.filled(0.5, 1.5)
+        pts, codes = gen.filled(0.5, 1.5 if not self.L.get("field_smooth_cells") else 9.0)
         polys = []
         for pa, ca in zip(pts, codes):
             starts = [i for i, c in enumerate(ca) if c == 1] + [len(ca)]
@@ -1636,6 +1673,12 @@ class TownGen:
         self.log(json.dumps(rep["counts"]))
         return rep
 
+    def area_report(self):
+        import town_area as ta
+        st = ta.stats(self.h, self.cell, self.area, ta.merged(dict(self.P.get("area_auto") or {})))
+        st["mode"] = self.area_info.get("mode", "manual")
+        return st
+
     def report(self, streets, districts):
         bl = [b["poly"] for b in self.buildings]
         issues = []
@@ -1667,7 +1710,7 @@ class TownGen:
         for b in self.buildings:
             kinds[b["e"]["kind"]] = kinds.get(b["e"]["kind"], 0) + 1
         return {"seed": self.seed, "detail": self.detail, "scale_ft_per_in": self.view["scale_ft_per_in"],
-                "sea_level_ft": self.sea, "warnings": self.warnings, "issues": issues,
+                "sea_level_ft": self.sea, "area": self.area_report(), "warnings": self.warnings, "issues": issues,
                 "counts": {"streets": len(streets), "buildings": len(self.buildings), "fields": len(self.fields),
                            "plazas": len(self.plazas), "blocks": len(self.blocks), "by_kind": kinds},
                 "street_grade_max": mx, "street_grade_raw_max": mxr, "street_grade_cap": cap,

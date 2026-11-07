@@ -1,10 +1,532 @@
 {
- "_note": "One generation of the Bridgehollow town (all proposed). Feet, y down. Run: python illustrator/generators/town_gen.py",
+ "_note": "One generation of the Bridgehollow town v5 (all proposed). Feet, y down. area_ft is the terrain-fitted lasso (python illustrator/generators/town_area.py --write-params); edit it freely. Run: python illustrator/generators/town_gen.py",
  "place": "bridgehollow",
  "seed": 1103,
  "detail": 2,
  "view_preset": "town",
  "area_ft": [
+  [
+   1097.7,
+   518.6
+  ],
+  [
+   1062.9,
+   527.2
+  ],
+  [
+   1030.6,
+   542.7
+  ],
+  [
+   1001.0,
+   562.9
+  ],
+  [
+   971.5,
+   583.3
+  ],
+  [
+   939.7,
+   599.8
+  ],
+  [
+   906.5,
+   613.7
+  ],
+  [
+   874.5,
+   629.6
+  ],
+  [
+   845.3,
+   650.5
+  ],
+  [
+   819.9,
+   675.8
+  ],
+  [
+   799.0,
+   704.9
+  ],
+  [
+   783.0,
+   737.0
+  ],
+  [
+   772.3,
+   771.2
+  ],
+  [
+   768.4,
+   806.8
+  ],
+  [
+   771.4,
+   842.5
+  ],
+  [
+   779.2,
+   877.5
+  ],
+  [
+   788.2,
+   912.3
+  ],
+  [
+   795.6,
+   947.4
+  ],
+  [
+   799.3,
+   983.0
+  ],
+  [
+   798.7,
+   1018.9
+  ],
+  [
+   793.9,
+   1054.4
+  ],
+  [
+   786.8,
+   1089.6
+  ],
+  [
+   782.3,
+   1125.2
+  ],
+  [
+   786.4,
+   1160.7
+  ],
+  [
+   801.2,
+   1193.2
+  ],
+  [
+   822.6,
+   1221.9
+  ],
+  [
+   846.1,
+   1249.1
+  ],
+  [
+   868.6,
+   1277.0
+  ],
+  [
+   888.1,
+   1307.1
+  ],
+  [
+   904.8,
+   1338.9
+  ],
+  [
+   922.8,
+   1369.9
+  ],
+  [
+   945.0,
+   1398.0
+  ],
+  [
+   971.4,
+   1422.3
+  ],
+  [
+   1001.7,
+   1441.5
+  ],
+  [
+   1035.5,
+   1453.2
+  ],
+  [
+   1071.1,
+   1456.5
+  ],
+  [
+   1106.5,
+   1451.1
+  ],
+  [
+   1140.3,
+   1439.0
+  ],
+  [
+   1174.4,
+   1428.3
+  ],
+  [
+   1209.9,
+   1430.5
+  ],
+  [
+   1243.0,
+   1444.2
+  ],
+  [
+   1276.2,
+   1457.9
+  ],
+  [
+   1311.5,
+   1463.8
+  ],
+  [
+   1346.9,
+   1459.0
+  ],
+  [
+   1379.3,
+   1443.9
+  ],
+  [
+   1406.2,
+   1420.4
+  ],
+  [
+   1426.3,
+   1390.8
+  ],
+  [
+   1436.6,
+   1356.6
+  ],
+  [
+   1437.4,
+   1320.8
+  ],
+  [
+   1435.4,
+   1285.0
+  ],
+  [
+   1439.3,
+   1249.4
+  ],
+  [
+   1457.5,
+   1219.0
+  ],
+  [
+   1488.6,
+   1202.0
+  ],
+  [
+   1524.2,
+   1199.4
+  ],
+  [
+   1560.0,
+   1202.2
+  ],
+  [
+   1595.7,
+   1199.9
+  ],
+  [
+   1628.8,
+   1186.6
+  ],
+  [
+   1655.9,
+   1163.2
+  ],
+  [
+   1673.1,
+   1132.1
+  ],
+  [
+   1673.3,
+   1096.7
+  ],
+  [
+   1658.4,
+   1064.2
+  ],
+  [
+   1637.9,
+   1034.8
+  ],
+  [
+   1616.3,
+   1006.2
+  ],
+  [
+   1594.8,
+   977.4
+  ],
+  [
+   1573.9,
+   948.2
+  ],
+  [
+   1554.5,
+   918.0
+  ],
+  [
+   1536.8,
+   886.9
+  ],
+  [
+   1520.7,
+   854.8
+  ],
+  [
+   1507.2,
+   821.5
+  ],
+  [
+   1497.3,
+   787.1
+  ],
+  [
+   1491.2,
+   751.7
+  ],
+  [
+   1488.6,
+   715.9
+  ],
+  [
+   1485.7,
+   680.2
+  ],
+  [
+   1477.0,
+   645.5
+  ],
+  [
+   1459.3,
+   614.4
+  ],
+  [
+   1434.8,
+   588.3
+  ],
+  [
+   1405.4,
+   567.8
+  ],
+  [
+   1371.2,
+   557.9
+  ],
+  [
+   1335.7,
+   561.5
+  ],
+  [
+   1300.6,
+   569.0
+  ],
+  [
+   1265.3,
+   564.6
+  ],
+  [
+   1233.9,
+   547.5
+  ],
+  [
+   1203.1,
+   529.1
+  ],
+  [
+   1169.1,
+   517.9
+  ],
+  [
+   1133.4,
+   515.4
+  ]
+ ],
+ "output": {
+  "streets": true,
+  "plazas": true,
+  "blocks": false,
+  "buildings": true,
+  "fields": true,
+  "districts": true
+ },
+ "limits": {
+  "max_street_grade": 0.08,
+  "max_main_grade": 0.04,
+  "max_build_slope": 0.19,
+  "max_build_relief_ft": 6.0,
+  "max_field_slope": 0.13,
+  "water_margin_ft": 14,
+  "below_datum_is_water": true,
+  "bank_fill_ft": 18,
+  "field_smooth_cells": 1.0
+ },
+ "entry": {
+  "point": [
+   1290,
+   1480
+  ],
+  "via": [
+   [
+    1290,
+    900
+   ]
+  ],
+  "name": "Pilgrim Road",
+  "id": "pilgrim_road",
+  "width_ft": 30,
+  "bridge_width_ft": 26,
+  "grade_weight": 6.0,
+  "grade_exp": 3.0
+ },
+ "ring_spec": {
+  "centre": [
+   1110,
+   780
+  ],
+  "aspect": [
+   0.8,
+   0.95
+  ],
+  "noise": 0.2,
+  "noise_period_ft": 320,
+  "feather_ft": 110,
+  "rings": [
+   {
+    "id": "authority",
+    "name": "Authority Ward",
+    "kind": "civic",
+    "r_max": 230,
+    "street_width": 24,
+    "dsep": [
+     80,
+     95
+    ],
+    "lot_area": [
+     1800,
+     4200
+    ],
+    "build_prob": 0.95
+   },
+   {
+    "id": "commoner",
+    "name": "Commoners' Ring",
+    "kind": "residential",
+    "r_max": 520,
+    "street_width": 18,
+    "dsep": [
+     62,
+     76
+    ],
+    "lot_area": [
+     420,
+     900
+    ],
+    "build_prob": 0.95
+   },
+   {
+    "id": "farm",
+    "name": "Farmland",
+    "kind": "farm",
+    "r_max": 1000000000,
+    "street_width": 13,
+    "dsep": [
+     150,
+     200
+    ],
+    "lot_area": [
+     16000,
+     48000
+    ],
+    "build_prob": 0.3
+   }
+  ],
+  "mode": "terrain"
+ },
+ "plazas": {
+  "enabled": true,
+  "min_area_ft2": 150000,
+  "per_area_ft2": 600000,
+  "max": 4,
+  "radius_ft": [
+   38,
+   62
+  ],
+  "min_sep_ft": 260,
+  "anchors": [
+   {
+    "id": "sqr_market",
+    "name": "Market Square",
+    "type": "road",
+    "near": [
+     1300,
+     760
+    ]
+   },
+   {
+    "id": "sqr_court",
+    "name": "Court Square",
+    "type": "road_end",
+    "near": [
+     1110,
+     780
+    ]
+   }
+  ]
+ },
+ "named": {
+  "market_plaza": "sqr_market",
+  "court_plaza": "sqr_court"
+ },
+ "streets": {
+  "trace_grade_margin": 0.6,
+  "stub_min_ft": 110,
+  "loop_max_area_ft2": 5000,
+  "loop_compact": 0.3,
+  "split_steep_factor": 1.0,
+  "smooth_sigma_ft": 12,
+  "edge_inset": true
+ },
+ "lots": {
+  "min_frontage_ft": 10,
+  "house_fill_w": [
+   0.7,
+   0.92
+  ],
+  "house_fill_d": [
+   0.55,
+   0.85
+  ],
+  "min_house_ft": [
+   14,
+   12
+  ],
+  "shed_detail": 2,
+  "shed_min_area_ft2": 700,
+  "shed_prob": 0.5,
+  "max_house_ft": [
+   46,
+   38
+  ],
+  "backland_ft": 32,
+  "edge_fade_ft": 28
+ },
+ "area_mode": "manual",
+ "area_auto": {
+  "seed": 1103,
+  "slope_limit": 0.15,
+  "smoothing_ft": 45,
+  "target_area_ft2": null,
+  "centre": [
+   1110,
+   780
+  ]
+ },
+ "_area_ft_v4_box": [
   [
    640,
    360
@@ -77,170 +599,5 @@
    610,
    600
   ]
- ],
- "output": {
-  "streets": true,
-  "plazas": true,
-  "blocks": false,
-  "buildings": true,
-  "fields": true,
-  "districts": true
- },
- "limits": {
-  "max_street_grade": 0.08,
-  "max_main_grade": 0.04,
-  "max_build_slope": 0.19,
-  "max_build_relief_ft": 6.0,
-  "max_field_slope": 0.13,
-  "water_margin_ft": 14,
-  "below_datum_is_water": true,
-  "bank_fill_ft": 18
- },
- "entry": {
-  "point": [
-   1290,
-   1480
-  ],
-  "via": [
-   [
-    1290,
-    900
-   ]
-  ],
-  "name": "Pilgrim Road",
-  "id": "pilgrim_road",
-  "width_ft": 30,
-  "bridge_width_ft": 26,
-  "grade_weight": 6.0,
-  "grade_exp": 3.0
- },
- "ring_spec": {
-  "centre": [
-   1110,
-   780
-  ],
-  "aspect": [
-   0.8,
-   0.95
-  ],
-  "noise": 0.12,
-  "noise_period_ft": 320,
-  "feather_ft": 110,
-  "rings": [
-   {
-    "id": "authority",
-    "name": "Authority Ward",
-    "kind": "civic",
-    "r_max": 210,
-    "street_width": 24,
-    "dsep": [
-     80,
-     95
-    ],
-    "lot_area": [
-     1800,
-     4200
-    ],
-    "build_prob": 0.95
-   },
-   {
-    "id": "commoner",
-    "name": "Commoners' Ring",
-    "kind": "residential",
-    "r_max": 490,
-    "street_width": 18,
-    "dsep": [
-     62,
-     76
-    ],
-    "lot_area": [
-     420,
-     900
-    ],
-    "build_prob": 0.95
-   },
-   {
-    "id": "farm",
-    "name": "Farmland",
-    "kind": "farm",
-    "r_max": 1000000000,
-    "street_width": 13,
-    "dsep": [
-     150,
-     200
-    ],
-    "lot_area": [
-     16000,
-     48000
-    ],
-    "build_prob": 0.3
-   }
-  ]
- },
- "plazas": {
-  "enabled": true,
-  "min_area_ft2": 150000,
-  "per_area_ft2": 600000,
-  "max": 4,
-  "radius_ft": [
-   38,
-   62
-  ],
-  "min_sep_ft": 260,
-  "anchors": [
-   {
-    "id": "sqr_market",
-    "name": "Market Square",
-    "type": "road",
-    "near": [
-     1300,
-     760
-    ]
-   },
-   {
-    "id": "sqr_court",
-    "name": "Court Square",
-    "type": "road_end",
-    "near": [
-     1110,
-     780
-    ]
-   }
-  ]
- },
- "named": {
-  "market_plaza": "sqr_market",
-  "court_plaza": "sqr_court"
- },
- "streets": {
-  "trace_grade_margin": 0.6,
-  "stub_min_ft": 110,
-  "loop_max_area_ft2": 5000,
-  "loop_compact": 0.3,
-  "split_steep_factor": 1.0,
-  "smooth_sigma_ft": 12
- },
- "lots": {
-  "min_frontage_ft": 10,
-  "house_fill_w": [
-   0.7,
-   0.92
-  ],
-  "house_fill_d": [
-   0.55,
-   0.85
-  ],
-  "min_house_ft": [
-   14,
-   12
-  ],
-  "shed_detail": 2,
-  "shed_min_area_ft2": 700,
-  "shed_prob": 0.5,
-  "max_house_ft": [
-   46,
-   38
-  ],
-  "backland_ft": 32
- }
+ ]
 }

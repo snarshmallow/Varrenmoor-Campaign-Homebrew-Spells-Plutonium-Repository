@@ -1,0 +1,66 @@
+// Town area ("auto lasso") panel pieces: params, jobs. Loaded after core.js; extends window.VBCore without touching it.
+(function (root) {
+  "use strict";
+  var VB = root.VBCore || (typeof module !== "undefined" && module.exports ? module.exports : null);
+  if (!VB) return;
+  var GEN = "illustrator/generators/";
+  var AREA_LAYERS = ["TOWN AREA", "TOWN AREA RINGS"];
+  VB.AREA_LAYERS = AREA_LAYERS;
+
+  // defaults mirror town_area.DEFAULTS
+  VB.areaDefaults = function () {
+    return { slope_limit: 0.15, river_buffer_ft: 14, smoothing_ft: 55, min_width_ft: 150, noise_ft: 22, target_area_ft2: 0, seed: 1103 };
+  };
+  var baseDefaults = VB.defaults;
+  VB.defaults = function () { var s = baseDefaults(); s.town.aa = VB.areaDefaults(); return s; };
+
+  var baseFrom = VB.townFromParams;
+  VB.townFromParams = function (p, t) {
+    baseFrom(p, t);
+    var a = p.area_auto || {}, d = VB.areaDefaults();
+    t.aa = Object.assign({}, d, t.aa || {});
+    Object.keys(d).forEach(function (k) { if (a[k] != null) t.aa[k] = a[k]; });
+    if (a.target_area_ft2 === null) t.aa.target_area_ft2 = 0;
+    return t;
+  };
+
+  // town_params for town_gen / town_area: the lasso in state is used as drawn (area_mode manual), terrain rings
+  var baseMerge = VB.mergeTownParams;
+  VB.areaParams = function (t) {
+    var o = {}, a = t.aa || VB.areaDefaults();
+    ["slope_limit", "river_buffer_ft", "smoothing_ft", "min_width_ft", "noise_ft", "seed"].forEach(function (k) { if (a[k] !== "" && a[k] != null) o[k] = +a[k]; });
+    o.target_area_ft2 = +a.target_area_ft2 > 0 ? +a.target_area_ft2 : null;
+    return o;
+  };
+  VB.mergeTownParams = function (base, t) {
+    var p = baseMerge(base, t);
+    p.area_auto = Object.assign({}, p.area_auto || {}, VB.areaParams(t));
+    p.area_mode = "manual";
+    return p;
+  };
+
+  // mode: "auto" (generate from terrain) | "snap" (settle the captured lasso onto the terrain)
+  VB.jobTownArea = function (st, d, mode) {
+    var t = st.town, params = d.panel + "/town_params_area.json", out = d.panel + "/town_area.json", svg = d.panel + "/town_area.svg";
+    var py = VB.steps.py;
+    var args = ["--place", st.place, "--mode", mode, "--params", params, "--out", out, "--svg", svg].concat(VB.viewFlags(st));
+    return {
+      kind: "town_area_" + mode, label: mode === "snap" ? "Snap lasso to terrain" : "Auto lasso from terrain", params: { aa: t.aa },
+      steps: [
+        { t: "fn", label: "check lasso", fn: function () {
+          if (mode === "snap" && (!t.area || t.area.length < 3)) throw new Error("no lasso to snap: Capture lasso first (or Reload town_params.json)"); } },
+        { t: "fn", label: "write area params", fn: function (run) {
+          var p = VB.mergeTownParams(run.readJson(d.world + "/town_params.json", {}), t);
+          if (mode === "auto") { delete p.area_ft; p.area_mode = "auto"; }
+          p.place = st.place; run.writeJson(params, p); } },
+        py(GEN + "town_area.py", args, "town_area.py (" + mode + ")", { json: "area" }),
+        { t: "fn", label: "store the outline", fn: function (run) {
+          var a = run.vars.area; if (!a || !a.area_ft) throw new Error("town_area returned no outline");
+          run.setState("town.area", a.area_ft);
+          run.setState("town.area_src", (mode === "snap" ? "snapped to terrain" : "auto lasso") + " (" + a.stats.vertices + " pts, " + a.stats.area_ft2 + " ft2, max turn " + a.stats.max_turn_deg + " deg)");
+          run.log("outline: " + JSON.stringify(a.stats)); } }
+      ].concat(VB.replaceSteps(svg, AREA_LAYERS, "draw TOWN AREA layer (edit it, then Capture lasso)")),
+      setStale: ["town"]
+    };
+  };
+})(typeof window !== "undefined" ? window : this);
