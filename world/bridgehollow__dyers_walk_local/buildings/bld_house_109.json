@@ -31,8 +31,153 @@
   "ai_layer": null
  },
  "floors": 1,
- "rooms": [],
- "doors": [],
+ "rooms": [
+  {
+   "id": "bld_house_109_r0_1",
+   "name": "Hall",
+   "floor": 0,
+   "polygon": [
+    [
+     285.629,
+     315.388
+    ],
+    [
+     280.503,
+     311.721
+    ],
+    [
+     273.948,
+     320.828
+    ],
+    [
+     279.102,
+     324.515
+    ]
+   ],
+   "area_ft2": 70.916,
+   "use": "hall",
+   "doors": [
+    "bld_house_109_door1",
+    "bld_house_109_idoor_f0_1"
+   ],
+   "entry": true,
+   "stair": false
+  },
+  {
+   "id": "bld_house_109_r0_2",
+   "name": "Kitchen",
+   "floor": 0,
+   "polygon": [
+    [
+     285.629,
+     315.388
+    ],
+    [
+     279.102,
+     324.515
+    ],
+    [
+     284.326,
+     328.254
+    ],
+    [
+     290.855,
+     319.125
+    ]
+   ],
+   "area_ft2": 72.098,
+   "use": "kitchen",
+   "doors": [
+    "bld_house_109_idoor_f0_1",
+    "bld_house_109_idoor_f0_2"
+   ],
+   "entry": false,
+   "stair": false
+  },
+  {
+   "id": "bld_house_109_r0_3",
+   "name": "Bedroom",
+   "floor": 0,
+   "polygon": [
+    [
+     294.751,
+     313.677
+    ],
+    [
+     284.374,
+     306.342
+    ],
+    [
+     280.503,
+     311.721
+    ],
+    [
+     290.855,
+     319.125
+    ]
+   ],
+   "area_ft2": 84.732,
+   "use": "bedroom",
+   "doors": [
+    "bld_house_109_idoor_f0_2"
+   ],
+   "entry": false,
+   "stair": false
+  }
+ ],
+ "doors": [
+  {
+   "id": "bld_house_109_door1",
+   "kind": "exterior",
+   "floor": 0,
+   "point": [
+    278.55,
+    313.15
+   ],
+   "width_ft": 3.5,
+   "height_ft": 7.0,
+   "rooms": [
+    "bld_house_109_r0_1",
+    null
+   ],
+   "facing": [
+    -0.812,
+    -0.584
+   ]
+  },
+  {
+   "id": "bld_house_109_idoor_f0_1",
+   "kind": "interior",
+   "floor": 0,
+   "point": [
+    282.548,
+    319.697
+   ],
+   "width_ft": 3.0,
+   "height_ft": 6.8,
+   "rooms": [
+    "bld_house_109_r0_1",
+    "bld_house_109_r0_2"
+   ],
+   "wall": "bld_house_109_w0_0"
+  },
+  {
+   "id": "bld_house_109_idoor_f0_2",
+   "kind": "interior",
+   "floor": 0,
+   "point": [
+    288.689,
+    317.576
+   ],
+   "width_ft": 3.0,
+   "height_ft": 6.8,
+   "rooms": [
+    "bld_house_109_r0_2",
+    "bld_house_109_r0_3"
+   ],
+   "wall": "bld_house_109_w0_2"
+  }
+ ],
  "elevation_ft": 643.5,
  "site_slope": 0.087,
  "site_relief_ft": 1.4,
@@ -42,5 +187,357 @@
   "edge": false,
   "inside_frac": 1.0,
   "in_region_frac": 0.0
+ },
+ "layout": {
+  "version": 1,
+  "generated": true,
+  "canon": false,
+  "seed": 96404309806021,
+  "kind": "house",
+  "floors": 1,
+  "storey_ft": 10.0,
+  "slab_ft": 0.6,
+  "exterior_wall_ft": 0.75,
+  "partition_ft": 0.4,
+  "entry_room": "bld_house_109_r0_1",
+  "walls": [
+   {
+    "id": "bld_house_109_w0_0",
+    "floor": 0,
+    "a": [
+     279.102,
+     324.515
+    ],
+    "b": [
+     285.629,
+     315.388
+    ],
+    "thickness_ft": 0.4,
+    "rooms": [
+     "bld_house_109_r0_1",
+     "bld_house_109_r0_2"
+    ],
+    "doors": [
+     "bld_house_109_idoor_f0_1"
+    ]
+   },
+   {
+    "id": "bld_house_109_w0_1",
+    "floor": 0,
+    "a": [
+     280.503,
+     311.721
+    ],
+    "b": [
+     285.629,
+     315.388
+    ],
+    "thickness_ft": 0.4,
+    "rooms": [
+     "bld_house_109_r0_1",
+     "bld_house_109_r0_3"
+    ],
+    "doors": []
+   },
+   {
+    "id": "bld_house_109_w0_2",
+    "floor": 0,
+    "a": [
+     285.629,
+     315.388
+    ],
+    "b": [
+     290.855,
+     319.125
+    ],
+    "thickness_ft": 0.4,
+    "rooms": [
+     "bld_house_109_r0_2",
+     "bld_house_109_r0_3"
+    ],
+    "doors": [
+     "bld_house_109_idoor_f0_2"
+    ]
+   }
+  ],
+  "stairs": [],
+  "windows": [
+   {
+    "id": "bld_house_109_win0_1",
+    "floor": 0,
+    "room": "bld_house_109_r0_3",
+    "point": [
+     290.0,
+     309.4
+    ],
+    "edge": 2,
+    "u_ft": 7.103,
+    "width_ft": 3.0,
+    "height_ft": 3.5,
+    "sill_ft": 3.5,
+    "angle_deg": 35.256,
+    "outward": [
+     0.577,
+     -0.817
+    ]
+   },
+   {
+    "id": "bld_house_109_win0_2",
+    "floor": 0,
+    "room": "bld_house_109_r0_2",
+    "point": [
+     287.761,
+     324.74
+    ],
+    "edge": 3,
+    "u_ft": 13.819,
+    "width_ft": 3.0,
+    "height_ft": 3.5,
+    "sill_ft": 3.5,
+    "angle_deg": 125.572,
+    "outward": [
+     0.813,
+     0.582
+    ]
+   }
+  ],
+  "fixtures": [
+   {
+    "id": "bld_house_109_fx0_1_1",
+    "type": "hearth",
+    "floor": 0,
+    "room": "bld_house_109_r0_1",
+    "point": [
+     277.23,
+     322.008
+    ],
+    "size_ft": [
+     4.5,
+     1.8,
+     3.2
+    ],
+    "angle_deg": 215.584,
+    "material": "mat_hearth_stone"
+   },
+   {
+    "id": "bld_house_109_fx0_1_2",
+    "type": "bench",
+    "floor": 0,
+    "room": "bld_house_109_r0_1",
+    "point": [
+     279.464,
+     317.931
+    ],
+    "size_ft": [
+     4.0,
+     1.0,
+     1.5
+    ],
+    "angle_deg": 305.572,
+    "material": "mat_furn_wood"
+   },
+   {
+    "id": "bld_house_109_fx0_1_3",
+    "type": "shelf",
+    "floor": 0,
+    "room": "bld_house_109_r0_1",
+    "point": [
+     276.652,
+     317.927
+    ],
+    "size_ft": [
+     3.6,
+     0.9,
+     6.0
+    ],
+    "angle_deg": 305.744,
+    "material": "mat_furn_wood"
+   },
+   {
+    "id": "bld_house_109_fx0_1_4",
+    "type": "barrel",
+    "floor": 0,
+    "room": "bld_house_109_r0_1",
+    "point": [
+     282.587,
+     314.379
+    ],
+    "size_ft": [
+     1.8,
+     1.8,
+     2.8
+    ],
+    "angle_deg": 35.572,
+    "material": "mat_furn_wood"
+   },
+   {
+    "id": "bld_house_109_fx0_2_1",
+    "type": "hearth",
+    "floor": 0,
+    "room": "bld_house_109_r0_2",
+    "point": [
+     282.499,
+     325.778
+    ],
+    "size_ft": [
+     4.5,
+     1.8,
+     3.2
+    ],
+    "angle_deg": 215.584,
+    "material": "mat_hearth_stone"
+   },
+   {
+    "id": "bld_house_109_fx0_2_2",
+    "type": "barrel",
+    "floor": 0,
+    "room": "bld_house_109_r0_2",
+    "point": [
+     285.591,
+     324.853
+    ],
+    "size_ft": [
+     1.8,
+     1.8,
+     2.8
+    ],
+    "angle_deg": 125.572,
+    "material": "mat_furn_wood"
+   },
+   {
+    "id": "bld_house_109_fx0_2_3",
+    "type": "crate",
+    "floor": 0,
+    "room": "bld_house_109_r0_2",
+    "point": [
+     286.894,
+     322.859
+    ],
+    "size_ft": [
+     2.0,
+     2.0,
+     2.0
+    ],
+    "angle_deg": 125.572,
+    "material": "mat_furn_wood"
+   },
+   {
+    "id": "bld_house_109_fx0_3_1",
+    "type": "bed",
+    "floor": 0,
+    "room": "bld_house_109_r0_3",
+    "point": [
+     285.569,
+     311.289
+    ],
+    "size_ft": [
+     3.8,
+     6.6,
+     2.0
+    ],
+    "angle_deg": 35.256,
+    "material": "mat_fabric"
+   },
+   {
+    "id": "bld_house_109_fx0_3_2",
+    "type": "chest",
+    "floor": 0,
+    "room": "bld_house_109_r0_3",
+    "point": [
+     290.344,
+     311.603
+    ],
+    "size_ft": [
+     3.0,
+     1.6,
+     1.8
+    ],
+    "angle_deg": 35.256,
+    "material": "mat_furn_wood"
+   },
+   {
+    "id": "bld_house_109_fx0_3_3",
+    "type": "shelf",
+    "floor": 0,
+    "room": "bld_house_109_r0_3",
+    "point": [
+     282.765,
+     309.433
+    ],
+    "size_ft": [
+     3.6,
+     0.9,
+     6.0
+    ],
+    "angle_deg": 305.744,
+    "material": "mat_furn_wood"
+   }
+  ],
+  "lights": [
+   {
+    "id": "bld_house_109_light_hearth0_1",
+    "type": "hearth",
+    "floor": 0,
+    "room": "bld_house_109_r0_1",
+    "point": [
+     277.23,
+     322.008
+    ],
+    "z_ft": 2.0,
+    "color": "#ff9a3c",
+    "bright_ft": 8,
+    "dim_ft": 18,
+    "intensity": 0.8,
+    "animation": "torch"
+   },
+   {
+    "id": "bld_house_109_light_hearth0_2",
+    "type": "hearth",
+    "floor": 0,
+    "room": "bld_house_109_r0_2",
+    "point": [
+     282.499,
+     325.778
+    ],
+    "z_ft": 2.0,
+    "color": "#ff9a3c",
+    "bright_ft": 8,
+    "dim_ft": 18,
+    "intensity": 0.8,
+    "animation": "torch"
+   },
+   {
+    "id": "bld_house_109_win0_2_light",
+    "type": "window",
+    "floor": 0,
+    "room": "bld_house_109_r0_2",
+    "point": [
+     286.135,
+     323.576
+    ],
+    "z_ft": 5.25,
+    "color": "#dfeaff",
+    "bright_ft": 3,
+    "dim_ft": 10,
+    "intensity": 0.3,
+    "animation": "none"
+   },
+   {
+    "id": "bld_house_109_win0_1_light",
+    "type": "window",
+    "floor": 0,
+    "room": "bld_house_109_r0_3",
+    "point": [
+     288.846,
+     311.034
+    ],
+    "z_ft": 5.25,
+    "color": "#dfeaff",
+    "bright_ft": 3,
+    "dim_ft": 10,
+    "intensity": 0.3,
+    "animation": "none"
+   }
+  ]
  }
 }

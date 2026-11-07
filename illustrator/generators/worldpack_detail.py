@@ -108,6 +108,9 @@ def build_building_detailed(cx, e):
     D, N, Q = wall_geometry(P)
     storeys = max(1, int(e.get("floors", 1)))
     edge_holes = plan_holes(P, door_hits(P, e.get("openings"), cx), storeys, zf)
+    if e.get("layout"):                                      # interior layout owns the window positions (worldpack_interiors)
+        import worldpack_interiors as wi
+        edge_holes = wi.apply_layout_windows(edge_holes, P, e, cx, zf)
     door_nodes = []
 
     def X(i, u, v, z):
@@ -204,3 +207,7 @@ def build_building_detailed(cx, e):
         if len(sel):
             subs[k] = sel
     return wm.merge_meshes([b.build(), Mesh(base.V, base.UV, subs, False)]), door_nodes
+
+
+import worldpack_interiors as _wi  # noqa: E402  (interior materials join the detail materials)
+DETAIL_MATS.update(_wi.INTERIOR_MATS)

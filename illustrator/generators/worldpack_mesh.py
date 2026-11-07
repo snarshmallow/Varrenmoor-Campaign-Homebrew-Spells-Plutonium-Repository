@@ -455,6 +455,9 @@ def build_parts(pack, step=1, carve=True, conform=True, layers=None, drape_edge_
         h = wp.carved_heights(pack)
     if conform:
         h = wp.road_conformed_heights(pack, h)
+    if any(b.get("layout") for b in pack.list("buildings")):          # interiors: level pads so the terrain stays below the floor plates
+        import worldpack_interiors as wi
+        h = wi.pad_buildings(pack, h)
     cx = Ctx(pack, h)
     want = lambda l: layers is None or l in layers
     parts = []
@@ -488,7 +491,11 @@ def build_parts(pack, step=1, carve=True, conform=True, layers=None, drape_edge_
             if e.get("openings"):
                 import worldpack_detail as wd
                 m, dn = wd.build_building_detailed(cx, e)
-                add(e, "buildings", m, door_nodes=dn)
+                extra = {}
+                if e.get("layout"):                                   # generated interior (interiors.py): storeys/roof/props as separate nodes
+                    import worldpack_interiors as wi
+                    m, dn, extra = wi.add_interior(cx, e, m, dn)
+                add(e, "buildings", m, door_nodes=dn, **extra)
             else:
                 add(e, "buildings", build_building(cx, e))
     for e in pack.list("fences"):
