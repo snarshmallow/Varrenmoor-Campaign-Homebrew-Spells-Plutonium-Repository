@@ -1,0 +1,23 @@
+{
+  "id": "sample_export",
+  "ok": true,
+  "finished": "2026-11-07T16:03:53.114Z",
+  "results": [
+    {
+      "ok": true,
+      "mode": "opened",
+      "action": "place_svg"
+    },
+    {
+      "ok": true,
+      "layer": "ART - Shading",
+      "width": 864,
+      "height": 540,
+      "action": "place_image"
+    },
+    {
+      "ok": true,
+      "action": "export_png"
+    }
+  ]
+}

@@ -18,5 +18,10 @@ Files: `illustrator/out/bridgehollow_sample_full.ai` / `.png` (bowl, 1 in = 200 
 2. The SVG art is outline-only by design (water is a blue outline, streets and buildings dashed "proposed" outlines, no fills); Illustrator shows the same. Fills come from the panel's apply_fills.
 3. At 100 ft/in the shading image is larger than the artboard (it covers the whole 2400x1500 ft place) and is cropped by the artboard in exports.
 
-## Foundry push test: NOT RUN (waiting)
-`bridge.ps1 version` still returned `unknown op: version` for over 20 minutes of retries (world_info lists varrenmoor-bridge 0.2.0). The GM browser on Arcturus needs Ctrl+F5 (and possibly a world relaunch) so module 0.3.0 loads. Nothing was created or deleted in Foundry. Then run: push-scene to a new scene "ZZ Bridgehollow Sample Push" with the bowl image, verify, push again, push-token, delete-scene for that scene and `Scene.SLPM8ihlgzcIzRaM`.
+## Foundry push test (module ops live after Ctrl+F5; `version` still prints 0.2.0 from the manifest cache, pipeline_ops true)
+Image: `illustrator/out/sample/bowl_export.png` (whole artboard, 2550x1650 px = 150 dpi, from job sample_export). Scene 'ZZ Bridgehollow Sample Push' (2400x1500 px, grid 75 px = 100 ft, 0.75 px/ft).
+- push-scene --drawings roads,water: created 556 walls + 38 drawings; scene get: grid 75/100 ft, Level background src set, flags.varrenmoor.pipelineId + calib present, 556 walls, 38 drawings. PASS
+- second push: 0 created, 556 walls and 38 drawings updated; counts unchanged, one pipeline-flagged scene. PASS
+- push-token (Actor 'bones yellow', --at bld_inn) placed on the sample scene; repeated push moved the same token (no duplicate). PASS
+- delete-scene for the sample scene and the old 'ZZ Illustrator Push Test' (Scene.SLPM8ihlgzcIzRaM; both pipeline-flagged); list shows no ZZ scenes left. PASS
+No bugs found in foundry_push.py.
