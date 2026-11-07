@@ -1,0 +1,449 @@
+{
+ "place": "bridgehollow",
+ "view": "bowl",
+ "fpi": 200.0,
+ "k": 0.36,
+ "x0": -400.0,
+ "y0": -250.0,
+ "margin_pt": 36.0,
+ "labels": {
+  "dis_farm": {
+   "cx": 734.24,
+   "cy": 527.37,
+   "w": 64.88,
+   "h": 10.45,
+   "layer": "Labels - Districts",
+   "tier": "districts",
+   "status": "placed",
+   "text": "FARMLAND",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "dis_authority": {
+   "cx": 398.22,
+   "cy": 415.33,
+   "w": 108.7,
+   "h": 10.45,
+   "layer": "Labels - Districts",
+   "tier": "districts",
+   "status": "placed",
+   "text": "AUTHORITY WARD",
+   "anchor": [
+    531.97,
+    415.33
+   ],
+   "offset": true,
+   "pinned": false
+  },
+  "dis_commoner": {
+   "cx": 393.0,
+   "cy": 393.66,
+   "w": 112.92,
+   "h": 10.45,
+   "layer": "Labels - Districts",
+   "tier": "districts",
+   "status": "placed",
+   "text": "COMMONERS' RING",
+   "anchor": [
+    471.6,
+    406.8
+   ],
+   "offset": true,
+   "pinned": false
+  },
+  "sqr_court": {
+   "cx": 473.04,
+   "cy": 347.58,
+   "w": 58.92,
+   "h": 8.14,
+   "layer": "Labels - Districts",
+   "tier": "plazas",
+   "status": "placed",
+   "text": "Court Square",
+   "anchor": [
+    570.38,
+    406.46
+   ],
+   "offset": true,
+   "pinned": false
+  },
+  "sqr_3": {
+   "cx": 450.65,
+   "cy": 485.91,
+   "w": 39.53,
+   "h": 8.14,
+   "layer": "Labels - Districts",
+   "tier": "plazas",
+   "status": "placed",
+   "text": "Square 3",
+   "anchor": [
+    499.1,
+    485.91
+   ],
+   "offset": true,
+   "pinned": false
+  },
+  "sqr_market": {
+   "cx": 747.83,
+   "cy": 482.94,
+   "w": 63.83,
+   "h": 8.14,
+   "layer": "Labels - Districts",
+   "tier": "plazas",
+   "status": "placed",
+   "text": "Market Square",
+   "anchor": [
+    635.45,
+    411.48
+   ],
+   "offset": true,
+   "pinned": false
+  },
+  "str_pilgrim_road_1": {
+   "cx": 672.09,
+   "cy": 535.57,
+   "w": 28.9,
+   "h": 4.62,
+   "layer": "Labels - Streets",
+   "tier": "civic",
+   "status": "placed",
+   "text": "Pilgrim Road *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_tax_office": {
+   "cx": 771.87,
+   "cy": 568.49,
+   "w": 74.35,
+   "h": 7.15,
+   "layer": "Labels - Buildings",
+   "tier": "civic",
+   "status": "placed",
+   "text": "Tax and Permit Office *",
+   "anchor": [
+    665.71,
+    508.5
+   ],
+   "offset": true,
+   "pinned": false
+  },
+  "bld_customs_house": {
+   "cx": 456.02,
+   "cy": 362.53,
+   "w": 50.46,
+   "h": 7.15,
+   "layer": "Labels - Buildings",
+   "tier": "civic",
+   "status": "placed",
+   "text": "Customs House *",
+   "anchor": [
+    525.42,
+    397.69
+   ],
+   "offset": true,
+   "pinned": false
+  },
+  "bld_inn": {
+   "cx": 603.88,
+   "cy": 396.93,
+   "w": 16.61,
+   "h": 7.15,
+   "layer": "Labels - Buildings",
+   "tier": "civic",
+   "status": "placed",
+   "text": "Inn *",
+   "anchor": [
+    626.2,
+    391.91
+   ],
+   "offset": true,
+   "pinned": false
+  },
+  "bld_smithy": {
+   "cx": 595.16,
+   "cy": 455.03,
+   "w": 24.8,
+   "h": 7.15,
+   "layer": "Labels - Buildings",
+   "tier": "civic",
+   "status": "placed",
+   "text": "Smithy *",
+   "anchor": [
+    558.13,
+    470.66
+   ],
+   "offset": true,
+   "pinned": false
+  },
+  "bld_meeting_hall": {
+   "cx": 482.45,
+   "cy": 531.3,
+   "w": 43.22,
+   "h": 7.15,
+   "layer": "Labels - Buildings",
+   "tier": "civic",
+   "status": "placed",
+   "text": "Meeting Hall *",
+   "anchor": [
+    576.9,
+    467.46
+   ],
+   "offset": true,
+   "pinned": false
+  },
+  "bld_wardens_barracks": {
+   "cx": 601.76,
+   "cy": 380.3,
+   "w": 64.65,
+   "h": 7.15,
+   "layer": "Labels - Buildings",
+   "tier": "civic",
+   "status": "placed",
+   "text": "Wardens' Barracks *",
+   "anchor": [
+    560.43,
+    366.98
+   ],
+   "offset": true,
+   "pinned": false
+  },
+  "bld_treasury": {
+   "cx": 637.19,
+   "cy": 326.75,
+   "w": 51.69,
+   "h": 7.15,
+   "layer": "Labels - Buildings",
+   "tier": "civic",
+   "status": "placed",
+   "text": "Town Treasury *",
+   "anchor": [
+    570.33,
+    358.76
+   ],
+   "offset": true,
+   "pinned": false
+  },
+  "bld_stables": {
+   "cx": 622.9,
+   "cy": 353.66,
+   "w": 28.35,
+   "h": 7.15,
+   "layer": "Labels - Buildings",
+   "tier": "civic",
+   "status": "placed",
+   "text": "Stables *",
+   "anchor": [
+    591.03,
+    353.66
+   ],
+   "offset": true,
+   "pinned": false
+  },
+  "bld_gate_watch": {
+   "cx": 707.38,
+   "cy": 632.12,
+   "w": 54.69,
+   "h": 7.15,
+   "layer": "Labels - Buildings",
+   "tier": "civic",
+   "status": "placed",
+   "text": "Gate Watch Post *",
+   "anchor": [
+    663.39,
+    632.12
+   ],
+   "offset": true,
+   "pinned": false
+  },
+  "bld_magistrate_court": {
+   "cx": 423.12,
+   "cy": 428.13,
+   "w": 63.29,
+   "h": 7.15,
+   "layer": "Labels - Buildings",
+   "tier": "civic",
+   "status": "placed",
+   "text": "Magistrate's Court *",
+   "anchor": [
+    552.47,
+    428.13
+   ],
+   "offset": true,
+   "pinned": false
+  },
+  "bld_records_house": {
+   "cx": 588.31,
+   "cy": 433.36,
+   "w": 51.69,
+   "h": 7.15,
+   "layer": "Labels - Buildings",
+   "tier": "civic",
+   "status": "placed",
+   "text": "Records House *",
+   "anchor": [
+    553.46,
+    415.82
+   ],
+   "offset": true,
+   "pinned": false
+  },
+  "bld_warden_hall": {
+   "cx": 473.78,
+   "cy": 337.87,
+   "w": 48.0,
+   "h": 7.15,
+   "layer": "Labels - Buildings",
+   "tier": "civic",
+   "status": "placed",
+   "text": "Warden's Hall *",
+   "anchor": [
+    557.75,
+    388.84
+   ],
+   "offset": true,
+   "pinned": false
+  },
+  "bld_lockup": {
+   "cx": 595.66,
+   "cy": 423.95,
+   "w": 27.25,
+   "h": 7.15,
+   "layer": "Labels - Buildings",
+   "tier": "civic",
+   "status": "placed",
+   "text": "Lockup *",
+   "anchor": [
+    553.09,
+    404.01
+   ],
+   "offset": true,
+   "pinned": false
+  },
+  "bld_mill": {
+   "cx": 656.98,
+   "cy": 566.44,
+   "w": 16.47,
+   "h": 7.15,
+   "layer": "Labels - Buildings",
+   "tier": "civic",
+   "status": "placed",
+   "text": "Mill *",
+   "anchor": [
+    623.29,
+    566.44
+   ],
+   "offset": true,
+   "pinned": false
+  }
+ },
+ "qa": {
+  "labels_shown": 21,
+  "labels_hidden": 136,
+  "hidden_by_scale": 136,
+  "hidden_by_collision": 0,
+  "numbered": 0,
+  "with_leader": 19,
+  "pinned": 0,
+  "text_over_features_pct": 17.0,
+  "over_features_by_kind_pct": {
+   "building": 0.0,
+   "road": 5.0,
+   "water": 12.0
+  },
+  "labels_over_25pct": 8,
+  "label_label_overlaps": 0,
+  "labels_over_contour_labels": 0,
+  "leaders_crossing_other_labels": 0,
+  "worst": [
+   {
+    "id": "bld_lockup",
+    "text": "Lockup *",
+    "tier": "civic",
+    "over_pct": 99.2,
+    "by_kind": {
+     "road": 0.14,
+     "water": 0.85
+    }
+   },
+   {
+    "id": "bld_smithy",
+    "text": "Smithy *",
+    "tier": "civic",
+    "over_pct": 93.0,
+    "by_kind": {
+     "water": 0.93
+    }
+   },
+   {
+    "id": "bld_stables",
+    "text": "Stables *",
+    "tier": "civic",
+    "over_pct": 90.9,
+    "by_kind": {
+     "water": 0.91
+    }
+   },
+   {
+    "id": "bld_records_house",
+    "text": "Records House *",
+    "tier": "civic",
+    "over_pct": 62.8,
+    "by_kind": {
+     "building": 0.01,
+     "road": 0.17,
+     "water": 0.45
+    }
+   },
+   {
+    "id": "bld_wardens_barracks",
+    "text": "Wardens' Barracks *",
+    "tier": "civic",
+    "over_pct": 59.6,
+    "by_kind": {
+     "road": 0.22,
+     "water": 0.38,
+     "junction": 1.0
+    }
+   },
+   {
+    "id": "bld_inn",
+    "text": "Inn *",
+    "tier": "civic",
+    "over_pct": 44.9,
+    "by_kind": {
+     "water": 0.45
+    }
+   },
+   {
+    "id": "bld_treasury",
+    "text": "Town Treasury *",
+    "tier": "civic",
+    "over_pct": 40.8,
+    "by_kind": {
+     "water": 0.41
+    }
+   },
+   {
+    "id": "dis_farm",
+    "text": "FARMLAND",
+    "tier": "districts",
+    "over_pct": 36.4,
+    "by_kind": {
+     "road": 0.36
+    }
+   }
+  ],
+  "overlapping_pairs": [],
+  "hidden": []
+ },
+ "declutter": {
+  "enabled": true,
+  "scale_visibility": true,
+  "collision": "hide",
+  "score": true,
+  "legend": false,
+  "quiet": false
+ }
+}

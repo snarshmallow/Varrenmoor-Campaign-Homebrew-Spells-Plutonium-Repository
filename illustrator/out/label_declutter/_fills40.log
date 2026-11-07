@@ -1,0 +1,6 @@
+fills: style 'Full map (textured)', window 880,550 - 1520,950 ft at 1 in = 40 ft
+  fields    fill_fields.png 3200x2000 px, 8.2% covered
+  water     fill_water.png 3200x2000 px, 13.8% covered
+  streets   fill_streets.png 3200x2000 px, 33.3% covered
+  buildings fill_buildings.png 3200x2000 px, 19.0% covered
+wrote out/label_declutter/fills_town40\fills.json

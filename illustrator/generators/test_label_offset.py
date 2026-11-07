@@ -76,10 +76,15 @@ def main():
     assert not L.LineString(r4.leader).intersects(Polygon(nb)), "leader does not cross a neighbour"
 
     # svg ids
-    svg = "".join(L.leader_svg(sm, 0.4))
-    root = ET.fromstring(f'<svg xmlns="http://www.w3.org/2000/svg">{svg}</svg>')
+    parts = L.leader_svg(sm, P)
+    root = ET.fromstring(f'<svg xmlns="http://www.w3.org/2000/svg">{"".join(x for _, x in parts)}</svg>')
     ids = [e.get("id") for e in root]
-    assert ids == ["small_leader", "small_leader_dot"], ids
+    assert ids == ["small_leader_casing", "small_leader", "small_leader_dot"], ids
+    assert [l for l, _ in parts] == ["Leaders", "Leaders", "Leader Anchors"]
+    assert root[1].get("stroke") == "#ffffff" and root[0].get("stroke") == "#1a1a1a", "white leader over a dark casing by default"
+    assert float(root[0].get("stroke-width")) > float(root[1].get("stroke-width"))
+    plain = ET.fromstring(f'<svg xmlns="http://www.w3.org/2000/svg">{"".join(x for _, x in L.leader_svg(sm, L.LabelParams.from_dict({"casing": False, "match_text": True}), "#223344"))}</svg>')
+    assert [e.get("id") for e in plain] == ["small_leader", "small_leader_dot"] and plain[0].get("stroke") == "#223344", "no casing, text colour"
 
     # full render: Leaders sublayer inside LABELS
     import render_world as R
@@ -90,8 +95,10 @@ def main():
     ns = "{http://www.w3.org/2000/svg}"
     labels = next(g for g in tree.iter(ns + "g") if g.get("id") == "LABELS")
     leaders = next(g for g in labels if g.get("id") == "Leaders")
-    n = [e.get("id") for e in leaders if e.tag == ns + "path"]
-    assert n and all(i.endswith("_leader") for i in n), n
+    n = [e.get("id").replace("_x5F_", "_") for e in leaders if e.tag == ns + "path"]
+    assert n and all(i.endswith("_leader") or i.endswith("_leader_casing") for i in n), n
+    anchors = next(g for g in labels if g.get("id") == "Leader Anchors")
+    assert all(e.get("id").replace("_x5F_", "_").endswith("_leader_dot") for e in anchors) and len(list(anchors)) == len([i for i in n if i.endswith("_leader")])
     out2 = os.path.join(os.path.dirname(out), "t2.svg")
     R.render(model, "town", out2, None, {"scale": 40}, {"enabled": False})
     t2 = ET.parse(out2).getroot()

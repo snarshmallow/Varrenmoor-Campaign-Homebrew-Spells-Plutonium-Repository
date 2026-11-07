@@ -1,0 +1,310 @@
+{
+ "place": "bridgehollow",
+ "view": "town",
+ "fpi": 40.0,
+ "k": 1.8,
+ "x0": 880.0,
+ "y0": 550.0,
+ "margin_pt": 36.0,
+ "labels": {
+  "bld_inn": {
+   "cx": 683.01,
+   "cy": 375.57,
+   "w": 20.78,
+   "h": 24.42,
+   "layer": "Labels - Buildings",
+   "tier": "civic",
+   "status": "placed",
+   "text": "Inn *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_records_house": {
+   "cx": 319.32,
+   "cy": 495.09,
+   "w": 45.02,
+   "h": 24.42,
+   "layer": "Labels - Buildings",
+   "tier": "civic",
+   "status": "placed",
+   "text": "Records House *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_warden_hall": {
+   "cx": 340.74,
+   "cy": 360.18,
+   "w": 48.98,
+   "h": 24.42,
+   "layer": "Labels - Buildings",
+   "tier": "civic",
+   "status": "placed",
+   "text": "Warden's Hall *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_lockup": {
+   "cx": 317.43,
+   "cy": 436.05,
+   "w": 46.19,
+   "h": 12.21,
+   "layer": "Labels - Buildings",
+   "tier": "civic",
+   "status": "placed",
+   "text": "Lockup *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "sqr_court": {
+   "cx": 403.92,
+   "cy": 448.29,
+   "w": 45.13,
+   "h": 24.42,
+   "layer": "Labels - Districts",
+   "tier": "plazas",
+   "status": "placed",
+   "text": "Court Square",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "sqr_market": {
+   "cx": 729.27,
+   "cy": 473.4,
+   "w": 91.59,
+   "h": 12.21,
+   "layer": "Labels - Districts",
+   "tier": "plazas",
+   "status": "placed",
+   "text": "Market Square",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "dis_authority": {
+   "cx": 457.9,
+   "cy": 473.2,
+   "w": 158.08,
+   "h": 15.62,
+   "layer": "Labels - Districts",
+   "tier": "districts",
+   "status": "placed",
+   "text": "AUTHORITY WARD",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_meeting_hall": {
+   "cx": 496.06,
+   "cy": 739.47,
+   "w": 73.46,
+   "h": 12.21,
+   "layer": "Labels - Buildings",
+   "tier": "civic",
+   "status": "placed",
+   "text": "Meeting Hall *",
+   "anchor": [
+    436.5,
+    753.3
+   ],
+   "offset": true,
+   "pinned": false
+  },
+  "bld_customs_house": {
+   "cx": 248.21,
+   "cy": 387.25,
+   "w": 85.81,
+   "h": 12.21,
+   "layer": "Labels - Buildings",
+   "tier": "civic",
+   "status": "placed",
+   "text": "Customs House *",
+   "anchor": [
+    179.1,
+    404.46
+   ],
+   "offset": true,
+   "pinned": false
+  },
+  "bld_wardens_barracks": {
+   "cx": 449.46,
+   "cy": 250.92,
+   "w": 110.06,
+   "h": 12.21,
+   "layer": "Labels - Buildings",
+   "tier": "civic",
+   "status": "placed",
+   "text": "Wardens' Barracks *",
+   "anchor": [
+    354.15,
+    250.92
+   ],
+   "offset": true,
+   "pinned": false
+  },
+  "bld_treasury": {
+   "cx": 475.85,
+   "cy": 229.03,
+   "w": 87.91,
+   "h": 12.21,
+   "layer": "Labels - Buildings",
+   "tier": "civic",
+   "status": "placed",
+   "text": "Town Treasury *",
+   "anchor": [
+    403.65,
+    209.79
+   ],
+   "offset": true,
+   "pinned": false
+  },
+  "bld_stables": {
+   "cx": 559.81,
+   "cy": 164.69,
+   "w": 48.05,
+   "h": 12.21,
+   "layer": "Labels - Buildings",
+   "tier": "civic",
+   "status": "placed",
+   "text": "Stables *",
+   "anchor": [
+    507.15,
+    184.32
+   ],
+   "offset": true,
+   "pinned": false
+  },
+  "bld_magistrate_court": {
+   "cx": 481.26,
+   "cy": 556.65,
+   "w": 107.73,
+   "h": 12.21,
+   "layer": "Labels - Buildings",
+   "tier": "civic",
+   "status": "placed",
+   "text": "Magistrate's Court *",
+   "anchor": [
+    314.37,
+    556.65
+   ],
+   "offset": true,
+   "pinned": false
+  }
+ },
+ "qa": {
+  "labels_shown": 31,
+  "labels_hidden": 0,
+  "hidden_by_scale": 0,
+  "hidden_by_collision": 0,
+  "numbered": 0,
+  "with_leader": 6,
+  "pinned": 0,
+  "text_over_features_pct": 40.4,
+  "over_features_by_kind_pct": {
+   "building": 5.3,
+   "plaza": 3.6,
+   "road": 22.8,
+   "water": 12.6
+  },
+  "labels_over_25pct": 17,
+  "label_label_overlaps": 1,
+  "labels_over_contour_labels": 0,
+  "leaders_crossing_other_labels": 0,
+  "worst": [
+   {
+    "id": "dis_authority",
+    "text": "AUTHORITY WARD",
+    "tier": "districts",
+    "over_pct": 100.0,
+    "by_kind": {
+     "plaza": 0.38,
+     "road": 0.57,
+     "water": 0.46
+    }
+   },
+   {
+    "id": "str_019",
+    "text": "Potters Row *",
+    "tier": "streets",
+    "over_pct": 99.8,
+    "by_kind": {
+     "road": 1.0
+    }
+   },
+   {
+    "id": "str_pilgrim_road_bridge",
+    "text": "Pilgrim Bridge *",
+    "tier": "civic",
+    "over_pct": 95.0,
+    "by_kind": {
+     "water": 0.95
+    }
+   },
+   {
+    "id": "str_006",
+    "text": "Weavers Walk *",
+    "tier": "streets",
+    "over_pct": 79.6,
+    "by_kind": {
+     "building": 0.27,
+     "road": 0.53
+    }
+   },
+   {
+    "id": "bld_meeting_hall",
+    "text": "Meeting Hall *",
+    "tier": "civic",
+    "over_pct": 72.2,
+    "by_kind": {
+     "water": 0.72
+    }
+   },
+   {
+    "id": "str_015",
+    "text": "Wheelwright Lane *",
+    "tier": "streets",
+    "over_pct": 62.9,
+    "by_kind": {
+     "road": 0.63
+    }
+   },
+   {
+    "id": "str_013",
+    "text": "Thatchers Way *",
+    "tier": "streets",
+    "over_pct": 62.0,
+    "by_kind": {
+     "road": 0.62
+    }
+   },
+   {
+    "id": "bld_magistrate_court",
+    "text": "Magistrate's Court *",
+    "tier": "civic",
+    "over_pct": 60.6,
+    "by_kind": {
+     "water": 0.61
+    }
+   }
+  ],
+  "overlapping_pairs": [
+   [
+    "str_013",
+    "str_015"
+   ]
+  ],
+  "hidden": []
+ },
+ "declutter": {
+  "enabled": false,
+  "scale_visibility": false,
+  "collision": "keep",
+  "score": false,
+  "legend": false,
+  "quiet": false
+ }
+}

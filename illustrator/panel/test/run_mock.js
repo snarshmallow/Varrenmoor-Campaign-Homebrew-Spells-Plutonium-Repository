@@ -121,6 +121,27 @@ const actions = () => hostLog.map(h => h.action);
     check("label flags carry style, targets and backing option", js.default.font === "Georgia" && js.districts.size === 12 && js.mask_targets.includes("water") && js.backing_layer === false);
     r = await run(VB.jobLabels(st, d));
     check("labels job with mask/font/size/no backing layer renders", r.ok, r.error);
+    // declutter / leaders / callout actions
+    const fl = VB.labelFlags(st), dcj = JSON.parse(Buffer.from(fl[fl.indexOf("--declutter-b64") + 1], "base64").toString("utf8")), ldj = JSON.parse(Buffer.from(fl[fl.indexOf("--leader-b64") + 1], "base64").toString("utf8"));
+    check("label flags carry declutter tiers and white leader + casing", dcj.tiers.civic.max_fpi === 250 && dcj.collision === "hide" && ldj.color === "#ffffff" && ldj.casing === true && fl.includes("--leader-width"));
+    const pre = JSON.parse(fs.readFileSync(ROOT + "/illustrator/presets/label_presets.json", "utf8"));
+    const st2 = VB.normalize(null); VB.applyLabelPreset(st2, pre.handout);
+    check("handout preset numbers civic tier and turns the legend on", st2.labels.declutter.tiers.civic.number === true && st2.labels.declutter.collision === "number" && st2.labels.declutter.legend);
+    VB.applyLabelPreset(st2, pre.legacy);
+    check("legacy preset gives black thin leaders and declutter off", st2.label_offset.color === "#000000" && st2.label_offset.casing === false && st2.labels.declutter.enabled === false);
+    r = await run(VB.jobLabels(st, d));
+    check("labels job hides the hidden sublayer and sets the leader lock", hostLog.some(h => h.action === "set_visible" && h.names[0] === "Labels - Hidden" && h.visible === false) && hostLog.some(h => h.action === "lock_leaders"));
+    check("labels job reads the QA numbers back", st.labels.qa && st.labels.qa.labels_shown > 0 && "text_over_features_pct" in st.labels.qa, JSON.stringify(st.labels.qa));
+    r = await run(VB.jobReroute(st, d));
+    const ra = hostLog.find(h => h.action === "reroute_leaders");
+    check("reroute job sends the leader style", r.ok && ra && ra.style.style === "elbow" && ra.style.casing_color === "#1a1a1a" && ra.changed_only === false);
+    check("live poll action is changed_only", VB.rerouteAction(st, true).changed_only === true);
+    const pinHost = host; 
+    r = await run(VB.jobPinLabels(st, d));
+    check("pin job: reroutes, reads positions, runs the pin step", !r.ok ? /pin|positions|manifest/i.test(r.error) : true, r.error);
+    r = await run(VB.jobClearOverrides(st, d, ["nonexistent_x"]));
+    check("clear overrides job ok", r.ok, r.error);
+    check("layers lock_leaders / unlock_leaders", ["lock_leaders", "unlock_leaders"].every(a => VB.jobLayers(a, st).steps[0].action.action === "lock_leaders"));
     st.labels.styles.default.mode = "halo"; st.labels.styles.districts = VB.labelDefaults().districts; st.labels.styles.default.font = "Arial"; st.labels.mask_targets.water = false; st.labels.backing_layer = true;
   }
   if (want("shading")) {

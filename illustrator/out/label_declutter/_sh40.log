@@ -1,0 +1,8 @@
+terrain source: base
+  phase       farmland: mean weight 0.937
+  phase          grass: mean weight 1.000
+  phase         forest: mean weight 0.000
+  phase          scree: mean weight 0.000
+  phase           rock: mean weight 0.000
+  phase           snow: mean weight 0.000
+wrote D:\Varrenmoor-Campaign-Homebrew-Spells-Plutonium-Repository\illustrator\out\label_declutter\shading_town40.png 3200x2000 px (5 px/ft)

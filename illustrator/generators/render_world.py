@@ -10,6 +10,7 @@ Default output for the town view: illustrator/out/bridgehollow_town.svg
 Layer tree: see illustrator/DESIGN.md section 3. GEN layers are rewritten; ART layers are emitted empty.
 """
 import argparse
+import base64
 import glob
 import json
 import math
@@ -24,6 +25,8 @@ import viewcfg  # noqa: E402
 import terrain as tr  # noqa: E402
 import label_offset as lbo  # noqa: E402
 import label_style as lst  # noqa: E402
+import label_declutter as ld  # noqa: E402
+import dataclasses as _dc  # noqa: E402
 import region_draw as rdraw  # noqa: E402
 import worldio  # noqa: E402
 from xml.sax.saxutils import escape  # noqa: E402
@@ -33,7 +36,8 @@ PAGE_W_IN, PAGE_H_IN, MARGIN_IN = 17, 11, 0.5   # defaults; the active view_sett
 
 SPEC = [
     ("NOTES", []),
-    ("LABELS", ["Leaders", "Labels - Districts", "Labels - Streets", "Labels - Buildings", "Labels - Rooms", ct.LAYER_LABELS, lst.LAYER_BACKING]),
+    ("LABELS", [ld.LAYER_LEGEND, ld.LAYER_MARKERS, lbo.LAYER_ANCHORS, lbo.LAYER_LEADERS, "Labels - Districts", "Labels - Streets", "Labels - Buildings",
+                "Labels - Rooms", ld.LAYER_HIDDEN, ct.LAYER_LABELS, lst.LAYER_BACKING]),
     ("ART - Top", []),
     ("ART - Fills", []),
     ("ART - Textures", []),
@@ -46,19 +50,19 @@ CSS = """\
 path { fill: none; }
 .guide-line { fill: none; stroke: #7a7a7a; stroke-width: 0.35; }
 .guide-major { fill: none; stroke: #5a5a5a; stroke-width: 0.6; }
+.grid-minor { fill: none; stroke: #7a766c; stroke-width: 0.3; stroke-opacity: 0.38; }
+.grid-major { fill: none; stroke: #6c685e; stroke-width: 0.5; stroke-opacity: 0.55; }
 .field { fill: none; stroke: #5d7a3a; stroke-width: 0.4; }
 .guide-major { fill: none; stroke: #5a5a5a; stroke-width: 0.6; }
 .field { fill: none; stroke: #5d7a3a; stroke-width: 0.4; }
 .wall { fill: none; stroke: #000000; stroke-width: 1.25; }
-.grid-minor { fill: none; stroke: #7a766c; stroke-width: 0.3; stroke-opacity: 0.38; }
-.grid-major { fill: none; stroke: #6c685e; stroke-width: 0.5; stroke-opacity: 0.55; }
 .road { fill: none; stroke: #000000; stroke-width: 0.75; }
 .water { fill: none; stroke: #1a4f8a; stroke-width: 0.75; }
 .bar { fill: none; stroke: #9c8556; stroke-width: 0.4; }
 .proposed { stroke-dasharray: 3 1.5; }
 text { fill: #000000; stroke: none; font-family: Arial, sans-serif; }
-.leader { fill: none; stroke: #000000; }
-.leader-dot { stroke: none; fill: #000000; }
+.leader { fill: none; }
+.leader-casing { fill: none; }
 """ + ct.CSS + rdraw.CSS
 
 
@@ -247,6 +251,32 @@ def street_label(v, e, size, fpi, name):
     return x, y, ang
 
 
+def street_label_cands(v, e, size, fpi, name):
+    """All usable street-name positions [(x, y, angle)] (page pt, rotated along the street), best first; [] when the street is too short."""
+    from shapely.geometry import LineString
+    ln = LineString(e["geometry"]["points"])
+    if ln.length < max(2.0 * fpi, 40):
+        return []
+    out = []
+    for f in (0.5, 0.35, 0.65, 0.25, 0.75):
+        p = ln.interpolate(f, normalized=True)
+        if not v.inside((p.x, p.y)):
+            continue
+        d = ln.length * f
+        a, m, b = ln.interpolate(max(d - 12, 0)), ln.interpolate(d), ln.interpolate(min(d + 12, ln.length))
+        ang = math.degrees(math.atan2(b.y - a.y, b.x - a.x))
+        if ang > 90 or ang <= -90:
+            ang = (ang + 180 + 180) % 360 - 180
+        th = math.radians(ang)
+        off = e["geometry"]["width_ft"] / 2 + size / v.k * 0.7
+        nx_, ny_ = -math.sin(th), math.cos(th)
+        if ny_ > 0:                      # keep the label on the upper side of the street on the page
+            nx_, ny_ = -nx_, -ny_
+        x, y = v.px((m.x + nx_ * off, m.y + ny_ * off))
+        out.append((x, y, ang))
+    return out
+
+
 def cut_d(rings, cut, closed=True):
     """Path data for rings (page pt) with the parts under `cut` removed (real geometry: open sub-paths, no clipping paths)."""
     from shapely.geometry import LineString
@@ -339,7 +369,9 @@ def render(model, view_arg, out_path, topts=None, cfg_over=None, lopts=None, lst
     lf = min(max((100.0 / fpi) ** 0.5, 0.6), 1.6)     # label size factor follows the scale
     ls = lambda base: round(base * lf, 1)
 
-    t = LayerTree(SPEC, pw, ph, css=CSS, locked=["GUIDES", "Grid", "Scale bar", "North arrow", "Bounds"])
+    lock_leaders = bool((lopts if lopts is not None else cfg.get("label_offset") or {}).get("lock_leaders", True))
+    t = LayerTree(SPEC, pw, ph, css=CSS, locked=["GUIDES", "Grid", "Scale bar", "North arrow", "Bounds"] + ([lbo.LAYER_LEADERS] if lock_leaders else []),
+                  hidden=[ld.LAYER_HIDDEN])
 
     lcfg = lst.merge(viewcfg.label_style(place["id"]), *(lstyle if isinstance(lstyle, list) else [lstyle]))
     styles = {c_: lst.resolve(lcfg, c_) for c_ in lst.CATEGORIES}
@@ -410,12 +442,28 @@ def render(model, view_arg, out_path, topts=None, cfg_over=None, lopts=None, lst
                               **{k_: topts[k_] for k_ in ("decimals", "label_spacing_ft", "min_len_ft", "follow_line",
                                                           "upright", "labels", "emphasize_datum") if k_ in topts})
         cs = ct.build(h, meta["cell_ft"], frame, cp, mask)
+        cs.halo = topts.get("halo", True)
+        if topts.get("shade_luma") != "none" and cs.halo:      # contour colour/casing follows the shading under it
+            from scipy import ndimage as ndi_
+            lum, lppf = shading_luma(h, meta, topts.get("shade_luma") or "auto")
+            def luma_at(xp, yp, _l=lum, _f=frame, _p=lppf):
+                return ndi_.map_coordinates(_l, [((yp - _f.oy) / _f.k + _f.y0) * _p, ((xp - _f.ox) / _f.k + _f.x0) * _p], order=1, mode="nearest")
+            ct.classify_tone(cs, luma_at)
+            tc = {k_: sum(1 for p_ in cs.pieces if p_.get("tone") == k_) for k_ in ("dark", "mid", "light")}
+            print(f"contour tone by shading: {tc}")
         print(f"contours: {len(cs.pieces)} paths, {len(cs.labels)} labels, relief {meta['elev_min']:.0f}..{meta['elev_max']:.0f} ft, "
               f"mask={'on (%d polygons)' % len(mask) if mask else 'off'}")
 
     # LABELS (closed shapes get an offset + leader when the text does not fit inside; see label_offset.py).
-    # Text styling, wrapping, halo / backing box / knock-out: label_style.py
+    # Text styling, wrapping, halo / backing box / knock-out: label_style.py. Tiers, scale visibility, scoring, pinned positions,
+    # numbered legend, QA: label_declutter.py
+    from shapely import affinity as _aff
+    from shapely.geometry import Polygon as _Poly, LineString as _Line
+    dc = dopts if dopts is not None else ld.merge(viewcfg.declutter(place["id"]))
     lp = lbo.LabelParams.from_dict(lopts if lopts is not None else cfg.get("label_offset"))
+    qf = 0.85 if dc.get("quiet") else 1.0
+    if dc.get("quiet"):
+        lp.stroke_width, lp.dash, lp.casing_width, lp.dot_radius = min(lp.stroke_width, 0.5), lp.dash or "0.9 1.6", min(lp.casing_width, 1.2), min(lp.dot_radius, 1.1)
     m_pt = margin * 72
     shapes_pt = []
     for e in model["buildings"] + [d for d in model["districts"] if d["kind"] == "square"]:
@@ -428,8 +476,42 @@ def render(model, view_arg, out_path, topts=None, cfg_over=None, lopts=None, lst
             if rc:
                 shapes_pt.append((f"{sid}#{i_}", [v.px(q) for q in rc]))
     placer = lbo.Placer(lp, frame=(m_pt, m_pt, W - m_pt, H - m_pt), shapes=shapes_pt)
+    to_pt = [v.k, 0, 0, v.k, m_pt - v.x0 * v.k, m_pt - v.y0 * v.k]
+    from shapely.geometry import box as _box
+    win = _box(v.x0 - 50, v.y0 - 50, v.x1 + 50, v.y1 + 50)
+    feats = {"building": [], "plaza": [], "road": [], "water": []}
+    for e in model["buildings"]:
+        g_ = _Poly(entity_polygon(e)).buffer(0)
+        if g_.intersects(win):
+            feats["building"].append((e["id"], _aff.affine_transform(g_, to_pt)))
+    for e in model["districts"]:
+        if e["kind"] == "square":
+            feats["plaza"].append((e["id"], _aff.affine_transform(_Poly(entity_polygon(e)).buffer(0), to_pt)))
+    for sid, sh in shapes.items():
+        if not sh.is_empty and sh.intersects(win):
+            feats["road"].append((sid, _aff.affine_transform(sh, to_pt)))
+    for e in model["water"]:
+        g_ = _Poly(entity_polygon(e)).buffer(0)
+        if g_.intersects(win):
+            feats["water"].append((e["id"], _aff.affine_transform(g_, to_pt)))
+    junc = []
+    sl_ = [(s_["id"], _Line(s_["geometry"]["points"])) for s_ in model["streets"] if len(s_["geometry"]["points"]) > 1]
+    for i_ in range(len(sl_)):
+        for j_ in range(i_ + 1, len(sl_)):
+            x_ = sl_[i_][1].intersection(sl_[j_][1])
+            for p_ in (x_.geoms if hasattr(x_, "geoms") else [x_]):
+                if p_.geom_type == "Point" and v.inside((p_.x, p_.y)):
+                    junc.append(v.px((p_.x, p_.y)))
+    placer.set_features(feats, junc, dc.get("weights"))
+    placer.score = bool(dc.get("score"))
+    placer.move_thresh = float(dc.get("area_move", 0.30))
+    overrides = ld.load_overrides(place["id"]) if dc.get("overrides") else {}
+    abbr = lst.load_abbreviations(extra=dc.get("abbreviations"))
+    sampler = ld.make_sampler(dc["contrast_png"]) if dc.get("contrast_png") else None
+    ft_to_pt = lambda q: (m_pt + (q[0] - v.x0) * v.k, m_pt + (q[1] - v.y0) * v.k)
     recs = []                                           # every label as a lst.Rec
     est = styles["elevation"]
+    contour_boxes = []
     if cs is not None:
         for lb in cs.labels:
             w_ = max(lst.measure(lb["text"], lb["size"], est), 1.0)
@@ -437,27 +519,45 @@ def render(model, view_arg, out_path, topts=None, cfg_over=None, lopts=None, lst
                           lb["rot"], lb["size"], est, "contour-label")
             recs.append(rec)
             placer.add_fixed_box(lst.rec_box(rec).buffer(1.0))
-    meta = {}
+            contour_boxes.append(lst.rec_box(rec))
+    meta = {}                                           # entity id -> (layer, size, style, tier, text, kind)
+    legacy_rows = []
+    hidden_scale = []                                   # (id, layer, size, style, tier, text, (x, y)) too small for this view scale
+
+    on_fail = dc.get("collision", "hide") if dc.get("enabled") else "keep"
+
+    def tier_info(cat, e):
+        tier = ld.tier_of(e.get("kind"), cat)
+        tc = ld.tier_cfg(dc, tier)
+        return tier, tc, (tc["priority"] if dc.get("enabled") else 0)
 
     def lab(cat, layer, e, s, size, auto_upper=False, ratio=1.0):
         pg = v.clip(entity_polygon(e))
         c = tuple(e["label_point"]) if e.get("label_point") else centroid(entity_polygon(e))
-        cs.halo = topts.get("halo", True)
-        if topts.get("shade_luma") != "none" and cs.halo:      # contour colour/casing follows the shading under it
-            from scipy import ndimage as ndi_
-            lum, lppf = shading_luma(h, meta, topts.get("shade_luma") or "auto")
-            def luma_at(xp, yp, _l=lum, _f=frame, _p=lppf):
-                return ndi_.map_coordinates(_l, [((yp - _f.oy) / _f.k + _f.y0) * _p, ((xp - _f.ox) / _f.k + _f.x0) * _p], order=1, mode="nearest")
-            ct.classify_tone(cs, luma_at)
-            tc = {k_: sum(1 for p_ in cs.pieces if p_.get("tone") == k_) for k_ in ("dark", "mid", "light")}
-            print(f"contour tone by shading: {tc}")
         if not pg or not v.inside(c):
             return
         st = styles[cat]
-        sz = round(st.size * ratio, 1) if st.size else size
-        meta[e["id"]] = (layer, sz, st)
-        lays, off = lst.build_layouts(lst.apply_case(s, st, auto_upper), st, sz, v.k)
-        placer.add(e["id"], [v.px(q) for q in pg], s, sz, st.bold, None, point=v.px(c), layouts=lays, offset_layout=off)
+        tier, tc, pr = tier_info(cat, e)
+        tf = (tc.get("size") or 1.0) if dc.get("enabled") else 1.0
+        sz = round(st.size * ratio * tf * qf, 1) if st.size else round(size * tf * qf, 1)
+        txt = lst.apply_case(s, st, auto_upper)
+        if not ld.visible(dc, tier, fpi):
+            hidden_scale.append((e["id"], layer, sz, st, tier, txt, v.px(c)))
+            return
+        meta[e["id"]] = (layer, sz, st, tier, txt, e.get("kind"))
+        pp = [v.px(q) for q in pg]
+        xs = [q[0] for q in pp]
+        lays, offs = lst.build_layouts_ex(txt, st, sz, v.k, shape_w=max(xs) - min(xs), abbr=abbr)
+        ov = None
+        if e["id"] in overrides:
+            o_ = overrides[e["id"]]
+            cx_, cy_ = ft_to_pt((o_["x_ft"], o_["y_ft"]))
+            if m_pt <= cx_ <= W - m_pt and m_pt <= cy_ <= H - m_pt:
+                ov = {"cx": cx_, "cy": cy_, "anchor": ft_to_pt(o_["anchor_ft"]) if o_.get("anchor_ft") else None}
+        mc = tc.get("max_cover") if dc.get("enabled") else None
+        placer.add(e["id"], pp, s, sz, st.bold, None, point=v.px(c), layouts=lays, offset_layouts=offs, priority=pr,
+                   on_fail=on_fail,
+                   score_inside=(cat == "districts" and bool(dc.get("score"))), max_cover=mc, override=ov, leader=bool(tc.get("leader", True)) or not dc.get("enabled"), number=bool(tc.get("number")) and dc.get("enabled"))
 
     for e in model["districts"]:
         if e["kind"] == "district":
@@ -470,37 +570,131 @@ def render(model, view_arg, out_path, topts=None, cfg_over=None, lopts=None, lst
         for e in model["streets"]:
             if kind == "bowl" and e["geometry"]["width_ft"] < 22 and e["kind"] != "road":
                 continue
-            sz = sst.size or ls(6)
+            tier, tc, pr = tier_info("streets", e)
+            tf = (tc.get("size") or 1.0) if dc.get("enabled") else 1.0
+            sz = round((sst.size * tf if sst.size else ls(6) * tf) * qf, 1)
             txt = lst.apply_case(e["name"] + " *", sst)
-            r_ = street_label(v, e, sz, fpi, txt)
-            if r_:
-                x_, y_, ang = r_
+            cands = street_label_cands(v, e, sz, fpi, txt)
+            if not cands:
+                continue
+            w_, h_ = lst.measure(txt, sz, sst), lst.block_height(1, sz, sst)
+            cl = []
+            for (x_, y_, ang) in cands:
                 th = math.radians(ang)
-                w_, h_ = lst.measure(txt, sz, sst), lst.block_height(1, sz, sst)
-                rec = lst.Rec(f"lbl_{e['id']}", "Labels - Streets", [txt], x_ + 0.35 * sz * math.sin(th), y_ - 0.35 * sz * math.cos(th),
-                              w_, h_, ang, sz, sst)
+                cl.append((x_ + 0.35 * sz * math.sin(th), y_ - 0.35 * sz * math.cos(th), ang))
+            if not ld.visible(dc, tier, fpi):
+                hidden_scale.append((e["id"], "Labels - Streets", sz, sst, tier, txt, (cl[0][0], cl[0][1]), cl[0][2]))
+                continue
+            meta[e["id"]] = ("Labels - Streets", sz, sst, tier, txt, e.get("kind"))
+            if not dc.get("enabled"):                    # legacy: first position, fixed, placed before everything else
+                rec = lst.Rec(f"{e['id']}_label", "Labels - Streets", [txt], cl[0][0], cl[0][1], w_, h_, cl[0][2], sz, sst)
                 recs.append(rec)
                 placer.add_fixed_box(lst.rec_box(rec).buffer(1.0))
+                legacy_rows.append({"id": e["id"], "text": txt, "tier": tier, "status": "placed", "why": None, "box": lst.rec_box(rec), "leader": None, "pinned": False})
+                continue
+            ov = None
+            if e["id"] in overrides:
+                o_ = overrides[e["id"]]
+                cx_, cy_ = ft_to_pt((o_["x_ft"], o_["y_ft"]))
+                ov = {"cx": cx_, "cy": cy_, "rot": cl[0][2]}
+            placer.add_line(e["id"], cl, w_, h_, txt, sz, priority=pr, on_fail="hide" if on_fail == "number" else on_fail,
+                            max_cover=tc.get("max_cover"), override=ov)
     for e in model["buildings"]:
-        if kind != "building" and e["kind"] in CIVIC_SKIP and fpi >= 40:
+        if kind != "building" and e["kind"] in CIVIC_SKIP and fpi >= 40 and not dc.get("scale_visibility"):
             continue
         lab("buildings", "Labels - Buildings", e, e["name"] + " *", ls(7) if kind != "building" else 10)
     if kind == "building":
         for r in blds[ident].get("rooms", []):
             lab("rooms", "Labels - Rooms", r, r["name"], 8)
-    n_off = 0
-    for res in placer.solve():
-        layer, sz, st = meta[res.id]
-        recs.append(lst.Rec(f"lbl_{res.id}", layer, res.lines, res.cx, res.cy, res.w, res.h, res.rot, sz, st))
+
+    results = placer.solve()
+    for hs in hidden_scale:                              # too small for this scale: kept in the hidden sublayer at the label point
+        id_, layer, sz, st, tier, txt, pt = hs[:7]
+        hst = _dc.replace(st, mode="none", knockout=False)
+        w_, h_ = lst.measure(txt, sz, hst), lst.block_height(1, sz, hst)
+        recs.append(lst.Rec(f"{id_}_label", ld.LAYER_HIDDEN, [txt], pt[0], pt[1], w_, h_, hs[7] if len(hs) > 7 else None, sz, hst, "hidden-label"))
+    numbered = []
+    rows, manifest_labels = list(legacy_rows), {}
+    n_off = n_hidden = n_pinned = 0
+    for res in results:
+        layer, sz, st, tier, txt, kd = meta[res.id]
+        box_ = lbo.text_box(res.cx, res.cy, res.w, res.h, res.rot)
+        row = {"id": res.id, "text": txt, "tier": tier, "status": res.status, "why": "collision" if res.status == "hidden" else None,
+               "box": box_, "leader": res.leader, "pinned": res.pinned}
+        rows.append(row)
+        manifest_labels[res.id] = {"cx": round(res.cx, 2), "cy": round(res.cy, 2), "w": round(res.w, 2), "h": round(res.h, 2), "layer": layer, "tier": tier,
+                                   "status": res.status, "text": txt, "anchor": [round(res.dot[0], 2), round(res.dot[1], 2)] if res.dot else None,
+                                   "offset": bool(res.leader), "pinned": res.pinned}
+        if res.status == "hidden":
+            n_hidden += 1
+            hst = _dc.replace(st, mode="none", knockout=False)
+            recs.append(lst.Rec(f"{res.id}_label", ld.LAYER_HIDDEN, [txt], res.cx, res.cy, lst.measure(txt, sz, hst), lst.block_height(1, sz, hst), res.rot, sz, hst, "hidden-label"))
+            continue
+        if res.status == "numbered":
+            numbered.append((res, sz, st, tier, txt))
+            continue
+        n_pinned += 1 if res.pinned else 0
+        stx = st
+        if sampler is not None and layer != ct.LAYER_LABELS:
+            x0_, y0_ = (box_.bounds[0] - m_pt) / v.k + v.x0, (box_.bounds[1] - m_pt) / v.k + v.y0
+            x1_, y1_ = (box_.bounds[2] - m_pt) / v.k + v.x0, (box_.bounds[3] - m_pt) / v.k + v.y0
+            lum_ = sampler(x0_, y0_, x1_, y1_)
+            if lum_ is not None and lum_ < 0.33 and st.mode in ("halo", "box"):
+                stx = _dc.replace(st, color="#f7f4ea", halo_color="#14171a", box_color="#14171a", auto_contrast=False)
+        recs.append(lst.Rec(f"{res.id}_label", layer, res.lines, res.cx, res.cy, res.w, res.h, res.rot, sz, stx))
         if res.leader:
             n_off += 1
-            for sv in lbo.leader_svg(res, lp.stroke_width):
-                t.add("Leaders", sv)
+            for lay_, sv in lbo.leader_svg(res, lp, lst.text_color(stx)):
+                t.add(lay_, sv)
+    # numbered callouts: marker circle on the map + a legend entry
+    numbered.sort(key=lambda r_: (ld.tier_cfg(dc, r_[3])["priority"], round(r_[0].cy / 12), r_[0].cx))
+    legend_entries = []
+    for n_, (res, sz, st, tier, txt) in enumerate(numbered, 1):
+        fs = lst.style_font_css(st) if hasattr(lst, "style_font_css") else "font-family:Arial, sans-serif"
+        for sv in ld.marker_svg(res.id, res.marker[0], res.marker[1], res.w / 2, n_, max(sz * 0.8, 4.5), fs):
+            t.add(ld.LAYER_MARKERS, sv)
+        legend_entries.append((n_, txt))
+        manifest_labels[res.id]["number"] = n_
+    if legend_entries and dc.get("legend"):
+        ls_ = styles["buildings"]
+        lsz = 7.0 * qf
+        fs = lst.style_font_css(ls_)
+        wof = lambda s_: lst.measure(s_, lsz, ls_)
+        rows_, lw_, lh_ = ld.legend_layout(legend_entries, lsz, wof, dc.get("legend_title") or "Key")
+        # free margin: the part of the page outside the place bounds, else the emptiest corner of the map (with a backing)
+        wf_ = place.get("window_ft") or [0, 0, bw, bh]
+        bx0, by0 = ft_to_pt((wf_[0], wf_[1])); bx1, by1 = ft_to_pt((wf_[2], wf_[3]))
+        spots = [(m_pt + 6, m_pt + 8, bx0 - m_pt - 12), (bx1 + 6, m_pt + 8, W - m_pt - bx1 - 12)]
+        sx = next(((x_, y_) for x_, y_, aw in spots if aw >= lw_ + 4 and H - 2 * m_pt - 60 >= lh_), None)
+        backing_ = None
+        if sx is None:
+            cands_ = [(m_pt + 8, m_pt + 8), (W - m_pt - lw_ - 8, m_pt + 8), (m_pt + 8, H - m_pt - lh_ - 8), (W - m_pt - lw_ - 8, H - m_pt - lh_ - 8)]
+            sx = min(cands_, key=lambda c_: placer.cost_of(_box(c_[0], c_[1], c_[0] + lw_, c_[1] + lh_)) + sum(1 for r_ in rows if r_["status"] == "placed" and r_["box"].intersects(_box(c_[0], c_[1], c_[0] + lw_, c_[1] + lh_))))
+            backing_ = ("#ffffff", 0.88)
+        for sv in ld.legend_svg(rows_, sx[0], sx[1], lsz, fs, backing_, w=lw_, h=lh_):
+            t.add(ld.LAYER_LEGEND, sv)
+        print(f"label legend: {len(legend_entries)} numbered callouts")
     if lp.enabled:
         print(f"label offsets: {n_off} labels moved outside their shape with a leader")
-    n_wrapped = sum(1 for r in recs if len(r.lines) > 1)
+    n_wrapped = sum(1 for r in recs if len(r.lines) > 1 and r.layer != ld.LAYER_HIDDEN)
     if n_wrapped:
         print(f"label wrapping: {n_wrapped} labels set on more than one line")
+    n_abbr = sum(1 for res in results if res.status == "placed" and " ".join(res.lines or []) != " ".join(meta[res.id][4].split()))
+    if n_abbr:
+        print(f"label abbreviations: {n_abbr} labels abbreviated to fit")
+    for sc_ in hidden_scale:
+        rows.append({"id": sc_[0], "text": sc_[5], "tier": sc_[4], "status": "hidden", "why": "scale", "box": _box(0, 0, 0, 0), "leader": None, "pinned": False})
+    if dc.get("qa"):
+        qa = ld.qa_report(placer, rows, contour_boxes)
+        print(ld.qa_text(qa))
+        manifest = {"place": place["id"], "view": view_arg, "fpi": fpi, "k": v.k, "x0": v.x0, "y0": v.y0, "margin_pt": m_pt, "labels": manifest_labels, "qa": qa,
+                    "declutter": {k_: dc[k_] for k_ in ("enabled", "scale_visibility", "collision", "score", "legend", "quiet")}}
+        os.makedirs(os.path.dirname(out_path) or ".", exist_ok=True)
+        with open(out_path + ".labels.json", "w", encoding="utf-8") as f_:
+            json.dump(manifest, f_, indent=1)
+        if "panel" in os.path.abspath(out_path).replace("\\", "/").split("/"):
+          with open(os.path.join(os.path.dirname(out_path) or ".", "label_manifest.json"), "w", encoding="utf-8") as f_:     # the panel's Pin step reads this one
+              json.dump(manifest, f_, indent=1)
 
     # knock-out: padded rounded boxes of the labels in mask mode (or with knockout on) cut the linework underneath
     from shapely.ops import unary_union
@@ -525,7 +719,7 @@ def render(model, view_arg, out_path, topts=None, cfg_over=None, lopts=None, lst
     if n_l:
         print(f"label mask: {n_l} line paths cut under labels")
     for rec in recs:
-        lst.emit(t, rec, None if rec.layer == ct.LAYER_LABELS else backing)
+        lst.emit(t, rec, None if rec.layer in (ct.LAYER_LABELS, ld.LAYER_HIDDEN) else backing)
 
     # GUIDES: minor + major grid
     k = v.k
@@ -608,6 +802,12 @@ if __name__ == "__main__":
     ap.add_argument("--label-max-offset", type=float, help="max distance (page pt) outside the shape")
     ap.add_argument("--leader-dot", dest="leader_dot", action="store_true", default=None)
     ap.add_argument("--no-leader-dot", dest="leader_dot", action="store_false")
+    ap.add_argument("--label-preset", help="named preset from presets/label_presets.json (label_style + label_offset + declutter)")
+    ap.add_argument("--declutter", help="declutter options as JSON text or @file (see label_declutter.py DEFAULT)")
+    ap.add_argument("--declutter-b64", help="same as --declutter, base64 of the JSON (used by the panel)")
+    ap.add_argument("--no-declutter", action="store_true", help="legacy behaviour: no tiers, scale visibility or scoring")
+    ap.add_argument("--leader-color", help="leader colour (default white)")
+    ap.add_argument("--leader-b64", help="more leader options (casing, casing_color, casing_width, dot_ring, match_text, dash, lock_leaders) as base64 JSON (panel)")
     ap.add_argument("--label-style", help="label styling as JSON text or @file (see label_style.py): fonts, wrapping, halo/box/mask")
     ap.add_argument("--label-style-b64", help="same as --label-style, base64 of the JSON (used by the panel)")
     ap.add_argument("--view", default="town", help="town | bowl | street:<id> | building:<id>")
@@ -616,6 +816,7 @@ if __name__ == "__main__":
     ap.add_argument("--grid", type=float, help="minor grid in feet")
     ap.add_argument("--grid-major", type=int, help="major grid every N minor lines")
     ap.add_argument("--page", help="page size in inches, e.g. 17x11")
+    ap.add_argument("--grid-full-page", action="store_true", help="draw the grid over the whole page (default: only inside the map window / place bounds)")
     ap.add_argument("--out")
     ap.add_argument("--terrain", action="store_true", help="regenerate heightmap + hillshade preview, overlay contours")
     ap.add_argument("--contours", action="store_true", help="overlay contours and elevation labels")
@@ -633,6 +834,9 @@ if __name__ == "__main__":
     ap.add_argument("--no-upright", action="store_true", help="allow upside-down labels")
     ap.add_argument("--no-labels", action="store_true", help="contours only")
     ap.add_argument("--no-datum", action="store_true", help="do not emphasise the datum contour")
+    ap.add_argument("--no-contour-halo", action="store_true", help="plain contour lines, no casing / no tone-by-shading")
+    ap.add_argument("--contour-shading", default="auto", help="phase preset used to pick contour colour/casing per underlying shading luminance "
+                    "(auto = the default calm preset, none = ignore shading)")
     ap.add_argument("--terrain-source", choices=["auto", "base", "patched", "carved"],
                     help="which heightmap to read (default: panel_state / auto = patched, or carved when water.use_carved)")
     ap.add_argument("--water-source", choices=["world", "working"])
@@ -656,11 +860,16 @@ if __name__ == "__main__":
     out = a.out or os.path.join(REPO, "illustrator", "out", f"{a.place}_{suffix}.svg")
     lopts = {"enabled": a.label_offset, "style": a.leader_style, "stroke_width": a.leader_width,
              "margin_pct": a.label_fit_margin, "max_offset_pt": a.label_max_offset, "dot": a.leader_dot}
-    lopts = {**viewcfg.label_offset(a.place), **{k: v_ for k, v_ in lopts.items() if v_ is not None}}
+    if a.leader_b64:
+        lopts = {**json.loads(base64.b64decode(a.leader_b64).decode("utf-8")), **{k_: v_ for k_, v_ in lopts.items() if v_ is not None}}
+    if a.leader_color:
+        lopts["color"] = a.leader_color
+    pre = ld.preset(a.label_preset) if a.label_preset else {}
+    lopts = {**viewcfg.label_offset(a.place), **pre.get("label_offset", {}), **{k_: v_ for k_, v_ in lopts.items() if v_ is not None}}
+    dcli = [ld.parse_cli(a.declutter), json.loads(base64.b64decode(a.declutter_b64).decode("utf-8")) if a.declutter_b64 else {}]
+    if a.no_declutter:
+        dcli.append({"enabled": False})
+    dopts = ld.merge(viewcfg.declutter(a.place), pre.get("declutter"), *dcli)
     render(load_place(a.place, a.model_dir), a.view, out, topts,
            {"preset": a.preset, "scale": a.scale, "grid": a.grid, "page": a.page, "major_every": a.grid_major, "grid_extent": "page" if a.grid_full_page else None}, lopts,
            [pre.get("label_style"), lst.parse_cli(a.label_style), lst.decode_b64(a.label_style_b64)], dopts)
-    ap.add_argument("--grid-full-page", action="store_true", help="draw the grid over the whole page (default: only inside the map window / place bounds)")
-    ap.add_argument("--no-contour-halo", action="store_true", help="plain contour lines, no casing / no tone-by-shading")
-    ap.add_argument("--contour-shading", default="auto", help="phase preset used to pick contour colour/casing per underlying shading luminance "
-                    "(auto = the default calm preset, none = ignore shading)")

@@ -81,9 +81,9 @@ class LayerTree:
     A parent layer's own items are written after (on top of) its sublayers.
     """
 
-    def __init__(self, spec, width_in=17, height_in=11, css="", locked=()):
+    def __init__(self, spec, width_in=17, height_in=11, css="", locked=(), hidden=()):
         self.w, self.h = width_in * 72.0, height_in * 72.0
-        self.spec, self.css, self.locked = spec, css, set(locked)
+        self.spec, self.css, self.locked, self.hidden = spec, css, set(locked), set(hidden)
         self.items = {}
         self._register(spec)
 
@@ -105,6 +105,8 @@ class LayerTree:
     def _group(self, name, body, out, indent):
         a = quoteattr(name)
         lock = ' sodipodi:insensitive="true"' if name in self.locked else ""
+        if name in self.hidden:
+            lock += ' style="display:none"'
         out.append(f'{indent}<g id={a} inkscape:groupmode="layer" i:layer="yes" inkscape:label={a}{lock}>')
         out.extend(body)
         out.append(f"{indent}</g>")

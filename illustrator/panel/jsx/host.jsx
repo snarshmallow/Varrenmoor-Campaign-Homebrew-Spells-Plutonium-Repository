@@ -87,6 +87,152 @@ function VB_snapshot(container, list) {
   return list;
 }
 function VB_showTree(l) { l.visible = true; for (var i = 0; i < l.layers.length; i++) VB_showTree(l.layers[i]); }
+// ---- label callouts: re-route leaders after labels are dragged ---------------------------------------------------------------
+// Items (made by render_world.py): text <id>_label on LABELS/Labels - *, its halo or box <id>_label_halo|_box on Label Backing,
+// leader <id>_leader + casing <id>_leader_casing on Leaders (open paths anchor -> label), anchor dot <id>_leader_dot on Leader Anchors.
+// Page coordinates below = points from the artboard's top-left, y down (the same space the SVG was written in).
+var VB_LABEL_LAYERS = ["Labels - Districts", "Labels - Streets", "Labels - Buildings", "Labels - Rooms"];
+var VB_lc = {};   // id -> signature of the last seen label bounds + anchor (poll: only changed callouts are re-routed)
+// leader from a fixed anchor to a label box b=[l, t, r, bt]; same rules as label_offset.route_leader (python)
+function VB_route(anchor, b, style, shelf, gap) {
+  var l = b[0], t = b[1], r = b[2], bt = b[3], ax = anchor[0], ay = anchor[1], cx = (l + r) / 2, cy = (t + bt) / 2;
+  if (l - 1 <= ax && ax <= r + 1 && t - 1 <= ay && ay <= bt + 1) return null;
+  if (ax < l - gap || ax > r + gap) {
+    var side = ax < l ? 1 : -1, end = side > 0 ? [l - gap, cy] : [r + gap, cy], knee = [end[0] - side * shelf, cy];
+    if (style === "elbow" && shelf > 0 && (knee[0] - ax) * side > 1.5 && Math.abs(ay - cy) > 1) return [anchor, knee, end];
+    return [anchor, end];
+  }
+  return [anchor, ay < t ? [cx, t - gap] : [cx, bt + gap]];
+}
+function VB_walkItems(container, fn) {
+  for (var i = 0; i < container.pageItems.length; i++) fn(container.pageItems[i]);
+}
+// name -> item for one layer (direct children only)
+function VB_nameMap(layer, map, suffixes) {
+  var items = VB_direct(layer);
+  for (var i = 0; i < items.length; i++) {
+    var n = String(items[i].name);
+    for (var s = 0; s < suffixes.length; s++) {
+      var sf = suffixes[s];
+      if (n.length > sf.length && n.substr(n.length - sf.length) === sf) { map[n] = items[i]; break; }
+    }
+  }
+}
+function VB_unlockChain(layer, undo) {
+  var l = layer;
+  while (l && l.typename === "Layer") {
+    if (l.locked) { undo.push(l); l.locked = false; }
+    try { l = l.parent; } catch (e) { break; }
+  }
+}
+function VB_page(doc, p) { var ab = doc.artboards[0].artboardRect; return [p[0] - ab[0], ab[1] - p[1]]; }
+function VB_doc(pt, doc) { var ab = doc.artboards[0].artboardRect; return [ab[0] + pt[0], ab[1] - pt[1]]; }
+function VB_pageBounds(doc, it) {
+  var g = it.geometricBounds, ab = doc.artboards[0].artboardRect;
+  return [g[0] - ab[0], ab[1] - g[1], g[2] - ab[0], ab[1] - g[3]];
+}
+function VB_rgbOf(hex) {
+  var h = String(hex).replace("#", ""); if (h.length === 3) h = h.charAt(0) + h.charAt(0) + h.charAt(1) + h.charAt(1) + h.charAt(2) + h.charAt(2);
+  return [parseInt(h.substr(0, 2), 16), parseInt(h.substr(2, 2), 16), parseInt(h.substr(4, 2), 16)];
+}
+// Collect callout parts of the document: {texts:{id:item}, leaders, casings, dots, backing}
+function VB_callouts(doc) {
+  var m = { texts: {}, leaders: {}, casings: {}, dots: {}, backing: {}, layers: [] }, i, k, ids = {};
+  var tmp = {}, ll = VB_find(doc, "Leaders"), al = VB_find(doc, "Leader Anchors"), bl = VB_find(doc, "Label Backing");
+  for (i = 0; i < VB_LABEL_LAYERS.length; i++) {
+    var lay = VB_find(doc, VB_LABEL_LAYERS[i]);
+    if (lay) { VB_nameMap(lay, tmp, ["_label"]); m.layers.push(lay); }
+  }
+  for (k in tmp) if (tmp.hasOwnProperty(k)) m.texts[k.substr(0, k.length - 6)] = tmp[k];
+  var t2 = {};
+  if (ll) { VB_nameMap(ll, t2, ["_leader", "_leader_casing"]); m.layers.push(ll); }
+  for (k in t2) if (t2.hasOwnProperty(k)) { if (/_leader_casing$/.test(k)) m.casings[k.substr(0, k.length - 14)] = t2[k]; else m.leaders[k.substr(0, k.length - 7)] = t2[k]; }
+  var t3 = {};
+  if (al) { VB_nameMap(al, t3, ["_leader_dot"]); m.layers.push(al); }
+  for (k in t3) if (t3.hasOwnProperty(k)) m.dots[k.substr(0, k.length - 11)] = t3[k];
+  var t4 = {};
+  if (bl) { VB_nameMap(bl, t4, ["_label_halo", "_label_box"]); m.layers.push(bl); }
+  for (k in t4) if (t4.hasOwnProperty(k)) m.backing[k.replace(/_label_(halo|box)$/, "")] = t4[k];
+  return m;
+}
+function VB_rerouteLeaders(doc, a) {
+  var m = VB_callouts(doc), out = { callouts: 0, rerouted: 0, hidden_leaders: 0, synced_backing: 0, unchanged: 0, ids: [] };
+  var st = a.style || {}, styleName = st.style || "elbow", shelf = st.shelf === undefined ? 7 : st.shelf, gap = st.gap === undefined ? 2 : st.gap;
+  var only = null, i, id;
+  if (a.ids && a.ids.length) { only = {}; for (i = 0; i < a.ids.length; i++) only[a.ids[i]] = true; }
+  var undo = [], opened = false;
+  for (id in m.texts) {
+    if (!m.texts.hasOwnProperty(id)) continue;
+    if (only && !only[id]) continue;
+    var tx = m.texts[id], ld = m.leaders[id], dot = m.dots[id], hal = m.backing[id];
+    var tb = VB_pageBounds(doc, tx), tcx = (tb[0] + tb[2]) / 2, tcy = (tb[1] + tb[3]) / 2;
+    var anchor = null;
+    if (dot) { var db = VB_pageBounds(doc, dot); anchor = [(db[0] + db[2]) / 2, (db[1] + db[3]) / 2]; }
+    else if (ld && ld.pathPoints.length) { anchor = VB_page(doc, ld.pathPoints[0].anchor); }
+    var sig = Math.round(tb[0] * 10) + "," + Math.round(tb[1] * 10) + "," + Math.round(tb[2] * 10) + "," + Math.round(tb[3] * 10) + "|" + (anchor ? Math.round(anchor[0] * 10) + "," + Math.round(anchor[1] * 10) : "-");
+    out.callouts++;
+    var note = ""; try { note = String(tx.note); } catch (e) {}
+    var needNote = (note.indexOf("vb_orig=") !== 0);
+    var changed = (VB_lc[id] !== undefined && VB_lc[id] !== sig);
+    if (a.changed_only && !changed && !needNote) { if (VB_lc[id] === undefined) VB_lc[id] = sig; out.unchanged++; continue; }
+    if (a.changed_only && VB_lc[id] === undefined && !needNote) { VB_lc[id] = sig; continue; }
+    if (!opened) { for (i = 0; i < m.layers.length; i++) VB_unlockChain(m.layers[i], undo); opened = true; }
+    if (needNote) {   // remember where the generator put the label: the backing copy still sits there; else the current position
+      var oc = [tcx, tcy];
+      if (hal) { var hb = VB_pageBounds(doc, hal); oc = [(hb[0] + hb[2]) / 2, (hb[1] + hb[3]) / 2]; }
+      try { tx.note = "vb_orig=" + oc[0].toFixed(2) + "," + oc[1].toFixed(2); } catch (e) {}
+      if (a.changed_only && VB_lc[id] === undefined) { VB_lc[id] = sig; if (!(hal && (Math.abs(oc[0] - tcx) > 0.3 || Math.abs(oc[1] - tcy) > 0.3))) continue; }
+    }
+    // the halo / box copy follows its text (it is a separate item on Label Backing)
+    if (hal && a.sync_backing !== false) {
+      var hb2 = VB_pageBounds(doc, hal), dx = tcx - (hb2[0] + hb2[2]) / 2, dy = tcy - (hb2[1] + hb2[3]) / 2;
+      if (Math.abs(dx) > 0.25 || Math.abs(dy) > 0.25) { try { hal.translate(dx, -dy); out.synced_backing++; } catch (e) {} }
+    }
+    if (ld && anchor) {
+      var pts = VB_route(anchor, tb, styleName, shelf, gap), parts = [ld, m.casings[id]];
+      for (i = 0; i < parts.length; i++) {
+        var pi = parts[i]; if (!pi) continue;
+        if (!pts) { pi.hidden = true; continue; }
+        pi.hidden = false;
+        var dp = []; for (var q = 0; q < pts.length; q++) dp.push(VB_doc(pts[q], doc));
+        pi.setEntirePath(dp);
+        if (i === 0 && st.color) { pi.strokeColor = VB_rgb(VB_rgbOf(st.color)); }
+        if (i === 0 && st.width) pi.strokeWidth = st.width;
+        if (i === 1 && st.casing_color) pi.strokeColor = VB_rgb(VB_rgbOf(st.casing_color));
+        if (i === 1 && st.casing_width) pi.strokeWidth = st.casing_width;
+      }
+      if (!pts) out.hidden_leaders++;
+      out.rerouted++; out.ids.push(id);
+    }
+    VB_lc[id] = sig;
+  }
+  for (i = 0; i < undo.length; i++) { try { undo[i].locked = true; } catch (e) {} }
+  return out;
+}
+// positions of every label (page pt) + where it was generated (item note) + its anchor dot, for the panel's 'Pin label positions'
+function VB_readLabels(doc) {
+  var m = VB_callouts(doc), res = [], id;
+  for (id in m.texts) {
+    if (!m.texts.hasOwnProperty(id)) continue;
+    var tx = m.texts[id], b = VB_pageBounds(doc, tx), o = { id: id + "_label", cx: (b[0] + b[2]) / 2, cy: (b[1] + b[3]) / 2, w: b[2] - b[0], h: b[3] - b[1] };
+    var note = ""; try { note = String(tx.note); } catch (e) {}
+    if (note.indexOf("vb_orig=") === 0) { var pp = note.substr(8).split(","); o.ref = [parseFloat(pp[0]), parseFloat(pp[1])]; }
+    else if (m.backing[id]) { var hb = VB_pageBounds(doc, m.backing[id]); o.ref = [(hb[0] + hb[2]) / 2, (hb[1] + hb[3]) / 2]; }
+    if (m.dots[id]) { var db = VB_pageBounds(doc, m.dots[id]); o.anchor = [(db[0] + db[2]) / 2, (db[1] + db[3]) / 2]; }
+    res.push(o);
+  }
+  return res;
+}
+// first item named `name` in any layer (recursive)
+function VB_findItem(container, name) {
+  var i;
+  for (i = 0; i < container.layers.length; i++) {
+    var l = container.layers[i], items = VB_direct(l);
+    for (var j = 0; j < items.length; j++) if (String(items[j].name) === name) return items[j];
+    var r = VB_findItem(l, name); if (r) return r;
+  }
+  return null;
+}
 function VB_run(json) {
   try {
     var a = eval("(" + json + ")");
@@ -417,6 +563,53 @@ function VB_run(json) {
         out.dpi = edpi; out.width_pt = er[2] - er[0]; out.height_pt = er[1] - er[3];
         out.width_px = Math.round(out.width_pt * edpi / 72); out.height_px = Math.round(out.height_pt * edpi / 72);
         break;
+      }
+      case "reroute_leaders": {
+        // Rebuild the leader (and its casing) of every callout from the FIXED anchor dot to the label's current bounds.
+        // a.changed_only: only callouts whose label/anchor moved since the last call (the panel's live mode polls with it).
+        // a.ids: limit to these entity ids. a.style {style: elbow|straight, shelf, gap, color, casing_color, width, casing_width}.
+        if (app.documents.length === 0) throw new Error("no open document");
+        var rdoc = app.activeDocument;
+        if (!VB_find(rdoc, "Leaders")) { out.skipped = "no Leaders layer (not a map generated here)"; break; }
+        var rr = VB_rerouteLeaders(rdoc, a);
+        for (var rk in rr) if (rr.hasOwnProperty(rk)) out[rk] = rr[rk];
+        break;
+      }
+      case "read_label_positions": {
+        if (app.documents.length === 0) throw new Error("no open document");
+        out.labels = VB_readLabels(app.activeDocument); out.artboard = app.activeDocument.artboards[0].artboardRect; break;
+      }
+      case "move_item": {
+        // move the first item called a.name by (dx, dy) page points (y down); used to test dragging and by scripted edits
+        if (app.documents.length === 0) throw new Error("no open document");
+        var mdoc = app.activeDocument, mit = VB_findItem(mdoc, a.name);
+        if (!mit) throw new Error("item not found: " + a.name);
+        var mundo = []; try { VB_unlockChain(mit.layer, mundo); } catch (e) {}
+        var wasL = false; try { wasL = mit.locked; mit.locked = false; } catch (e) {}
+        mit.translate(a.dx || 0, -(a.dy || 0));
+        try { mit.locked = wasL; } catch (e) {}
+        for (var mu = 0; mu < mundo.length; mu++) mundo[mu].locked = true;
+        out.bounds = VB_pageBounds(mdoc, mit); break;
+      }
+      case "read_items": {
+        // page-point bounds (and path points) of items by name, to check where things ended up
+        if (app.documents.length === 0) throw new Error("no open document");
+        var idoc = app.activeDocument, inames = a.names || [], items = {};
+        for (var ix = 0; ix < inames.length; ix++) {
+          var iit = VB_findItem(idoc, inames[ix]);
+          if (!iit) { items[inames[ix]] = null; continue; }
+          var rec = { bounds: VB_pageBounds(idoc, iit), hidden: !!iit.hidden };
+          if (iit.typename === "PathItem") { rec.points = []; for (var ip = 0; ip < iit.pathPoints.length; ip++) rec.points.push(VB_page(idoc, iit.pathPoints[ip].anchor)); }
+          items[inames[ix]] = rec;
+        }
+        out.items = items; break;
+      }
+      case "lock_leaders": {
+        // lock / unlock the Leaders layer (lines only; the Leader Anchors layer stays editable so anchors can be dragged)
+        if (app.documents.length === 0) throw new Error("no open document");
+        var kl = VB_find(app.activeDocument, "Leaders");
+        if (kl) kl.locked = (a.locked !== false);
+        out.locked = (a.locked !== false); out.found = !!kl; break;
       }
       default: throw new Error("unknown action: " + a.action);
     }

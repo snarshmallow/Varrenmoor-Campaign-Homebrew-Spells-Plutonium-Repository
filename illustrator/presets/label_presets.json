@@ -1,0 +1,40 @@
+{
+ "_note": "Label presets: each has label_style (see label_style.py), label_offset (leader look, see label_offset.py) and declutter (tiers, scale visibility, scoring, legend; see label_declutter.py). Used by render_world.py --label-preset NAME and by the panel's Labels tab (Apply preset). Edit freely; keys left out keep the current / default value.",
+ "legacy": {
+  "_title": "Legacy (before declutter): black thin leaders, first-fit placement, nothing hidden",
+  "label_style": {"default": {"halo_width": 1.6, "halo_opacity": 0.9},
+                  "districts": {"halo_width": 2.0, "max_lines": 3},
+                  "streets": {"halo_width": 1.4},
+                  "buildings": {"fit_shape": false}},
+  "label_offset": {"color": "#000000", "casing": false, "stroke_width": 0.4, "dot_ring": false, "dot_radius": 0.8, "lock_leaders": false},
+  "declutter": {"enabled": false}
+ },
+ "working": {
+  "_title": "Town working map: every tier for the scale, white leaders with casing, hidden labels kept in a hidden sublayer",
+  "label_style": {},
+  "label_offset": {"color": "#ffffff", "casing": true, "stroke_width": 0.8, "casing_width": 1.7, "lock_leaders": true},
+  "declutter": {"enabled": true, "collision": "hide", "legend": false, "quiet": false}
+ },
+ "bowl": {
+  "_title": "Declutter: bowl overview - districts, plazas and civic buildings only, larger text, rest hidden",
+  "label_style": {"districts": {"size": 9.5, "bold": true, "wrap": "auto", "max_lines": 2},
+                  "buildings": {"size": 6.5, "max_lines": 2, "halo_width": 2.2}},
+  "label_offset": {"color": "#ffffff", "casing": true, "stroke_width": 0.8, "max_offset_pt": 110},
+  "declutter": {"enabled": true, "collision": "hide", "legend": false,
+                "tiers": {"districts": {"max_fpi": 1000}, "plazas": {"max_fpi": 1000}, "civic": {"max_fpi": 300}, "streets": {"max_fpi": 150}, "houses": {"max_fpi": 45}}}
+ },
+ "clean": {
+  "_title": "Clean map: quiet dotted leaders, smaller text, fewer tiers",
+  "label_style": {"default": {"halo_opacity": 0.85}},
+  "label_offset": {"color": "#ffffff", "casing": true, "stroke_width": 0.5, "casing_width": 1.2, "dash": "0.9 1.6"},
+  "declutter": {"enabled": true, "quiet": true, "collision": "hide",
+                "tiers": {"civic": {"max_fpi": 150}, "streets": {"max_fpi": 110}, "houses": {"max_fpi": 25}}}
+ },
+ "handout": {
+  "_title": "Player handout: civic buildings as numbered markers with a legend key in the margin",
+  "label_style": {"districts": {"size": 9.5}},
+  "label_offset": {"color": "#ffffff", "casing": true},
+  "declutter": {"enabled": true, "collision": "number", "legend": true, "legend_title": "Key",
+                "tiers": {"civic": {"number": true, "max_fpi": 300}, "houses": {"max_fpi": 25}}}
+ }
+}

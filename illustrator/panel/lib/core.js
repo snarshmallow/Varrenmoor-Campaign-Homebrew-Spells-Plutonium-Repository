@@ -3,26 +3,33 @@
 (function (root) {
   "use strict";
   var VB = {};
-  var GEN_LAYERS = ["Labels - Districts", "Labels - Streets", "Labels - Buildings", "Labels - Rooms", "Labels - Elevation", "Label Backing", "Leaders", "NOTES",
+  var GEN_LAYERS = ["Labels - Districts", "Labels - Streets", "Labels - Buildings", "Labels - Rooms", "Labels - Elevation", "Label Backing", "Leaders", "Leader Anchors", "Callout Markers", "Legend", "Labels - Hidden", "NOTES",
     "Walls", "Buildings", "Blocks", "Roads", "Water", "Contours - Minor", "Contours - Index", "Fences",
     "Grid", "Scale bar", "North arrow", "Bounds"];
   var GUIDE_LAYERS = ["GUIDES", "Grid", "Scale bar", "North arrow", "Bounds"];
   var CONTOUR_LAYERS = ["Contours - Minor", "Contours - Index", "Labels - Elevation"];
-  var TOWN_LAYERS = ["Buildings", "Blocks", "Roads", "Water", "Fences", "Labels - Districts", "Labels - Streets", "Labels - Buildings", "Label Backing", "Leaders", "NOTES"];
+  var TOWN_LAYERS = ["Buildings", "Blocks", "Roads", "Water", "Fences", "Labels - Districts", "Labels - Streets", "Labels - Buildings", "Label Backing", "Leaders", "Leader Anchors", "Callout Markers", "Legend", "Labels - Hidden", "NOTES"];
   // label styling (mirrors generators/label_style.py; run_mock.js checks both agree)
   var LABEL_CATS = ["districts", "streets", "buildings", "rooms", "elevation"];
-  var LABEL_LAYERS = ["Leaders", "Labels - Districts", "Labels - Streets", "Labels - Buildings", "Labels - Rooms", "Labels - Elevation", "Label Backing"];
+  var LABEL_LAYERS = ["Legend", "Callout Markers", "Leader Anchors", "Leaders", "Labels - Hidden", "Labels - Districts", "Labels - Streets", "Labels - Buildings", "Labels - Rooms", "Labels - Elevation", "Label Backing"];
   var LABEL_TARGETS = { contours: ["Contours - Minor", "Contours - Index"], streets: ["Roads"], buildings: ["Buildings", "Walls"], blocks: ["Blocks"],
     water: ["Water"], fences: ["Fences"], grid: ["Grid"] };
   var LABEL_DEFAULT = { font: "Arial", size: null, bold: false, italic: false, letter_spacing: 0, case: "asis", color: "#111111", auto_contrast: false,
     wrap: "auto", wrap_width: 120, wrap_unit: "pt", max_lines: 3, line_spacing: 1.1, align: "center",
-    mode: "halo", halo_color: "#ffffff", halo_width: 1.6, halo_opacity: 0.9, box_color: "#ffffff", box_pad: 2, box_radius: 2, box_opacity: 0.8,
-    knockout: false, knockout_pad: 2.5 };
+    mode: "halo", halo_color: "#ffffff", halo_width: 2, halo_opacity: 0.92, box_color: "#ffffff", box_pad: 2, box_radius: 2, box_opacity: 0.8,
+    knockout: false, knockout_pad: 2.5,
+    wrap_mode: "balanced", min_width: 0, max_width: 0, fit_shape: false, fit_ratio: 0.92, lines: 0, max_chars: 0, break_chars: true, abbrev: "off", small_caps: false };
   var LABEL_CAT_DEFAULT = {
-    districts: { bold: true, "case": "auto", letter_spacing: 0.6, halo_width: 2 }, streets: { wrap: "off", italic: true, halo_width: 1.4 },
-    buildings: { max_lines: 2 }, rooms: { max_lines: 2 }, elevation: { wrap: "off", color: "#6b4423", mode: "none", knockout: true, knockout_pad: 1.5 } };
+    districts: { bold: true, "case": "auto", letter_spacing: 0.6, halo_width: 2.6 }, streets: { wrap: "off", italic: true, halo_width: 1.8 },
+    buildings: { max_lines: 2, fit_shape: true }, rooms: { max_lines: 2 }, elevation: { wrap: "off", color: "#6b4423", mode: "none", knockout: true, knockout_pad: 1.5 } };
   VB.LABEL_CATS = LABEL_CATS; VB.LABEL_LAYERS = LABEL_LAYERS; VB.LABEL_TARGETS = LABEL_TARGETS;
   VB.FONTS = ["Arial", "Georgia", "Times New Roman", "Garamond", "Palatino Linotype", "Trebuchet MS", "Verdana", "Cambria", "Constantia", "Calibri", "Tahoma", "Candara", "Baskerville"];
+  // declutter + leader options (mirrors generators/label_declutter.py DEFAULT and label_offset.DEFAULTS)
+  VB.DECLUTTER_DEFAULT = { enabled: true, scale_visibility: true, collision: "hide", score: true, legend: true, legend_title: "Key", overrides: true, quiet: false, qa: true,
+    tiers: { districts: { max_fpi: 1000, size: 1, number: false }, plazas: { max_fpi: 1000, size: 1, number: false }, civic: { max_fpi: 250, size: 1, number: false },
+      streets: { max_fpi: 150, size: 0.95, number: false }, houses: { max_fpi: 45, size: 0.9, number: false, leader: false } } };
+  VB.LEADER_DEFAULT = { enabled: true, style: "elbow", stroke_width: 0.8, margin_pct: 10, max_offset_pt: 90, dot: true, color: "#ffffff", casing: true, casing_color: "#1a1a1a",
+    casing_width: 1.7, dot_ring: true, match_text: false, dash: "", lock_leaders: true };
   VB.labelDefaults = function () {
     var o = { "default": JSON.parse(JSON.stringify(LABEL_DEFAULT)) };
     LABEL_CATS.forEach(function (c) { o[c] = JSON.parse(JSON.stringify(LABEL_CAT_DEFAULT[c] || {})); });
@@ -77,7 +84,7 @@
       labels: { cat: "default", backing_layer: true, redraw_lines: true, live_reroute: true, preset: "working", qa: null,
         declutter: JSON.parse(JSON.stringify(VB.DECLUTTER_DEFAULT)),
         mask_targets: { contours: true, streets: true, buildings: true, blocks: true, water: false, fences: false, grid: true }, styles: VB.labelDefaults() },
-      label_offset: { enabled: true, style: "elbow", stroke_width: 0.4, margin_pct: 10, max_offset_pt: 90, dot: true },
+      label_offset: JSON.parse(JSON.stringify(VB.LEADER_DEFAULT)),
       shading: { preset: "alpine_steep_calm", base_color: "#8aa066", phases: [], loaded: false, slope_smooth_ft: 12,
         muted: { saturation: 0.62, contrast: 0.86, tint: "#d9cba3", tint_strength: 0.12 },
         hillshade: { enabled: true, azimuth: 315, altitude: 40, strength: 0.36, ambient: 0.38, exaggeration: 1 } },
@@ -251,6 +258,11 @@
   };
 
   // ---------------------------------------------------------------- shading phase file
+  // global 'muted' control (shading.py apply_muted): saturation / contrast 0..1 (1 = unchanged), tint colour (blank = none)
+  VB.mutedOf = function (sh) {
+    var m = sh.muted || {}, n = function (v, d) { return v === undefined || v === "" || isNaN(+v) ? d : Math.min(1, Math.max(0, +v)); };
+    return { saturation: n(m.saturation, 1), contrast: n(m.contrast, 1), tint: /^#[0-9a-fA-F]{6}$/.test(m.tint || "") ? m.tint : null, tint_strength: n(m.tint_strength, 0.12) };
+  };
   VB.phaseFile = function (sh) {
     var h = sh.hillshade;
     return {
@@ -259,11 +271,6 @@
       hillshade: { enabled: !!h.enabled, azimuth: +h.azimuth, altitude: +h.altitude, strength: +h.strength, ambient: +(h.ambient === undefined || h.ambient === "" ? 0.3 : h.ambient), exaggeration: +h.exaggeration },
       phases: sh.phases.map(function (p) {
         var q = clone(p);
-  // global 'muted' control (shading.py apply_muted): saturation / contrast 0..1 (1 = unchanged), tint colour (blank = none)
-  VB.mutedOf = function (sh) {
-    var m = sh.muted || {}, n = function (v, d) { return v === undefined || v === "" || isNaN(+v) ? d : Math.min(1, Math.max(0, +v)); };
-    return { saturation: n(m.saturation, 1), contrast: n(m.contrast, 1), tint: /^#[0-9a-fA-F]{6}$/.test(m.tint || "") ? m.tint : null, tint_strength: n(m.tint_strength, 0.12) };
-  };
         ["elev_min", "elev_max"].forEach(function (k) { if (q[k] === "" || q[k] === undefined) q[k] = null; });
         q.enabled = p.enabled !== false; return q;
       })
@@ -297,11 +304,27 @@
     return Buffer.from(u, "binary").toString("base64");
   };
   VB.labelStyleFlags = function (st) { return ["--label-style-b64", VB.b64(JSON.stringify(VB.labelStyleJson(st)))]; };
+  VB.declutterJson = function (st) { var l = st.labels || {}; return JSON.parse(JSON.stringify(l.declutter || VB.DECLUTTER_DEFAULT)); };
   VB.labelFlags = function (st) {
-    var o = st.label_offset || {}, sf = VB.labelStyleFlags(st);
+    var o = st.label_offset || {}, sf = VB.labelStyleFlags(st).concat(["--declutter-b64", VB.b64(JSON.stringify(VB.declutterJson(st)))]);
     if (o.enabled === false) return ["--no-label-offset"].concat(sf);
+    var lj = { color: o.color, casing: o.casing !== false, casing_color: o.casing_color, casing_width: o.casing_width, dot_ring: o.dot_ring !== false, match_text: !!o.match_text,
+      dash: o.dash || "", lock_leaders: o.lock_leaders !== false };
     return sf.concat(["--label-offset", "--leader-style", o.style || "elbow", "--leader-width", String(o.stroke_width), "--label-fit-margin", String(o.margin_pct),
-      "--label-max-offset", String(o.max_offset_pt), o.dot === false ? "--no-leader-dot" : "--leader-dot"]);
+      "--label-max-offset", String(o.max_offset_pt), o.dot === false ? "--no-leader-dot" : "--leader-dot", "--leader-b64", VB.b64(JSON.stringify(lj))]);
+  };
+  // apply a preset (presets/label_presets.json entry) to the panel state: label_style layers over the current styles, leader look, declutter options
+  VB.applyLabelPreset = function (st, pre) {
+    var clone = function (x) { return JSON.parse(JSON.stringify(x)); };
+    var L = st.labels;
+    Object.keys(pre.label_style || {}).forEach(function (cat) { L.styles[cat] = Object.assign(L.styles[cat] || {}, clone(pre.label_style[cat])); });
+    st.label_offset = Object.assign(st.label_offset || {}, clone(pre.label_offset || {}));
+    var dc = pre.declutter || {};
+    Object.keys(dc).forEach(function (k) {
+      if (k === "tiers") Object.keys(dc.tiers).forEach(function (t) { L.declutter.tiers[t] = Object.assign(L.declutter.tiers[t] || {}, clone(dc.tiers[t])); });
+      else L.declutter[k] = clone(dc[k]);
+    });
+    return st;
   };
   VB.contourFlags = function (st) {
     var c = st.contours, f = ["--contours", c.mask ? "--contour-mask" : "--no-contour-mask", "--contour-interval", String(c.minor), "--index-interval", String(c.index),
@@ -311,6 +334,7 @@
     if (!c.upright) f.push("--no-upright");
     if (!c.labels) f.push("--no-labels");
     if (!c.datum) f.push("--no-datum");
+    if (c.halo === false) f.push("--no-contour-halo");
     return f;
   };
 
@@ -334,7 +358,6 @@
   VB.fillAssignments = function (st, textures) {
     var tex = {}; (textures || []).forEach(function (t) { tex[t.name] = t.rgb; });
     EXTRA_SWATCHES.forEach(function (t) { tex[t.name] = t.rgb; });
-    if (c.halo === false) f.push("--no-contour-halo");
     var hex = function (h) { var m = /^#?([0-9a-f]{6})$/i.exec(h || ""); return m ? [0, 2, 4].map(function (i) { return parseInt(m[1].substr(i, 2), 16); }) : null; };
     var out = [];
     Object.keys(VB.PARTS).forEach(function (k) {
@@ -383,8 +406,40 @@
     var args = ["--place", st.place].concat(VB.viewFlags(st), VB.labelFlags(st), VB.srcFlags(st), VB.contourFlags(st), ["--out", svg]);
     return {
       kind: "labels", label: "Redraw labels", params: { labels: st.labels, offset: st.label_offset },
-      steps: [py(GEN + "render_world.py", args, "render_world (labels)")].concat(VB.replaceSteps(svg, names, "replace label layers"))
+      steps: [py(GEN + "render_world.py", args, "render_world (labels)")].concat(VB.replaceSteps(svg, names, "replace label layers"), VB.labelAfterSteps(st, d))
     };
+  };
+  // after labels are drawn: the hidden-labels sublayer stays hidden, leaders locked unless asked otherwise, QA numbers read back
+  VB.labelAfterSteps = function (st, d) {
+    return [host({ action: "set_visible", names: ["Labels - Hidden"], visible: false }, "hide the hidden-labels sublayer", true),
+      host({ action: "lock_leaders", locked: (st.label_offset || {}).lock_leaders !== false }, "leaders layer lock", true),
+      { t: "fn", label: "label QA", fn: async function (run) {
+        var f = d.panel + "/label_manifest.json", m = run.readJson ? run.readJson(f) : null;
+        if (m && m.qa) { run.setState("labels.qa", m.qa); run.log("Label QA: " + m.qa.labels_shown + " shown, " + m.qa.labels_hidden + " hidden, " + m.qa.numbered + " numbered; text over features " + m.qa.text_over_features_pct + "%, overlaps " + m.qa.label_label_overlaps); }
+      } }];
+  };
+  // re-route every leader to its (moved) label. only_changed = the live poll. Style options come from the Labels tab.
+  VB.rerouteAction = function (st, only_changed) {
+    var o = st.label_offset || {};
+    return { action: "reroute_leaders", changed_only: !!only_changed, style: { style: o.style || "elbow", color: o.match_text ? undefined : o.color, casing_color: o.casing_color,
+      width: o.stroke_width, casing_width: o.casing_width } };
+  };
+  VB.jobReroute = function (st, d) {
+    return { kind: "labels_reroute", label: "Re-route leaders", params: {}, steps: [host(VB.rerouteAction(st, false), "re-route leaders")] };
+  };
+  // write the labels the user moved (and moved anchor dots) into world/<place>/label_overrides.json, so regeneration keeps them
+  VB.jobPinLabels = function (st, d) {
+    var pos = d.panel + "/label_positions.json";
+    return { kind: "labels_pin", label: "Pin label positions", params: {},
+      steps: [host(VB.rerouteAction(st, false), "re-route + sync backing"), host({ action: "read_label_positions" }, "read label positions"),
+        { t: "fn", label: "write positions", fn: async function (run) { await run.writeJson(pos, { labels: (run.last && run.last.labels) || [] }); } },
+        py(GEN + "label_declutter.py", ["pin", "--place", st.place, "--positions", pos, "--manifest", d.panel + "/label_manifest.json"], "pin label positions", { json: "pinned" }),
+        { t: "fn", label: "report", fn: async function (run) { var r = run.vars.pinned || {}; run.log("pinned " + r.pinned + " label(s) (" + (r.anchors || 0) + " anchors) -> label_overrides.json; " + r.total + " in total. Redraw labels to regenerate with them."); } }]
+    };
+  };
+  VB.jobClearOverrides = function (st, d, ids) {
+    return { kind: "labels_clear_overrides", label: "Clear pinned label positions", params: { ids: ids || [] },
+      steps: [py(GEN + "label_declutter.py", ["clear", "--place", st.place].concat(ids && ids.length ? ["--ids", ids.join(",")] : []), "clear overrides", { json: "cleared" })] };
   };
   VB.jobTerrainGenerate = function (st, d) {
     return {
@@ -605,6 +660,8 @@
   };
   VB.jobLayers = function (act, st) {
     var m = {
+      lock_leaders: host({ action: "lock_leaders", locked: true }, "lock leaders"),
+      unlock_leaders: host({ action: "lock_leaders", locked: false }, "unlock leaders"),
       lock_guides: host({ action: "lock_layers", names: GUIDE_LAYERS, locked: true }, "lock GUIDES"),
       unlock_guides: host({ action: "lock_layers", names: GUIDE_LAYERS, locked: false }, "unlock GUIDES"),
       show_labels: host({ action: "set_visible", names: ["LABELS"], visible: true }, "show LABELS"),

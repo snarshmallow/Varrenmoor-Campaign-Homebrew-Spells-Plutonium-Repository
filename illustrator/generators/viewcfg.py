@@ -14,7 +14,8 @@ REPO = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), 
 FALLBACK = {
     "units": "ft", "page_in": [17, 11], "margin_in": 0.5, "min_street_width_ft": 10, "default_preset": "town",
     "contour_mask": {"enabled": True, "include": ["buildings", "streets", "plazas"]},
-    "label_offset": {"enabled": True, "style": "elbow", "stroke_width": 0.4, "margin_pct": 10, "max_offset_pt": 90, "dot": True},
+    "label_offset": {"enabled": True, "style": "elbow", "stroke_width": 0.8, "margin_pct": 10, "max_offset_pt": 90, "dot": True, "color": "#ffffff",
+                     "casing": True, "casing_color": "#1a1a1a", "casing_width": 1.7},
     "presets": {
         "town": {"scale_ft_per_in": 100, "grid_ft": 100, "grid_major_every": 5, "focus": [1200, 750]},
         "bowl": {"scale_ft_per_in": 200, "grid_ft": 100, "grid_major_every": 5, "focus": "center"},
@@ -43,6 +44,11 @@ def label_style(place):
     return load_raw(place).get("label_style", {})
 
 
+def declutter(place):
+    """declutter block of view_settings.json (tiers, scale visibility, scoring, legend; see label_declutter.py), {} when absent."""
+    return load_raw(place).get("declutter", {})
+
+
 def parse_page(s):
     if s is None:
         return None
@@ -68,14 +74,14 @@ def load(place, preset="town", scale=None, grid=None, page=None, major_every=Non
         c["grid_ft"] = float(grid)
     if major_every:
         c["grid_major_every"] = int(major_every)
+    if grid_extent:
+        c["grid_extent"] = grid_extent            # "window" (default: grid only inside the map window) | "page" (whole page)
     c["page_in"] = parse_page(page) or c.get("page_in", [17, 11])
     c.setdefault("grid_major_every", 5)
     c.setdefault("margin_in", 0.5)
     if not c.get("scale_bar_ft"):
         c["scale_bar_ft"] = _nice(5 * c["scale_ft_per_in"])
     return c
-    if grid_extent:
-        c["grid_extent"] = grid_extent            # "window" (default: grid only inside the map window) | "page" (whole page)
 
 
 def _nice(v):

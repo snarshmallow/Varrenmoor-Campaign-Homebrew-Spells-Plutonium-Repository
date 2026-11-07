@@ -207,7 +207,20 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
     <label>Max lines <input type="number" data-ls="max_lines" min="1" max="8" step="1"></label>
     <label>Line spacing (x size) <input type="number" data-ls="line_spacing" min="0.8" max="2.5" step="0.05"></label>
     <label>Align <select data-ls="align"><option>left</option><option>center</option><option>right</option></select></label>
+    <label>Break style <select data-ls="wrap_mode"><option value="balanced">balanced (even lines)</option><option value="greedy">greedy (fill first)</option></select></label>
+    <label>Exact lines (0 = auto) <input type="number" data-ls="lines" min="0" max="8" step="1"></label>
+    <label>Min width (pt, 0 = none) <input type="number" data-ls="min_width" min="0" step="1"></label>
+    <label>Max width (pt, 0 = none) <input type="number" data-ls="max_width" min="0" step="1"></label>
+    <label>Max characters / line (0 = none) <input type="number" data-ls="max_chars" min="0" step="1"></label>
+    <label>Shape-width ratio <input type="number" data-ls="fit_ratio" min="0.3" max="1.5" step="0.02"></label>
+    <label>Abbreviate <select data-ls="abbrev"><option value="off">never</option><option value="fit">only when it does not fit</option></select></label>
   </div>
+  <div class="grid" style="margin-top:4px">
+    <label class="chk"><input type="checkbox" data-ls="fit_shape"> Narrower lines for narrow shapes (limit line width to the shape width x ratio)</label>
+    <label class="chk"><input type="checkbox" data-ls="break_chars"> Break after - and / (apostrophes never break)</label>
+    <label class="chk"><input type="checkbox" data-ls="small_caps"> Small caps</label>
+  </div>
+  <p class="note">Abbreviations come from <code>presets/label_abbreviations.json</code> (edit it: Street = St., Authority = Auth., ...). Lines, widths and ratio are per category like the rest of the style.</p>
   <h4 style="margin-top:8px">Halo / backing / knock-out</h4>
   <div class="grid">
     <label>Mode <select data-ls="mode"><option value="none">none</option><option value="halo">halo stroke</option><option value="box">backing box</option><option value="mask">mask (knock-out only)</option></select></label>
@@ -236,18 +249,62 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
     <label class="chk"><input type="checkbox" data-s="labels.mask_targets.fences"> Fences / fields</label>
     <label class="chk"><input type="checkbox" data-s="labels.mask_targets.grid"> Grid</label>
   </div>
-  <h4 style="margin-top:8px">Label offsets</h4>
+  <h4 style="margin-top:8px">Leaders (offset labels)</h4>
   <div class="grid">
-    <label>Leader style <select data-s="label_offset.style"><option>elbow</option><option>straight</option></select></label>
-    <label>Leader stroke (pt) <input type="number" data-s="label_offset.stroke_width" min="0.05" step="0.05"></label>
+    <label>Style <select data-s="label_offset.style"><option>elbow</option><option>straight</option></select></label>
+    <label>Leader colour <input type="color" data-s="label_offset.color"></label>
+    <label>Leader width (pt) <input type="number" data-s="label_offset.stroke_width" min="0.05" step="0.05"></label>
+    <label>Casing colour <input type="color" data-s="label_offset.casing_color"></label>
+    <label>Casing width (pt) <input type="number" data-s="label_offset.casing_width" min="0" step="0.1"></label>
+    <label>Dash (svg, blank = solid) <input type="text" data-s="label_offset.dash" placeholder="0.9 1.6"></label>
     <label>Min fit margin (%) <input type="number" data-s="label_offset.margin_pct" min="0" step="5"></label>
     <label>Max offset (page pt) <input type="number" data-s="label_offset.max_offset_pt" min="0" step="5"></label>
   </div>
   <div class="grid" style="margin-top:4px">
     <label class="chk"><input type="checkbox" data-s="label_offset.enabled"> Offset labels that do not fit (leader line)</label>
+    <label class="chk"><input type="checkbox" data-s="label_offset.casing"> Dark casing under the leader (reads on light fills)</label>
+    <label class="chk"><input type="checkbox" data-s="label_offset.match_text"> Leader colour = label text colour</label>
     <label class="chk"><input type="checkbox" data-s="label_offset.dot"> Dot at anchor</label>
+    <label class="chk"><input type="checkbox" data-s="label_offset.dot_ring"> Dark ring on the dot</label>
+    <label class="chk"><input type="checkbox" data-s="label_offset.lock_leaders"> Lock the Leaders layer (drag only the text; the Leader Anchors layer stays editable)</label>
     <label class="chk"><input type="checkbox" data-s="labels.redraw_lines"> Redraw the cut linework too</label>
   </div>
+  <h4 style="margin-top:8px">Move labels by hand (callouts)</h4>
+  <p class="note">Every offset label is a callout: text <code>&lt;id&gt;_label</code>, leader <code>&lt;id&gt;_leader</code> (+ <code>_leader_casing</code>) and anchor dot <code>&lt;id&gt;_leader_dot</code>. <b>Drag the text</b> with the Selection tool (not the leader); the leader keeps its anchor and re-routes. Drag the dot (Leader Anchors layer) to move the anchor.</p>
+  <div class="grid">
+    <label class="chk"><input type="checkbox" data-s="labels.live_reroute"> Auto re-route while I drag (polls every 1.5 s; only maps made here)</label>
+  </div>
+  <div class="btns">
+    <button data-act="labels_reroute" title="Rebuild every leader from its fixed anchor to the label's current position">Re-route leaders</button>
+    <button data-act="labels_pin" title="Write the labels you moved (and moved anchors) into world/&lt;place&gt;/label_overrides.json; Redraw labels keeps them">Pin label positions</button>
+    <button data-act="labels_clear_overrides" title="Delete label_overrides.json entries: regeneration places labels automatically again">Clear overrides</button>
+    <button data-act="unlock_leaders">Unlock Leaders</button><button data-act="lock_leaders">Lock Leaders</button>
+  </div>
+  <h4 style="margin-top:8px">Declutter</h4>
+  <div class="grid">
+    <label>Preset <select id="lblPreset" data-s="labels.preset"></select></label>
+    <label>When a label finds no free spot <select data-s="labels.declutter.collision"><option value="hide">hide it (hidden sublayer)</option><option value="number">number it (marker + legend)</option><option value="keep">keep it (overlap)</option></select></label>
+    <label>Legend title <input type="text" data-s="labels.declutter.legend_title"></label>
+  </div>
+  <div class="btns"><button data-act="labels_apply_preset">Apply preset</button></div>
+  <div class="grid" style="margin-top:4px">
+    <label class="chk"><input type="checkbox" data-s="labels.declutter.enabled"> Declutter on (off = legacy first-fit placement)</label>
+    <label class="chk"><input type="checkbox" data-s="labels.declutter.scale_visibility"> Hide tiers that are too small for the view scale</label>
+    <label class="chk"><input type="checkbox" data-s="labels.declutter.score"> Place by how little of the map the text covers</label>
+    <label class="chk"><input type="checkbox" data-s="labels.declutter.legend"> Numbered legend key in the margin</label>
+    <label class="chk"><input type="checkbox" data-s="labels.declutter.overrides"> Honour pinned positions (label_overrides.json)</label>
+    <label class="chk"><input type="checkbox" data-s="labels.declutter.quiet"> Quiet mode (smaller text, thin dotted leaders)</label>
+  </div>
+  <p class="note">Tiers, highest priority first. Shown while the view scale (ft per inch) is at or below the limit; hidden labels stay in <b>LABELS / Labels - Hidden</b> (hidden, not deleted). Size = factor on the label size; "number" turns the tier into numbered markers listed in the legend.</p>
+  <table class="note" style="width:100%"><tr><th></th><th>Max ft/in</th><th>Size x</th><th>Numbered</th></tr>
+    <tr><td>Districts</td><td><input type="number" data-s="labels.declutter.tiers.districts.max_fpi" step="10"></td><td><input type="number" data-s="labels.declutter.tiers.districts.size" step="0.05"></td><td><input type="checkbox" data-s="labels.declutter.tiers.districts.number"></td></tr>
+    <tr><td>Plazas</td><td><input type="number" data-s="labels.declutter.tiers.plazas.max_fpi" step="10"></td><td><input type="number" data-s="labels.declutter.tiers.plazas.size" step="0.05"></td><td><input type="checkbox" data-s="labels.declutter.tiers.plazas.number"></td></tr>
+    <tr><td>Civic / trade</td><td><input type="number" data-s="labels.declutter.tiers.civic.max_fpi" step="10"></td><td><input type="number" data-s="labels.declutter.tiers.civic.size" step="0.05"></td><td><input type="checkbox" data-s="labels.declutter.tiers.civic.number"></td></tr>
+    <tr><td>Streets</td><td><input type="number" data-s="labels.declutter.tiers.streets.max_fpi" step="10"></td><td><input type="number" data-s="labels.declutter.tiers.streets.size" step="0.05"></td><td><input type="checkbox" data-s="labels.declutter.tiers.streets.number"></td></tr>
+    <tr><td>Houses / farms</td><td><input type="number" data-s="labels.declutter.tiers.houses.max_fpi" step="5"></td><td><input type="number" data-s="labels.declutter.tiers.houses.size" step="0.05"></td><td><input type="checkbox" data-s="labels.declutter.tiers.houses.number"></td></tr>
+  </table>
+  <h4 style="margin-top:8px">Label QA</h4>
+  <pre id="lblQa" class="note" style="white-space:pre-wrap;margin:2px 0">Redraw labels to get the numbers (text over features, overlaps, hidden labels).</pre>
   <div class="btns"><button class="primary" data-act="labels_run" title="Re-renders LABELS (+ Label Backing, Leaders) and the linework they cut">Redraw labels only</button></div>
 </section>
 
@@ -267,6 +324,15 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
     <label>Strength <input type="number" data-s="shading.hillshade.strength" min="0" max="1.5" step="0.05"></label>
     <label>Ambient <input type="number" data-s="shading.hillshade.ambient" min="0" max="1" step="0.05"></label>
   </div>
+  <h4>Muted (map-calm)</h4>
+  <div class="grid">
+    <label>Saturation 0..1 <input type="number" data-s="shading.muted.saturation" min="0" max="1" step="0.05"></label>
+    <label>Contrast 0..1 <input type="number" data-s="shading.muted.contrast" min="0" max="1" step="0.05"></label>
+    <label>Tint <input type="text" data-s="shading.muted.tint" placeholder="#d9cba3"></label>
+    <label>Tint amount <input type="number" data-s="shading.muted.tint_strength" min="0" max="1" step="0.02"></label>
+    <label>Smooth slope (ft) <input type="number" data-s="shading.slope_smooth_ft" min="0" max="200" step="5"></label>
+  </div>
+  <p class="note">1 / 1 = full colour. The calm presets set about 0.6 / 0.86 with a warm paper tint; changing these does not edit the preset file.</p>
   <div class="btns"><button class="primary" data-act="shading_render">Render and place on ART - Shading</button></div>
   <p class="note">The PNG is placed with its .json bounds so it registers with the map, below LINES, and the layer is locked.</p>
 </section>
@@ -324,15 +390,6 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
 
 <section id="tab-water" role="tabpanel">
   <h4>Water</h4>
-  <h4>Muted (map-calm)</h4>
-  <div class="grid">
-    <label>Saturation 0..1 <input type="number" data-s="shading.muted.saturation" min="0" max="1" step="0.05"></label>
-    <label>Contrast 0..1 <input type="number" data-s="shading.muted.contrast" min="0" max="1" step="0.05"></label>
-    <label>Tint <input type="text" data-s="shading.muted.tint" placeholder="#d9cba3"></label>
-    <label>Tint amount <input type="number" data-s="shading.muted.tint_strength" min="0" max="1" step="0.02"></label>
-    <label>Smooth slope (ft) <input type="number" data-s="shading.slope_smooth_ft" min="0" max="200" step="5"></label>
-  </div>
-  <p class="note">1 / 1 = full colour. The calm presets set about 0.6 / 0.86 with a warm paper tint; changing these does not edit the preset file.</p>
   <div class="grid">
     <label>Sea level (ft) <input type="number" data-s="water.sea_level_ft" step="any"></label>
     <label>River threshold (cells) <input type="number" data-s="water.threshold_cells" min="1" step="any"></label>

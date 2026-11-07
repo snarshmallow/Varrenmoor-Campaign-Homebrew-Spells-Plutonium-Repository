@@ -80,8 +80,46 @@
     });
     $("lsCat").addEventListener("change", paintLabelStyle);
   }
+  // presets/label_presets.json: one file shared with render_world.py --label-preset
+  var labelPresets = {};
+  function loadLabelPresets() {
+    labelPresets = readJson(path.join(root, "illustrator", "presets", "label_presets.json"), {});
+    var sel = $("lblPreset"); if (!sel) return;
+    sel.innerHTML = "";
+    Object.keys(labelPresets).filter(function (k) { return k.charAt(0) !== "_"; }).forEach(function (k) {
+      var o = document.createElement("option"); o.value = k; o.textContent = (labelPresets[k]._title || k); sel.appendChild(o);
+    });
+  }
+  function applyLabelPreset(name) {
+    var pre = labelPresets[name]; if (!pre) { showError("unknown label preset " + name); return; }
+    VB.applyLabelPreset(state, pre); save(); paintInputs(); logLine("label preset applied: " + name + " (Redraw labels to use it)");
+  }
+  function paintQa() {
+    var el = $("lblQa"), q = state.labels && state.labels.qa; if (!el || !q) return;
+    var lines = ["Label QA: " + q.labels_shown + " shown, " + q.labels_hidden + " hidden (" + q.hidden_by_scale + " by scale, " + q.hidden_by_collision + " by collision), " + q.numbered + " numbered, " +
+      q.with_leader + " with leader, " + q.pinned + " pinned",
+      "text over map features: " + q.text_over_features_pct + "% of text area; " + q.labels_over_25pct + " labels over 25%; label/label overlaps " + q.label_label_overlaps +
+      "; leaders crossing labels " + q.leaders_crossing_other_labels];
+    (q.worst || []).slice(0, 5).forEach(function (w) { lines.push("worst: " + w.text + " (" + w.tier + ") " + w.over_pct + "%"); });
+    (q.hidden || []).slice(0, 8).forEach(function (h) { lines.push("hidden: " + h.text + " (" + h.tier + ", " + h.why + ")"); });
+    el.textContent = lines.join("\n");
+  }
+  // live mode: while the panel is open, re-route callouts whose label (or anchor dot) moved. Light: one host call per tick, nothing to do when
+  // nothing changed; backs off when the open document is not a map generated here (no Leaders layer) or no document is open.
+  var liveBusy = false, liveSkips = 0;
+  function liveTick() {
+    var delay = 1500;
+    var done = function () { liveBusy = false; setTimeout(liveTick, liveSkips > 2 ? 6000 : delay); };
+    if (!state || !state.labels || state.labels.live_reroute === false || liveBusy || (runner && runner.isBusy())) { setTimeout(liveTick, delay); return; }
+    liveBusy = true;
+    evalHost(VB.rerouteAction(state, true)).then(function (r) {
+      if (!r || !r.ok || r.skipped) liveSkips++; else liveSkips = 0;
+      if (r && r.ok && r.rerouted) logLine("re-routed " + r.rerouted + " leader(s): " + r.ids.join(", "));
+      done();
+    }, function () { liveSkips++; done(); });
+  }
   function paintInputs() {
-    paintLabelStyle();
+    paintLabelStyle(); paintQa();
     $$("[data-s]").forEach(function (el) {
       var v = VB.getPath(state, el.getAttribute("data-s"));
       if (el.type === "checkbox") el.checked = !!v; else if (v !== undefined && v !== null) el.value = v; else el.value = "";
@@ -258,6 +296,7 @@
     var doc = readJson(d.presets + "/terrain_phases/" + name + ".json", null);
     if (!doc) { showError("terrain phase preset not found: " + name); return; }
     var sh = state.shading; sh.preset = name; sh.base_color = doc.base_color || "#808080";
+    sh.muted = Object.assign({ saturation: 1, contrast: 1, tint: "", tint_strength: 0.12 }, doc.muted || {}); sh.slope_smooth_ft = doc.slope_smooth_ft || 0;
     if (doc.hillshade) sh.hillshade = Object.assign({ enabled: true, azimuth: 315, altitude: 40, strength: 0.35, ambient: 0.3, exaggeration: 1 }, doc.hillshade);
     sh.phases = (doc.phases || (Array.isArray(doc) ? doc : [])).map(function (p) {
       var q = VB.clone(p); q.texture = VB.texName(q.texture) || "#808080"; if (q.enabled === undefined) q.enabled = true; return q;
@@ -296,7 +335,6 @@
         else p[k] = t.value;
         save();
       });
-    sh.muted = Object.assign({ saturation: 1, contrast: 1, tint: "", tint_strength: 0.12 }, doc.muted || {}); sh.slope_smooth_ft = doc.slope_smooth_ft || 0;
       el.addEventListener("change", function (ev) { if (ev.target.tagName === "SELECT") { p.texture = ev.target.value; save(); } });
       el.addEventListener("click", function (ev) {
         var b = ev.target.closest("button[data-op]"); if (!b) return; var op = b.getAttribute("data-op"), a = state.shading.phases;
@@ -424,6 +462,12 @@
     patch_redo: function () { return startJob(VB.jobPatchCmd(state, d, "redo"), refreshPatches); },
     patch_refresh: function () { refreshPatches(); },
     labels_run: function () { return startJob(VB.jobLabels(state, d)); },
+    labels_reroute: function () { return startJob(VB.jobReroute(state, d)); },
+    labels_pin: function () { return startJob(VB.jobPinLabels(state, d)); },
+    labels_clear_overrides: function () { return startJob(VB.jobClearOverrides(state, d)); },
+    labels_apply_preset: function () { applyLabelPreset(state.labels.preset); },
+    lock_leaders: function () { return startJob(VB.jobLayers("lock_leaders", state)); },
+    unlock_leaders: function () { return startJob(VB.jobLayers("unlock_leaders", state)); },
     labels_reset_cat: function () { var c = state.labels.cat; if (c && c !== "default") { state.labels.styles[c] = VB.labelDefaults()[c]; save(); paintLabelStyle(); } },
     contours_run: function () { return startJob(VB.jobContours(state, d)); },
     shading_load_preset: function () { loadPreset(state.shading.preset); },
@@ -677,7 +721,7 @@
     var places = listPlaces(), sel = $("place");
     places.forEach(function (p) { var o = document.createElement("option"); o.value = p; o.textContent = p; sel.appendChild(o); });
     state = VB.normalize(null); d = VB.dirs(root, state.place);
-    makeRunner(); bindTabs(); bindInputs(); bindLabelStyle();
+    makeRunner(); bindTabs(); loadLabelPresets(); bindInputs(); bindLabelStyle();
     $$("[data-act]").forEach(function (b) { b.addEventListener("click", function () { act(b.getAttribute("data-act")); }); });
     if (window.VBRegionUI) VBRegionUI.init({ state: function () { return state; }, dirs: function () { return d; }, save: save, startJob: startJob, syncInputs: paintInputs, readJson: readJson, fs: fs, path: path,
       root: root, acts: acts, switchPlace: switchPlace });
@@ -694,7 +738,7 @@
     fPaint(); fSetupAuto();
     setStatus("idle", false);
     loadTextures();
-    setInterval(pollJobs, 2000); pollJobs();
+    setInterval(pollJobs, 2000); pollJobs(); setTimeout(liveTick, 3000);
   }
   init().catch(function (e) { showError("startup failed: " + (e && e.stack || e)); });
 })();
