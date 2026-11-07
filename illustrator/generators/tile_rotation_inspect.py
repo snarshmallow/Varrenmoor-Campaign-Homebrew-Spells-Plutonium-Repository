@@ -116,7 +116,7 @@ def labels(doc):
 def push(dry):
     import foundry_push as fp
     doc = build()
-    argv = ["push-models", "--placements", os.path.join(OUT, "placements.json"), "--scene-name", SCENE, "--set-name", "inspect"] + (["--dry-run"] if dry else [])
+    argv = ["push-models", "--placements", os.path.join(OUT, "placements.json"), "--scene-name", SCENE, "--set-name", "inspect", "--scene-mode", "3d"] + (["--dry-run"] if dry else [])
     a = fp.parser().parse_args(argv)
     br = fp.PsBridge()
     res = fp.cmd_push_models(br, a)

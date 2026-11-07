@@ -46,6 +46,34 @@ FLAG = "varrenmoor"
 LOG = lambda m: print(m, flush=True)  # noqa: E731
 
 
+# Scene modes (see illustrator/FOUNDRY_3D_CANVAS_NOTES.md). 3D Canvas keeps its scene settings in flags.levels-3d-preview. Only the keys listed here are written,
+# everything else keeps the module default. The "3d" values are copied from the working 3D scenes (Ossuary Market template, ZZ Tile Rotation Inspect).
+L3D = "levels-3d-preview"
+SCENE_MODES = {
+    "flat": {"auto3d": False, "enablePlayers": False, "renderBackground": False},
+    "3d": {"auto3d": True, "enablePlayers": True, "object3dSight": True, "enableGameCamera": True, "enableFogOfWar": True, "enableRuler": True,
+           "renderBackground": False, "renderTable": "matcustom", "tableTex": "baileywiki-content/assets/modules/baileywiki-3d/models/black-tone-pure.webp",
+           "tableColor": "#341f0f", "exr": "assets/ossuary-exchange-skybox3.webp", "skybox": "", "maxElevation": 100000, "timeSync": "darkness", "sunPosition": 9,
+           "ambientLightIntensity": 0, "showSceneWalls": True, "showSceneDoors": True, "showSceneFloors": True, "renderSceneLights": True, "mirrorLevels": True},
+}
+
+
+def scene_mode_flags(mode, overrides=None):
+    """{"levels-3d-preview": {...}} for --scene-mode flat|3d; overrides = ["key=value", ...] (value parsed as JSON, else kept as a string)."""
+    if mode not in SCENE_MODES:
+        raise PushError(f"--scene-mode must be flat or 3d, not {mode}")
+    f = dict(SCENE_MODES[mode])
+    for o in overrides or []:
+        k, sep, v = o.partition("=")
+        if not sep or not k:
+            raise PushError(f"--scene-flag needs key=value, got {o}")
+        try:
+            f[k] = json.loads(v)
+        except ValueError:
+            f[k] = v
+    return {L3D: f}
+
+
 class PushError(Exception):
     pass
 
@@ -421,6 +449,10 @@ def cmd_push_scene(br, a):
     sdata = {"name": name, "width": c["width"], "height": c["height"], "padding": c["padding"], "navigation": False,
              "grid": {"type": 1, "size": c["grid_px"], "distance": c["grid_ft"], "units": "ft"},
              "flags": {FLAG: {"worldId": a.place, "calib": calib, **extra}}}
+    mode = a.scene_mode or "flat"
+    if a.scene_mode or sc is None and not a.scene_uuid:     # explicit --scene-mode, or a brand-new scene (default flat); never silently re-flag an existing one
+        sdata["flags"].update(scene_mode_flags(mode, a.scene_flag))
+        result["scene_mode"] = mode
     if sc is not None and not pipe_id(sc):          # confirmed adoption of an existing scene: change only what we manage
         br.call("update", uuid=a.scene_uuid, data={"flags": {FLAG: {"pipelineId": pid, "worldId": a.place, "calib": calib, **extra}}})
         result["created"] = False
@@ -736,8 +768,12 @@ def cmd_push_models(br, a):
             cal = {"x0": 0.0, "y0": 0.0, "ppf": ppf, "grid_px": round(5 * ppf), "grid_ft": 5.0, "width": W, "height": H, "sceneX": 0, "sceneY": 0, "place": place, "view": "models"}
             r = br.call("upsert_by_flag", documentName="Scene", id=pid, data={"name": a.scene_name, "width": W, "height": H, "padding": 0, "navigation": False,
                                                                            "grid": {"type": 1, "size": round(5 * ppf), "distance": 5, "units": "ft"},
-                                                                           "flags": {FLAG: {"worldId": place, "calib": cal}}})
+                                                                           "flags": {FLAG: {"worldId": place, "calib": cal}, **scene_mode_flags(a.scene_mode or "3d", a.scene_flag)}})
             uuid = r["uuid"]
+            result["scene_mode"] = a.scene_mode or "3d"
+    if a.scene_mode and not result.get("scene_mode"):        # explicit mode on an existing scene: merge only the mode keys
+        br.call("update", uuid=uuid, data={"flags": scene_mode_flags(a.scene_mode, a.scene_flag)})
+        result["scene_mode"] = a.scene_mode
     r = br.call("upsert_many", documentName="Tile", parentUuid=uuid, items=items, prefix="model:", prune=bool(a.prune))
     LOG(f"tiles: {r}")
     result.update(scene_uuid=uuid, tile_ops=r)
@@ -793,6 +829,9 @@ def parser():
     ap.add_argument("--lod", type=int, default=0, help="push-models: 0 = full models, 1/2 = cheaper decimated variants from a merge")
     ap.add_argument("--px-per-ft", type=float, help="push-models: scene px per foot (default: the scene calibration, else the pack value)")
     ap.add_argument("--set-name", help="push-models: folder name under art/<place>/models/")
+    ap.add_argument("--scene-mode", choices=["flat", "3d"], help="3D Canvas scene flags: flat = 2D map (auto3d off), 3d = terrain/model scene. Default: flat for push-scene, 3d for push-models; "
+                    "applied to new scenes, and to existing ones only when given explicitly")
+    ap.add_argument("--scene-flag", action="append", default=[], metavar="KEY=VALUE", help="override one levels-3d-preview scene flag (JSON value), repeatable")
     ap.add_argument("--prune", action="store_true", help="push-models: delete pipeline model tiles that are not in this push")
     return ap
 

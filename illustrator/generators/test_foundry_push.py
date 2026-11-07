@@ -255,6 +255,43 @@ class PushTests(unittest.TestCase):
         self.assertTrue(r4["ok"])
         self.assertTrue(br.docs["Actor"]["a1"]["img"].startswith("assets/varrenmoor-3d/art/bridgehollow/actors/old_man_v001"))
 
+    def test_scene_mode_flags(self):
+        f = fp.scene_mode_flags("flat")["levels-3d-preview"]
+        self.assertIs(f["auto3d"], False)
+        g = fp.scene_mode_flags("3d", ["renderBackground=true", "tableColor=#000000", "sunPosition=45"])["levels-3d-preview"]
+        self.assertIs(g["auto3d"], True)
+        self.assertIs(g["renderBackground"], True)
+        self.assertEqual((g["tableColor"], g["sunPosition"]), ("#000000", 45))
+        with self.assertRaises(fp.PushError):
+            fp.scene_mode_flags("2d")
+        with self.assertRaises(fp.PushError):
+            fp.scene_mode_flags("3d", ["nokey"])
+
+    def test_push_scene_default_flat_and_existing_untouched(self):
+        br = FakeBridge()
+        r1, _ = self.push(br)
+        self.assertEqual(r1["scene_mode"], "flat")
+        sc = next(d for d in br.docs["Scene"].values() if br._pid(d))
+        self.assertIs(sc["flags"]["levels-3d-preview"]["auto3d"], False)
+        sc["flags"]["levels-3d-preview"]["auto3d"] = True        # user switched it on by hand: a re-push must not undo that
+        r2, _ = self.push(br)
+        self.assertNotIn("scene_mode", r2)
+        self.assertIs(sc["flags"]["levels-3d-preview"]["auto3d"], True)
+        r3, _ = self.push(br, "--scene-mode", "flat")             # explicit: applied
+        self.assertIs(sc["flags"]["levels-3d-preview"]["auto3d"], False)
+
+    def test_push_models_scene_mode(self):
+        import tile_rotation_inspect as tri
+        doc = tri.build()
+        pl = os.path.join(tri.OUT, "placements.json")
+        br = FakeBridge()
+        r, _ = self.run_cmd(br, "push-models", "--placements", pl, "--scene-name", "ZZ Mode Test", "--set-name", "t")
+        self.assertTrue(r["ok"], r)
+        self.assertEqual(r["scene_mode"], "3d")
+        sc = next(d for d in br.docs["Scene"].values() if br._pid(d))
+        self.assertIs(sc["flags"]["levels-3d-preview"]["auto3d"], True)
+        self.assertIs(sc["flags"]["levels-3d-preview"]["renderBackground"], False)
+
     def test_delete_only_pipeline(self):
         br = FakeBridge()
         s, _ = self.push(br)
