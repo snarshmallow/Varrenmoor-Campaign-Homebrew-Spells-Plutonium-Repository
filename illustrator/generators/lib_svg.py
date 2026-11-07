@@ -3,7 +3,13 @@
 Units: user units are points (1/72 in) so the SVG opens at true size in Illustrator.
 Each layer is <g id="Name" inkscape:groupmode="layer" inkscape:label="Name">.
 """
+import re
 from xml.sax.saxutils import escape, quoteattr
+
+
+def _encode_ids(text):
+    """Illustrator turns '_' in an id into a space on SVG import; '_x5F_' is decoded back to '_', so entity ids survive."""
+    return re.sub(r'(?<![\w-])id="([^"]*)"', lambda m: 'id="' + m.group(1).replace("_", "_x5F_") + '"', text)
 
 DEFAULT_LAYERS = ["Grid", "Roads", "Walls", "Buildings", "Water", "Labels", "Notes"]
 
@@ -52,15 +58,16 @@ class LayeredSVG:
     def write(self, path):
         out = [f'<?xml version="1.0" encoding="UTF-8"?>',
                f'<svg xmlns="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" '
+               f'xmlns:i="http://ns.adobe.com/AdobeIllustrator/10.0/" '
                f'width="{self.w:g}pt" height="{self.h:g}pt" viewBox="0 0 {self.w:g} {self.h:g}">']
         for name, items in self.layers.items():
             a = quoteattr(name)
-            out.append(f'<g id={a} inkscape:groupmode="layer" inkscape:label={a}>')
+            out.append(f'<g id={a} inkscape:groupmode="layer" i:layer="yes" inkscape:label={a}>')
             out.extend("  " + i for i in items)
             out.append("</g>")
         out.append("</svg>")
         with open(path, "w", encoding="utf-8") as f:
-            f.write("\n".join(out) + "\n")
+            f.write(_encode_ids("\n".join(out) + "\n"))
 
 
 class LayerTree:
@@ -98,7 +105,7 @@ class LayerTree:
     def _group(self, name, body, out, indent):
         a = quoteattr(name)
         lock = ' sodipodi:insensitive="true"' if name in self.locked else ""
-        out.append(f'{indent}<g id={a} inkscape:groupmode="layer" inkscape:label={a}{lock}>')
+        out.append(f'{indent}<g id={a} inkscape:groupmode="layer" i:layer="yes" inkscape:label={a}{lock}>')
         out.extend(body)
         out.append(f"{indent}</g>")
 
@@ -114,6 +121,7 @@ class LayerTree:
     def write(self, path):
         out = ['<?xml version="1.0" encoding="UTF-8"?>',
                f'<svg xmlns="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" '
+               f'xmlns:i="http://ns.adobe.com/AdobeIllustrator/10.0/" '
                f'xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" '
                f'width="{self.w:g}pt" height="{self.h:g}pt" viewBox="0 0 {self.w:g} {self.h:g}">']
         if self.css:
@@ -122,4 +130,4 @@ class LayerTree:
             self._emit(node, out, 0)
         out.append("</svg>")
         with open(path, "w", encoding="utf-8") as f:
-            f.write("\n".join(out) + "\n")
+            f.write(_encode_ids("\n".join(out) + "\n"))

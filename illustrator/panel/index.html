@@ -7,7 +7,9 @@
 html,body{margin:0;height:100%}
 body{font:11px/1.35 "Segoe UI",Arial,sans-serif;background:var(--bg);color:var(--fg);display:flex;flex-direction:column}
 #top{padding:4px 6px;background:var(--bg2);border-bottom:1px solid var(--line)}
-#top .row{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+#top .row{display:flex;gap:6px;align-items:center;flex-wrap:nowrap;min-height:24px;overflow:hidden}
+#top .row>*{flex:0 0 auto}
+#top .row>#status{flex:1 1 0;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #status{font-weight:600}
 #status.busy{color:var(--warn)}
 #err{color:var(--bad);white-space:pre-wrap;margin-top:2px}
@@ -61,8 +63,8 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
 <body>
 <div id="top">
   <div class="row">
-    <label style="flex-direction:row;align-items:center;gap:4px">Place <select id="place" data-s="place" style="width:120px"></select></label>
-    <label style="flex-direction:row;align-items:center;gap:4px">View <input type="text" data-s="settings.view" style="width:90px" title="town | bowl | street:&lt;id&gt; | building:&lt;id&gt;"></label>
+    <label style="flex-direction:row;align-items:center;gap:4px">Place <select id="place" data-s="place" style="width:90px"></select></label>
+    <label style="flex-direction:row;align-items:center;gap:4px">View <input type="text" data-s="settings.view" style="width:70px" title="town | bowl | street:&lt;id&gt; | building:&lt;id&gt;"></label>
     <span id="status">starting</span>
     <button id="cancel" disabled title="Stop the running job">Cancel</button>
     <button id="toggleLog" title="Show or hide the log">Log</button>

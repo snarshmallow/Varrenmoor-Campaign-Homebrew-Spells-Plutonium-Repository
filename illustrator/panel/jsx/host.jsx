@@ -161,6 +161,18 @@ function VB_run(json) {
         for (var gi = 0; gi < gd.layers.length; gi++) out.layers.push(gd.layers[gi].name);
         out.selection = gd.selection.length; break;
       }
+      case "get_layer_tree": {
+        if (app.documents.length === 0) throw new Error("no open document");
+        var walk = function (c) {
+          var r = [];
+          for (var i = 0; i < c.layers.length; i++) {
+            var l = c.layers[i];
+            r.push({ name: l.name, visible: l.visible, locked: l.locked, items: l.pageItems.length, children: walk(l) });
+          }
+          return r;
+        };
+        out.doc = app.activeDocument.name; out.tree = walk(app.activeDocument); break;
+      }
       case "get_selection": {
         // Paths of the current selection; if nothing is selected and `layer` is given, the paths on that layer.
         if (app.documents.length === 0) throw new Error("no open document");
@@ -222,8 +234,9 @@ function VB_run(json) {
           var cnt = 0, its = VB_direct(fl);
           for (var ii = 0; ii < its.length; ii++) {
             var itm = its[ii];
-            if (re && !re.test(itm.name)) continue;
-            if (asg.exclude && new RegExp(asg.exclude).test(itm.name)) continue;
+            var nm = String(itm.name), nm2 = nm.replace(/ /g, "_");  // older SVGs: Illustrator imports "_" in ids as a space
+            if (re && !re.test(nm) && !re.test(nm2)) continue;
+            if (asg.exclude && (new RegExp(asg.exclude).test(nm) || new RegExp(asg.exclude).test(nm2))) continue;
             try { itm.locked = false; } catch (e) {}
             var tgt = itm.typename === "CompoundPathItem" ? itm.pathItems[0] : itm;
             if (!tgt || !("filled" in tgt)) continue;

@@ -90,15 +90,25 @@
 
   // ------------------------------------------------------------ tabs
   function showTab(t) {
-    state.ui.tab = t; save();
-    $$("#tabs button").forEach(function (b) { b.setAttribute("aria-selected", b.getAttribute("data-tab") === t ? "true" : "false"); b.tabIndex = b.getAttribute("data-tab") === t ? 0 : -1; });
-    $$("main section").forEach(function (s) { s.classList.toggle("on", s.id === "tab-" + t); });
-    if (t === "terrain") refreshPatches();
+    try {
+      $$("#tabs button").forEach(function (b) { b.setAttribute("aria-selected", b.getAttribute("data-tab") === t ? "true" : "false"); b.tabIndex = b.getAttribute("data-tab") === t ? 0 : -1; });
+      $$("main section").forEach(function (s) { s.classList.toggle("on", s.id === "tab-" + t); });
+      state.ui.tab = t; save();
+      if (t === "terrain") refreshPatches();
+    } catch (e) { showError("tab " + t + ": " + (e && e.stack || e)); }
   }
   function bindTabs() {
+    // Delegated on the nav; pointerdown/mousedown as well as click so a swallowed CEP click still switches.
+    var nav = $("tabs"), last = 0;
+    var go = function (ev) {
+      var b = ev.target && ev.target.closest ? ev.target.closest("button[data-tab]") : null;
+      if (!b) return;
+      var now = Date.now(); if (now - last < 300) return; last = now;
+      showTab(b.getAttribute("data-tab"));
+    };
+    nav.addEventListener("pointerdown", go); nav.addEventListener("mousedown", go); nav.addEventListener("click", go);
     var btns = $$("#tabs button");
     btns.forEach(function (b, i) {
-      b.addEventListener("click", function () { showTab(b.getAttribute("data-tab")); });
       b.addEventListener("keydown", function (e) {
         var j = e.key === "ArrowRight" ? i + 1 : e.key === "ArrowLeft" ? i - 1 : null;
         if (j === null) return; j = (j + btns.length) % btns.length; btns[j].focus(); showTab(btns[j].getAttribute("data-tab")); e.preventDefault();
