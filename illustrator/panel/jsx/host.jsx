@@ -572,6 +572,21 @@ function VB_run(json) {
         if (vnf.length) out.ok = false, out.error = "layers not found: " + vnf.join(", ");
         break;
       }
+      case "close_docs": {
+        // Close named open documents (a.names = exact file names; nothing else is ever touched). Safety: names are required, and a document
+        // with unsaved changes is SKIPPED (reported in out.skipped) unless a.discard === true; nothing is ever saved here.
+        var cn = a.names || [], closed = [], keep = [], skipped = [];
+        if (!cn.length) throw new Error("close_docs needs names: [file names]");
+        for (var ci = app.documents.length - 1; ci >= 0; ci--) {
+          var cdoc = app.documents[ci], hit = false;
+          for (var cj = 0; cj < cn.length; cj++) if (cdoc.name === cn[cj]) hit = true;
+          if (!hit) continue;
+          if (!cdoc.saved && a.discard !== true) { skipped.push(cdoc.name); continue; }
+          closed.push(cdoc.name); cdoc.close(SaveOptions.DONOTSAVECHANGES);
+        }
+        for (var ck = 0; ck < app.documents.length; ck++) keep.push(app.documents[ck].name);
+        out.closed = closed; out.skipped = skipped; out.open = keep; break;
+      }
       case "save_ai": {
         if (app.documents.length === 0) throw new Error("no open document");
         app.activeDocument.saveAs(new File(a.path), new IllustratorSaveOptions()); break;
