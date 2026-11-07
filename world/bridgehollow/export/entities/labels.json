@@ -23,9 +23,9 @@
    "entity": "dis_authority",
    "entity_type": "districts",
    "anchor": [
-    979.2,
+    977.7,
     803.7,
-    646.3
+    646.7
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -58,7 +58,7 @@
    "anchor": [
     810.0,
     780.0,
-    654.5
+    653.6
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -89,8 +89,8 @@
    "entity": "dis_farm",
    "entity_type": "districts",
    "anchor": [
-    1531.9,
-    993.3,
+    1527.3,
+    995.0,
     652.3
    ],
    "tag_height_ft": 0.0,
@@ -122,8 +122,8 @@
    "entity": "sqr_3",
    "entity_type": "plazas",
    "anchor": [
-    887.929,
-    1004.754,
+    884.987,
+    999.85,
     647.4
    ],
    "tag_height_ft": 0.0,
@@ -188,9 +188,9 @@
    "entity": "sqr_market",
    "entity_type": "plazas",
    "anchor": [
-    1265.952,
-    790.43,
-    651.7
+    1266.778,
+    791.061,
+    652.0
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -204,7 +204,7 @@
   },
   {
    "id": "lbl_str_003",
-   "name": "Cartwright Lane",
+   "name": "Alley 3",
    "kind": "label",
    "status": "proposed",
    "notes": "",
@@ -217,13 +217,13 @@
    "foundry": {
     "pipelineId": "world:bridgehollow:lbl_str_003"
    },
-   "text": "Cartwright Lane",
+   "text": "Alley 3",
    "entity": "str_003",
    "entity_type": "roads",
    "anchor": [
-    1058.2,
-    624.0,
-    657.7
+    992.8,
+    623.2,
+    663.4
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -237,7 +237,7 @@
   },
   {
    "id": "lbl_str_004",
-   "name": "Tanners Row",
+   "name": "Alley 4",
    "kind": "label",
    "status": "proposed",
    "notes": "",
@@ -250,12 +250,12 @@
    "foundry": {
     "pipelineId": "world:bridgehollow:lbl_str_004"
    },
-   "text": "Tanners Row",
+   "text": "Alley 4",
    "entity": "str_004",
    "entity_type": "roads",
    "anchor": [
-    1125.1,
-    612.1,
+    1116.4,
+    621.7,
     654.7
    ],
    "tag_height_ft": 0.0,
@@ -287,9 +287,9 @@
    "entity": "str_005",
    "entity_type": "roads",
    "anchor": [
-    1347.5,
-    739.7,
-    661.7
+    949.0,
+    668.0,
+    661.0
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -320,8 +320,8 @@
    "entity": "str_006",
    "entity_type": "roads",
    "anchor": [
-    1369.6,
-    636.7,
+    1367.7,
+    635.1,
     661.7
    ],
    "tag_height_ft": 0.0,
@@ -353,9 +353,9 @@
    "entity": "str_007",
    "entity_type": "roads",
    "anchor": [
-    1401.1,
-    579.0,
-    665.4
+    1413.5,
+    678.0,
+    664.3
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -386,9 +386,9 @@
    "entity": "str_008",
    "entity_type": "roads",
    "anchor": [
-    899.5,
-    733.9,
-    660.1
+    914.6,
+    725.4,
+    658.6
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -402,7 +402,7 @@
   },
   {
    "id": "lbl_str_009",
-   "name": "Chandler Row",
+   "name": "Alley 9",
    "kind": "label",
    "status": "proposed",
    "notes": "",
@@ -415,27 +415,27 @@
    "foundry": {
     "pipelineId": "world:bridgehollow:lbl_str_009"
    },
-   "text": "Chandler Row",
+   "text": "Alley 9",
    "entity": "str_009",
    "entity_type": "roads",
    "anchor": [
-    944.4,
-    728.8,
-    658.0
+    1102.2,
+    690.2,
+    651.2
    ],
    "tag_height_ft": 0.0,
    "tags": {
     "layer": "labels",
     "subtype": "label",
-    "district": "dis_commoner",
-    "ring": "commoner",
+    "district": "dis_authority",
+    "ring": "authority",
     "group": "labels",
     "id": "lbl_str_009"
    }
   },
   {
    "id": "lbl_str_010",
-   "name": "Alley 10",
+   "name": "Chandler Row",
    "kind": "label",
    "status": "proposed",
    "notes": "",
@@ -448,20 +448,20 @@
    "foundry": {
     "pipelineId": "world:bridgehollow:lbl_str_010"
    },
-   "text": "Alley 10",
+   "text": "Chandler Row",
    "entity": "str_010",
    "entity_type": "roads",
    "anchor": [
-    1110.3,
-    676.2,
-    651.3
+    1268.0,
+    667.0,
+    655.3
    ],
    "tag_height_ft": 0.0,
    "tags": {
     "layer": "labels",
     "subtype": "label",
-    "district": "dis_authority",
-    "ring": "authority",
+    "district": "dis_commoner",
+    "ring": "commoner",
     "group": "labels",
     "id": "lbl_str_010"
    }
@@ -485,16 +485,16 @@
    "entity": "str_011",
    "entity_type": "roads",
    "anchor": [
-    1268.3,
-    666.6,
-    655.3
+    952.8,
+    842.7,
+    654.3
    ],
    "tag_height_ft": 0.0,
    "tags": {
     "layer": "labels",
     "subtype": "label",
-    "district": "dis_commoner",
-    "ring": "commoner",
+    "district": "dis_authority",
+    "ring": "authority",
     "group": "labels",
     "id": "lbl_str_011"
    }
@@ -518,9 +518,9 @@
    "entity": "str_012",
    "entity_type": "roads",
    "anchor": [
-    814.9,
-    745.1,
-    657.3
+    1415.9,
+    749.8,
+    662.1
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -551,23 +551,23 @@
    "entity": "str_013",
    "entity_type": "roads",
    "anchor": [
-    1421.1,
-    749.2,
-    662.7
+    1446.9,
+    880.8,
+    656.2
    ],
    "tag_height_ft": 0.0,
    "tags": {
     "layer": "labels",
     "subtype": "label",
-    "district": "dis_commoner",
-    "ring": "commoner",
+    "district": "dis_farm",
+    "ring": "farm",
     "group": "labels",
     "id": "lbl_str_013"
    }
   },
   {
    "id": "lbl_str_014",
-   "name": "Alley 14",
+   "name": "Warden Street",
    "kind": "label",
    "status": "proposed",
    "notes": "",
@@ -580,27 +580,27 @@
    "foundry": {
     "pipelineId": "world:bridgehollow:lbl_str_014"
    },
-   "text": "Alley 14",
+   "text": "Warden Street",
    "entity": "str_014",
    "entity_type": "roads",
    "anchor": [
-    795.7,
-    826.5,
-    655.4
+    1006.0,
+    810.8,
+    653.3
    ],
    "tag_height_ft": 0.0,
    "tags": {
     "layer": "labels",
     "subtype": "label",
-    "district": "dis_commoner",
-    "ring": "commoner",
+    "district": "dis_authority",
+    "ring": "authority",
     "group": "labels",
     "id": "lbl_str_014"
    }
   },
   {
    "id": "lbl_str_015",
-   "name": "Dyers Walk",
+   "name": "Wheelwright Lane",
    "kind": "label",
    "status": "proposed",
    "notes": "",
@@ -613,13 +613,13 @@
    "foundry": {
     "pipelineId": "world:bridgehollow:lbl_str_015"
    },
-   "text": "Dyers Walk",
+   "text": "Wheelwright Lane",
    "entity": "str_015",
    "entity_type": "roads",
    "anchor": [
-    927.1,
-    863.0,
-    653.0
+    1398.2,
+    833.3,
+    658.3
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -633,7 +633,7 @@
   },
   {
    "id": "lbl_str_016",
-   "name": "Warden Street",
+   "name": "Dyers Walk",
    "kind": "label",
    "status": "proposed",
    "notes": "",
@@ -646,20 +646,20 @@
    "foundry": {
     "pipelineId": "world:bridgehollow:lbl_str_016"
    },
-   "text": "Warden Street",
+   "text": "Dyers Walk",
    "entity": "str_016",
    "entity_type": "roads",
    "anchor": [
-    1006.0,
-    805.5,
-    653.7
+    888.7,
+    895.1,
+    652.0
    ],
    "tag_height_ft": 0.0,
    "tags": {
     "layer": "labels",
     "subtype": "label",
-    "district": "dis_authority",
-    "ring": "authority",
+    "district": "dis_commoner",
+    "ring": "commoner",
     "group": "labels",
     "id": "lbl_str_016"
    }
@@ -683,9 +683,9 @@
    "entity": "str_017",
    "entity_type": "roads",
    "anchor": [
-    1376.5,
-    832.1,
-    657.3
+    1414.7,
+    911.9,
+    653.4
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -716,23 +716,23 @@
    "entity": "str_018",
    "entity_type": "roads",
    "anchor": [
-    1233.0,
-    918.3,
-    645.3
+    857.8,
+    919.6,
+    649.2
    ],
    "tag_height_ft": 0.0,
    "tags": {
     "layer": "labels",
     "subtype": "label",
-    "district": "dis_authority",
-    "ring": "authority",
+    "district": "dis_commoner",
+    "ring": "commoner",
     "group": "labels",
     "id": "lbl_str_018"
    }
   },
   {
    "id": "lbl_str_019",
-   "name": "Fuller Lane",
+   "name": "Potters Row",
    "kind": "label",
    "status": "proposed",
    "notes": "",
@@ -745,20 +745,20 @@
    "foundry": {
     "pipelineId": "world:bridgehollow:lbl_str_019"
    },
-   "text": "Fuller Lane",
+   "text": "Potters Row",
    "entity": "str_019",
    "entity_type": "roads",
    "anchor": [
-    1441.5,
-    880.6,
-    655.7
+    1041.0,
+    933.1,
+    646.7
    ],
    "tag_height_ft": 0.0,
    "tags": {
     "layer": "labels",
     "subtype": "label",
-    "district": "dis_commoner",
-    "ring": "commoner",
+    "district": "dis_authority",
+    "ring": "authority",
     "group": "labels",
     "id": "lbl_str_019"
    }
@@ -782,9 +782,9 @@
    "entity": "str_020",
    "entity_type": "roads",
    "anchor": [
-    859.4,
-    923.9,
-    649.1
+    998.5,
+    1048.8,
+    642.3
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -798,7 +798,7 @@
   },
   {
    "id": "lbl_str_021",
-   "name": "Hay Lane",
+   "name": "Cartwright Lane 2",
    "kind": "label",
    "status": "proposed",
    "notes": "",
@@ -811,13 +811,13 @@
    "foundry": {
     "pipelineId": "world:bridgehollow:lbl_str_021"
    },
-   "text": "Hay Lane",
+   "text": "Cartwright Lane 2",
    "entity": "str_021",
    "entity_type": "roads",
    "anchor": [
-    913.6,
-    910.9,
-    651.2
+    1288.3,
+    1017.8,
+    643.0
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -831,7 +831,7 @@
   },
   {
    "id": "lbl_str_022",
-   "name": "Cartwright Lane 2",
+   "name": "Tanners Row 2",
    "kind": "label",
    "status": "proposed",
    "notes": "",
@@ -844,27 +844,27 @@
    "foundry": {
     "pipelineId": "world:bridgehollow:lbl_str_022"
    },
-   "text": "Cartwright Lane 2",
+   "text": "Tanners Row 2",
    "entity": "str_022",
    "entity_type": "roads",
    "anchor": [
-    1034.9,
-    940.9,
-    647.0
+    1471.8,
+    1077.4,
+    648.3
    ],
    "tag_height_ft": 0.0,
    "tags": {
     "layer": "labels",
     "subtype": "label",
-    "district": "dis_authority",
-    "ring": "authority",
+    "district": "dis_farm",
+    "ring": "farm",
     "group": "labels",
     "id": "lbl_str_022"
    }
   },
   {
    "id": "lbl_str_023",
-   "name": "Tanners Row 2",
+   "name": "Alley 23",
    "kind": "label",
    "status": "proposed",
    "notes": "",
@@ -877,13 +877,13 @@
    "foundry": {
     "pipelineId": "world:bridgehollow:lbl_str_023"
    },
-   "text": "Tanners Row 2",
+   "text": "Alley 23",
    "entity": "str_023",
    "entity_type": "roads",
    "anchor": [
-    1069.4,
-    998.8,
-    643.1
+    902.2,
+    1102.0,
+    644.5
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -897,7 +897,7 @@
   },
   {
    "id": "lbl_str_024",
-   "name": "Cooper Row 2",
+   "name": "Weavers Walk 2",
    "kind": "label",
    "status": "proposed",
    "notes": "",
@@ -910,27 +910,27 @@
    "foundry": {
     "pipelineId": "world:bridgehollow:lbl_str_024"
    },
-   "text": "Cooper Row 2",
+   "text": "Weavers Walk 2",
    "entity": "str_024",
    "entity_type": "roads",
    "anchor": [
-    1233.9,
-    921.7,
-    645.1
+    1002.4,
+    1114.9,
+    639.9
    ],
    "tag_height_ft": 0.0,
    "tags": {
     "layer": "labels",
     "subtype": "label",
-    "district": "dis_authority",
-    "ring": "authority",
+    "district": "dis_commoner",
+    "ring": "commoner",
     "group": "labels",
     "id": "lbl_str_024"
    }
   },
   {
    "id": "lbl_str_025",
-   "name": "Pasture Lane",
+   "name": "Alley 25",
    "kind": "label",
    "status": "proposed",
    "notes": "",
@@ -943,13 +943,13 @@
    "foundry": {
     "pipelineId": "world:bridgehollow:lbl_str_025"
    },
-   "text": "Pasture Lane",
+   "text": "Alley 25",
    "entity": "str_025",
    "entity_type": "roads",
    "anchor": [
-    1605.0,
-    1017.4,
-    654.7
+    1664.4,
+    1088.0,
+    653.9
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -963,7 +963,7 @@
   },
   {
    "id": "lbl_str_026",
-   "name": "Alley 26",
+   "name": "Brook Lane 2",
    "kind": "label",
    "status": "proposed",
    "notes": "",
@@ -976,13 +976,13 @@
    "foundry": {
     "pipelineId": "world:bridgehollow:lbl_str_026"
    },
-   "text": "Alley 26",
+   "text": "Brook Lane 2",
    "entity": "str_026",
    "entity_type": "roads",
    "anchor": [
-    1010.4,
-    1049.0,
-    642.5
+    1244.6,
+    1156.7,
+    632.1
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -996,7 +996,7 @@
   },
   {
    "id": "lbl_str_027",
-   "name": "Brook Lane 2",
+   "name": "Hedge Lane",
    "kind": "label",
    "status": "proposed",
    "notes": "",
@@ -1009,13 +1009,13 @@
    "foundry": {
     "pipelineId": "world:bridgehollow:lbl_str_027"
    },
-   "text": "Brook Lane 2",
+   "text": "Hedge Lane",
    "entity": "str_027",
    "entity_type": "roads",
    "anchor": [
-    1465.0,
-    1064.7,
-    648.5
+    1559.2,
+    1110.5,
+    648.3
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -1025,72 +1025,6 @@
     "ring": "farm",
     "group": "labels",
     "id": "lbl_str_027"
-   }
-  },
-  {
-   "id": "lbl_str_028",
-   "name": "Alley 28",
-   "kind": "label",
-   "status": "proposed",
-   "notes": "",
-   "links": {
-    "foundry_scene": null,
-    "model3d": null,
-    "ai_layer": null
-   },
-   "source": "world/bridgehollow/streets.json",
-   "foundry": {
-    "pipelineId": "world:bridgehollow:lbl_str_028"
-   },
-   "text": "Alley 28",
-   "entity": "str_028",
-   "entity_type": "roads",
-   "anchor": [
-    1244.4,
-    1141.6,
-    632.4
-   ],
-   "tag_height_ft": 0.0,
-   "tags": {
-    "layer": "labels",
-    "subtype": "label",
-    "district": "dis_commoner",
-    "ring": "commoner",
-    "group": "labels",
-    "id": "lbl_str_028"
-   }
-  },
-  {
-   "id": "lbl_str_029",
-   "name": "Hedge Lane",
-   "kind": "label",
-   "status": "proposed",
-   "notes": "",
-   "links": {
-    "foundry_scene": null,
-    "model3d": null,
-    "ai_layer": null
-   },
-   "source": "world/bridgehollow/streets.json",
-   "foundry": {
-    "pipelineId": "world:bridgehollow:lbl_str_029"
-   },
-   "text": "Hedge Lane",
-   "entity": "str_029",
-   "entity_type": "roads",
-   "anchor": [
-    1572.2,
-    1111.0,
-    648.5
-   ],
-   "tag_height_ft": 0.0,
-   "tags": {
-    "layer": "labels",
-    "subtype": "label",
-    "district": "dis_farm",
-    "ring": "farm",
-    "group": "labels",
-    "id": "lbl_str_029"
    }
   },
   {
@@ -1112,9 +1046,9 @@
    "entity": "str_pilgrim_road_1",
    "entity_type": "roads",
    "anchor": [
-    1296.9,
-    1148.8,
-    636.0
+    1364.0,
+    1167.7,
+    639.3
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -1178,9 +1112,9 @@
    "entity": "bld_barn_001",
    "entity_type": "buildings",
    "anchor": [
-    1462.342,
-    637.89,
-    682.735
+    1492.95,
+    1055.3,
+    664.924
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -1211,9 +1145,9 @@
    "entity": "bld_barn_002",
    "entity_type": "buildings",
    "anchor": [
-    1640.052,
-    1154.086,
-    664.908
+    1006.419,
+    1159.582,
+    651.333
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -1244,9 +1178,9 @@
    "entity": "bld_customs_house",
    "entity_type": "buildings",
    "anchor": [
-    1037.066,
-    784.55,
-    666.425
+    959.459,
+    754.646,
+    672.202
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -1277,9 +1211,9 @@
    "entity": "bld_farm_001",
    "entity_type": "buildings",
    "anchor": [
-    1439.489,
-    597.075,
-    694.966
+    1504.289,
+    955.979,
+    668.436
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -1310,9 +1244,9 @@
    "entity": "bld_farm_002",
    "entity_type": "buildings",
    "anchor": [
-    1580.95,
-    1139.55,
-    664.02
+    975.85,
+    1197.4,
+    662.392
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -1343,9 +1277,9 @@
    "entity": "bld_farm_003",
    "entity_type": "buildings",
    "anchor": [
-    1233.95,
-    1220.65,
-    655.965
+    920.836,
+    1315.984,
+    658.988
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -1376,9 +1310,9 @@
    "entity": "bld_gate_watch",
    "entity_type": "buildings",
    "anchor": [
-    1329.5,
-    1417.85,
-    636.412
+    1342.74,
+    1405.916,
+    638.817
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -1409,9 +1343,9 @@
    "entity": "bld_house_001",
    "entity_type": "buildings",
    "anchor": [
-    1102.45,
-    553.5,
-    672.442
+    1129.1,
+    563.1,
+    673.549
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -1442,9 +1376,9 @@
    "entity": "bld_house_002",
    "entity_type": "buildings",
    "anchor": [
-    1026.296,
-    557.047,
-    686.288
+    1019.15,
+    567.6,
+    681.552
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -1475,9 +1409,9 @@
    "entity": "bld_house_003",
    "entity_type": "buildings",
    "anchor": [
-    1078.2,
-    556.3,
-    674.136
+    972.711,
+    569.894,
+    683.105
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -1508,9 +1442,9 @@
    "entity": "bld_house_004",
    "entity_type": "buildings",
    "anchor": [
-    1052.45,
-    562.598,
-    675.565
+    998.35,
+    573.4,
+    680.078
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -1541,9 +1475,9 @@
    "entity": "bld_house_005",
    "entity_type": "buildings",
    "anchor": [
-    994.099,
-    571.954,
-    681.249
+    1076.632,
+    581.884,
+    673.45
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -1574,9 +1508,9 @@
    "entity": "bld_house_006",
    "entity_type": "buildings",
    "anchor": [
-    966.999,
-    580.727,
-    677.122
+    1356.25,
+    584.45,
+    686.318
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -1607,9 +1541,9 @@
    "entity": "bld_house_007",
    "entity_type": "buildings",
    "anchor": [
-    1029.9,
-    595.05,
-    673.681
+    1184.9,
+    591.6,
+    670.378
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -1640,9 +1574,9 @@
    "entity": "bld_house_008",
    "entity_type": "buildings",
    "anchor": [
-    1202.75,
-    596.55,
-    667.896
+    1054.165,
+    593.973,
+    684.503
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -1673,9 +1607,9 @@
    "entity": "bld_house_009",
    "entity_type": "buildings",
    "anchor": [
-    1112.395,
-    598.917,
-    669.644
+    1316.911,
+    596.023,
+    670.413
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -1706,9 +1640,9 @@
    "entity": "bld_house_010",
    "entity_type": "buildings",
    "anchor": [
-    1156.455,
-    599.672,
-    669.337
+    970.75,
+    603.15,
+    678.843
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -1739,9 +1673,9 @@
    "entity": "bld_house_011",
    "entity_type": "buildings",
    "anchor": [
-    1084.397,
-    606.582,
-    670.63
+    1038.3,
+    610.2,
+    673.379
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -1772,9 +1706,9 @@
    "entity": "bld_house_012",
    "entity_type": "buildings",
    "anchor": [
-    1361.7,
-    606.65,
-    674.712
+    1156.3,
+    605.25,
+    668.085
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -1805,9 +1739,9 @@
    "entity": "bld_house_013",
    "entity_type": "buildings",
    "anchor": [
-    1018.98,
-    608.498,
-    672.725
+    1358.931,
+    617.299,
+    684.702
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -1838,9 +1772,9 @@
    "entity": "bld_house_014",
    "entity_type": "buildings",
    "anchor": [
-    973.898,
-    607.891,
-    675.993
+    1386.35,
+    622.75,
+    677.398
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -1871,9 +1805,9 @@
    "entity": "bld_house_015",
    "entity_type": "buildings",
    "anchor": [
-    997.7,
-    607.95,
-    673.83
+    1020.688,
+    624.391,
+    675.808
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -1904,9 +1838,9 @@
    "entity": "bld_house_016",
    "entity_type": "buildings",
    "anchor": [
-    1390.368,
-    615.755,
-    676.637
+    916.443,
+    639.042,
+    677.796
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -1937,9 +1871,9 @@
    "entity": "bld_house_017",
    "entity_type": "buildings",
    "anchor": [
-    1178.856,
-    611.904,
-    678.163
+    881.7,
+    644.05,
+    689.185
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -1970,16 +1904,16 @@
    "entity": "bld_house_018",
    "entity_type": "buildings",
    "anchor": [
-    1142.1,
-    629.0,
-    669.549
+    994.2,
+    641.6,
+    674.299
    ],
    "tag_height_ft": 0.0,
    "tags": {
     "layer": "labels",
     "subtype": "label",
-    "district": "dis_authority",
-    "ring": "authority",
+    "district": "dis_commoner",
+    "ring": "commoner",
     "group": "labels",
     "id": "lbl_bld_house_018"
    }
@@ -2003,9 +1937,9 @@
    "entity": "bld_house_019",
    "entity_type": "buildings",
    "anchor": [
-    1313.6,
-    627.5,
-    681.206
+    1292.242,
+    648.093,
+    669.136
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -2036,9 +1970,9 @@
    "entity": "bld_house_020",
    "entity_type": "buildings",
    "anchor": [
-    994.05,
-    639.9,
-    672.301
+    934.0,
+    653.5,
+    677.673
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -2069,9 +2003,9 @@
    "entity": "bld_house_021",
    "entity_type": "buildings",
    "anchor": [
-    915.1,
-    647.9,
-    676.005
+    1313.65,
+    655.1,
+    670.337
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -2102,9 +2036,9 @@
    "entity": "bld_house_022",
    "entity_type": "buildings",
    "anchor": [
-    859.75,
-    650.05,
-    678.318
+    861.7,
+    661.0,
+    687.212
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -2135,9 +2069,9 @@
    "entity": "bld_house_023",
    "entity_type": "buildings",
    "anchor": [
-    1322.25,
-    649.95,
-    681.131
+    905.216,
+    665.131,
+    676.073
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -2168,9 +2102,9 @@
    "entity": "bld_house_024",
    "entity_type": "buildings",
    "anchor": [
-    1294.919,
-    656.271,
-    669.595
+    1364.597,
+    664.039,
+    674.954
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -2201,9 +2135,9 @@
    "entity": "bld_house_025",
    "entity_type": "buildings",
    "anchor": [
-    937.65,
-    660.95,
-    676.89
+    971.2,
+    663.65,
+    673.351
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -2234,9 +2168,9 @@
    "entity": "bld_house_026",
    "entity_type": "buildings",
    "anchor": [
-    960.75,
-    657.15,
-    685.95
+    993.84,
+    670.822,
+    673.335
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -2267,9 +2201,9 @@
    "entity": "bld_house_027",
    "entity_type": "buildings",
    "anchor": [
-    988.15,
-    667.55,
-    675.476
+    874.95,
+    670.8,
+    676.961
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -2300,9 +2234,9 @@
    "entity": "bld_house_028",
    "entity_type": "buildings",
    "anchor": [
-    911.748,
-    669.407,
-    676.625
+    1388.201,
+    671.197,
+    676.497
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -2333,9 +2267,9 @@
    "entity": "bld_house_029",
    "entity_type": "buildings",
    "anchor": [
-    835.7,
-    673.05,
-    677.299
+    916.375,
+    680.925,
+    675.464
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -2366,9 +2300,9 @@
    "entity": "bld_house_030",
    "entity_type": "buildings",
    "anchor": [
-    1393.908,
-    677.35,
-    679.43
+    886.484,
+    685.367,
+    676.508
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -2399,9 +2333,9 @@
    "entity": "bld_house_031",
    "entity_type": "buildings",
    "anchor": [
-    1367.45,
-    677.45,
-    675.233
+    823.938,
+    689.314,
+    686.591
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -2432,9 +2366,9 @@
    "entity": "bld_house_032",
    "entity_type": "buildings",
    "anchor": [
-    934.75,
-    692.25,
-    673.93
+    1320.023,
+    691.969,
+    672.013
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -2465,9 +2399,9 @@
    "entity": "bld_house_033",
    "entity_type": "buildings",
    "anchor": [
-    954.843,
-    691.101,
-    685.403
+    1372.953,
+    691.751,
+    676.173
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -2498,9 +2432,9 @@
    "entity": "bld_house_034",
    "entity_type": "buildings",
    "anchor": [
-    1327.7,
-    693.6,
-    673.662
+    1392.5,
+    691.639,
+    687.162
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -2531,9 +2465,9 @@
    "entity": "bld_house_035",
    "entity_type": "buildings",
    "anchor": [
-    854.755,
-    695.894,
-    679.995
+    971.6,
+    694.55,
+    673.402
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -2564,16 +2498,16 @@
    "entity": "bld_house_036",
    "entity_type": "buildings",
    "anchor": [
-    983.35,
-    700.445,
-    671.367
+    901.65,
+    706.3,
+    674.542
    ],
    "tag_height_ft": 0.0,
    "tags": {
     "layer": "labels",
     "subtype": "label",
-    "district": "dis_authority",
-    "ring": "authority",
+    "district": "dis_commoner",
+    "ring": "commoner",
     "group": "labels",
     "id": "lbl_bld_house_036"
    }
@@ -2597,9 +2531,9 @@
    "entity": "bld_house_037",
    "entity_type": "buildings",
    "anchor": [
-    1393.75,
-    702.706,
-    678.47
+    809.15,
+    709.65,
+    674.8
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -2630,9 +2564,9 @@
    "entity": "bld_house_038",
    "entity_type": "buildings",
    "anchor": [
-    805.632,
-    711.288,
-    674.705
+    1371.95,
+    711.95,
+    676.271
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -2663,9 +2597,9 @@
    "entity": "bld_house_039",
    "entity_type": "buildings",
    "anchor": [
-    915.297,
-    709.31,
-    676.212
+    1329.12,
+    717.425,
+    682.612
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -2696,9 +2630,9 @@
    "entity": "bld_house_040",
    "entity_type": "buildings",
    "anchor": [
-    838.2,
-    716.9,
-    674.927
+    1392.1,
+    723.35,
+    685.936
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -2729,9 +2663,9 @@
    "entity": "bld_house_041",
    "entity_type": "buildings",
    "anchor": [
-    874.947,
-    720.754,
-    673.879
+    808.95,
+    730.95,
+    673.19
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -2762,9 +2696,9 @@
    "entity": "bld_house_042",
    "entity_type": "buildings",
    "anchor": [
-    1299.0,
-    718.0,
-    671.895
+    1372.65,
+    731.15,
+    676.004
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -2795,9 +2729,9 @@
    "entity": "bld_house_043",
    "entity_type": "buildings",
    "anchor": [
-    1323.35,
-    723.4,
-    675.0
+    1283.95,
+    732.05,
+    671.924
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -2828,9 +2762,9 @@
    "entity": "bld_house_044",
    "entity_type": "buildings",
    "anchor": [
-    1364.335,
-    727.152,
-    675.246
+    792.926,
+    745.322,
+    683.526
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -2861,9 +2795,9 @@
    "entity": "bld_house_045",
    "entity_type": "buildings",
    "anchor": [
-    1388.329,
-    727.502,
-    688.897
+    1312.769,
+    744.424,
+    672.786
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -2894,9 +2828,9 @@
    "entity": "bld_house_046",
    "entity_type": "buildings",
    "anchor": [
-    829.115,
-    735.229,
-    672.799
+    881.05,
+    757.85,
+    671.338
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -2927,9 +2861,9 @@
    "entity": "bld_house_047",
    "entity_type": "buildings",
    "anchor": [
-    864.5,
-    735.6,
-    673.263
+    1380.3,
+    772.6,
+    674.871
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -2960,9 +2894,9 @@
    "entity": "bld_house_048",
    "entity_type": "buildings",
    "anchor": [
-    789.85,
-    747.25,
-    673.784
+    893.1,
+    777.25,
+    672.526
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -2993,16 +2927,16 @@
    "entity": "bld_house_049",
    "entity_type": "buildings",
    "anchor": [
-    939.75,
-    763.05,
-    674.762
+    955.071,
+    784.902,
+    671.198
    ],
    "tag_height_ft": 0.0,
    "tags": {
     "layer": "labels",
     "subtype": "label",
-    "district": "dis_commoner",
-    "ring": "commoner",
+    "district": "dis_authority",
+    "ring": "authority",
     "group": "labels",
     "id": "lbl_bld_house_049"
    }
@@ -3026,9 +2960,9 @@
    "entity": "bld_house_050",
    "entity_type": "buildings",
    "anchor": [
-    894.9,
-    781.05,
-    673.114
+    1432.707,
+    784.193,
+    687.118
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -3059,9 +2993,9 @@
    "entity": "bld_house_051",
    "entity_type": "buildings",
    "anchor": [
-    1433.048,
-    788.765,
-    686.994
+    1331.75,
+    780.4,
+    673.55
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -3092,9 +3026,9 @@
    "entity": "bld_house_052",
    "entity_type": "buildings",
    "anchor": [
-    868.61,
-    794.97,
-    680.083
+    826.05,
+    792.75,
+    669.832
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -3125,9 +3059,9 @@
    "entity": "bld_house_053",
    "entity_type": "buildings",
    "anchor": [
-    912.9,
-    817.65,
-    671.95
+    855.25,
+    796.8,
+    680.207
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -3158,9 +3092,9 @@
    "entity": "bld_house_054",
    "entity_type": "buildings",
    "anchor": [
-    821.892,
-    836.788,
-    668.154
+    777.75,
+    807.4,
+    671.191
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -3191,9 +3125,9 @@
    "entity": "bld_house_055",
    "entity_type": "buildings",
    "anchor": [
-    921.584,
-    844.379,
-    667.742
+    890.35,
+    808.7,
+    671.177
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -3224,9 +3158,9 @@
    "entity": "bld_house_056",
    "entity_type": "buildings",
    "anchor": [
-    1292.031,
-    844.361,
-    675.04
+    797.652,
+    815.492,
+    678.862
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -3257,9 +3191,9 @@
    "entity": "bld_house_057",
    "entity_type": "buildings",
    "anchor": [
-    1407.388,
-    849.403,
-    671.034
+    840.9,
+    814.5,
+    679.806
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -3290,16 +3224,16 @@
    "entity": "bld_house_058",
    "entity_type": "buildings",
    "anchor": [
-    1351.035,
-    853.172,
-    678.705
+    970.55,
+    815.2,
+    672.41
    ],
    "tag_height_ft": 0.0,
    "tags": {
     "layer": "labels",
     "subtype": "label",
-    "district": "dis_commoner",
-    "ring": "commoner",
+    "district": "dis_authority",
+    "ring": "authority",
     "group": "labels",
     "id": "lbl_bld_house_058"
    }
@@ -3323,9 +3257,9 @@
    "entity": "bld_house_059",
    "entity_type": "buildings",
    "anchor": [
-    1379.95,
-    854.55,
-    670.224
+    1358.215,
+    818.442,
+    671.34
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -3356,9 +3290,9 @@
    "entity": "bld_house_060",
    "entity_type": "buildings",
    "anchor": [
-    809.8,
-    855.4,
-    666.932
+    1338.3,
+    820.7,
+    669.636
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -3389,9 +3323,9 @@
    "entity": "bld_house_061",
    "entity_type": "buildings",
    "anchor": [
-    842.212,
-    861.62,
-    666.542
+    899.45,
+    825.85,
+    669.511
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -3422,9 +3356,9 @@
    "entity": "bld_house_062",
    "entity_type": "buildings",
    "anchor": [
-    897.165,
-    862.777,
-    667.024
+    856.879,
+    826.514,
+    669.661
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -3455,16 +3389,16 @@
    "entity": "bld_house_063",
    "entity_type": "buildings",
    "anchor": [
-    974.7,
-    864.4,
-    667.062
+    812.05,
+    838.2,
+    678.127
    ],
    "tag_height_ft": 0.0,
    "tags": {
     "layer": "labels",
     "subtype": "label",
-    "district": "dis_authority",
-    "ring": "authority",
+    "district": "dis_commoner",
+    "ring": "commoner",
     "group": "labels",
     "id": "lbl_bld_house_063"
    }
@@ -3488,9 +3422,9 @@
    "entity": "bld_house_064",
    "entity_type": "buildings",
    "anchor": [
-    1304.789,
-    862.933,
-    666.447
+    870.617,
+    842.272,
+    670.292
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -3521,9 +3455,9 @@
    "entity": "bld_house_065",
    "entity_type": "buildings",
    "anchor": [
-    1427.04,
-    868.665,
-    670.053
+    780.15,
+    846.5,
+    669.86
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -3554,9 +3488,9 @@
    "entity": "bld_house_066",
    "entity_type": "buildings",
    "anchor": [
-    1277.2,
-    870.05,
-    662.089
+    903.4,
+    848.5,
+    677.537
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -3587,16 +3521,16 @@
    "entity": "bld_house_067",
    "entity_type": "buildings",
    "anchor": [
-    1210.75,
-    871.4,
-    657.631
+    933.514,
+    857.124,
+    666.791
    ],
    "tag_height_ft": 0.0,
    "tags": {
     "layer": "labels",
     "subtype": "label",
-    "district": "dis_authority",
-    "ring": "authority",
+    "district": "dis_commoner",
+    "ring": "commoner",
     "group": "labels",
     "id": "lbl_bld_house_067"
    }
@@ -3620,9 +3554,9 @@
    "entity": "bld_house_068",
    "entity_type": "buildings",
    "anchor": [
-    1394.856,
-    871.148,
-    668.095
+    1393.5,
+    857.65,
+    669.525
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -3653,16 +3587,16 @@
    "entity": "bld_house_069",
    "entity_type": "buildings",
    "anchor": [
-    1032.5,
-    877.1,
-    665.13
+    883.882,
+    865.176,
+    677.768
    ],
    "tag_height_ft": 0.0,
    "tags": {
     "layer": "labels",
     "subtype": "label",
-    "district": "dis_authority",
-    "ring": "authority",
+    "district": "dis_commoner",
+    "ring": "commoner",
     "group": "labels",
     "id": "lbl_bld_house_069"
    }
@@ -3686,9 +3620,9 @@
    "entity": "bld_house_070",
    "entity_type": "buildings",
    "anchor": [
-    1363.7,
-    882.45,
-    667.746
+    1305.15,
+    866.2,
+    666.623
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -3719,9 +3653,9 @@
    "entity": "bld_house_071",
    "entity_type": "buildings",
    "anchor": [
-    958.413,
-    881.99,
-    675.389
+    1362.011,
+    866.844,
+    669.219
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -3752,9 +3686,9 @@
    "entity": "bld_house_072",
    "entity_type": "buildings",
    "anchor": [
-    826.3,
-    883.25,
-    679.028
+    833.05,
+    869.9,
+    677.019
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -3785,16 +3719,16 @@
    "entity": "bld_house_073",
    "entity_type": "buildings",
    "anchor": [
-    865.389,
-    883.326,
-    664.965
+    983.749,
+    871.926,
+    666.119
    ],
    "tag_height_ft": 0.0,
    "tags": {
     "layer": "labels",
     "subtype": "label",
-    "district": "dis_commoner",
-    "ring": "commoner",
+    "district": "dis_authority",
+    "ring": "authority",
     "group": "labels",
     "id": "lbl_bld_house_073"
    }
@@ -3818,9 +3752,9 @@
    "entity": "bld_house_074",
    "entity_type": "buildings",
    "anchor": [
-    931.88,
-    890.425,
-    667.298
+    1384.45,
+    877.55,
+    667.932
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -3851,9 +3785,9 @@
    "entity": "bld_house_075",
    "entity_type": "buildings",
    "anchor": [
-    1396.983,
-    890.51,
-    669.042
+    1419.6,
+    878.6,
+    668.941
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -3884,16 +3818,16 @@
    "entity": "bld_house_076",
    "entity_type": "buildings",
    "anchor": [
-    1102.95,
-    936.3,
-    666.168
+    1290.7,
+    879.65,
+    663.418
    ],
    "tag_height_ft": 0.0,
    "tags": {
     "layer": "labels",
     "subtype": "label",
-    "district": "dis_authority",
-    "ring": "authority",
+    "district": "dis_commoner",
+    "ring": "commoner",
     "group": "labels",
     "id": "lbl_bld_house_076"
    }
@@ -3917,9 +3851,9 @@
    "entity": "bld_house_077",
    "entity_type": "buildings",
    "anchor": [
-    839.2,
-    902.6,
-    674.247
+    797.55,
+    882.25,
+    679.498
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -3950,9 +3884,9 @@
    "entity": "bld_house_078",
    "entity_type": "buildings",
    "anchor": [
-    1376.059,
-    903.347,
-    666.322
+    905.95,
+    883.25,
+    667.153
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -3983,16 +3917,16 @@
    "entity": "bld_house_079",
    "entity_type": "buildings",
    "anchor": [
-    940.75,
-    910.9,
-    676.434
+    1209.7,
+    886.45,
+    656.633
    ],
    "tag_height_ft": 0.0,
    "tags": {
     "layer": "labels",
     "subtype": "label",
-    "district": "dis_commoner",
-    "ring": "commoner",
+    "district": "dis_authority",
+    "ring": "authority",
     "group": "labels",
     "id": "lbl_bld_house_079"
    }
@@ -4016,9 +3950,9 @@
    "entity": "bld_house_080",
    "entity_type": "buildings",
    "anchor": [
-    1042.15,
-    909.0,
-    671.743
+    1051.892,
+    888.15,
+    665.171
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -4049,9 +3983,9 @@
    "entity": "bld_house_081",
    "entity_type": "buildings",
    "anchor": [
-    1320.2,
-    909.75,
-    665.976
+    1396.5,
+    896.25,
+    670.546
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -4082,9 +4016,9 @@
    "entity": "bld_house_082",
    "entity_type": "buildings",
    "anchor": [
-    896.66,
-    922.519,
-    674.061
+    923.922,
+    895.873,
+    665.197
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -4115,9 +4049,9 @@
    "entity": "bld_house_083",
    "entity_type": "buildings",
    "anchor": [
-    982.5,
-    922.25,
-    665.678
+    1319.513,
+    895.665,
+    674.639
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -4148,9 +4082,9 @@
    "entity": "bld_house_084",
    "entity_type": "buildings",
    "anchor": [
-    882.973,
-    929.839,
-    662.551
+    829.95,
+    905.8,
+    666.503
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -4181,9 +4115,9 @@
    "entity": "bld_house_085",
    "entity_type": "buildings",
    "anchor": [
-    956.2,
-    940.35,
-    674.306
+    1254.15,
+    912.15,
+    658.75
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -4214,9 +4148,9 @@
    "entity": "bld_house_086",
    "entity_type": "buildings",
    "anchor": [
-    831.849,
-    947.51,
-    663.241
+    879.15,
+    912.05,
+    663.916
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -4247,9 +4181,9 @@
    "entity": "bld_house_087",
    "entity_type": "buildings",
    "anchor": [
-    1271.6,
-    948.55,
-    671.607
+    939.65,
+    919.1,
+    666.626
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -4280,9 +4214,9 @@
    "entity": "bld_house_088",
    "entity_type": "buildings",
    "anchor": [
-    1351.75,
-    953.85,
-    664.918
+    1330.982,
+    922.943,
+    673.442
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -4313,9 +4247,9 @@
    "entity": "bld_house_089",
    "entity_type": "buildings",
    "anchor": [
-    917.25,
-    956.5,
-    673.784
+    889.2,
+    934.85,
+    663.06
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -4346,9 +4280,9 @@
    "entity": "bld_house_090",
    "entity_type": "buildings",
    "anchor": [
-    1220.95,
-    957.8,
-    656.845
+    967.384,
+    941.462,
+    672.282
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -4379,16 +4313,16 @@
    "entity": "bld_house_091",
    "entity_type": "buildings",
    "anchor": [
-    1051.8,
-    962.95,
-    661.49
+    1222.2,
+    942.65,
+    656.48
    ],
    "tag_height_ft": 0.0,
    "tags": {
     "layer": "labels",
     "subtype": "label",
-    "district": "dis_commoner",
-    "ring": "commoner",
+    "district": "dis_authority",
+    "ring": "authority",
     "group": "labels",
     "id": "lbl_bld_house_091"
    }
@@ -4412,9 +4346,9 @@
    "entity": "bld_house_092",
    "entity_type": "buildings",
    "anchor": [
-    808.852,
-    969.2,
-    666.457
+    1272.9,
+    946.2,
+    660.145
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -4445,9 +4379,9 @@
    "entity": "bld_house_093",
    "entity_type": "buildings",
    "anchor": [
-    928.077,
-    970.834,
-    661.622
+    824.004,
+    948.625,
+    678.03
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -4478,9 +4412,9 @@
    "entity": "bld_house_094",
    "entity_type": "buildings",
    "anchor": [
-    1103.478,
-    977.754,
-    666.466
+    913.9,
+    953.9,
+    662.847
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -4511,9 +4445,9 @@
    "entity": "bld_house_095",
    "entity_type": "buildings",
    "anchor": [
-    1365.92,
-    979.135,
-    665.02
+    1287.05,
+    967.15,
+    661.328
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -4544,9 +4478,9 @@
    "entity": "bld_house_096",
    "entity_type": "buildings",
    "anchor": [
-    987.5,
-    981.85,
-    660.821
+    1219.101,
+    976.427,
+    655.133
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -4577,9 +4511,9 @@
    "entity": "bld_house_097",
    "entity_type": "buildings",
    "anchor": [
-    1297.773,
-    981.986,
-    660.621
+    1239.05,
+    980.0,
+    665.621
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -4610,9 +4544,9 @@
    "entity": "bld_house_098",
    "entity_type": "buildings",
    "anchor": [
-    1231.468,
-    982.99,
-    665.824
+    1041.511,
+    983.187,
+    659.237
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -4643,9 +4577,9 @@
    "entity": "bld_house_099",
    "entity_type": "buildings",
    "anchor": [
-    1039.95,
-    990.05,
-    659.709
+    982.989,
+    987.035,
+    661.212
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -4676,9 +4610,9 @@
    "entity": "bld_house_100",
    "entity_type": "buildings",
    "anchor": [
-    1240.41,
-    1002.268,
-    656.841
+    1300.9,
+    990.2,
+    661.3
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -4709,9 +4643,9 @@
    "entity": "bld_house_101",
    "entity_type": "buildings",
    "anchor": [
-    1312.238,
-    1002.781,
-    672.217
+    1034.4,
+    1005.05,
+    669.129
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -4742,9 +4676,9 @@
    "entity": "bld_house_102",
    "entity_type": "buildings",
    "anchor": [
-    1104.15,
-    1003.55,
-    653.232
+    1314.35,
+    1005.3,
+    658.795
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -4775,9 +4709,9 @@
    "entity": "bld_house_103",
    "entity_type": "buildings",
    "anchor": [
-    1292.3,
-    1020.3,
-    666.655
+    1105.05,
+    1008.3,
+    654.328
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -4808,9 +4742,9 @@
    "entity": "bld_house_104",
    "entity_type": "buildings",
    "anchor": [
-    1024.8,
-    1011.8,
-    671.173
+    1255.85,
+    1011.05,
+    654.631
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -4841,9 +4775,9 @@
    "entity": "bld_house_105",
    "entity_type": "buildings",
    "anchor": [
-    950.7,
-    1021.35,
-    670.707
+    1227.245,
+    1011.592,
+    665.345
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -4874,9 +4808,9 @@
    "entity": "bld_house_106",
    "entity_type": "buildings",
    "anchor": [
-    1259.1,
-    1021.5,
-    655.213
+    824.844,
+    1014.829,
+    665.054
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -4907,9 +4841,9 @@
    "entity": "bld_house_107",
    "entity_type": "buildings",
    "anchor": [
-    1241.663,
-    1029.233,
-    653.21
+    954.734,
+    1019.575,
+    661.043
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -4940,9 +4874,9 @@
    "entity": "bld_house_108",
    "entity_type": "buildings",
    "anchor": [
-    1105.249,
-    1031.944,
-    652.923
+    1324.85,
+    1020.35,
+    669.409
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -4973,9 +4907,9 @@
    "entity": "bld_house_109",
    "entity_type": "buildings",
    "anchor": [
-    1222.65,
-    1036.35,
-    651.578
+    1014.352,
+    1027.251,
+    657.779
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -5006,9 +4940,9 @@
    "entity": "bld_house_110",
    "entity_type": "buildings",
    "anchor": [
-    982.049,
-    1072.71,
-    658.679
+    1238.124,
+    1032.914,
+    651.796
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -5039,9 +4973,9 @@
    "entity": "bld_house_111",
    "entity_type": "buildings",
    "anchor": [
-    1240.033,
-    1073.283,
-    648.534
+    1100.55,
+    1034.2,
+    661.47
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -5072,9 +5006,9 @@
    "entity": "bld_house_112",
    "entity_type": "buildings",
    "anchor": [
-    1076.15,
-    1071.7,
-    655.202
+    1269.2,
+    1045.35,
+    652.658
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -5105,9 +5039,9 @@
    "entity": "bld_house_113",
    "entity_type": "buildings",
    "anchor": [
-    1272.808,
-    1088.566,
-    649.7
+    929.85,
+    1046.9,
+    668.952
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -5117,6 +5051,369 @@
     "ring": "commoner",
     "group": "labels",
     "id": "lbl_bld_house_113"
+   }
+  },
+  {
+   "id": "lbl_bld_house_114",
+   "name": "House 114",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_114.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_114"
+   },
+   "text": "House 114",
+   "entity": "bld_house_114",
+   "entity_type": "buildings",
+   "anchor": [
+    1225.9,
+    1057.0,
+    647.893
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_114"
+   }
+  },
+  {
+   "id": "lbl_bld_house_115",
+   "name": "House 115",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_115.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_115"
+   },
+   "text": "House 115",
+   "entity": "bld_house_115",
+   "entity_type": "buildings",
+   "anchor": [
+    1248.116,
+    1056.63,
+    649.429
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_115"
+   }
+  },
+  {
+   "id": "lbl_bld_house_116",
+   "name": "House 116",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_116.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_116"
+   },
+   "text": "House 116",
+   "entity": "bld_house_116",
+   "entity_type": "buildings",
+   "anchor": [
+    1047.488,
+    1067.858,
+    652.36
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_116"
+   }
+  },
+  {
+   "id": "lbl_bld_house_117",
+   "name": "House 117",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_117.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_117"
+   },
+   "text": "House 117",
+   "entity": "bld_house_117",
+   "entity_type": "buildings",
+   "anchor": [
+    1065.05,
+    1068.15,
+    652.798
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_117"
+   }
+  },
+  {
+   "id": "lbl_bld_house_118",
+   "name": "House 118",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_118.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_118"
+   },
+   "text": "House 118",
+   "entity": "bld_house_118",
+   "entity_type": "buildings",
+   "anchor": [
+    1090.989,
+    1069.903,
+    650.16
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_118"
+   }
+  },
+  {
+   "id": "lbl_bld_house_119",
+   "name": "House 119",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_119.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_119"
+   },
+   "text": "House 119",
+   "entity": "bld_house_119",
+   "entity_type": "buildings",
+   "anchor": [
+    930.982,
+    1070.591,
+    659.989
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_119"
+   }
+  },
+  {
+   "id": "lbl_bld_house_120",
+   "name": "House 120",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_120.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_120"
+   },
+   "text": "House 120",
+   "entity": "bld_house_120",
+   "entity_type": "buildings",
+   "anchor": [
+    1233.898,
+    1077.943,
+    646.581
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_120"
+   }
+  },
+  {
+   "id": "lbl_bld_house_121",
+   "name": "House 121",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_121.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_121"
+   },
+   "text": "House 121",
+   "entity": "bld_house_121",
+   "entity_type": "buildings",
+   "anchor": [
+    1270.227,
+    1080.312,
+    650.878
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_121"
+   }
+  },
+  {
+   "id": "lbl_bld_house_122",
+   "name": "House 122",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_122.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_122"
+   },
+   "text": "House 122",
+   "entity": "bld_house_122",
+   "entity_type": "buildings",
+   "anchor": [
+    976.3,
+    1084.9,
+    665.526
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_122"
+   }
+  },
+  {
+   "id": "lbl_bld_house_123",
+   "name": "House 123",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_123.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_123"
+   },
+   "text": "House 123",
+   "entity": "bld_house_123",
+   "entity_type": "buildings",
+   "anchor": [
+    991.75,
+    1093.65,
+    655.031
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_123"
+   }
+  },
+  {
+   "id": "lbl_bld_house_124",
+   "name": "House 124",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_124.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_124"
+   },
+   "text": "House 124",
+   "entity": "bld_house_124",
+   "entity_type": "buildings",
+   "anchor": [
+    923.668,
+    1092.157,
+    658.535
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_124"
    }
   },
   {
@@ -5138,16 +5435,16 @@
    "entity": "bld_inn",
    "entity_type": "buildings",
    "anchor": [
-    1349.586,
-    1075.067,
-    670.29
+    1239.45,
+    738.65,
+    680.35
    ],
    "tag_height_ft": 0.0,
    "tags": {
     "layer": "labels",
     "subtype": "label",
-    "district": "dis_commoner",
-    "ring": "commoner",
+    "district": "dis_authority",
+    "ring": "authority",
     "group": "labels",
     "id": "lbl_bld_inn"
    }
@@ -5171,9 +5468,9 @@
    "entity": "bld_lockup",
    "entity_type": "buildings",
    "anchor": [
-    1057.242,
-    716.702,
-    665.802
+    1036.35,
+    772.25,
+    670.4
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -5204,9 +5501,9 @@
    "entity": "bld_magistrate_court",
    "entity_type": "buildings",
    "anchor": [
-    1047.431,
-    840.007,
-    675.942
+    1034.65,
+    839.25,
+    676.422
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -5237,9 +5534,9 @@
    "entity": "bld_meeting_hall",
    "entity_type": "buildings",
    "anchor": [
-    1050.946,
-    662.292,
-    671.634
+    1102.55,
+    948.5,
+    655.786
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -5270,9 +5567,9 @@
    "entity": "bld_mill",
    "entity_type": "buildings",
    "anchor": [
-    1232.35,
-    1189.7,
-    658.895
+    1231.338,
+    1223.423,
+    658.406
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -5303,9 +5600,9 @@
    "entity": "bld_records_house",
    "entity_type": "buildings",
    "anchor": [
-    1092.7,
-    655.95,
-    677.319
+    1037.4,
+    805.05,
+    677.606
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -5315,6 +5612,138 @@
     "ring": "authority",
     "group": "labels",
     "id": "lbl_bld_records_house"
+   }
+  },
+  {
+   "id": "lbl_bld_shed_018",
+   "name": "Shed 18",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_shed_018.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_shed_018"
+   },
+   "text": "Shed 18",
+   "entity": "bld_shed_018",
+   "entity_type": "buildings",
+   "anchor": [
+    1010.75,
+    651.5,
+    670.355
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_shed_018"
+   }
+  },
+  {
+   "id": "lbl_bld_shed_035",
+   "name": "Shed 35",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_shed_035.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_shed_035"
+   },
+   "text": "Shed 35",
+   "entity": "bld_shed_035",
+   "entity_type": "buildings",
+   "anchor": [
+    993.85,
+    694.0,
+    669.24
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_authority",
+    "ring": "authority",
+    "group": "labels",
+    "id": "lbl_bld_shed_035"
+   }
+  },
+  {
+   "id": "lbl_bld_shed_049",
+   "name": "Shed 49",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_shed_049.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_shed_049"
+   },
+   "text": "Shed 49",
+   "entity": "bld_shed_049",
+   "entity_type": "buildings",
+   "anchor": [
+    982.85,
+    781.134,
+    667.92
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_authority",
+    "ring": "authority",
+    "group": "labels",
+    "id": "lbl_bld_shed_049"
+   }
+  },
+  {
+   "id": "lbl_bld_shed_067",
+   "name": "Shed 67",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_shed_067.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_shed_067"
+   },
+   "text": "Shed 67",
+   "entity": "bld_shed_067",
+   "entity_type": "buildings",
+   "anchor": [
+    921.85,
+    832.5,
+    666.655
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_shed_067"
    }
   },
   {
@@ -5336,117 +5765,18 @@
    "entity": "bld_shed_079",
    "entity_type": "buildings",
    "anchor": [
-    956.836,
-    898.811,
-    663.224
+    1206.509,
+    857.341,
+    656.016
    ],
    "tag_height_ft": 0.0,
    "tags": {
     "layer": "labels",
     "subtype": "label",
-    "district": "dis_commoner",
-    "ring": "commoner",
+    "district": "dis_authority",
+    "ring": "authority",
     "group": "labels",
     "id": "lbl_bld_shed_079"
-   }
-  },
-  {
-   "id": "lbl_bld_shed_092",
-   "name": "Shed 92",
-   "kind": "label",
-   "status": "proposed",
-   "notes": "",
-   "links": {
-    "foundry_scene": null,
-    "model3d": null,
-    "ai_layer": null
-   },
-   "source": "world/bridgehollow/buildings/bld_shed_092.json",
-   "foundry": {
-    "pipelineId": "world:bridgehollow:lbl_bld_shed_092"
-   },
-   "text": "Shed 92",
-   "entity": "bld_shed_092",
-   "entity_type": "buildings",
-   "anchor": [
-    810.4,
-    996.85,
-    661.14
-   ],
-   "tag_height_ft": 0.0,
-   "tags": {
-    "layer": "labels",
-    "subtype": "label",
-    "district": "dis_commoner",
-    "ring": "commoner",
-    "group": "labels",
-    "id": "lbl_bld_shed_092"
-   }
-  },
-  {
-   "id": "lbl_bld_shed_109",
-   "name": "Shed 109",
-   "kind": "label",
-   "status": "proposed",
-   "notes": "",
-   "links": {
-    "foundry_scene": null,
-    "model3d": null,
-    "ai_layer": null
-   },
-   "source": "world/bridgehollow/buildings/bld_shed_109.json",
-   "foundry": {
-    "pipelineId": "world:bridgehollow:lbl_bld_shed_109"
-   },
-   "text": "Shed 109",
-   "entity": "bld_shed_109",
-   "entity_type": "buildings",
-   "anchor": [
-    1220.45,
-    1015.85,
-    650.7
-   ],
-   "tag_height_ft": 0.0,
-   "tags": {
-    "layer": "labels",
-    "subtype": "label",
-    "district": "dis_commoner",
-    "ring": "commoner",
-    "group": "labels",
-    "id": "lbl_bld_shed_109"
-   }
-  },
-  {
-   "id": "lbl_bld_shed_112",
-   "name": "Shed 112",
-   "kind": "label",
-   "status": "proposed",
-   "notes": "",
-   "links": {
-    "foundry_scene": null,
-    "model3d": null,
-    "ai_layer": null
-   },
-   "source": "world/bridgehollow/buildings/bld_shed_112.json",
-   "foundry": {
-    "pipelineId": "world:bridgehollow:lbl_bld_shed_112"
-   },
-   "text": "Shed 112",
-   "entity": "bld_shed_112",
-   "entity_type": "buildings",
-   "anchor": [
-    1072.45,
-    1094.95,
-    647.884
-   ],
-   "tag_height_ft": 0.0,
-   "tags": {
-    "layer": "labels",
-    "subtype": "label",
-    "district": "dis_commoner",
-    "ring": "commoner",
-    "group": "labels",
-    "id": "lbl_bld_shed_112"
    }
   },
   {
@@ -5468,9 +5798,9 @@
    "entity": "bld_smithy",
    "entity_type": "buildings",
    "anchor": [
-    1363.55,
-    572.4,
-    677.128
+    1050.35,
+    957.37,
+    661.411
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -5501,16 +5831,16 @@
    "entity": "bld_stables",
    "entity_type": "buildings",
    "anchor": [
-    1299.05,
-    1119.05,
-    651.926
+    1141.77,
+    632.43,
+    668.716
    ],
    "tag_height_ft": 0.0,
    "tags": {
     "layer": "labels",
     "subtype": "label",
-    "district": "dis_commoner",
-    "ring": "commoner",
+    "district": "dis_authority",
+    "ring": "authority",
     "group": "labels",
     "id": "lbl_bld_stables"
    }
@@ -5534,16 +5864,16 @@
    "entity": "bld_tax_office",
    "entity_type": "buildings",
    "anchor": [
-    1234.55,
-    731.45,
-    669.132
+    1349.199,
+    1062.5,
+    655.892
    ],
    "tag_height_ft": 0.0,
    "tags": {
     "layer": "labels",
     "subtype": "label",
-    "district": "dis_authority",
-    "ring": "authority",
+    "district": "dis_commoner",
+    "ring": "commoner",
     "group": "labels",
     "id": "lbl_bld_tax_office"
    }
@@ -5567,9 +5897,9 @@
    "entity": "bld_treasury",
    "entity_type": "buildings",
    "anchor": [
-    968.473,
-    807.454,
-    679.178
+    1084.25,
+    646.55,
+    680.036
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -5600,9 +5930,9 @@
    "entity": "bld_warden_hall",
    "entity_type": "buildings",
    "anchor": [
-    1041.9,
-    746.0,
-    679.992
+    1049.3,
+    730.1,
+    679.225
    ],
    "tag_height_ft": 0.0,
    "tags": {
@@ -5633,9 +5963,9 @@
    "entity": "bld_wardens_barracks",
    "entity_type": "buildings",
    "anchor": [
-    981.239,
-    760.255,
-    680.678
+    1056.75,
+    669.4,
+    679.523
    ],
    "tag_height_ft": 0.0,
    "tags": {

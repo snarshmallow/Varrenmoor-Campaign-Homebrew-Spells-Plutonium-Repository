@@ -303,7 +303,7 @@
    "kind": "image",
    "texture": "terrain/albedo.png",
    "source": null,
-   "sha256": "d453d9c598aa907a57ebde0d223c1f1593977dc8a909a1936e25e17c3a01deb8",
+   "sha256": "7f4952775c2227b792d4041455714c07301eccddd52656c4309dc53af8418094",
    "mean_color": "#6f9a48",
    "roughness": 0.95,
    "metallic": 0.0,
