@@ -26,3 +26,6 @@ General rule: towns and features should be natural and flowing, not boxy. Less g
 
 ## Terrain patch tool (clarification 2026-11-06, replaces the painted-art reading above as the primary meaning)
 Lasso an area and set: max height, average height, steepness, and terrain type (e.g. mountain, rolling hills, mesa, dunes, rocky crags, plateau). The highest points sit at the centre of the lassoed area; the edges blend/feather to match the surrounding terrain. Result modifies the heightmap (preview, accept/reject, undo history), then contours, shading and town generation all use it. Diffusion-model art generation stays as an optional later extra.
+
+## Negative elevation (added 2026-11-06)
+Elevations are signed feet against a sea-level datum (`sea_level_ft`, default 0). Everything must handle negative values: terrain patches (basins, trenches, seabeds), contour levels and labels (minus sign, a 0 ft datum contour that can be emphasised), shading phases (below-datum water depth shading), town generation (nothing built below the water level unless it is dry basin ground), and Foundry/3D elevation exports.
