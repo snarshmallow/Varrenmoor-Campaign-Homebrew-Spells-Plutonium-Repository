@@ -1,0 +1,826 @@
+[
+ {
+  "road": "str_pilgrim_road_west",
+  "road_name": "Pilgrim Road (west approach)",
+  "water_id": "wat_auto_river_06",
+  "water_kind": "river",
+  "point": [
+   868.0,
+   700.0
+  ],
+  "width_ft": 22.2,
+  "bank_elevation_ft": 661.7,
+  "depth_ft": 1.38,
+  "flow_cfs": 30.69,
+  "surface_ft": 661.81,
+  "river_width_ft": 22.2,
+  "suggestion": "ford",
+  "note": "shallow (1.38 ft) and modest flow; paved ford, stepping stones for pedestrians"
+ },
+ {
+  "road": "str_pilgrim_bridge",
+  "road_name": "Pilgrim Bridge",
+  "water_id": "wat_river",
+  "water_kind": "river",
+  "point": [
+   1205.8,
+   700.0
+  ],
+  "width_ft": 53.7,
+  "bank_elevation_ft": 655.0,
+  "depth_ft": 2.62,
+  "flow_cfs": 171.58,
+  "surface_ft": 654.11,
+  "river_width_ft": 52.4,
+  "suggestion": "bridge",
+  "span_ft": 70,
+  "deck_elevation_ft": 658.0,
+  "note": "clear span 70 ft (6 ft abutments each side)",
+  "existing_bridge": "str_pilgrim_bridge"
+ },
+ {
+  "road": "str_pilgrim_bridge",
+  "road_name": "Pilgrim Bridge",
+  "water_id": "wat_auto_river_01",
+  "water_kind": "river",
+  "point": [
+   1211.1,
+   700.0
+  ],
+  "width_ft": 48.0,
+  "bank_elevation_ft": 655.3,
+  "depth_ft": 2.36,
+  "flow_cfs": 118.17,
+  "surface_ft": 653.87,
+  "river_width_ft": 43.5,
+  "suggestion": "bridge",
+  "span_ft": 65,
+  "deck_elevation_ft": 658.3,
+  "note": "clear span 65 ft (6 ft abutments each side)",
+  "existing_bridge": "str_pilgrim_bridge"
+ },
+ {
+  "road": "str_pilgrim_road_east",
+  "road_name": "Pilgrim Road (east)",
+  "water_id": "wat_auto_river_07",
+  "water_kind": "river",
+  "point": [
+   1421.3,
+   700.0
+  ],
+  "width_ft": 23.7,
+  "bank_elevation_ft": 661.6,
+  "depth_ft": 1.18,
+  "flow_cfs": 20.75,
+  "surface_ft": 661.73,
+  "river_width_ft": 18.2,
+  "suggestion": "ford",
+  "note": "shallow (1.18 ft) and modest flow; paved ford, stepping stones for pedestrians"
+ },
+ {
+  "road": "str_ew_400_w",
+  "road_name": "North Row (west)",
+  "water_id": "wat_auto_river_06",
+  "water_kind": "river",
+  "point": [
+   805.4,
+   400.0
+  ],
+  "width_ft": 10.8,
+  "bank_elevation_ft": 674.0,
+  "depth_ft": 0.77,
+  "flow_cfs": 7.12,
+  "surface_ft": 674.03,
+  "river_width_ft": 10.7,
+  "suggestion": "ford",
+  "note": "shallow (0.77 ft) and modest flow; paved ford, stepping stones for pedestrians"
+ },
+ {
+  "road": "str_ew_400_w",
+  "road_name": "North Row (west)",
+  "water_id": "wat_auto_river_18",
+  "water_kind": "river",
+  "point": [
+   785.3,
+   400.0
+  ],
+  "width_ft": 11.7,
+  "bank_elevation_ft": 674.1,
+  "depth_ft": 0.65,
+  "flow_cfs": 4.63,
+  "surface_ft": 674.01,
+  "river_width_ft": 8.6,
+  "suggestion": "ford",
+  "note": "shallow (0.65 ft) and modest flow; paved ford, stepping stones for pedestrians"
+ },
+ {
+  "road": "str_ew_500_w",
+  "road_name": "Ledger Street (west)",
+  "water_id": "wat_auto_river_06",
+  "water_kind": "river",
+  "point": [
+   901.9,
+   500.0
+  ],
+  "width_ft": 18.0,
+  "bank_elevation_ft": 670.1,
+  "depth_ft": 0.85,
+  "flow_cfs": 9.18,
+  "surface_ft": 670.12,
+  "river_width_ft": 12.1,
+  "suggestion": "ford",
+  "note": "shallow (0.85 ft) and modest flow; paved ford, stepping stones for pedestrians"
+ },
+ {
+  "road": "str_ew_500_w",
+  "road_name": "Ledger Street (west)",
+  "water_id": "wat_auto_river_13",
+  "water_kind": "river",
+  "point": [
+   782.3,
+   500.0
+  ],
+  "width_ft": 9.3,
+  "bank_elevation_ft": 670.9,
+  "depth_ft": 0.56,
+  "flow_cfs": 3.23,
+  "surface_ft": 670.68,
+  "river_width_ft": 7.2,
+  "suggestion": "ford",
+  "note": "shallow (0.56 ft) and modest flow; paved ford, stepping stones for pedestrians"
+ },
+ {
+  "road": "str_ew_500_w",
+  "road_name": "Ledger Street (west)",
+  "water_id": "wat_auto_river_15",
+  "water_kind": "river",
+  "point": [
+   961.5,
+   500.0
+  ],
+  "width_ft": 8.3,
+  "bank_elevation_ft": 669.7,
+  "depth_ft": 0.6,
+  "flow_cfs": 3.92,
+  "surface_ft": 669.84,
+  "river_width_ft": 7.9,
+  "suggestion": "ford",
+  "note": "shallow (0.6 ft) and modest flow; paved ford, stepping stones for pedestrians"
+ },
+ {
+  "road": "str_ew_500_w",
+  "road_name": "Ledger Street (west)",
+  "water_id": "wat_auto_river_18",
+  "water_kind": "river",
+  "point": [
+   877.5,
+   500.0
+  ],
+  "width_ft": 12.1,
+  "bank_elevation_ft": 670.2,
+  "depth_ft": 0.65,
+  "flow_cfs": 4.7,
+  "surface_ft": 670.06,
+  "river_width_ft": 8.7,
+  "suggestion": "ford",
+  "note": "shallow (0.65 ft) and modest flow; paved ford, stepping stones for pedestrians"
+ },
+ {
+  "road": "str_ew_600_w",
+  "road_name": "Warden Street (west)",
+  "water_id": "wat_auto_river_06",
+  "water_kind": "river",
+  "point": [
+   911.9,
+   600.0
+  ],
+  "width_ft": 21.9,
+  "bank_elevation_ft": 666.0,
+  "depth_ft": 1.02,
+  "flow_cfs": 14.55,
+  "surface_ft": 665.82,
+  "river_width_ft": 15.3,
+  "suggestion": "ford",
+  "note": "shallow (1.02 ft) and modest flow; paved ford, stepping stones for pedestrians"
+ },
+ {
+  "road": "str_ew_600_w",
+  "road_name": "Warden Street (west)",
+  "water_id": "wat_auto_river_13",
+  "water_kind": "river",
+  "point": [
+   860.4,
+   600.0
+  ],
+  "width_ft": 14.6,
+  "bank_elevation_ft": 665.9,
+  "depth_ft": 0.74,
+  "flow_cfs": 6.61,
+  "surface_ft": 665.69,
+  "river_width_ft": 10.3,
+  "suggestion": "ford",
+  "note": "shallow (0.74 ft) and modest flow; paved ford, stepping stones for pedestrians"
+ },
+ {
+  "road": "str_ew_600_w",
+  "road_name": "Warden Street (west)",
+  "water_id": "wat_auto_river_18",
+  "water_kind": "river",
+  "point": [
+   898.0,
+   600.0
+  ],
+  "width_ft": 11.7,
+  "bank_elevation_ft": 665.9,
+  "depth_ft": 0.65,
+  "flow_cfs": 4.78,
+  "surface_ft": 665.8,
+  "river_width_ft": 8.7,
+  "suggestion": "ford",
+  "note": "shallow (0.65 ft) and modest flow; paved ford, stepping stones for pedestrians"
+ },
+ {
+  "road": "str_ew_800_w",
+  "road_name": "Cartwright Street (west)",
+  "water_id": "wat_auto_river_06",
+  "water_kind": "river",
+  "point": [
+   880.4,
+   800.0
+  ],
+  "width_ft": 25.7,
+  "bank_elevation_ft": 657.7,
+  "depth_ft": 1.43,
+  "flow_cfs": 33.88,
+  "surface_ft": 657.61,
+  "river_width_ft": 23.3,
+  "suggestion": "ford",
+  "note": "shallow (1.43 ft) and modest flow; paved ford, stepping stones for pedestrians"
+ },
+ {
+  "road": "str_ew_900_w",
+  "road_name": "Tanners Row (west)",
+  "water_id": "wat_auto_river_06",
+  "water_kind": "river",
+  "point": [
+   939.3,
+   900.0
+  ],
+  "width_ft": 27.9,
+  "bank_elevation_ft": 653.5,
+  "depth_ft": 1.49,
+  "flow_cfs": 37.31,
+  "surface_ft": 653.42,
+  "river_width_ft": 24.4,
+  "suggestion": "ford",
+  "note": "shallow (1.49 ft) and modest flow; paved ford, stepping stones for pedestrians"
+ },
+ {
+  "road": "str_ew_1000_w",
+  "road_name": "South Row (west)",
+  "water_id": "wat_auto_river_06",
+  "water_kind": "river",
+  "point": [
+   998.2,
+   1000.0
+  ],
+  "width_ft": 32.3,
+  "bank_elevation_ft": 648.9,
+  "depth_ft": 1.54,
+  "flow_cfs": 40.47,
+  "surface_ft": 648.96,
+  "river_width_ft": 25.4,
+  "suggestion": "ford",
+  "note": "shallow (1.54 ft) and modest flow; paved ford, stepping stones for pedestrians"
+ },
+ {
+  "road": "str_ns_w0",
+  "road_name": "West Lane 1",
+  "water_id": "wat_auto_river_13",
+  "water_kind": "river",
+  "point": [
+   760.0,
+   477.6
+  ],
+  "width_ft": 9.5,
+  "bank_elevation_ft": 672.2,
+  "depth_ft": 0.56,
+  "flow_cfs": 3.22,
+  "surface_ft": 671.81,
+  "river_width_ft": 7.2,
+  "suggestion": "ford",
+  "note": "shallow (0.56 ft) and modest flow; paved ford, stepping stones for pedestrians"
+ },
+ {
+  "road": "str_ns_w1",
+  "road_name": "West Lane 2",
+  "water_id": "wat_auto_river_06",
+  "water_kind": "river",
+  "point": [
+   860.0,
+   462.8
+  ],
+  "width_ft": 16.0,
+  "bank_elevation_ft": 672.1,
+  "depth_ft": 0.85,
+  "flow_cfs": 9.15,
+  "surface_ft": 671.64,
+  "river_width_ft": 12.1,
+  "suggestion": "ford",
+  "note": "shallow (0.85 ft) and modest flow; paved ford, stepping stones for pedestrians"
+ },
+ {
+  "road": "str_ns_w1",
+  "road_name": "West Lane 2",
+  "water_id": "wat_auto_river_06",
+  "water_kind": "river",
+  "point": [
+   860.0,
+   703.7
+  ],
+  "width_ft": 122.8,
+  "bank_elevation_ft": 663.9,
+  "depth_ft": 1.38,
+  "flow_cfs": 30.93,
+  "surface_ft": 661.42,
+  "river_width_ft": 22.2,
+  "suggestion": "bridge",
+  "span_ft": 135,
+  "deck_elevation_ft": 666.9,
+  "note": "clear span 135 ft (6 ft abutments each side)"
+ },
+ {
+  "road": "str_ns_w1",
+  "road_name": "West Lane 2",
+  "water_id": "wat_auto_river_13",
+  "water_kind": "river",
+  "point": [
+   860.0,
+   599.6
+  ],
+  "width_ft": 14.3,
+  "bank_elevation_ft": 666.3,
+  "depth_ft": 0.74,
+  "flow_cfs": 6.61,
+  "surface_ft": 665.69,
+  "river_width_ft": 10.3,
+  "suggestion": "ford",
+  "note": "shallow (0.74 ft) and modest flow; paved ford, stepping stones for pedestrians"
+ },
+ {
+  "road": "str_ns_w1",
+  "road_name": "West Lane 2",
+  "water_id": "wat_auto_river_13",
+  "water_kind": "river",
+  "point": [
+   860.0,
+   639.0
+  ],
+  "width_ft": 2.3,
+  "bank_elevation_ft": 664.1,
+  "depth_ft": 1.34,
+  "flow_cfs": 28.66,
+  "surface_ft": 664.23,
+  "river_width_ft": 21.4,
+  "suggestion": "ford",
+  "note": "shallow (1.34 ft) and modest flow; paved ford, stepping stones for pedestrians"
+ },
+ {
+  "road": "str_ns_w1",
+  "road_name": "West Lane 2",
+  "water_id": "wat_auto_river_18",
+  "water_kind": "river",
+  "point": [
+   860.0,
+   478.2
+  ],
+  "width_ft": 15.0,
+  "bank_elevation_ft": 671.5,
+  "depth_ft": 0.65,
+  "flow_cfs": 4.68,
+  "surface_ft": 671.04,
+  "river_width_ft": 8.7,
+  "suggestion": "ford",
+  "note": "shallow (0.65 ft) and modest flow; paved ford, stepping stones for pedestrians"
+ },
+ {
+  "road": "str_ns_w2",
+  "road_name": "West Lane 3",
+  "water_id": "wat_auto_river_06",
+  "water_kind": "river",
+  "point": [
+   960.0,
+   940.6
+  ],
+  "width_ft": 53.4,
+  "bank_elevation_ft": 652.8,
+  "depth_ft": 1.52,
+  "flow_cfs": 39.22,
+  "surface_ft": 651.51,
+  "river_width_ft": 25.0,
+  "suggestion": "bridge",
+  "span_ft": 70,
+  "deck_elevation_ft": 655.8,
+  "note": "clear span 70 ft (6 ft abutments each side)"
+ },
+ {
+  "road": "str_ns_w2",
+  "road_name": "West Lane 3",
+  "water_id": "wat_auto_river_15",
+  "water_kind": "river",
+  "point": [
+   960.0,
+   520.8
+  ],
+  "width_ft": 54.6,
+  "bank_elevation_ft": 670.0,
+  "depth_ft": 0.65,
+  "flow_cfs": 4.71,
+  "surface_ft": 668.85,
+  "river_width_ft": 8.7,
+  "suggestion": "bridge",
+  "span_ft": 70,
+  "deck_elevation_ft": 673.0,
+  "note": "clear span 70 ft (6 ft abutments each side)"
+ },
+ {
+  "road": "str_ew_500_e",
+  "road_name": "Ledger Street (east)",
+  "water_id": "wat_auto_river_10",
+  "water_kind": "river",
+  "point": [
+   1592.1,
+   500.0
+  ],
+  "width_ft": 18.0,
+  "bank_elevation_ft": 671.9,
+  "depth_ft": 0.78,
+  "flow_cfs": 7.35,
+  "surface_ft": 671.88,
+  "river_width_ft": 10.8,
+  "suggestion": "ford",
+  "note": "shallow (0.78 ft) and modest flow; paved ford, stepping stones for pedestrians"
+ },
+ {
+  "road": "str_ew_500_e",
+  "road_name": "Ledger Street (east)",
+  "water_id": "wat_auto_river_11",
+  "water_kind": "river",
+  "point": [
+   1562.6,
+   500.0
+  ],
+  "width_ft": 13.6,
+  "bank_elevation_ft": 671.6,
+  "depth_ft": 0.67,
+  "flow_cfs": 5.05,
+  "surface_ft": 671.46,
+  "river_width_ft": 9.0,
+  "suggestion": "ford",
+  "note": "shallow (0.67 ft) and modest flow; paved ford, stepping stones for pedestrians"
+ },
+ {
+  "road": "str_ew_600_e",
+  "road_name": "Warden Street (east)",
+  "water_id": "wat_auto_river_07",
+  "water_kind": "river",
+  "point": [
+   1402.8,
+   600.0
+  ],
+  "width_ft": 9.5,
+  "bank_elevation_ft": 666.2,
+  "depth_ft": 0.67,
+  "flow_cfs": 5.01,
+  "surface_ft": 666.01,
+  "river_width_ft": 9.0,
+  "suggestion": "ford",
+  "note": "shallow (0.67 ft) and modest flow; paved ford, stepping stones for pedestrians"
+ },
+ {
+  "road": "str_ew_600_e",
+  "road_name": "Warden Street (east)",
+  "water_id": "wat_auto_river_10",
+  "water_kind": "river",
+  "point": [
+   1487.3,
+   600.0
+  ],
+  "width_ft": 15.7,
+  "bank_elevation_ft": 667.4,
+  "depth_ft": 0.78,
+  "flow_cfs": 7.43,
+  "surface_ft": 667.18,
+  "river_width_ft": 10.9,
+  "suggestion": "ford",
+  "note": "shallow (0.78 ft) and modest flow; paved ford, stepping stones for pedestrians"
+ },
+ {
+  "road": "str_ew_600_e",
+  "road_name": "Warden Street (east)",
+  "water_id": "wat_auto_river_11",
+  "water_kind": "river",
+  "point": [
+   1463.6,
+   600.0
+  ],
+  "width_ft": 13.0,
+  "bank_elevation_ft": 667.1,
+  "depth_ft": 0.7,
+  "flow_cfs": 5.64,
+  "surface_ft": 666.92,
+  "river_width_ft": 9.5,
+  "suggestion": "ford",
+  "note": "shallow (0.7 ft) and modest flow; paved ford, stepping stones for pedestrians"
+ },
+ {
+  "road": "str_ew_800_e",
+  "road_name": "Cartwright Street (east)",
+  "water_id": "wat_auto_river_07",
+  "water_kind": "river",
+  "point": [
+   1467.9,
+   800.0
+  ],
+  "width_ft": 23.1,
+  "bank_elevation_ft": 657.3,
+  "depth_ft": 1.22,
+  "flow_cfs": 22.72,
+  "surface_ft": 657.3,
+  "river_width_ft": 19.1,
+  "suggestion": "ford",
+  "note": "shallow (1.22 ft) and modest flow; paved ford, stepping stones for pedestrians"
+ },
+ {
+  "road": "str_ew_800_e",
+  "road_name": "Cartwright Street (east)",
+  "water_id": "wat_auto_river_12",
+  "water_kind": "river",
+  "point": [
+   1626.8,
+   800.0
+  ],
+  "width_ft": 11.1,
+  "bank_elevation_ft": 656.5,
+  "depth_ft": 0.65,
+  "flow_cfs": 4.64,
+  "surface_ft": 656.63,
+  "river_width_ft": 8.6,
+  "suggestion": "ford",
+  "note": "shallow (0.65 ft) and modest flow; paved ford, stepping stones for pedestrians"
+ },
+ {
+  "road": "str_ew_900_e",
+  "road_name": "Tanners Row (east)",
+  "water_id": "wat_auto_river_07",
+  "water_kind": "river",
+  "point": [
+   1401.8,
+   900.0
+  ],
+  "width_ft": 26.3,
+  "bank_elevation_ft": 653.5,
+  "depth_ft": 1.22,
+  "flow_cfs": 22.79,
+  "surface_ft": 653.47,
+  "river_width_ft": 19.1,
+  "suggestion": "ford",
+  "note": "shallow (1.22 ft) and modest flow; paved ford, stepping stones for pedestrians"
+ },
+ {
+  "road": "str_ew_900_e",
+  "road_name": "Tanners Row (east)",
+  "water_id": "wat_auto_river_12",
+  "water_kind": "river",
+  "point": [
+   1536.4,
+   900.0
+  ],
+  "width_ft": 17.0,
+  "bank_elevation_ft": 652.6,
+  "depth_ft": 0.82,
+  "flow_cfs": 8.43,
+  "surface_ft": 652.54,
+  "river_width_ft": 11.6,
+  "suggestion": "ford",
+  "note": "shallow (0.82 ft) and modest flow; paved ford, stepping stones for pedestrians"
+ },
+ {
+  "road": "str_ew_1000_e",
+  "road_name": "South Row (east)",
+  "water_id": "wat_auto_river_07",
+  "water_kind": "river",
+  "point": [
+   1503.5,
+   1000.0
+  ],
+  "width_ft": 29.3,
+  "bank_elevation_ft": 649.4,
+  "depth_ft": 1.22,
+  "flow_cfs": 22.88,
+  "surface_ft": 649.12,
+  "river_width_ft": 19.1,
+  "suggestion": "ford",
+  "note": "shallow (1.22 ft) and modest flow; paved ford, stepping stones for pedestrians"
+ },
+ {
+  "road": "str_ew_1000_e",
+  "road_name": "South Row (east)",
+  "water_id": "wat_auto_river_12",
+  "water_kind": "river",
+  "point": [
+   1510.1,
+   1000.0
+  ],
+  "width_ft": 18.8,
+  "bank_elevation_ft": 649.3,
+  "depth_ft": 0.97,
+  "flow_cfs": 12.79,
+  "surface_ft": 649.13,
+  "river_width_ft": 14.3,
+  "suggestion": "ford",
+  "note": "shallow (0.97 ft) and modest flow; paved ford, stepping stones for pedestrians"
+ },
+ {
+  "road": "str_ns_e1",
+  "road_name": "East Lane 2",
+  "water_id": "wat_auto_river_07",
+  "water_kind": "river",
+  "point": [
+   1450.0,
+   744.7
+  ],
+  "width_ft": 54.1,
+  "bank_elevation_ft": 660.9,
+  "depth_ft": 1.21,
+  "flow_cfs": 22.17,
+  "surface_ft": 660.0,
+  "river_width_ft": 18.8,
+  "suggestion": "bridge",
+  "span_ft": 70,
+  "deck_elevation_ft": 663.9,
+  "note": "clear span 70 ft (6 ft abutments each side)"
+ },
+ {
+  "road": "str_ns_e1",
+  "road_name": "East Lane 2",
+  "water_id": "wat_auto_river_07",
+  "water_kind": "river",
+  "point": [
+   1450.0,
+   818.1
+  ],
+  "width_ft": 25.3,
+  "bank_elevation_ft": 657.0,
+  "depth_ft": 1.22,
+  "flow_cfs": 22.73,
+  "surface_ft": 656.62,
+  "river_width_ft": 19.1,
+  "suggestion": "ford",
+  "note": "shallow (1.22 ft) and modest flow; paved ford, stepping stones for pedestrians"
+ },
+ {
+  "road": "str_ns_e1",
+  "road_name": "East Lane 2",
+  "water_id": "wat_auto_river_07",
+  "water_kind": "river",
+  "point": [
+   1450.0,
+   949.9
+  ],
+  "width_ft": 26.9,
+  "bank_elevation_ft": 651.3,
+  "depth_ft": 1.22,
+  "flow_cfs": 22.83,
+  "surface_ft": 650.9,
+  "river_width_ft": 19.1,
+  "suggestion": "ford",
+  "note": "shallow (1.22 ft) and modest flow; paved ford, stepping stones for pedestrians"
+ },
+ {
+  "road": "str_ns_e1",
+  "road_name": "East Lane 2",
+  "water_id": "wat_auto_river_10",
+  "water_kind": "river",
+  "point": [
+   1450.0,
+   641.9
+  ],
+  "width_ft": 17.9,
+  "bank_elevation_ft": 665.2,
+  "depth_ft": 0.78,
+  "flow_cfs": 7.46,
+  "surface_ft": 664.93,
+  "river_width_ft": 10.9,
+  "suggestion": "ford",
+  "note": "shallow (0.78 ft) and modest flow; paved ford, stepping stones for pedestrians"
+ },
+ {
+  "road": "str_ns_e1",
+  "road_name": "East Lane 2",
+  "water_id": "wat_auto_river_11",
+  "water_kind": "river",
+  "point": [
+   1450.0,
+   616.1
+  ],
+  "width_ft": 15.2,
+  "bank_elevation_ft": 666.4,
+  "depth_ft": 0.7,
+  "flow_cfs": 5.65,
+  "surface_ft": 666.01,
+  "river_width_ft": 9.5,
+  "suggestion": "ford",
+  "note": "shallow (0.7 ft) and modest flow; paved ford, stepping stones for pedestrians"
+ },
+ {
+  "road": "str_ns_e2",
+  "road_name": "East Lane 3",
+  "water_id": "wat_auto_river_10",
+  "water_kind": "river",
+  "point": [
+   1550.0,
+   538.8
+  ],
+  "width_ft": 15.7,
+  "bank_elevation_ft": 670.3,
+  "depth_ft": 0.78,
+  "flow_cfs": 7.38,
+  "surface_ft": 670.08,
+  "river_width_ft": 10.9,
+  "suggestion": "ford",
+  "note": "shallow (0.78 ft) and modest flow; paved ford, stepping stones for pedestrians"
+ },
+ {
+  "road": "str_ns_e2",
+  "road_name": "East Lane 3",
+  "water_id": "wat_auto_river_11",
+  "water_kind": "river",
+  "point": [
+   1550.0,
+   511.2
+  ],
+  "width_ft": 12.1,
+  "bank_elevation_ft": 671.3,
+  "depth_ft": 0.67,
+  "flow_cfs": 5.06,
+  "surface_ft": 671.17,
+  "river_width_ft": 9.0,
+  "suggestion": "ford",
+  "note": "shallow (0.67 ft) and modest flow; paved ford, stepping stones for pedestrians"
+ },
+ {
+  "road": "str_ns_e2",
+  "road_name": "East Lane 3",
+  "water_id": "wat_auto_river_12",
+  "water_kind": "river",
+  "point": [
+   1550.0,
+   887.8
+  ],
+  "width_ft": 15.3,
+  "bank_elevation_ft": 653.4,
+  "depth_ft": 0.82,
+  "flow_cfs": 8.42,
+  "surface_ft": 653.14,
+  "river_width_ft": 11.6,
+  "suggestion": "ford",
+  "note": "shallow (0.82 ft) and modest flow; paved ford, stepping stones for pedestrians"
+ },
+ {
+  "road": "str_ns_e3",
+  "road_name": "East Lane 4",
+  "water_id": "wat_auto_river_10",
+  "water_kind": "river",
+  "point": [
+   1650.0,
+   442.6
+  ],
+  "width_ft": 16.1,
+  "bank_elevation_ft": 675.0,
+  "depth_ft": 0.77,
+  "flow_cfs": 7.28,
+  "surface_ft": 675.24,
+  "river_width_ft": 10.8,
+  "suggestion": "ford",
+  "note": "shallow (0.77 ft) and modest flow; paved ford, stepping stones for pedestrians"
+ },
+ {
+  "road": "str_ns_e3",
+  "road_name": "East Lane 4",
+  "water_id": "wat_auto_river_11",
+  "water_kind": "river",
+  "point": [
+   1650.0,
+   413.0
+  ],
+  "width_ft": 6.0,
+  "bank_elevation_ft": 677.8,
+  "depth_ft": 0.66,
+  "flow_cfs": 4.81,
+  "surface_ft": 677.04,
+  "river_width_ft": 8.8,
+  "suggestion": "ford",
+  "note": "shallow (0.66 ft) and modest flow; paved ford, stepping stones for pedestrians"
+ }
+]
