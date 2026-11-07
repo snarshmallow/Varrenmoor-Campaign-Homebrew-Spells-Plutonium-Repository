@@ -77,6 +77,7 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
   <button role="tab" data-tab="contours">Contours</button>
   <button role="tab" data-tab="labels">Labels</button>
   <button role="tab" data-tab="shading">Shading</button>
+  <button role="tab" data-tab="lighting">Lighting</button>
   <button role="tab" data-tab="water">Water</button>
   <button role="tab" data-tab="town">Town</button>
   <button role="tab" data-tab="layers">Layers</button>
@@ -262,6 +263,58 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
   </div>
   <div class="btns"><button class="primary" data-act="shading_render">Render and place on ART - Shading</button></div>
   <p class="note">The PNG is placed with its .json bounds so it registers with the map, below LINES, and the layer is locked.</p>
+</section>
+
+<section id="tab-lighting" role="tabpanel">
+  <h4>Lighting and cast shadows</h4>
+  <div class="grid">
+    <label class="chk"><input type="checkbox" data-s="lighting.enabled"> Enabled</label>
+    <label>Lights <select id="lightMode" data-s="lighting.mode"><option value="both">Sun + placed lights</option><option value="sun">Sun only</option><option value="lights">Placed lights only</option></select></label>
+  </div>
+  <div class="btns" id="lightPresets"></div>
+  <h4>Sun</h4>
+  <div style="display:flex;gap:8px;align-items:flex-start">
+    <div id="lightDial" title="Click or drag: angle = azimuth (clockwise from north), distance from centre = how low the sun is" style="flex:0 0 96px"></div>
+    <div class="grid" style="flex:1">
+      <label>Azimuth (deg, cw from N) <input type="number" data-s="lighting.sun.azimuth" min="0" max="360" step="5"></label>
+      <label>Altitude (deg) <input type="number" data-s="lighting.sun.altitude" min="1" max="89" step="1"></label>
+      <label>Softness <input type="number" data-s="lighting.sun.softness" min="0" max="1" step="0.05"></label>
+      <label>Intensity <input type="number" data-s="lighting.sun.intensity" min="0" max="2" step="0.05"></label>
+      <label>Colour <input type="color" data-s="lighting.sun.color"></label>
+      <label>Lit-side tint <input type="number" data-s="lighting.sun.tint" min="0" max="1" step="0.05"></label>
+    </div>
+  </div>
+  <p class="note" id="lightDialTxt"></p>
+  <h4>Placed lights (lantern, torch, bonfire, beacon)</h4>
+  <div class="btns"><button data-light-add="lantern">+ Lantern</button><button data-light-add="torch">+ Torch</button><button data-light-add="bonfire">+ Bonfire</button><button data-light-add="beacon">+ Beacon</button>
+    <button data-act="light_capture" title="Select an anchor point (or a path) in Illustrator, then press: its position in feet goes to the selected light">Capture point</button></div>
+  <ul class="list" id="lightList"></ul>
+  <div class="grid" id="lightForm"></div>
+  <h4>Shadows</h4>
+  <div class="grid">
+    <label>Shadow opacity <input type="number" data-s="lighting.shadow.opacity" min="0" max="1" step="0.05"></label>
+    <label>Shadow colour <input type="color" data-s="lighting.shadow.color"></label>
+    <label>Blur (ft) <input type="number" data-s="lighting.shadow.blur_ft" min="0" max="20" step="0.1"></label>
+    <label>Max length (ft) <input type="number" data-s="lighting.shadow.max_length_ft" min="10" max="2000" step="10"></label>
+    <label>Ambient (0 dark - 1) <input type="number" data-s="lighting.ambient" min="0" max="1" step="0.05"></label>
+    <label>Slope shading <input type="number" data-s="lighting.terrain_shade" min="0" max="1" step="0.05"></label>
+    <label>Building height scale <input type="number" data-s="lighting.height_scale" min="0.2" max="4" step="0.1"></label>
+    <label class="chk"><input type="checkbox" data-s="lighting.roof_pitch"> Gable roofs</label>
+    <label class="chk"><input type="checkbox" data-s="lighting.shadow.terrain"> Terrain shadows</label>
+    <label class="chk"><input type="checkbox" data-s="lighting.shadow.buildings"> Building shadows</label>
+    <label class="chk"><input type="checkbox" data-s="lighting.glow.enabled"> Light glow layer</label>
+    <label>Glow opacity <input type="number" data-s="lighting.glow.opacity" min="0" max="1" step="0.05"></label>
+  </div>
+  <h4>Output</h4>
+  <div class="grid">
+    <label class="chk"><input type="checkbox" data-s="lighting.vector"> Editable vector building shadows (LINES/Shadows)</label>
+    <label class="chk"><input type="checkbox" data-s="lighting.auto"> Auto re-render on change (preview dpi)</label>
+    <label>Preview dpi <input type="number" data-s="lighting.preview_dpi" min="20" max="200" step="10"></label>
+    <label>Full dpi <input type="number" data-s="lighting.dpi" min="30" max="400" step="10"></label>
+    <label class="chk"><input type="checkbox" data-s="lighting.embed"> Embed PNGs</label>
+  </div>
+  <div class="btns"><button data-act="light_preview">Preview (low dpi)</button><button class="primary" data-act="light_render">Render shadows</button><button data-act="light_clear" title="Removes the placed PNGs; the vector sublayer is kept">Remove images</button></div>
+  <p class="note">Places ART - Shadows (multiply-style dark, set the layer's blend mode to Multiply for the usual look) and ART - Light Glow (set it to Screen or Soft Light) above the fill layers and below LINES. Heights come from <code>presets/building_heights.json</code> (a building's own <code>height_ft</code> wins).</p>
 </section>
 
 <section id="tab-water" role="tabpanel">
@@ -452,3 +505,5 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
 <script src="lib/townarea.js"></script>
 <script src="main.js"></script>
 </body></html>
+<script src="lib/lighting.js"></script>
+<script src="lighting_ui.js"></script>

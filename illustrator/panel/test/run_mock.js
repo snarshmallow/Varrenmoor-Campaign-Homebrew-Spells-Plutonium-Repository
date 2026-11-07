@@ -5,7 +5,7 @@
 // Job logs go to --jobs-dir (default: a temp folder, never illustrator/jobs). The settings files the panel
 // writes (view_settings, terrain_spec) go to --world-copy; generators still read the real world/.
 const fs = require("fs"), path = require("path"), os = require("os"), cp = require("child_process");
-const VB = require("../lib/core.js"), R = require("../lib/runner.js");
+const VB = require("../lib/core.js"); require("../lib/lighting.js"); const R = require("../lib/runner.js");
 const arg = (k, d) => { const i = process.argv.indexOf(k); return i > 0 ? process.argv[i + 1] : d; };
 const ROOT = path.resolve(__dirname, "../../..").replace(/\\/g, "/");
 const TMP = fs.mkdtempSync(path.join(os.tmpdir(), "vbpanel-"));
@@ -134,6 +134,29 @@ const actions = () => hostLog.map(h => h.action);
     check("phases file has panel hillshade", JSON.parse(fs.readFileSync(`${d.panel}/phases.json`, "utf8")).hillshade.azimuth === 315);
     hostFail = "place_image"; r = await run(VB.jobShading(st, d)); hostFail = null;
     check("host failure on place is a warning, not a failure", r.ok && r.warnings.length === 1, JSON.stringify(r));
+  }
+  if (want("lighting")) {
+    const L = st.lighting;
+    check("lighting defaults present", L && L.sun.azimuth === 225 && VB.normalize({}).lighting.ambient === 0.35);
+    VB.applyLightingPreset(st, "night"); L.lights = [VB.newLight("lantern", 1)]; L.lights[0].x = 1150; L.lights[0].y = 745; L.vector = true;
+    const cfg = VB.lightingConfig(st);
+    check("night config has moon sun + lantern", cfg.lights.length === 2 && cfg.lights[0].type === "sun" && cfg.lights[1].type === "point" && cfg.lights[1].x === 1150 && cfg.ambient === 0.14, JSON.stringify(cfg.lights));
+    st.scale.scale_ft_per_in = 100; st.scale.preset = "town"; st.settings.view = "town";
+    let r = await run(VB.jobLighting(st, d, { preview: true }));
+    check("lighting preview ok", r.ok, r.error);
+    const pis = hostLog.filter(h => h.action === "place_image"), v = JSON.parse(fs.readFileSync(`${d.panel}/lighting/lighting.json`, "utf8"));
+    check("shadows and glow placed below LINES, above the fills", pis.length === 2 && pis[0].layer === "ART - Shadows" && pis[1].layer === "ART - Light Glow" && pis.every(p => p.below[p.below.length - 1] === "LINES" && p.lock === true), JSON.stringify(pis.map(p => [p.layer, p.below])));
+    check("shadows go above every fill layer", ["ART - Fill Buildings", "ART - Fill Streets", "ART - Shading"].every(n => VB.FILL_ORDER.indexOf(n) < VB.FILL_ORDER.indexOf("ART - Shadows")) && !pis[0].below.includes("ART - Fill Buildings"));
+    const tv = JSON.parse(cp.execFileSync("python", ["-X", "utf8", `${ROOT}/illustrator/generators/panelio.py`, "view", "--place", place].concat(VB.panelioViewFlags(st)), { encoding: "utf8" }));
+    check("shadow rect registers with the map window", Math.abs((pis[0].rect[2] - pis[0].rect[0]) - (v.bounds_ft.x_max - v.bounds_ft.x_min) * tv.k) < 0.01 && Math.abs(pis[0].rect[0] - (tv.margin_in * 72)) < 0.01, JSON.stringify(pis[0].rect));
+    const rl = hostLog.find(h => h.action === "replace_layer");
+    check("vector shadows replace LINES/Shadows", rl && rl.names[0] === "Shadows" && v.vector && v.vector.polygons > 0, JSON.stringify(rl));
+    L.mode = "sun"; L.vector = false;
+    r = await run(VB.jobLighting(st, d, { preview: true }));
+    check("sun-only render removes the stale glow", r.ok && hostLog.some(h => h.action === "remove_item" && h.layer === "ART - Light Glow") && !hostLog.some(h => h.action === "replace_layer"), r.error);
+    mockSelection = { ok: true, source: "selection", artboard, paths: [{ name: "pt", closed: false, points: [VB.ftToDoc(tv, artboard, [1000, 700])].map(q => ({ a: q, l: q.slice(), r: q.slice() })), selected: [0] }] };
+    r = await run(VB.jobLightCapture(st, d));
+    check("capture point gives feet", r.ok && Math.abs(L.capture[0] - 1000) < 0.2 && Math.abs(L.capture[1] - 700) < 0.2, JSON.stringify(L.capture) + (r.error || ""));
   }
   if (want("water") && !WRITES) {
     for (const [n, j] of [["analyze", VB.jobWaterAnalyze(st, d)], ["carve", VB.jobWaterCarve(st, d)], ["crossings", VB.jobWaterCrossings(st, d)]]) check("water " + n + " command line (not run)", j.steps[0].args[0] === n || j.steps[0].args[0] === "crossings", JSON.stringify(j.steps[0].args));

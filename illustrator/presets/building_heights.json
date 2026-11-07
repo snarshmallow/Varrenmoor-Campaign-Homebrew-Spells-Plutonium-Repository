@@ -1,0 +1,24 @@
+{
+  "_doc": "Building and prop heights in feet (eave-to-ridge overall height), used by generators/lighting.py. A building JSON with its own height_ft wins. Otherwise the first match in by_id_contains, then by_kind, then default. The value inside the [min, max] range is picked deterministically from the entity id. roof_pitch_deg gives gabled roofs (ridge along the long side); 0 = flat top.",
+  "default": {"height_ft": [16, 22], "roof_pitch_deg": 25},
+  "by_kind": {
+    "house": {"height_ft": [16, 22], "roof_pitch_deg": 27},
+    "farmhouse": {"height_ft": [18, 24], "roof_pitch_deg": 27},
+    "civic": {"height_ft": [28, 40], "roof_pitch_deg": 22},
+    "inn": {"height_ft": [26, 32], "roof_pitch_deg": 28},
+    "craft": {"height_ft": [18, 24], "roof_pitch_deg": 25},
+    "stable": {"height_ft": [14, 18], "roof_pitch_deg": 22},
+    "barn": {"height_ft": [24, 30], "roof_pitch_deg": 24},
+    "shed": {"height_ft": [8, 10], "roof_pitch_deg": 15}
+  },
+  "by_id_contains": {
+    "mill": {"height_ft": [24, 30], "roof_pitch_deg": 25},
+    "barn": {"height_ft": [24, 30], "roof_pitch_deg": 24},
+    "tower": {"height_ft": [45, 60], "roof_pitch_deg": 35}
+  },
+  "props": {
+    "wall": {"height_ft": [6, 8]},
+    "fence": {"height_ft": [4, 4]},
+    "tree": {"height_ft": [25, 40]}
+  }
+}

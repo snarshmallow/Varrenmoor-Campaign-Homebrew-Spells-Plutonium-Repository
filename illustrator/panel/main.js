@@ -385,7 +385,7 @@
     $("candTag").className = "tag" + (state.town.candidate ? " stale" : "");
     $("statePath").textContent = d.state;
   }
-  function refreshAll() { paintInputs(); paintTags(); paintStale(); paintPatchForm(); paintRings(); if (typeof fPaint === "function" && state) fPaint(); }
+  function refreshAll() { paintInputs(); if (window.VBLightUI) VBLightUI.paint(); paintTags(); paintStale(); paintPatchForm(); paintRings(); if (typeof fPaint === "function" && state) fPaint(); }
 
   function showCrossings() {
     var j = readJson(d.water + "/crossings.json", null), el = $("crossInfo");
@@ -424,6 +424,8 @@
     shading_load_preset: function () { loadPreset(state.shading.preset); },
     shading_add_phase: addPhase,
     shading_render: function () { return startJob(VB.jobShading(state, d)); },
+    light_render: function () { return window.VBLightUI.actions.light_render(); }, light_preview: function () { return window.VBLightUI.actions.light_preview(); },
+    light_clear: function () { return window.VBLightUI.actions.light_clear(); }, light_capture: function () { return window.VBLightUI.actions.light_capture(); },
     water_analyze: function () { return startJob(VB.jobWaterAnalyze(state, d)); },
     water_carve: function () { return startJob(VB.jobWaterCarve(state, d)); },
     water_crossings: function () { return startJob(VB.jobWaterCrossings(state, d), showCrossings); },
@@ -671,6 +673,8 @@
     window.addEventListener("error", function (e) { showError("panel error: " + e.message); });
     var cur = places.indexOf(readJson(path.join(root, "world", "panel_last_place.json"), {}).place) >= 0 ? readJson(path.join(root, "world", "panel_last_place.json"), {}).place : places[0];
     await switchPlace(cur);
+    VBLightUI.init({ state: function () { return state; }, dirs: function () { return d; }, save: save, startJob: startJob, isBusy: function () { return runner.isBusy(); }, syncInputs: paintInputs,
+      placeCentre: function () { var p = readJson(d.world + "/place.json", {}), b = p.bounds || {}; return [Math.round((b.width_ft || 2400) / 2), Math.round((b.height_ft || 1500) / 2)]; } });
     sel.addEventListener("change", function () { try { fs.writeFileSync(path.join(root, "world", "panel_last_place.json"), JSON.stringify({ place: sel.value })); } catch (e) { /* ignore */ } });
     $("fPlace").addEventListener("change", function () { sel.value = $("fPlace").value; switchPlace($("fPlace").value); try { fs.writeFileSync(path.join(root, "world", "panel_last_place.json"), JSON.stringify({ place: sel.value })); } catch (e) { /* ignore */ } });
     ["foundry.filter.actors", "foundry.filter.items"].forEach(function (k) { var el = document.querySelector('[data-s="' + k + '"]'); if (el) el.addEventListener("input", fPaint); });

@@ -46,7 +46,7 @@ function VB_ensureLike(doc, src) {
 function VB_orderLayer(doc, name, below) {
   var pl = VB_find(doc, name);
   if (!pl) { pl = doc.layers.add(); pl.name = name; }
-  var list = (below instanceof Array) ? below : (below ? [below] : []);
+  var list = (typeof below === "string") ? [below] : (below && below.length !== undefined ? below : []);   // arrays from eval are not always instanceof Array
   for (var i = 0; i < list.length; i++) {
     var ref = VB_find(doc, list[i]);
     if (ref && ref !== pl) { try { pl.move(ref, ElementPlacement.PLACEAFTER); } catch (e) {} break; }
@@ -69,7 +69,9 @@ function VB_pathInfo(pi) {
     var p = pi.pathPoints[i];
     pts.push({ a: [p.anchor[0], p.anchor[1]], l: [p.leftDirection[0], p.leftDirection[1]], r: [p.rightDirection[0], p.rightDirection[1]] });
   }
-  return { name: pi.name, closed: pi.closed, points: pts };
+  var sel = [];
+  try { for (var k = 0; k < pi.pathPoints.length; k++) { if (pi.pathPoints[k].selected === PathPointSelection.ANCHORPOINT) sel.push(k); } } catch (e) {}
+  return { name: pi.name, closed: pi.closed, points: pts, selected: sel };
 }
 function VB_collectPaths(items, outList) {
   for (var i = 0; i < items.length; i++) {
@@ -302,6 +304,18 @@ function VB_run(json) {
         out.applied = applied; out.skipped = skipped;
         if (skipped.length) out.warn = "layers not found: " + skipped.join(", ");
         break;
+      }
+      case "remove_item": {
+        // delete the named item(s) on a layer (e.g. a stale light glow PNG); a missing layer or item is not an error
+        if (app.documents.length === 0) throw new Error("no open document");
+        var rd = app.activeDocument, rl = VB_find(rd, a.layer), removed = 0;
+        if (rl) {
+          var wl = rl.locked; rl.locked = false;
+          var ri2 = VB_direct(rl);
+          for (var rj = ri2.length - 1; rj >= 0; rj--) { if (ri2[rj].name === a.name) { try { ri2[rj].locked = false; } catch (e) {} ri2[rj].remove(); removed++; } }
+          rl.locked = wl;
+        }
+        out.removed = removed; break;
       }
       case "set_visible": {
         if (app.documents.length === 0) throw new Error("no open document");
