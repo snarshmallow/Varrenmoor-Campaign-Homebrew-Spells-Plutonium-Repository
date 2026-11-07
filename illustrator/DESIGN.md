@@ -16,7 +16,7 @@ One persistent spatial model of the world (town > district > street > building >
 | Town | 1 in = 100 ft | 17x11 | whole settlement |
 | Street / block | 1 in = 20 ft | 17x11 | one street |
 | Building / room | 1 in = 5 ft (one Foundry square) | 17x11 or larger | floorplans, battle maps |
-The generator takes `--view town|street:<id>|building:<id>` and crops/scales from the model.
+The generator takes `--view town|bowl|street:<id>|building:<id>` and crops/scales from the model. Presets, grid and page size live in `world/<place>/view_settings.json` (including a `bowl` preset, 1 in = 200 ft, for the whole place) and can be overridden with `--scale/--grid/--page`.
 
 ## 3. Illustrator file structure (top to bottom)
 Everything toggles from the Layers panel. Only the layers marked GEN are rewritten by the generator.

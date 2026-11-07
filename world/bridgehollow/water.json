@@ -275,7 +275,7 @@
      ]
     ]
    },
-   "notes": "Flows north to south through the hollow. Width varies 52-68 ft.",
+   "notes": "Flows north to south through the hollow and out by the southern pass. Width 52-68 ft.",
    "links": {
     "foundry_scene": null,
     "model3d": null,
@@ -414,7 +414,10 @@
      1226.4,
      1550
     ]
-   ]
+   ],
+   "width_ft": 60,
+   "depth_ft": 6,
+   "flow": "south"
   }
  ]
 }

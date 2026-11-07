@@ -1,0 +1,39 @@
+{
+ "id": "bld_farm_002",
+ "name": "Farmhouse 2",
+ "kind": "farmhouse",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    715.0,
+    1100.4
+   ],
+   [
+    724.9,
+    1074.9
+   ],
+   [
+    699.3,
+    1065.1
+   ],
+   [
+    689.5,
+    1090.6
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 2,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 645.5,
+ "site_slope": 0.05,
+ "site_relief_ft": 1.7
+}

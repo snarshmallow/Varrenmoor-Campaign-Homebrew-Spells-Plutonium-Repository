@@ -1,0 +1,39 @@
+{
+ "id": "bld_house_114",
+ "name": "House 114",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    946.4,
+    1062.9
+   ],
+   [
+    972.3,
+    1048.4
+   ],
+   [
+    964.4,
+    1034.2
+   ],
+   [
+    938.4,
+    1048.6
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 2,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 647.2,
+ "site_slope": 0.047,
+ "site_relief_ft": 1.2
+}

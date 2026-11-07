@@ -7,24 +7,24 @@
   "type": "polygon",
   "points": [
    [
-    980.0,
-    625.0
+    976.0,
+    652.9
    ],
    [
-    1040.0,
-    625.0
+    1004.1,
+    639.3
    ],
    [
-    1040.0,
-    675.0
+    992.7,
+    615.9
    ],
    [
-    980.0,
-    675.0
+    964.7,
+    629.5
    ]
   ]
  },
- "notes": "Seat of the wardens; beside the bridge. Layout proposed.",
+ "notes": "Seat of the wardens, on the low rise. Layout proposed.",
  "links": {
   "foundry_scene": null,
   "model3d": null,
@@ -32,5 +32,8 @@
  },
  "floors": 2,
  "rooms": [],
- "doors": []
+ "doors": [],
+ "elevation_ft": 667.4,
+ "site_slope": 0.149,
+ "site_relief_ft": 4.2
 }

@@ -26,6 +26,7 @@ M_PER_FT = 0.3048
 CSS = """\
 .contour-minor { fill: none; stroke: #8a5a2b; stroke-width: 0.3; }
 .contour-index { fill: none; stroke: #8a5a2b; stroke-width: 0.75; }
+.contour-datum { fill: none; stroke: #1a4f8a; stroke-width: 1.1; }
 .contour-label { fill: #6b4423; stroke: none; font-family: Arial, sans-serif; }"""
 
 LAYER_MINOR, LAYER_INDEX, LAYER_LABELS = "Contours - Minor", "Contours - Index", "Labels - Elevation"
@@ -51,6 +52,9 @@ class ContourParams:
     chaikin: int = 1
     use_mask: bool = True
     labels: bool = True
+    sea_level_ft: float = 0.0      # datum (signed elevations); levels and index contours are counted from it
+    emphasize_datum: bool = True   # draw the datum (0 ft / shoreline) contour with class contour-datum
+    minus: str = "-"               # minus sign used in labels ("−" for a true minus)
 
 
 @dataclass
@@ -110,7 +114,10 @@ def _merge(geom):
 
 
 def _label_text(v, p):
-    return f"{v:.{p.decimals}f}{p.suffix}"
+    t = f"{v:.{p.decimals}f}"
+    if float(t) == 0:
+        t = t.lstrip("-")           # never print "-0"
+    return t.replace("-", p.minus) + p.suffix
 
 
 def build(h, cell_ft, frame, params=None, mask_polys=None):
@@ -135,12 +142,15 @@ def build(h, cell_ft, frame, params=None, mask_polys=None):
     mat = frame.matrix()
 
     zmin, zmax = float(hs.min() * f_u), float(hs.max() * f_u)
-    lv0 = math.ceil(zmin / p.minor - 1e-9)
-    lv1 = math.floor(zmax / p.minor + 1e-9)
+    sea = p.sea_level_ft * f_u
+    lv0 = math.ceil((zmin - sea) / p.minor - 1e-9)       # works for negative elevations (ceil/floor on signed values)
+    lv1 = math.floor((zmax - sea) / p.minor + 1e-9)
     pieces = []     # {elev, index, geom (page pt), closed}
     for i in range(lv0, lv1 + 1):
-        level = i * p.minor
-        is_index = abs(level / p.index - round(level / p.index)) < 1e-6
+        level = sea + i * p.minor
+        rel = i * p.minor
+        is_index = abs(rel / p.index - round(rel / p.index)) < 1e-6
+        is_datum = abs(rel) < 1e-9
         for arr in gen.lines(level):
             if len(arr) < 3:
                 continue
@@ -161,10 +171,11 @@ def build(h, cell_ft, frame, params=None, mask_polys=None):
             for seg in _merge(geom) if not (closed and isinstance(geom, LineString)) else [geom]:
                 if seg.length < p.min_len_ft:
                     continue
-                pieces.append({"elev": level, "index": is_index, "closed": closed and seg is geom,
+                pieces.append({"elev": level, "index": is_index, "datum": is_datum, "closed": closed and seg is geom,
                                "geom": affinity.affine_transform(seg, mat)})
 
     cs = ContourSet()
+    cs.emphasize_datum = p.emphasize_datum
     if p.labels:
         cs.labels = _place_labels(pieces, frame, p, mask, mat)
     halos = [lb["box"].buffer(p.halo_pt) for lb in cs.labels]
@@ -182,7 +193,7 @@ def build(h, cell_ft, frame, params=None, mask_polys=None):
         for seg in _merge(pc["geom"]) if not pc["closed"] else [pc["geom"]]:
             e = f"{pc['elev']:g}"
             counters[e] = counters.get(e, 0) + 1
-            cs.pieces.append({"id": f"contour_{e}_{counters[e]}", "elev": pc["elev"], "index": pc["index"],
+            cs.pieces.append({"id": f"contour_{e}_{counters[e]}", "elev": pc["elev"], "index": pc["index"], "datum": pc.get("datum", False),
                               "pts": list(seg.coords), "closed": pc["closed"]})
     cl = {}
     for lb in cs.labels:
@@ -197,7 +208,7 @@ def _place_labels(pieces, frame, p, mask, mat):
     size = p.font_size
     spacing = p.label_spacing_ft * frame.k
     min_len = p.min_len_ft * frame.k
-    idx_pieces = [pc for pc in pieces if pc["index"]]
+    idx_pieces = [pc for pc in pieces if pc["index"] or pc.get("datum")]
     geoms = [pc["geom"] for pc in idx_pieces]
     tree = STRtree(geoms) if geoms else None
     mask_pt = affinity.affine_transform(mask, mat) if mask is not None else None
@@ -270,6 +281,8 @@ def _d(pts, closed):
 def emit(tree, cs, layer_minor=LAYER_MINOR, layer_index=LAYER_INDEX, layer_labels=LAYER_LABELS):
     for pc in cs.pieces:
         cls = "contour-index" if pc["index"] else "contour-minor"
+        if pc.get("datum") and getattr(cs, "emphasize_datum", True):
+            cls = "contour-datum"
         pts = pc["pts"][:-1] if pc["closed"] else pc["pts"]
         tree.add(layer_index if pc["index"] else layer_minor,
                  f'<path id="{pc["id"]}" class="{cls}" fill="none" d="{_d(pts, pc["closed"])}"/>')

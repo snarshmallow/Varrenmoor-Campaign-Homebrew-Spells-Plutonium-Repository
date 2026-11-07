@@ -1,0 +1,212 @@
+{
+ "_note": "One generation of the Bridgehollow town (all proposed). Feet, y down. Run: python illustrator/generators/town_gen.py",
+ "place": "bridgehollow",
+ "seed": 1103,
+ "detail": 2,
+ "view_preset": "town",
+ "area_ft": [
+  [
+   640,
+   360
+  ],
+  [
+   800,
+   310
+  ],
+  [
+   1100,
+   300
+  ],
+  [
+   1400,
+   310
+  ],
+  [
+   1650,
+   340
+  ],
+  [
+   1760,
+   450
+  ],
+  [
+   1780,
+   700
+  ],
+  [
+   1740,
+   950
+  ],
+  [
+   1650,
+   1130
+  ],
+  [
+   1480,
+   1230
+  ],
+  [
+   1380,
+   1300
+  ],
+  [
+   1330,
+   1490
+  ],
+  [
+   1100,
+   1490
+  ],
+  [
+   1060,
+   1300
+  ],
+  [
+   800,
+   1230
+  ],
+  [
+   650,
+   1100
+  ],
+  [
+   600,
+   850
+  ],
+  [
+   610,
+   600
+  ]
+ ],
+ "output": {
+  "streets": true,
+  "plazas": true,
+  "blocks": false,
+  "buildings": true,
+  "fields": true,
+  "districts": true
+ },
+ "limits": {
+  "max_street_grade": 0.08,
+  "max_main_grade": 0.05,
+  "max_build_slope": 0.19,
+  "max_build_relief_ft": 6.0,
+  "max_field_slope": 0.13,
+  "water_margin_ft": 14,
+  "below_datum_is_water": true
+ },
+ "entry": {
+  "point": [
+   1290,
+   1480
+  ],
+  "via": [
+   [
+    1290,
+    900
+   ]
+  ],
+  "name": "Pilgrim Road",
+  "id": "pilgrim_road",
+  "width_ft": 30,
+  "bridge_width_ft": 26
+ },
+ "ring_spec": {
+  "centre": [
+   1010,
+   700
+  ],
+  "aspect": [
+   1.0,
+   1.0
+  ],
+  "noise": 0.12,
+  "noise_period_ft": 320,
+  "feather_ft": 90,
+  "rings": [
+   {
+    "id": "authority",
+    "name": "Authority Ward",
+    "kind": "civic",
+    "r_max": 170,
+    "street_width": 24,
+    "dsep": [
+     80,
+     95
+    ],
+    "lot_area": [
+     2600,
+     6000
+    ],
+    "build_prob": 0.95
+   },
+   {
+    "id": "commoner",
+    "name": "Commoners' Ring",
+    "kind": "residential",
+    "r_max": 480,
+    "street_width": 18,
+    "dsep": [
+     85,
+     100
+    ],
+    "lot_area": [
+     900,
+     2000
+    ],
+    "build_prob": 0.95
+   },
+   {
+    "id": "farm",
+    "name": "Farmland",
+    "kind": "farm",
+    "r_max": 1000000000,
+    "street_width": 13,
+    "dsep": [
+     210,
+     300
+    ],
+    "lot_area": [
+     28000,
+     85000
+    ],
+    "build_prob": 0.3
+   }
+  ]
+ },
+ "plazas": {
+  "enabled": true,
+  "min_area_ft2": 150000,
+  "per_area_ft2": 450000,
+  "max": 4,
+  "radius_ft": [
+   38,
+   62
+  ],
+  "min_sep_ft": 260,
+  "anchors": [
+   {
+    "id": "sqr_market",
+    "name": "Market Square",
+    "type": "road",
+    "near": [
+     1300,
+     760
+    ]
+   },
+   {
+    "id": "sqr_court",
+    "name": "Court Square",
+    "type": "road_end",
+    "near": [
+     1010,
+     700
+    ]
+   }
+  ]
+ },
+ "named": {
+  "market_plaza": "sqr_market",
+  "court_plaza": "sqr_court"
+ }
+}

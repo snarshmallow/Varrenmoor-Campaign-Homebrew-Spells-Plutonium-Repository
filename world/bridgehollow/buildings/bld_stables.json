@@ -7,24 +7,24 @@
   "type": "polygon",
   "points": [
    [
-    883,
-    756
+    1260.2,
+    975.8
    ],
    [
-    937,
-    756
+    1231.4,
+    985.7
    ],
    [
-    937,
-    780
+    1238.5,
+    1006.6
    ],
    [
-    883,
-    780
+    1267.3,
+    996.7
    ]
   ]
  },
- "notes": "Stables behind the inn.",
+ "notes": "Stables beside the inn.",
  "links": {
   "foundry_scene": null,
   "model3d": null,
@@ -32,5 +32,8 @@
  },
  "floors": 1,
  "rooms": [],
- "doors": []
+ "doors": [],
+ "elevation_ft": 651.6,
+ "site_slope": 0.049,
+ "site_relief_ft": 1.1
 }

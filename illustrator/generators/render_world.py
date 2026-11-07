@@ -1,6 +1,7 @@
 """Render a world/<place> JSON model to a layered SVG for Illustrator.
 
-  python illustrator/generators/render_world.py [--place bridgehollow] [--view town|street:<id>|building:<id>] [--out PATH]
+  python illustrator/generators/render_world.py [--place bridgehollow] [--view town|bowl|street:<id>|building:<id>] [--out PATH]
+      [--preset town|bowl|street|room] [--scale FT_PER_IN] [--grid FT] [--grid-major N] [--page WxH]   (defaults: world/<place>/view_settings.json)
       [--terrain] [--contours] [--no-contour-mask] [--contour-interval 10] [--index-interval 50] [--label-size 6] [--units ft|m]
   --terrain regenerates world/<place>/terrain/ from terrain_spec.json and writes illustrator/out/<place>_height.png (hillshade);
   --terrain or --contours overlays contours + elevation labels (default output illustrator/out/<place>_terrain.svg for the town view).
@@ -19,11 +20,13 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 from lib_svg import LayerTree  # noqa: E402
 import contours as ct  # noqa: E402
+import viewcfg  # noqa: E402
+import viewcfg  # noqa: E402
 import terrain as tr  # noqa: E402
 from xml.sax.saxutils import escape  # noqa: E402
 
 REPO = os.path.abspath(os.path.join(HERE, "..", ".."))
-PAGE_W_IN, PAGE_H_IN, MARGIN_IN = 17, 11, 0.5
+PAGE_W_IN, PAGE_H_IN, MARGIN_IN = 17, 11, 0.5   # defaults; the active view_settings page/margin are used per render
 
 SPEC = [
     ("NOTES", []),
@@ -32,13 +35,17 @@ SPEC = [
     ("ART - Fills", []),
     ("ART - Textures", []),
     ("ART - Masks", []),
-    ("LINES", ["Walls", "Buildings", "Roads", "Water", ("Terrain", [ct.LAYER_MINOR, ct.LAYER_INDEX]), "Fences"]),
+    ("LINES", ["Walls", "Buildings", "Blocks", "Roads", "Water", ("Terrain", [ct.LAYER_MINOR, ct.LAYER_INDEX]), "Fences"]),
     ("GUIDES", ["Grid", "Scale bar", "North arrow", "Bounds"]),
 ]
 
 CSS = """\
 path { fill: none; }
 .guide-line { fill: none; stroke: #7a7a7a; stroke-width: 0.35; }
+.guide-major { fill: none; stroke: #5a5a5a; stroke-width: 0.6; }
+.field { fill: none; stroke: #5d7a3a; stroke-width: 0.4; }
+.guide-major { fill: none; stroke: #5a5a5a; stroke-width: 0.6; }
+.field { fill: none; stroke: #5d7a3a; stroke-width: 0.4; }
 .wall { fill: none; stroke: #000000; stroke-width: 1.25; }
 .road { fill: none; stroke: #000000; stroke-width: 0.75; }
 .water { fill: none; stroke: #1a4f8a; stroke-width: 0.75; }
@@ -128,18 +135,46 @@ def entity_polygon(e):
     return [tuple(p) for p in g["points"]]
 
 
+def street_shapes(streets):
+    """Non-overlapping street outlines {id: shapely geometry}: wider streets win at junctions, so the drawn curbs
+    tile the road area and organic (curved) streets have no self-crossing mitres. Bridges keep their own outline."""
+    from shapely.geometry import LineString
+    from shapely.ops import unary_union
+    order = sorted(streets, key=lambda e: (e["kind"] != "bridge", -e["geometry"]["width_ft"], e["id"]))
+    out, taken = {}, None
+    for e in order:
+        g = e["geometry"]
+        sh = LineString(g["points"]).buffer(g["width_ft"] / 2, cap_style=2, join_style=1, resolution=4)
+        if e["kind"] != "bridge" and taken is not None:
+            sh = sh.difference(taken)
+        out[e["id"]] = sh
+        taken = sh if taken is None else unary_union([taken, sh])
+    return out
+
+
+def shape_rings(sh):
+    polys = []
+    for g in getattr(sh, "geoms", [sh]):
+        if g.is_empty or g.geom_type != "Polygon" or g.area < 1.0:
+            continue
+        polys.append([tuple(p) for p in g.exterior.coords][:-1])
+        polys += [[tuple(p) for p in i.coords][:-1] for i in g.interiors]
+    return polys
+
+
 # ------------------------------------------------------------------ view
 class View:
-    def __init__(self, fpi, cx, cy):
+    def __init__(self, fpi, cx, cy, page=(PAGE_W_IN, PAGE_H_IN), margin=MARGIN_IN):
         self.fpi = fpi
+        self.page, self.margin = page, margin
         self.k = 72.0 / fpi                       # points per foot
-        self.wf = (PAGE_W_IN - 2 * MARGIN_IN) * fpi   # window size in feet
-        self.hf = (PAGE_H_IN - 2 * MARGIN_IN) * fpi
+        self.wf = (page[0] - 2 * margin) * fpi    # window size in feet
+        self.hf = (page[1] - 2 * margin) * fpi
         self.x0, self.y0 = cx - self.wf / 2, cy - self.hf / 2
         self.x1, self.y1 = cx + self.wf / 2, cy + self.hf / 2
 
     def px(self, p):
-        return (MARGIN_IN * 72 + (p[0] - self.x0) * self.k, MARGIN_IN * 72 + (p[1] - self.y0) * self.k)
+        return (self.margin * 72 + (p[0] - self.x0) * self.k, self.margin * 72 + (p[1] - self.y0) * self.k)
 
     def inside(self, p):
         return self.x0 <= p[0] <= self.x1 and self.y0 <= p[1] <= self.y1
@@ -167,56 +202,107 @@ def text(id_, x, y, s, size, rot=None, bold=False, anchor="middle"):
 
 
 # ------------------------------------------------------------------ render
-def render(model, view_arg, out_path, topts=None):
+CIVIC_SKIP = {"house", "shed", "farmhouse", "barn"}
+
+
+def street_label(t, v, e, size, fpi):
+    from shapely.geometry import LineString
+    ln = LineString(e["geometry"]["points"])
+    if ln.length < max(2.0 * fpi, 40):
+        return
+    best = None
+    for f in (0.5, 0.35, 0.65, 0.25, 0.75):
+        p = ln.interpolate(f, normalized=True)
+        if v.inside((p.x, p.y)):
+            best = f
+            break
+    if best is None:
+        return
+    d = ln.length * best
+    a, m, b = ln.interpolate(max(d - 12, 0)), ln.interpolate(d), ln.interpolate(min(d + 12, ln.length))
+    ang = math.degrees(math.atan2(b.y - a.y, b.x - a.x))
+    if ang > 90 or ang <= -90:
+        ang = (ang + 180 + 180) % 360 - 180
+    th = math.radians(ang)
+    off = e["geometry"]["width_ft"] / 2 + size / v.k * 0.7
+    nx_, ny_ = -math.sin(th), math.cos(th)
+    if ny_ > 0:                      # keep the label on the upper side of the street on the page
+        nx_, ny_ = -nx_, -ny_
+    x, y = v.px((m.x + nx_ * off, m.y + ny_ * off))
+    t.add("Labels - Streets", text(f"lbl_{e['id']}", x, y, e["name"] + " *", size, rot=ang))
+
+
+def render(model, view_arg, out_path, topts=None, cfg_over=None):
     place = model["place"]
     bw, bh = place["bounds"]["width_ft"], place["bounds"]["height_ft"]
     kind, _, ident = view_arg.partition(":")
     streets = {s["id"]: s for s in model["streets"]}
     blds = {b["id"]: b for b in model["buildings"]}
+    o = cfg_over or {}
+    cfg = viewcfg.load(place["id"], o.get("preset") or kind, scale=o.get("scale"), grid=o.get("grid"),
+                       page=o.get("page"), major_every=o.get("major_every"))
+    fpi, grid_ft, major_n = cfg["scale_ft_per_in"], cfg["grid_ft"], cfg["grid_major_every"]
+    pw, ph = cfg["page_in"]
+    margin = cfg["margin_in"]
+    W, H = pw * 72.0, ph * 72.0
 
-    if kind == "town":
-        v = View(place["scales"]["town"]["feet_per_inch"], *place["view_focus"]["town"])
-        grid_ft, title = 100, f"{place['name']} - town view"
-    elif kind == "street":
+    focus = cfg.get("focus", "center")
+    ent_poly = None
+    if kind == "street":
         if ident not in streets:
             sys.exit(f"unknown street id: {ident}")
-        poly = entity_polygon(streets[ident])
-        v = View(place["scales"]["street"]["feet_per_inch"], *centroid(poly))
-        grid_ft, title = 20, f"{place['name']} - street: {streets[ident]['name']}"
+        ent_poly, title = entity_polygon(streets[ident]), f"{place['name']} - street: {streets[ident]['name']}"
     elif kind == "building":
         if ident not in blds:
             sys.exit(f"unknown building id: {ident}")
-        v = View(place["scales"]["building"]["feet_per_inch"], *centroid(entity_polygon(blds[ident])))
-        grid_ft, title = 5, f"{place['name']} - building: {blds[ident]['name']}"
+        ent_poly, title = entity_polygon(blds[ident]), f"{place['name']} - building: {blds[ident]['name']}"
+    elif kind in ("town", "bowl"):
+        title = f"{place['name']} - {'whole bowl' if kind == 'bowl' else 'town view'}"
     else:
-        sys.exit("--view must be town, street:<id> or building:<id>")
+        sys.exit("--view must be town, bowl, street:<id> or building:<id>")
+    if isinstance(focus, list):
+        fx, fy = focus
+    elif focus == "entity" and ent_poly:
+        fx, fy = centroid(ent_poly)
+    else:
+        fx, fy = bw / 2, bh / 2
+    v = View(fpi, fx, fy, (pw, ph), margin)
+    title += f"  (1 in = {fpi:g} ft, grid {grid_ft:g} ft)"
+    lf = min(max((100.0 / fpi) ** 0.5, 0.6), 1.6)     # label size factor follows the scale
+    ls = lambda base: round(base * lf, 1)
 
-    t = LayerTree(SPEC, PAGE_W_IN, PAGE_H_IN, css=CSS, locked=["GUIDES", "Grid", "Scale bar", "North arrow", "Bounds"])
-    base = {"building": "wall", "street": "road", "bridge": "road", "road": "road", "river": "water"}
+    t = LayerTree(SPEC, pw, ph, css=CSS, locked=["GUIDES", "Grid", "Scale bar", "North arrow", "Bounds"])
 
-    def draw(layer, e, cls):
-        poly = v.clip(entity_polygon(e))
+    def addpoly(layer, id_, poly, cls, status):
+        poly = v.clip(poly)
         if not poly:
             return None
-        c = cls + (" proposed" if e.get("status") == "proposed" else "")
-        t.add(layer, path(e["id"], v.d([poly]), c))
+        c = cls + (" proposed" if status == "proposed" else "")
+        t.add(layer, path(id_, v.d([poly]), c))
         return poly
 
     # LINES
     for e in model["water"]:
-        draw("Water", e, "water")
+        addpoly("Water", e["id"], entity_polygon(e), "water", e.get("status"))
     for e in model["districts"]:
-        draw("Terrain", e, "guide-line")
+        k = e["kind"]
+        layer, cls = {"square": ("Roads", "road"), "field": ("Fences", "field"),
+                      "block": ("Blocks", "guide-line")}.get(k, ("Terrain", "guide-line"))
+        addpoly(layer, e["id"], entity_polygon(e), cls, e.get("status"))
+    shapes = street_shapes(model["streets"])
     for e in model["streets"]:
-        draw("Roads", e, "wall" if e["kind"] == "bridge" else "road")
+        rings = [r for r in (v.clip(r) for r in shape_rings(shapes[e["id"]])) if r]
+        if rings:
+            c = ("wall" if e["kind"] == "bridge" else "road") + (" proposed" if e.get("status") == "proposed" else "")
+            t.add("Roads", path(e["id"], v.d(rings), c))
     for e in model["buildings"]:
-        draw("Buildings", e, "wall")
+        addpoly("Buildings", e["id"], entity_polygon(e), "wall", e.get("status"))
         if kind == "building" and e["id"] == ident:
             for r in e.get("rooms", []):
-                draw("Walls", r, "wall")
+                addpoly("Walls", r["id"], entity_polygon(r), "wall", r.get("status"))
             for dr in e.get("doors", []):
                 if "geometry" in dr:
-                    draw("Walls", dr, "guide-line")
+                    addpoly("Walls", dr["id"], entity_polygon(dr), "guide-line", dr.get("status"))
 
     # TERRAIN contours + elevation labels (heightmap from world/<place>/terrain/)
     if topts is not None:
@@ -224,87 +310,87 @@ def render(model, view_arg, out_path, topts=None):
         mask = []
         if topts["use_mask"]:
             from shapely.geometry import Polygon
-            for e in model["buildings"] + model["streets"]:
-                pg = entity_polygon(e)
-                if len(pg) >= 3:
-                    mask.append(Polygon(pg).buffer(0))
-        frame = ct.Frame(v.x0, v.y0, v.x1, v.y1, v.k, MARGIN_IN * 72, MARGIN_IN * 72)
-        cp = ct.ContourParams(minor=topts["minor"], index=topts["index"], font_size=topts["label_size"],
-                              units=topts["units"], use_mask=topts["use_mask"])
+            inc = set(cfg.get("contour_mask", {}).get("include", ["buildings", "streets", "plazas"]))
+            if "buildings" in inc:
+                for e in model["buildings"]:
+                    pg = entity_polygon(e)
+                    if len(pg) >= 3:
+                        mask.append(Polygon(pg).buffer(0))
+            if "streets" in inc:
+                mask += [g for g in shapes.values() if not g.is_empty]
+            if "plazas" in inc:
+                for e in model["districts"]:
+                    if e["kind"] == "square":
+                        mask.append(Polygon(entity_polygon(e)).buffer(0))
+        frame = ct.Frame(v.x0, v.y0, v.x1, v.y1, v.k, margin * 72, margin * 72)
+        cp = ct.ContourParams(minor=topts["minor"], index=topts["index"], font_size=topts["label_size"] * lf,
+                              units=topts["units"], use_mask=topts["use_mask"],
+                              sea_level_ft=float(meta.get("sea_level_ft", 0.0)))
         cs = ct.build(h, meta["cell_ft"], frame, cp, mask)
         ct.emit(t, cs)
-        print(f"contours: {len(cs.pieces)} paths, {len(cs.labels)} labels, relief {meta['elev_min']:.0f}-{meta['elev_max']:.0f} ft")
+        print(f"contours: {len(cs.pieces)} paths, {len(cs.labels)} labels, relief {meta['elev_min']:.0f}..{meta['elev_max']:.0f} ft, "
+              f"mask={'on (%d polygons)' % len(mask) if mask else 'off'}")
 
     # LABELS
-    def anchor(poly):
-        return centroid(poly)
-
     lab = lambda layer, e, s, size, bold=False, rot=None: _label(t, v, layer, e, s, size, bold, rot)
     for e in model["districts"]:
-        lab("Labels - Districts", e, e["name"].upper() if e["kind"] == "district" else e["name"], 9 if e["kind"] == "district" else 7, True)
-    if kind in ("town", "street"):
+        if e["kind"] == "district":
+            if kind != "building":
+                lab("Labels - Districts", e, e["name"].upper(), ls(9), True)
+        elif e["kind"] == "square":
+            lab("Labels - Districts", e, e["name"], ls(7), True)
+    if kind in ("town", "street", "bowl"):
         for e in model["streets"]:
-            pts = e["geometry"]["points"]
-            segs = list(zip(pts, pts[1:]))
-            a, b = max(segs, key=lambda s: math.hypot(s[1][0] - s[0][0], s[1][1] - s[0][1]))
-            mid = ((a[0] + b[0]) / 2, (a[1] + b[1]) / 2)
-            vertical = abs(b[1] - a[1]) > abs(b[0] - a[0])
-            if v.inside(mid):
-                # offset the label so it sits beside the road centerline
-                off = e["geometry"]["width_ft"] / 2 + 5
-                m2 = (mid[0] + (off if vertical else 0), mid[1] - (0 if vertical else off))
-                x, y = v.px(m2)
-                t.add("Labels - Streets", text(f"lbl_{e['id']}", x, y, e["name"] + " *", 6, rot=-90 if vertical else None))
+            if kind == "bowl" and e["geometry"]["width_ft"] < 22 and e["kind"] != "road":
+                continue
+            street_label(t, v, e, ls(6), fpi)
     for e in model["buildings"]:
-        if kind == "town" and e["kind"] == "house":
+        if kind != "building" and e["kind"] in CIVIC_SKIP and fpi >= 40:
             continue
-        if kind == "street" and e["kind"] == "house":
-            continue
-        size = 7 if kind != "building" else 10
-        lab("Labels - Buildings", e, e["name"] + " *", size)
-    # Labels - Rooms: empty until rooms exist
+        lab("Labels - Buildings", e, e["name"] + " *", ls(7) if kind != "building" else 10)
     if kind == "building":
         for r in blds[ident].get("rooms", []):
             lab("Labels - Rooms", r, r["name"], 8)
 
-    # GUIDES
+    # GUIDES: minor + major grid
     k = v.k
-    first_x = math.ceil(v.x0 / grid_ft) * grid_ft
-    first_y = math.ceil(v.y0 / grid_ft) * grid_ft
     px0, py0 = v.px((v.x0, v.y0)); px1, py1 = v.px((v.x1, v.y1))
-    segs = []
-    x = first_x
-    while x <= v.x1:
-        sx = v.px((x, 0))[0]
-        segs.append(f"M{sx:.2f},{py0:.2f} L{sx:.2f},{py1:.2f}")
-        x += grid_ft
-    y = first_y
-    while y <= v.y1:
-        sy = v.px((0, y))[1]
-        segs.append(f"M{px0:.2f},{sy:.2f} L{px1:.2f},{sy:.2f}")
-        y += grid_ft
-    t.add("Grid", path(f"grid_{grid_ft}ft", " ".join(segs), "guide-line"))
+    minor, major = [], []
+    major_ft = grid_ft * major_n
+    nlines = (v.x1 - v.x0) / grid_ft + (v.y1 - v.y0) / grid_ft
+    for axis, lo, hi in (("x", v.x0, v.x1), ("y", v.y0, v.y1)):
+        g = math.ceil(lo / grid_ft)
+        while g * grid_ft <= hi:
+            pos = g * grid_ft
+            q = v.px((pos, pos))
+            seg = (f"M{q[0]:.2f},{py0:.2f} L{q[0]:.2f},{py1:.2f}" if axis == "x"
+                   else f"M{px0:.2f},{q[1]:.2f} L{px1:.2f},{q[1]:.2f}")
+            (major if major_n and g % major_n == 0 else minor).append(seg)
+            g += 1
+    if minor and nlines < 900:
+        t.add("Grid", path(f"grid_{grid_ft:g}ft", " ".join(minor), "guide-line"))
+    if major:
+        t.add("Grid", path(f"grid_major_{major_ft:g}ft", " ".join(major), "guide-major"))
 
-    # scale bar: 5 segments, two rows of alternating rectangles drawn as 2 compound paths
-    bar_ft = {100: 500, 20: 100, 5: 25}[grid_ft]
+    bar_ft = cfg["scale_bar_ft"]
     seg_ft = bar_ft / 5.0
-    bx, by, bh_pt = 36 + 4, 792 - 26, 5
+    bx, by, bh_pt = 36 + 4, H - 26, 5
     even, odd = [], []
     for i in range(5):
         x0 = bx + seg_ft * i * k
-        r = f"M{x0:.2f},{by:.2f} L{x0 + seg_ft * k:.2f},{by:.2f} L{x0 + seg_ft * k:.2f},{by + bh_pt:.2f} L{x0:.2f},{by + bh_pt:.2f} Z"
+        r = (f"M{x0:.2f},{by:.2f} L{x0 + seg_ft * k:.2f},{by:.2f} L{x0 + seg_ft * k:.2f},{by + bh_pt:.2f} "
+             f"L{x0:.2f},{by + bh_pt:.2f} Z")
         (even if i % 2 == 0 else odd).append(r)
     t.add("Scale bar", path("scalebar_a", " ".join(even), "wall"))
     t.add("Scale bar", path("scalebar_b", " ".join(odd), "guide-line"))
     for i in range(6):
         t.add("Scale bar", text(f"scalebar_t{i}", bx + seg_ft * i * k, by + 16, f"{seg_ft * i:g}", 7))
-    t.add("Scale bar", text("scalebar_unit", bx + bar_ft * k + 10, by + 5, f"ft   (1 in = {v.fpi:g} ft)", 8, anchor="start"))
+    t.add("Scale bar", text("scalebar_unit", bx + bar_ft * k + 10, by + 5, f"ft   (1 in = {fpi:g} ft)", 8, anchor="start"))
 
-    ax, ay = 1224 - 60, 792 - 40
+    ax, ay = W - 60, H - 40
     t.add("North arrow", path("north_arrow", f"M{ax:.2f},{ay - 28:.2f} L{ax + 7:.2f},{ay + 6:.2f} L{ax:.2f},{ay:.2f} L{ax - 7:.2f},{ay + 6:.2f} Z", "wall"))
     t.add("North arrow", text("north_label", ax, ay - 33, "N", 9, bold=True))
 
-    # Bounds: place bounds intersected with the view window
     b = clip_poly([(0, 0), (bw, 0), (bw, bh), (0, bh)], v.x0, v.y0, v.x1, v.y1)
     if b:
         t.add("Bounds", path("bounds_place", v.d([b]), "guide-line"))
@@ -313,7 +399,7 @@ def render(model, view_arg, out_path, topts=None):
     # NOTES
     t.add("NOTES", text("note_title", 36, 22, title, 11, bold=True, anchor="start"))
     t.add("NOTES", text("note_status", 36, 34, "DRAFT - every entity is PROPOSED (no canon layout). * = proposed. Dashed strokes = proposed.", 7, anchor="start"))
-    t.add("NOTES", text("note_regen", 1224 - 36, 22, "GEN layers are rewritten on regeneration; draw in ART layers.", 7, anchor="end"))
+    t.add("NOTES", text("note_regen", W - 36, 22, "GEN layers are rewritten on regeneration; draw in ART layers.", 7, anchor="end"))
 
     os.makedirs(os.path.dirname(out_path), exist_ok=True)
     t.write(out_path)
@@ -322,7 +408,7 @@ def render(model, view_arg, out_path, topts=None):
 
 def _label(t, v, layer, e, s, size, bold, rot):
     poly = entity_polygon(e)
-    c = centroid(poly)
+    c = tuple(e["label_point"]) if e.get("label_point") else centroid(poly)
     if not v.inside(c):
         return
     x, y = v.px(c)
@@ -332,11 +418,18 @@ def _label(t, v, layer, e, s, size, bold, rot):
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--place", default="bridgehollow")
-    ap.add_argument("--view", default="town")
+    ap.add_argument("--view", default="town", help="town | bowl | street:<id> | building:<id>")
+    ap.add_argument("--preset", help="view_settings preset (default follows --view)")
+    ap.add_argument("--scale", type=float, help="feet per paper inch (overrides the preset)")
+    ap.add_argument("--grid", type=float, help="minor grid in feet")
+    ap.add_argument("--grid-major", type=int, help="major grid every N minor lines")
+    ap.add_argument("--page", help="page size in inches, e.g. 17x11")
     ap.add_argument("--out")
     ap.add_argument("--terrain", action="store_true", help="regenerate heightmap + hillshade preview, overlay contours")
     ap.add_argument("--contours", action="store_true", help="overlay contours and elevation labels")
-    ap.add_argument("--no-contour-mask", action="store_true", help="do not subtract buildings/streets from contours")
+    ap.add_argument("--contour-mask", dest="mask", action="store_true", default=None,
+                    help="subtract building footprints + street polygons from contours")
+    ap.add_argument("--no-contour-mask", dest="mask", action="store_false")
     ap.add_argument("--contour-interval", type=float, default=10.0)
     ap.add_argument("--index-interval", type=float, default=50.0)
     ap.add_argument("--label-size", type=float, default=6.0)
@@ -349,8 +442,10 @@ if __name__ == "__main__":
             hm, meta = tr.generate(tr.load_spec(os.path.join(troot, "terrain_spec.json")), verbose=True)
             tr.save(hm, meta, os.path.join(troot, "terrain"))
             tr.save_preview(hm, meta, os.path.join(REPO, "illustrator", "out", f"{a.place}_height.png"))
+        use_mask = a.mask if a.mask is not None else viewcfg.load_raw(a.place).get("contour_mask", {}).get("enabled", True)
         topts = {"minor": a.contour_interval, "index": a.index_interval, "label_size": a.label_size,
-                 "units": a.units, "use_mask": not a.no_contour_mask}
+                 "units": a.units, "use_mask": use_mask}
     suffix = "terrain" if topts and a.view == "town" else a.view.replace(":", "_")
     out = a.out or os.path.join(REPO, "illustrator", "out", f"{a.place}_{suffix}.svg")
-    render(load_place(a.place), a.view, out, topts)
+    render(load_place(a.place), a.view, out, topts,
+           {"preset": a.preset, "scale": a.scale, "grid": a.grid, "page": a.page, "major_every": a.grid_major})

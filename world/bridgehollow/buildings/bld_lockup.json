@@ -7,24 +7,24 @@
   "type": "polygon",
   "points": [
    [
-    992.0,
-    535.0
+    943.8,
+    591.8
    ],
    [
-    1028.0,
-    535.0
+    932.6,
+    566.8
    ],
    [
-    1028.0,
-    565.0
+    917.7,
+    573.4
    ],
    [
-    992.0,
-    565.0
+    928.9,
+    598.4
    ]
   ]
  },
- "notes": "Cells; kept near the warden's hall.",
+ "notes": "Cells, kept beside the warden's hall.",
  "links": {
   "foundry_scene": null,
   "model3d": null,
@@ -32,5 +32,8 @@
  },
  "floors": 1,
  "rooms": [],
- "doors": []
+ "doors": [],
+ "elevation_ft": 666.8,
+ "site_slope": 0.044,
+ "site_relief_ft": 1.3
 }
