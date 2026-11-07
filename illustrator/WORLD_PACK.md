@@ -92,7 +92,48 @@ Commands in order: `worldpack.py export` -> `blender ... import_worldpack.py` ->
 
 ### Merge / compress (`worldpack_split.py merge`)
 Presets `all`, `layer` (all terrain, all buildings, all foliage ...), `district` (layer x district), `individual` (no merge). Each merged group is one GLB with one primitive per material (draw calls = materials, not objects), a `members` lookup (id, layer, source file, position) so picking and links still work, and LOD variants (`lod1`, `lod2`: vertex-clustering decimation, `lods[].suggested_distance_m`; 3D Canvas has no automatic LOD, choose with `push-models --lod 1`). The report (`merge_report.json`, also printed) gives files, triangles, draw-call estimate (primitives; foliage instances count one each), texture memory (unique textures as RGBA with mips) and GLB size before and after. Faces that lie entirely below the terrain are dropped (buildings have no floor caps, so nothing is removed from a pristine pack; it matters for edited models). Output goes to `optimized/<preset>_vNNN` (new version each run); sources are only read.
-Not done, and why: **texture atlases** (the pack's textures are seamless tiles with repeating UVs, which an atlas cannot repeat; they are shared per material instead, so merging already collapses materials), **Draco/meshopt/KTX2/WebP** (no `gltfpack` or `gltf-transform` is installed here and nothing was installed; `--compress meshopt` calls `gltfpack -cc` when it is on PATH, recommendation: `npm i -g gltfpack`; whether the Levels 3D Preview module in your Foundry loads `EXT_meshopt_compression`, Draco or KTX2 has not been checked, so test one file before relying on it), **GPU instancing** (foliage is one template GLB with one tile per tree, which shares the geometry in memory; `EXT_mesh_gpu_instancing` is not used).
+Not done, and why: **texture atlases** (the pack's textures are seamless tiles with repeating UVs, which an atlas cannot repeat; they are shared per material instead, so merging already collapses materials), **KTX2/WebP texture compression** (`gltfpack` 1.3 is now installed, but the npm build has no BasisU or WebP encoder and no `basisu`/`toktx` is on PATH; 3D Canvas also does not appear to load KTX2, see the compatibility section), **GPU instancing** (foliage is one template GLB with one tile per tree, which shares the geometry in memory; `EXT_mesh_gpu_instancing` is not used).
+
+### Foundry/3D Canvas compatibility (glTF features)
+Source checked (2026-11-07): the public source of the module (`theripper93/levels-3d-preview`, module.json version 9.0.0, Foundry v14; the manual says "supports lighting and animated models" and nothing else about formats) and the bundled three.js `GLTFLoader` in its `index.js`. **Not verified in your running Foundry**: the installed copy on Vega was not readable from here, so confirm with the test below.
+
+| Feature | Status | Basis |
+|---|---|---|
+| Plain glTF 2.0 / GLB, external relative textures (PNG/JPG) | works | standard three.js loader; used by the existing pipeline |
+| `KHR_draco_mesh_compression` | **supported** | the module's own `GLTFLoader` wrapper calls `setDRACOLoader`, decoder fetched from `https://www.gstatic.com/draco/versioned/decoders/1.5.7/` (the Foundry client needs internet access) |
+| `EXT_meshopt_compression` | **probably not** | no `setMeshoptDecoder` call found; three.js throws "setMeshoptDecoder must be called before loading compressed files" for files that *require* it |
+| `KHR_texture_basisu` (KTX2) | **probably not** | no `setKTX2Loader` call found |
+| `KHR_mesh_quantization`, `KHR_texture_transform`, `EXT_texture_webp`, `EXT_mesh_gpu_instancing` | decoded by three.js core, so should load | built into the bundled loader (webp needs a browser with WebP, i.e. all current ones); instancing inside one GLB is not used by the pipeline |
+| Animations | supported (`AnimationMixer` in the module; module page says animated models) | not used by the pack |
+| LODs | none automatic | choose with `push-models --lod N` |
+| Max texture size | the GPU limit (usually 8192 or 16384); the module reads `maxTextureSize` | keep textures at or under 4096 for memory |
+| Triangle / draw-call budget | not published | pack default: ~300k triangles, ~150 draw calls in view (own estimate) |
+| `scenes` | the module keeps **one** scene: if a GLB has several scenes it uses `scenes[2]` when present, else `scenes[0]` | our GLBs have one scene |
+
+Tile mapping (from the repo notes, not re-verified here): tile `x, y` is the centre in scene px; width = model X, height = model Y, depth (flag) = model Z, all in px at 20 px/ft; `elevation` is feet above the ground with `autoGround`; `autoCenter` is off because the pack pivot already is the centre; tile `rotation` is degrees (see the orientation conflict above; `illustrator/generators/tile_rotation_inspect.py` pushes the inspection scene "ZZ Tile Rotation Inspect").
+
+**gltfpack measurements** (1.3, on `terrain.glb`, 72 000 triangles, 2.03 MB, one material; triangle counts are unchanged by every variant; flags used by the script: `-kn -km -tr -vp 16`):
+
+| Variant | Size | Required extensions |
+|---|---|---|
+| source | 2.03 MB | none |
+| `-noq` (plain floats, nodes/materials kept) | 1.60 MB | none |
+| `quant` (quantised, no meshopt) | 1.02 MB | `KHR_mesh_quantization` |
+| `-cf` (meshopt with uncompressed fallback buffer) | 361 KB | `KHR_mesh_quantization` (meshopt optional) |
+| `meshopt` (`-cc`) | 265 KB (7.7x smaller) | `KHR_mesh_quantization`, `EXT_meshopt_compression` |
+| `-cc -noq` (meshopt, floats) | 721 KB | `EXT_meshopt_compression` |
+
+`roads.glb` (908 triangles, 5 materials): 52.9 KB -> 12 KB with plain `-cc` (but that merges the 29 named nodes into one and drops the names, so `-kn -km` is required: 25 KB), 35 KB quantised only. A 16-triangle building: 2.7 KB -> 3.1 KB (tiny files grow; do not compress individual buildings). Quantised files use `KHR_texture_transform` to rescale the repeating UVs (fine for three.js). Texture compression (`-tc`, `-tw`) is unavailable in the npm gltfpack; textures stay PNG (use `-ts`/`-tl` only after resizing elsewhere).
+
+**Recommended preset order** (`worldpack_split.py merge --compress ...`, per-file via gltfpack):
+1. **`none` (default, safe).** Plain glTF, no extensions; always loads.
+2. **`quant`.** Only `KHR_mesh_quantization` (core three.js); about half the size. Test one file first.
+3. **`meshopt-fallback`.** Meshopt with a fallback buffer; a loader without a meshopt decoder should use the uncompressed fallback, a loader with one uses the small data. Larger than `meshopt`; test once.
+4. **`meshopt`.** Smallest; only after the check below shows 3D Canvas loads `EXT_meshopt_compression`.
+5. Draco is supported by the module but gltfpack cannot write it (use `gltf-transform draco`); it needs internet at the table and decodes slowly, so it is not offered.
+6. KTX2/WebP textures: not available here; skip.
+
+Check once: `worldpack_split.py merge --place bridgehollow --preset layer --compress quant` (and `meshopt`), `push-models` the result into `ZZ Model Push Test`, and see whether the terrain tile appears; an unsupported extension shows as an empty tile and a console error. Record the verdict here. The script passes `-vp 16` (16-bit positions) to keep terrain heights precise.
 
 ### Recommended Foundry scene budget (starting point, not measured on 3D Canvas)
 About 300k triangles and 150 draw calls in view, texture memory under 256 MB, one file per terrain/water/roads layer, buildings merged by district for the town view and individual only where you edit or animate. Bridgehollow split (136 buildings, no foliage): 79k triangles, 311 draw calls individually, 19 after `merge --preset layer`. Measure with the report and adjust once you see the frame rate.

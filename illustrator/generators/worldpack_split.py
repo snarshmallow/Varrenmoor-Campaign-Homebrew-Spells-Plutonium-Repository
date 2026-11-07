@@ -2,7 +2,7 @@
 
   python worldpack_split.py split    --place bridgehollow [--pack DIR] [--split buildings=entity,roads=group] [--textures external|embed]
   python worldpack_split.py reexport --place bridgehollow --id bld_house_001[,bld_house_002]      # rebuild only those files, keep the rest
-  python worldpack_split.py merge    --place bridgehollow --preset all|layer|district|individual [--compress none|meshopt]
+  python worldpack_split.py merge    --place bridgehollow --preset all|layer|district|individual [--compress none|quant|meshopt|meshopt-fallback]
   python worldpack_split.py publish  --place bridgehollow --preset layer --scene-uuid Scene.xxx [--dry-run]    # merge, then push-models
 
 Output (inside the pack folder, default world/<place>/export/): placements.json + models/<layer>/<file>.glb + models/textures/.
@@ -205,6 +205,16 @@ def next_version_dir(base, name):
     return os.path.join(base, f"{name}_v{n:03d}")
 
 
+# gltfpack flags per --compress mode. -kn/-km keep node and material names (members lookup, picking); -tr keeps the shared relative
+# texture URIs instead of embedding every image into every GLB; -vp 16 keeps terrain heights precise. All three modes need a glTF
+# extension (quantization and/or meshopt) that the 3D Canvas module may not load: see WORLD_PACK.md, Foundry/3D Canvas compatibility.
+GLTFPACK_FLAGS = {
+    "quant": ["-kn", "-km", "-tr", "-vp", "16"],                       # KHR_mesh_quantization only (+ KHR_texture_transform), no meshopt
+    "meshopt": ["-cc", "-kn", "-km", "-tr", "-vp", "16"],              # EXT_meshopt_compression required
+    "meshopt-fallback": ["-cf", "-kn", "-km", "-tr", "-vp", "16"],     # meshopt plus an uncompressed fallback buffer (larger files)
+}
+
+
 def merge_export(pack_dir, preset="layer", out_dir=None, lods=(1, 2), compress="none", remove_hidden=True, log=print):
     """Merge the individual models (placements.json in pack_dir) per preset into optimized/<preset>_vNNN/. Sources are read only."""
     pack = wp.load_pack(pack_dir)
@@ -301,9 +311,9 @@ def merge_export(pack_dir, preset="layer", out_dir=None, lods=(1, 2), compress="
         else:
             for e in entries:
                 p = os.path.join(out, e["file"])
-                subprocess.run([exe, "-i", p, "-o", p + ".tmp", "-cc"], check=True, capture_output=True)
+                subprocess.run([exe, "-i", p, "-o", p + ".tmp"] + GLTFPACK_FLAGS[compress], check=True, capture_output=True)
                 os.replace(p + ".tmp", p)
-                e["bytes"], e["sha256"], e["compression"] = os.path.getsize(p), _sha(p), "meshopt"
+                e["bytes"], e["sha256"], e["compression"] = os.path.getsize(p), _sha(p), compress
     doc = {**{k: v for k, v in src.items() if k != "files"}, "merge": {"preset": preset, "source": os.path.join(pack_dir, "placements.json"), "lods": list(lods), "compress": compress,
                                                                     "hidden_faces_removed": removed},
            "files": sorted(entries, key=lambda e: e["file"])}
@@ -335,7 +345,7 @@ def main(argv=None):
             s.add_argument("--id", required=True, help="entity id(s), comma separated")
         if n in ("merge", "publish"):
             s.add_argument("--preset", choices=["all", "layer", "district", "individual"], default="layer")
-            s.add_argument("--compress", choices=["none", "meshopt"], default="none")
+            s.add_argument("--compress", choices=["none", "quant", "meshopt", "meshopt-fallback"], default="none")
             s.add_argument("--no-hidden-removal", action="store_true")
         if n == "publish":
             s.add_argument("--scene-uuid")
