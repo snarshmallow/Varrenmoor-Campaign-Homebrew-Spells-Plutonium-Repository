@@ -557,6 +557,16 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
     <label class="chk"><input type="checkbox" data-s="regions.detail.fences"> fences</label><label class="chk"><input type="checkbox" data-s="regions.detail.kerbs"> sidewalks/kerbs</label>
     <label class="chk"><input type="checkbox" data-s="regions.detail.trees"> trees</label>
   </div>
+  <h4>Drawn on the map (generated details)</h4>
+  <div class="grid" id="regDrawList">
+    <label class="chk"><input type="checkbox" data-s="regions.draw_auto"> Automatic (everything except lots at 20 ft/in or finer)</label>
+    <label class="chk"><input type="checkbox" data-s="regions.draw.trees"> DETAILS - Trees</label><label class="chk"><input type="checkbox" data-s="regions.draw.lots"> DETAILS - Lots</label>
+    <label class="chk"><input type="checkbox" data-s="regions.draw.doors"> doors</label><label class="chk"><input type="checkbox" data-s="regions.draw.roofs"> roofs</label>
+    <label class="chk"><input type="checkbox" data-s="regions.draw.chimneys"> chimneys</label><label class="chk"><input type="checkbox" data-s="regions.draw.fences"> fences</label>
+    <label class="chk"><input type="checkbox" data-s="regions.draw.kerbs"> kerbs</label>
+    <label class="chk"><input type="checkbox" data-s="regions.headless_png"> Also write a PNG without Illustrator</label>
+  </div>
+  <p class="note">Trees and lots are on their own layers under LINES, drawn faint, so they can be hidden or deleted. The checkboxes below the automatic one apply when Automatic is off.</p>
   <p class="note">Child id: <code id="regChildId"></code>. Labels use the Labels tab settings.</p>
   <div class="btns"><button class="primary" data-act="reg_create" title="Extract, render with the normal pipeline at district scale, open as a new Illustrator document">Create region map</button>
     <button data-act="reg_list">Rescan children</button></div>

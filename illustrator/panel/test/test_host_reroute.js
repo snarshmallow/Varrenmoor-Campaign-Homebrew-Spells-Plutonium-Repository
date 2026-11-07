@@ -122,5 +122,19 @@ check("leader follows the moved group (ends beside the text, anchor unchanged)",
 T.name = ""; 
 r2 = run({ action: "read_label_positions" });
 check("name fallback keeps the callout findable (text nearest the leader end)", r2.labels.length === 1, JSON.stringify(r2.labels));
+// close_docs: names required, only exact names, unsaved documents skipped unless discard:true, never saves
+{
+  const closedLog = [], mkDoc = (name, saved) => ({ name, saved, close(opt) { closedLog.push(name + ":" + (opt === global.SaveOptions.DONOTSAVECHANGES ? "nosave" : "?")); const i = app.documents.indexOf(this); app.documents.splice(i, 1); } });
+  global.SaveOptions = { DONOTSAVECHANGES: "no" };
+  const docs = [mkDoc("keep.ai", true), mkDoc("test_a.ai", true), mkDoc("test_b.ai", false), mkDoc("other.ai", true)];
+  app.documents = docs; docs.getByName = undefined;
+  let rc = run({ action: "close_docs", names: [] });
+  check("close_docs without names is refused", rc.ok === false && /needs names/.test(rc.error || ""), JSON.stringify(rc));
+  rc = run({ action: "close_docs", names: ["test_a.ai", "test_b.ai", "missing.ai"] });
+  check("close_docs closes saved named docs, skips unsaved", rc.ok && rc.closed.join() === "test_a.ai" && rc.skipped.join() === "test_b.ai" && rc.open.join() === "keep.ai,test_b.ai,other.ai", JSON.stringify(rc));
+  check("closed without saving", closedLog.join() === "test_a.ai:nosave", closedLog.join());
+  rc = run({ action: "close_docs", names: ["test_b.ai"], discard: true });
+  check("discard:true closes an unsaved doc too", rc.closed.join() === "test_b.ai" && rc.open.join() === "keep.ai,other.ai", JSON.stringify(rc));
+}
 console.log(fails ? fails + " FAILED" : "all host reroute checks passed");
 process.exit(fails ? 1 : 0);

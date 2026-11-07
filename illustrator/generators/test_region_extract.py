@@ -242,9 +242,21 @@ class T(unittest.TestCase):
         rw.render(model, "region", svg, None, {"preset": None, "scale": None, "grid": None, "page": None, "major_every": None},
                   {"enabled": True, "style": "elbow", "stroke_width": 0.4, "margin_pct": 10, "max_offset_pt": 90, "dot": True})
         t = open(svg, encoding="utf-8").read().replace("_x5F_", "_")      # lib_svg encodes ids for Illustrator
-        for needle in ('id="bld_in"', 'id="str_main"', 'id="bld_in_door1"', "Details", "Vegetation", "1 in = 20 ft", 'id="region_outline"'):
+        for needle in ('id="bld_in"', 'id="str_main"', 'id="bld_in_door1"', "Details", "DETAILS - Trees", "1 in = 20 ft", 'id="region_outline"'):
             self.assertIn(needle, t, needle)
         self.assertNotIn('id="bld_out"', t)
+        # detail drawing flags: auto = no lots at <=20 ft/in, trees faint and on their own layer; none = no details at all; explicit 'lots' draws them
+        self.assertNotIn('class="lot', t)
+        self.assertIn('class="tree-faint"', t)
+        self.assertNotIn('class="tree"', t)
+        for spec, lots, trees in (("none", False, False), ("lots", True, False), ("all", True, True)):
+            model["_details_draw"] = spec
+            rw.render(model, "region", svg, None, {"preset": None, "scale": None, "grid": None, "page": None, "major_every": None},
+                      {"enabled": True, "style": "elbow", "stroke_width": 0.4, "margin_pct": 10, "max_offset_pt": 90, "dot": True})
+            t2 = open(svg, encoding="utf-8").read()
+            self.assertEqual('class="lot-faint"' in t2, lots, spec)
+            self.assertEqual('class="tree-faint"' in t2, trees, spec)
+        model["_details_draw"] = None
 
     def test_foundry_region_flags(self):
         import foundry_push as fp

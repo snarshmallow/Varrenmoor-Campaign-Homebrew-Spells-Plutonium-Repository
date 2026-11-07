@@ -61,3 +61,14 @@ Existing scenes are only re-flagged when `--scene-mode` is passed explicitly, so
 5. A full-map image as `tableTex`: is it tiled or stretched over the padded table, and is the scale equal to scene size?
 6. Wall rendering of auto-generated building walls in 3D (set `showSceneWalls false` if ugly or if buildings are GLB tiles).
 7. Do compressed GLBs (quant, meshopt) load (see WORLD_PACK.md check).
+
+## 7. Bake the finished 2D map into the 3D ground texture (no live push)
+
+Drawings, labels and fills are not rendered by 3D Canvas, so the finished map is baked into the scene's table texture instead.
+
+1. Render the map PNG without Illustrator: `python illustrator/generators/region_render.py --child ID --scale 20 --grid 5` writes `<prefix>.png` (headless, `svg_raster.py`, page at `--png-dpi` 120). The result JSON gives `window_ft`, `png_dpi` and `page_margin_pt`. (An Illustrator export of the open document works too; give its dpi.)
+2. `python illustrator/generators/foundry_push.py bake-texture --place ID --image map.png --crop-margin-pt 36 --dpi 120 --window x0,y0,x1,y1 [--name ground] [--publish]`
+   crops the paper margin, checks the image against the window in feet (px per ft must agree on both axes), converts to a versioned webp under `art/<place>/maps/` (local `world/<place>/export/baked/` unless `--publish` copies into the shared assets folder) and writes `bake.json` with the footprint in feet, px/ft and the exact scene flags (`renderTable matcustom`, `tableTex <path>`, `renderBackground false`). It makes no Foundry call.
+3. Apply it with a later push: `push-models ... --table-texture assets/varrenmoor-3d/art/<place>/maps/ground_v001.webp` (same as `--scene-flag renderTable="matcustom" --scene-flag tableTex=...`).
+
+Open (TEST live): whether 3D Canvas tiles or stretches `tableTex` over the padded table, and at what scale. The table is sized to the scene padding, so the bake records the footprint in feet; if the table is bigger than the map the texture will have to be placed on a flat ground tile at that footprint instead (a plane tile at elevation 0 under the terrain GLB would z-fight, keep it 0.05 ft below). Roads/water as real geometry stay in the world pack GLBs; this bake carries the paper look only.

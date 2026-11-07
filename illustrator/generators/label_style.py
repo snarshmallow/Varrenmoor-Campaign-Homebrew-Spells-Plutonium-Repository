@@ -480,6 +480,7 @@ class Rec:
     size: float
     st: Style
     cls: str = ""
+    path: str = ""     # SVG path data (page pt): the text runs along it (textPath) instead of being rotated straight
 
 
 def rec_box(rec):
@@ -537,6 +538,10 @@ def _text_el(rec, id_, style, with_class=True):
         x, anchor = rec.cx, "middle"
     tr = f' transform="rotate({rec.rot:.2f} {rec.cx:.2f} {rec.cy:.2f})"' if rec.rot and abs(rec.rot) > 0.01 else ""
     cls = f' class="{rec.cls}"' if rec.cls and with_class else ""
+    if rec.path:
+        body_ = (lambda t: _small_caps_runs(t, rec.size)) if st.small_caps else escape
+        return (f'<text id="{id_}"{cls} font-size="{rec.size:g}" text-anchor="middle" style="{style}">'
+                f'<textPath href="#{rec.id}_tp" xlink:href="#{rec.id}_tp" startOffset="50%">{body_(" ".join(rec.lines))}</textPath></text>')
     head = (f'<text id="{id_}"{cls} x="{x:.2f}" y="{y0:.2f}" font-size="{rec.size:g}" text-anchor="{anchor}" '
             f'style="{style}"{tr}>')
     body = (lambda t: _small_caps_runs(t, rec.size)) if st.small_caps else escape
@@ -551,6 +556,8 @@ def emit(tree, rec, backing_layer=None):
     the label's own layer."""
     st = rec.st
     bl = backing_layer or rec.layer
+    if rec.path:
+        tree.add(rec.layer, f'<path id="{rec.id}_tp" class="textpath" d="{rec.path}" fill="none" stroke="none"/>')
     if st.mode == "halo" and st.halo_width > 0:
         tree.add(bl, _text_el(rec, rec.id + "_halo", _style_attr(st, rec, st.halo_color, st.halo_color, st.halo_width * 2, st.halo_opacity),
                               with_class=False))

@@ -10,7 +10,11 @@ import math
 CSS = """\
 .fence { fill: none; stroke: #6b4a2a; stroke-width: 0.7; stroke-dasharray: 2.2 1.2; }
 .kerb { fill: none; stroke: #5a5a5a; stroke-width: 0.35; }
+.fence-hi { fill: none; stroke: #5a3a1c; stroke-width: 1.0; stroke-dasharray: 3 1.5; }
+.kerb-hi { fill: none; stroke: #3a3a3a; stroke-width: 0.9; }
 .lot { fill: none; stroke: #7a7a7a; stroke-width: 0.3; stroke-dasharray: 5 3; }
+.lot-faint { fill: none; stroke: #7a7a7a; stroke-width: 0.2; stroke-opacity: 0.45; stroke-dasharray: 5 3; }
+.tree-faint { fill: none; stroke: #3d6b2a; stroke-width: 0.25; stroke-opacity: 0.4; }
 .roof { fill: none; stroke: #444444; stroke-width: 0.4; }
 .chimney { fill: none; stroke: #000000; stroke-width: 0.5; }
 .door { fill: none; stroke: #000000; stroke-width: 0.9; }
@@ -18,7 +22,23 @@ CSS = """\
 .offmap { fill: none; stroke: #b02020; stroke-width: 0.9; }
 .region-outline { fill: none; stroke: #d4202a; stroke-width: 1.1; stroke-dasharray: 6 3; }
 """
-LAYERS = ["Details", "Vegetation"]
+LAYER_LOTS, LAYER_TREES = "DETAILS - Lots", "DETAILS - Trees"
+LAYERS = ["Details", LAYER_LOTS, LAYER_TREES]
+KINDS = ("doors", "roofs", "chimneys", "lots", "fences", "kerbs", "trees")
+
+
+def draw_opts(spec, fpi):
+    """Which detail kinds are DRAWN (the extract may hold more). spec: None/'auto' | 'all' | 'none' | 'a,b' | list.
+    auto = everything except lots when the scale is <= 20 ft/in (they clutter street maps; ask for them with 'lots')."""
+    if spec in (None, "", "auto"):
+        on = set(KINDS) - ({"lots"} if fpi <= 20 else set())
+    elif spec == "all":
+        on = set(KINDS)
+    elif spec == "none":
+        on = set()
+    else:
+        on = {k.strip() for k in (spec.split(",") if isinstance(spec, str) else spec)} & set(KINDS)
+    return on
 
 
 def _near(v, pts):
@@ -39,22 +59,24 @@ def _circle(v, x, y, r, n=14):
     return _poly(v, [(x + r * math.cos(2 * math.pi * i / n), y + r * math.sin(2 * math.pi * i / n)) for i in range(n)])
 
 
-def emit(t, v, model, path):
+def emit(t, v, model, path, draw=None):
     D, M = model.get("details") or {}, model.get("markers") or {}
+    on = draw_opts(draw, v.fpi)
+    hi = v.fpi <= 25      # street scale: kerbs and fences need a heavier stroke to be seen
     n = 0
-    for d in D.get("kerbs", []):
+    for d in D.get("kerbs", []) if "kerbs" in on else []:
         if _near(v, d["geometry"]):
-            t.add("Details", path(d["id"], _poly(v, d["geometry"]), "kerb")); n += 1
-    for d in D.get("lots", []):
+            t.add("Details", path(d["id"], _poly(v, d["geometry"]), "kerb-hi" if hi else "kerb")); n += 1
+    for d in D.get("lots", []) if "lots" in on else []:
         if _near(v, d["geometry"]):
-            t.add("Details", path(d["id"], _poly(v, d["geometry"]), "lot")); n += 1
-    for d in D.get("roofs", []):
+            t.add(LAYER_LOTS, path(d["id"], _poly(v, d["geometry"]), "lot-faint")); n += 1
+    for d in D.get("roofs", []) if "roofs" in on else []:
         if _near(v, d["ridge"]):
             t.add("Details", path(d["id"], _line(v, d["ridge"]), "roof")); n += 1
-    for d in D.get("chimneys", []):
+    for d in D.get("chimneys", []) if "chimneys" in on else []:
         if _near(v, d["geometry"]):
             t.add("Details", path(d["id"], _poly(v, d["geometry"]), "chimney")); n += 1
-    for d in D.get("doors", []):
+    for d in D.get("doors", []) if "doors" in on else []:
         px, py = d["point"]
         if not _near(v, [d["point"]]):
             continue
@@ -64,12 +86,12 @@ def emit(t, v, model, path):
         a = [(px - tx * hw, py - ty * hw), (px + tx * hw, py + ty * hw)]
         b = [(px + tx * hw + fx * 1.4, py + ty * hw + fy * 1.4), (px - tx * hw + fx * 1.4, py - ty * hw + fy * 1.4)]
         t.add("Details", path(d["id"], _poly(v, a + b), "door")); n += 1
-    for d in D.get("fences", []):
+    for d in D.get("fences", []) if "fences" in on else []:
         if _near(v, d["points"]):
-            t.add("Fences", path(d["id"], _line(v, d["points"]), "fence")); n += 1
-    for d in D.get("trees", []):
+            t.add("Fences", path(d["id"], _line(v, d["points"]), "fence-hi" if hi else "fence")); n += 1
+    for d in D.get("trees", []) if "trees" in on else []:
         if _near(v, [(d["x"], d["y"])]):
-            t.add("Vegetation", path(d["id"], _circle(v, d["x"], d["y"], d["r_ft"]) + " " + _circle(v, d["x"], d["y"], 0.5, 6), "tree")); n += 1
+            t.add(LAYER_TREES, path(d["id"], _circle(v, d["x"], d["y"], d["r_ft"]), "tree-faint")); n += 1
     for m in M.get("markers", []):
         if not _near(v, [m["point"]]):
             continue

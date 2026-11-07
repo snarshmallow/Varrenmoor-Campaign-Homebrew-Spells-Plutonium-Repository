@@ -105,5 +105,55 @@ class NegativeOriginTerrain(unittest.TestCase):
         self.assertEqual(meta["origin_ft"], [0.0, 0.0])
 
 
+PACK = os.path.join(worldio.REPO, "world", "bridgehollow__dyers_walk_local", "export")
+
+
+@unittest.skipUnless(os.path.exists(os.path.join(PACK, "manifest.json")), "dyers_walk pack not exported")
+class SplitMergeDoors(unittest.TestCase):
+    """Real pack (copied to a temp dir): split keeps manifest hashes valid, merge keeps door nodes separate and in place."""
+    @classmethod
+    def setUpClass(cls):
+        import shutil
+        import worldpack_split as ws
+        cls.t = tempfile.mkdtemp()
+        cls.pk = os.path.join(cls.t, "export")
+        shutil.copytree(PACK, cls.pk)
+        cls.ws = ws
+
+    def test_1_split_then_validate(self):
+        self.ws.split_export(self.pk, log=lambda m: None)
+        self.assertEqual(wp.validate_pack(self.pk), [])
+
+    def test_2_merge_keeps_doors(self):
+        ws = self.ws
+        src = wp._jload(os.path.join(self.pk, "placements.json"))
+        src_doors = {}
+        for e in src["files"]:
+            nodes, g = wm.read_glb(os.path.join(self.pk, e["file"]))
+            pv = np.array(e["pivot"]["blender_m"])
+            for n, ex, m in nodes:
+                if ex.get("isDoor"):
+                    src_doors[n] = np.array(ex["_t"]) + pv
+        self.assertGreaterEqual(len(src_doors), 20)
+        for preset in ("layer", "all", "district"):
+            out = os.path.join(self.t, "opt_" + preset)
+            doc, rep = ws.merge_export(self.pk, preset, out_dir=out, lods=(), log=lambda m: None)
+            self.assertEqual(rep["door_nodes"], len(src_doors))
+            found = {}
+            for e in doc["files"]:
+                nodes, g = wm.read_glb(os.path.join(out, e["file"]))
+                pv = np.array(e["pivot"]["blender_m"])
+                for n, ex, m in nodes:
+                    if ex.get("isDoor"):
+                        self.assertTrue(ex["doorId"].startswith(ex["building"]))
+                        self.assertEqual(ex["doorStyle"], 1)
+                        found[n] = np.array(ex["_t"]) + pv
+                    else:
+                        self.assertNotIn("isDoor", ex)
+            self.assertEqual(set(found), set(src_doors), preset)
+            for n in found:
+                self.assertLess(np.abs(found[n] - src_doors[n]).max(), 1e-3, (preset, n))       # same hinge position after merging
+
+
 if __name__ == "__main__":
     unittest.main()

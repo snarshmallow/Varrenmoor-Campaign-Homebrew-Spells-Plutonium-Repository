@@ -50,6 +50,7 @@ DEFAULTS = {
     "min_width_ft": 150.0,         # necks narrower than this are removed
     "noise_ft": 22.0,             # amplitude of the boundary wobble
     "noise_period_ft": 260.0,
+    "area_scale": 1.0,            # multiplies target_area_ft2 (2.0 = twice the town area, as far as the buildable ground reaches)
     "target_area_ft2": 900000.0,  # outer extent is trimmed to about this area (None: no trim)
     "slope_cost": 1.4,            # extra terrain cost per (slope/limit)^2 when growing outward from the centre
     "vertex_spacing_ft": 36.0,    # editable outline vertex spacing
@@ -268,7 +269,7 @@ def auto_area(h, cell, wet, centre, P):
     mask = comp
     dcut = None
     if P.get("target_area_ft2"):
-        tgt = float(P["target_area_ft2"])
+        tgt = float(P["target_area_ft2"]) * float(P.get("area_scale") or 1.0)
         lo, hi = 0.0, float(D[comp].max())
         if comp.sum() * cell * cell > tgt:
             for _ in range(28):
@@ -326,6 +327,9 @@ def rings_from_field(R, cell, centre, area, rings, spacing):
 def merged(params):
     P = dict(DEFAULTS)
     P.update({k: v for k, v in (params or {}).items() if k in DEFAULTS and (v is not None or k in ("target_area_ft2", "centre"))})
+    sc = float(P.get("area_scale") or 1.0)
+    if sc > 1.0:       # a bigger town also has to climb the valley sides: relax the buildable slope with the scale (capped well below the gorge limit)
+        P["slope_limit"] = min(P["slope_limit"] * sc, 0.28)
     return P
 
 

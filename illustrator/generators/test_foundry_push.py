@@ -300,6 +300,37 @@ class PushTests(unittest.TestCase):
         r, _ = self.run_cmd(br, "delete-scene", "--scene-uuid", "Scene.s0")
         self.assertFalse(r["ok"])
 
+    def test_bake_texture_offline(self):
+        with tempfile.TemporaryDirectory() as t:
+            img = os.path.join(t, "map.png")
+            Image.new("RGB", (700, 500), (120, 160, 90)).save(img)        # page export: 50 px paper margin on each side
+            br = FakeBridge()
+            r, _ = self.run_cmd(br, "bake-texture", "--place", "p", "--image", img, "--crop-margin-pt", "30", "--dpi", "120", "--window", "100,200,400,400",
+                                "--out-dir", os.path.join(t, "o"), "--name", "g")
+            self.assertTrue(r["ok"], r)
+            self.assertEqual(br.calls, [])                                   # no Foundry call at all
+            self.assertEqual(r["size_px"], [600, 400])
+            self.assertAlmostEqual(r["px_per_ft"], 2.0)
+            self.assertEqual(r["footprint_ft"], [100.0, 200.0, 400.0, 400.0])
+            fl = r["scene_flags"]["levels-3d-preview"]
+            self.assertEqual((fl["renderTable"], fl["renderBackground"]), ("matcustom", False))
+            self.assertTrue(fl["tableTex"].endswith("/g_v001.webp"))
+            self.assertTrue(os.path.exists(r["image"]))
+            self.assertTrue(os.path.exists(os.path.join(t, "o", "bake.json")))
+            r2, _ = self.run_cmd(br, "bake-texture", "--place", "p", "--image", img, "--px-per-ft", "2", "--out-dir", os.path.join(t, "o"), "--name", "g")
+            self.assertEqual(r2["size_px"], [700, 500])
+
+    def test_push_models_table_texture(self):
+        import tile_rotation_inspect as tri
+        tri.build()
+        pl = os.path.join(tri.OUT, "placements.json")
+        br = FakeBridge()
+        r, _ = self.run_cmd(br, "push-models", "--placements", pl, "--scene-name", "ZZ Tex Test", "--set-name", "t", "--table-texture", "assets/x/g_v001.webp")
+        self.assertTrue(r["ok"], r)
+        sc = next(d for d in br.docs["Scene"].values() if br._pid(d))
+        f = sc["flags"]["levels-3d-preview"]
+        self.assertEqual((f["tableTex"], f["renderTable"], f["renderBackground"]), ("assets/x/g_v001.webp", "matcustom", False))
+
 
 if __name__ == "__main__":
     unittest.main()

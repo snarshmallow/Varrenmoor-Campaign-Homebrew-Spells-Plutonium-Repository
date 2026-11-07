@@ -126,10 +126,11 @@ class PackTests(unittest.TestCase):
         out2 = os.path.join(TMP, "pack2")
         wp.export_world("bridgehollow", out2, world_root=WORLD, timestamp=TS, lod=(4,), log=lambda m: None)
         a, b = wp._jload(os.path.join(OUT, "manifest.json")), wp._jload(os.path.join(out2, "manifest.json"))
-        a["files"] = {k: v for k, v in a["files"].items()}
-        self.assertEqual(a["files"].keys() - {"placements.json"}, b["files"].keys())
-        for k in b["files"]:
-            self.assertEqual(a["files"][k], b["files"][k], k)
+        # the split rewrote models/ + placements.json and re-hashed them in the manifest (refresh_manifest_files): compare everything else
+        keep = lambda d: {k: v for k, v in d.items() if k != "placements.json" and not k.startswith("models/")}  # noqa: E731
+        self.assertEqual(keep(a["files"]), keep(b["files"]))
+        self.assertIn("placements.json", a["files"])
+        self.assertEqual(wp.validate_pack(OUT), [])                    # hashes valid right after the split
 
     def test_tags_and_foliage(self):
         pack = wp.load_pack(OUT)

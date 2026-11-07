@@ -15,6 +15,7 @@ import glob
 import json
 import math
 import os
+import re
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -27,6 +28,7 @@ import label_offset as lbo  # noqa: E402
 import label_style as lst  # noqa: E402
 import label_declutter as ld  # noqa: E402
 import dataclasses as _dc  # noqa: E402
+import label_curve as lcv  # noqa: E402
 import region_draw as rdraw  # noqa: E402
 import worldio  # noqa: E402
 from xml.sax.saxutils import escape  # noqa: E402
@@ -300,6 +302,36 @@ def cut_d(rings, cut, closed=True):
     return " ".join(parts), changed
 
 
+def _nice_fit(v):
+    e = 10 ** math.floor(math.log10(v))
+    for m in (1, 1.2, 1.5, 2, 2.5, 3, 4, 5, 6, 7.5, 10):
+        if v <= m * e * 1.0001:
+            return round(m * e, 4)
+    return v
+
+
+def fit_bounds(model, what="buildings"):
+    """Bounds [x0,y0,x1,y1] (ft) of what the page should frame: buildings (+ streets) | area (town_params area_ft lasso) | all (the place)."""
+    pts = []
+    if what == "area":
+        try:
+            tp = json.load(open(os.path.join(REPO, "world", model["place"]["id"], "town_params.json"), encoding="utf-8"))
+            pts = [tuple(p) for p in tp.get("area_ft") or []]
+        except (OSError, ValueError):
+            pts = []
+    if what == "buildings" or (what == "area" and not pts):
+        for b in model["buildings"]:
+            pts += [tuple(p) for p in entity_polygon(b)]
+        for e in model["streets"]:
+            if e.get("kind") != "road":                  # the long through-roads leave the town: not what we frame
+                pts += [tuple(p) for p in e["geometry"]["points"]]
+    if what == "all" or not pts:
+        w = model["place"]["bounds"]
+        return [0.0, 0.0, float(w["width_ft"]), float(w["height_ft"])]
+    xs, ys = [p[0] for p in pts], [p[1] for p in pts]
+    return [min(xs), min(ys), max(xs), max(ys)]
+
+
 def compute_view(model, view_arg, cfg_over=None):
     """-> (View, cfg, title, kind, ident). Shared by render() and panelio.py (page <-> feet conversion for the panel)."""
     place = model["place"]
@@ -319,6 +351,22 @@ def compute_view(model, view_arg, cfg_over=None):
     W, H = pw * 72.0, ph * 72.0
 
     focus = cfg.get("focus", "center")
+    fit = o.get("fit")
+    if fit and kind in ("town", "bowl"):                  # framing: scale and centre chosen so the built-up area fills the page
+        fb = fit_bounds(model, fit)
+        if fb:
+            padft = float(o.get("fit_margin") or 0.0)
+            fw, fh = fb[2] - fb[0] + 2 * padft, fb[3] - fb[1] + 2 * padft
+            need = max(fw / max(pw - 2 * margin, 1e-6), fh / max(ph - 2 * margin, 1e-6)) * 1.04
+            if not o.get("scale"):
+                fpi = _nice_fit(need)
+                cfg["scale_ft_per_in"] = fpi
+                cfg.pop("scale_bar_ft", None)
+                cfg["scale_bar_ft"] = viewcfg._nice(5 * fpi)
+                if not o.get("grid"):
+                    cfg["grid_ft"] = max(viewcfg._nice(fpi), 5)
+            focus = [(fb[0] + fb[2]) / 2.0, (fb[1] + fb[3]) / 2.0]
+            cfg["fit_bounds_ft"] = [round(x, 1) for x in fb]
     ent_poly = None
     if kind == "street":
         if ident not in streets:
@@ -607,6 +655,7 @@ def render(model, view_arg, out_path, topts=None, cfg_over=None, lopts=None, lst
         for r in blds[ident].get("rooms", []):
             lab("rooms", "Labels - Rooms", r, r["name"], 8)
 
+    street_by_id = {e_['id']: e_ for e_ in model['streets']}
     results = placer.solve()
     for hs in hidden_scale:                              # too small for this scale: kept in the hidden sublayer at the label point
         id_, layer, sz, st, tier, txt, pt = hs[:7]
@@ -641,11 +690,42 @@ def render(model, view_arg, out_path, topts=None, cfg_over=None, lopts=None, lst
             lum_ = sampler(x0_, y0_, x1_, y1_)
             if lum_ is not None and lum_ < 0.33 and st.mode in ("halo", "box"):
                 stx = _dc.replace(st, color="#f7f4ea", halo_color="#14171a", box_color="#14171a", auto_contrast=False)
-        recs.append(lst.Rec(f"{res.id}_label", layer, res.lines, res.cx, res.cy, res.w, res.h, res.rot, sz, stx))
+        rpath = ""
+        if layer == "Labels - Streets" and dc.get("enabled") and dc.get("curved_streets") and not res.leader and res.id in street_by_id:
+            se = street_by_id[res.id]
+            cp = lcv.curved_path(se["geometry"]["points"], (res.cx, res.cy), res.w * 1.3, v, offset_ft=se["geometry"]["width_ft"] / 2 + 0.3 * sz / v.k,
+                                 min_curve_deg=float(dc.get("min_curve_deg", 12.0)))
+            if cp:
+                rpath = cp[0]
+        recs.append(lst.Rec(f"{res.id}_label", layer, res.lines, res.cx, res.cy, res.w, res.h, res.rot, sz, stx, path=rpath))
         if res.leader:
             n_off += 1
             for lay_, sv in lbo.leader_svg(res, lp, lst.text_color(stx)):
                 t.add(lay_, sv)
+    # river name: text on the centreline (always along the water, at the longest visible stretch)
+    if dc.get("river_label", True) and kind in ("town", "bowl") and fpi <= 250:
+        rst = styles["streets"]
+        rsz = round((rst.size if rst.size else ls(6)) * 1.15 * qf, 1)
+        for we in model["water"]:
+            cl_ = we.get("centerline")
+            if we.get("kind") != "river" or not cl_ or len(cl_) < 2 or not we.get("name"):
+                continue
+            from shapely.geometry import LineString as _LS
+            ln_ = _LS([tuple(p_[:2]) for p_ in cl_])
+            nm_ = re.sub(r"\s*\(.*?\)", "", we["name"]).strip()
+            wid_ = lst.measure(nm_, rsz, rst) * 1.5
+            best_ = None
+            for f_ in (0.5, 0.4, 0.6, 0.3, 0.7, 0.2, 0.8):
+                pc_ = ln_.interpolate(f_, normalized=True)
+                if v.inside((pc_.x, pc_.y)):
+                    best_ = v.px((pc_.x, pc_.y))
+                    break
+            if best_ is None or wid_ / v.k > ln_.length * 0.8:
+                continue
+            cp_ = lcv.curved_path([tuple(p_[:2]) for p_ in cl_], best_, wid_, v, offset_ft=-0.3 * rsz / v.k, always=True)
+            if cp_:
+                wst = _dc.replace(rst, italic=True, color="#1a4f8a", letter_spacing=max(rst.letter_spacing or 0, 1.5))
+                lst.emit(t, lst.Rec(f"{we['id']}_name", "Labels - Streets", [nm_], best_[0], best_[1], wid_, rsz, 0.0, rsz, wst, path=cp_[0]), backing)
     # numbered callouts: marker circle on the map + a legend entry
     numbered.sort(key=lambda r_: (ld.tier_cfg(dc, r_[3])["priority"], round(r_[0].cy / 12), r_[0].cx))
     legend_entries = []
@@ -771,7 +851,7 @@ def render(model, view_arg, out_path, topts=None, cfg_over=None, lopts=None, lst
     t.add("North arrow", path("north_arrow", f"M{ax:.2f},{ay - 28:.2f} L{ax + 7:.2f},{ay + 6:.2f} L{ax:.2f},{ay:.2f} L{ax - 7:.2f},{ay + 6:.2f} Z", "wall"))
     t.add("North arrow", text("north_label", ax, ay - 33, "N", 9, bold=True))
 
-    n_det = rdraw.emit(t, v, model, path) if (model.get("details") or model.get("markers")) else 0
+    n_det = rdraw.emit(t, v, model, path, model.get("_details_draw")) if (model.get("details") or model.get("markers")) else 0
     if n_det:
         print(f"region details drawn: {n_det} items")
     wf = place.get("window_ft") or [0, 0, bw, bh]
@@ -840,6 +920,10 @@ if __name__ == "__main__":
     ap.add_argument("--terrain-source", choices=["auto", "base", "patched", "carved"],
                     help="which heightmap to read (default: panel_state / auto = patched, or carved when water.use_carved)")
     ap.add_argument("--water-source", choices=["world", "working"])
+    ap.add_argument("--fit", choices=["buildings", "area", "all"], help="frame the page on the built-up area: scale (next nice value) and centre follow the bounds of the buildings+streets, "
+                    "the town_params area lasso, or the whole place (an explicit --scale is kept)")
+    ap.add_argument("--fit-margin", type=float, default=0.0, help="extra feet around the --fit bounds")
+    ap.add_argument("--details", help="region details to DRAW: auto (default; no lots at <=20 ft/in) | all | none | comma list of doors,roofs,chimneys,lots,fences,kerbs,trees")
     ap.add_argument("--model-dir", help="read the town model from this folder instead of world/<place> (candidate)")
     a = ap.parse_args()
     worldio.set_source(a.terrain_source, a.water_source)
@@ -870,6 +954,8 @@ if __name__ == "__main__":
     if a.no_declutter:
         dcli.append({"enabled": False})
     dopts = ld.merge(viewcfg.declutter(a.place), pre.get("declutter"), *dcli)
-    render(load_place(a.place, a.model_dir), a.view, out, topts,
-           {"preset": a.preset, "scale": a.scale, "grid": a.grid, "page": a.page, "major_every": a.grid_major, "grid_extent": "page" if a.grid_full_page else None}, lopts,
+    model_ = load_place(a.place, a.model_dir)
+    model_["_details_draw"] = a.details
+    render(model_, a.view, out, topts,
+           {"preset": a.preset, "scale": a.scale, "grid": a.grid, "page": a.page, "major_every": a.grid_major, "grid_extent": "page" if a.grid_full_page else None, "fit": a.fit, "fit_margin": a.fit_margin}, lopts,
            [pre.get("label_style"), lst.parse_cli(a.label_style), lst.decode_b64(a.label_style_b64)], dopts)

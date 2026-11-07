@@ -98,3 +98,9 @@ can be placed in the parent's frame. (Use a child id matching `[a-z0-9_]+`, i.e.
 When the place has `details.json` (any region child), `worldpack.py export` adds `openings` (the generated doors) to buildings and `kerbs` to streets; `worldpack_mesh.build_parts` then builds hollow
 buildings (0.75 ft walls, door/window holes, trim, glass, floor, door leaves as separate hinge-origin nodes) via `worldpack_detail.py`. See `illustrator/out/commoners_ring_notes.md` for limits (no interiors).
 `--local-origin` children now export (negative terrain origin fixed in `worldio.load_terrain`).
+
+## Detail drawing, headless PNG, framing (2026-11-07 bug-fix pass)
+* Generated details are drawn on their own layers under LINES: `Details` (kerbs, roofs, chimneys, doors), `DETAILS - Lots`, `DETAILS - Trees`, `Fences`. Trees are one faint ring (no centre dot); lots are a thin faint dashed outline and are **off at 20 ft/in and finer** unless asked for. Flags: `render_world.py --details auto|all|none|trees,lots,...`, `region_render.py --details ...` (same), panel Regions tab "Drawn on the map". `region_extract --detail` still decides what is *generated*; `--details` only what is drawn.
+* Kerbs and fences use a heavier stroke at <= 25 ft/in (`kerb-hi`, `fence-hi`).
+* `region_render.py` writes `<prefix>.png` headlessly (`svg_raster.py`, PIL) and still emits the Illustrator job (its export is `<prefix>_ai.png`). `--no-headless-png` skips it, `--png-dpi` sets the resolution.
+* Framing: `render_world.py --fit buildings|area|all [--fit-margin ft]` picks the next nice scale (1, 1.2, 1.5, 2, 2.5, 3, 4, 5, 6, 7.5 x 10^n) and centres the page on the built-up area; an explicit `--scale` is kept. `town_area.py --area-scale 1.6` relaxes the buildable slope with the factor and multiplies the target area (Bridgehollow: 597k -> 652k ft2, the valley sides stop it; a hand lasso is used as drawn).

@@ -140,3 +140,7 @@ About 300k triangles and 150 draw calls in view, texture memory under 256 MB, on
 
 ## Versioning and conventions
 `schema_version` 1.x is additive (new optional fields); a major change bumps `format` consumers' check in `load_pack`. Output is deterministic (sorted, rounded to 0.001, no clock except `generated.timestamp`; `--timestamp` pins it). `export` clears `terrain/ entities/ textures/` only; `models/` and `placements.json` are yours (re-run `split` after a new export, or use `reexport --id ...`, which rebuilds only the files containing those ids and keeps every other entry). Tests: `python illustrator/generators/test_worldpack.py` (round trip, scale, determinism, tags, placements, idempotent re-export, merge lookup, push-models mock, Blender import/edit/re-export when Blender is installed).
+
+## Split / merge and the manifest (2026-11-07)
+* `worldpack_split.py split|reexport` into the pack folder now re-hashes `manifest.files` (listed files re-hashed, vanished ones dropped, `placements.json` and `models/**/*.glb` added), so `worldpack.py validate` passes after a split.
+* `merge` keeps door leaves (glTF nodes with `isDoor`) out of every merge group: each stays its own node in its building's merged file (hinge position and extras preserved, `read_glb` now reports the node translation as extras `_t`), for every preset. Test: `test_worldpack_detail.py::SplitMergeDoors` on a copy of `bridgehollow__dyers_walk_local/export`. LOD files do not carry doors.

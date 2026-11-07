@@ -679,7 +679,11 @@ def read_glb(path):
             UV = arr(p["attributes"]["TEXCOORD_0"]).astype(float)
             smooth = "NORMAL" in p["attributes"]
             subs[g["materials"][p["material"]]["name"]] = arr(p["indices"]).reshape(-1, 3).astype(np.int64)
-        out.append((nd["name"], nd.get("extras", {}), Mesh(V if V is not None else np.zeros((0, 3)), UV if UV is not None else np.zeros((0, 2)), subs, smooth)))
+        ex = dict(nd.get("extras", {}))
+        if nd.get("translation"):                       # inverse of write_glb: glTF (x, y up, z south) -> Blender metres; "_t" is popped again by write_glb
+            tx, ty, tz = nd["translation"]
+            ex["_t"] = (tx, -tz, ty)
+        out.append((nd["name"], ex, Mesh(V if V is not None else np.zeros((0, 3)), UV if UV is not None else np.zeros((0, 2)), subs, smooth)))
     return out, g
 
 

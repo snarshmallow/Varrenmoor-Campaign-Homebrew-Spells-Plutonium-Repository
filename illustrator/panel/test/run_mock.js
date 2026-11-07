@@ -293,6 +293,14 @@ const actions = () => hostLog.map(h => h.action);
     const ea = VB.regionExtractArgs(S, d);
     check("extract args", ea[0] === "extract" && ea.includes("--district") && ea.includes("--sandbox") && ea.includes("--force") && ea[ea.indexOf("--detail") + 1] === "all", ea.join(" "));
     r.detail.trees = false; check("detail toggles", VB.regionDetailArg(r) === "doors,roofs,chimneys,lots,fences,kerbs"); r.detail.trees = true;
+    {
+      const ra0 = VB.regionRenderArgs(S, "c1"); check("draw auto: no --details flag, headless PNG on", !ra0.includes("--details") && !ra0.includes("--no-headless-png"), ra0.join(" "));
+      r.draw_auto = false; r.draw.lots = false; check("draw list without lots", VB.regionDrawArg(r) === "doors,roofs,chimneys,fences,kerbs,trees", VB.regionDrawArg(r));
+      check("draw args go to render", VB.regionRenderArgs(S, "c1").join(" ").includes("--details doors,roofs,chimneys,fences,kerbs,trees"));
+      r.draw.lots = true; check("draw all", VB.regionDrawArg(r) === "all"); Object.keys(r.draw).forEach(k => { r.draw[k] = false; }); check("draw none", VB.regionDrawArg(r) === "none");
+      r.draw.trees = true; r.draw.lots = true; check("trees+lots only", VB.regionDrawArg(r) === "lots,trees"); r.draw.lots = false; r.draw.doors = r.draw.roofs = r.draw.chimneys = r.draw.fences = r.draw.kerbs = true;
+      r.draw_auto = true; r.headless_png = false; check("headless PNG can be switched off", VB.regionRenderArgs(S, "c1").includes("--no-headless-png")); r.headless_png = true;
+    }
     r.mode = "lasso"; r.polygon = []; check("lasso mode needs a captured polygon", /Capture lasso/.test(VB.regionCheck(S)));
     r.polygon = polyFt.map(p => p.slice()); check("lasso args use the polygon file", VB.regionSpecArgs(S, d)[0] === "--polygon-file");
     r.mode = "rect"; r.rect = [900, 500, 1300, 800]; check("rect args", VB.regionSpecArgs(S, d).join() === "--rect,900,500,1300,800");

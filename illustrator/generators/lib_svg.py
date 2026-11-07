@@ -9,7 +9,8 @@ from xml.sax.saxutils import escape, quoteattr
 
 def _encode_ids(text):
     """Illustrator turns '_' in an id into a space on SVG import; '_x5F_' is decoded back to '_', so entity ids survive."""
-    return re.sub(r'(?<![\w-])id="([^"]*)"', lambda m: 'id="' + m.group(1).replace("_", "_x5F_") + '"', text)
+    text = re.sub(r'(?<![\w-])id="([^"]*)"', lambda m: 'id="' + m.group(1).replace("_", "_x5F_") + '"', text)
+    return re.sub(r'(?<![\w-])href="#([^"]*)"', lambda m: 'href="#' + m.group(1).replace("_", "_x5F_") + '"', text)     # textPath references
 
 DEFAULT_LAYERS = ["Grid", "Roads", "Walls", "Buildings", "Water", "Labels", "Notes"]
 
@@ -57,7 +58,7 @@ class LayeredSVG:
 
     def write(self, path):
         out = [f'<?xml version="1.0" encoding="UTF-8"?>',
-               f'<svg xmlns="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" '
+               f'<svg xmlns="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:xlink="http://www.w3.org/1999/xlink" '
                f'xmlns:i="http://ns.adobe.com/AdobeIllustrator/10.0/" '
                f'width="{self.w:g}pt" height="{self.h:g}pt" viewBox="0 0 {self.w:g} {self.h:g}">']
         for name, items in self.layers.items():
@@ -122,7 +123,7 @@ class LayerTree:
 
     def write(self, path):
         out = ['<?xml version="1.0" encoding="UTF-8"?>',
-               f'<svg xmlns="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" '
+               f'<svg xmlns="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:xlink="http://www.w3.org/1999/xlink" '
                f'xmlns:i="http://ns.adobe.com/AdobeIllustrator/10.0/" '
                f'xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" '
                f'width="{self.w:g}pt" height="{self.h:g}pt" viewBox="0 0 {self.w:g} {self.h:g}">']

@@ -100,7 +100,12 @@ def _entry(pack, rel, parts, textures, out, tex_mode):
         absm = [wm.part_mesh(p) for p in parts]
         merged = wm.merge_meshes(absm)
         pivot = wm._pivot(merged)
-        nodes = [(p["id"], m.translated([-pivot[0], -pivot[1], -pivot[2]]), {"id": p["id"], "layer": p["layer"], "group": p["group"]}) for p, m in zip(parts, absm)]
+        nodes = []
+        for p, m in zip(parts, absm):
+            if p.get("layered_nodes"):                           # building with interior: storeys / roof / props as separate nodes (worldpack_interiors)
+                nodes += [(nm, mm.translated([-pivot[0], -pivot[1], -pivot[2]]), {"id": p["id"], "layer": p["layer"], "group": p["group"], **xx}) for nm, mm, xx in p["layered_nodes"]]
+            else:
+                nodes.append((p["id"], m.translated([-pivot[0], -pivot[1], -pivot[2]]), {"id": p["id"], "layer": p["layer"], "group": p["group"]}))
         lo, hi = merged.bbox()
         size_m = [float(v) for v in (hi - lo)]
         for p in parts:                                          # movable door leaves: own glTF nodes, origin on the hinge
@@ -125,6 +130,9 @@ def _entry(pack, rel, parts, textures, out, tex_mode):
          "tile": {"x": _px(fr, pf[0], pf[1])[0], "y": _px(fr, pf[0], pf[1])[1], "width": round(size_ft[0] * fr.px_per_ft, 2), "height": round(size_ft[1] * fr.px_per_ft, 2),
                   "depth": round(size_ft[2] * fr.px_per_ft, 2), "elevation_ft": round(pivot[2] / FT, 3), "rotation": pack.manifest["foundry"]["tile_rotation_deg"]},
          "tris": int(sum(m.tri_count for _, m, _ in nodes)), "bytes": os.path.getsize(full), "sha256": _sha(full)}
+    lts = [dict(lt, foundry_px=_px(fr, lt["point"][0], lt["point"][1])) for p in parts for lt in p.get("interior_lights", [])]
+    if lts:                                                      # interior light hints (hearths, window light): Foundry light docs are built from these
+        e["lights"] = lts
     if inst:
         e["instances"] = [{"id": p["id"], "pivot_ft": [round(v, 3) for v in fr.from_blender(*p["pivot"])], "rotation_deg": p["instance"]["rot_deg"],
                            "scale": round(p["instance"]["scale"], 4), "tile_xy": _px(fr, *fr.from_blender(p["pivot"][0], p["pivot"][1]))} for p in parts]
@@ -170,6 +178,9 @@ def split_export(pack_dir, out_dir=None, split=None, textures="external", step=1
                      "note": "tile.x/y = pivot px at the pack's px_per_ft; push-models rescales to the target scene's calibration"},
            "split": split, "textures": textures, "files": [entries[k] for k in sorted(entries)]}
     wp._jdump(pp, doc)
+    if os.path.abspath(out) == os.path.abspath(pack_dir):
+        ch, ad, dr = wp.refresh_manifest_files(pack_dir)           # split rewrote GLBs + placements.json: keep manifest.files hashes valid
+        log(f"manifest.files refreshed: {ch} re-hashed, {ad} added, {dr} dropped")
     log(f"split: {len(entries)} model files, {sum(e['tris'] for e in entries.values())} triangles -> {out}")
     return doc
 
@@ -231,6 +242,7 @@ def merge_export(pack_dir, preset="layer", out_dir=None, lods=(1, 2), compress="
     before = _stats(src, pack_dir, tex_src)
     fr = pack.frame
     items = []                                              # (entry, node id, abs mesh, tags, district)
+    doors = []                                              # (node id, extras, hinge-local mesh, absolute hinge (blender m), entry): never merged
     for e in src["files"]:
         nodes, _ = wm.read_glb(os.path.join(pack_dir, e["file"]))
         pv = np.array(e["pivot"]["blender_m"])
@@ -242,9 +254,13 @@ def merge_export(pack_dir, preset="layer", out_dir=None, lods=(1, 2), compress="
             continue
         mem = {m["id"]: m for m in e["members"]}
         for nid, ex, m in nodes:
+            if ex.get("isDoor"):                            # door leaf: keep as its own node, hinge position = node translation + source pivot
+                t = ex.get("_t") or (0.0, 0.0, 0.0)
+                doors.append((nid, {k: v for k, v in ex.items() if k != "_t"}, m, np.array(t) + pv, e))
+                continue
             tg = (mem.get(nid) or {}).get("tags", {})
             items.append((e, nid, m.translated(pv), e["layer"], tg.get("district")))
-    groups = {}
+    groups, keyof = {}, {}
     for it in items:
         e = it[0]
         if preset == "individual":
@@ -256,8 +272,10 @@ def merge_export(pack_dir, preset="layer", out_dir=None, lods=(1, 2), compress="
         else:
             k = it[3]
         groups.setdefault(k, []).append(it)
+        keyof[it[1]] = k
     entries = []
     removed = 0
+    n_doors = 0
     tex_out = os.path.join(out, "models", "textures")
     if os.path.isdir(tex_src):
         shutil.copytree(tex_src, tex_out, dirs_exist_ok=True)
@@ -282,6 +300,10 @@ def merge_export(pack_dir, preset="layer", out_dir=None, lods=(1, 2), compress="
         nodes = [(k, merged.translated([-pivot[0], -pivot[1], -pivot[2]]), {"merged": [n for n, *_ in meshes]})]
         if preset == "individual":
             nodes = [(n, m.translated([-pivot[0], -pivot[1], -pivot[2]]), {"id": n}) for n, m, _, _ in meshes]
+        for did, dex, dm_, dabs, _e in doors:                # door leaves stay separate nodes (hinge at node origin, extras kept) in their building's file
+            if keyof.get(dex.get("building")) == k:
+                nodes.append((did, dm_, {**dex, "_t": tuple(dabs - np.array(pivot))}))
+                n_doors += 1
         full = os.path.join(out, "models", rel)
         depth = rel.count("/")
         wm.write_glb(full, nodes, pack.materials, textures=src.get("textures", "external"), tex_root=tex_out, tex_prefix="../" * depth + "textures/")
@@ -326,7 +348,7 @@ def merge_export(pack_dir, preset="layer", out_dir=None, lods=(1, 2), compress="
     doc["pack"] = {**src["pack"], "dir": os.path.relpath(pack_dir, out).replace("\\", "/")}
     wp._jdump(os.path.join(out, "placements.json"), doc)
     after = _stats(doc, out, tex_out)
-    rep = {"preset": preset, "before": before, "after": after, "hidden_faces_removed": removed, "out": out}
+    rep = {"preset": preset, "before": before, "after": after, "hidden_faces_removed": removed, "door_nodes": n_doors, "out": out}
     wp._jdump(os.path.join(out, "merge_report.json"), rep)
     log(f"merge[{preset}]: files {before['files']}->{after['files']}, triangles {before['triangles']}->{after['triangles']}, draw calls {before['draw_calls_est']}->{after['draw_calls_est']}, "
         f"GLB {before['glb_mb']}->{after['glb_mb']} MB, textures {before['texture_mb']}->{after['texture_mb']} MB; {removed} hidden faces removed -> {out}")

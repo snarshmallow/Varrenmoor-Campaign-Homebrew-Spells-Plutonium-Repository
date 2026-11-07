@@ -728,6 +728,66 @@ def build_model_tiles(doc, scene_calib, a, publish=None):
     return items
 
 
+def _tex_flags(a):
+    """--scene-flag list plus the baked ground texture (--table-texture): renderTable matcustom + tableTex, renderBackground off."""
+    fl = list(a.scene_flag or [])
+    if getattr(a, "table_texture", None):
+        fl = ["renderTable=\"matcustom\"", "renderBackground=false", "tableTex=" + json.dumps(a.table_texture)] + fl
+    return fl
+
+
+def cmd_bake_texture(br, a):
+    """OFFLINE (no Foundry call): turn a rendered map PNG into the ground texture of a 3D Canvas scene. Drawings, labels and fills do not render
+    in 3D Canvas, so the finished 2D map is baked into the table texture instead. Writes a versioned image + bake.json (the exact scene flags and
+    the footprint in feet) and prints them; a later `push-models --table-texture <path>` (or --scene-flag tableTex=...) applies it."""
+    from PIL import Image
+    if not a.image or not os.path.exists(a.image):
+        raise PushError("give --image <rendered map png>")
+    img = Image.open(a.image)
+    img.load()
+    if a.crop_margin_pt:      # drop the paper margin of a page export (pt * dpi/72): --crop-margin-pt 36 --dpi 120; --window then names the cropped area
+        m = int(round(float(a.crop_margin_pt) * float(a.dpi or 72.0) / 72.0))
+        img = img.crop((m, m, img.size[0] - m, img.size[1] - m))
+    w, h = img.size
+    if a.window:
+        x0, y0, x1, y1 = [float(v) for v in a.window.split(",")]
+        ppf = w / (x1 - x0)
+        if abs(h / (y1 - y0) - ppf) / ppf > 0.02:
+            raise PushError(f"image {w}x{h}px does not match window {a.window} (px/ft differs by axis): crop the paper margin (--crop-margin-pt) or re-render the same window")
+    elif a.px_per_ft:
+        ppf, x0, y0 = float(a.px_per_ft), 0.0, 0.0
+        x1, y1 = x0 + w / ppf, y0 + h / ppf
+    else:
+        raise PushError("give --px-per-ft or --window x0,y0,x1,y1 (ft) of the image")
+    if img.mode != "RGB":
+        bg = Image.new("RGB", img.size, (255, 255, 255))
+        bg.paste(img, mask=img.getchannel("A") if "A" in img.getbands() else None)
+        img = bg
+    max_px = int(a.max_px or 8192)
+    if max(img.size) > max_px:
+        f = max_px / max(img.size)
+        img = img.resize((int(w * f), int(h * f)), Image.LANCZOS)
+        ppf *= f
+        w, h = img.size
+    out = a.out_dir or os.path.join(REPO, "world", a.place, "export", "baked")
+    root = (a.assets_dir or assets_dir()) if a.publish else out
+    ver, path = publish_image(img, f"art/{a.place}/maps", a.name or "ground", root, a.format, False)
+    tex = a.table_texture_path or path
+    flags = {"renderBackground": False, "renderTable": "matcustom", "tableTex": tex}
+    doc = {"ok": True, "place": a.place, "image": os.path.join(root, *path.split("assets/varrenmoor-3d/", 1)[1].split("/")), "foundry_path": tex, "version": ver,
+           "size_px": [w, h], "px_per_ft": round(ppf, 4), "footprint_ft": [round(x0, 2), round(y0, 2), round(x1, 2), round(y1, 2)],
+           "size_ft": [round(w / ppf, 2), round(h / ppf, 2)], "published": bool(a.publish), "scene_flags": {L3D: flags},
+           "scene_flag_args": [f"--scene-flag={k}={json.dumps(v)}" for k, v in flags.items()],
+           "notes": ["No live push was made. tableTex is shown tiled/stretched by 3D Canvas over the padded table: check scale in the scene [TEST], "
+                     "see FOUNDRY_3D_CANVAS_NOTES.md section 7.",
+                     "Keep the terrain GLB at the same footprint or leave it out; do not also enable renderBackground (z-fighting)."]}
+    os.makedirs(out, exist_ok=True)
+    with open(os.path.join(out, "bake.json"), "w", encoding="utf-8") as f:
+        json.dump(doc, f, indent=1)
+    LOG(f"baked {w}x{h}px ground texture, {doc['size_ft'][0]} x {doc['size_ft'][1]} ft at {doc['px_per_ft']} px/ft -> {path}")
+    return doc
+
+
 def cmd_push_models(br, a):
     pp = a.placements or os.path.join(REPO, "world", a.place, "export", "placements.json")
     with open(pp, encoding="utf-8") as f:
@@ -768,11 +828,11 @@ def cmd_push_models(br, a):
             cal = {"x0": 0.0, "y0": 0.0, "ppf": ppf, "grid_px": round(5 * ppf), "grid_ft": 5.0, "width": W, "height": H, "sceneX": 0, "sceneY": 0, "place": place, "view": "models"}
             r = br.call("upsert_by_flag", documentName="Scene", id=pid, data={"name": a.scene_name, "width": W, "height": H, "padding": 0, "navigation": False,
                                                                            "grid": {"type": 1, "size": round(5 * ppf), "distance": 5, "units": "ft"},
-                                                                           "flags": {FLAG: {"worldId": place, "calib": cal}, **scene_mode_flags(a.scene_mode or "3d", a.scene_flag)}})
+                                                                           "flags": {FLAG: {"worldId": place, "calib": cal}, **scene_mode_flags(a.scene_mode or "3d", _tex_flags(a))}})
             uuid = r["uuid"]
             result["scene_mode"] = a.scene_mode or "3d"
     if a.scene_mode and not result.get("scene_mode"):        # explicit mode on an existing scene: merge only the mode keys
-        br.call("update", uuid=uuid, data={"flags": scene_mode_flags(a.scene_mode, a.scene_flag)})
+        br.call("update", uuid=uuid, data={"flags": scene_mode_flags(a.scene_mode, _tex_flags(a))})
         result["scene_mode"] = a.scene_mode
     r = br.call("upsert_many", documentName="Tile", parentUuid=uuid, items=items, prefix="model:", prune=bool(a.prune))
     LOG(f"tiles: {r}")
@@ -783,7 +843,7 @@ def cmd_push_models(br, a):
 # ------------------------------------------------------------------ cli
 def parser():
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
-    ap.add_argument("cmd", choices=["status", "places", "list", "export-info", "push-scene", "push-token", "push-actor", "push-item", "push-models", "delete-scene", "link-region"])
+    ap.add_argument("cmd", choices=["status", "places", "list", "export-info", "push-scene", "push-token", "push-actor", "push-item", "push-models", "delete-scene", "link-region", "bake-texture"])
     ap.add_argument("--place", default="bridgehollow")
     ap.add_argument("--view", default="town")
     ap.add_argument("--preset")
@@ -832,13 +892,20 @@ def parser():
     ap.add_argument("--scene-mode", choices=["flat", "3d"], help="3D Canvas scene flags: flat = 2D map (auto3d off), 3d = terrain/model scene. Default: flat for push-scene, 3d for push-models; "
                     "applied to new scenes, and to existing ones only when given explicitly")
     ap.add_argument("--scene-flag", action="append", default=[], metavar="KEY=VALUE", help="override one levels-3d-preview scene flag (JSON value), repeatable")
+    ap.add_argument("--table-texture", dest="table_texture", help="push-models: Foundry path of a baked ground texture (bake-texture output) used as the scene's tableTex")
+    ap.add_argument("--window", help="bake-texture: map window x0,y0,x1,y1 in ft that the image covers (region_render prints window_ft)")
+    ap.add_argument("--crop-margin-pt", type=float, help="bake-texture: crop this paper margin (pt) off every side of a page export (with --dpi)")
+    ap.add_argument("--dpi", type=float, help="bake-texture: dpi of the image (for --crop-margin-pt)")
+    ap.add_argument("--out-dir", dest="out_dir", help="bake-texture: where the baked image and bake.json go (default world/<place>/export/baked)")
+    ap.add_argument("--table-texture-path", dest="table_texture_path", help="bake-texture: tableTex value to record (default: the asset path)")
+    ap.add_argument("--publish", action="store_true", help="bake-texture: copy the image into the shared assets folder Foundry serves (otherwise only written locally)")
     ap.add_argument("--prune", action="store_true", help="push-models: delete pipeline model tiles that are not in this push")
     return ap
 
 
 CMDS = {"status": cmd_status, "places": cmd_places, "list": cmd_list, "export-info": cmd_export_info, "push-scene": cmd_push_scene,
         "push-token": cmd_push_token, "push-actor": cmd_push_actor, "push-item": cmd_push_item, "push-models": cmd_push_models, "delete-scene": cmd_delete_scene,
-        "link-region": cmd_link_region}
+        "link-region": cmd_link_region, "bake-texture": cmd_bake_texture}
 
 
 def main(argv=None, bridge=None):

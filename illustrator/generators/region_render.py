@@ -2,7 +2,7 @@
 
   python illustrator/generators/region_render.py --child ID [--out-dir DIR] [--name PREFIX] [--scale 20] [--grid 5] [--page WxH]
         [--contour-interval 2] [--index-interval 10] [--no-contours] [--no-fills] [--shading PRESET|none] [--dpi 120] [--style full_map]
-        [--max-fill-px 36000000] [--label-style-b64 B64] [--job] [--job-id ID] [--png-scale 100] [-- extra render_world args]
+        [--max-fill-px 36000000] [--label-style-b64 B64] [--details auto|all|none|trees,lots,...] [--no-headless-png] [--png-dpi 120] [--job] [--job-id ID] [--png-scale 100] [-- extra render_world args]
 
 Steps: render_world.py (--view region, contours at the finer interval, labels) -> SVG; shading.py --window (only the page window, never the
 whole padded frame); fills_raster.py at a dpi capped so the raster stays under --max-fill-px (memory); then ONE final JSON line with
@@ -61,6 +61,9 @@ def main(argv=None):
     ap.add_argument("--style", default="full_map")
     ap.add_argument("--max-fill-px", type=float, default=36e6)
     ap.add_argument("--label-style-b64")
+    ap.add_argument("--details", help="which generated details to draw: auto (default, no lots at <=20 ft/in) | all | none | comma list (doors,roofs,chimneys,lots,fences,kerbs,trees)")
+    ap.add_argument("--no-headless-png", action="store_true", help="skip the PIL rasteriser (the PNG then exists only after the Illustrator job)")
+    ap.add_argument("--png-dpi", type=float, default=120.0, help="dpi of the headless PNG (page pt * dpi / 72)")
     ap.add_argument("--job", action="store_true")
     ap.add_argument("--job-id")
     ap.add_argument("--png-scale", type=float, default=100.0)
@@ -82,6 +85,8 @@ def main(argv=None):
                   "--min-contour-len", "30"]
     if a.label_style_b64:
         rargs += ["--label-style-b64", a.label_style_b64]
+    if a.details:
+        rargs += ["--details", a.details]
     run("render_world.py", rargs + extra)
     win = [v.x0, v.y0, v.x1, v.y1]
     wft, hft = v.x1 - v.x0, v.y1 - v.y0
@@ -107,8 +112,18 @@ def main(argv=None):
             layers.append({"path": os.path.join(fd, L["png"]), "rect": rect_of(info["bounds_ft"]), "layer": L["layer"], "name": L["name"]})
     layers.sort(key=lambda L: FILL_ORDER.index(L["layer"]) if L["layer"] in FILL_ORDER else 99)
     ai = free_path(os.path.join(out, prefix + ".ai"))
-    png_out = free_path(os.path.join(out, prefix + ".png"))
-    rel = lambda p: os.path.relpath(p, REPO).replace("\\", "/")  # noqa: E731
+    png_out = free_path(os.path.join(out, prefix + "_ai.png"))        # the Illustrator export; the headless PNG is <prefix>.png
+    headless = None
+    if not a.no_headless_png:
+        import svg_raster
+        bases = [(L["path"], L["rect"]) for L in layers]
+        headless, size = svg_raster.rasterise(svg, os.path.join(out, prefix + ".png"), a.png_dpi, 2, "#faf7ee", bases)
+        print(f"headless PNG {headless} {size[0]}x{size[1]}px (no Illustrator needed)")
+    def rel(p):
+        try:
+            return os.path.relpath(p, REPO).replace("\\", "/")
+        except ValueError:                      # other drive: keep the absolute path
+            return p.replace("\\", "/")
     actions = [{"action": "place_svg", "path": rel(svg), "mode": "open"}]
     for L in layers:
         actions.append({"action": "place_image", "path": rel(L["path"]), "rect": [round(x, 3) for x in L["rect"]], "layer": L["layer"], "below": "LINES",
@@ -116,7 +131,7 @@ def main(argv=None):
     actions += [{"action": "save_ai", "path": rel(ai)}, {"action": "export_png", "path": rel(png_out), "scale": a.png_scale}]
     jid = a.job_id or prefix
     res = {"ok": True, "child": child, "svg": svg, "scale_ft_per_in": v.fpi, "page_in": list(v.page), "window_ft": win, "fill_dpi": dpi,
-           "ai": ai, "png": png_out, "layers": [L["layer"] for L in layers], "job": {"id": jid, "actions": actions}}
+           "ai": ai, "png": headless or png_out, "png_headless": headless, "png_dpi": a.png_dpi, "page_margin_pt": v.margin * 72, "png_illustrator": png_out, "layers": [L["layer"] for L in layers], "job": {"id": jid, "actions": actions}}
     if a.job:
         jd = os.path.join(REPO, "illustrator", "jobs")
         os.makedirs(jd, exist_ok=True)

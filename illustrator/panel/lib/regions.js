@@ -19,7 +19,7 @@
     var det = {}; VB.REGION_DETAILS.forEach(function (k) { det[k] = true; });
     return { mode: "district", district: "", polygon: [], polygon_src: "", rect: [0, 0, 0, 0], margin_ft: 40, name: "",
       preset: "street20", scale_ft_per_in: 20, grid_ft: 5, terrain_cell_ft: 2.5, contour_minor: 2, contour_index: 10, detail_ft: 0.45,
-      detail: det, detail_on: true, seed: "", fills: true, fills_dpi: 120, shading: "temperate_valley_calm", flatten_pads: true, clip_buildings: false,
+      detail: det, detail_on: true, draw: { doors: true, roofs: true, chimneys: true, lots: false, fences: true, kerbs: true, trees: true }, draw_auto: true, headless_png: true, seed: "", fills: true, fills_dpi: 120, shading: "temperate_valley_calm", flatten_pads: true, clip_buildings: false,
       local_origin: false, sandbox: false, px_per_grid: 80, scene_name: "", parent_scene_name: "", link_apply: false,
       sel: "", children: [], diff: null, last: null };
   };
@@ -64,6 +64,12 @@
     var on = VB.REGION_DETAILS.filter(function (k) { return r.detail[k]; });
     return on.length === VB.REGION_DETAILS.length ? "all" : (on.join(",") || "none");
   };
+  // which generated details the 2D map DRAWS (render_world --details): trees (DETAILS - Trees) and lots (DETAILS - Lots) are separate layers; lots are off by default
+  VB.regionDrawArg = function (r) {
+    if (r.draw_auto !== false) return "auto";
+    var d = r.draw || {}, on = VB.REGION_DETAILS.filter(function (k) { return d[k]; });
+    return on.length === VB.REGION_DETAILS.length ? "all" : (on.join(",") || "none");
+  };
   VB.regionExtractArgs = function (st, d) {
     var r = st.regions, a = ["extract", "--parent", st.place].concat(VB.regionSpecArgs(st, d),
       ["--name", VB.regionName(st), "--margin", String(r.margin_ft), "--terrain-cell", String(r.terrain_cell_ft), "--scale", String(r.scale_ft_per_in), "--grid", String(r.grid_ft),
@@ -79,6 +85,8 @@
     var r = st.regions, a = ["--child", child, "--scale", String(r.scale_ft_per_in), "--grid", String(r.grid_ft), "--contour-interval", String(r.contour_minor),
       "--index-interval", String(r.contour_index), "--dpi", String(r.fills_dpi), "--shading", r.shading || "none"];
     if (!r.fills) a.push("--no-fills");
+    var dr = r.draw_auto === false ? VB.regionDrawArg(r) : null; if (dr) a.push("--details", dr);
+    if (r.headless_png === false) a.push("--no-headless-png");
     return a.concat(VB.labelStyleFlags(st));
   };
   var childFlag = function (c) { return ["--child", c]; };

@@ -143,6 +143,34 @@ def _jdump(path, obj):
         f.write("\n")
 
 
+def refresh_manifest_files(root):
+    """Re-hash manifest.files after something rewrote files inside the pack (worldpack_split): listed files that exist are re-hashed,
+    listed files that vanished are dropped, and placements.json + models/**/*.glb are added. Returns (rehashed, added, dropped)."""
+    mp = os.path.join(root, "manifest.json")
+    if not os.path.exists(mp):
+        return 0, 0, 0
+    m = _jload(mp)
+    files = m.get("files", {})
+    new, added, dropped, changed = {}, 0, 0, 0
+    for rel in files:
+        p = os.path.join(root, rel)
+        if os.path.exists(p):
+            new[rel] = _sha(p)
+            changed += new[rel] != files[rel]
+        else:
+            dropped += 1
+    extra = ["placements.json"] if os.path.exists(os.path.join(root, "placements.json")) else []
+    for dp, _, fs in os.walk(os.path.join(root, "models")):
+        extra += [os.path.relpath(os.path.join(dp, f), root).replace("\\", "/") for f in fs if f.endswith(".glb")]
+    for rel in extra:
+        if rel not in new:
+            new[rel] = _sha(os.path.join(root, rel))
+            added += 1
+    m["files"] = dict(sorted(new.items()))
+    _jdump(mp, m)
+    return changed, added, dropped
+
+
 def files_sha(root, rel):
     return _sha(os.path.join(root, rel))
 
@@ -720,6 +748,8 @@ def export_world(place, out_dir=None, lod=(1, 4), world_root=None, terrain_sourc
             e["openings"] = {"doors": [{"id": d["id"], "point": d["point"], "width_ft": d.get("width_ft"), "facing": d.get("facing")} for d in dr],
                              "windows": "derived at mesh time (worldpack_detail.py)", "wall_thickness_ft": 0.75, "canon": False}
             e["derived"].append("openings")
+            import interiors as _interiors                      # generated room layout (interiors.py): stored layout, else generated on the fly
+            _interiors.attach_to_entity(e, b, dr)
         ents["buildings"].append(e)
     # ---- districts, plazas, fields, fences
     dists = []

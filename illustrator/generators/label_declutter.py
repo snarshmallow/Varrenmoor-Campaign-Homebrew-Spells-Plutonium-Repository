@@ -32,10 +32,10 @@ DEFAULT = {
     "scale_visibility": True,       # hide tiers whose max_fpi is below the view scale (ft per inch)
     "tiers": {
         "districts": {"priority": 1, "max_fpi": 1000, "size": 1.0, "number": False, "max_cover": None},
-        "plazas": {"priority": 2, "max_fpi": 1000, "size": 1.0, "number": False, "max_cover": None},
+        "plazas": {"priority": 2, "max_fpi": 1000, "size": 0.8, "number": False, "max_cover": 0.22},
         "civic": {"priority": 3, "max_fpi": 250, "size": 1.0, "number": False, "max_cover": 0.75},
         "streets": {"priority": 4, "max_fpi": 150, "size": 0.95, "number": False, "max_cover": 0.6},
-        "houses": {"priority": 5, "max_fpi": 45, "size": 0.9, "number": False, "max_cover": 0.4, "leader": False},
+        "houses": {"priority": 5, "max_fpi": 45, "size": 0.9, "number": False, "max_cover": 0.5, "leader": True},
     },
     "collision": "hide",            # a label that finds no free spot: hide (hidden sublayer) | number (marker + legend) | keep (overlap)
     "score": True,                  # place by how little of the map the text covers
@@ -44,7 +44,7 @@ DEFAULT = {
     "legend": True,
     "legend_title": "Key",
     "overrides": True,              # honour world/<place>/label_overrides.json
-    "curved_streets": False,        # street names along a curved baseline (textPath) where the street bends
+    "curved_streets": True,         # street names along a curved baseline (textPath) where the street bends
     "min_curve_deg": 12.0,
     "qa": True,
     "quiet": False,                 # smaller text, thin dotted leaders
@@ -244,7 +244,7 @@ def qa_report(placer, rows, contour_boxes=()):
         "text_over_features_pct": round(100.0 * cov_a / tot_a, 1) if tot_a else 0.0,
         "over_features_by_kind_pct": {k_: round(100.0 * v / tot_a, 1) for k_, v in sorted(kinds.items())} if tot_a else {},
         "labels_over_25pct": over, "label_label_overlaps": len(pairs), "labels_over_contour_labels": cb, "leaders_crossing_other_labels": cross,
-        "worst": [{"id": i, "text": t, "tier": ti, "over_pct": round(100 * f, 1), "by_kind": bk} for f, i, t, ti, bk in per[:8] if f > 0],
+        "worst": [{"id": i, "text": t, "tier": ti, "over_pct": round(100 * f, 1), "by_kind": bk} for f, i, t, ti, bk in per[:int(os.environ.get("LABEL_QA_WORST", 8))] if f > 0],
         "overlapping_pairs": pairs[:12],
         "hidden": [{"id": r["id"], "text": r["text"], "tier": r["tier"], "why": r.get("why")} for r in hidden if r.get("why") != "scale"][:40],
     }

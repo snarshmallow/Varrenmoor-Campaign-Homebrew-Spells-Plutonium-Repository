@@ -13,7 +13,7 @@
   "_title": "Town working map: every tier for the scale, white leaders with casing, hidden labels kept in a hidden sublayer",
   "label_style": {},
   "label_offset": {"color": "#ffffff", "casing": true, "stroke_width": 0.8, "casing_width": 1.7, "lock_leaders": true},
-  "declutter": {"enabled": true, "collision": "hide", "legend": false, "quiet": false}
+  "declutter": {"enabled": true, "collision": "number", "legend": true, "quiet": false}
  },
  "bowl": {
   "_title": "Declutter: bowl overview - districts, plazas and civic buildings only, larger text, rest hidden",
