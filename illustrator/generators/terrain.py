@@ -212,11 +212,10 @@ def save(h, meta, outdir):
         f.write("\n")
 
 
-def load_heightmap(place, root=None):
-    d = os.path.join(root or os.path.join(REPO, "world"), place, "terrain")
-    h = np.load(os.path.join(d, "heightmap.npy"))
-    meta = json.load(open(os.path.join(d, "terrain_meta.json"), encoding="utf-8"))
-    return h, meta
+def load_heightmap(place, root=None, source=None):
+    """Current terrain for `place` (patched / carved / base per worldio); the base file stays untouched."""
+    import worldio
+    return worldio.load_terrain(place, source=source, root=root)
 
 
 # ---------------------------------------------------------------- preview

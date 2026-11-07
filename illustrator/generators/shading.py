@@ -284,7 +284,8 @@ def vector_svg(h, meta, phases, ppf, base_dir, path, cell_ft=4.0, seed=None, min
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--place", default="bridgehollow")
-    ap.add_argument("--heightmap", help=".npy (default world/<place>/terrain/heightmap.npy)")
+    ap.add_argument("--heightmap", help=".npy (default: current terrain via worldio: patched/carved/base)")
+    ap.add_argument("--terrain-source", choices=["auto", "base", "patched", "carved"], help="which heightmap (default per panel_state / auto)")
     ap.add_argument("--meta", help="terrain_meta.json (default next to heightmap)")
     ap.add_argument("--phases", help="phase-list JSON path, or preset name")
     ap.add_argument("--reverse", action="store_true", help="reverse the phase order (quick re-order test)")
@@ -311,9 +312,16 @@ def main():
         return
     if not (a.phases and a.out):
         ap.error("--phases and --out are required")
-    hp = a.heightmap or os.path.join(REPO, "world", a.place, "terrain", "heightmap.npy")
-    h = np.load(hp)
-    meta = json.load(open(a.meta or os.path.join(os.path.dirname(hp), "terrain_meta.json"), encoding="utf-8"))
+    if a.heightmap:
+        h = np.load(a.heightmap)
+        meta = json.load(open(a.meta or os.path.join(os.path.dirname(a.heightmap), "terrain_meta.json"), encoding="utf-8"))
+    else:   # the shared loader: patched / carved / base (see worldio.py)
+        import sys
+        sys.path.insert(0, HERE)
+        import worldio
+        worldio.set_source(a.terrain_source)
+        h, meta = worldio.load_terrain(a.place)
+        print(f"terrain source: {meta['source']}")
     h = h + a.elev_offset
     if a.sea_level is not None:
         meta["sea_level_ft"] = a.sea_level

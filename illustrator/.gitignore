@@ -4,3 +4,4 @@ jobs/done/*
 !jobs/.gitkeep
 !jobs/done/.gitkeep
 __pycache__/
+out/panel/

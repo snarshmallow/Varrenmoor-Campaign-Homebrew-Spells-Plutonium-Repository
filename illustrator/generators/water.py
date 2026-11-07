@@ -83,9 +83,15 @@ class Grid:
 
 
 def load_grid(place, root=None, sea_level=None, offset=0.0):
-    d = os.path.join(root or os.path.join(REPO, "world"), place, "terrain")
-    h = np.load(os.path.join(d, "heightmap.npy")).astype(float) + offset
-    meta = json.load(open(os.path.join(d, "terrain_meta.json"), encoding="utf-8"))
+    if root is None:   # shared loader: carve and analyse the patched terrain (never the carved result itself)
+        sys.path.insert(0, HERE)
+        import worldio
+        h, meta = worldio.load_terrain(place, source="patched")
+        h = h.astype(float) + offset
+    else:
+        d = os.path.join(root, place, "terrain")
+        h = np.load(os.path.join(d, "heightmap.npy")).astype(float) + offset
+        meta = json.load(open(os.path.join(d, "terrain_meta.json"), encoding="utf-8"))
     sl = meta.get("sea_level_ft", 0.0) if sea_level is None else sea_level
     return Grid(h, meta["cell_ft"], sl), meta
 

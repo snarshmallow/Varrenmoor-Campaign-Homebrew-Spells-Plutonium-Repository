@@ -42,6 +42,32 @@ function VB_ensureLike(doc, src) {
   t.name = src.name;
   return t;
 }
+function VB_rgb(c) { var r = new RGBColor(); r.red = c[0]; r.green = c[1]; r.blue = c[2]; return r; }
+// Named swatch: create it or update its colour (swatches are the only fill style a script can create).
+function VB_swatch(doc, name, rgb) {
+  var sw = null;
+  try { sw = doc.swatches.getByName(name); } catch (e) { sw = null; }
+  if (!sw) { sw = doc.swatches.add(); sw.name = name; }
+  sw.color = VB_rgb(rgb);
+  return sw;
+}
+// Flatten a PathItem to {name, closed, points:[{a,l,r}]} (document coordinates, y up).
+function VB_pathInfo(pi) {
+  var pts = [];
+  for (var i = 0; i < pi.pathPoints.length; i++) {
+    var p = pi.pathPoints[i];
+    pts.push({ a: [p.anchor[0], p.anchor[1]], l: [p.leftDirection[0], p.leftDirection[1]], r: [p.rightDirection[0], p.rightDirection[1]] });
+  }
+  return { name: pi.name, closed: pi.closed, points: pts };
+}
+function VB_collectPaths(items, outList) {
+  for (var i = 0; i < items.length; i++) {
+    var it = items[i], t = it.typename;
+    if (t === "PathItem") outList.push(it);
+    else if (t === "CompoundPathItem") { for (var j = 0; j < it.pathItems.length; j++) outList.push(it.pathItems[j]); }
+    else if (t === "GroupItem") VB_collectPaths(it.pageItems, outList);
+  }
+}
 function VB_run(json) {
   try {
     var a = eval("(" + json + ")");
@@ -126,6 +152,102 @@ function VB_run(json) {
         }
         out.locked = lk; out.layers = done; out.not_found = nf;
         if (nf.length) out.ok = false, out.error = "layers not found: " + nf.join(", ");
+        break;
+      }
+      case "get_doc_info": {
+        if (app.documents.length === 0) throw new Error("no open document");
+        var gd = app.activeDocument;
+        out.name = gd.name; out.artboard = gd.artboards[0].artboardRect; out.layers = [];
+        for (var gi = 0; gi < gd.layers.length; gi++) out.layers.push(gd.layers[gi].name);
+        out.selection = gd.selection.length; break;
+      }
+      case "get_selection": {
+        // Paths of the current selection; if nothing is selected and `layer` is given, the paths on that layer.
+        if (app.documents.length === 0) throw new Error("no open document");
+        var sd = app.activeDocument, found = [], src = "selection";
+        var selItems = []; for (var si3 = 0; si3 < sd.selection.length; si3++) selItems.push(sd.selection[si3]);
+        VB_collectPaths(selItems, found);
+        if (!found.length && a.layer) {
+          var sl3 = VB_find(sd, a.layer);
+          if (!sl3) throw new Error("layer not found: " + a.layer);
+          VB_collectPaths(VB_direct(sl3), found); src = "layer " + a.layer;
+        }
+        out.source = src; out.artboard = sd.artboards[0].artboardRect; out.paths = [];
+        for (var pi3 = 0; pi3 < found.length; pi3++) {
+          var inf = VB_pathInfo(found[pi3]);
+          if (a.closed_only && !inf.closed) continue;
+          if (a.open_only && inf.closed) continue;
+          out.paths.push(inf);
+        }
+        if (!out.paths.length) out.ok = false, out.error = "no " + (a.closed_only ? "closed " : a.open_only ? "open " : "") + "path selected" + (a.layer ? " (or on layer " + a.layer + ")" : "");
+        break;
+      }
+      case "place_image": {
+        // rect = [left, top, right, bottom] in page points measured from the artboard's top-left (y down).
+        if (app.documents.length === 0) throw new Error("no open document");
+        if (!a.path || !a.rect) throw new Error("path and rect required");
+        var pf = new File(a.path);
+        if (!pf.exists) throw new Error("file not found: " + a.path);
+        var pd = app.activeDocument, ab = pd.artboards[0].artboardRect;
+        var lname = a.layer || "ART - Shading", pl = VB_find(pd, lname);
+        if (!pl) {
+          pl = pd.layers.add(); pl.name = lname;
+          var ref = a.below ? VB_find(pd, a.below) : null;
+          if (ref) { try { pl.move(ref, ElementPlacement.PLACEAFTER); } catch (e) {} }
+        }
+        pl.locked = false; pl.visible = true;
+        var iname = a.name || "shading_png", old2 = VB_direct(pl);
+        for (var oi2 = old2.length - 1; oi2 >= 0; oi2--) {
+          if (old2[oi2].name === iname) { try { old2[oi2].locked = false; } catch (e) {} old2[oi2].remove(); }
+        }
+        var pim = pl.placedItems.add();
+        pim.file = pf; pim.name = iname;
+        var w2 = a.rect[2] - a.rect[0], h2 = a.rect[3] - a.rect[1];
+        pim.width = w2; pim.height = h2;
+        pim.position = [ab[0] + a.rect[0], ab[1] - a.rect[1]];
+        if (a.embed) pim.embed();
+        pl.locked = (a.lock !== false);
+        out.layer = lname; out.width = w2; out.height = h2; break;
+      }
+      case "apply_fills": {
+        // assignments: [{layer, match (regex on item name), swatch, fill [r,g,b]|null, stroke [r,g,b]|null, stroke_w}]
+        if (app.documents.length === 0) throw new Error("no open document");
+        var fd = app.activeDocument, as2 = a.assignments || [], applied = [], skipped = [];
+        for (var ai = 0; ai < as2.length; ai++) {
+          var asg = as2[ai], fl = VB_find(fd, asg.layer);
+          if (!fl) { skipped.push(asg.layer); continue; }
+          var re = asg.match ? new RegExp(asg.match) : null;
+          var wl = fl.locked, wv = fl.visible; fl.locked = false; fl.visible = true;
+          var sw2 = asg.fill ? VB_swatch(fd, asg.swatch || ("VB " + asg.layer), asg.fill) : null;
+          var cnt = 0, its = VB_direct(fl);
+          for (var ii = 0; ii < its.length; ii++) {
+            var itm = its[ii];
+            if (re && !re.test(itm.name)) continue;
+            if (asg.exclude && new RegExp(asg.exclude).test(itm.name)) continue;
+            try { itm.locked = false; } catch (e) {}
+            var tgt = itm.typename === "CompoundPathItem" ? itm.pathItems[0] : itm;
+            if (!tgt || !("filled" in tgt)) continue;
+            if (sw2) { tgt.filled = true; tgt.fillColor = sw2.color; } else tgt.filled = false;
+            if (asg.stroke) { tgt.stroked = true; tgt.strokeColor = VB_rgb(asg.stroke); if (asg.stroke_w) tgt.strokeWidth = asg.stroke_w; }
+            cnt++;
+          }
+          fl.locked = wl; fl.visible = wv;
+          applied.push(asg.layer + ":" + cnt);
+        }
+        out.applied = applied; out.skipped = skipped;
+        if (skipped.length) out.warn = "layers not found: " + skipped.join(", ");
+        break;
+      }
+      case "set_visible": {
+        if (app.documents.length === 0) throw new Error("no open document");
+        var vd = app.activeDocument, vn = a.names || [], vdone = [], vnf = [];
+        for (var vi = 0; vi < vn.length; vi++) {
+          var vl = VB_find(vd, vn[vi]);
+          if (!vl) { vnf.push(vn[vi]); continue; }
+          vl.visible = (a.visible !== false); vdone.push(vn[vi]);
+        }
+        out.layers = vdone; out.not_found = vnf;
+        if (vnf.length) out.ok = false, out.error = "layers not found: " + vnf.join(", ");
         break;
       }
       case "save_ai": {

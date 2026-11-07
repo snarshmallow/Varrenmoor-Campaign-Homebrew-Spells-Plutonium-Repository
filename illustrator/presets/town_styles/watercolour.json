@@ -1,0 +1,13 @@
+{
+ "name": "Watercolour",
+ "description": "Soft colour wash: sand roads, red-rock roofs, meadow fields, blue water.",
+ "_note": "Fills are named swatches the panel creates by script (names 'VB <Part> - <choice>') and assigns to the paths on the named layers (Roads, Buildings, Fences, Water). Scripts cannot create graphic styles or pattern swatches: keep any graphic styles in illustrator/templates/varrenmoor.ait and apply them by hand; the textures are represented by their mean colour.",
+ "parts": {
+  "streets": "sand",
+  "plazas": "dirt",
+  "buildings": "red_rock",
+  "fields": "meadow",
+  "water": "water_blue"
+ },
+ "stroke": "#3a2a1a"
+}

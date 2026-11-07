@@ -1,14 +1,316 @@
 <!doctype html>
-<html><head><meta charset="utf-8"><title>Varrenmoor Bridge</title>
+<html lang="en"><head><meta charset="utf-8"><title>Varrenmoor Bridge</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
-body{font:12px sans-serif;background:#323232;color:#ddd;margin:8px}
-#st{font-weight:bold}
-#log{white-space:pre-wrap;font-family:monospace;font-size:11px;margin-top:8px;max-height:140px;overflow:auto}
+:root{--bg:#2b2b2b;--bg2:#333;--bg3:#3c3c3c;--fg:#ddd;--dim:#9a9a9a;--line:#4a4a4a;--acc:#5a9bd5;--ok:#7bc67b;--warn:#e0b050;--bad:#e2685c}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{font:11px/1.35 "Segoe UI",Arial,sans-serif;background:var(--bg);color:var(--fg);display:flex;flex-direction:column}
+#top{padding:4px 6px;background:var(--bg2);border-bottom:1px solid var(--line)}
+#top .row{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+#status{font-weight:600}
+#status.busy{color:var(--warn)}
+#err{color:var(--bad);white-space:pre-wrap;margin-top:2px}
+#err.warn{color:var(--warn)}
+#err:empty{display:none}
+nav{display:flex;flex-wrap:wrap;background:var(--bg2);border-bottom:1px solid var(--line)}
+nav button{background:none;border:0;border-bottom:2px solid transparent;color:var(--dim);padding:4px 7px;font:inherit;cursor:pointer;border-radius:0}
+nav button[aria-selected=true]{color:var(--fg);border-bottom-color:var(--acc)}
+nav button.stale::after{content:" \25CF";color:var(--warn)}
+main{flex:1;overflow:auto;padding:6px}
+section{display:none}
+section.on{display:block}
+h4{margin:8px 0 3px;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--dim);border-bottom:1px solid var(--line)}
+h4:first-child{margin-top:0}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(125px,1fr));gap:3px 8px}
+label{display:flex;flex-direction:column;gap:1px;color:var(--dim)}
+label.chk{flex-direction:row;align-items:center;gap:4px;color:var(--fg)}
+input[type=number],input[type=text],select{width:100%;background:var(--bg3);color:var(--fg);border:1px solid var(--line);border-radius:2px;padding:2px 4px;font:inherit;min-width:0}
+input[type=range]{width:100%;margin:0}
+input:focus,select:focus,button:focus-visible,textarea:focus{outline:1px solid var(--acc)}
+textarea{width:100%;background:var(--bg3);color:var(--fg);border:1px solid var(--line);font:11px monospace;min-height:34px}
+button{background:var(--bg3);color:var(--fg);border:1px solid var(--line);border-radius:2px;padding:3px 8px;font:inherit;cursor:pointer}
+button:hover:not(:disabled){background:#484848}
+button.primary{background:#2f5b85;border-color:#3d74a8}
+button.danger{background:#6b3631;border-color:#8a463f}
+button:disabled{opacity:.45;cursor:default}
+.btns{display:flex;flex-wrap:wrap;gap:4px;margin:5px 0}
+.note{color:var(--dim);font-size:10px;margin:2px 0}
+.tag{display:inline-block;padding:0 4px;border-radius:2px;background:var(--bg3);color:var(--dim)}
+.tag.stale{background:#5a4a1f;color:var(--warn)}
+ul.list{list-style:none;margin:2px 0;padding:0;border:1px solid var(--line)}
+ul.list li{display:flex;gap:4px;align-items:center;padding:2px 4px;border-bottom:1px solid var(--line);cursor:pointer}
+ul.list li:last-child{border-bottom:0}
+ul.list li.sel{background:#34475a}
+ul.list li span.g{flex:1}
+ul.list button{padding:0 5px}
+.phase{border:1px solid var(--line);margin:3px 0;padding:3px 4px;background:var(--bg2)}
+.phase.drag{opacity:.5}
+.phase.off{opacity:.55}
+.phase .hd{display:flex;gap:4px;align-items:center}
+.phase .hd input[type=text]{flex:1}
+.phase .handle{cursor:grab;color:var(--dim);user-select:none}
+.phase .sl{display:grid;grid-template-columns:62px 1fr 52px;gap:4px;align-items:center;margin-top:1px}
+.phase .sl span{color:var(--dim)}
+#patchPrev{max-width:100%;border:1px solid var(--line);display:none;margin-top:4px}
+#patchInfo,#crossInfo{font-family:Consolas,monospace;font-size:10px;white-space:pre-wrap;color:var(--dim)}
+#log{white-space:pre-wrap;font:10px Consolas,monospace;max-height:110px;overflow:auto;border-top:1px solid var(--line);padding:3px 6px;background:#242424;color:#b8b8b8}
+table{border-collapse:collapse;width:100%}
+td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
 </style></head>
 <body>
-<div>Jobs: <span id="dir">?</span></div>
-<div>Status: <span id="st">starting</span></div>
-<div id="log"></div>
+<div id="top">
+  <div class="row">
+    <label style="flex-direction:row;align-items:center;gap:4px">Place <select id="place" data-s="place" style="width:120px"></select></label>
+    <label style="flex-direction:row;align-items:center;gap:4px">View <input type="text" data-s="settings.view" style="width:90px" title="town | bowl | street:&lt;id&gt; | building:&lt;id&gt;"></label>
+    <span id="status">starting</span>
+    <button id="cancel" disabled title="Stop the running job">Cancel</button>
+    <button id="toggleLog" title="Show or hide the log">Log</button>
+  </div>
+  <div id="err" role="alert"></div>
+</div>
+<nav role="tablist" id="tabs">
+  <button role="tab" data-tab="scale">Scale</button>
+  <button role="tab" data-tab="terrain">Terrain</button>
+  <button role="tab" data-tab="contours">Contours</button>
+  <button role="tab" data-tab="shading">Shading</button>
+  <button role="tab" data-tab="water">Water</button>
+  <button role="tab" data-tab="town">Town</button>
+  <button role="tab" data-tab="layers">Layers</button>
+  <button role="tab" data-tab="foundry">Foundry</button>
+</nav>
+<main>
+
+<section id="tab-scale" role="tabpanel">
+  <h4>Scale and grid</h4>
+  <div class="grid">
+    <label>Preset <select data-s="scale.preset" data-act-change="scale_preset"><option>town</option><option>bowl</option><option>street</option><option>room</option></select></label>
+    <label>Scale (ft per inch) <input type="number" data-s="scale.scale_ft_per_in" min="1" step="any"></label>
+    <label>Grid (ft) <input type="number" data-s="scale.grid_ft" min="0.5" step="any"></label>
+    <label>Major every <input type="number" data-s="scale.grid_major_every" min="1" step="1"></label>
+    <label>Page width (in) <input type="number" data-s="scale.page_w_in" min="1" step="any"></label>
+    <label>Page height (in) <input type="number" data-s="scale.page_h_in" min="1" step="any"></label>
+    <label>Units <select data-s="scale.units"><option>ft</option><option>m</option></select></label>
+  </div>
+  <div class="btns">
+    <button class="primary" data-act="scale_apply" title="Writes view_settings.json and regenerates Grid, Scale bar, North arrow, Bounds, NOTES">Apply (regenerate guides)</button>
+    <button data-act="redraw_all" title="Redraws every GEN layer, with contours">Redraw all GEN layers</button>
+    <button data-act="new_doc" title="New Illustrator document at this page size, then draws everything">New document + draw</button>
+    <button data-act="scale_reload" title="Re-read view_settings.json">Reload</button>
+  </div>
+  <p class="note">Feet are the model unit; scale only changes the drawing. Guides are regenerated, your ART layers are never touched.</p>
+  <h4>Settings</h4>
+  <div class="grid">
+    <label>Python executable <input type="text" data-s="settings.python"></label>
+    <label>Shading dpi <input type="number" data-s="settings.dpi" min="30" max="600" step="10"></label>
+  </div>
+</section>
+
+<section id="tab-terrain" role="tabpanel">
+  <h4>Base terrain (terrain_spec.json)</h4>
+  <div class="grid">
+    <label>Seed <input type="number" data-s="terrain.spec.seed" step="1"></label>
+    <label>Cell (ft) <input type="number" data-s="terrain.spec.cell_ft" min="2" step="1"></label>
+    <label>Base elevation (ft) <input type="number" data-s="terrain.spec.base_elevation_ft" step="any"></label>
+    <label>Ridge noise amp (ft) <input type="number" data-s="terrain.spec.ridged_amp_ft" step="any"></label>
+    <label>Noise scale (ft) <input type="number" data-s="terrain.spec.noise_scale_ft" step="any"></label>
+    <label>Thermal erosion iters <input type="number" data-s="terrain.spec.thermal_iterations" min="0" step="1"></label>
+    <label>Smooth sigma (cells) <input type="number" data-s="terrain.spec.smooth_sigma_cells" min="0" step="0.1"></label>
+  </div>
+  <div class="btns">
+    <button data-act="terrain_generate" class="danger" title="Regenerates the base heightmap, then replays the patches onto it">Generate base terrain</button>
+    <button data-act="terrain_load_spec">Reload spec</button>
+  </div>
+  <h4>Patches <span id="patchCount" class="tag"></span></h4>
+  <ul class="list" id="patchList"></ul>
+  <div class="btns">
+    <button data-act="patch_undo">Undo</button><button data-act="patch_redo">Redo</button><button data-act="patch_refresh">Refresh list</button>
+  </div>
+  <h4>Add patch</h4>
+  <div class="grid">
+    <label>Terrain type <select id="patchType" data-s="terrain.patch.terrain_type"></select></label>
+    <label>Max height (ft) <input type="number" data-s="terrain.patch.max_height_ft" step="any"></label>
+    <label>Min height (ft) <input type="number" data-s="terrain.patch.min_height_ft" step="any"></label>
+    <label>Average height (ft) <input type="number" data-s="terrain.patch.avg_height_ft" step="any"></label>
+    <label>Steepness 0-1 <input type="number" data-s="terrain.patch.steepness" min="0" max="1" step="0.05"></label>
+    <label>Feather (ft) <input type="number" data-s="terrain.patch.feather_ft" min="0" step="any"></label>
+    <label>Roughness 0-1 <input type="number" data-s="terrain.patch.roughness" min="0" max="1" step="0.05"></label>
+    <label>Seed <input type="number" data-s="terrain.patch.seed" step="1"></label>
+    <label>Angle (deg) <input type="number" data-s="terrain.patch.angle_deg" step="any"></label>
+  </div>
+  <p class="note">Raise types use Max height, depression types (bowl, valley, trench, sinkhole, seabed_shelf) use Min height. Elevations are signed feet.</p>
+  <div class="btns">
+    <button data-act="patch_capture" title="Takes the selected closed path, or the path on layer TERRAIN AREA">Capture polygon</button>
+    <span id="patchPoly" class="tag">none</span>
+  </div>
+  <div class="btns">
+    <button data-act="patch_preview" class="primary">Preview</button>
+    <button data-act="patch_apply">Apply</button>
+  </div>
+  <div id="patchInfo"></div>
+  <img id="patchPrev" alt="patch preview (hillshade)">
+</section>
+
+<section id="tab-contours" role="tabpanel">
+  <h4>Contours <span class="tag" id="stale-contours"></span></h4>
+  <div class="grid">
+    <label>Minor interval <input type="number" data-s="contours.minor" min="0.5" step="any"></label>
+    <label>Index interval <input type="number" data-s="contours.index" min="1" step="any"></label>
+    <label>Units <select data-s="contours.units"><option>ft</option><option>m</option></select></label>
+    <label>Label size (pt) <input type="number" data-s="contours.label_size" min="2" step="0.5"></label>
+    <label>Decimals <input type="number" data-s="contours.decimals" min="0" max="3" step="1"></label>
+    <label>Label spacing (ft) <input type="number" data-s="contours.label_spacing_ft" min="50" step="10"></label>
+    <label>Min length (ft) <input type="number" data-s="contours.min_len_ft" min="0" step="10"></label>
+  </div>
+  <div class="grid" style="margin-top:4px">
+    <label class="chk"><input type="checkbox" data-s="contours.labels"> Show labels</label>
+    <label class="chk"><input type="checkbox" data-s="contours.follow_line"> Along-line rotation</label>
+    <label class="chk"><input type="checkbox" data-s="contours.upright"> Upright flip</label>
+    <label class="chk"><input type="checkbox" data-s="contours.datum"> Emphasise datum</label>
+    <label class="chk"><input type="checkbox" data-s="contours.mask"> Mask under buildings/streets</label>
+  </div>
+  <div class="btns"><button class="primary" data-act="contours_run">Render contours</button></div>
+  <p class="note">Draws Contours - Minor, Contours - Index and Labels - Elevation from the current terrain (patched, or carved when enabled on the Water tab).</p>
+</section>
+
+<section id="tab-shading" role="tabpanel">
+  <h4>Shading phases <span class="tag" id="stale-shading"></span></h4>
+  <div class="grid">
+    <label>Preset <select id="shPreset" data-s="shading.preset"></select></label>
+    <label>Base colour <input type="text" data-s="shading.base_color"></label>
+  </div>
+  <div class="btns"><button data-act="shading_load_preset">Load preset</button><button data-act="shading_add_phase">Add phase</button></div>
+  <div id="phases"></div>
+  <h4>Hillshade</h4>
+  <div class="grid">
+    <label class="chk"><input type="checkbox" data-s="shading.hillshade.enabled"> Hillshade</label>
+    <label>Azimuth <input type="number" data-s="shading.hillshade.azimuth" min="0" max="360" step="5"></label>
+    <label>Altitude <input type="number" data-s="shading.hillshade.altitude" min="1" max="90" step="5"></label>
+    <label>Strength <input type="number" data-s="shading.hillshade.strength" min="0" max="1.5" step="0.05"></label>
+  </div>
+  <div class="btns"><button class="primary" data-act="shading_render">Render and place on ART - Shading</button></div>
+  <p class="note">The PNG is placed with its .json bounds so it registers with the map, below LINES, and the layer is locked.</p>
+</section>
+
+<section id="tab-water" role="tabpanel">
+  <h4>Water</h4>
+  <div class="grid">
+    <label>Sea level (ft) <input type="number" data-s="water.sea_level_ft" step="any"></label>
+    <label>River threshold (cells) <input type="number" data-s="water.threshold_cells" min="1" step="any"></label>
+    <label>Outlet width (ft, 0=off) <input type="number" data-s="water.outlet_width" min="0" step="any"></label>
+    <label>Bank (ft) <input type="number" data-s="water.bank_ft" min="0" step="any"></label>
+  </div>
+  <label>Off-map inflow lines: x,y,acres (one per line)<textarea data-s="water.inflow" placeholder="1200,0,30"></textarea></label>
+  <div class="grid" style="margin-top:3px">
+    <label class="chk"><input type="checkbox" data-s="water.delta"> Delta</label>
+    <label class="chk"><input type="checkbox" data-s="water.meander"> Meander</label>
+    <label class="chk"><input type="checkbox" data-s="water.redraw"> Redraw Water layer after</label>
+    <label class="chk"><input type="checkbox" data-s="water.use_working"> Use derived/working water</label>
+    <label class="chk"><input type="checkbox" data-s="water.use_carved"> Use carved terrain</label>
+  </div>
+  <div class="btns">
+    <button class="primary" data-act="water_analyze">Derive rivers (analyze)</button>
+    <button data-act="water_carve">Carve rivers</button>
+    <button data-act="water_crossings">Bridges report</button>
+  </div>
+  <h4>Add river</h4>
+  <div class="grid">
+    <label>Name <input type="text" data-s="water.river.name"></label>
+    <label>Width (ft) <input type="number" data-s="water.river.width" min="1" step="any"></label>
+    <label>Width at end (ft) <input type="number" data-s="water.river.width_end" min="0" step="any"></label>
+    <label>Depth (ft) <input type="number" data-s="water.river.depth" min="0.1" step="any"></label>
+    <label>Flow (cfs) <input type="number" data-s="water.river.flow" min="0" step="any"></label>
+    <label>Meander <input type="number" data-s="water.river.meander" min="0" step="0.1"></label>
+    <label>Join river id <input type="text" data-s="water.river.join"></label>
+    <label class="chk"><input type="checkbox" data-s="water.river.carve"> Carve</label>
+  </div>
+  <div class="btns"><button data-act="water_capture_river" title="Selected open path, or path on layer WATER DRAW">Capture path</button><span id="riverPath" class="tag">none</span><button data-act="water_add_river">Add river</button></div>
+  <h4>Add lake</h4>
+  <div class="grid">
+    <label>Name <input type="text" data-s="water.lake.name"></label>
+    <label>Kind <select data-s="water.lake.kind"><option>pond</option><option>lake</option></select></label>
+    <label>Level (ft) <input type="number" data-s="water.lake.level" step="any"></label>
+    <label>Max depth (ft) <input type="number" data-s="water.lake.depth" min="0.5" step="any"></label>
+    <label class="chk"><input type="checkbox" data-s="water.lake.auto_level"> Level = lowest rim</label>
+  </div>
+  <div class="btns"><button data-act="water_capture_lake" title="Selected closed path, or path on layer WATER DRAW">Capture polygon</button><span id="lakePoly" class="tag">none</span><button data-act="water_add_lake">Add lake</button></div>
+  <h4>Bridges and fords</h4>
+  <div id="crossInfo">Run "Bridges report".</div>
+</section>
+
+<section id="tab-town" role="tabpanel">
+  <h4>Town generator <span class="tag" id="stale-town"></span></h4>
+  <div class="btns"><button data-act="town_capture" title="Selected closed path, or path on layer TOWN AREA">Capture lasso</button><span id="townArea" class="tag">none</span>
+    <button data-act="town_load_params">Reload town_params.json</button></div>
+  <div class="grid">
+    <label>Seed <input type="number" data-s="town.seed" step="1"></label>
+    <label>Detail (1-3) <input type="number" data-s="town.detail" min="1" max="3" step="1"></label>
+    <label>Entry x (ft) <input type="number" data-s="town.entry_x" step="any"></label>
+    <label>Entry y (ft) <input type="number" data-s="town.entry_y" step="any"></label>
+    <label>Plaza min area (ft2) <input type="number" data-s="town.plazas_min_area_ft2" min="0" step="1000"></label>
+    <label>Max street grade <input type="number" data-s="town.max_street_grade" min="0.01" step="0.01"></label>
+    <label>Max main grade <input type="number" data-s="town.max_main_grade" min="0.01" step="0.01"></label>
+    <label>Max build slope <input type="number" data-s="town.max_build_slope" min="0.01" step="0.01"></label>
+    <label>Max build relief (ft) <input type="number" data-s="town.max_build_relief_ft" min="0" step="0.5"></label>
+    <label>Max field slope <input type="number" data-s="town.max_field_slope" min="0.01" step="0.01"></label>
+  </div>
+  <div class="grid" style="margin-top:3px">
+    <label class="chk"><input type="checkbox" data-s="town.plazas_enabled"> Plazas</label>
+    <label class="chk"><input type="checkbox" data-s="town.blocks"> Blocks</label>
+    <label class="chk"><input type="checkbox" data-s="town.buildings"> Buildings</label>
+    <label class="chk"><input type="checkbox" data-s="town.fields"> Fields</label>
+    <label class="chk"><input type="checkbox" data-s="contours.mask"> Contour mask</label>
+    <label class="chk"><input type="checkbox" data-s="town.redraw_contours"> Redraw contours</label>
+  </div>
+  <h4>Rings (radius, street width, lot area)</h4>
+  <div id="rings"></div>
+  <div class="btns">
+    <button class="primary" data-act="town_generate">Generate</button>
+    <button data-act="town_accept" id="btnAccept" disabled>Accept</button>
+    <button data-act="town_reject" id="btnReject" class="danger" disabled>Reject</button>
+    <span id="candTag" class="tag">no candidate</span>
+  </div>
+  <p class="note">Generate writes a candidate model and draws it; the saved world model stays as it was until you Accept.</p>
+  <h4>Fills per part</h4>
+  <div class="grid">
+    <label>Style preset <select id="stylePreset" data-s="town.style.preset" data-act-change="style_preset"></select></label>
+    <label>Line colour (#rrggbb) <input type="text" data-s="town.style.stroke" placeholder="keep"></label>
+    <label>Streets <select class="fill" data-s="town.style.streets"></select></label>
+    <label>Plazas <select class="fill" data-s="town.style.plazas"></select></label>
+    <label>Buildings <select class="fill" data-s="town.style.buildings"></select></label>
+    <label>Fields <select class="fill" data-s="town.style.fields"></select></label>
+    <label>Water <select class="fill" data-s="town.style.water"></select></label>
+    <label class="chk"><input type="checkbox" data-s="town.autofill"> Apply fills after drawing</label>
+  </div>
+  <div class="btns"><button data-act="town_fills">Apply fills now</button></div>
+  <p class="note">Fills are named swatches ("VB Streets - ...") set on the named layers. Scripts cannot create graphic styles: keep them in the .ait template (see illustrator/README.md).</p>
+</section>
+
+<section id="tab-layers" role="tabpanel">
+  <h4>Layers</h4>
+  <div class="btns">
+    <button data-act="lock_guides">Lock GUIDES</button><button data-act="unlock_guides">Unlock GUIDES</button>
+    <button data-act="show_labels">Show LABELS</button><button data-act="hide_labels">Hide LABELS</button>
+  </div>
+  <div class="btns">
+    <button data-act="scale_apply">Regenerate view (guides)</button>
+    <button data-act="redraw_all">Redraw all GEN layers</button>
+    <button data-act="open_out">Open out folder</button>
+  </div>
+  <h4>State</h4>
+  <div class="note">Settings file: <span id="statePath">?</span></div>
+  <div class="btns"><button data-act="clear_stale">Clear stale marks</button><button data-act="open_done">Open job log folder</button></div>
+</section>
+
+<section id="tab-foundry" role="tabpanel">
+  <h4>Foundry</h4>
+  <div class="btns"><button disabled>Export view</button><button disabled>Push scene</button><button disabled>Push tiles</button></div>
+  <p class="note">push: pending Foundry bridge additions (Drawing create, upsert_by_flag, export_view, push_scene; see DESIGN.md section 7).</p>
+</section>
+</main>
+<div id="log" hidden></div>
 <script src="CSInterface.js"></script>
+<script src="lib/core.js"></script>
+<script src="lib/runner.js"></script>
 <script src="main.js"></script>
 </body></html>

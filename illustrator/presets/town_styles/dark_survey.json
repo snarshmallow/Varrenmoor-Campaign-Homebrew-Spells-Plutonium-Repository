@@ -1,0 +1,13 @@
+{
+ "name": "Dark survey",
+ "description": "Night-mode survey sheet: dark ink fills with pale lines.",
+ "_note": "Fills are named swatches the panel creates by script (names 'VB <Part> - <choice>') and assigns to the paths on the named layers (Roads, Buildings, Fences, Water). Scripts cannot create graphic styles or pattern swatches: keep any graphic styles in illustrator/templates/varrenmoor.ait and apply them by hand; the textures are represented by their mean colour.",
+ "parts": {
+  "streets": "ink_mid",
+  "plazas": "ink_light",
+  "buildings": "ink_black",
+  "fields": "ink_dark",
+  "water": "water_dark"
+ },
+ "stroke": "#cfd8dc"
+}

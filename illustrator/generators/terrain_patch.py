@@ -454,7 +454,7 @@ def _next_id(hist):
 
 def main(argv=None):
     ap = argparse.ArgumentParser()
-    ap.add_argument("cmd", choices=["preview", "apply", "undo", "redo", "list", "remove", "reorder"])
+    ap.add_argument("cmd", choices=["preview", "apply", "undo", "redo", "list", "remove", "reorder", "rebuild", "json"])
     ap.add_argument("--place", default="bridgehollow")
     ap.add_argument("--root", help="worlds directory (default <repo>/world)")
     ap.add_argument("--polygon")
@@ -469,6 +469,13 @@ def main(argv=None):
     if a.cmd == "list":
         for x in sorted(hist["patches"], key=lambda x: x["order"]):
             print(x["id"], x["order"], "on" if x.get("enabled", True) else "off", x["params"].get("terrain_type"))
+        return 0
+    if a.cmd == "json":     # machine-readable history for the panel
+        print(json.dumps(hist))
+        return 0
+    if a.cmd == "rebuild":  # replay patches onto the (possibly regenerated) base heightmap
+        h, infos = rebuild(a.place, a.root)
+        print("rebuilt", len(infos), "patches; elevation %.0f..%.0f ft" % (h.min(), h.max()))
         return 0
     if a.cmd in ("preview", "apply"):
         poly = _load_json(a.polygon)

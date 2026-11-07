@@ -1,0 +1,13 @@
+{
+ "name": "Parchment",
+ "description": "Warm aged-paper map: parchment tones, brown lines.",
+ "_note": "Fills are named swatches the panel creates by script (names 'VB <Part> - <choice>') and assigns to the paths on the named layers (Roads, Buildings, Fences, Water). Scripts cannot create graphic styles or pattern swatches: keep any graphic styles in illustrator/templates/varrenmoor.ait and apply them by hand; the textures are represented by their mean colour.",
+ "parts": {
+  "streets": "parch_light",
+  "plazas": "parch_mid",
+  "buildings": "parch_deep",
+  "fields": "parch_mid",
+  "water": "water_pale"
+ },
+ "stroke": "#4a3320"
+}

@@ -1,0 +1,13 @@
+{
+ "name": "Ink plan",
+ "description": "Black line work on paper: light paper streets, dark hatched-looking buildings.",
+ "_note": "Fills are named swatches the panel creates by script (names 'VB <Part> - <choice>') and assigns to the paths on the named layers (Roads, Buildings, Fences, Water). Scripts cannot create graphic styles or pattern swatches: keep any graphic styles in illustrator/templates/varrenmoor.ait and apply them by hand; the textures are represented by their mean colour.",
+ "parts": {
+  "streets": "paper",
+  "plazas": "white",
+  "buildings": "ink_dark",
+  "fields": "white",
+  "water": "water_pale"
+ },
+ "stroke": "#000000"
+}

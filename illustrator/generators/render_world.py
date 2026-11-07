@@ -21,8 +21,8 @@ sys.path.insert(0, HERE)
 from lib_svg import LayerTree  # noqa: E402
 import contours as ct  # noqa: E402
 import viewcfg  # noqa: E402
-import viewcfg  # noqa: E402
 import terrain as tr  # noqa: E402
+import worldio  # noqa: E402
 from xml.sax.saxutils import escape  # noqa: E402
 
 REPO = os.path.abspath(os.path.join(HERE, "..", ".."))
@@ -55,11 +55,14 @@ text { fill: #000000; stroke: none; font-family: Arial, sans-serif; }
 
 
 # ------------------------------------------------------------------ model
-def load_place(name):
-    root = os.path.join(REPO, "world", name)
+def load_place(name, model_dir=None):
+    """model_dir: read place/districts/streets/buildings from this folder instead of world/<place> (panel town candidate).
+    Water always comes from worldio.water_path (world file, or the panel's working water file when enabled)."""
+    root = model_dir or os.path.join(REPO, "world", name)
     rd = lambda f: json.load(open(os.path.join(root, f), encoding="utf-8"))
     m = {"place": rd("place.json"), "districts": rd("districts.json")["districts"],
-         "streets": rd("streets.json")["streets"], "water": rd("water.json")["water"], "buildings": []}
+         "streets": rd("streets.json")["streets"],
+         "water": json.load(open(worldio.water_path(name), encoding="utf-8"))["water"], "buildings": []}
     for f in sorted(glob.glob(os.path.join(root, "buildings", "*.json"))):
         m["buildings"].append(json.load(open(f, encoding="utf-8")))
     return m
@@ -232,7 +235,8 @@ def street_label(t, v, e, size, fpi):
     t.add("Labels - Streets", text(f"lbl_{e['id']}", x, y, e["name"] + " *", size, rot=ang))
 
 
-def render(model, view_arg, out_path, topts=None, cfg_over=None):
+def compute_view(model, view_arg, cfg_over=None):
+    """-> (View, cfg, title, kind, ident). Shared by render() and panelio.py (page <-> feet conversion for the panel)."""
     place = model["place"]
     bw, bh = place["bounds"]["width_ft"], place["bounds"]["height_ft"]
     kind, _, ident = view_arg.partition(":")
@@ -268,6 +272,19 @@ def render(model, view_arg, out_path, topts=None, cfg_over=None):
         fx, fy = bw / 2, bh / 2
     v = View(fpi, fx, fy, (pw, ph), margin)
     title += f"  (1 in = {fpi:g} ft, grid {grid_ft:g} ft)"
+    return v, cfg, title, kind, ident
+
+
+def render(model, view_arg, out_path, topts=None, cfg_over=None):
+    place = model["place"]
+    bw, bh = place["bounds"]["width_ft"], place["bounds"]["height_ft"]
+    streets = {s["id"]: s for s in model["streets"]}
+    blds = {b["id"]: b for b in model["buildings"]}
+    v, cfg, title, kind, ident = compute_view(model, view_arg, cfg_over)
+    fpi, grid_ft, major_n = cfg["scale_ft_per_in"], cfg["grid_ft"], cfg["grid_major_every"]
+    pw, ph = cfg["page_in"]
+    margin = cfg["margin_in"]
+    W, H = pw * 72.0, ph * 72.0
     lf = min(max((100.0 / fpi) ** 0.5, 0.6), 1.6)     # label size factor follows the scale
     ls = lambda base: round(base * lf, 1)
 
@@ -306,7 +323,8 @@ def render(model, view_arg, out_path, topts=None, cfg_over=None):
 
     # TERRAIN contours + elevation labels (heightmap from world/<place>/terrain/)
     if topts is not None:
-        h, meta = tr.load_heightmap(place["id"])
+        h, meta = tr.load_heightmap(place["id"])     # worldio: patched / carved / base
+        print(f"terrain source: {meta.get('source', 'base')}" + (f" WARNING: {meta['warning']}" if meta.get("warning") else ""))
         mask = []
         if topts["use_mask"]:
             from shapely.geometry import Polygon
@@ -325,7 +343,9 @@ def render(model, view_arg, out_path, topts=None, cfg_over=None):
         frame = ct.Frame(v.x0, v.y0, v.x1, v.y1, v.k, margin * 72, margin * 72)
         cp = ct.ContourParams(minor=topts["minor"], index=topts["index"], font_size=topts["label_size"] * lf,
                               units=topts["units"], use_mask=topts["use_mask"],
-                              sea_level_ft=float(meta.get("sea_level_ft", 0.0)))
+                              sea_level_ft=float(meta.get("sea_level_ft", 0.0)),
+                              **{k_: topts[k_] for k_ in ("decimals", "label_spacing_ft", "min_len_ft", "follow_line",
+                                                          "upright", "labels", "emphasize_datum") if k_ in topts})
         cs = ct.build(h, meta["cell_ft"], frame, cp, mask)
         ct.emit(t, cs)
         print(f"contours: {len(cs.pieces)} paths, {len(cs.labels)} labels, relief {meta['elev_min']:.0f}..{meta['elev_max']:.0f} ft, "
@@ -434,7 +454,19 @@ if __name__ == "__main__":
     ap.add_argument("--index-interval", type=float, default=50.0)
     ap.add_argument("--label-size", type=float, default=6.0)
     ap.add_argument("--units", choices=["ft", "m"], default="ft")
+    ap.add_argument("--label-decimals", type=int, default=0)
+    ap.add_argument("--label-spacing", type=float, default=500.0, help="target feet between labels on one contour")
+    ap.add_argument("--min-contour-len", type=float, default=120.0, help="drop contour pieces shorter than this (ft)")
+    ap.add_argument("--no-follow-line", action="store_true", help="horizontal labels instead of along the line")
+    ap.add_argument("--no-upright", action="store_true", help="allow upside-down labels")
+    ap.add_argument("--no-labels", action="store_true", help="contours only")
+    ap.add_argument("--no-datum", action="store_true", help="do not emphasise the datum contour")
+    ap.add_argument("--terrain-source", choices=["auto", "base", "patched", "carved"],
+                    help="which heightmap to read (default: panel_state / auto = patched, or carved when water.use_carved)")
+    ap.add_argument("--water-source", choices=["world", "working"])
+    ap.add_argument("--model-dir", help="read the town model from this folder instead of world/<place> (candidate)")
     a = ap.parse_args()
+    worldio.set_source(a.terrain_source, a.water_source)
     topts = None
     if a.terrain or a.contours:
         troot = os.path.join(REPO, "world", a.place)
@@ -444,8 +476,11 @@ if __name__ == "__main__":
             tr.save_preview(hm, meta, os.path.join(REPO, "illustrator", "out", f"{a.place}_height.png"))
         use_mask = a.mask if a.mask is not None else viewcfg.load_raw(a.place).get("contour_mask", {}).get("enabled", True)
         topts = {"minor": a.contour_interval, "index": a.index_interval, "label_size": a.label_size,
-                 "units": a.units, "use_mask": use_mask}
+                 "units": a.units, "use_mask": use_mask, "decimals": a.label_decimals,
+                 "label_spacing_ft": a.label_spacing, "min_len_ft": a.min_contour_len,
+                 "follow_line": not a.no_follow_line, "upright": not a.no_upright, "labels": not a.no_labels,
+                 "emphasize_datum": not a.no_datum}
     suffix = "terrain" if topts and a.view == "town" else a.view.replace(":", "_")
     out = a.out or os.path.join(REPO, "illustrator", "out", f"{a.place}_{suffix}.svg")
-    render(load_place(a.place), a.view, out, topts,
+    render(load_place(a.place, a.model_dir), a.view, out, topts,
            {"preset": a.preset, "scale": a.scale, "grid": a.grid, "page": a.page, "major_every": a.grid_major})
