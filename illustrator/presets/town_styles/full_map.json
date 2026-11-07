@@ -1,0 +1,56 @@
+{
+ "name": "Full map (textured)",
+ "description": "Default. Every street, plaza, building, field and water body gets a textured raster fill chosen by its type (see 'types'), drawn as ART - Fill * layers below the linework. Edit 'types' to change which texture a type uses; any PNG in presets/textures works.",
+ "full_map": true,
+ "seed": 11,
+ "raster": {"dpi": 200, "min_tile_px": 40},
+ "parts": {},
+ "stroke": "",
+ "types": {
+  "streets": {
+   "road":   {"texture": "cobble",       "tile_ft": 20, "warp": 0.2, "tint": 0.04},
+   "street": {"texture": "gravel",       "tile_ft": 26, "tint": 0.05},
+   "lane":   {"texture": "packed_earth", "tile_ft": 30, "tint": 0.05},
+   "alley":  {"texture": "mud",          "tile_ft": 30, "tint": 0.05},
+   "bridge": {"texture": "plank",        "tile_ft": 9, "align": "across", "tint": 0.03},
+   "classify": {"alley_name": "^Alley\b", "alley_max_width_ft": 12.5, "narrow_is_alley": true},
+   "edge": {"ft": 2.0, "dark": 0.25},
+   "bridge_shadow": {"dx_ft": 2.5, "dy_ft": 2.5, "blur_ft": 2.0, "alpha": 0.35}
+  },
+  "plazas": {
+   "default": {"texture": "cobble", "tile_ft": 14, "warp": 0.2, "tint": 0.06}
+  },
+  "buildings": {
+   "house":     {"textures": [["thatch", 3], ["shingle", 3], ["timber_roof", 1]], "tile_ft": 14, "tint": 0.10},
+   "farmhouse": {"textures": [["thatch", 3], ["shingle", 2]], "tile_ft": 16, "tint": 0.10},
+   "shed":      {"textures": [["timber_roof", 3], ["thatch", 1]], "tile_ft": 12, "tint": 0.12},
+   "inn":       {"texture": "shingle", "tile_ft": 14, "tint": 0.05},
+   "tavern":    {"texture": "shingle", "tile_ft": 14, "tint": 0.05},
+   "civic":     {"textures": [["slate", 3], ["red_tile", 1]], "tile_ft": 14, "tint": 0.06},
+   "craft":     {"textures": [["timber_roof", 2], ["slate", 1]], "tile_ft": 14, "tint": 0.08},
+   "mill":      {"texture": "timber_roof", "tile_ft": 14, "tint": 0.06},
+   "barn":      {"texture": "timber_roof", "tile_ft": 16, "tint": 0.08},
+   "stable":    {"texture": "timber_roof", "tile_ft": 14, "tint": 0.08},
+   "default":   {"textures": [["shingle", 2], ["thatch", 1]], "tile_ft": 14, "tint": 0.08},
+   "gable": 0.22,
+   "eave": {"ft": 1.1, "dark": 0.38},
+   "shadow": {"dx_ft": 3.0, "dy_ft": 3.0, "blur_ft": 1.6, "alpha": 0.38}
+  },
+  "fields": {
+   "choose": [["tilled", 3], ["wheat", 3], ["pasture", 2], ["crop_green", 1]],
+   "crops": {
+    "tilled":     {"texture": "tilled",     "tile_ft": 40, "tint": 0.07},
+    "wheat":      {"texture": "wheat",      "tile_ft": 40, "tint": 0.06},
+    "pasture":    {"texture": "pasture",    "tile_ft": 60, "tint": 0.06},
+    "crop_green": {"texture": "crop_green", "tile_ft": 40, "tint": 0.06}
+   },
+   "border": {"color": "#4d6b30", "ft": 2.5, "alpha": 0.55}
+  },
+  "water": {
+   "river":   {"texture": "water", "tile_ft": 50, "warp": 0.35, "shallow": "#9fd0d0", "foam": 0.5},
+   "lake":    {"texture": "water", "tile_ft": 60, "warp": 0.35, "shallow": "#9fd0d0", "foam": 0.35},
+   "default": {"texture": "water", "tile_ft": 50, "warp": 0.35, "shallow": "#9fd0d0", "foam": 0.4},
+   "bank": {"texture": "mud", "ft": 10, "tile_ft": 30, "alpha": 0.9, "wet": 0.35}
+  }
+ }
+}

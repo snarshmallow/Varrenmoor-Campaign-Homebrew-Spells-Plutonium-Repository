@@ -112,7 +112,7 @@ const actions = () => hostLog.map(h => h.action);
     let r = await run(VB.jobShading(st, d));
     check("shading ok", r.ok, r.error);
     const pi = hostLog.find(h => h.action === "place_image");
-    check("place_image on ART - Shading below LINES, locked", pi && pi.layer === "ART - Shading" && pi.below === "LINES" && pi.lock === true, JSON.stringify(pi));
+    check("place_image on ART - Shading below LINES, locked", pi && pi.layer === "ART - Shading" && Array.isArray(pi.below) && pi.below[pi.below.length - 1] === "LINES" && pi.lock === true, JSON.stringify(pi));
     check("shading rect registers with the map", pi && Math.abs((pi.rect[2] - pi.rect[0]) - 2400 * view.k) < 0.01 && Math.abs((pi.rect[3] - pi.rect[1]) - 1500 * view.k) < 0.01, JSON.stringify(pi && pi.rect));
     check("shading stale cleared", st.stale.shading === false);
     check("phases file has panel hillshade", JSON.parse(fs.readFileSync(`${d.panel}/phases.json`, "utf8")).hillshade.azimuth === 315);
@@ -142,11 +142,21 @@ const actions = () => hostLog.map(h => h.action);
   if (want("town")) {
     st.town.area = JSON.parse(fs.readFileSync(`${ROOT}/world/${place}/town_params.json`, "utf8")).area_ft; // same lasso as the saved model
     st.town.style.streets = "parch_light"; st.town.style.buildings = "red_rock"; st.town.style.water = "water_blue"; st.town.style.stroke = "#4a3320";
+    st.town.fills.full = false;      // legacy flat fills path first
     let r = await run(VB.jobTown(st, d));
     check("town generate ok", r.ok, r.error);
     check("candidate written and flagged", fs.existsSync(`${d.candidate}/streets.json`) && st.town.candidate === true);
     const fills = hostLog.find(h => h.action === "apply_fills");
     check("apply_fills after drawing, on named layers", fills && fills.assignments.some(a => a.layer === "Roads" && a.exclude === "^sqr_" && a.fill) && fills.assignments.some(a => a.layer === "Buildings" && a.stroke), JSON.stringify(fills));
+    hostLog.length = 0; st.town.fills.full = true;
+    r = await run(VB.jobFullFills(st, d));
+    check("full fills job ok", r.ok, r.error);
+    const pl = hostLog.filter(h => h.action === "place_image" && /ART - Fill /.test(h.layer));
+    check("four fill rasters placed below LINES, each aligned to the view window", pl.length === 4 && pl.every(h => h.below[h.below.length - 1] === "LINES" && h.rect.every(Number.isFinite)) && pl[0].rect.join() === pl[3].rect.join(), JSON.stringify(pl.map(h => h.layer)));
+    check("PNGs exist at the placed paths", pl.every(h => fs.existsSync(h.path)));
+    const ff = hostLog.find(h => h.action === "apply_fills" && h.clear);
+    check("flat copies go to ART - Fill Shapes with ids and swatches", ff && ff.assignments.length > 3 && ff.assignments.every(a => a.copy_to === "ART - Fill Shapes" && a.ids.length && a.fill.length === 3), JSON.stringify(ff).slice(0, 300));
+    check("autofill after drawing uses the textured pipeline by default", VB.autoFillSteps(st, d).some(x => /fills_raster/.test(x.label || "")) );
     r = await run(VB.jobTownReject(st, d));
     check("town reject ok, candidate gone, flag cleared", r.ok && !fs.existsSync(d.candidate) && st.town.candidate === false, r.error);
     if (WRITES) {

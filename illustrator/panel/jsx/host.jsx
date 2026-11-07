@@ -42,6 +42,17 @@ function VB_ensureLike(doc, src) {
   t.name = src.name;
   return t;
 }
+// Layer `name` (created if missing), stacked directly beneath the first existing layer of `below` (string or array of names).
+function VB_orderLayer(doc, name, below) {
+  var pl = VB_find(doc, name);
+  if (!pl) { pl = doc.layers.add(); pl.name = name; }
+  var list = (below instanceof Array) ? below : (below ? [below] : []);
+  for (var i = 0; i < list.length; i++) {
+    var ref = VB_find(doc, list[i]);
+    if (ref && ref !== pl) { try { pl.move(ref, ElementPlacement.PLACEAFTER); } catch (e) {} break; }
+  }
+  return pl;
+}
 function VB_rgb(c) { var r = new RGBColor(); r.red = c[0]; r.green = c[1]; r.blue = c[2]; return r; }
 // Named swatch: create it or update its colour (swatches are the only fill style a script can create).
 function VB_swatch(doc, name, rgb) {
@@ -208,14 +219,8 @@ function VB_run(json) {
         var pf = new File(a.path);
         if (!pf.exists) throw new Error("file not found: " + a.path);
         var pd = app.activeDocument, ab = pd.artboards[0].artboardRect;
-        var lname = a.layer || "ART - Shading", pl = VB_find(pd, lname);
-        if (!pl) {
-          pl = pd.layers.add(); pl.name = lname;
-          var ref = a.below ? VB_find(pd, a.below) : null;
-          if (ref) { try { pl.move(ref, ElementPlacement.PLACEAFTER); } catch (e) {} }
-        }
+        var lname = a.layer || "ART - Shading", pl = VB_orderLayer(pd, lname, a.below);
         pl.locked = false; pl.visible = true;
-        if (a.below) { var ref2 = VB_find(pd, a.below); if (ref2) { try { pl.move(ref2, ElementPlacement.PLACEAFTER); } catch (e) {} } }   // also reposition an existing layer
         var iname = a.name || "shading_png", old2 = VB_direct(pl);
         for (var oi2 = old2.length - 1; oi2 >= 0; oi2--) {
           if (old2[oi2].name === iname) { try { old2[oi2].locked = false; } catch (e) {} old2[oi2].remove(); }
@@ -233,19 +238,44 @@ function VB_run(json) {
         // assignments: [{layer, match (regex on item name), swatch, fill [r,g,b]|null, stroke [r,g,b]|null, stroke_w}]
         if (app.documents.length === 0) throw new Error("no open document");
         var fd = app.activeDocument, as2 = a.assignments || [], applied = [], skipped = [];
+        // a.clear: layers whose items are removed first (flat copies from the previous run)
+        var clr = a.clear || [];
+        for (var ci = 0; ci < clr.length; ci++) {
+          var cl = VB_find(fd, clr[ci]);
+          if (!cl) continue;
+          cl.locked = false; cl.visible = true;
+          var co = VB_direct(cl);
+          for (var cj = co.length - 1; cj >= 0; cj--) { try { co[cj].locked = false; co[cj].hidden = false; } catch (e) {} co[cj].remove(); }
+        }
+        var cpLayers = {};
         for (var ai = 0; ai < as2.length; ai++) {
           var asg = as2[ai], fl = VB_find(fd, asg.layer);
           if (!fl) { skipped.push(asg.layer); continue; }
           var re = asg.match ? new RegExp(asg.match) : null;
+          var idset = null;
+          if (asg.ids) { idset = {}; for (var di = 0; di < asg.ids.length; di++) { idset[asg.ids[di]] = true; idset[String(asg.ids[di]).replace(/_/g, " ")] = true; } }
+          var cpl = null;
+          if (asg.copy_to) {
+            if (!cpLayers[asg.copy_to]) { cpLayers[asg.copy_to] = VB_orderLayer(fd, asg.copy_to, asg.copy_below); cpLayers[asg.copy_to].locked = false; cpLayers[asg.copy_to].visible = true; }
+            cpl = cpLayers[asg.copy_to];
+          }
           var wl = fl.locked, wv = fl.visible; fl.locked = false; fl.visible = true;
           var sw2 = asg.fill ? VB_swatch(fd, asg.swatch || ("VB " + asg.layer), asg.fill) : null;
           var cnt = 0, its = VB_direct(fl);
           for (var ii = 0; ii < its.length; ii++) {
             var itm = its[ii];
             var nm = String(itm.name), nm2 = nm.replace(/ /g, "_");  // older SVGs: Illustrator imports "_" in ids as a space
+            if (idset && !idset[nm] && !idset[nm2]) continue;
             if (re && !re.test(nm) && !re.test(nm2)) continue;
             if (asg.exclude && (new RegExp(asg.exclude).test(nm) || new RegExp(asg.exclude).test(nm2))) continue;
             try { itm.locked = false; } catch (e) {}
+            if (cpl) {   // flat fill-only copy on its own layer (editable, usable as a mask); the original keeps its line
+              var dup = itm.duplicate(cpl, ElementPlacement.PLACEATEND);
+              dup.name = "flat_" + nm2;
+              var dt = dup.typename === "CompoundPathItem" ? dup.pathItems[0] : dup;
+              if (sw2 && dt && ("filled" in dt)) { dt.filled = true; dt.fillColor = sw2.color; dt.stroked = false; }
+              cnt++; continue;
+            }
             var tgt = itm.typename === "CompoundPathItem" ? itm.pathItems[0] : itm;
             if (!tgt || !("filled" in tgt)) continue;
             if (sw2) { tgt.filled = true; tgt.fillColor = sw2.color; } else tgt.filled = false;
@@ -255,6 +285,7 @@ function VB_run(json) {
           fl.locked = wl; fl.visible = wv;
           applied.push(asg.layer + ":" + cnt);
         }
+        for (var ck in cpLayers) { if (cpLayers.hasOwnProperty(ck)) cpLayers[ck].locked = true; }
         out.applied = applied; out.skipped = skipped;
         if (skipped.length) out.warn = "layers not found: " + skipped.join(", ");
         break;

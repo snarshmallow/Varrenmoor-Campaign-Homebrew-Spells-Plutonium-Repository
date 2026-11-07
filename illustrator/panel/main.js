@@ -319,8 +319,10 @@
       extras.map(function (t) { return '<option value="' + t.name + '">' + t.name + "</option>"; }).join("");
     $$("select.fill").forEach(function (s) { s.innerHTML = opts; });
     var sp = $("stylePreset"); sp.innerHTML = '<option value="">(custom)</option>';
+    var fs_ = $("fullStyle"); fs_.innerHTML = "";
     listDir(d.presets + "/town_styles", ".json").forEach(function (f) {
-      var j = readJson(d.presets + "/town_styles/" + f, {}), o = document.createElement("option"); o.value = f.replace(/\.json$/, ""); o.textContent = j.name || o.value; sp.appendChild(o);
+      var j = readJson(d.presets + "/town_styles/" + f, {}), o = document.createElement("option"); o.value = f.replace(/\.json$/, ""); o.textContent = j.name || o.value;
+      (j.types ? fs_ : sp).appendChild(o);
     });
   }
   function applyStylePreset() {
@@ -412,6 +414,7 @@
     town_accept: function () { return startJob(VB.jobTownAccept(state, d)); },
     town_reject: function () { return startJob(VB.jobTownReject(state, d)); },
     town_fills: function () { return startJob(VB.jobFills(state, d)); },
+    fills_render: function () { return startJob(VB.jobFullFills(state, d)); },
     style_preset: applyStylePreset,
     lock_guides: function () { return startJob(VB.jobLayers("lock_guides", state)); },
     unlock_guides: function () { return startJob(VB.jobLayers("unlock_guides", state)); },

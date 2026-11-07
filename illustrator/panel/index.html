@@ -285,7 +285,18 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
     <span id="candTag" class="tag">no candidate</span>
   </div>
   <p class="note">Generate writes a candidate model and draws it; the saved world model stays as it was until you Accept.</p>
-  <h4>Fills per part</h4>
+  <h4>Map fills (textured, by feature type)</h4>
+  <div class="grid">
+    <label class="chk"><input type="checkbox" data-s="town.fills.full"> Textured full-map fills (default)</label>
+    <label class="chk"><input type="checkbox" data-s="town.autofill"> Apply fills after drawing</label>
+    <label>Full-map style <select id="fullStyle" data-s="town.fills.style"></select></label>
+    <label>Fill dpi <input type="number" step="25" min="50" max="400" data-s="town.fills.dpi"></label>
+    <label class="chk"><input type="checkbox" data-s="town.fills.flat"> Flat vector swatches on ART - Fill Shapes</label>
+    <label class="chk"><input type="checkbox" data-s="town.fills.embed"> Embed PNGs in the document</label>
+  </div>
+  <div class="btns"><button data-act="fills_render">Render map with fills</button></div>
+  <p class="note">Streets, plazas, buildings, fields and water get a texture chosen by their type (road, street, lane, alley, bridge; house, civic, inn, mill, barn...; crop; river, lake) from the style's <code>types</code> map. Rasters go on <code>ART - Fill Fields / Water / Streets / Buildings</code> below LINES and are replaced on each run; the linework and labels stay vector on top.</p>
+  <h4>Fills per part (flat colours, legacy)</h4>
   <div class="grid">
     <label>Style preset <select id="stylePreset" data-s="town.style.preset" data-act-change="style_preset"></select></label>
     <label>Line colour (#rrggbb) <input type="text" data-s="town.style.stroke" placeholder="keep"></label>
@@ -294,10 +305,9 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
     <label>Buildings <select class="fill" data-s="town.style.buildings"></select></label>
     <label>Fields <select class="fill" data-s="town.style.fields"></select></label>
     <label>Water <select class="fill" data-s="town.style.water"></select></label>
-    <label class="chk"><input type="checkbox" data-s="town.autofill"> Apply fills after drawing</label>
   </div>
-  <div class="btns"><button data-act="town_fills">Apply fills now</button></div>
-  <p class="note">Fills are named swatches ("VB Streets - ...") set on the named layers. Scripts cannot create graphic styles: keep them in the .ait template (see illustrator/README.md).</p>
+  <div class="btns"><button data-act="town_fills">Apply flat fills now</button></div>
+  <p class="note">Flat fills are named swatches ("VB Streets - ...") set on the named layers. Scripts cannot create graphic styles: keep them in the .ait template (see illustrator/README.md).</p>
 </section>
 
 <section id="tab-layers" role="tabpanel">

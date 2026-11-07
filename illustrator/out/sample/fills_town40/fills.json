@@ -1,0 +1,296 @@
+{
+ "style": "Full map (textured)",
+ "dpi": 200.0,
+ "ppf": 5.0,
+ "scale_ft_per_in": 40.0,
+ "size_px": [
+  3200,
+  2000
+ ],
+ "bounds_ft": {
+  "x_min": 880.0,
+  "y_min": 550.0,
+  "x_max": 1520.0,
+  "y_max": 950.0
+ },
+ "y_axis": "down",
+ "layers": [
+  {
+   "category": "fields",
+   "png": "fill_fields.png",
+   "layer": "ART - Fill Fields",
+   "name": "fill_fields_png"
+  },
+  {
+   "category": "water",
+   "png": "fill_water.png",
+   "layer": "ART - Fill Water",
+   "name": "fill_water_png"
+  },
+  {
+   "category": "streets",
+   "png": "fill_streets.png",
+   "layer": "ART - Fill Streets",
+   "name": "fill_streets_png"
+  },
+  {
+   "category": "buildings",
+   "png": "fill_buildings.png",
+   "layer": "ART - Fill Buildings",
+   "name": "fill_buildings_png"
+  }
+ ],
+ "flat": [
+  {
+   "part": "buildings",
+   "swatch": "VB Roofs - red_tile",
+   "layer": "Buildings",
+   "rgb": [
+    168,
+    88,
+    59
+   ],
+   "ids": [
+    "bld_magistrate_court"
+   ]
+  },
+  {
+   "part": "buildings",
+   "swatch": "VB Roofs - shingle",
+   "layer": "Buildings",
+   "rgb": [
+    119,
+    89,
+    61
+   ],
+   "ids": [
+    "bld_house_009",
+    "bld_house_013",
+    "bld_house_014",
+    "bld_house_015",
+    "bld_house_016",
+    "bld_house_017",
+    "bld_house_018",
+    "bld_house_027",
+    "bld_house_030",
+    "bld_house_042",
+    "bld_house_046",
+    "bld_house_052",
+    "bld_house_056",
+    "bld_house_057",
+    "bld_house_060",
+    "bld_house_063",
+    "bld_house_066",
+    "bld_house_067",
+    "bld_house_069",
+    "bld_house_070",
+    "bld_house_071",
+    "bld_house_073",
+    "bld_house_075",
+    "bld_house_080",
+    "bld_house_082",
+    "bld_house_085",
+    "bld_house_087",
+    "bld_house_088",
+    "bld_house_089",
+    "bld_house_091"
+   ]
+  },
+  {
+   "part": "buildings",
+   "swatch": "VB Roofs - slate",
+   "layer": "Buildings",
+   "rgb": [
+    85,
+    94,
+    105
+   ],
+   "ids": [
+    "bld_lockup",
+    "bld_meeting_hall",
+    "bld_tax_office",
+    "bld_warden_hall"
+   ]
+  },
+  {
+   "part": "buildings",
+   "swatch": "VB Roofs - thatch",
+   "layer": "Buildings",
+   "rgb": [
+    153,
+    131,
+    74
+   ],
+   "ids": [
+    "bld_house_007",
+    "bld_house_008",
+    "bld_house_010",
+    "bld_house_011",
+    "bld_house_012",
+    "bld_house_021",
+    "bld_house_023",
+    "bld_house_028",
+    "bld_house_031",
+    "bld_house_032",
+    "bld_house_033",
+    "bld_house_035",
+    "bld_house_036",
+    "bld_house_038",
+    "bld_house_039",
+    "bld_house_040",
+    "bld_house_043",
+    "bld_house_045",
+    "bld_house_047",
+    "bld_house_054",
+    "bld_house_055",
+    "bld_house_059",
+    "bld_house_062",
+    "bld_house_072",
+    "bld_house_076",
+    "bld_house_077",
+    "bld_house_078",
+    "bld_house_083",
+    "bld_shed_043"
+   ]
+  },
+  {
+   "part": "buildings",
+   "swatch": "VB Roofs - timber_roof",
+   "layer": "Buildings",
+   "rgb": [
+    106,
+    94,
+    77
+   ],
+   "ids": [
+    "bld_house_020",
+    "bld_house_022",
+    "bld_house_024",
+    "bld_house_026",
+    "bld_house_037",
+    "bld_house_064",
+    "bld_house_079",
+    "bld_house_084",
+    "bld_smithy"
+   ]
+  },
+  {
+   "part": "fields",
+   "swatch": "VB Fields - pasture",
+   "layer": "Fences",
+   "rgb": [
+    126,
+    169,
+    74
+   ],
+   "ids": [
+    "fld_001"
+   ]
+  },
+  {
+   "part": "plazas",
+   "swatch": "VB Plazas - cobble",
+   "layer": "Roads",
+   "rgb": [
+    131,
+    123,
+    110
+   ],
+   "ids": [
+    "sqr_market",
+    "sqr_court"
+   ]
+  },
+  {
+   "part": "streets",
+   "swatch": "VB Streets - cobble",
+   "layer": "Roads",
+   "rgb": [
+    131,
+    123,
+    110
+   ],
+   "ids": [
+    "str_pilgrim_road_1"
+   ]
+  },
+  {
+   "part": "streets",
+   "swatch": "VB Streets - gravel",
+   "layer": "Roads",
+   "rgb": [
+    157,
+    148,
+    131
+   ],
+   "ids": [
+    "str_003",
+    "str_005",
+    "str_006",
+    "str_007",
+    "str_008",
+    "str_009",
+    "str_010",
+    "str_012",
+    "str_013",
+    "str_014",
+    "str_016",
+    "str_017",
+    "str_018",
+    "str_020",
+    "str_021",
+    "str_022",
+    "str_023",
+    "str_024",
+    "str_025",
+    "str_026",
+    "str_027",
+    "str_030",
+    "str_031"
+   ]
+  },
+  {
+   "part": "streets",
+   "swatch": "VB Streets - packed_earth",
+   "layer": "Roads",
+   "rgb": [
+    151,
+    121,
+    85
+   ],
+   "ids": [
+    "str_004",
+    "str_011",
+    "str_015",
+    "str_019",
+    "str_028"
+   ]
+  },
+  {
+   "part": "streets",
+   "swatch": "VB Streets - plank",
+   "layer": "Roads",
+   "rgb": [
+    144,
+    114,
+    76
+   ],
+   "ids": [
+    "str_pilgrim_road_bridge"
+   ]
+  },
+  {
+   "part": "water",
+   "swatch": "VB Water - water",
+   "layer": "Water",
+   "rgb": [
+    77,
+    129,
+    169
+   ],
+   "ids": [
+    "wat_river"
+   ]
+  }
+ ]
+}

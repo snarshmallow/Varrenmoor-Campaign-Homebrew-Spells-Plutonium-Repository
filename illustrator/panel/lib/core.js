@@ -68,6 +68,7 @@
         max_street_grade: 0.08, max_main_grade: 0.05, max_build_slope: 0.19, max_build_relief_ft: 6, max_field_slope: 0.13,
         entry_x: 1290, entry_y: 1480, area: [], area_src: "", rings: [], params_loaded: false, candidate: false,
         redraw_contours: true, autofill: true,
+        fills: { full: true, style: "full_map", flat: true, dpi: 200, embed: false },
         style: { preset: "", streets: "", plazas: "", buildings: "", fields: "", water: "", stroke: "" }
       },
       foundry: { target: "new", sceneName: "", sceneUuid: "", dpi: 150, ftPerGrid: null, walls: true, drawRoads: false, drawWater: false,
@@ -294,7 +295,7 @@
           var p = d.world + "/view_settings.json", raw = run.readJson(p, {});
           run.writeJson(p, VB.applyViewSettings(raw, st.scale)); } },
         py(GEN + "render_world.py", args, "render_world (view)")
-      ].concat(VB.replaceSteps(svg, names, "replace layers")),
+      ].concat(VB.replaceSteps(svg, names, "replace layers"), all ? VB.autoFillSteps(st, d) : []),
       setStale: all ? [] : ["contours", "shading"], clearStale: all ? ["contours"] : []
     };
   };
@@ -378,7 +379,7 @@
         { t: "fn", label: "place PNG", fn: function (run) {
           var side = run.readJson(png.replace(/\.png$/, ".json"), null);
           if (!side) throw new Error("shading sidecar .json missing");
-          return run.host({ action: "place_image", path: png, rect: VB.imageRect(run.vars.view, side.bounds_ft), layer: "ART - Shading", below: "LINES", name: "shading_png", lock: true }, true);
+          return run.host({ action: "place_image", path: png, rect: VB.imageRect(run.vars.view, side.bounds_ft), layer: "ART - Shading", below: VB.fillBelow("ART - Shading"), name: "shading_png", lock: true }, true);
         } }
       ],
       clearStale: ["shading"]
@@ -389,7 +390,7 @@
     if (!st.water.redraw) return [];
     var svg = d.panel + "/water.svg";
     return [py(GEN + "render_world.py", ["--place", st.place].concat(VB.viewFlags(st), ["--out", svg], VB.srcFlags(st), VB.labelFlags(st)), "render_world (water)")]
-      .concat(VB.replaceSteps(svg, ["Water"], "replace Water layer"));
+      .concat(VB.replaceSteps(svg, ["Water"], "replace Water layer"), VB.autoFillSteps(st, d));
   };
   VB.jobWaterAnalyze = function (st, d) {
     var w = st.water, a = ["analyze"].concat(VB.waterBase(st), ["--threshold-cells", String(w.threshold_cells), "--sea-level", String(w.sea_level_ft)]);
@@ -429,6 +430,45 @@
     return { kind: "water_crossings", label: "Bridges report", params: {},
       steps: [py(GEN + "water.py", ["crossings"].concat(VB.waterBase(st)), "water crossings")] };
   };
+  // ---------------------------------------------------------------- textured 'full map' fills (fills_raster.py)
+  // Stacking order of the raster layers, bottom to top; each is placed directly beneath the first existing layer above it, else beneath LINES.
+  VB.FILL_ORDER = ["ART - Shading", "ART - Fill Shapes", "ART - Fill Fields", "ART - Fill Water", "ART - Fill Streets", "ART - Fill Buildings"];
+  VB.FILL_SHAPES = "ART - Fill Shapes";
+  VB.fillBelow = function (name) {
+    var i = VB.FILL_ORDER.indexOf(name);
+    return (i < 0 ? [] : VB.FILL_ORDER.slice(i + 1)).concat(["LINES"]);
+  };
+  VB.fillsOn = function (st) { var f = (st.town || {}).fills; return !!(f && f.full); };
+  // steps: py panelio view, py fills_raster, place each PNG below LINES, flat swatch copies. opts {modelDir}
+  VB.fullFillSteps = function (st, d, opts) {
+    opts = opts || {}; var f = st.town.fills, out = d.panel + "/fills", style = f.style || "full_map";
+    var args = ["--place", st.place].concat(VB.viewFlags(st), ["--out-dir", out, "--style", style, "--dpi", String(f.dpi || 200)], VB.srcFlags(st));
+    if (opts.modelDir) args.push("--model-dir", opts.modelDir);
+    return [
+      py(GEN + "panelio.py", ["view", "--place", st.place].concat(VB.panelioViewFlags(st)), "page <-> feet mapping", { json: "view" }),
+      py(GEN + "fills_raster.py", args, "fills_raster (" + style + ")"),
+      { t: "fn", label: "place fill layers", fn: async function (run) {
+        var info = run.readJson(out + "/fills.json"), rect = VB.imageRect(run.vars.view, info.bounds_ft);
+        for (var i = 0; i < info.layers.length; i++) {
+          var L = info.layers[i];
+          await run.host({ action: "place_image", path: out + "/" + L.png, rect: rect, layer: L.layer, below: VB.fillBelow(L.layer), name: L.name, lock: true, embed: !!f.embed }, true);
+        }
+        if (f.flat !== false) {
+          var as = info.flat.map(function (g) {
+            return { layer: g.layer, ids: g.ids, swatch: g.swatch, fill: g.rgb, copy_to: VB.FILL_SHAPES, copy_below: VB.fillBelow(VB.FILL_SHAPES) };
+          });
+          await run.host({ action: "apply_fills", clear: [VB.FILL_SHAPES], assignments: as }, true);
+        }
+        run.log("fills: " + info.layers.length + " raster layers, " + info.flat.length + " flat swatch groups");
+      } }
+    ];
+  };
+  // fills after a drawing job: textured full map when on (needs a style with a 'types' map), else the flat per-part swatches
+  VB.autoFillSteps = function (st, d, opts) {
+    if (!st.town.autofill) return [];
+    if (VB.fillsOn(st)) return VB.fullFillSteps(st, d, opts);
+    return [{ t: "fn", label: "fills", fn: function (run) { return VB.fillStep(st, run); } }];
+  };
   VB.fillStep = function (st, run) {
     var as = VB.fillAssignments(st, run.textures);
     if (!as.length) { run.log("fills: nothing chosen"); return null; }
@@ -449,10 +489,13 @@
           run.writeJson(params, p); } },
         py(GEN + "town_gen.py", ["--place", st.place, "--params", params, "--out-dir", d.candidate].concat(VB.srcFlags(st)), "town_gen.py (candidate)"),
         py(GEN + "render_world.py", rargs, "render_world (candidate)")
-      ].concat(VB.replaceSteps(svg, names, "draw candidate"), [
-        { t: "fn", label: "fills", when: function () { return t.autofill; }, fn: function (run) { return VB.fillStep(st, run); } }]),
+      ].concat(VB.replaceSteps(svg, names, "draw candidate"), VB.autoFillSteps(st, d, { modelDir: d.candidate })),
       setState: [["town.candidate", true]], clearStale: ["town"]
     };
+  };
+  VB.jobFullFills = function (st, d) {
+    return { kind: "fills_render", label: "Render map with fills", params: { fills: st.town.fills },
+      steps: VB.fullFillSteps(st, d, { modelDir: st.town.candidate ? d.candidate : null }) };
   };
   VB.jobFills = function (st, d) {
     return { kind: "town_fills", label: "Apply fills", params: { style: st.town.style },
@@ -467,7 +510,7 @@
     return { kind: "town_reject", label: "Reject town (restore previous)", params: {},
       steps: [py(GEN + "panelio.py", ["town-reject", "--place", st.place], "town-reject"),
         py(GEN + "render_world.py", ["--place", st.place].concat(VB.viewFlags(st), ["--out", svg], VB.srcFlags(st), VB.labelFlags(st), st.town.redraw_contours ? VB.contourFlags(st) : []), "render_world (previous model)")]
-        .concat(VB.replaceSteps(svg, names, "restore previous"), [{ t: "fn", label: "fills", when: function () { return st.town.autofill; }, fn: function (run) { return VB.fillStep(st, run); } }]),
+        .concat(VB.replaceSteps(svg, names, "restore previous"), VB.autoFillSteps(st, d)),
       setState: [["town.candidate", false]] };
   };
   VB.jobLayers = function (act, st) {
