@@ -80,6 +80,7 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
   <button role="tab" data-tab="lighting">Lighting</button>
   <button role="tab" data-tab="water">Water</button>
   <button role="tab" data-tab="town">Town</button>
+  <button role="tab" data-tab="regions">Regions</button>
   <button role="tab" data-tab="layers">Layers</button>
   <button role="tab" data-tab="foundry">Foundry</button>
 </nav>
@@ -445,6 +446,70 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
   <p class="note">Flat fills are named swatches ("VB Streets - ...") set on the named layers. Scripts cannot create graphic styles: keep them in the .ait template (see illustrator/README.md).</p>
 </section>
 
+<section id="tab-regions" role="tabpanel">
+  <h4>Zoom-in child map of a district</h4>
+  <p class="note">Parent = the place chosen at the top. The child keeps the parent's feet and entity ids; only the view scale changes. Details are generated (not canon).</p>
+  <h4>Region</h4>
+  <div class="grid">
+    <label class="chk"><input type="radio" name="regMode" id="regMode_district" value="district"> District / ring / field from the model</label>
+    <label>Entity <select id="regDistrict"></select></label>
+    <label class="chk"><input type="radio" name="regMode" id="regMode_lasso" value="lasso"> Lasso (closed path in Illustrator)</label>
+    <div class="btns"><button data-act="reg_capture" title="Selected closed path, or the path on layer REGIONS">Capture lasso</button><span id="regPolyTag" class="tag">none</span></div>
+    <label class="chk"><input type="radio" name="regMode" id="regMode_rect" value="rect"> Rectangle (feet)</label>
+    <div class="grid" style="grid-template-columns:repeat(4,1fr)">
+      <label>x0 <input type="number" data-s="regions.rect.0" step="any"></label><label>y0 <input type="number" data-s="regions.rect.1" step="any"></label>
+      <label>x1 <input type="number" data-s="regions.rect.2" step="any"></label><label>y1 <input type="number" data-s="regions.rect.3" step="any"></label></div>
+    <label>Name <input type="text" data-s="regions.name" placeholder="e.g. Authority Ward"></label>
+    <label>Margin / feather (ft) <input type="number" data-s="regions.margin_ft" min="0" step="5"></label>
+  </div>
+  <div class="btns"><button data-act="reg_preview" title="Draws the region as an editable closed path on layer REGIONS of the open parent document">Preview extent</button></div>
+  <h4>Scale and detail</h4>
+  <div class="grid">
+    <label>Target scale <select id="regScalePreset"></select></label>
+    <label>Feet per inch <input type="number" data-s="regions.scale_ft_per_in" min="1" step="any"></label>
+    <label>Grid (ft) <input type="number" data-s="regions.grid_ft" min="0.5" step="any"></label>
+    <label>Terrain cell (ft) <input type="number" data-s="regions.terrain_cell_ft" min="0.5" step="any" title="Parent heightmap is up-resolved to this cell size"></label>
+    <label>Contour interval (ft) <input type="number" data-s="regions.contour_minor" min="0.25" step="any"></label>
+    <label>Index every (ft) <input type="number" data-s="regions.contour_index" min="1" step="any"></label>
+    <label>Terrain micro-relief (ft) <input type="number" data-s="regions.detail_ft" min="0" step="0.05"></label>
+    <label>Seed (blank = from name) <input type="text" data-s="regions.seed"></label>
+    <label class="chk"><input type="checkbox" data-s="regions.detail_on"> Detail pass</label>
+    <label class="chk"><input type="checkbox" data-s="regions.flatten_pads"> Flat building pads</label>
+    <label class="chk"><input type="checkbox" data-s="regions.clip_buildings"> Clip edge buildings</label>
+    <label class="chk"><input type="checkbox" data-s="regions.local_origin"> Local origin (shift coordinates)</label>
+    <label class="chk"><input type="checkbox" data-s="regions.fills"> Textured fills</label>
+    <label>Fills dpi <input type="number" data-s="regions.fills_dpi" min="30" max="400" step="10"></label>
+    <label>Shading preset <input type="text" data-s="regions.shading" placeholder="temperate_valley or none"></label>
+    <label class="chk"><input type="checkbox" data-s="regions.sandbox"> Test copy (world/_region_test, git-ignored)</label>
+  </div>
+  <div class="grid" id="regDetailList">
+    <label class="chk"><input type="checkbox" data-s="regions.detail.doors"> doors</label><label class="chk"><input type="checkbox" data-s="regions.detail.roofs"> roofs</label>
+    <label class="chk"><input type="checkbox" data-s="regions.detail.chimneys"> chimneys</label><label class="chk"><input type="checkbox" data-s="regions.detail.lots"> lots</label>
+    <label class="chk"><input type="checkbox" data-s="regions.detail.fences"> fences</label><label class="chk"><input type="checkbox" data-s="regions.detail.kerbs"> sidewalks/kerbs</label>
+    <label class="chk"><input type="checkbox" data-s="regions.detail.trees"> trees</label>
+  </div>
+  <p class="note">Child id: <code id="regChildId"></code>. Labels use the Labels tab settings.</p>
+  <div class="btns"><button class="primary" data-act="reg_create" title="Extract, render with the normal pipeline at district scale, open as a new Illustrator document">Create region map</button>
+    <button data-act="reg_list">Rescan children</button></div>
+  <h4>Existing child regions</h4>
+  <ul class="list" id="regChildren"></ul>
+  <div class="btns"><button data-act="reg_refresh_sel" title="Re-extract the selected child from the parent; hand edits to child entities and everything on ART layers are kept">Refresh from parent</button>
+    <button data-act="reg_sync" title="Show the shared attributes (name, kind, status, notes, floors, links, geometry) that differ from the parent. Writes nothing.">Sync back (diff)</button>
+    <button id="regApply" data-act="reg_sync_apply" disabled>Apply diff to parent...</button></div>
+  <pre id="regDiff" class="note" style="white-space:pre-wrap;max-height:120px;overflow:auto"></pre>
+  <h4>Foundry</h4>
+  <div class="grid">
+    <label>Grid px per square <input type="number" data-s="regions.px_per_grid" min="50" max="200" step="5"></label>
+    <label>Export dpi <span id="regDpi" class="tag"></span></label>
+    <label>Scene name (blank = "&lt;region&gt; (district)") <input type="text" data-s="regions.scene_name"></label>
+    <label>Parent scene name (for the outline link) <input type="text" data-s="regions.parent_scene_name"></label>
+    <label class="chk"><input type="checkbox" data-s="regions.link_apply"> Really write the outline link (otherwise dry run)</label>
+  </div>
+  <div class="btns"><button data-act="reg_foundry_dry">Dry run push</button><button class="primary" data-act="reg_foundry" title="Needs the child map open and active in Illustrator">Push region scene to Foundry</button>
+    <button data-act="reg_link">Link on parent scene</button></div>
+  <p class="note">Walls come from building edges, the grid is the target scale's grid, the scene id is scene:&lt;child&gt;:&lt;name&gt; and it carries flags with the parent place and the region polygon.</p>
+</section>
+
 <section id="tab-layers" role="tabpanel">
   <h4>Layers</h4>
   <div class="btns">
@@ -528,6 +593,8 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
 <script src="lib/core.js"></script>
 <script src="lib/runner.js"></script>
 <script src="lib/townarea.js"></script>
+<script src="lib/regions.js"></script>
+<script src="regions_ui.js"></script>
 <script src="main.js"></script>
 </body></html>
 <script src="lib/lighting.js"></script>

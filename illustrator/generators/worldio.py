@@ -94,6 +94,17 @@ def load_terrain(place, source=None, root=None):
         if os.path.exists(P["patched"]) and os.path.getmtime(P["carved"]) < os.path.getmtime(P["patched"]):
             meta["warning"] = "heightmap_carved.npy is older than heightmap_patched.npy: run the carve again"
     meta.setdefault("sea_level_ft", 0.0)
+    o = meta.get("origin_ft")
+    if o and (o[0] or o[1]):      # region child: the file is a crop at origin_ft; pad it (edge values) so node (i,j) is again at x=j*cell, y=i*cell
+        c = float(meta["cell_ft"])
+        pj, pi = int(round(o[0] / c)), int(round(o[1] / c))
+        if h.shape[0] + pi > 6000 or h.shape[1] + pj > 6000:
+            raise SystemExit("child terrain frame too large to pad: use --local-origin when extracting far from the parent origin")
+        h = np.pad(h, ((pi, 0), (pj, 0)), mode="edge")
+        meta = dict(meta)
+        meta["padded_origin_ft"], meta["origin_ft"] = list(o), [0.0, 0.0]
+        meta["nx"], meta["ny"] = int(h.shape[1]), int(h.shape[0])
+        meta["size_ft"] = [(h.shape[1] - 1) * c, (h.shape[0] - 1) * c]
     meta["source"] = used
     meta["source_file"] = path
     return h, meta

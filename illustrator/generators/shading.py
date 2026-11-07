@@ -205,15 +205,19 @@ def phase_weight(p, i, elev, slope, ppf, seed, sea=0.0):
 
 
 def render(h, meta, phases, ppf, base_dir=".", hill=None, seed=None, base_color="#808080",
-           masks_dir=None, max_px=60_000_000, verbose=True):
+           masks_dir=None, max_px=60_000_000, verbose=True, window=None):
+    """window = (x0, y0, x1, y1) feet: render only that part (region children: the page window, not the whole padded frame)."""
     cell = meta["cell_ft"]
     W_ft, H_ft = meta["size_ft"]
+    ox, oy = 0.0, 0.0
+    if window:
+        ox, oy, W_ft, H_ft = float(window[0]), float(window[1]), float(window[2] - window[0]), float(window[3] - window[1])
     nx, ny = int(round(W_ft * ppf)), int(round(H_ft * ppf))
     if nx * ny > max_px:
         raise SystemExit(f"{nx}x{ny} px exceeds {max_px}; lower dpi or raise scale_ft_per_in")
     seed = meta.get("seed", 0) if seed is None else seed
     sea = float(meta.get("sea_level_ft", 0.0))
-    X, Y = np.meshgrid((np.arange(nx) + .5) / ppf, (np.arange(ny) + .5) / ppf)
+    X, Y = np.meshgrid(ox + (np.arange(nx) + .5) / ppf, oy + (np.arange(ny) + .5) / ppf)
     elev = resample(h, X, Y, cell)
     slope = resample(slope_deg_native(h, cell), X, Y, cell)
     out = np.empty((ny, nx, 3))
@@ -332,6 +336,7 @@ def main():
     ap.add_argument("--vector", help="also write per-phase thresholded SVG here")
     ap.add_argument("--vector-cell", type=float, default=4.0)
     ap.add_argument("--make-textures", action="store_true")
+    ap.add_argument("--window", help="x0,y0,x1,y1 feet: render only this window (region children)")
     a = ap.parse_args()
     if a.make_textures:
         print("textures:", ", ".join(make_textures()))
@@ -362,6 +367,7 @@ def main():
     if a.reverse:
         phases = phases[::-1]
     ppf = a.dpi / a.scale_ft_per_in
+    win = [float(v) for v in a.window.split(",")] if a.window else None
     hill = doc.get("hillshade")
     if a.hillshade:
         hill = dict(azimuth=a.azimuth, altitude=a.altitude, strength=a.strength, ambient=a.ambient, exaggeration=a.exaggeration)
@@ -372,14 +378,17 @@ def main():
     os.makedirs(os.path.dirname(out), exist_ok=True)
     base = os.path.splitext(out)[0]
     img, _ = render(h, meta, phases, ppf, base_dir, hill, a.seed, doc.get("base_color", "#808080"),
-                    masks_dir=base + "_masks" if a.masks else None)
+                    masks_dir=base + "_masks" if a.masks else None, window=win)
     from PIL import Image
     Image.fromarray(img).save(out, dpi=(a.dpi, a.dpi))
     W_ft, H_ft = meta["size_ft"]
+    x_min, y_min = 0, 0
+    if win:
+        x_min, y_min, W_ft, H_ft = win[0], win[1], win[2], win[3]
     info = dict(png=os.path.basename(out), width_px=img.shape[1], height_px=img.shape[0], ppf=ppf,
                 dpi=a.dpi, scale_ft_per_in=a.scale_ft_per_in,
-                bounds_ft=dict(x_min=0, y_min=0, x_max=W_ft, y_max=H_ft), y_axis="down",
-                page_size_in=[W_ft / a.scale_ft_per_in, H_ft / a.scale_ft_per_in],
+                bounds_ft=dict(x_min=x_min, y_min=y_min, x_max=W_ft, y_max=H_ft), y_axis="down",
+                page_size_in=[(W_ft - x_min) / a.scale_ft_per_in, (H_ft - y_min) / a.scale_ft_per_in],
                 phases=[p.get("id") for p in phases])
     json.dump(info, open(base + ".json", "w"), indent=1)
     # world file: pixel size in feet, y grows downward (positive E), origin = centre of top-left pixel

@@ -24,6 +24,7 @@ import viewcfg  # noqa: E402
 import terrain as tr  # noqa: E402
 import label_offset as lbo  # noqa: E402
 import label_style as lst  # noqa: E402
+import region_draw as rdraw  # noqa: E402
 import worldio  # noqa: E402
 from xml.sax.saxutils import escape  # noqa: E402
 
@@ -37,7 +38,7 @@ SPEC = [
     ("ART - Fills", []),
     ("ART - Textures", []),
     ("ART - Masks", []),
-    ("LINES", ["Walls", "Buildings", "Blocks", "Roads", "Water", ("Terrain", [ct.LAYER_MINOR, ct.LAYER_INDEX]), "Fences"]),
+    ("LINES", ["Walls", "Buildings", "Blocks", "Roads", "Water", ("Terrain", [ct.LAYER_MINOR, ct.LAYER_INDEX]), "Fences"] + rdraw.LAYERS),
     ("GUIDES", ["Grid", "Scale bar", "North arrow", "Bounds"]),
 ]
 
@@ -56,7 +57,7 @@ path { fill: none; }
 text { fill: #000000; stroke: none; font-family: Arial, sans-serif; }
 .leader { fill: none; stroke: #000000; }
 .leader-dot { stroke: none; fill: #000000; }
-""" + ct.CSS
+""" + ct.CSS + rdraw.CSS
 
 
 # ------------------------------------------------------------------ model
@@ -70,6 +71,9 @@ def load_place(name, model_dir=None):
          "water": json.load(open(worldio.water_path(name), encoding="utf-8"))["water"], "buildings": []}
     for f in sorted(glob.glob(os.path.join(root, "buildings", "*.json"))):
         m["buildings"].append(json.load(open(f, encoding="utf-8")))
+    for k_ in ("details", "markers"):        # region children (region_extract.py): generated detail + off-map markers, absent for normal places
+        if os.path.exists(os.path.join(root, k_ + ".json")):
+            m[k_] = json.load(open(os.path.join(root, k_ + ".json"), encoding="utf-8"))
     return m
 
 
@@ -271,7 +275,10 @@ def compute_view(model, view_arg, cfg_over=None):
     kind, _, ident = view_arg.partition(":")
     streets = {s["id"]: s for s in model["streets"]}
     blds = {b["id"]: b for b in model["buildings"]}
-    o = cfg_over or {}
+    o = dict(cfg_over or {})
+    if kind in ("region", "district"):          # the zoomed-in view of a region child: a town-style view with the 'district' preset
+        kind = "town"
+        o["preset"] = o.get("preset") or "district"
     cfg = viewcfg.load(place["id"], o.get("preset") or kind, scale=o.get("scale"), grid=o.get("grid"),
                        page=o.get("page"), major_every=o.get("major_every"))
     fpi, grid_ft, major_n = cfg["scale_ft_per_in"], cfg["grid_ft"], cfg["grid_major_every"]
@@ -290,7 +297,7 @@ def compute_view(model, view_arg, cfg_over=None):
             sys.exit(f"unknown building id: {ident}")
         ent_poly, title = entity_polygon(blds[ident]), f"{place['name']} - building: {blds[ident]['name']}"
     elif kind in ("town", "bowl"):
-        title = f"{place['name']} - {'whole bowl' if kind == 'bowl' else 'town view'}"
+        title = f"{place['name']} - {'whole bowl' if kind == 'bowl' else 'district view' if place.get('parent') else 'town view'}"
     else:
         sys.exit("--view must be town, bowl, street:<id> or building:<id>")
     if isinstance(focus, list):
@@ -539,7 +546,11 @@ def render(model, view_arg, out_path, topts=None, cfg_over=None, lopts=None, lst
     t.add("North arrow", path("north_arrow", f"M{ax:.2f},{ay - 28:.2f} L{ax + 7:.2f},{ay + 6:.2f} L{ax:.2f},{ay:.2f} L{ax - 7:.2f},{ay + 6:.2f} Z", "wall"))
     t.add("North arrow", text("north_label", ax, ay - 33, "N", 9, bold=True))
 
-    b = clip_poly([(0, 0), (bw, 0), (bw, bh), (0, bh)], v.x0, v.y0, v.x1, v.y1)
+    n_det = rdraw.emit(t, v, model, path) if (model.get("details") or model.get("markers")) else 0
+    if n_det:
+        print(f"region details drawn: {n_det} items")
+    wf = place.get("window_ft") or [0, 0, bw, bh]
+    b = clip_poly([(wf[0], wf[1]), (wf[2], wf[1]), (wf[2], wf[3]), (wf[0], wf[3])], v.x0, v.y0, v.x1, v.y1)
     if b:
         t.add("Bounds", path("bounds_place", v.d([b]), "guide-line"))
     t.add("Bounds", path("bounds_view", v.d([[(v.x0, v.y0), (v.x1, v.y0), (v.x1, v.y1), (v.x0, v.y1)]]), "wall"))

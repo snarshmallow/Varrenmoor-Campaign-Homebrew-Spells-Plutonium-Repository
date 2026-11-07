@@ -63,3 +63,8 @@ All Foundry reads and writes run in `generators/foundry_push.py` (the panel just
 
 ## 9. World pack export for the 3D pipeline (built 2026-11-07)
 `generators/worldpack.py export` writes the model (terrain, roads with graded elevations, buildings with derived roof/wall data, water, plazas, fields, fences, foliage, lights, labels) to `world/<place>/export/` as a versioned, schema-checked pack that keeps every entity id; `worldpack_split.py` turns it into per-model GLBs plus `placements.json`, and `foundry_push.py push-models` places them as 3D Canvas tiles. Axis and scale conventions, the Blender importer and the merge/compress workflow are in `WORLD_PACK.md`; schema in `world/schema/world-pack.schema.json`.
+
+## 9. Regions (zoom-in child maps, built 2026-11-07; see REGIONS.md)
+- A district extracted from a place becomes a child place (`world/<parent>__<region>/`, `place.json.parent`, provenance and transform in `region.json`). Foot coordinates and entity ids are the parent's, so the hierarchy town > district > street > building keeps one identity per entity; the zoom is the view scale (`district` preset, 1 in = 20 ft, 5 ft grid).
+- Regeneration rule still holds: GEN layers (and the child's generated `details.json`) are rewritten; ART layers are never touched; hand edits to child entity json survive `refresh` (snapshot hashes); child -> parent only through `sync --apply` after a diff.
+- Extra GEN layers in child maps: `LINES/Details` (doors, roof ridges, chimneys, lots, kerbs), `LINES/Vegetation` (trees), `LINES/Fences` (generated fences), `REGIONS` (extent preview on the parent document).

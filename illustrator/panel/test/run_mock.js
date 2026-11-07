@@ -5,7 +5,7 @@
 // Job logs go to --jobs-dir (default: a temp folder, never illustrator/jobs). The settings files the panel
 // writes (view_settings, terrain_spec) go to --world-copy; generators still read the real world/.
 const fs = require("fs"), path = require("path"), os = require("os"), cp = require("child_process");
-const VB = require("../lib/core.js"); require("../lib/lighting.js"); const R = require("../lib/runner.js");
+const VB = require("../lib/core.js"); require("../lib/lighting.js"); require("../lib/regions.js"); const R = require("../lib/runner.js");
 const arg = (k, d) => { const i = process.argv.indexOf(k); return i > 0 ? process.argv[i + 1] : d; };
 const ROOT = path.resolve(__dirname, "../../..").replace(/\\/g, "/");
 const TMP = fs.mkdtempSync(path.join(os.tmpdir(), "vbpanel-"));
@@ -260,6 +260,51 @@ const actions = () => hostLog.map(h => h.action);
     check("push-models dry run through the runner", pj && pj.ok && pj.dry_run && pj.tiles > 0, pr.out + pr.err);
     st.town.exportPack = true; check("accept job adds the export step when the toggle is on", VB.jobTownAccept(st, d).steps.length === 2);
     st.town.exportPack = false; check("accept job unchanged when the toggle is off", VB.jobTownAccept(st, d).steps.length === 1);
+  }
+  if (want("regions")) { // zoom-in child maps: command lines, extract + render through the real generators into world/_region_test (git-ignored), host actions, sync diff
+    const S = VB.normalize(null), r = S.regions;
+    check("regions defaults present", r && r.mode === "district" && r.scale_ft_per_in === 20 && r.grid_ft === 5 && r.margin_ft === 40);
+    check("no district picked is an error", /pick a district/.test(VB.regionCheck(S)));
+    r.district = "dis_authority"; r.name = "Mock Ward"; r.sandbox = true; r.margin_ft = 30; r.fills = false; r.shading = "none"; r.contour_minor = 2;
+    check("child id derives from place and name", VB.regionChildId(S) === "_region_test/bridgehollow__mock_ward", VB.regionChildId(S));
+    check("scale presets", (VB.regionApplyPreset(r, "block40"), r.scale_ft_per_in === 40 && r.grid_ft === 10) && (VB.regionApplyPreset(r, "street20"), r.scale_ft_per_in === 20 && r.grid_ft === 5));
+    check("export dpi gives the asked grid px", VB.regionDpi(r) === 320, String(VB.regionDpi(r)));
+    const ea = VB.regionExtractArgs(S, d);
+    check("extract args", ea[0] === "extract" && ea.includes("--district") && ea.includes("--sandbox") && ea.includes("--force") && ea[ea.indexOf("--detail") + 1] === "all", ea.join(" "));
+    r.detail.trees = false; check("detail toggles", VB.regionDetailArg(r) === "doors,roofs,chimneys,lots,fences,kerbs"); r.detail.trees = true;
+    r.mode = "lasso"; r.polygon = []; check("lasso mode needs a captured polygon", /Capture lasso/.test(VB.regionCheck(S)));
+    r.polygon = polyFt.map(p => p.slice()); check("lasso args use the polygon file", VB.regionSpecArgs(S, d)[0] === "--polygon-file");
+    r.mode = "rect"; r.rect = [900, 500, 1300, 800]; check("rect args", VB.regionSpecArgs(S, d).join() === "--rect,900,500,1300,800");
+    // preview: py preview + replace_layer REGIONS
+    let res = await run(VB.jobRegionPreview(S, d));
+    check("preview job ok", res.ok, res.error);
+    const rl0 = hostLog.find(h => h.action === "replace_layer");
+    check("preview draws the REGIONS layer", rl0 && rl0.names[0] === "REGIONS", JSON.stringify(rl0));
+    // create from a rectangle (no fills: fast) through the real generators
+    r.mode = "rect"; r.rect = [900, 600, 1200, 800]; r.name = "Mock Ward"; r.margin_ft = 20;
+    const childDir = `${ROOT}/world/_region_test/bridgehollow__mock_ward`;
+    res = await run(VB.jobRegionCreate(S, d));
+    check("create job ok", res.ok, res.error);
+    const acts_ = actions();
+    check("create opens the svg, saves, exports", acts_[0] === "place_svg" && hostLog[0].mode === "open" && acts_.includes("save_ai") && acts_.includes("export_png"), acts_.join());
+    check("child written", fs.existsSync(`${childDir}/region.json`) && fs.existsSync(`${childDir}/terrain/heightmap.npy`));
+    check("child list and selection stored", st.regions.sel === "_region_test/bridgehollow__mock_ward" && st.regions.children.some(c => c.child === st.regions.sel), JSON.stringify(st.regions.children));
+    const ai = hostLog.find(h => h.action === "save_ai");
+    check("an existing .ai is never overwritten (free name picked)", ai && !fs.existsSync(path.resolve(ROOT, ai.path)), ai && ai.path);
+    // sync diff (writes nothing), then refresh keeps a child edit
+    const bf = fs.readdirSync(`${childDir}/buildings`)[0], bp = `${childDir}/buildings/${bf}`, b = JSON.parse(fs.readFileSync(bp, "utf8"));
+    b.name = "Panel test name"; fs.writeFileSync(bp, JSON.stringify(b));
+    res = await run(VB.jobRegionSync(S, d, st.regions.sel, false));
+    check("sync diff job shows the rename and writes nothing", res.ok && st.regions.diff.n >= 1 && /Panel test name/.test(st.regions.diff.text) && !st.regions.diff.applied, res.error || JSON.stringify(st.regions.diff));
+    res = await run(VB.jobRegionCreate(S, d, { refresh: true, child: st.regions.sel }));
+    check("refresh job ok and keeps the edit", res.ok && JSON.parse(fs.readFileSync(bp, "utf8")).name === "Panel test name", res.error);
+    // Foundry (dry run only: the module is not touched)
+    const fj = VB.jobRegionFoundry(S, d, st.regions.sel, { dry: true });
+    check("foundry job exports the child at the grid dpi", fj.steps[1].action.dpi === 320 && fj.steps[2].args.includes("--dry-run") && fj.steps[2].args.includes("region"), JSON.stringify(fj.steps[2].args));
+    S.regions.parent_scene_name = "Bridgehollow town"; const lj = VB.jobRegionLink(S, d, st.regions.sel);
+    check("link is a dry run unless confirmed", !lj.steps[1].args.includes("--apply") && lj.steps[1].args.includes("link-region"));
+    S.regions.link_apply = true; check("link apply needs the checkbox", VB.jobRegionLink(S, d, st.regions.sel).steps[1].args.includes("--apply"));
+    fs.rmSync(childDir, { recursive: true, force: true });
   }
   const logs = fs.existsSync(path.join(jobsDir, "done")) ? fs.readdirSync(path.join(jobsDir, "done")) : [];
   check("each run logged exact params to jobs/done", logs.length > 3 && logs.every(f => /^panel_\d{8}_\d{6}_.+\.json$/.test(f)), logs.length + " files");

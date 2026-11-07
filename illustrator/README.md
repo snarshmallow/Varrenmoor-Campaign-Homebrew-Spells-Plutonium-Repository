@@ -153,3 +153,6 @@ Code: `generators/label_style.py` (styles, wrapping, SVG), integrated in `label_
 
 ## World pack export (3D)
 Foundry tab > "3D models (world pack)": `Export world pack (3D)` runs `python illustrator/generators/worldpack.py export --place <place>` into `world/<place>/export/`; the Town tab has a toggle to export after Accept (default off). Details: `WORLD_PACK.md`.
+
+## Regions: zoom-in child maps (`generators/region_extract.py`, panel Regions tab)
+Pick a district, a captured lasso or a rectangle of a built place, and make a child place `world/<parent>__<region>/` at a larger scale (street 20 ft/in, 5 ft grid): same foot coordinates and entity ids, terrain up-resolved (10 -> 2.5 ft cells, coarse heights kept exactly), streets and water clipped with continues-off-map markers, optional generated detail (doors, roofs, chimneys, lots, fences, kerbs, trees; never canon), rendered with the normal pipeline and opened as a new Illustrator document. Refresh keeps your edits; `sync` shows a diff before anything touches the parent; `foundry_push.py push-scene` pushes the child scene with parent/region flags. Details: `REGIONS.md`. Tests: `python illustrator/generators/test_region_extract.py` and `node illustrator/panel/test/run_mock.js --only regions`. Samples: `out/region_test_authority_*.png`.

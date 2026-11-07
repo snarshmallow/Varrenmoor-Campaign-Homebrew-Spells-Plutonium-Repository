@@ -385,7 +385,7 @@
     $("candTag").className = "tag" + (state.town.candidate ? " stale" : "");
     $("statePath").textContent = d.state;
   }
-  function refreshAll() { paintInputs(); if (window.VBLightUI) VBLightUI.paint(); paintTags(); paintStale(); paintPatchForm(); paintRings(); if (typeof fPaint === "function" && state) fPaint(); }
+  function refreshAll() { paintInputs(); if (window.VBRegionUI) VBRegionUI.paint(); if (window.VBLightUI) VBLightUI.paint(); paintTags(); paintStale(); paintPatchForm(); paintRings(); if (typeof fPaint === "function" && state) fPaint(); }
 
   function showCrossings() {
     var j = readJson(d.water + "/crossings.json", null), el = $("crossInfo");
@@ -674,6 +674,8 @@
     state = VB.normalize(null); d = VB.dirs(root, state.place);
     makeRunner(); bindTabs(); bindInputs(); bindLabelStyle();
     $$("[data-act]").forEach(function (b) { b.addEventListener("click", function () { act(b.getAttribute("data-act")); }); });
+    if (window.VBRegionUI) VBRegionUI.init({ state: function () { return state; }, dirs: function () { return d; }, save: save, startJob: startJob, syncInputs: paintInputs, readJson: readJson, fs: fs, path: path,
+      root: root, acts: acts, switchPlace: switchPlace });
     $("cancel").addEventListener("click", function () { if (runner.cancel()) logLine("cancel requested"); });
     $("toggleLog").addEventListener("click", function () { var l = $("log"); l.hidden = !l.hidden; });
     window.addEventListener("error", function (e) { showError("panel error: " + e.message); });
