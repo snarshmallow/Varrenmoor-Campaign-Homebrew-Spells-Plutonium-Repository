@@ -6,7 +6,7 @@
 # Settings are found, in order: -Config <file>, env FOUNDRY_BRIDGE_URL + FOUNDRY_BRIDGE_TOKEN, env FOUNDRY_BRIDGE_CONFIG,
 # then client.json that start.mjs / publish-client.mjs writes on the Foundry PC (<dataPath>\bridge\client.json), read
 # over the network at \\<host>\C\FoundryVTT resources\bridge\client.json (host guessed from foundry-3d\.env, else VEGA).
-param([Parameter(Mandatory)][string]$Op, [string]$Args = '{}', [string]$Config = '')
+param([Parameter(Mandatory)][string]$Op, [string]$Args = '{}', [string]$Config = '', [string]$ArgsFile = '')
 $ErrorActionPreference = 'Stop'
 
 function Find-Config {
@@ -34,6 +34,7 @@ if ($env:FOUNDRY_BRIDGE_URL -and $env:FOUNDRY_BRIDGE_TOKEN) {
   $cfg = Get-Content -LiteralPath (Find-Config) -Raw | ConvertFrom-Json
   $url = $cfg.url; $token = $cfg.token
 }
+if ($ArgsFile) { $Args = [IO.File]::ReadAllText($ArgsFile, [Text.Encoding]::UTF8) }   # large payloads: pass a JSON file instead of a command-line string
 $body = '{"op":' + ($Op | ConvertTo-Json -Compress) + ',"args":' + $Args + '}'
 # The module's socket can drop and reconnect (tab sleep, tunnel blip): retry 503s and timeouts a few times.
 for ($try = 1; $try -le 5; $try++) {
@@ -44,6 +45,9 @@ for ($try = 1; $try -le 5; $try++) {
     break
   } catch {
     $msg = $_.ErrorDetails.Message; if (-not $msg) { $msg = $_.Exception.Message }
+    if (-not $msg -or $msg -match '^The remote server returned an error') {   # Windows PowerShell 5.1 leaves ErrorDetails empty: read the response body ({"error": "..."}) ourselves
+      try { $sr = New-Object IO.StreamReader($_.Exception.Response.GetResponseStream()); $body = $sr.ReadToEnd(); if ($body) { $msg = $body } } catch { }
+    }
     $transient = $msg -match '503|not connected|timed out|timeout'
     if ($transient -and $try -lt 5) { Start-Sleep -Seconds 4; continue }
     Write-Error "bridge $Op failed: $msg"

@@ -2,13 +2,20 @@ const MOD = 'varrenmoor-bridge';
 const COLLECTIONS = new Set(['Actor', 'Item', 'Scene', 'JournalEntry', 'Macro', 'RollTable', 'Playlist', 'Folder']);   // Folder: list/get/create/update only (no delete op exists)
 const ACTIVITY_ID = /^[A-Za-z0-9]{16}$/;
 const MAX_LIST = 500;
+// Pipeline flag: every document the Illustrator/pipeline tools create carries flags.varrenmoor.pipelineId (a stable string key).
+// Upserts match on it, and delete is only ever allowed for documents that bear it. Keeps the repo's existing flags.varrenmoor.* scope.
+const FLAG_SCOPE = 'varrenmoor';
+const FLAG_KEY = 'pipelineId';
+const PROTOCOL = 3;   // bump when ops change; clients check this via the 'version' op
+const EMBEDDED = { Wall: 'walls', Drawing: 'drawings', Tile: 'tiles', Token: 'tokens', AmbientLight: 'lights', AmbientSound: 'sounds', Note: 'notes' };
+const PIPE_DOCS = new Set([...COLLECTIONS, ...Object.keys(EMBEDDED)]);
 
 Hooks.once('init', () => {
   game.settings.register(MOD, 'enabled', { name: 'Connect to relay', hint: 'Only this GM client connects. Off by default.', scope: 'client', config: true, type: Boolean, default: false, onChange: () => connect() });
   game.settings.register(MOD, 'autoUrl', { name: 'Use launcher relay URL', hint: 'Read the current tunnel URL that start.bat writes into this module folder (relay-url.json), so quick-tunnel restarts need no re-pasting. Falls back to Relay URL below.', scope: 'client', config: true, type: Boolean, default: true, onChange: () => connect() });
   game.settings.register(MOD, 'relayUrl', { name: 'Relay URL', hint: 'e.g. wss://name.trycloudflare.com/module. Used when the launcher file is missing or the option above is off.', scope: 'client', config: true, type: String, default: 'ws://127.0.0.1:3030/module', onChange: () => connect() });
   game.settings.register(MOD, 'token', { name: 'Module token', hint: 'BRIDGE_MODULE_TOKEN from the relay.', scope: 'client', config: true, type: String, default: '', onChange: () => connect() });
-  game.settings.register(MOD, 'allowWrites', { name: 'Allow writes', hint: 'Permit create/update requests. Never allows delete. Leave off for read-only.', scope: 'world', config: true, type: Boolean, default: false });
+  game.settings.register(MOD, 'allowWrites', { name: 'Allow writes', hint: 'Permit create/update requests, and delete of documents that carry the pipeline flag (flags.varrenmoor.pipelineId) only. Leave off for read-only.', scope: 'world', config: true, type: Boolean, default: false });
 });
 
 Hooks.once('ready', () => { if (game.user.isGM) connect(); });
@@ -69,8 +76,120 @@ function activityProblems(item) {
   return out;
 }
 
+const pipeId = (d) => d?.flags?.[FLAG_SCOPE]?.[FLAG_KEY] ?? null;   // direct read: getFlag() rejects scopes that are not a module/system id
+
+function stamp(data, id) {
+  const out = foundry.utils.deepClone(data ?? {});
+  out.flags = { ...(out.flags ?? {}), [FLAG_SCOPE]: { ...(out.flags?.[FLAG_SCOPE] ?? {}), [FLAG_KEY]: id } };
+  return out;
+}
+
+async function container(documentName, parentUuid) {
+  if (!PIPE_DOCS.has(documentName)) throw new Error(`not allowed: ${documentName}`);
+  if (EMBEDDED[documentName]) {
+    if (!parentUuid) throw new Error(`${documentName} needs parentUuid (the scene)`);
+    const parent = await fromUuid(parentUuid);
+    if (!parent) throw new Error(`parent not found: ${parentUuid}`);
+    return { parent, docs: [...parent[EMBEDDED[documentName]]], embedded: true };
+  }
+  return { parent: null, docs: [...coll(documentName)], embedded: false };
+}
+
+const createIn = (c, name, arr) => (c.embedded ? c.parent.createEmbeddedDocuments(name, arr) : getDocumentClass(name).createDocuments(arr));
+const updateIn = (c, name, arr) => (c.embedded ? c.parent.updateEmbeddedDocuments(name, arr) : getDocumentClass(name).updateDocuments(arr));
+const deleteIn = (c, name, ids) => (c.embedded ? c.parent.deleteEmbeddedDocuments(name, ids) : getDocumentClass(name).deleteDocuments(ids));
+const brief = (d) => ({ uuid: d.uuid, name: d.name ?? null, pipelineId: pipeId(d) });
+
 const ops = {
   ping: () => 'pong',
+
+  // Capability query: clients use this to degrade with a clear message when the module on the Foundry server is older.
+  version: () => ({ module: game.modules.get(MOD)?.version ?? null, protocol: PROTOCOL, flag: `flags.${FLAG_SCOPE}.${FLAG_KEY}`, ops: Object.keys(ops) }),
+
+  find_by_flag: async ({ documentName, parentUuid, id, prefix }) => {
+    const c = await container(documentName, parentUuid);
+    const hit = c.docs.filter((d) => { const p = pipeId(d); return p && (id ? p === id : prefix ? String(p).startsWith(prefix) : true); });
+    return hit.slice(0, MAX_LIST).map(brief);
+  },
+
+  upsert_by_flag: async ({ documentName, parentUuid, id, data }) => {
+    requireWrites();
+    if (!id) throw new Error('id required');
+    const c = await container(documentName, parentUuid);
+    const found = c.docs.find((d) => pipeId(d) === id);
+    if (found) { await found.update(stamp(data, id)); return { uuid: found.uuid, created: false }; }
+    const [made] = await createIn(c, documentName, [stamp(data, id)]);
+    return { uuid: made.uuid, created: true };
+  },
+
+  // Bulk upsert (walls, drawings, tiles, tokens). items: [{id, data}]. prefix + prune: delete flagged docs under that prefix that are no longer in items.
+  upsert_many: async ({ documentName, parentUuid, items, prefix, prune }) => {
+    requireWrites();
+    const c = await container(documentName, parentUuid);
+    const byId = new Map(c.docs.filter((d) => pipeId(d)).map((d) => [pipeId(d), d]));
+    const toCreate = [], toUpdate = [], seen = new Set();
+    for (const it of items ?? []) {
+      if (!it.id) throw new Error('every item needs an id');
+      seen.add(it.id);
+      const ex = byId.get(it.id);
+      if (ex) toUpdate.push({ ...stamp(it.data, it.id), _id: ex.id }); else toCreate.push(stamp(it.data, it.id));
+    }
+    const stale = prune && prefix ? [...byId].filter(([k]) => String(k).startsWith(prefix) && !seen.has(k)).map(([, d]) => d.id) : [];
+    if (toUpdate.length) await updateIn(c, documentName, toUpdate);
+    if (toCreate.length) await createIn(c, documentName, toCreate);
+    if (stale.length) await deleteIn(c, documentName, stale);
+    return { created: toCreate.length, updated: toUpdate.length, deleted: stale.length };
+  },
+
+  // Delete is limited to documents bearing the pipeline flag.
+  delete_by_flag: async ({ documentName, parentUuid, id, prefix }) => {
+    requireWrites();
+    if (!id && !prefix) throw new Error('id or prefix required');
+    const c = await container(documentName, parentUuid);
+    const ids = c.docs.filter((d) => { const p = pipeId(d); return p && (id ? p === id : String(p).startsWith(prefix)); }).map((d) => d.id);
+    if (ids.length) await deleteIn(c, documentName, ids);
+    return { deleted: ids.length };
+  },
+
+  delete: async ({ uuid }) => {
+    requireWrites();
+    const doc = await fromUuid(uuid);
+    if (!doc) throw new Error(`not found: ${uuid}`);
+    if (!pipeId(doc)) throw new Error('refusing to delete a document without the pipeline flag');
+    await doc.delete();
+    return { deleted: uuid };
+  },
+
+  // v14: the background image lives on a Level (scene.levels); older cores keep scene.background.src.
+  set_scene_background: async ({ uuid, src, levelId, width, height, padding }) => {
+    requireWrites();
+    const scene = await fromUuid(uuid);
+    if (!scene || scene.documentName !== 'Scene') throw new Error(`not a scene: ${uuid}`);
+    const upd = {};
+    if (width) upd.width = width;
+    if (height) upd.height = height;
+    if (padding !== undefined && padding !== null) upd.padding = padding;
+    const lv = scene.levels;
+    if (lv && lv.size) {
+      const lvl = (levelId && lv.get(levelId)) || lv.get(scene.initialLevel) || lv.contents[0];
+      upd.levels = [{ _id: lvl.id, background: { src } }];
+    } else upd['background.src'] = src;
+    await scene.update(upd);
+    return { uuid: scene.uuid, src };
+  },
+
+  set_scene_grid: async ({ uuid, size, distance, units, type }) => {
+    requireWrites();
+    const scene = await fromUuid(uuid);
+    if (!scene || scene.documentName !== 'Scene') throw new Error(`not a scene: ${uuid}`);
+    const upd = {};
+    if (size) upd['grid.size'] = size;
+    if (distance) upd['grid.distance'] = distance;
+    if (units) upd['grid.units'] = units;
+    if (type !== undefined && type !== null) upd['grid.type'] = type;
+    await scene.update(upd);
+    return { uuid: scene.uuid, grid: upd };
+  },
 
   world_info: () => ({
     foundry: game.version, system: game.system.id, systemVersion: game.system.version, world: game.world.id,
@@ -134,7 +253,7 @@ const ops = {
 
   create: async ({ documentName, data, parentUuid }) => {
     requireWrites();
-    if (!COLLECTIONS.has(documentName) && !['ActiveEffect', 'Wall', 'AmbientLight', 'AmbientSound', 'PlaylistSound', 'Token', 'Tile'].includes(documentName)) throw new Error(`not allowed: ${documentName}`);
+    if (!COLLECTIONS.has(documentName) && !['ActiveEffect', 'Wall', 'AmbientLight', 'AmbientSound', 'PlaylistSound', 'Token', 'Tile', 'Drawing', 'Note'].includes(documentName)) throw new Error(`not allowed: ${documentName}`);
     const parent = parentUuid ? await fromUuid(parentUuid) : null;
     const created = await getDocumentClass(documentName).create(data, parent ? { parent } : {});
     return { uuid: created.uuid };

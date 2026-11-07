@@ -362,7 +362,7 @@
     $("candTag").className = "tag" + (state.town.candidate ? " stale" : "");
     $("statePath").textContent = d.state;
   }
-  function refreshAll() { paintInputs(); paintTags(); paintStale(); paintPatchForm(); paintRings(); }
+  function refreshAll() { paintInputs(); paintTags(); paintStale(); paintPatchForm(); paintRings(); if (typeof fPaint === "function" && state) fPaint(); }
 
   function showCrossings() {
     var j = readJson(d.water + "/crossings.json", null), el = $("crossInfo");
@@ -426,6 +426,153 @@
     try { fs.mkdirSync(p, { recursive: true }); var c = cp.spawn("explorer", [p.replace(/\//g, "\\")], { detached: true, stdio: "ignore" }); c.on("error", function (e) { showError("cannot open folder: " + e.message); }); c.unref(); }
     catch (e) { showError("cannot open folder: " + e.message); }
   }
+
+  // ------------------------------------------------------------ Foundry tab (all reads/writes run in foundry_push.py; the panel only spawns it)
+  var fBusy = false, autoTimer = null, autoMtime = 0, autoPending = 0;
+  function fOut(msg, level) { var e = $("fOut"); e.textContent = msg || ""; e.style.color = level === "bad" ? "var(--bad)" : level === "warn" ? "var(--warn)" : ""; }
+  async function fPy(args) {
+    var r = await runner.execPy(VB.FOUNDRY_PY, args, function (l, isErr) { if (l.charAt(0) !== "{") logLine((isErr ? "! " : "  ") + l); });
+    var j = runner.parseJsonOut(r.out);
+    if (!j) throw new Error(r.spawnError ? r.err : "foundry_push gave no result: " + (r.err || r.out || "").trim().split(/\r?\n/).slice(-2).join(" | "));
+    return j;
+  }
+  function fAsk(lines) {   // in-panel confirm (CEP dialogs are unreliable)
+    return new Promise(function (res) {
+      $("fConfirmText").textContent = lines.join("\n"); $("fConfirmText").style.whiteSpace = "pre-wrap"; $("fConfirm").hidden = false;
+      var done = function (v) { $("fConfirm").hidden = true; $("fYes").onclick = null; $("fNo").onclick = null; res(v); };
+      $("fYes").onclick = function () { done(true); }; $("fNo").onclick = function () { done(false); };
+    });
+  }
+  async function fGuard(label, fn, quiet) {
+    if (fBusy || runner.isBusy()) { if (!quiet) showError("another job is running: wait for it or press Cancel"); return null; }
+    fBusy = true; if (!quiet) showError(""); setStatus("Foundry: " + label, true); fOut(label + "...");
+    try { return await fn(); }
+    catch (e) { fOut(label + " failed: " + (e.message || e), "bad"); showError("Foundry: " + (e.message || e)); return null; }
+    finally { fBusy = false; setStatus("idle", false); }
+  }
+  async function fExport(only, name, transparent) {
+    var png = VB.foundryOut(d, name);
+    fs.mkdirSync(path.dirname(png), { recursive: true });
+    var r = await evalHost({ action: "export_view", path: png, dpi: state.foundry.dpi || 150, only: only || [], transparent: !!transparent });
+    if (!r.ok) throw new Error("Illustrator export failed: " + (r.error || "no reply") + " (is a document open? close and reopen the panel after updating host.jsx)");
+    logLine("exported " + png + " (" + r.width_px + "x" + r.height_px + " px at " + r.dpi + " dpi)");
+    return { png: png, info: r };
+  }
+  function fPaint() {
+    var f = state.foundry, c = f.cache || { lists: {} }, L = c.lists || {};
+    var fill = function (id, rows, cur, none) {
+      var el = $(id); if (!el) return;
+      var rs = VB.pickerRows(rows, id === "fActor" ? f.filter.actors : id === "fItem" ? f.filter.items : "");
+      el.innerHTML = '<option value="">' + none + "</option>" + rs.map(function (r) { return '<option value="' + esc(r.uuid) + '">' + esc(r.name) + (r.pipeline ? " [pipeline]" : "") + "  " + esc(String(r.uuid).split(".").pop().slice(0, 6)) + "</option>"; }).join("");
+      el.value = cur || "";
+    };
+    fill("fScene", L.scenes, f.sceneUuid, "(pick a scene)"); fill("fActor", L.actors, f.actorUuid, "(none: create from spec)"); fill("fItem", L.items, f.itemUuid, "(none: create new)");
+    var age = VB.cacheAgeMin(c), tag = $("fCache");
+    tag.textContent = age === null ? "no Foundry lists yet: press Refresh" : "lists from " + (age < 90 ? age + " min ago" : Math.round(age / 60) + " h ago") + " (" + (L.scenes || []).length + " scenes, " + (L.actors || []).length + " actors, " + (L.items || []).length + " items)";
+    tag.className = "tag" + (age === null || age > 1440 ? " stale" : "");
+    var sp = $("fPlace"); if (sp && sp.options.length === 0) listPlaces().forEach(function (p) { var o = document.createElement("option"); o.value = p; o.textContent = p; sp.appendChild(o); });
+    if (sp) sp.value = state.place;
+  }
+  function fSceneUuid() {
+    var f = state.foundry;
+    if (f.target === "existing" && f.sceneUuid) return f.sceneUuid;
+    if (f.last && f.last.scene_uuid && (f.target === "existing" || f.last.scene_name === String(f.sceneName).trim())) return f.last.scene_uuid;
+    throw new Error("pick an existing scene, or push the new scene first");
+  }
+  async function fHandle(args, what) {   // run; when Foundry content we did not make would change, ask, then rerun with --yes
+    var r = await fPy(args);
+    if (r.needs_confirm) {
+      fOut("waiting for your confirmation", "warn");
+      if (!(await fAsk(r.summary))) { fOut(what + " cancelled: nothing changed."); return null; }
+      r = await fPy(args.concat(["--yes"]));
+    }
+    if (!r.ok) { fOut(what + " failed: " + r.error, r.needs_module ? "warn" : "bad"); showError("Foundry: " + r.error); return null; }
+    return r;
+  }
+  async function fPushScene(withTiles, quiet) {
+    return fGuard(withTiles ? "push scene + tiles" : "push scene", async function () {
+      var base = await fExport(null, "view_export.png", false), tile = null;
+      if (withTiles) tile = await fExport(VB.foundryTileLayers(state.foundry), "tile_export.png", true);
+      var args = VB.foundryPushSceneArgs(state, { image: base.png, tileImage: tile && tile.png });
+      var r;
+      if (quiet) {
+        r = await fPy(args);
+        if (r.needs_confirm) { state.foundry.autoPush = false; save(); fSetupAuto(); paintInputs(); fOut("Auto-push turned off: this scene needs a manual confirm (press Push scene).", "warn"); return null; }
+        if (!r.ok) throw new Error(r.error);
+      } else r = await fHandle(args, "push");
+      if (!r) return null;
+      state.foundry.last = { scene_uuid: r.scene_uuid, scene_name: r.scene_name, at: new Date().toISOString(), version: r.version };
+      save();
+      fOut((r.created ? "Created" : "Updated") + " scene \"" + r.scene_name + "\" (" + r.scene_uuid + "): background v" + r.version + ", " + r.width + "x" + r.height + " px, grid " + r.grid.size + " px = " + r.grid.distance + " ft; walls " + JSON.stringify(r.wall_ops || {}) + (r.drawing_ops ? "; drawings " + JSON.stringify(r.drawing_ops) : "") + ".");
+      return r;
+    }, quiet);
+  }
+  async function fRefresh() {
+    return fGuard("refresh lists", async function () {
+      var r = await fPy(["list", "--kinds", "scenes,actors,items,journals"]);
+      if (!r.ok) {
+        var age = VB.cacheAgeMin(state.foundry.cache);
+        fOut("Cannot read Foundry: " + r.error + (age === null ? "" : "\nShowing the cached lists from " + age + " min ago."), "warn"); return;
+      }
+      state.foundry.cache = { fetched: r.fetched, lists: r.lists }; save(); fPaint();
+      fOut("Read " + Object.keys(r.lists).map(function (k) { return r.lists[k].length + " " + k; }).join(", ") + ".");
+    });
+  }
+  function fBrowse(key, exts) {
+    try {
+      var r = window.cep.fs.showOpenDialogEx(false, false, "Choose file", "", exts);
+      if (r && r.data && r.data.length) setState("foundry." + key, r.data[0].replace(/\\/g, "/"));
+    } catch (e) { showError("file dialog unavailable: type the path instead"); }
+  }
+  // Auto-push on save: opt-in. CEP has no reliable Illustrator save event, so poll the open document's file time; push 6 s after the last change (debounce).
+  function fAutoTick() {
+    if (!state || !state.foundry.autoPush) return;
+    evalHost({ action: "get_doc_info" }).then(function (r) {
+      if (!r.ok || !r.path) return;
+      var m = 0; try { m = fs.statSync(r.path).mtimeMs; } catch (e) { return; }
+      if (!autoMtime) { autoMtime = m; return; }
+      if (m !== autoMtime) { autoMtime = m; autoPending = Date.now() + 6000; fOut("save detected: pushing in 6 s"); }
+      if (autoPending && Date.now() >= autoPending) { autoPending = 0; fPushScene(false, true); }
+    });
+  }
+  function fSetupAuto() { if (autoTimer) clearInterval(autoTimer); autoTimer = null; autoMtime = 0; autoPending = 0; if (state.foundry.autoPush) autoTimer = setInterval(fAutoTick, 3000); }
+  Object.assign(acts, {
+    f_status: function () { return fGuard("check connection", async function () {
+      var r = await fPy(["status"]), t = $("fConn");
+      t.textContent = !r.connected ? "bridge offline" : r.pipeline_ops ? "connected, module " + r.module : "connected, module " + r.module + " needs update";
+      t.className = "tag" + (r.pipeline_ops ? "" : " stale");
+      fOut(r.error || r.warning || "Foundry " + r.foundry + ", world " + r.world + ", module " + r.module + " (pipeline ops ok).", r.pipeline_ops ? "" : "warn");
+    }); },
+    f_refresh: fRefresh,
+    f_export: function () { return fGuard("export view", async function () { var e = await fExport(null, "view_export.png", false); fOut("Exported " + e.png + " (" + e.info.width_px + "x" + e.info.height_px + " px)."); }); },
+    f_push_scene: function () { return fPushScene(false, false); },
+    f_push_tiles: function () { return fPushScene(true, false); },
+    f_auto: function () { fSetupAuto(); fOut(state.foundry.autoPush ? "Auto-push on save is ON (polls the open document; pushes 6 s after a save)." : "Auto-push off."); },
+    f_browse_image: function () { fBrowse("image", ["png", "jpg", "jpeg", "webp"]); },
+    f_browse_spec: function () { fBrowse("spec", ["json"]); },
+    f_token: function () { return fGuard("place token", async function () {
+      var f = state.foundry; if (!f.actorUuid) throw new Error("pick an actor"); if (!f.at) throw new Error("fill in Place at (building id or x,y feet)");
+      var a = ["push-token", "--place", state.place, "--scene-uuid", fSceneUuid(), "--actor-uuid", f.actorUuid, "--at", f.at, "--size-ft", String(f.sizeFt || 5)];
+      if (f.image) a.push("--image", f.image);
+      var r = await fHandle(a, "token"); if (r) fOut((r.created ? "Placed" : "Moved") + " token " + r.uuid + " at " + r.x + "," + r.y + ".");
+    }); },
+    f_actor: function () { return fGuard("push actor", async function () {
+      var f = state.foundry, a = ["push-actor", "--place", state.place];
+      if (f.actorUuid) { if (!f.image) throw new Error("give an image file to update the picked actor's portrait and token"); a.push("--actor-uuid", f.actorUuid); }
+      else { if (!f.spec) throw new Error("pick an actor and an image, or give an NPC spec json"); a.push("--spec", f.spec); }
+      if (f.image) a.push("--image", f.image);
+      var r = await fHandle(a, "actor");
+      if (r) { fOut("Actor " + r.uuid + (r.created === undefined ? " updated: " + (r.updated || []).join(", ") : r.created ? " created." : " updated.")); }
+    }); },
+    f_item: function () { return fGuard("push item", async function () {
+      var f = state.foundry, a = ["push-item", "--place", state.place];
+      if (f.itemUuid) a.push("--item-uuid", f.itemUuid); else if (f.spec) a.push("--spec", f.spec); else if (f.itemName) a.push("--name", f.itemName); else throw new Error("pick an item, or give a name or spec");
+      if (f.itemDesc) a.push("--description", f.itemDesc);
+      if (f.image) a.push("--image", f.image);
+      var r = await fHandle(a, "item");
+      if (r) { fOut("Item " + r.uuid + (r.created === undefined ? " updated: " + (r.updated || []).join(", ") : r.created ? " created." : " updated.")); }
+    }); }
+  });
 
   // ------------------------------------------------------------ place switching / textures
   async function loadTextures() {
@@ -497,6 +644,9 @@
     var cur = places.indexOf(readJson(path.join(root, "world", "panel_last_place.json"), {}).place) >= 0 ? readJson(path.join(root, "world", "panel_last_place.json"), {}).place : places[0];
     await switchPlace(cur);
     sel.addEventListener("change", function () { try { fs.writeFileSync(path.join(root, "world", "panel_last_place.json"), JSON.stringify({ place: sel.value })); } catch (e) { /* ignore */ } });
+    $("fPlace").addEventListener("change", function () { sel.value = $("fPlace").value; switchPlace($("fPlace").value); try { fs.writeFileSync(path.join(root, "world", "panel_last_place.json"), JSON.stringify({ place: sel.value })); } catch (e) { /* ignore */ } });
+    ["foundry.filter.actors", "foundry.filter.items"].forEach(function (k) { var el = document.querySelector('[data-s="' + k + '"]'); if (el) el.addEventListener("input", fPaint); });
+    fPaint(); fSetupAuto();
     setStatus("idle", false);
     loadTextures();
     setInterval(pollJobs, 2000); pollJobs();

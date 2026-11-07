@@ -317,9 +317,51 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
 </section>
 
 <section id="tab-foundry" role="tabpanel">
-  <h4>Foundry</h4>
-  <div class="btns"><button disabled>Export view</button><button disabled>Push scene</button><button disabled>Push tiles</button></div>
-  <p class="note">push: pending Foundry bridge additions (Drawing create, upsert_by_flag, export_view, push_scene; see DESIGN.md section 7).</p>
+  <h4>Foundry <span class="tag" id="fConn">not checked</span></h4>
+  <div class="grid">
+    <label>Place <select id="fPlace"></select></label>
+    <label>Target <select data-s="foundry.target"><option value="new">New scene (create)</option><option value="existing">Existing scene</option></select></label>
+    <label>New scene name <input type="text" data-s="foundry.sceneName" placeholder="Bridgehollow overview"></label>
+    <label>Existing scene <select id="fScene" data-s="foundry.sceneUuid"></select></label>
+  </div>
+  <div class="btns"><button data-act="f_status">Check connection</button><button data-act="f_refresh" title="Read scenes, actors, items, journals from Foundry">Refresh from Foundry</button><span id="fCache" class="tag"></span></div>
+  <h4>Scene (view -> background, grid, walls)</h4>
+  <div class="grid">
+    <label>Export dpi <input type="number" data-s="foundry.dpi" min="50" max="600" step="10"></label>
+    <label>Feet per grid square <input type="number" data-s="foundry.ftPerGrid" min="1" step="any" placeholder="view grid"></label>
+    <label class="chk"><input type="checkbox" data-s="foundry.walls"> Walls from buildings</label>
+    <label class="chk"><input type="checkbox" data-s="foundry.drawRoads"> Road drawings</label>
+    <label class="chk"><input type="checkbox" data-s="foundry.drawWater"> Water drawings</label>
+    <label>Overlay tile layers <input type="text" data-s="foundry.tileLayers"></label>
+  </div>
+  <div class="btns">
+    <button data-act="f_export">Export view</button>
+    <button class="primary" data-act="f_push_scene">Push scene</button>
+    <button data-act="f_push_tiles" title="Scene plus a transparent overlay tile of the layers above">Push tiles</button>
+    <label class="chk"><input type="checkbox" data-s="foundry.autoPush" data-act-change="f_auto"> Auto-push on save</label>
+  </div>
+  <div id="fConfirm" hidden><div id="fConfirmText" class="note"></div><div class="btns"><button class="primary" id="fYes">Continue</button><button id="fNo">Cancel</button></div></div>
+  <h4>Actors, items, tokens</h4>
+  <div class="grid">
+    <label>Actor filter <input type="text" data-s="foundry.filter.actors"></label>
+    <label>Actor <select id="fActor" data-s="foundry.actorUuid"></select></label>
+    <label>Item filter <input type="text" data-s="foundry.filter.items"></label>
+    <label>Item <select id="fItem" data-s="foundry.itemUuid"></select></label>
+    <label>Image file <input type="text" data-s="foundry.image" placeholder="png / jpg / webp"></label>
+    <label>NPC / item spec (json) <input type="text" data-s="foundry.spec" placeholder="foundry-tools spec"></label>
+    <label>Place at (bld_id, str_id or x,y ft) <input type="text" data-s="foundry.at"></label>
+    <label>Token size (ft) <input type="number" data-s="foundry.sizeFt" min="1" step="any"></label>
+    <label>New item name <input type="text" data-s="foundry.itemName"></label>
+    <label>Item description <input type="text" data-s="foundry.itemDesc"></label>
+  </div>
+  <div class="btns">
+    <button data-act="f_browse_image">Browse image</button><button data-act="f_browse_spec">Browse spec</button>
+    <button data-act="f_token">Place token on scene</button>
+    <button data-act="f_actor" title="Picked actor + image: update its portrait/token art. No actor picked + spec: create or update the NPC.">Push actor</button>
+    <button data-act="f_item" title="Picked item: update image/description. Otherwise create from name or spec.">Push item</button>
+  </div>
+  <p class="note">Everything the pipeline creates is flagged, so pushing again updates in place. Existing documents you did not make are only changed after a confirm. Needs Varrenmoor Bridge module 0.3.0 on the Foundry server (foundry-bridge/DEPLOY_MODULE.md). Token: scene = the picked/last pushed one.</p>
+  <div id="fOut" class="note" style="white-space:pre-wrap"></div>
 </section>
 </main>
 <div id="log" hidden></div>

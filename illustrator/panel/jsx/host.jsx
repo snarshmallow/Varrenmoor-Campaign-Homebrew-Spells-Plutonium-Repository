@@ -68,6 +68,12 @@ function VB_collectPaths(items, outList) {
     else if (t === "GroupItem") VB_collectPaths(it.pageItems, outList);
   }
 }
+// Visibility snapshot of every (sub)layer: [{l, v}]; used by export_view to show only some layers and restore afterwards.
+function VB_snapshot(container, list) {
+  for (var i = 0; i < container.layers.length; i++) { var l = container.layers[i]; list.push({ l: l, v: l.visible }); VB_snapshot(l, list); }
+  return list;
+}
+function VB_showTree(l) { l.visible = true; for (var i = 0; i < l.layers.length; i++) VB_showTree(l.layers[i]); }
 function VB_run(json) {
   try {
     var a = eval("(" + json + ")");
@@ -159,6 +165,7 @@ function VB_run(json) {
         var gd = app.activeDocument;
         out.name = gd.name; out.artboard = gd.artboards[0].artboardRect; out.layers = [];
         for (var gi = 0; gi < gd.layers.length; gi++) out.layers.push(gd.layers[gi].name);
+        try { out.path = gd.fullName.fsName; } catch (e) { out.path = ""; }
         out.selection = gd.selection.length; break;
       }
       case "get_layer_tree": {
@@ -273,6 +280,33 @@ function VB_run(json) {
         o.artBoardClipping = true; o.transparency = false;
         var s = a.scale || 100; o.horizontalScale = s; o.verticalScale = s;
         app.activeDocument.exportFile(new File(a.path), ExportType.PNG24, o); break;
+      }
+      case "export_view": {
+        // Whole artboard as PNG at a given dpi (so px per ft = dpi / scale_ft_per_in); a.only = layer names to show (others hidden, restored after);
+        // a.transparent = no paper background. Reports the exact pixel size for the Foundry push calibration.
+        if (app.documents.length === 0) throw new Error("no open document");
+        var ed = app.activeDocument, edpi = a.dpi || 150, snap = [], enf = [];
+        if (a.only && a.only.length) {
+          snap = VB_snapshot(ed, []);
+          for (var si = 0; si < snap.length; si++) snap[si].l.visible = false;
+          for (var oi = 0; oi < a.only.length; oi++) {
+            var ol = VB_find(ed, a.only[oi]);
+            if (!ol) enf.push(a.only[oi]); else { VB_showTree(ol); var op = ol; try { while (op.parent && op.parent.typename === "Layer") { op = op.parent; op.visible = true; } } catch (e) {} }
+          }
+        }
+        try {
+          if (enf.length) throw new Error("layers not found: " + enf.join(", "));
+          var eo = new ExportOptionsPNG24();
+          eo.artBoardClipping = true; eo.transparency = !!a.transparent; eo.antiAliasing = true;
+          eo.horizontalScale = edpi / 72 * 100; eo.verticalScale = eo.horizontalScale;
+          ed.exportFile(new File(a.path), ExportType.PNG24, eo);
+        } finally {
+          for (var ri = 0; ri < snap.length; ri++) { try { snap[ri].l.visible = snap[ri].v; } catch (e) {} }
+        }
+        var er = ed.artboards[ed.artboards.getActiveArtboardIndex()].artboardRect;
+        out.dpi = edpi; out.width_pt = er[2] - er[0]; out.height_pt = er[1] - er[3];
+        out.width_px = Math.round(out.width_pt * edpi / 72); out.height_px = Math.round(out.height_pt * edpi / 72);
+        break;
       }
       default: throw new Error("unknown action: " + a.action);
     }

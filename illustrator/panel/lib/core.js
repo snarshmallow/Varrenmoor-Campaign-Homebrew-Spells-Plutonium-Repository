@@ -70,6 +70,9 @@
         redraw_contours: true, autofill: true,
         style: { preset: "", streets: "", plazas: "", buildings: "", fields: "", water: "", stroke: "" }
       },
+      foundry: { target: "new", sceneName: "", sceneUuid: "", dpi: 150, ftPerGrid: null, walls: true, drawRoads: false, drawWater: false,
+        tileLayers: "Labels - Districts,Labels - Streets,Labels - Buildings", actorUuid: "", itemUuid: "", spec: "", image: "", at: "", itemName: "", itemDesc: "",
+        sizeFt: 5, autoPush: false, filter: { actors: "", items: "" }, cache: { fetched: null, lists: {} }, last: null },
       stale: { contours: false, shading: false, town: false },
       ui: { tab: "scale" }
     };
@@ -475,6 +478,38 @@
       hide_labels: host({ action: "set_visible", names: ["LABELS"], visible: false }, "hide LABELS")
     };
     return { kind: "layers_" + act, label: act.replace("_", " "), params: {}, steps: [m[act]] };
+  };
+
+  // ---------------------------------------------------------------- Foundry push (everything runs in illustrator/generators/foundry_push.py)
+  VB.FOUNDRY_PY = "illustrator/generators/foundry_push.py";
+  VB.foundryOut = function (d, name) { return d.root + "/illustrator/out/foundry/" + d.world.replace(/^.*\//, "") + "/" + name; };
+  VB.foundryDrawings = function (f) {
+    var k = []; if (f.drawRoads) k.push("roads"); if (f.drawWater) k.push("water");
+    return k.join(",");
+  };
+  VB.foundryTileLayers = function (f) {
+    return String(f.tileLayers || "").split(",").map(function (x) { return x.trim(); }).filter(Boolean);
+  };
+  // push-scene argument list. o = { image, tileImage, uuid (existing scene) }; target "new" uses the name field, "existing" the picked uuid.
+  VB.foundryPushSceneArgs = function (st, o) {
+    var f = st.foundry, a = ["push-scene", "--place", st.place].concat(VB.viewFlags(st), ["--image", o.image]);
+    if (f.target === "existing") { if (!f.sceneUuid) throw new Error("pick an existing scene (Refresh from Foundry first)"); a.push("--scene-uuid", f.sceneUuid); }
+    else { if (!String(f.sceneName || "").trim()) throw new Error("type a name for the new scene"); a.push("--scene-name", String(f.sceneName).trim()); }
+    a.push(f.walls ? "--walls" : "--no-walls");
+    var dr = VB.foundryDrawings(f); a.push("--drawings", dr);
+    if (f.ftPerGrid) a.push("--ft-per-grid", String(f.ftPerGrid));
+    if (o.tileImage) a.push("--tile-image", o.tileImage, "--tile-id", "labels");
+    return a;
+  };
+  // age of the cached Foundry lists in minutes (null if never fetched)
+  VB.cacheAgeMin = function (cache, now) {
+    if (!cache || !cache.fetched) return null;
+    return Math.max(0, Math.round(((now || Date.now()) - Date.parse(cache.fetched)) / 60000));
+  };
+  VB.pickerRows = function (rows, filter) {
+    var q = String(filter || "").toLowerCase();
+    return (rows || []).filter(function (r) { return !q || String(r.name).toLowerCase().indexOf(q) >= 0; })
+      .sort(function (a, b) { return String(a.name).localeCompare(String(b.name)); });
   };
 
   if (typeof module !== "undefined" && module.exports) module.exports = VB;

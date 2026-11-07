@@ -1,4 +1,4 @@
-# Varrenmoor Foundry Bridge (v0.1, untested against a live world)
+# Varrenmoor Foundry Bridge (module 0.3.0)
 
 ```
 Claude (HTTPS) --POST /rpc, Bearer API token--> relay --WebSocket--> Foundry module (GM browser tab)
@@ -8,7 +8,7 @@ Foundry modules run inside a GM's browser, so **a GM client must be open** (a de
 
 ## Ops
 Read: `ping`, `world_info`, `list {collection,type?,nameContains?}`, `get {uuid}`, `audit_activities` (flags Activity IDs that are not 16 alphanumeric chars), `scene_stats`, `perf_sample {ms}` (FPS/long-frame sample; run it while moving a token with vision on).
-Write (off unless the world setting **Allow writes** is on): `create`, `update`. There is no delete op, and no arbitrary code execution.
+Write (off unless the world setting **Allow writes** is on): `create`, `update`, and from module 0.3.0 the pipeline ops `version`, `find_by_flag`, `upsert_by_flag`, `upsert_many`, `delete_by_flag`, `delete`, `set_scene_background`, `set_scene_grid` (flag `flags.varrenmoor.pipelineId`; delete only ever removes documents carrying that flag). No arbitrary code execution. `bridge.ps1 <op> -ArgsFile payload.json` takes a JSON file for large payloads. Deploying the module on Vega: `DEPLOY_MODULE.md`.
 
 ## Quick start (recommended)
 Install Node 20+ and `cloudflared`, then run `start.bat` (Windows) or `./start.sh`. It installs deps, generates tokens into a git-ignored `.env`, starts the relay on 127.0.0.1, opens a Cloudflare quick tunnel, self-tests it, and prints exactly what to enter in Foundry and in the Claude environment.

@@ -180,6 +180,23 @@ const actions = () => hostLog.map(h => h.action);
     const rm = await runner.run({ kind: "bad2", label: "bad2", params: {}, steps: [VB.steps.py("illustrator/generators/render_world.py", ["--place", "nope"], "rw")] });
     check("missing world files give a visible error", !rm.ok, rm.error);
   }
+  { // Foundry tab helpers + the Python tool through the runner
+    const st = VB.normalize(null); st.foundry.sceneName = " ZZ Test "; st.foundry.drawRoads = true; st.foundry.drawWater = true;
+    const args = VB.foundryPushSceneArgs(st, { image: "x.png", tileImage: "t.png" });
+    check("push args: new scene by name", args.includes("--scene-name") && args[args.indexOf("--scene-name") + 1] === "ZZ Test" && args.includes("--walls"), args.join(" "));
+    check("push args: drawings + tile", args[args.indexOf("--drawings") + 1] === "roads,water" && args.includes("--tile-image"));
+    st.foundry.target = "existing";
+    let msg = ""; try { VB.foundryPushSceneArgs(st, { image: "x.png" }); } catch (e) { msg = e.message; }
+    check("existing target needs a picked scene", /pick an existing scene/.test(msg), msg);
+    st.foundry.sceneUuid = "Scene.abc"; check("existing target uses uuid", VB.foundryPushSceneArgs(st, { image: "x.png" }).includes("Scene.abc"));
+    check("cache age", VB.cacheAgeMin({ fetched: new Date(Date.now() - 125 * 60000).toISOString() }) === 125 && VB.cacheAgeMin({}) === null);
+    check("picker filter+sort", VB.pickerRows([{ name: "Zed" }, { name: "Abe" }, { name: "abel" }], "ab").map(r => r.name).join() === "Abe,abel");
+    const runner2 = R.createRunner({ root: ROOT, jobsDir, fs, path, spawn: cp.spawn, host, getPython: () => "python", setState() {}, onStale() {} });
+    const r = await runner2.execPy(VB.FOUNDRY_PY, ["places"]), j = runner2.parseJsonOut(r.out);
+    check("foundry_push places through the runner", j && j.ok && j.places.includes("bridgehollow"), r.out + r.err);
+    const e = await runner2.execPy(VB.FOUNDRY_PY, ["export-info", "--place", "bridgehollow"].concat(VB.viewFlags(VB.normalize(null)))), ej = runner2.parseJsonOut(e.out);
+    check("export-info gives window in feet", ej && ej.ok && ej.window_ft[2] === 1600, e.out + e.err);
+  }
   const logs = fs.existsSync(path.join(jobsDir, "done")) ? fs.readdirSync(path.join(jobsDir, "done")) : [];
   check("each run logged exact params to jobs/done", logs.length > 3 && logs.every(f => /^panel_\d{8}_\d{6}_.+\.json$/.test(f)), logs.length + " files");
   if (logs.length) { const j = JSON.parse(fs.readFileSync(path.join(jobsDir, "done", logs[0]), "utf8")); check("log has params + steps", j.params !== undefined && Array.isArray(j.steps)); }
