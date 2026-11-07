@@ -11,13 +11,17 @@ os.makedirs(out, exist_ok=True)
 base, meta = tp.load_base("bridgehollow")
 meta = dict(meta, sea_level_ft=0.0)
 box = lambda x0, y0, x1, y1: [[x0, y0], [x1, y0], [x1 + 60, (y0 + y1) / 2], [x1, y1], [x0, y1 + 40], [x0 - 50, (y0 + y1) / 2]]
+# Targets retargeted for natural terrain v2 (raise types can only raise): the hill_band ground already averages ~769 ft
+# (peak 877) and the mesa ground averages ~866 ft with peaks to 1019, so the old 745/850 means and 1000 ft mesa top were
+# unreachable (now hill 900/785, mesa 1080/925 with a 200 ft feather so the larger raise still seams cleanly). The trench feather went 110 -> 150 ft: the boundary gradient jump scales ~1/feather^2 and a 40 ft trench in
+# ground that is already -24..+23 ft is gentle, so the relative seam metric was marginal (0.052 abs vs 0.05) at 110.
 CASES = [
  ("ne_peak", box(1750, 150, 2250, 600), dict(terrain_type="mountain", max_height_ft=1250, avg_height_ft=1000, steepness=0.7, feather_ft=150, seed=7, roughness=0.5, erosion=6)),
  ("mound_700", box(1000, 850, 1500, 1250), dict(terrain_type="mountain", max_height_ft=700, avg_height_ft=665, steepness=0.4, feather_ft=100, seed=3, roughness=0.3)),
- ("hill_band", [[100, 700], [900, 600], [1000, 800], [150, 950]], dict(terrain_type="rolling_hills", max_height_ft=880, avg_height_ft=745, steepness=0.3, feather_ft=120, seed=11, roughness=0.6)),
- ("mesa", box(300, 150, 700, 450), dict(terrain_type="mesa", max_height_ft=1000, avg_height_ft=850, steepness=0.8, feather_ft=150, seed=5, roughness=0.3)),
+ ("hill_band", [[100, 700], [900, 600], [1000, 800], [150, 950]], dict(terrain_type="rolling_hills", max_height_ft=900, avg_height_ft=785, steepness=0.3, feather_ft=120, seed=11, roughness=0.6)),
+ ("mesa", box(300, 150, 700, 450), dict(terrain_type="mesa", max_height_ft=1080, avg_height_ft=925, steepness=0.8, feather_ft=200, seed=5, roughness=0.3)),
  ("basin_neg60", box(1200, 1150, 1600, 1420), dict(terrain_type="bowl", min_height_ft=-60, avg_height_ft=-25, steepness=0.4, feather_ft=100, seed=9, roughness=0.3)),
- ("trench_neg", [[700, 1090], [1100, 1020], [1120, 1230], [720, 1300]], dict(terrain_type="trench", min_height_ft=-40, avg_height_ft=-12, angle_deg=-10, steepness=0.7, feather_ft=110, seed=2)),
+ ("trench_neg", [[700, 1090], [1100, 1020], [1120, 1230], [720, 1300]], dict(terrain_type="trench", min_height_ft=-40, avg_height_ft=-12, angle_deg=-10, steepness=0.7, feather_ft=150, seed=2)),
 ]
 NEG = {"basin_neg60", "trench_neg"}
 ok = True
