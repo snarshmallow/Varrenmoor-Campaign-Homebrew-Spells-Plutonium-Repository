@@ -29,3 +29,6 @@ Lasso an area and set: max height, average height, steepness, and terrain type (
 
 ## Negative elevation (added 2026-11-06)
 Elevations are signed feet against a sea-level datum (`sea_level_ft`, default 0). Everything must handle negative values: terrain patches (basins, trenches, seabeds), contour levels and labels (minus sign, a 0 ft datum contour that can be emphasised), shading phases (below-datum water depth shading), town generation (nothing built below the water level unless it is dry basin ground), and Foundry/3D elevation exports.
+
+## Water and rivers (added 2026-11-06)
+Water bodies (sea, lakes, ponds, wetlands) and rivers are part of the terrain model: sea/lake levels against the datum, rivers that follow the terrain downhill (flow routing, widening downstream, meanders), optional river carving into the heightmap, lakes in basins, shorelines, fords/bridges where roads cross, springs and deltas, and user-drawn rivers/lakes in the panel (draw a path, set width/depth/flow). Water affects contours (shoreline contour), shading (water depth phases), town generation (no building in water, bridges, mills and docks at the water) and Foundry/3D exports.
