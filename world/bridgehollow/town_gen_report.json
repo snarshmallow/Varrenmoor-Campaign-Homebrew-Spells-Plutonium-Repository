@@ -4,24 +4,24 @@
  "scale_ft_per_in": 100,
  "sea_level_ft": 0.0,
  "warnings": [
-  "street grade over cap (40 ft window): str_pilgrim_road_1 0.156, str_pilgrim_road_3 0.093, str_016 0.099"
+  "street grade over cap (40 ft window): str_006 0.128"
  ],
  "issues": [],
  "counts": {
-  "streets": 36,
-  "buildings": 136,
-  "fields": 7,
+  "streets": 31,
+  "buildings": 91,
+  "fields": 6,
   "plazas": 3,
-  "blocks": 51,
+  "blocks": 37,
   "by_kind": {
    "civic": 6,
    "inn": 1,
    "stable": 1,
    "craft": 2,
-   "house": 122,
-   "farmhouse": 3,
-   "barn": 1
+   "house": 75,
+   "farmhouse": 4,
+   "barn": 2
   }
  },
- "street_grade_max": 0.156
+ "street_grade_max": 0.128
 }

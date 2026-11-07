@@ -1,26 +1,26 @@
 {
- "id": "bld_house_110",
- "name": "House 110",
- "kind": "house",
+ "id": "bld_farm_004",
+ "name": "Farmhouse 4",
+ "kind": "farmhouse",
  "status": "proposed",
  "geometry": {
   "type": "polygon",
   "points": [
    [
-    1004.6,
-    1034.6
+    1282.3,
+    1287.3
    ],
    [
-    1029.2,
-    1022.3
+    1276.6,
+    1257.6
    ],
    [
-    1020.2,
-    1004.2
+    1255.7,
+    1261.6
    ],
    [
-    995.6,
-    1016.5
+    1261.4,
+    1291.3
    ]
   ]
  },
@@ -33,7 +33,7 @@
  "floors": 1,
  "rooms": [],
  "doors": [],
- "elevation_ft": 648.3,
- "site_slope": 0.041,
- "site_relief_ft": 0.9
+ "elevation_ft": 626.7,
+ "site_slope": 0.094,
+ "site_relief_ft": 3.3
 }
