@@ -4,7 +4,7 @@
   cs = build(h, cell_ft, Frame(x0, y0, x1, y1, pt_per_ft, ox_pt, oy_pt), ContourParams(...), mask_polys=[...])
   emit(tree, cs)       # LINES/Terrain/'Contours - Minor' + 'Contours - Index', LABELS/'Labels - Elevation'
 
-Pipeline: Gaussian pre-smooth -> cubic upsample -> contourpy -> shapely simplify + Chaikin -> clip to the view window
+Pipeline: Gaussian pre-smooth -> cubic-spline upsample (x4) -> contourpy -> drop tiny closed loops -> shapely simplify + Chaikin -> clip to the view window
 -> subtract mask polygons (optional, feet) -> place labels on index contours (rotated boxes, STRtree collision)
 -> cut a small gap in every contour under each label -> ids contour_<elev>_<n>.
 Intervals are in the chosen `units` (ft or m); heights in the heightmap are feet.
@@ -24,8 +24,8 @@ from xml.sax.saxutils import escape
 M_PER_FT = 0.3048
 
 CSS = """\
-.contour-minor { fill: none; stroke: #8a5a2b; stroke-width: 0.3; }
-.contour-index { fill: none; stroke: #8a5a2b; stroke-width: 0.75; }
+.contour-minor { fill: none; stroke: #8a5a2b; stroke-width: 0.3; stroke-linejoin: round; stroke-linecap: round; }
+.contour-index { fill: none; stroke: #8a5a2b; stroke-width: 0.85; stroke-linejoin: round; stroke-linecap: round; }
 .contour-datum { fill: none; stroke: #1a4f8a; stroke-width: 1.1; }
 .contour-label { fill: #6b4423; stroke: none; font-family: Arial, sans-serif; }"""
 
@@ -46,10 +46,11 @@ class ContourParams:
     upright: bool = True           # flip labels so they never read upside down
     max_bend_deg: float = 25.0     # reject label spots where the line bends more than this under the label
     halo_pt: float = 1.5           # gap cut in contours around each label
-    smooth_sigma: float = 1.0      # Gaussian sigma in heightmap cells
-    upsample: int = 2
-    simplify_ft: float = 0.4
-    chaikin: int = 1
+    smooth_sigma: float = 0.8      # Gaussian sigma in heightmap cells (pre-smooth before upsampling)
+    upsample: int = 4              # cubic-spline upsampling factor: contour crossings are found at sub-cell accuracy
+    simplify_ft: float = 0.3
+    chaikin: int = 2               # light corner cutting on the traced polyline (no stair-steps, closed loops stay closed)
+    min_closed_area_ft2: float = 2500.0   # drop closed contours enclosing less than this (noise confetti); 0 = keep all
     use_mask: bool = True
     labels: bool = True
     sea_level_ft: float = 0.0      # datum (signed elevations); levels and index contours are counted from it
@@ -94,6 +95,11 @@ def chaikin(pts, n, closed):
             out[0::2], out[1::2] = q, r
             pts = np.vstack([pts[:1], out, pts[-1:]])
     return pts
+
+
+def _ring_area(a):
+    x, y = a[:, 0], a[:, 1]
+    return 0.5 * float(np.dot(x, np.roll(y, -1)) - np.dot(y, np.roll(x, -1)))
 
 
 def _lines(geom):
@@ -155,6 +161,8 @@ def build(h, cell_ft, frame, params=None, mask_polys=None):
             if len(arr) < 3:
                 continue
             closed = bool(np.allclose(arr[0], arr[-1]))
+            if closed and p.min_closed_area_ft2 > 0 and len(arr) >= 4 and abs(_ring_area(arr)) < p.min_closed_area_ft2 :
+                continue
             ls = LineString(arr)
             if p.simplify_ft:
                 ls = ls.simplify(p.simplify_ft)

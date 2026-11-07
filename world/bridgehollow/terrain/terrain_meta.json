@@ -7,9 +7,10 @@
  "nx": 241,
  "ny": 151,
  "seed": 1103,
- "elev_min": 619.1509399414062,
- "elev_max": 1048.382568359375,
- "relief_ft": 429.23162841796875,
+ "elev_min": 611.7584838867188,
+ "elev_max": 1070.523193359375,
+ "relief_ft": 458.76470947265625,
  "units": "feet",
+ "pipeline": "natural_v2",
  "node_convention": "h[i,j] at x=j*cell_ft, y=i*cell_ft (y down)"
 }

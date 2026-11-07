@@ -12,6 +12,10 @@ Spec (JSON, feet, origin top-left, y down; see world/bridgehollow/terrain_spec.j
                    carve to floor = base plane + rel, walls rising at side_slope (ft/ft); rel is relative to the base plane
   noise    {scale_ft, octaves, lacunarity, gain, ridged_amp_ft, base_amp_ft, warp_ft, warp_scale_ft}
   erosion  {thermal_iterations, talus_slope, rate, smooth_sigma_cells}
+  natural  optional block; when present the v2 pipeline runs (smoothed/wandering constraint lines, spurs, plateaus,
+           stream-power + thermal erosion with scree aprons, terraces, basin micro-relief, monotone river bed).
+           See terrain_natural.py for the keys. Without it the original (v1) pipeline is used unchanged.
+  sea_level_ft  optional datum copied to terrain_meta.json (elevations stay signed feet relative to it)
 Output: heightmap.npy (float32 feet, shape [ny, nx], node (i,j) at x=j*cell, y=i*cell, nx=W/cell+1),
 heightmap_16.png (16-bit, linearly scaled between terrain_meta.json elev_min/elev_max) and terrain_meta.json.
 Same spec + seed + cell size => identical output.
@@ -24,6 +28,8 @@ import time
 
 import numpy as np
 from scipy import ndimage as ndi
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.abspath(os.path.join(HERE, "..", ".."))
@@ -131,7 +137,8 @@ def load_spec(path):
         return json.load(f)
 
 
-def generate(spec, cell_ft=None, seed=None, verbose=False):
+def generate_v1(spec, cell_ft=None, seed=None, verbose=False):
+    """Original generator (kept unchanged for specs without a \"natural\" block)."""
     t0 = time.time()
     W, H = spec["size_ft"]
     cell = float(cell_ft or spec.get("cell_ft", 10))
@@ -234,7 +241,8 @@ def hillshade(h, cell, azimuth=315.0, altitude=40.0, exag=1.0):
 def save_preview(h, meta, path, zoom=4):
     from PIL import Image
     hs = hillshade(h, meta["cell_ft"], exag=1.0)
-    shade = np.clip(0.85 + (hs - np.sin(np.radians(40))) * 1.1, 0.35, 1.15)
+    # gentle strength so steep faces stay readable (not black)
+    shade = np.clip(0.9 + (hs - np.sin(np.radians(40))) * 0.55, 0.62, 1.1)
     t = (h - meta["elev_min"]) / max(meta["elev_max"] - meta["elev_min"], 1e-6)
     stops = np.array([0, .12, .45, .75, 1.0])
     cols = np.array([[70, 125, 70], [140, 170, 90], [170, 150, 105], [150, 140, 135], [250, 250, 250]], float)

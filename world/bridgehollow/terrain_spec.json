@@ -1,5 +1,5 @@
 {
- "_note": "PROPOSED terrain for the redesigned Bridgehollow. Heights are feet above sea level; ridge heights are above the base plane.",
+ "_note": "Bridgehollow terrain. 'natural' block enables the v2 pipeline (terrain_natural.py); remove it to get the old v1 result (see terrain_spec_v1.json). Heights are feet above sea level; ridge heights above the base plane.",
  "size_ft": [
   2400,
   1500
@@ -14,124 +14,127 @@
  "ridges": [
   {
    "name": "north wall",
-   "width_ft": 400,
+   "width_ft": 459,
    "sharpness": 1.5,
    "points": [
     [
      -150,
      20,
-     330
+     224
     ],
     [
      500,
      30,
-     400
+     272
     ],
     [
      1200,
      0,
-     440
+     300
     ],
     [
      1900,
      30,
-     400
+     272
     ],
     [
      2550,
      20,
-     330
+     224
     ]
-   ]
+   ],
+   "spurs": true
   },
   {
    "name": "west wall",
-   "width_ft": 380,
+   "width_ft": 436,
    "sharpness": 1.5,
    "points": [
     [
      300,
      -100,
-     380
+     259
     ],
     [
      330,
      500,
-     370
+     252
     ],
     [
      310,
      900,
-     290
+     198
     ],
     [
      270,
      1250,
-     110
+     75
     ],
     [
      230,
      1450,
      0
     ]
-   ]
+   ],
+   "spurs": true
   },
   {
    "name": "east wall",
-   "width_ft": 380,
+   "width_ft": 436,
    "sharpness": 1.5,
    "points": [
     [
      2100,
      -100,
-     380
+     259
     ],
     [
      2070,
      500,
-     370
+     252
     ],
     [
      2090,
      900,
-     290
+     198
     ],
     [
      2130,
      1250,
-     110
+     75
     ],
     [
      2170,
      1450,
      0
     ]
-   ]
+   ],
+   "spurs": true
   },
   {
    "name": "south foothills",
-   "width_ft": 300,
+   "width_ft": 345,
    "sharpness": 1.3,
    "points": [
     [
      -100,
      1600,
-     150
+     102
     ],
     [
      800,
      1590,
-     160
+     109
     ],
     [
      1600,
      1590,
-     160
+     109
     ],
     [
      2500,
      1600,
-     150
+     102
     ]
    ]
   }
@@ -141,7 +144,7 @@
    "name": "north-west peak",
    "x": 560,
    "y": -20,
-   "height": 60,
+   "height": 41,
    "radius_ft": 300,
    "sharpness": 1.0,
    "mode": "add"
@@ -150,7 +153,7 @@
    "name": "north-east peak",
    "x": 1850,
    "y": 10,
-   "height": 50,
+   "height": 35,
    "radius_ft": 300,
    "sharpness": 1.0,
    "mode": "add"
@@ -159,8 +162,8 @@
    "name": "authority rise",
    "x": 1200,
    "y": 700,
-   "height": 28,
-   "radius_ft": 280,
+   "height": 18,
+   "radius_ft": 330,
    "sharpness": 1.0,
    "mode": "add"
   },
@@ -168,7 +171,7 @@
    "name": "n peak a",
    "x": 900,
    "y": 30,
-   "height": 70,
+   "height": 48,
    "radius_ft": 220,
    "mode": "add"
   },
@@ -176,7 +179,7 @@
    "name": "n peak b",
    "x": 1500,
    "y": 20,
-   "height": 80,
+   "height": 55,
    "radius_ft": 240,
    "mode": "add"
   },
@@ -184,7 +187,7 @@
    "name": "w peak",
    "x": 300,
    "y": 700,
-   "height": 60,
+   "height": 41,
    "radius_ft": 260,
    "mode": "add"
   },
@@ -192,7 +195,7 @@
    "name": "e peak",
    "x": 2100,
    "y": 650,
-   "height": 70,
+   "height": 48,
    "radius_ft": 260,
    "mode": "add"
   }
@@ -311,7 +314,98 @@
      -8,
      0.2
     ]
-   ]
+   ],
+   "river": true
+  },
+  {
+   "name": "hanging valley (east wall)",
+   "core_ft": 18,
+   "side_slope": 0.55,
+   "points": [
+    [
+     2100,
+     520,
+     170,
+     0.5
+    ],
+    [
+     1990,
+     450,
+     135,
+     0.5
+    ],
+    [
+     1890,
+     390,
+     115,
+     0.45
+    ],
+    [
+     1800,
+     350,
+     104,
+     0.45
+    ]
+   ],
+   "carve_width_ft": 420,
+   "round_ft": 38,
+   "soft_ft": 16
+  },
+  {
+   "name": "hanging valley (west wall)",
+   "core_ft": 16,
+   "side_slope": 0.55,
+   "points": [
+    [
+     380,
+     560,
+     140,
+     0.55
+    ],
+    [
+     470,
+     500,
+     118,
+     0.5
+    ],
+    [
+     560,
+     470,
+     104,
+     0.5
+    ]
+   ],
+   "round_ft": 38,
+   "soft_ft": 16,
+   "carve_width_ft": 420
+  },
+  {
+   "name": "hanging valley (north-west, drains to the gorge)",
+   "core_ft": 16,
+   "side_slope": 0.5,
+   "points": [
+    [
+     800,
+     60,
+     170,
+     0.5
+    ],
+    [
+     900,
+     180,
+     120,
+     0.45
+    ],
+    [
+     1000,
+     270,
+     80,
+     0.4
+    ]
+   ],
+   "round_ft": 38,
+   "soft_ft": 16,
+   "carve_width_ft": 420
   }
  ],
  "passes": [
@@ -346,7 +440,7 @@
   "octaves": 5,
   "lacunarity": 2.0,
   "gain": 0.5,
-  "ridged_amp_ft": 110,
+  "ridged_amp_ft": 85,
   "base_amp_ft": 3,
   "warp_ft": 140,
   "warp_scale_ft": 700,
@@ -358,5 +452,129 @@
   "talus_slope": 1.0,
   "rate": 0.5,
   "smooth_sigma_cells": 1.0
+ },
+ "natural": {
+  "plateaus": [
+   {
+    "name": "west bench",
+    "polygon": [
+     [
+      440,
+      520
+     ],
+     [
+      520,
+      490
+     ],
+     [
+      590,
+      600
+     ],
+     [
+      585,
+      790
+     ],
+     [
+      520,
+      900
+     ],
+     [
+      440,
+      800
+     ],
+     [
+      420,
+      640
+     ]
+    ],
+    "lift_ft": 2,
+    "tilt": [
+     0.03,
+     -0.05
+    ],
+    "edge_ft": 90,
+    "noise_ft": 4,
+    "strength": 0.85
+   },
+   {
+    "name": "east bench",
+    "polygon": [
+     [
+      1960,
+      560
+     ],
+     [
+      2040,
+      530
+     ],
+     [
+      2100,
+      640
+     ],
+     [
+      2085,
+      800
+     ],
+     [
+      2010,
+      900
+     ],
+     [
+      1930,
+      790
+     ],
+     [
+      1925,
+      650
+     ]
+    ],
+    "lift_ft": 2,
+    "tilt": [
+     -0.03,
+     -0.045
+    ],
+    "edge_ft": 90,
+    "noise_ft": 4,
+    "strength": 0.85
+   }
+  ],
+  "keep_clear": [
+   [
+    1200,
+    700,
+    320
+   ]
+  ],
+  "basin": {
+   "fan": {
+    "x": 1255,
+    "y": 330,
+    "radius_ft": 330,
+    "height_ft": 11,
+    "spread_deg": 50
+   }
+  },
+  "spurs": {
+   "clear_points": [
+    [
+     1200,
+     700,
+     380
+    ]
+   ]
+  },
+  "rough_ft": 7,
+  "final_smooth_cells": 0.5,
+  "rugged": {
+   "scale_ft": 330,
+   "amp_ft": 120,
+   "octaves": 6
+  },
+  "hydraulic": {
+   "iterations": 36,
+   "K": 0.1,
+   "diffusion": 0.03,
+   "max_incise_ft": 50
+  }
  }
 }
