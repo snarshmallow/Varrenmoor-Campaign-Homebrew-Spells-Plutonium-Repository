@@ -169,6 +169,17 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
     <label class="chk"><input type="checkbox" data-s="contours.datum"> Emphasise datum</label>
     <label class="chk"><input type="checkbox" data-s="contours.mask"> Mask under buildings/streets</label>
   </div>
+  <h4 style="margin-top:8px">Label offsets</h4>
+  <div class="grid">
+    <label>Leader style <select data-s="label_offset.style"><option>elbow</option><option>straight</option></select></label>
+    <label>Leader stroke (pt) <input type="number" data-s="label_offset.stroke_width" min="0.05" step="0.05"></label>
+    <label>Min fit margin (%) <input type="number" data-s="label_offset.margin_pct" min="0" step="5"></label>
+    <label>Max offset (page pt) <input type="number" data-s="label_offset.max_offset_pt" min="0" step="5"></label>
+  </div>
+  <div class="grid" style="margin-top:4px">
+    <label class="chk"><input type="checkbox" data-s="label_offset.enabled"> Offset labels that do not fit (leader line)</label>
+    <label class="chk"><input type="checkbox" data-s="label_offset.dot"> Dot at anchor</label>
+  </div>
   <div class="btns"><button class="primary" data-act="contours_run">Render contours</button></div>
   <p class="note">Draws Contours - Minor, Contours - Index and Labels - Elevation from the current terrain (patched, or carved when enabled on the Water tab).</p>
 </section>

@@ -2,7 +2,8 @@
 
   cfg = viewcfg.load(place, preset="town", scale=None, grid=None, page=None)
   cfg -> dict: preset, scale_ft_per_in, grid_ft, grid_major_every, page_in, margin_in, focus, scale_bar_ft,
-               units, min_street_width_ft, contour_mask
+               units, min_street_width_ft, contour_mask, label_offset
+  label_offset = {enabled, style: straight|elbow, stroke_width (pt), margin_pct, max_offset_pt (page pt), dot}; see label_offset.py
 Scale bar length defaults to 5 paper inches of ground. Feet are always the model unit; only drawing changes.
 """
 import json
@@ -12,6 +13,7 @@ REPO = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), 
 FALLBACK = {
     "units": "ft", "page_in": [17, 11], "margin_in": 0.5, "min_street_width_ft": 10, "default_preset": "town",
     "contour_mask": {"enabled": True, "include": ["buildings", "streets", "plazas"]},
+    "label_offset": {"enabled": True, "style": "elbow", "stroke_width": 0.4, "margin_pct": 10, "max_offset_pt": 90, "dot": True},
     "presets": {
         "town": {"scale_ft_per_in": 100, "grid_ft": 100, "grid_major_every": 5, "focus": [1200, 750]},
         "bowl": {"scale_ft_per_in": 200, "grid_ft": 100, "grid_major_every": 5, "focus": "center"},
@@ -28,6 +30,11 @@ def load_raw(place):
         with open(p, encoding="utf-8") as f:
             return json.load(f)
     return FALLBACK
+
+
+def label_offset(place):
+    """Label-offset settings (leader lines) from view_settings.json, falling back to the defaults."""
+    return {**FALLBACK["label_offset"], **load_raw(place).get("label_offset", {})}
 
 
 def parse_page(s):

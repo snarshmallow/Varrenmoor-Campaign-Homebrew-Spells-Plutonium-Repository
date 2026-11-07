@@ -62,7 +62,12 @@ def parse(svg, png, dpi=100, crop=None, grid=False, zoom=1.0):
                 x, y = pt(float(el.get("x")), float(el.get("y")))
                 tx = el.text or ""
                 w = d.textlength(tx, font=font)
-                d.text((x - w / 2 if el.get("text-anchor") == "middle" else x, y - 8), tx, fill=c, font=font)
+                an = el.get("text-anchor")
+                d.text((x - w / 2 if an == "middle" else x - w if an == "end" else x, y - 8), tx, fill=c, font=font)
+            elif tag == "circle":
+                x, y = pt(float(el.get("cx")), float(el.get("cy")))
+                r = max(float(el.get("r")) * s, 1.5)
+                d.ellipse((x - r, y - r, x + r, y + r), fill=c)
 
     walk(root, "")
     img.save(png)

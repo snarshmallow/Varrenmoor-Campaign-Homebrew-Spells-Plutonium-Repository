@@ -3,12 +3,12 @@
 (function (root) {
   "use strict";
   var VB = {};
-  var GEN_LAYERS = ["Labels - Districts", "Labels - Streets", "Labels - Buildings", "Labels - Rooms", "Labels - Elevation", "NOTES",
+  var GEN_LAYERS = ["Labels - Districts", "Labels - Streets", "Labels - Buildings", "Labels - Rooms", "Labels - Elevation", "Leaders", "NOTES",
     "Walls", "Buildings", "Blocks", "Roads", "Water", "Contours - Minor", "Contours - Index", "Fences",
     "Grid", "Scale bar", "North arrow", "Bounds"];
   var GUIDE_LAYERS = ["GUIDES", "Grid", "Scale bar", "North arrow", "Bounds"];
   var CONTOUR_LAYERS = ["Contours - Minor", "Contours - Index", "Labels - Elevation"];
-  var TOWN_LAYERS = ["Buildings", "Blocks", "Roads", "Water", "Fences", "Labels - Districts", "Labels - Streets", "Labels - Buildings", "NOTES"];
+  var TOWN_LAYERS = ["Buildings", "Blocks", "Roads", "Water", "Fences", "Labels - Districts", "Labels - Streets", "Labels - Buildings", "Leaders", "NOTES"];
   var RAISE = ["mountain", "rolling_hills", "mesa", "plateau", "dunes", "rocky_crags", "ridge_line"];
   var DEPRESS = ["bowl", "valley", "trench", "sinkhole", "seabed_shelf"];
   var EXTRA_SWATCHES = [
@@ -55,6 +55,7 @@
       },
       contours: { minor: 10, index: 50, units: "ft", label_size: 6, decimals: 0, label_spacing_ft: 500, min_len_ft: 120,
         follow_line: true, upright: true, labels: true, datum: true, mask: true },
+      label_offset: { enabled: true, style: "elbow", stroke_width: 0.4, margin_pct: 10, max_offset_pt: 90, dot: true },
       shading: { preset: "alpine_steep", base_color: "#6f9a48", phases: [], loaded: false,
         hillshade: { enabled: true, azimuth: 315, altitude: 40, strength: 0.55, exaggeration: 1 } },
       water: { sea_level_ft: 0, threshold_cells: 150, outlet_width: 60, inflow: "", delta: false, meander: true, bank_ft: 12,
@@ -226,6 +227,12 @@
   VB.panelioViewFlags = function (st) {
     return VB.viewFlags(st).map(function (x) { return x === "--grid-major" ? "--major" : x; });
   };
+  VB.labelFlags = function (st) {
+    var o = st.label_offset || {};
+    if (o.enabled === false) return ["--no-label-offset"];
+    return ["--label-offset", "--leader-style", o.style || "elbow", "--leader-width", String(o.stroke_width), "--label-fit-margin", String(o.margin_pct),
+      "--label-max-offset", String(o.max_offset_pt), o.dot === false ? "--no-leader-dot" : "--leader-dot"];
+  };
   VB.contourFlags = function (st) {
     var c = st.contours, f = ["--contours", c.mask ? "--contour-mask" : "--no-contour-mask", "--contour-interval", String(c.minor), "--index-interval", String(c.index),
       "--label-size", String(c.label_size), "--units", c.units, "--label-decimals", String(c.decimals), "--label-spacing", String(c.label_spacing_ft),
@@ -275,7 +282,7 @@
   VB.jobScaleApply = function (st, d, all) {
     var svg = d.panel + "/view.svg";
     var names = all ? GEN_LAYERS : ["Grid", "Scale bar", "North arrow", "Bounds", "NOTES"];
-    var args = ["--place", st.place].concat(VB.viewFlags(st), ["--out", svg], VB.srcFlags(st), all ? VB.contourFlags(st) : []);
+    var args = ["--place", st.place].concat(VB.viewFlags(st), ["--out", svg], VB.srcFlags(st), VB.labelFlags(st), all ? VB.contourFlags(st) : []);
     return {
       kind: all ? "redraw_all" : "scale_apply", label: all ? "Redraw all GEN layers" : "Apply scale and regenerate guides",
       params: { scale: st.scale, view: st.settings.view },
@@ -292,7 +299,7 @@
     var svg = d.panel + "/contours.svg";
     return {
       kind: "contours", label: "Render contours", params: { contours: st.contours, source: VB.srcFlags(st) },
-      steps: [py(GEN + "render_world.py", ["--place", st.place].concat(VB.viewFlags(st), VB.contourFlags(st), VB.srcFlags(st), ["--out", svg]), "render_world --contours")]
+      steps: [py(GEN + "render_world.py", ["--place", st.place].concat(VB.viewFlags(st), VB.contourFlags(st), VB.labelFlags(st), VB.srcFlags(st), ["--out", svg]), "render_world --contours")]
         .concat(VB.replaceSteps(svg, CONTOUR_LAYERS, "replace contour layers")),
       clearStale: ["contours"]
     };
@@ -378,7 +385,7 @@
   VB.waterRedraw = function (st, d) {
     if (!st.water.redraw) return [];
     var svg = d.panel + "/water.svg";
-    return [py(GEN + "render_world.py", ["--place", st.place].concat(VB.viewFlags(st), ["--out", svg], VB.srcFlags(st)), "render_world (water)")]
+    return [py(GEN + "render_world.py", ["--place", st.place].concat(VB.viewFlags(st), ["--out", svg], VB.srcFlags(st), VB.labelFlags(st)), "render_world (water)")]
       .concat(VB.replaceSteps(svg, ["Water"], "replace Water layer"));
   };
   VB.jobWaterAnalyze = function (st, d) {
@@ -427,7 +434,7 @@
   VB.jobTown = function (st, d) {
     var params = d.panel + "/town_params_run.json", svg = d.panel + "/town_candidate.svg", t = st.town;
     var names = TOWN_LAYERS.concat(t.redraw_contours ? CONTOUR_LAYERS : []);
-    var rargs = ["--place", st.place].concat(VB.viewFlags(st), ["--model-dir", d.candidate, "--out", svg], VB.srcFlags(st), t.redraw_contours ? VB.contourFlags(st) : []);
+    var rargs = ["--place", st.place].concat(VB.viewFlags(st), ["--model-dir", d.candidate, "--out", svg], VB.srcFlags(st), VB.labelFlags(st), t.redraw_contours ? VB.contourFlags(st) : []);
     return {
       kind: "town_generate", label: "Generate town (candidate)", params: { town: t },
       steps: [
@@ -456,7 +463,7 @@
     var svg = d.panel + "/town_restore.svg", names = TOWN_LAYERS.concat(st.town.redraw_contours ? CONTOUR_LAYERS : []);
     return { kind: "town_reject", label: "Reject town (restore previous)", params: {},
       steps: [py(GEN + "panelio.py", ["town-reject", "--place", st.place], "town-reject"),
-        py(GEN + "render_world.py", ["--place", st.place].concat(VB.viewFlags(st), ["--out", svg], VB.srcFlags(st), st.town.redraw_contours ? VB.contourFlags(st) : []), "render_world (previous model)")]
+        py(GEN + "render_world.py", ["--place", st.place].concat(VB.viewFlags(st), ["--out", svg], VB.srcFlags(st), VB.labelFlags(st), st.town.redraw_contours ? VB.contourFlags(st) : []), "render_world (previous model)")]
         .concat(VB.replaceSteps(svg, names, "restore previous"), [{ t: "fn", label: "fills", when: function () { return st.town.autofill; }, fn: function (run) { return VB.fillStep(st, run); } }]),
       setState: [["town.candidate", false]] };
   };

@@ -22,6 +22,7 @@ from lib_svg import LayerTree  # noqa: E402
 import contours as ct  # noqa: E402
 import viewcfg  # noqa: E402
 import terrain as tr  # noqa: E402
+import label_offset as lbo  # noqa: E402
 import worldio  # noqa: E402
 from xml.sax.saxutils import escape  # noqa: E402
 
@@ -30,7 +31,7 @@ PAGE_W_IN, PAGE_H_IN, MARGIN_IN = 17, 11, 0.5   # defaults; the active view_sett
 
 SPEC = [
     ("NOTES", []),
-    ("LABELS", ["Labels - Districts", "Labels - Streets", "Labels - Buildings", "Labels - Rooms", ct.LAYER_LABELS]),
+    ("LABELS", ["Leaders", "Labels - Districts", "Labels - Streets", "Labels - Buildings", "Labels - Rooms", ct.LAYER_LABELS]),
     ("ART - Top", []),
     ("ART - Fills", []),
     ("ART - Textures", []),
@@ -51,6 +52,8 @@ path { fill: none; }
 .water { fill: none; stroke: #1a4f8a; stroke-width: 0.75; }
 .proposed { stroke-dasharray: 3 1.5; }
 text { fill: #000000; stroke: none; font-family: Arial, sans-serif; }
+.leader { fill: none; stroke: #000000; }
+.leader-dot { stroke: none; fill: #000000; }
 """ + ct.CSS
 
 
@@ -233,6 +236,7 @@ def street_label(t, v, e, size, fpi):
         nx_, ny_ = -nx_, -ny_
     x, y = v.px((m.x + nx_ * off, m.y + ny_ * off))
     t.add("Labels - Streets", text(f"lbl_{e['id']}", x, y, e["name"] + " *", size, rot=ang))
+    return x, y, e["name"] + " *", size, ang
 
 
 def compute_view(model, view_arg, cfg_over=None):
@@ -275,7 +279,7 @@ def compute_view(model, view_arg, cfg_over=None):
     return v, cfg, title, kind, ident
 
 
-def render(model, view_arg, out_path, topts=None, cfg_over=None):
+def render(model, view_arg, out_path, topts=None, cfg_over=None, lopts=None):
     place = model["place"]
     bw, bh = place["bounds"]["width_ft"], place["bounds"]["height_ft"]
     streets = {s["id"]: s for s in model["streets"]}
@@ -321,6 +325,7 @@ def render(model, view_arg, out_path, topts=None, cfg_over=None):
                 if "geometry" in dr:
                     addpoly("Walls", dr["id"], entity_polygon(dr), "guide-line", dr.get("status"))
 
+    cs = None
     # TERRAIN contours + elevation labels (heightmap from world/<place>/terrain/)
     if topts is not None:
         h, meta = tr.load_heightmap(place["id"])     # worldio: patched / carved / base
@@ -351,8 +356,29 @@ def render(model, view_arg, out_path, topts=None, cfg_over=None):
         print(f"contours: {len(cs.pieces)} paths, {len(cs.labels)} labels, relief {meta['elev_min']:.0f}..{meta['elev_max']:.0f} ft, "
               f"mask={'on (%d polygons)' % len(mask) if mask else 'off'}")
 
-    # LABELS
-    lab = lambda layer, e, s, size, bold=False, rot=None: _label(t, v, layer, e, s, size, bold, rot)
+    # LABELS (closed shapes get an offset + leader when the text does not fit inside; see label_offset.py)
+    lp = lbo.LabelParams.from_dict(lopts if lopts is not None else cfg.get("label_offset"))
+    m_pt = margin * 72
+    shapes_pt = []
+    for e in model["buildings"] + [d for d in model["districts"] if d["kind"] == "square"]:
+        pg = v.clip(entity_polygon(e))
+        if pg:
+            shapes_pt.append((e["id"], [v.px(q) for q in pg]))
+    placer = lbo.Placer(lp, frame=(m_pt, m_pt, W - m_pt, H - m_pt), shapes=shapes_pt)
+    if cs is not None:
+        for lb in cs.labels:
+            w_, h_ = lbo.text_size(lb["text"], lb["size"])
+            placer.add_fixed_box(lbo.text_box(lb["x"], lb["y"], w_, h_, lb["rot"]).buffer(1.0))
+    layer_of = {}
+
+    def lab(layer, e, s, size, bold=False, rot=None):
+        pg = v.clip(entity_polygon(e))
+        c = tuple(e["label_point"]) if e.get("label_point") else centroid(entity_polygon(e))
+        if not pg or not v.inside(c):
+            return
+        layer_of[e["id"]] = (layer, bold, size)
+        placer.add(e["id"], [v.px(q) for q in pg], s, size, bold, rot, point=v.px(c))
+
     for e in model["districts"]:
         if e["kind"] == "district":
             if kind != "building":
@@ -363,7 +389,10 @@ def render(model, view_arg, out_path, topts=None, cfg_over=None):
         for e in model["streets"]:
             if kind == "bowl" and e["geometry"]["width_ft"] < 22 and e["kind"] != "road":
                 continue
-            street_label(t, v, e, ls(6), fpi)
+            r_ = street_label(t, v, e, ls(6), fpi)
+            if r_:
+                w_, h_ = lbo.text_size(r_[2], r_[3])
+                placer.add_fixed_box(lbo.text_box(r_[0], r_[1], w_, h_, r_[4]).buffer(1.0))
     for e in model["buildings"]:
         if kind != "building" and e["kind"] in CIVIC_SKIP and fpi >= 40:
             continue
@@ -371,6 +400,17 @@ def render(model, view_arg, out_path, topts=None, cfg_over=None):
     if kind == "building":
         for r in blds[ident].get("rooms", []):
             lab("Labels - Rooms", r, r["name"], 8)
+    n_off = 0
+    texts = {it.id: it.text for it in placer.items}
+    for res in placer.solve():
+        layer, bold, size = layer_of[res.id]
+        t.add(layer, text(f"lbl_{res.id}", res.x, res.y, texts[res.id], size, rot=res.rot, bold=bold, anchor=res.anchor))
+        if res.leader:
+            n_off += 1
+            for sv in lbo.leader_svg(res, lp.stroke_width):
+                t.add("Leaders", sv)
+    if lp.enabled:
+        print(f"label offsets: {n_off} labels moved outside their shape with a leader")
 
     # GUIDES: minor + major grid
     k = v.k
@@ -426,18 +466,18 @@ def render(model, view_arg, out_path, topts=None, cfg_over=None):
     print("wrote", out_path)
 
 
-def _label(t, v, layer, e, s, size, bold, rot):
-    poly = entity_polygon(e)
-    c = tuple(e["label_point"]) if e.get("label_point") else centroid(poly)
-    if not v.inside(c):
-        return
-    x, y = v.px(c)
-    t.add(layer, text(f"lbl_{e['id']}", x, y + size * 0.35, s, size, rot=rot, bold=bold))
-
-
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--place", default="bridgehollow")
+    ap.add_argument("--label-offset", dest="label_offset", action="store_true", default=None,
+                    help="offset labels with leader lines when the shape is too small (default from view_settings, on)")
+    ap.add_argument("--no-label-offset", dest="label_offset", action="store_false")
+    ap.add_argument("--leader-style", choices=["straight", "elbow"])
+    ap.add_argument("--leader-width", type=float, help="leader stroke width (pt)")
+    ap.add_argument("--label-fit-margin", type=float, help="spare room (percent) the text needs to stay inside its shape")
+    ap.add_argument("--label-max-offset", type=float, help="max distance (page pt) outside the shape")
+    ap.add_argument("--leader-dot", dest="leader_dot", action="store_true", default=None)
+    ap.add_argument("--no-leader-dot", dest="leader_dot", action="store_false")
     ap.add_argument("--view", default="town", help="town | bowl | street:<id> | building:<id>")
     ap.add_argument("--preset", help="view_settings preset (default follows --view)")
     ap.add_argument("--scale", type=float, help="feet per paper inch (overrides the preset)")
@@ -482,5 +522,8 @@ if __name__ == "__main__":
                  "emphasize_datum": not a.no_datum}
     suffix = "terrain" if topts and a.view == "town" else a.view.replace(":", "_")
     out = a.out or os.path.join(REPO, "illustrator", "out", f"{a.place}_{suffix}.svg")
+    lopts = {"enabled": a.label_offset, "style": a.leader_style, "stroke_width": a.leader_width,
+             "margin_pct": a.label_fit_margin, "max_offset_pt": a.label_max_offset, "dot": a.leader_dot}
+    lopts = {**viewcfg.label_offset(a.place), **{k: v_ for k, v_ in lopts.items() if v_ is not None}}
     render(load_place(a.place, a.model_dir), a.view, out, topts,
-           {"preset": a.preset, "scale": a.scale, "grid": a.grid, "page": a.page, "major_every": a.grid_major})
+           {"preset": a.preset, "scale": a.scale, "grid": a.grid, "page": a.page, "major_every": a.grid_major}, lopts)
