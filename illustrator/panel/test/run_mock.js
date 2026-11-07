@@ -246,6 +246,21 @@ const actions = () => hostLog.map(h => h.action);
     const e = await runner2.execPy(VB.FOUNDRY_PY, ["export-info", "--place", "bridgehollow"].concat(VB.viewFlags(VB.normalize(null)))), ej = runner2.parseJsonOut(e.out);
     check("export-info gives window in feet", ej && ej.ok && ej.window_ft[2] === 1600, e.out + e.err);
   }
+  if (want("worldpack")) { // world pack export + split + merge jobs and the push-models arguments (exports into the temp folder, never world/)
+    const st = VB.normalize(null), out = path.join(TMP, "pack").replace(/\\/g, "/");
+    let r = await run(VB.jobWorldPack(st, d, out));
+    check("world pack export job ok", r.ok && fs.existsSync(`${out}/manifest.json`), r.error);
+    r = await run(VB.jobWorldSplit(st, d, out)); check("split models job ok", r.ok && fs.existsSync(`${out}/placements.json`), r.error);
+    st.foundry.models.preset = "all"; r = await run(VB.jobWorldMerge(st, d, out)); check("merge models job ok", r.ok && fs.existsSync(`${out}/optimized`), r.error);
+    st.foundry.sceneName = "ZZ Model Push Test"; st.foundry.models.layers = "buildings"; st.foundry.models.lod = "1";
+    const a = VB.worldPushArgs(st, d, { dry: true, placements: `${out}/placements.json` });
+    check("push-models args", a.includes("--scene-name") && a.includes("--layers") && a.includes("--lod") && a.includes("--dry-run"), a.join(" "));
+    const runner3 = R.createRunner({ root: ROOT, jobsDir, fs, path, spawn: cp.spawn, host, getPython: () => "python", setState() {}, onStale() {} });
+    const pr = await runner3.execPy(VB.FOUNDRY_PY, a.concat(["--assets-dir", path.join(TMP, "assets")])), pj = runner3.parseJsonOut(pr.out);
+    check("push-models dry run through the runner", pj && pj.ok && pj.dry_run && pj.tiles > 0, pr.out + pr.err);
+    st.town.exportPack = true; check("accept job adds the export step when the toggle is on", VB.jobTownAccept(st, d).steps.length === 2);
+    st.town.exportPack = false; check("accept job unchanged when the toggle is off", VB.jobTownAccept(st, d).steps.length === 1);
+  }
   const logs = fs.existsSync(path.join(jobsDir, "done")) ? fs.readdirSync(path.join(jobsDir, "done")) : [];
   check("each run logged exact params to jobs/done", logs.length > 3 && logs.every(f => /^panel_\d{8}_\d{6}_.+\.json$/.test(f)), logs.length + " files");
   if (logs.length) { const j = JSON.parse(fs.readFileSync(path.join(jobsDir, "done", logs[0]), "utf8")); check("log has params + steps", j.params !== undefined && Array.isArray(j.steps)); }

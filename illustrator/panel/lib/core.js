@@ -89,13 +89,13 @@
         seed: 1103, detail: 2, plazas_enabled: true, plazas_min_area_ft2: 150000, blocks: false, buildings: true, fields: true,
         max_street_grade: 0.08, max_main_grade: 0.05, max_build_slope: 0.19, max_build_relief_ft: 6, max_field_slope: 0.13,
         entry_x: 1290, entry_y: 1480, area: [], area_src: "", rings: [], params_loaded: false, candidate: false,
-        redraw_contours: true, autofill: true,
+        redraw_contours: true, autofill: true, exportPack: false,
         fills: { full: true, style: "full_map", flat: true, dpi: 200, embed: false },
         style: { preset: "", streets: "", plazas: "", buildings: "", fields: "", water: "", stroke: "" }
       },
       foundry: { target: "new", sceneName: "", sceneUuid: "", dpi: 150, ftPerGrid: null, walls: true, drawRoads: false, drawWater: false,
         tileLayers: "Labels - Districts,Labels - Streets,Labels - Buildings", actorUuid: "", itemUuid: "", spec: "", image: "", at: "", itemName: "", itemDesc: "",
-        sizeFt: 5, autoPush: false, filter: { actors: "", items: "" }, cache: { fetched: null, lists: {} }, last: null },
+        models: { split: "", preset: "layer", layers: "", lod: 0, compress: "none" }, sizeFt: 5, autoPush: false, filter: { actors: "", items: "" }, cache: { fetched: null, lists: {} }, last: null },
       stale: { contours: false, shading: false, town: false },
       ui: { tab: "scale" }
     };
@@ -558,7 +558,8 @@
       steps: [{ t: "fn", label: "apply_fills", fn: function (run) { return VB.fillStep(st, run); } }] };
   };
   VB.jobTownAccept = function (st, d) {
-    return { kind: "town_accept", label: "Accept town", params: {}, steps: [py(GEN + "panelio.py", ["town-accept", "--place", st.place], "town-accept")],
+    return { kind: "town_accept", label: "Accept town", params: {}, steps: [py(GEN + "panelio.py", ["town-accept", "--place", st.place], "town-accept")]
+        .concat(st.town.exportPack ? [py(GEN + "worldpack.py", ["export", "--place", st.place], "world pack export")] : []),
       setState: [["town.candidate", false]], setStale: ["contours"] };
   };
   VB.jobTownReject = function (st, d) {
@@ -577,6 +578,41 @@
       hide_labels: host({ action: "set_visible", names: ["LABELS"], visible: false }, "hide LABELS")
     };
     return { kind: "layers_" + act, label: act.replace("_", " "), params: {}, steps: [m[act]] };
+  };
+
+  // ---------------------------------------------------------------- world pack for the 3D pipeline (worldpack.py, worldpack_split.py, foundry_push.py push-models)
+  VB.packDir = function (d) { return d.world + "/export"; };
+  VB.jobWorldPack = function (st, d, out) {
+    return { kind: "worldpack_export", label: "Export world pack (3D)", params: { out: out || null },
+      steps: [py(GEN + "worldpack.py", ["export", "--place", st.place].concat(out ? ["--out", out] : []), "world pack export")] };
+  };
+  VB.jobWorldSplit = function (st, d, pack) {
+    var m = st.foundry.models, a = ["split", "--place", st.place, "--pack", pack || VB.packDir(d)]; if (m.split) a.push("--split", m.split);
+    return { kind: "worldpack_split", label: "Export split models", params: { split: m.split }, steps: [py(GEN + "worldpack_split.py", a, "split models")] };
+  };
+  VB.jobWorldMerge = function (st, d, pack) {
+    var m = st.foundry.models;
+    return { kind: "worldpack_merge", label: "Merge/compress (" + m.preset + ")", params: { preset: m.preset },
+      steps: [py(GEN + "worldpack_split.py", ["merge", "--place", st.place, "--pack", pack || VB.packDir(d), "--preset", m.preset, "--compress", m.compress || "none"], "merge models")] };
+  };
+  // push-models argument list (target scene as in the scene push: new by name, or the picked existing one); o = { dry, placements }
+  VB.worldPushArgs = function (st, d, o) {
+    o = o || {}; var f = st.foundry, m = f.models, a = ["push-models", "--place", st.place, "--placements", o.placements || (VB.packDir(d) + "/placements.json")];
+    if (f.target === "existing") { if (!f.sceneUuid) throw new Error("pick an existing scene (Refresh from Foundry first)"); a.push("--scene-uuid", f.sceneUuid); }
+    else { if (!String(f.sceneName || "").trim()) throw new Error("type a name for the new scene"); a.push("--scene-name", String(f.sceneName).trim()); }
+    if (m.layers) a.push("--layers", m.layers);
+    if (+m.lod) a.push("--lod", String(+m.lod));
+    if (o.dry) a.push("--dry-run");
+    return a;
+  };
+  VB.jobWorldPush = function (st, d, o) {
+    return { kind: "worldpack_push", label: "Push models", params: {}, steps: [py("illustrator/generators/foundry_push.py", VB.worldPushArgs(st, d, o), "push models")] };
+  };
+  VB.jobWorldPublish = function (st, d) {
+    var f = st.foundry, m = f.models, a = ["publish", "--place", st.place, "--pack", VB.packDir(d), "--preset", m.preset, "--compress", m.compress || "none", "--lod", String(+m.lod || 0)];
+    if (f.target === "existing") { if (!f.sceneUuid) throw new Error("pick an existing scene (Refresh from Foundry first)"); a.push("--scene-uuid", f.sceneUuid); }
+    else { if (!String(f.sceneName || "").trim()) throw new Error("type a name for the new scene"); a.push("--scene-name", String(f.sceneName).trim()); }
+    return { kind: "worldpack_publish", label: "Publish models (merge + push)", params: { preset: m.preset }, steps: [py(GEN + "worldpack_split.py", a, "merge + push models")] };
   };
 
   // ---------------------------------------------------------------- Foundry push (everything runs in illustrator/generators/foundry_push.py)

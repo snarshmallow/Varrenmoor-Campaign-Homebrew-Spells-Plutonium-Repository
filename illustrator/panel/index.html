@@ -417,6 +417,7 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
     <button data-act="town_accept" id="btnAccept" disabled>Accept</button>
     <button data-act="town_reject" id="btnReject" class="danger" disabled>Reject</button>
     <span id="candTag" class="tag">no candidate</span>
+    <label class="chk" title="Runs worldpack.py export after Accept (world/&lt;place&gt;/export)"><input type="checkbox" data-s="town.exportPack"> Export world pack (3D) after Accept</label>
   </div>
   <p class="note">Generate writes a candidate model and draws it; the saved world model stays as it was until you Accept.</p>
   <h4>Map fills (textured, by feature type)</h4>
@@ -485,6 +486,20 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
     <label class="chk"><input type="checkbox" data-s="foundry.autoPush" data-act-change="f_auto"> Auto-push on save</label>
   </div>
   <div id="fConfirm" hidden><div id="fConfirmText" class="note"></div><div class="btns"><button class="primary" id="fYes">Continue</button><button id="fNo">Cancel</button></div></div>
+  <h4>3D models (world pack)</h4>
+  <div class="grid">
+    <label>Split (layer=entity|group|layer) <input type="text" data-s="foundry.models.split" placeholder="buildings=entity,roads=layer"></label>
+    <label>Merge preset <select data-s="foundry.models.preset"><option value="layer">merge by layer</option><option value="district">merge by district</option><option value="all">merge all</option><option value="individual">keep individual</option></select></label>
+    <label>Layers to push <input type="text" data-s="foundry.models.layers" placeholder="all (terrain,buildings,roads,...)"></label>
+    <label>LOD <select data-s="foundry.models.lod"><option value="0">0 full</option><option value="1">1</option><option value="2">2</option></select></label>
+  </div>
+  <div class="btns">
+    <button data-act="wp_export" title="worldpack.py export: terrain, roads, buildings, water ... as a versioned pack in world/&lt;place&gt;/export">Export world pack (3D)</button>
+    <button data-act="wp_split" title="One GLB per layer / building plus placements.json">Export split models</button>
+    <button data-act="wp_merge" title="Merge the split models by the preset (adds LOD files and a report)">Merge/compress</button>
+    <button class="primary" data-act="wp_push" title="One 3D Canvas tile per model on the target scene above (upsert by pipelineId)">Push models</button>
+    <button data-act="wp_publish" title="Merge with the preset, then push the optimised files">Publish (merge + push)</button>
+  </div>
   <h4>Actors, items, tokens</h4>
   <div class="grid">
     <label>Actor filter <input type="text" data-s="foundry.filter.actors"></label>

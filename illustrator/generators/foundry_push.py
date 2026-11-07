@@ -14,12 +14,20 @@ Every command prints log lines, then ONE final JSON line on stdout ({"ok": true,
   push-token   --scene-uuid U --actor-uuid A (--at bld_id|str_id|x,y | --px sx,sy) [--image F] [--size-ft 5] [--key K] [--yes]
   push-actor   (--spec npc.json | --actor-uuid U) [--image F] [--portrait F --token F] [--yes]
   push-item    (--spec item.json | --name N) [--description T] [--image F] [--item-uuid U] [--yes]
+  push-models  --placements P (--scene-uuid U | --scene-name N) [--layers L] [--ids I] [--lod 0|1|2] [--px-per-ft F] [--prune] [--dry-run]
+               one 3D Canvas tile per model of a world pack (worldpack_split.py), upserted by pipelineId model:<place>:<id>
   delete-scene --scene-uuid U              delete a pipeline-flagged scene (module refuses anything else)
+  link-region  --place CHILD (--parent-scene-uuid U | --parent-scene-name N) [--child-scene-uuid U] [--apply]
+               region children (region_extract.py): outline Drawing of the region on the parent scene (pipelineId draw:region:<child>), flagged with the
+               child place and scene. Prints the planned document and writes NOTHING unless --apply.
+  A scene pushed for a region child (--place world/<parent>__<region>, --view region) also carries flags.varrenmoor.region = {parent, polygon, transform}
+  and a default scene name (--scene-name omitted) of "<region name> (district)".
 View flags (same as render_world.py): --view --preset --scale --grid --page. Image calibration: the exported PNG is the whole page; the map
 window (page minus margin) is cropped, resampled so one grid square = grid.size px, and stored as scene.flags.varrenmoor.calib.
 """
 import argparse
 import datetime
+import io
 import json
 import math
 import os
@@ -343,6 +351,17 @@ def scene_summary(sc, c, new_name):
             "Walls, drawings and tiles you made yourself are NOT touched; only pipeline-flagged ones are added/updated/pruned. The scene will be flagged as pipeline-managed."]
 
 
+def region_flags(place):
+    """flags.varrenmoor.region for a region child (parent link, polygon in PARENT feet, transform), None for an ordinary place."""
+    import region_extract as rx
+    r = rx._rj(os.path.join(rx.child_dir(place), "region.json"))
+    if not r:
+        return None
+    return {"parent": r["parent"], "child": r["child"], "name": r["name"], "polygon_parent_ft": r["region"]["polygon_parent_ft"], "transform": r["transform"],
+            "parent_commit": (r.get("parent_source") or {}).get("git_commit"), "parent_sha1": (r.get("parent_source") or {}).get("content_sha1"),
+            "extracted_at": r.get("extracted_at")}
+
+
 def cmd_push_scene(br, a):
     from PIL import Image
     model, v, cfg = load_view(a.place, a.view, a.preset, a.scale, a.grid, a.page, a.major)
@@ -366,6 +385,9 @@ def cmd_push_scene(br, a):
         name = sc["name"]
     else:
         name = a.scene_name
+        rf0 = region_flags(a.place)
+        if not name and rf0:
+            name = f"{rf0['name']} (district)"
         if not name:
             raise PushError("give --scene-name (new scene) or --scene-uuid (existing scene)")
         pid = f"scene:{a.place}:{slug(name)}"
@@ -394,11 +416,13 @@ def cmd_push_scene(br, a):
               "width": c["width"], "height": c["height"], "walls": len(walls), "drawings": len(drawings), "dry_run": bool(a.dry_run)}
     if a.dry_run:
         return result
+    rf = region_flags(a.place)
+    extra = {"region": rf} if rf else {}
     sdata = {"name": name, "width": c["width"], "height": c["height"], "padding": c["padding"], "navigation": False,
              "grid": {"type": 1, "size": c["grid_px"], "distance": c["grid_ft"], "units": "ft"},
-             "flags": {FLAG: {"worldId": a.place, "calib": calib}}}
+             "flags": {FLAG: {"worldId": a.place, "calib": calib, **extra}}}
     if sc is not None and not pipe_id(sc):          # confirmed adoption of an existing scene: change only what we manage
-        br.call("update", uuid=a.scene_uuid, data={"flags": {FLAG: {"pipelineId": pid, "worldId": a.place, "calib": calib}}})
+        br.call("update", uuid=a.scene_uuid, data={"flags": {FLAG: {"pipelineId": pid, "worldId": a.place, "calib": calib, **extra}}})
         result["created"] = False
     else:
         r = br.call("upsert_by_flag", documentName="Scene", id=pid, data=sdata)
@@ -420,6 +444,37 @@ def cmd_push_scene(br, a):
     result["scene_uuid"] = uuid
     LOG(f"scene {'created' if result.get('created') else 'updated'}: {uuid}")
     return result
+
+
+def cmd_link_region(br, a):
+    """Outline of a region child drawn on its PARENT scene (same calibration as the parent push). Dry unless --apply."""
+    rf = region_flags(a.place)
+    if not rf:
+        raise PushError(f"{a.place} is not a region child (no region.json)")
+    require_module(br)
+    uuid = a.parent_scene_uuid
+    if not uuid and a.parent_scene_name:
+        hit = br.call("find_by_flag", documentName="Scene", id=f"scene:{rf['parent']}:{slug(a.parent_scene_name)}")
+        if not hit:
+            raise PushError(f"no pipeline scene for parent {rf['parent']} named {a.parent_scene_name}")
+        uuid = hit[0]["uuid"]
+    if not uuid:
+        raise PushError("give --parent-scene-uuid or --parent-scene-name")
+    sc = br.call("get", uuid=uuid)
+    calib = (sc.get("flags", {}).get(FLAG, {}) or {}).get("calib")
+    if not calib:
+        raise PushError("the parent scene has no pipeline calibration (push it with this tool first)")
+    doc = _poly_drawing(rf["child"].replace("/", "_"), "region", [tuple(p) for p in rf["polygon_parent_ft"]], calib, "#d4202a", "#d4202a")
+    doc["data"]["fillAlpha"] = 0.12
+    doc["data"]["flags"] = {FLAG: {"childPlace": rf["child"], "childScene": a.child_scene_uuid, "region": rf["name"]}}
+    cx = sum(p[0] for p in rf["polygon_parent_ft"]) / len(rf["polygon_parent_ft"])
+    cy = sum(p[1] for p in rf["polygon_parent_ft"]) / len(rf["polygon_parent_ft"])
+    res = {"ok": True, "parent_scene": uuid, "centroid_ft": [round(cx, 1), round(cy, 1)], "drawing": doc, "applied": bool(a.apply)}
+    if not a.apply:
+        res["note"] = "dry run: nothing written; add --apply to create/update the flagged outline drawing on the parent scene"
+        return res
+    res["ops"] = br.call("upsert_many", documentName="Drawing", parentUuid=uuid, items=[doc], prefix="draw:region:", prune=False)
+    return res
 
 
 def cmd_delete_scene(br, a):
@@ -570,10 +625,129 @@ def cmd_push_token(br, a):
     return {"ok": True, **r, "x": tok["x"], "y": tok["y"]}
 
 
+# ------------------------------------------------------------------ 3D models (world pack placements -> 3D Canvas tiles)
+def publish_glb(src, rel, set_name, place, root, dry=False):
+    """Copy a model into <root>/art/<place>/models/<set_name>/<rel with _vNNN>. A byte-identical newest version is reused (no clutter, Foundry caches by path).
+    The shared textures folder (models/textures) is copied next to it, so the GLB relative texture uris resolve. Returns the Foundry path."""
+    import shutil
+    base = os.path.join(root, "art", place, "models", set_name)
+    stem, ext = os.path.splitext(rel)
+    d = os.path.join(base, os.path.dirname(rel))
+    bn = os.path.basename(stem)
+    pat = re.compile(re.escape(bn) + r"_v(\d+)" + re.escape(ext) + "$")
+    have = sorted((int(m.group(1)), f) for f in (os.listdir(d) if os.path.isdir(d) else []) for m in [pat.match(f)] if m)
+    with open(src, "rb") as f:
+        data = f.read()
+    with open(os.path.join(d, have[-1][1]), "rb") if have else io.BytesIO(b"") as f0:
+        same = bool(have) and f0.read() == data
+    if same:
+        name = have[-1][1]
+    else:
+        name = f"{bn}_v{(have[-1][0] if have else 0) + 1:03d}{ext}"
+        if not dry:
+            os.makedirs(d, exist_ok=True)
+            with open(os.path.join(d, name), "wb") as f:
+                f.write(data)
+    tex = os.path.join(os.path.dirname(os.path.abspath(src)), *([".."] * rel.count("/")), "textures")
+    if not dry and os.path.isdir(tex):
+        shutil.copytree(tex, os.path.join(base, "textures"), dirs_exist_ok=True)
+    sub = os.path.dirname(rel)
+    return f"assets/varrenmoor-3d/art/{place}/models/{set_name}/" + (sub + "/" if sub else "") + name
+
+
+def build_model_tiles(doc, scene_calib, a, publish=None):
+    """placements.json -> [{"id", "data"}] Tile items for upsert_many. scene_calib: {ppf, x0, y0, sceneX, sceneY}; sizes scale by ppf so models keep
+    their true size on a scene whose px-per-foot differs from the pack. publish(entry, rel) -> foundry path. Tile x,y = pivot (centre), elevation in ft."""
+    c = scene_calib
+    ppf = c["ppf"]
+    place = doc["place"]
+    want_l = set(a.layers.split(",")) if a.layers else None
+    want_i = set(a.ids.split(",")) if a.ids else None
+    items = []
+    for e in doc["files"]:
+        if want_l and not (set(e.get("layers", [e["layer"]])) & want_l):
+            continue
+        if want_i and not (want_i & set(e["ids"])):
+            continue
+        rel = e["file"]
+        if a.lod and e.get("lods"):
+            lod = next((l for l in e["lods"] if l["lod"] == a.lod), None)
+            if lod:
+                rel = lod["file"]
+        path = publish(e, rel) if publish else rel
+        sz = e["size_ft"]
+        rot0 = e["tile"]["rotation"] + e.get("rotation_deg", 0.0)
+        flags = lambda extra: {"levels-3d-preview": {"model3d": path, "autoGround": True, "autoCenter": False, "collision": False, "sight": False, **extra},
+                               FLAG: {"modelFile": e["file"], "sha256": e["sha256"], "layer": e["layer"], "ids": e["ids"][:50]}}
+        if e["kind"] == "instances":
+            for ins in e["instances"]:
+                px, py = c["sceneX"] + (ins["pivot_ft"][0] - c["x0"]) * ppf, c["sceneY"] + (ins["pivot_ft"][1] - c["y0"]) * ppf
+                s = ins["scale"]
+                items.append({"id": f"model:{place}:{ins['id']}", "data": {
+                    "x": round(px), "y": round(py), "width": max(4, round(sz[0] * s * ppf)), "height": max(4, round(sz[1] * s * ppf)),
+                    "elevation": round(ins["pivot_ft"][2] - doc["frame"]["z_origin_ft"], 2), "rotation": rot0 + ins["rotation_deg"],
+                    "texture": {"src": "modules/levels-3d-preview/assets/blank.webp"}, "flags": flags({"depth": max(2, round(sz[2] * s * ppf))})}})
+            continue
+        px, py = c["sceneX"] + (e["pivot"]["x_ft"] - c["x0"]) * ppf, c["sceneY"] + (e["pivot"]["y_ft"] - c["y0"]) * ppf
+        sc = e.get("scale", 1.0)
+        items.append({"id": e["id"], "data": {
+            "x": round(px), "y": round(py), "width": max(4, round(sz[0] * sc * ppf)), "height": max(4, round(sz[1] * sc * ppf)), "elevation": e["pivot"]["rel_z_ft"],
+            "rotation": rot0, "texture": {"src": "modules/levels-3d-preview/assets/blank.webp"}, "flags": flags({"depth": max(2, round(sz[2] * sc * ppf))})}})
+    return items
+
+
+def cmd_push_models(br, a):
+    pp = a.placements or os.path.join(REPO, "world", a.place, "export", "placements.json")
+    with open(pp, encoding="utf-8") as f:
+        doc = json.load(f)
+    base = os.path.dirname(pp)
+    place = doc["place"]
+    fr = doc["frame"]
+    set_name = a.set_name or ("split" if "merge" not in doc else doc["merge"]["preset"] + "_" + os.path.basename(base).rsplit("_", 1)[-1])
+    sc, uuid, calib = None, a.scene_uuid, None
+    if not a.dry_run:
+        require_module(br)
+    if uuid:
+        sc = br.call("get", uuid=uuid)
+        calib = (sc.get("flags", {}).get(FLAG, {}) or {}).get("calib")
+        if not pipe_id(sc) and not a.yes:
+            return {"ok": False, "needs_confirm": True, "scene_uuid": uuid,
+                    "summary": f"Scene {sc['name']} was not created by the pipeline; tiles flagged model:* will be added to it (existing tiles untouched)."}
+    ppf = float(a.px_per_ft or (calib or {}).get("ppf") or fr["px_per_ft"])
+    c = {"ppf": ppf, "x0": (calib or {}).get("x0", 0.0), "y0": (calib or {}).get("y0", 0.0), "sceneX": (calib or {}).get("sceneX", 0), "sceneY": (calib or {}).get("sceneY", 0)}
+    root = a.assets_dir or assets_dir()
+    pub = lambda e, rel: publish_glb(os.path.join(base, rel), rel[len("models/"):], set_name, place, root, a.dry_run)
+    items = build_model_tiles(doc, c, a, pub)
+    LOG(f"{len(items)} model tiles for {len(doc['files'])} files at {ppf:g} px/ft ({'calibration of the scene' if calib else 'pack default'})")
+    result = {"ok": True, "tiles": len(items), "px_per_ft": ppf, "set": set_name, "dry_run": bool(a.dry_run), "sample": items[0] if items else None}
+    if a.dry_run:
+        return result
+    if not uuid:
+        if not a.scene_name:
+            raise PushError("give --scene-uuid or --scene-name")
+        pid = f"scene:{place}:{slug(a.scene_name)}"
+        hit = br.call("find_by_flag", documentName="Scene", id=pid)
+        if hit:
+            uuid = hit[0]["uuid"]
+        else:
+            if any(r["name"].lower() == a.scene_name.lower() for r in br.call("list", collection="Scene")):
+                raise PushError(f"a scene named {a.scene_name} exists and was not created by the pipeline; pass its uuid with --scene-uuid")
+            W, H = round(fr["width_ft"] * ppf), round(fr["height_ft"] * ppf)
+            cal = {"x0": 0.0, "y0": 0.0, "ppf": ppf, "grid_px": round(5 * ppf), "grid_ft": 5.0, "width": W, "height": H, "sceneX": 0, "sceneY": 0, "place": place, "view": "models"}
+            r = br.call("upsert_by_flag", documentName="Scene", id=pid, data={"name": a.scene_name, "width": W, "height": H, "padding": 0, "navigation": False,
+                                                                           "grid": {"type": 1, "size": round(5 * ppf), "distance": 5, "units": "ft"},
+                                                                           "flags": {FLAG: {"worldId": place, "calib": cal}}})
+            uuid = r["uuid"]
+    r = br.call("upsert_many", documentName="Tile", parentUuid=uuid, items=items, prefix="model:", prune=bool(a.prune))
+    LOG(f"tiles: {r}")
+    result.update(scene_uuid=uuid, tile_ops=r)
+    return result
+
+
 # ------------------------------------------------------------------ cli
 def parser():
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
-    ap.add_argument("cmd", choices=["status", "places", "list", "export-info", "push-scene", "push-token", "push-actor", "push-item", "delete-scene"])
+    ap.add_argument("cmd", choices=["status", "places", "list", "export-info", "push-scene", "push-token", "push-actor", "push-item", "push-models", "delete-scene", "link-region"])
     ap.add_argument("--place", default="bridgehollow")
     ap.add_argument("--view", default="town")
     ap.add_argument("--preset")
@@ -583,6 +757,10 @@ def parser():
     ap.add_argument("--grid-major", "--major", dest="major", type=int)
     ap.add_argument("--kinds")
     ap.add_argument("--scene-uuid")
+    ap.add_argument("--parent-scene-uuid")
+    ap.add_argument("--parent-scene-name")
+    ap.add_argument("--child-scene-uuid")
+    ap.add_argument("--apply", action="store_true", help="link-region: really write (default is a dry run)")
     ap.add_argument("--scene-name")
     ap.add_argument("--image")
     ap.add_argument("--portrait")
@@ -609,11 +787,19 @@ def parser():
     ap.add_argument("--size-ft", type=float, default=5.0)
     ap.add_argument("--key")
     ap.add_argument("--hidden", action="store_true")
+    ap.add_argument("--placements", help="push-models: placements.json (default world/<place>/export/placements.json)")
+    ap.add_argument("--layers", help="push-models: only these layers (comma list)")
+    ap.add_argument("--ids", help="push-models: only files containing these entity ids")
+    ap.add_argument("--lod", type=int, default=0, help="push-models: 0 = full models, 1/2 = cheaper decimated variants from a merge")
+    ap.add_argument("--px-per-ft", type=float, help="push-models: scene px per foot (default: the scene calibration, else the pack value)")
+    ap.add_argument("--set-name", help="push-models: folder name under art/<place>/models/")
+    ap.add_argument("--prune", action="store_true", help="push-models: delete pipeline model tiles that are not in this push")
     return ap
 
 
 CMDS = {"status": cmd_status, "places": cmd_places, "list": cmd_list, "export-info": cmd_export_info, "push-scene": cmd_push_scene,
-        "push-token": cmd_push_token, "push-actor": cmd_push_actor, "push-item": cmd_push_item, "delete-scene": cmd_delete_scene}
+        "push-token": cmd_push_token, "push-actor": cmd_push_actor, "push-item": cmd_push_item, "push-models": cmd_push_models, "delete-scene": cmd_delete_scene,
+        "link-region": cmd_link_region}
 
 
 def main(argv=None, bridge=None):

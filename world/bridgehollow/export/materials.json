@@ -1,0 +1,345 @@
+{
+ "format": "varrenmoor-world-pack",
+ "schema_version": "1.0",
+ "type": "materials",
+ "materials": [
+  {
+   "id": "mat_cobble",
+   "name": "cobble",
+   "kind": "image",
+   "texture": "textures/cobble.png",
+   "source": "illustrator/presets/textures/cobble.png",
+   "sha256": "8b0dd5330168c9cebb4522a243c9e2c956c77580105e96498eabc59862ce372a",
+   "mean_color": "#837b6e",
+   "roughness": 0.9,
+   "metallic": 0.0,
+   "foundry": {
+    "pipelineId": "mat:bridgehollow:cobble"
+   }
+  },
+  {
+   "id": "mat_farmland",
+   "name": "farmland",
+   "kind": "image",
+   "texture": "textures/farmland.png",
+   "source": "illustrator/presets/textures/farmland.png",
+   "sha256": "9010c3960d7cf803dc04f468e5da0d4af44b94facebed7da5d1b43249d840e14",
+   "mean_color": "#b1a75f",
+   "roughness": 0.9,
+   "metallic": 0.0,
+   "foundry": {
+    "pipelineId": "mat:bridgehollow:farmland"
+   }
+  },
+  {
+   "id": "mat_forest_floor",
+   "name": "forest_floor",
+   "kind": "image",
+   "texture": "textures/forest_floor.png",
+   "source": "illustrator/presets/textures/forest_floor.png",
+   "sha256": "e7cdfa555618bed0bebe684062efe33a69ace280fd7cb059abc72fcc7b998a39",
+   "mean_color": "#4b5c36",
+   "roughness": 0.9,
+   "metallic": 0.0,
+   "foundry": {
+    "pipelineId": "mat:bridgehollow:forest_floor"
+   }
+  },
+  {
+   "id": "mat_grass",
+   "name": "grass",
+   "kind": "image",
+   "texture": "textures/grass.png",
+   "source": "illustrator/presets/textures/grass.png",
+   "sha256": "6cfe3f89e0ea3bb6dfb4ef884058c11a6d342df0826fd04ea1ef3d463946718e",
+   "mean_color": "#6d9847",
+   "roughness": 0.9,
+   "metallic": 0.0,
+   "foundry": {
+    "pipelineId": "mat:bridgehollow:grass"
+   }
+  },
+  {
+   "id": "mat_gravel",
+   "name": "gravel",
+   "kind": "image",
+   "texture": "textures/gravel.png",
+   "source": "illustrator/presets/textures/gravel.png",
+   "sha256": "178a44b19a764a591fb9f9afec950fc73a198e1734de83c205c82148cd8cd1ff",
+   "mean_color": "#9d9483",
+   "roughness": 0.9,
+   "metallic": 0.0,
+   "foundry": {
+    "pipelineId": "mat:bridgehollow:gravel"
+   }
+  },
+  {
+   "id": "mat_mud",
+   "name": "mud",
+   "kind": "image",
+   "texture": "textures/mud.png",
+   "source": "illustrator/presets/textures/mud.png",
+   "sha256": "ec0ed33290bfb9083069ea42f946d0dfbb01ab730cd44a990107f4674d24ae9e",
+   "mean_color": "#5c442f",
+   "roughness": 0.9,
+   "metallic": 0.0,
+   "foundry": {
+    "pipelineId": "mat:bridgehollow:mud"
+   }
+  },
+  {
+   "id": "mat_packed_earth",
+   "name": "packed_earth",
+   "kind": "image",
+   "texture": "textures/packed_earth.png",
+   "source": "illustrator/presets/textures/packed_earth.png",
+   "sha256": "73dcab01d84b1dd8014803dc9b649a2c3dce9aba494a6c1110381283ff3421c8",
+   "mean_color": "#977955",
+   "roughness": 0.9,
+   "metallic": 0.0,
+   "foundry": {
+    "pipelineId": "mat:bridgehollow:packed_earth"
+   }
+  },
+  {
+   "id": "mat_pasture",
+   "name": "pasture",
+   "kind": "image",
+   "texture": "textures/pasture.png",
+   "source": "illustrator/presets/textures/pasture.png",
+   "sha256": "35d396395611649e289ad8fd18c7411ca83d77e8f0aca87eeb564c26055f02cb",
+   "mean_color": "#7ea94a",
+   "roughness": 0.9,
+   "metallic": 0.0,
+   "foundry": {
+    "pipelineId": "mat:bridgehollow:pasture"
+   }
+  },
+  {
+   "id": "mat_plank",
+   "name": "plank",
+   "kind": "image",
+   "texture": "textures/plank.png",
+   "source": "illustrator/presets/textures/plank.png",
+   "sha256": "a1401ccde6a674b0d6da0dc68cb29b4f44092fafdc622a167faa2e7160cd132e",
+   "mean_color": "#91734c",
+   "roughness": 0.9,
+   "metallic": 0.0,
+   "foundry": {
+    "pipelineId": "mat:bridgehollow:plank"
+   }
+  },
+  {
+   "id": "mat_red_tile",
+   "name": "red_tile",
+   "kind": "image",
+   "texture": "textures/red_tile.png",
+   "source": "illustrator/presets/textures/red_tile.png",
+   "sha256": "c1285b13eb0e880beab1f7e2c501bf69357ae82a16d61e7e7c411a0ce13fbf2d",
+   "mean_color": "#a8583b",
+   "roughness": 0.9,
+   "metallic": 0.0,
+   "foundry": {
+    "pipelineId": "mat:bridgehollow:red_tile"
+   }
+  },
+  {
+   "id": "mat_rock",
+   "name": "rock",
+   "kind": "image",
+   "texture": "textures/rock.png",
+   "source": "illustrator/presets/textures/rock.png",
+   "sha256": "66f90de2b5440d683d630feb92e45d07239d64b638f9c76c876414372efe81e3",
+   "mean_color": "#6b6866",
+   "roughness": 0.9,
+   "metallic": 0.0,
+   "foundry": {
+    "pipelineId": "mat:bridgehollow:rock"
+   }
+  },
+  {
+   "id": "mat_scree",
+   "name": "scree",
+   "kind": "image",
+   "texture": "textures/scree.png",
+   "source": "illustrator/presets/textures/scree.png",
+   "sha256": "5246e5b44bfd860433fd71b3fac6f32a46b05d548db118bb35b5d093e5e8cd3c",
+   "mean_color": "#89847d",
+   "roughness": 0.9,
+   "metallic": 0.0,
+   "foundry": {
+    "pipelineId": "mat:bridgehollow:scree"
+   }
+  },
+  {
+   "id": "mat_shingle",
+   "name": "shingle",
+   "kind": "image",
+   "texture": "textures/shingle.png",
+   "source": "illustrator/presets/textures/shingle.png",
+   "sha256": "2dad22d35e03364ae39a4cd8abd181963380134171793026d9151348c7cf9297",
+   "mean_color": "#77593d",
+   "roughness": 0.9,
+   "metallic": 0.0,
+   "foundry": {
+    "pipelineId": "mat:bridgehollow:shingle"
+   }
+  },
+  {
+   "id": "mat_slate",
+   "name": "slate",
+   "kind": "image",
+   "texture": "textures/slate.png",
+   "source": "illustrator/presets/textures/slate.png",
+   "sha256": "0a0ea61ec8a27fafdb1f389c379286255b7c741713da78c76912e94ca232bfd2",
+   "mean_color": "#555e69",
+   "roughness": 0.9,
+   "metallic": 0.0,
+   "foundry": {
+    "pipelineId": "mat:bridgehollow:slate"
+   }
+  },
+  {
+   "id": "mat_snow",
+   "name": "snow",
+   "kind": "image",
+   "texture": "textures/snow.png",
+   "source": "illustrator/presets/textures/snow.png",
+   "sha256": "01e67c68e9b8c4466bea54f84bd2be94f778a670f2bb8d32f1e1a7571af61424",
+   "mean_color": "#f0f3f7",
+   "roughness": 0.9,
+   "metallic": 0.0,
+   "foundry": {
+    "pipelineId": "mat:bridgehollow:snow"
+   }
+  },
+  {
+   "id": "mat_stone_slab",
+   "name": "stone_slab",
+   "kind": "image",
+   "texture": "textures/stone_slab.png",
+   "source": "illustrator/presets/textures/stone_slab.png",
+   "sha256": "5044d98dfea56819b08636cd8afc46ae0150e26f362655039cdb427cd4aa330c",
+   "mean_color": "#918e87",
+   "roughness": 0.9,
+   "metallic": 0.0,
+   "foundry": {
+    "pipelineId": "mat:bridgehollow:stone_slab"
+   }
+  },
+  {
+   "id": "mat_thatch",
+   "name": "thatch",
+   "kind": "image",
+   "texture": "textures/thatch.png",
+   "source": "illustrator/presets/textures/thatch.png",
+   "sha256": "1670a55b504f045742715fc361cdf53e6edb4cad8473aec289767b01af446104",
+   "mean_color": "#98824a",
+   "roughness": 0.9,
+   "metallic": 0.0,
+   "foundry": {
+    "pipelineId": "mat:bridgehollow:thatch"
+   }
+  },
+  {
+   "id": "mat_tilled",
+   "name": "tilled",
+   "kind": "image",
+   "texture": "textures/tilled.png",
+   "source": "illustrator/presets/textures/tilled.png",
+   "sha256": "108f1dc3a72379a18fc254f3147e801c9d11d48fd65cf660b7735de9d9231c10",
+   "mean_color": "#745839",
+   "roughness": 0.9,
+   "metallic": 0.0,
+   "foundry": {
+    "pipelineId": "mat:bridgehollow:tilled"
+   }
+  },
+  {
+   "id": "mat_timber_roof",
+   "name": "timber_roof",
+   "kind": "image",
+   "texture": "textures/timber_roof.png",
+   "source": "illustrator/presets/textures/timber_roof.png",
+   "sha256": "8773492128ddedb2a07895c0fa3a6a84a24b65bfb74d8bcedd39eb4aa2fcf625",
+   "mean_color": "#6a5e4d",
+   "roughness": 0.9,
+   "metallic": 0.0,
+   "foundry": {
+    "pipelineId": "mat:bridgehollow:timber_roof"
+   }
+  },
+  {
+   "id": "mat_water",
+   "name": "water",
+   "kind": "image",
+   "texture": "textures/water.png",
+   "source": "illustrator/presets/textures/water.png",
+   "sha256": "d0c6f7c86c71a0928d66bd25b3a3ec03cb3d984fe450d314fd85ffa3b5ce901e",
+   "mean_color": "#4d81a9",
+   "roughness": 0.9,
+   "metallic": 0.0,
+   "foundry": {
+    "pipelineId": "mat:bridgehollow:water"
+   }
+  },
+  {
+   "id": "mat_wheat",
+   "name": "wheat",
+   "kind": "image",
+   "texture": "textures/wheat.png",
+   "source": "illustrator/presets/textures/wheat.png",
+   "sha256": "713537fc14dbcd48fcc540d608b15deb6155ec618752fbca7d9f65307c0cbf9f",
+   "mean_color": "#c7a950",
+   "roughness": 0.9,
+   "metallic": 0.0,
+   "foundry": {
+    "pipelineId": "mat:bridgehollow:wheat"
+   }
+  },
+  {
+   "id": "mat_terrain_albedo",
+   "name": "terrain_albedo",
+   "kind": "image",
+   "texture": "terrain/albedo.png",
+   "source": null,
+   "sha256": "d453d9c598aa907a57ebde0d223c1f1593977dc8a909a1936e25e17c3a01deb8",
+   "mean_color": "#6f9a48",
+   "roughness": 0.95,
+   "metallic": 0.0,
+   "uv": "unit",
+   "foundry": {
+    "pipelineId": "mat:bridgehollow:terrain_albedo"
+   }
+  },
+  {
+   "id": "mat_tree_bark",
+   "name": "tree_bark",
+   "kind": "flat",
+   "texture": null,
+   "source": null,
+   "sha256": null,
+   "mean_color": "#5a4632",
+   "roughness": 0.95,
+   "metallic": 0.0,
+   "foundry": {
+    "pipelineId": "mat:bridgehollow:tree_bark"
+   }
+  },
+  {
+   "id": "mat_tree_leaf",
+   "name": "tree_leaf",
+   "kind": "flat",
+   "texture": null,
+   "source": null,
+   "sha256": null,
+   "mean_color": "#3f6b35",
+   "roughness": 0.95,
+   "metallic": 0.0,
+   "foundry": {
+    "pipelineId": "mat:bridgehollow:tree_leaf"
+   }
+  }
+ ],
+ "note": "texture paths are relative to the pack; 'source' is the repo path they were copied from"
+}

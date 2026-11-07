@@ -60,3 +60,6 @@ All Foundry reads and writes run in `generators/foundry_push.py` (the panel just
 - **Brushes:** brush artwork is generated as vector shapes in a `BRUSH ARTWORK` document. The user drags each into the Brushes panel once and picks the brush type; a numbered checklist is written next to the artwork. After that, strokes can be assigned by brush name.
 - **Styles:** a template file `illustrator/templates/varrenmoor.ait` carries the graphic styles and base swatches; new documents are created from it.
 - **Not used:** Illustrator's own random scatter brushes cannot be set from a script; our `scatter` action replaces them and is reproducible.
+
+## 9. World pack export for the 3D pipeline (built 2026-11-07)
+`generators/worldpack.py export` writes the model (terrain, roads with graded elevations, buildings with derived roof/wall data, water, plazas, fields, fences, foliage, lights, labels) to `world/<place>/export/` as a versioned, schema-checked pack that keeps every entity id; `worldpack_split.py` turns it into per-model GLBs plus `placements.json`, and `foundry_push.py push-models` places them as 3D Canvas tiles. Axis and scale conventions, the Blender importer and the merge/compress workflow are in `WORLD_PACK.md`; schema in `world/schema/world-pack.schema.json`.

@@ -1,0 +1,759 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "https://varrenmoor.local/schema/world-pack.schema.json",
+ "title": "varrenmoor-world-pack v1",
+ "description": "Schemas for the files of a world pack (world/<place>/export/). Validate a file against #/$defs/<name>: manifest, entityFile, materialsFile and the per-item defs road, building, areaEntity, waterEntity, fence, label.",
+ "$defs": {
+  "pt2": {
+   "type": "array",
+   "minItems": 2,
+   "maxItems": 2,
+   "items": {
+    "type": "number"
+   }
+  },
+  "pt3": {
+   "type": "array",
+   "minItems": 3,
+   "maxItems": 3,
+   "items": {
+    "type": "number"
+   }
+  },
+  "poly2": {
+   "type": "array",
+   "minItems": 3,
+   "items": {
+    "$ref": "#/$defs/pt2"
+   }
+  },
+  "line3": {
+   "type": "array",
+   "minItems": 2,
+   "items": {
+    "$ref": "#/$defs/pt3"
+   }
+  },
+  "surface": {
+   "type": "object",
+   "required": [
+    "material",
+    "tile_ft"
+   ],
+   "properties": {
+    "material": {
+     "type": "string",
+     "pattern": "^mat_"
+    },
+    "tile_ft": {
+     "type": [
+      "number",
+      "null"
+     ]
+    }
+   }
+  },
+  "common": {
+   "type": "object",
+   "required": [
+    "id",
+    "name",
+    "kind",
+    "status",
+    "links",
+    "source",
+    "foundry",
+    "tags"
+   ],
+   "properties": {
+    "id": {
+     "type": "string",
+     "pattern": "^[a-z][a-z0-9_]*$"
+    },
+    "name": {
+     "type": "string"
+    },
+    "kind": {
+     "type": "string"
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "canon",
+      "proposed"
+     ]
+    },
+    "notes": {
+     "type": "string"
+    },
+    "links": {
+     "type": "object"
+    },
+    "source": {
+     "type": "string"
+    },
+    "foundry": {
+     "type": "object",
+     "required": [
+      "pipelineId"
+     ],
+     "properties": {
+      "pipelineId": {
+       "type": "string",
+       "pattern": "^world:[a-z0-9_]+:[a-z0-9_]+$"
+      }
+     }
+    },
+    "tags": {
+     "type": "object",
+     "required": [
+      "layer",
+      "subtype",
+      "group",
+      "id"
+     ],
+     "properties": {
+      "layer": {
+       "type": "string"
+      },
+      "subtype": {
+       "type": "string"
+      },
+      "district": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "ring": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "group": {
+       "type": "string"
+      },
+      "id": {
+       "type": "string"
+      }
+     }
+    }
+   }
+  },
+  "manifest": {
+   "type": "object",
+   "required": [
+    "format",
+    "schema_version",
+    "place",
+    "generated",
+    "units",
+    "axes",
+    "origin",
+    "extent",
+    "sea_level_ft",
+    "z_origin_ft",
+    "scale_presets",
+    "grid",
+    "foundry",
+    "terrain",
+    "entities",
+    "materials_file",
+    "files"
+   ],
+   "properties": {
+    "format": {
+     "const": "varrenmoor-world-pack"
+    },
+    "schema_version": {
+     "type": "string",
+     "pattern": "^1\\.[0-9]+$"
+    },
+    "place": {
+     "type": "object",
+     "required": [
+      "id",
+      "name"
+     ],
+     "properties": {
+      "id": {
+       "type": "string"
+      },
+      "name": {
+       "type": "string"
+      }
+     }
+    },
+    "generated": {
+     "type": "object",
+     "required": [
+      "timestamp",
+      "tool"
+     ],
+     "properties": {
+      "timestamp": {
+       "type": "string"
+      },
+      "git_commit": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "tool": {
+       "type": "string"
+      }
+     }
+    },
+    "units": {
+     "type": "object",
+     "required": [
+      "length",
+      "ft_to_m"
+     ],
+     "properties": {
+      "length": {
+       "const": "feet"
+      },
+      "ft_to_m": {
+       "const": 0.3048
+      }
+     }
+    },
+    "axes": {
+     "type": "object",
+     "required": [
+      "world",
+      "blender",
+      "gltf",
+      "foundry"
+     ]
+    },
+    "extent": {
+     "type": "object",
+     "required": [
+      "width_ft",
+      "height_ft"
+     ],
+     "properties": {
+      "width_ft": {
+       "type": "number",
+       "minimum": 1
+      },
+      "height_ft": {
+       "type": "number",
+       "minimum": 1
+      }
+     }
+    },
+    "sea_level_ft": {
+     "type": "number"
+    },
+    "z_origin_ft": {
+     "type": "number"
+    },
+    "foundry": {
+     "type": "object",
+     "required": [
+      "px_per_ft",
+      "x0_ft",
+      "y0_ft",
+      "grid_ft",
+      "tile_rotation_deg"
+     ],
+     "properties": {
+      "px_per_ft": {
+       "type": "number",
+       "minimum": 0.1
+      },
+      "x0_ft": {
+       "type": "number"
+      },
+      "y0_ft": {
+       "type": "number"
+      },
+      "grid_ft": {
+       "type": "number"
+      },
+      "tile_rotation_deg": {
+       "type": "number"
+      }
+     }
+    },
+    "terrain": {
+     "type": "object",
+     "required": [
+      "cell_ft",
+      "nx",
+      "ny",
+      "size_ft",
+      "heights_bin",
+      "heights_npy",
+      "heights_png16",
+      "png16",
+      "meshes",
+      "splat"
+     ],
+     "properties": {
+      "cell_ft": {
+       "type": "number",
+       "minimum": 0.01
+      },
+      "nx": {
+       "type": "integer",
+       "minimum": 2
+      },
+      "ny": {
+       "type": "integer",
+       "minimum": 2
+      },
+      "size_ft": {
+       "$ref": "#/$defs/pt2"
+      },
+      "heights_bin": {
+       "type": "string"
+      },
+      "heights_npy": {
+       "type": "string"
+      },
+      "heights_png16": {
+       "type": "string"
+      },
+      "png16": {
+       "type": "object",
+       "required": [
+        "min_ft",
+        "max_ft"
+       ]
+      },
+      "meshes": {
+       "type": "array",
+       "items": {
+        "type": "object",
+        "required": [
+         "file",
+         "step_cells",
+         "vertices",
+         "triangles"
+        ]
+       }
+      },
+      "splat": {
+       "type": "object",
+       "required": [
+        "cell_ft",
+        "size_px",
+        "files",
+        "phases"
+       ]
+      }
+     }
+    },
+    "entities": {
+     "type": "object",
+     "additionalProperties": {
+      "type": "object",
+      "required": [
+       "file",
+       "count"
+      ],
+      "properties": {
+       "file": {
+        "type": "string"
+       },
+       "count": {
+        "type": "integer",
+        "minimum": 0
+       }
+      }
+     }
+    },
+    "materials_file": {
+     "type": "string"
+    },
+    "files": {
+     "type": "object",
+     "additionalProperties": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+     }
+    },
+    "placements_file": {
+     "type": [
+      "string",
+      "null"
+     ]
+    }
+   }
+  },
+  "entityFile": {
+   "type": "object",
+   "required": [
+    "format",
+    "schema_version",
+    "type",
+    "items"
+   ],
+   "properties": {
+    "format": {
+     "const": "varrenmoor-world-pack"
+    },
+    "schema_version": {
+     "type": "string"
+    },
+    "type": {
+     "type": "string",
+     "enum": [
+      "roads",
+      "buildings",
+      "plazas",
+      "fields",
+      "districts",
+      "water",
+      "fences",
+      "foliage",
+      "props",
+      "lights",
+      "labels"
+     ]
+    },
+    "items": {
+     "type": "array",
+     "items": {
+      "$ref": "#/$defs/common"
+     }
+    }
+   }
+  },
+  "materialsFile": {
+   "type": "object",
+   "required": [
+    "materials"
+   ],
+   "properties": {
+    "materials": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "required": [
+       "id",
+       "name",
+       "foundry"
+      ],
+      "properties": {
+       "id": {
+        "type": "string",
+        "pattern": "^mat_"
+       },
+       "texture": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "sha256": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "foundry": {
+        "type": "object",
+        "required": [
+         "pipelineId"
+        ]
+       }
+      }
+     }
+    }
+   }
+  },
+  "road": {
+   "type": "object",
+   "required": [
+    "class",
+    "width_ft",
+    "points",
+    "surface",
+    "length_ft"
+   ],
+   "properties": {
+    "class": {
+     "type": "string",
+     "enum": [
+      "road",
+      "street",
+      "lane",
+      "alley",
+      "bridge"
+     ]
+    },
+    "width_ft": {
+     "type": "number",
+     "minimum": 0.5
+    },
+    "points": {
+     "$ref": "#/$defs/line3"
+    },
+    "surface": {
+     "$ref": "#/$defs/surface"
+    },
+    "length_ft": {
+     "type": "number"
+    },
+    "outline": {
+     "$ref": "#/$defs/poly2"
+    },
+    "bridge": {
+     "type": [
+      "object",
+      "null"
+     ]
+    },
+    "fords": {
+     "type": "array"
+    }
+   }
+  },
+  "building": {
+   "type": "object",
+   "required": [
+    "polygon",
+    "area_ft2",
+    "floors",
+    "base_elevation_ft",
+    "wall_height_ft",
+    "height_ft",
+    "obb",
+    "roof",
+    "wall",
+    "interior"
+   ],
+   "properties": {
+    "polygon": {
+     "$ref": "#/$defs/poly2"
+    },
+    "area_ft2": {
+     "type": "number",
+     "minimum": 0
+    },
+    "floors": {
+     "type": "integer",
+     "minimum": 1
+    },
+    "base_elevation_ft": {
+     "type": "number"
+    },
+    "wall_height_ft": {
+     "type": "number",
+     "minimum": 0
+    },
+    "height_ft": {
+     "type": "number",
+     "minimum": 0
+    },
+    "obb": {
+     "type": "object",
+     "required": [
+      "center",
+      "angle_deg",
+      "length_ft",
+      "width_ft"
+     ],
+     "properties": {
+      "center": {
+       "$ref": "#/$defs/pt2"
+      },
+      "angle_deg": {
+       "type": "number"
+      },
+      "length_ft": {
+       "type": "number"
+      },
+      "width_ft": {
+       "type": "number"
+      }
+     }
+    },
+    "roof": {
+     "type": "object",
+     "required": [
+      "type",
+      "pitch",
+      "ridge_axis_deg",
+      "ridge_height_ft",
+      "surface"
+     ],
+     "properties": {
+      "type": {
+       "type": "string",
+       "enum": [
+        "gable",
+        "hip",
+        "flat"
+       ]
+      },
+      "surface": {
+       "$ref": "#/$defs/surface"
+      }
+     }
+    },
+    "wall": {
+     "type": "object",
+     "required": [
+      "surface"
+     ],
+     "properties": {
+      "surface": {
+       "$ref": "#/$defs/surface"
+      }
+     }
+    },
+    "interior": {
+     "type": "object",
+     "required": [
+      "json",
+      "room_ids"
+     ]
+    }
+   }
+  },
+  "areaEntity": {
+   "type": "object",
+   "required": [
+    "polygon",
+    "area_ft2"
+   ],
+   "properties": {
+    "polygon": {
+     "$ref": "#/$defs/poly2"
+    },
+    "area_ft2": {
+     "type": "number",
+     "minimum": 0
+    },
+    "surface": {
+     "anyOf": [
+      {
+       "$ref": "#/$defs/surface"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    }
+   }
+  },
+  "waterEntity": {
+   "type": "object",
+   "required": [
+    "polygon",
+    "area_ft2",
+    "depth_ft",
+    "surface"
+   ],
+   "properties": {
+    "polygon": {
+     "$ref": "#/$defs/poly2"
+    },
+    "depth_ft": {
+     "type": "number",
+     "minimum": 0
+    },
+    "centerline": {
+     "type": "array",
+     "minItems": 2,
+     "items": {
+      "$ref": "#/$defs/pt2"
+     }
+    },
+    "widths_ft": {
+     "type": "array",
+     "items": {
+      "type": "number"
+     }
+    },
+    "surface_elevations_ft": {
+     "type": "array",
+     "items": {
+      "type": "number"
+     }
+    },
+    "level_ft": {
+     "type": "number"
+    },
+    "surface": {
+     "$ref": "#/$defs/surface"
+    }
+   }
+  },
+  "fence": {
+   "type": "object",
+   "required": [
+    "points",
+    "height_ft",
+    "closed"
+   ],
+   "properties": {
+    "points": {
+     "$ref": "#/$defs/line3"
+    },
+    "height_ft": {
+     "type": "number"
+    },
+    "closed": {
+     "type": "boolean"
+    }
+   }
+  },
+  "label": {
+   "type": "object",
+   "required": [
+    "text",
+    "entity",
+    "entity_type",
+    "anchor"
+   ],
+   "properties": {
+    "text": {
+     "type": "string"
+    },
+    "entity": {
+     "type": "string"
+    },
+    "anchor": {
+     "$ref": "#/$defs/pt3"
+    }
+   }
+  },
+  "foliage": {
+   "type": "object",
+   "required": [
+    "species",
+    "points",
+    "scale",
+    "rotation_deg"
+   ],
+   "properties": {
+    "points": {
+     "type": "array",
+     "minItems": 1,
+     "maxItems": 1,
+     "items": {
+      "$ref": "#/$defs/pt3"
+     }
+    },
+    "species": {
+     "type": "string"
+    },
+    "scale": {
+     "type": "number"
+    },
+    "rotation_deg": {
+     "type": "number"
+    }
+   }
+  }
+ }
+}

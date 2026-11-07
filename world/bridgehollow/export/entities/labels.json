@@ -1,0 +1,5684 @@
+{
+ "format": "varrenmoor-world-pack",
+ "schema_version": "1.0",
+ "type": "labels",
+ "units": "feet",
+ "items": [
+  {
+   "id": "lbl_dis_authority",
+   "name": "Authority Ward",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/districts.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_dis_authority"
+   },
+   "text": "Authority Ward",
+   "entity": "dis_authority",
+   "entity_type": "districts",
+   "anchor": [
+    979.2,
+    803.7,
+    646.3
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_authority",
+    "ring": "authority",
+    "group": "labels",
+    "id": "lbl_dis_authority"
+   }
+  },
+  {
+   "id": "lbl_dis_commoner",
+   "name": "Commoners' Ring",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/districts.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_dis_commoner"
+   },
+   "text": "Commoners' Ring",
+   "entity": "dis_commoner",
+   "entity_type": "districts",
+   "anchor": [
+    810.0,
+    780.0,
+    654.5
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_dis_commoner"
+   }
+  },
+  {
+   "id": "lbl_dis_farm",
+   "name": "Farmland",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/districts.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_dis_farm"
+   },
+   "text": "Farmland",
+   "entity": "dis_farm",
+   "entity_type": "districts",
+   "anchor": [
+    1531.9,
+    993.3,
+    652.3
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_farm",
+    "ring": "farm",
+    "group": "labels",
+    "id": "lbl_dis_farm"
+   }
+  },
+  {
+   "id": "lbl_sqr_3",
+   "name": "Square 3",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/districts.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_sqr_3"
+   },
+   "text": "Square 3",
+   "entity": "sqr_3",
+   "entity_type": "plazas",
+   "anchor": [
+    887.929,
+    1004.754,
+    647.4
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_sqr_3"
+   }
+  },
+  {
+   "id": "lbl_sqr_court",
+   "name": "Court Square",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/districts.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_sqr_court"
+   },
+   "text": "Court Square",
+   "entity": "sqr_court",
+   "entity_type": "plazas",
+   "anchor": [
+    1082.485,
+    777.7,
+    646.9
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_authority",
+    "ring": "authority",
+    "group": "labels",
+    "id": "lbl_sqr_court"
+   }
+  },
+  {
+   "id": "lbl_sqr_market",
+   "name": "Market Square",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/districts.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_sqr_market"
+   },
+   "text": "Market Square",
+   "entity": "sqr_market",
+   "entity_type": "plazas",
+   "anchor": [
+    1265.952,
+    790.43,
+    651.7
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_authority",
+    "ring": "authority",
+    "group": "labels",
+    "id": "lbl_sqr_market"
+   }
+  },
+  {
+   "id": "lbl_str_003",
+   "name": "Cartwright Lane",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/streets.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_str_003"
+   },
+   "text": "Cartwright Lane",
+   "entity": "str_003",
+   "entity_type": "roads",
+   "anchor": [
+    1058.2,
+    624.0,
+    657.7
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_str_003"
+   }
+  },
+  {
+   "id": "lbl_str_004",
+   "name": "Tanners Row",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/streets.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_str_004"
+   },
+   "text": "Tanners Row",
+   "entity": "str_004",
+   "entity_type": "roads",
+   "anchor": [
+    1125.1,
+    612.1,
+    654.7
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_str_004"
+   }
+  },
+  {
+   "id": "lbl_str_005",
+   "name": "Cooper Row",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/streets.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_str_005"
+   },
+   "text": "Cooper Row",
+   "entity": "str_005",
+   "entity_type": "roads",
+   "anchor": [
+    1347.5,
+    739.7,
+    661.7
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_str_005"
+   }
+  },
+  {
+   "id": "lbl_str_006",
+   "name": "Weavers Walk",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/streets.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_str_006"
+   },
+   "text": "Weavers Walk",
+   "entity": "str_006",
+   "entity_type": "roads",
+   "anchor": [
+    1369.6,
+    636.7,
+    661.7
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_str_006"
+   }
+  },
+  {
+   "id": "lbl_str_007",
+   "name": "Brook Lane",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/streets.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_str_007"
+   },
+   "text": "Brook Lane",
+   "entity": "str_007",
+   "entity_type": "roads",
+   "anchor": [
+    1401.1,
+    579.0,
+    665.4
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_str_007"
+   }
+  },
+  {
+   "id": "lbl_str_008",
+   "name": "Hollow Way",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/streets.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_str_008"
+   },
+   "text": "Hollow Way",
+   "entity": "str_008",
+   "entity_type": "roads",
+   "anchor": [
+    899.5,
+    733.9,
+    660.1
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_str_008"
+   }
+  },
+  {
+   "id": "lbl_str_009",
+   "name": "Chandler Row",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/streets.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_str_009"
+   },
+   "text": "Chandler Row",
+   "entity": "str_009",
+   "entity_type": "roads",
+   "anchor": [
+    944.4,
+    728.8,
+    658.0
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_str_009"
+   }
+  },
+  {
+   "id": "lbl_str_010",
+   "name": "Alley 10",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/streets.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_str_010"
+   },
+   "text": "Alley 10",
+   "entity": "str_010",
+   "entity_type": "roads",
+   "anchor": [
+    1110.3,
+    676.2,
+    651.3
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_authority",
+    "ring": "authority",
+    "group": "labels",
+    "id": "lbl_str_010"
+   }
+  },
+  {
+   "id": "lbl_str_011",
+   "name": "Cobbler Row",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/streets.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_str_011"
+   },
+   "text": "Cobbler Row",
+   "entity": "str_011",
+   "entity_type": "roads",
+   "anchor": [
+    1268.3,
+    666.6,
+    655.3
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_str_011"
+   }
+  },
+  {
+   "id": "lbl_str_012",
+   "name": "Baker Lane",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/streets.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_str_012"
+   },
+   "text": "Baker Lane",
+   "entity": "str_012",
+   "entity_type": "roads",
+   "anchor": [
+    814.9,
+    745.1,
+    657.3
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_str_012"
+   }
+  },
+  {
+   "id": "lbl_str_013",
+   "name": "Thatchers Way",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/streets.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_str_013"
+   },
+   "text": "Thatchers Way",
+   "entity": "str_013",
+   "entity_type": "roads",
+   "anchor": [
+    1421.1,
+    749.2,
+    662.7
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_str_013"
+   }
+  },
+  {
+   "id": "lbl_str_014",
+   "name": "Alley 14",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/streets.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_str_014"
+   },
+   "text": "Alley 14",
+   "entity": "str_014",
+   "entity_type": "roads",
+   "anchor": [
+    795.7,
+    826.5,
+    655.4
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_str_014"
+   }
+  },
+  {
+   "id": "lbl_str_015",
+   "name": "Dyers Walk",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/streets.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_str_015"
+   },
+   "text": "Dyers Walk",
+   "entity": "str_015",
+   "entity_type": "roads",
+   "anchor": [
+    927.1,
+    863.0,
+    653.0
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_str_015"
+   }
+  },
+  {
+   "id": "lbl_str_016",
+   "name": "Warden Street",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/streets.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_str_016"
+   },
+   "text": "Warden Street",
+   "entity": "str_016",
+   "entity_type": "roads",
+   "anchor": [
+    1006.0,
+    805.5,
+    653.7
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_authority",
+    "ring": "authority",
+    "group": "labels",
+    "id": "lbl_str_016"
+   }
+  },
+  {
+   "id": "lbl_str_017",
+   "name": "Rope Walk",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/streets.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_str_017"
+   },
+   "text": "Rope Walk",
+   "entity": "str_017",
+   "entity_type": "roads",
+   "anchor": [
+    1376.5,
+    832.1,
+    657.3
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_str_017"
+   }
+  },
+  {
+   "id": "lbl_str_018",
+   "name": "Alley 18",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/streets.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_str_018"
+   },
+   "text": "Alley 18",
+   "entity": "str_018",
+   "entity_type": "roads",
+   "anchor": [
+    1233.0,
+    918.3,
+    645.3
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_authority",
+    "ring": "authority",
+    "group": "labels",
+    "id": "lbl_str_018"
+   }
+  },
+  {
+   "id": "lbl_str_019",
+   "name": "Fuller Lane",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/streets.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_str_019"
+   },
+   "text": "Fuller Lane",
+   "entity": "str_019",
+   "entity_type": "roads",
+   "anchor": [
+    1441.5,
+    880.6,
+    655.7
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_str_019"
+   }
+  },
+  {
+   "id": "lbl_str_020",
+   "name": "Alley 20",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/streets.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_str_020"
+   },
+   "text": "Alley 20",
+   "entity": "str_020",
+   "entity_type": "roads",
+   "anchor": [
+    859.4,
+    923.9,
+    649.1
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_str_020"
+   }
+  },
+  {
+   "id": "lbl_str_021",
+   "name": "Hay Lane",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/streets.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_str_021"
+   },
+   "text": "Hay Lane",
+   "entity": "str_021",
+   "entity_type": "roads",
+   "anchor": [
+    913.6,
+    910.9,
+    651.2
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_str_021"
+   }
+  },
+  {
+   "id": "lbl_str_022",
+   "name": "Cartwright Lane 2",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/streets.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_str_022"
+   },
+   "text": "Cartwright Lane 2",
+   "entity": "str_022",
+   "entity_type": "roads",
+   "anchor": [
+    1034.9,
+    940.9,
+    647.0
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_authority",
+    "ring": "authority",
+    "group": "labels",
+    "id": "lbl_str_022"
+   }
+  },
+  {
+   "id": "lbl_str_023",
+   "name": "Tanners Row 2",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/streets.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_str_023"
+   },
+   "text": "Tanners Row 2",
+   "entity": "str_023",
+   "entity_type": "roads",
+   "anchor": [
+    1069.4,
+    998.8,
+    643.1
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_str_023"
+   }
+  },
+  {
+   "id": "lbl_str_024",
+   "name": "Cooper Row 2",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/streets.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_str_024"
+   },
+   "text": "Cooper Row 2",
+   "entity": "str_024",
+   "entity_type": "roads",
+   "anchor": [
+    1233.9,
+    921.7,
+    645.1
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_authority",
+    "ring": "authority",
+    "group": "labels",
+    "id": "lbl_str_024"
+   }
+  },
+  {
+   "id": "lbl_str_025",
+   "name": "Pasture Lane",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/streets.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_str_025"
+   },
+   "text": "Pasture Lane",
+   "entity": "str_025",
+   "entity_type": "roads",
+   "anchor": [
+    1605.0,
+    1017.4,
+    654.7
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_farm",
+    "ring": "farm",
+    "group": "labels",
+    "id": "lbl_str_025"
+   }
+  },
+  {
+   "id": "lbl_str_026",
+   "name": "Alley 26",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/streets.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_str_026"
+   },
+   "text": "Alley 26",
+   "entity": "str_026",
+   "entity_type": "roads",
+   "anchor": [
+    1010.4,
+    1049.0,
+    642.5
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_str_026"
+   }
+  },
+  {
+   "id": "lbl_str_027",
+   "name": "Brook Lane 2",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/streets.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_str_027"
+   },
+   "text": "Brook Lane 2",
+   "entity": "str_027",
+   "entity_type": "roads",
+   "anchor": [
+    1465.0,
+    1064.7,
+    648.5
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_farm",
+    "ring": "farm",
+    "group": "labels",
+    "id": "lbl_str_027"
+   }
+  },
+  {
+   "id": "lbl_str_028",
+   "name": "Alley 28",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/streets.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_str_028"
+   },
+   "text": "Alley 28",
+   "entity": "str_028",
+   "entity_type": "roads",
+   "anchor": [
+    1244.4,
+    1141.6,
+    632.4
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_str_028"
+   }
+  },
+  {
+   "id": "lbl_str_029",
+   "name": "Hedge Lane",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/streets.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_str_029"
+   },
+   "text": "Hedge Lane",
+   "entity": "str_029",
+   "entity_type": "roads",
+   "anchor": [
+    1572.2,
+    1111.0,
+    648.5
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_farm",
+    "ring": "farm",
+    "group": "labels",
+    "id": "lbl_str_029"
+   }
+  },
+  {
+   "id": "lbl_str_pilgrim_road_1",
+   "name": "Pilgrim Road",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/streets.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_str_pilgrim_road_1"
+   },
+   "text": "Pilgrim Road",
+   "entity": "str_pilgrim_road_1",
+   "entity_type": "roads",
+   "anchor": [
+    1296.9,
+    1148.8,
+    636.0
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_farm",
+    "ring": "farm",
+    "group": "labels",
+    "id": "lbl_str_pilgrim_road_1"
+   }
+  },
+  {
+   "id": "lbl_str_pilgrim_road_bridge",
+   "name": "Pilgrim Bridge",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/streets.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_str_pilgrim_road_bridge"
+   },
+   "text": "Pilgrim Bridge",
+   "entity": "str_pilgrim_road_bridge",
+   "entity_type": "roads",
+   "anchor": [
+    1110.0,
+    780.0,
+    648.8
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_authority",
+    "ring": "authority",
+    "group": "labels",
+    "id": "lbl_str_pilgrim_road_bridge"
+   }
+  },
+  {
+   "id": "lbl_bld_barn_001",
+   "name": "Barn 1",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_barn_001.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_barn_001"
+   },
+   "text": "Barn 1",
+   "entity": "bld_barn_001",
+   "entity_type": "buildings",
+   "anchor": [
+    1462.342,
+    637.89,
+    682.735
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_farm",
+    "ring": "farm",
+    "group": "labels",
+    "id": "lbl_bld_barn_001"
+   }
+  },
+  {
+   "id": "lbl_bld_barn_002",
+   "name": "Barn 2",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_barn_002.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_barn_002"
+   },
+   "text": "Barn 2",
+   "entity": "bld_barn_002",
+   "entity_type": "buildings",
+   "anchor": [
+    1640.052,
+    1154.086,
+    664.908
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_farm",
+    "ring": "farm",
+    "group": "labels",
+    "id": "lbl_bld_barn_002"
+   }
+  },
+  {
+   "id": "lbl_bld_customs_house",
+   "name": "Customs House",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_customs_house.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_customs_house"
+   },
+   "text": "Customs House",
+   "entity": "bld_customs_house",
+   "entity_type": "buildings",
+   "anchor": [
+    1037.066,
+    784.55,
+    666.425
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_authority",
+    "ring": "authority",
+    "group": "labels",
+    "id": "lbl_bld_customs_house"
+   }
+  },
+  {
+   "id": "lbl_bld_farm_001",
+   "name": "Farmhouse 1",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_farm_001.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_farm_001"
+   },
+   "text": "Farmhouse 1",
+   "entity": "bld_farm_001",
+   "entity_type": "buildings",
+   "anchor": [
+    1439.489,
+    597.075,
+    694.966
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_farm",
+    "ring": "farm",
+    "group": "labels",
+    "id": "lbl_bld_farm_001"
+   }
+  },
+  {
+   "id": "lbl_bld_farm_002",
+   "name": "Farmhouse 2",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_farm_002.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_farm_002"
+   },
+   "text": "Farmhouse 2",
+   "entity": "bld_farm_002",
+   "entity_type": "buildings",
+   "anchor": [
+    1580.95,
+    1139.55,
+    664.02
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_farm",
+    "ring": "farm",
+    "group": "labels",
+    "id": "lbl_bld_farm_002"
+   }
+  },
+  {
+   "id": "lbl_bld_farm_003",
+   "name": "Farmhouse 3",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_farm_003.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_farm_003"
+   },
+   "text": "Farmhouse 3",
+   "entity": "bld_farm_003",
+   "entity_type": "buildings",
+   "anchor": [
+    1233.95,
+    1220.65,
+    655.965
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_farm",
+    "ring": "farm",
+    "group": "labels",
+    "id": "lbl_bld_farm_003"
+   }
+  },
+  {
+   "id": "lbl_bld_gate_watch",
+   "name": "Gate Watch Post",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_gate_watch.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_gate_watch"
+   },
+   "text": "Gate Watch Post",
+   "entity": "bld_gate_watch",
+   "entity_type": "buildings",
+   "anchor": [
+    1329.5,
+    1417.85,
+    636.412
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_farm",
+    "ring": "farm",
+    "group": "labels",
+    "id": "lbl_bld_gate_watch"
+   }
+  },
+  {
+   "id": "lbl_bld_house_001",
+   "name": "House 1",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_001.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_001"
+   },
+   "text": "House 1",
+   "entity": "bld_house_001",
+   "entity_type": "buildings",
+   "anchor": [
+    1102.45,
+    553.5,
+    672.442
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_001"
+   }
+  },
+  {
+   "id": "lbl_bld_house_002",
+   "name": "House 2",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_002.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_002"
+   },
+   "text": "House 2",
+   "entity": "bld_house_002",
+   "entity_type": "buildings",
+   "anchor": [
+    1026.296,
+    557.047,
+    686.288
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_002"
+   }
+  },
+  {
+   "id": "lbl_bld_house_003",
+   "name": "House 3",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_003.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_003"
+   },
+   "text": "House 3",
+   "entity": "bld_house_003",
+   "entity_type": "buildings",
+   "anchor": [
+    1078.2,
+    556.3,
+    674.136
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_003"
+   }
+  },
+  {
+   "id": "lbl_bld_house_004",
+   "name": "House 4",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_004.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_004"
+   },
+   "text": "House 4",
+   "entity": "bld_house_004",
+   "entity_type": "buildings",
+   "anchor": [
+    1052.45,
+    562.598,
+    675.565
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_004"
+   }
+  },
+  {
+   "id": "lbl_bld_house_005",
+   "name": "House 5",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_005.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_005"
+   },
+   "text": "House 5",
+   "entity": "bld_house_005",
+   "entity_type": "buildings",
+   "anchor": [
+    994.099,
+    571.954,
+    681.249
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_005"
+   }
+  },
+  {
+   "id": "lbl_bld_house_006",
+   "name": "House 6",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_006.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_006"
+   },
+   "text": "House 6",
+   "entity": "bld_house_006",
+   "entity_type": "buildings",
+   "anchor": [
+    966.999,
+    580.727,
+    677.122
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_006"
+   }
+  },
+  {
+   "id": "lbl_bld_house_007",
+   "name": "House 7",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_007.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_007"
+   },
+   "text": "House 7",
+   "entity": "bld_house_007",
+   "entity_type": "buildings",
+   "anchor": [
+    1029.9,
+    595.05,
+    673.681
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_007"
+   }
+  },
+  {
+   "id": "lbl_bld_house_008",
+   "name": "House 8",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_008.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_008"
+   },
+   "text": "House 8",
+   "entity": "bld_house_008",
+   "entity_type": "buildings",
+   "anchor": [
+    1202.75,
+    596.55,
+    667.896
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_008"
+   }
+  },
+  {
+   "id": "lbl_bld_house_009",
+   "name": "House 9",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_009.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_009"
+   },
+   "text": "House 9",
+   "entity": "bld_house_009",
+   "entity_type": "buildings",
+   "anchor": [
+    1112.395,
+    598.917,
+    669.644
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_009"
+   }
+  },
+  {
+   "id": "lbl_bld_house_010",
+   "name": "House 10",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_010.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_010"
+   },
+   "text": "House 10",
+   "entity": "bld_house_010",
+   "entity_type": "buildings",
+   "anchor": [
+    1156.455,
+    599.672,
+    669.337
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_010"
+   }
+  },
+  {
+   "id": "lbl_bld_house_011",
+   "name": "House 11",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_011.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_011"
+   },
+   "text": "House 11",
+   "entity": "bld_house_011",
+   "entity_type": "buildings",
+   "anchor": [
+    1084.397,
+    606.582,
+    670.63
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_011"
+   }
+  },
+  {
+   "id": "lbl_bld_house_012",
+   "name": "House 12",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_012.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_012"
+   },
+   "text": "House 12",
+   "entity": "bld_house_012",
+   "entity_type": "buildings",
+   "anchor": [
+    1361.7,
+    606.65,
+    674.712
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_012"
+   }
+  },
+  {
+   "id": "lbl_bld_house_013",
+   "name": "House 13",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_013.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_013"
+   },
+   "text": "House 13",
+   "entity": "bld_house_013",
+   "entity_type": "buildings",
+   "anchor": [
+    1018.98,
+    608.498,
+    672.725
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_013"
+   }
+  },
+  {
+   "id": "lbl_bld_house_014",
+   "name": "House 14",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_014.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_014"
+   },
+   "text": "House 14",
+   "entity": "bld_house_014",
+   "entity_type": "buildings",
+   "anchor": [
+    973.898,
+    607.891,
+    675.993
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_014"
+   }
+  },
+  {
+   "id": "lbl_bld_house_015",
+   "name": "House 15",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_015.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_015"
+   },
+   "text": "House 15",
+   "entity": "bld_house_015",
+   "entity_type": "buildings",
+   "anchor": [
+    997.7,
+    607.95,
+    673.83
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_015"
+   }
+  },
+  {
+   "id": "lbl_bld_house_016",
+   "name": "House 16",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_016.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_016"
+   },
+   "text": "House 16",
+   "entity": "bld_house_016",
+   "entity_type": "buildings",
+   "anchor": [
+    1390.368,
+    615.755,
+    676.637
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_016"
+   }
+  },
+  {
+   "id": "lbl_bld_house_017",
+   "name": "House 17",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_017.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_017"
+   },
+   "text": "House 17",
+   "entity": "bld_house_017",
+   "entity_type": "buildings",
+   "anchor": [
+    1178.856,
+    611.904,
+    678.163
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_017"
+   }
+  },
+  {
+   "id": "lbl_bld_house_018",
+   "name": "House 18",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_018.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_018"
+   },
+   "text": "House 18",
+   "entity": "bld_house_018",
+   "entity_type": "buildings",
+   "anchor": [
+    1142.1,
+    629.0,
+    669.549
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_authority",
+    "ring": "authority",
+    "group": "labels",
+    "id": "lbl_bld_house_018"
+   }
+  },
+  {
+   "id": "lbl_bld_house_019",
+   "name": "House 19",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_019.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_019"
+   },
+   "text": "House 19",
+   "entity": "bld_house_019",
+   "entity_type": "buildings",
+   "anchor": [
+    1313.6,
+    627.5,
+    681.206
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_019"
+   }
+  },
+  {
+   "id": "lbl_bld_house_020",
+   "name": "House 20",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_020.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_020"
+   },
+   "text": "House 20",
+   "entity": "bld_house_020",
+   "entity_type": "buildings",
+   "anchor": [
+    994.05,
+    639.9,
+    672.301
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_020"
+   }
+  },
+  {
+   "id": "lbl_bld_house_021",
+   "name": "House 21",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_021.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_021"
+   },
+   "text": "House 21",
+   "entity": "bld_house_021",
+   "entity_type": "buildings",
+   "anchor": [
+    915.1,
+    647.9,
+    676.005
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_021"
+   }
+  },
+  {
+   "id": "lbl_bld_house_022",
+   "name": "House 22",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_022.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_022"
+   },
+   "text": "House 22",
+   "entity": "bld_house_022",
+   "entity_type": "buildings",
+   "anchor": [
+    859.75,
+    650.05,
+    678.318
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_022"
+   }
+  },
+  {
+   "id": "lbl_bld_house_023",
+   "name": "House 23",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_023.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_023"
+   },
+   "text": "House 23",
+   "entity": "bld_house_023",
+   "entity_type": "buildings",
+   "anchor": [
+    1322.25,
+    649.95,
+    681.131
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_023"
+   }
+  },
+  {
+   "id": "lbl_bld_house_024",
+   "name": "House 24",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_024.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_024"
+   },
+   "text": "House 24",
+   "entity": "bld_house_024",
+   "entity_type": "buildings",
+   "anchor": [
+    1294.919,
+    656.271,
+    669.595
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_024"
+   }
+  },
+  {
+   "id": "lbl_bld_house_025",
+   "name": "House 25",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_025.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_025"
+   },
+   "text": "House 25",
+   "entity": "bld_house_025",
+   "entity_type": "buildings",
+   "anchor": [
+    937.65,
+    660.95,
+    676.89
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_025"
+   }
+  },
+  {
+   "id": "lbl_bld_house_026",
+   "name": "House 26",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_026.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_026"
+   },
+   "text": "House 26",
+   "entity": "bld_house_026",
+   "entity_type": "buildings",
+   "anchor": [
+    960.75,
+    657.15,
+    685.95
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_026"
+   }
+  },
+  {
+   "id": "lbl_bld_house_027",
+   "name": "House 27",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_027.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_027"
+   },
+   "text": "House 27",
+   "entity": "bld_house_027",
+   "entity_type": "buildings",
+   "anchor": [
+    988.15,
+    667.55,
+    675.476
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_027"
+   }
+  },
+  {
+   "id": "lbl_bld_house_028",
+   "name": "House 28",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_028.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_028"
+   },
+   "text": "House 28",
+   "entity": "bld_house_028",
+   "entity_type": "buildings",
+   "anchor": [
+    911.748,
+    669.407,
+    676.625
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_028"
+   }
+  },
+  {
+   "id": "lbl_bld_house_029",
+   "name": "House 29",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_029.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_029"
+   },
+   "text": "House 29",
+   "entity": "bld_house_029",
+   "entity_type": "buildings",
+   "anchor": [
+    835.7,
+    673.05,
+    677.299
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_029"
+   }
+  },
+  {
+   "id": "lbl_bld_house_030",
+   "name": "House 30",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_030.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_030"
+   },
+   "text": "House 30",
+   "entity": "bld_house_030",
+   "entity_type": "buildings",
+   "anchor": [
+    1393.908,
+    677.35,
+    679.43
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_030"
+   }
+  },
+  {
+   "id": "lbl_bld_house_031",
+   "name": "House 31",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_031.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_031"
+   },
+   "text": "House 31",
+   "entity": "bld_house_031",
+   "entity_type": "buildings",
+   "anchor": [
+    1367.45,
+    677.45,
+    675.233
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_031"
+   }
+  },
+  {
+   "id": "lbl_bld_house_032",
+   "name": "House 32",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_032.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_032"
+   },
+   "text": "House 32",
+   "entity": "bld_house_032",
+   "entity_type": "buildings",
+   "anchor": [
+    934.75,
+    692.25,
+    673.93
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_032"
+   }
+  },
+  {
+   "id": "lbl_bld_house_033",
+   "name": "House 33",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_033.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_033"
+   },
+   "text": "House 33",
+   "entity": "bld_house_033",
+   "entity_type": "buildings",
+   "anchor": [
+    954.843,
+    691.101,
+    685.403
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_033"
+   }
+  },
+  {
+   "id": "lbl_bld_house_034",
+   "name": "House 34",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_034.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_034"
+   },
+   "text": "House 34",
+   "entity": "bld_house_034",
+   "entity_type": "buildings",
+   "anchor": [
+    1327.7,
+    693.6,
+    673.662
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_034"
+   }
+  },
+  {
+   "id": "lbl_bld_house_035",
+   "name": "House 35",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_035.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_035"
+   },
+   "text": "House 35",
+   "entity": "bld_house_035",
+   "entity_type": "buildings",
+   "anchor": [
+    854.755,
+    695.894,
+    679.995
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_035"
+   }
+  },
+  {
+   "id": "lbl_bld_house_036",
+   "name": "House 36",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_036.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_036"
+   },
+   "text": "House 36",
+   "entity": "bld_house_036",
+   "entity_type": "buildings",
+   "anchor": [
+    983.35,
+    700.445,
+    671.367
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_authority",
+    "ring": "authority",
+    "group": "labels",
+    "id": "lbl_bld_house_036"
+   }
+  },
+  {
+   "id": "lbl_bld_house_037",
+   "name": "House 37",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_037.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_037"
+   },
+   "text": "House 37",
+   "entity": "bld_house_037",
+   "entity_type": "buildings",
+   "anchor": [
+    1393.75,
+    702.706,
+    678.47
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_037"
+   }
+  },
+  {
+   "id": "lbl_bld_house_038",
+   "name": "House 38",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_038.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_038"
+   },
+   "text": "House 38",
+   "entity": "bld_house_038",
+   "entity_type": "buildings",
+   "anchor": [
+    805.632,
+    711.288,
+    674.705
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_038"
+   }
+  },
+  {
+   "id": "lbl_bld_house_039",
+   "name": "House 39",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_039.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_039"
+   },
+   "text": "House 39",
+   "entity": "bld_house_039",
+   "entity_type": "buildings",
+   "anchor": [
+    915.297,
+    709.31,
+    676.212
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_039"
+   }
+  },
+  {
+   "id": "lbl_bld_house_040",
+   "name": "House 40",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_040.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_040"
+   },
+   "text": "House 40",
+   "entity": "bld_house_040",
+   "entity_type": "buildings",
+   "anchor": [
+    838.2,
+    716.9,
+    674.927
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_040"
+   }
+  },
+  {
+   "id": "lbl_bld_house_041",
+   "name": "House 41",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_041.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_041"
+   },
+   "text": "House 41",
+   "entity": "bld_house_041",
+   "entity_type": "buildings",
+   "anchor": [
+    874.947,
+    720.754,
+    673.879
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_041"
+   }
+  },
+  {
+   "id": "lbl_bld_house_042",
+   "name": "House 42",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_042.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_042"
+   },
+   "text": "House 42",
+   "entity": "bld_house_042",
+   "entity_type": "buildings",
+   "anchor": [
+    1299.0,
+    718.0,
+    671.895
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_042"
+   }
+  },
+  {
+   "id": "lbl_bld_house_043",
+   "name": "House 43",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_043.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_043"
+   },
+   "text": "House 43",
+   "entity": "bld_house_043",
+   "entity_type": "buildings",
+   "anchor": [
+    1323.35,
+    723.4,
+    675.0
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_043"
+   }
+  },
+  {
+   "id": "lbl_bld_house_044",
+   "name": "House 44",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_044.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_044"
+   },
+   "text": "House 44",
+   "entity": "bld_house_044",
+   "entity_type": "buildings",
+   "anchor": [
+    1364.335,
+    727.152,
+    675.246
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_044"
+   }
+  },
+  {
+   "id": "lbl_bld_house_045",
+   "name": "House 45",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_045.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_045"
+   },
+   "text": "House 45",
+   "entity": "bld_house_045",
+   "entity_type": "buildings",
+   "anchor": [
+    1388.329,
+    727.502,
+    688.897
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_045"
+   }
+  },
+  {
+   "id": "lbl_bld_house_046",
+   "name": "House 46",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_046.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_046"
+   },
+   "text": "House 46",
+   "entity": "bld_house_046",
+   "entity_type": "buildings",
+   "anchor": [
+    829.115,
+    735.229,
+    672.799
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_046"
+   }
+  },
+  {
+   "id": "lbl_bld_house_047",
+   "name": "House 47",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_047.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_047"
+   },
+   "text": "House 47",
+   "entity": "bld_house_047",
+   "entity_type": "buildings",
+   "anchor": [
+    864.5,
+    735.6,
+    673.263
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_047"
+   }
+  },
+  {
+   "id": "lbl_bld_house_048",
+   "name": "House 48",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_048.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_048"
+   },
+   "text": "House 48",
+   "entity": "bld_house_048",
+   "entity_type": "buildings",
+   "anchor": [
+    789.85,
+    747.25,
+    673.784
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_048"
+   }
+  },
+  {
+   "id": "lbl_bld_house_049",
+   "name": "House 49",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_049.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_049"
+   },
+   "text": "House 49",
+   "entity": "bld_house_049",
+   "entity_type": "buildings",
+   "anchor": [
+    939.75,
+    763.05,
+    674.762
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_049"
+   }
+  },
+  {
+   "id": "lbl_bld_house_050",
+   "name": "House 50",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_050.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_050"
+   },
+   "text": "House 50",
+   "entity": "bld_house_050",
+   "entity_type": "buildings",
+   "anchor": [
+    894.9,
+    781.05,
+    673.114
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_050"
+   }
+  },
+  {
+   "id": "lbl_bld_house_051",
+   "name": "House 51",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_051.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_051"
+   },
+   "text": "House 51",
+   "entity": "bld_house_051",
+   "entity_type": "buildings",
+   "anchor": [
+    1433.048,
+    788.765,
+    686.994
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_051"
+   }
+  },
+  {
+   "id": "lbl_bld_house_052",
+   "name": "House 52",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_052.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_052"
+   },
+   "text": "House 52",
+   "entity": "bld_house_052",
+   "entity_type": "buildings",
+   "anchor": [
+    868.61,
+    794.97,
+    680.083
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_052"
+   }
+  },
+  {
+   "id": "lbl_bld_house_053",
+   "name": "House 53",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_053.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_053"
+   },
+   "text": "House 53",
+   "entity": "bld_house_053",
+   "entity_type": "buildings",
+   "anchor": [
+    912.9,
+    817.65,
+    671.95
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_053"
+   }
+  },
+  {
+   "id": "lbl_bld_house_054",
+   "name": "House 54",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_054.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_054"
+   },
+   "text": "House 54",
+   "entity": "bld_house_054",
+   "entity_type": "buildings",
+   "anchor": [
+    821.892,
+    836.788,
+    668.154
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_054"
+   }
+  },
+  {
+   "id": "lbl_bld_house_055",
+   "name": "House 55",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_055.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_055"
+   },
+   "text": "House 55",
+   "entity": "bld_house_055",
+   "entity_type": "buildings",
+   "anchor": [
+    921.584,
+    844.379,
+    667.742
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_055"
+   }
+  },
+  {
+   "id": "lbl_bld_house_056",
+   "name": "House 56",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_056.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_056"
+   },
+   "text": "House 56",
+   "entity": "bld_house_056",
+   "entity_type": "buildings",
+   "anchor": [
+    1292.031,
+    844.361,
+    675.04
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_056"
+   }
+  },
+  {
+   "id": "lbl_bld_house_057",
+   "name": "House 57",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_057.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_057"
+   },
+   "text": "House 57",
+   "entity": "bld_house_057",
+   "entity_type": "buildings",
+   "anchor": [
+    1407.388,
+    849.403,
+    671.034
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_057"
+   }
+  },
+  {
+   "id": "lbl_bld_house_058",
+   "name": "House 58",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_058.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_058"
+   },
+   "text": "House 58",
+   "entity": "bld_house_058",
+   "entity_type": "buildings",
+   "anchor": [
+    1351.035,
+    853.172,
+    678.705
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_058"
+   }
+  },
+  {
+   "id": "lbl_bld_house_059",
+   "name": "House 59",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_059.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_059"
+   },
+   "text": "House 59",
+   "entity": "bld_house_059",
+   "entity_type": "buildings",
+   "anchor": [
+    1379.95,
+    854.55,
+    670.224
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_059"
+   }
+  },
+  {
+   "id": "lbl_bld_house_060",
+   "name": "House 60",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_060.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_060"
+   },
+   "text": "House 60",
+   "entity": "bld_house_060",
+   "entity_type": "buildings",
+   "anchor": [
+    809.8,
+    855.4,
+    666.932
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_060"
+   }
+  },
+  {
+   "id": "lbl_bld_house_061",
+   "name": "House 61",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_061.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_061"
+   },
+   "text": "House 61",
+   "entity": "bld_house_061",
+   "entity_type": "buildings",
+   "anchor": [
+    842.212,
+    861.62,
+    666.542
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_061"
+   }
+  },
+  {
+   "id": "lbl_bld_house_062",
+   "name": "House 62",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_062.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_062"
+   },
+   "text": "House 62",
+   "entity": "bld_house_062",
+   "entity_type": "buildings",
+   "anchor": [
+    897.165,
+    862.777,
+    667.024
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_062"
+   }
+  },
+  {
+   "id": "lbl_bld_house_063",
+   "name": "House 63",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_063.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_063"
+   },
+   "text": "House 63",
+   "entity": "bld_house_063",
+   "entity_type": "buildings",
+   "anchor": [
+    974.7,
+    864.4,
+    667.062
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_authority",
+    "ring": "authority",
+    "group": "labels",
+    "id": "lbl_bld_house_063"
+   }
+  },
+  {
+   "id": "lbl_bld_house_064",
+   "name": "House 64",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_064.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_064"
+   },
+   "text": "House 64",
+   "entity": "bld_house_064",
+   "entity_type": "buildings",
+   "anchor": [
+    1304.789,
+    862.933,
+    666.447
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_064"
+   }
+  },
+  {
+   "id": "lbl_bld_house_065",
+   "name": "House 65",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_065.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_065"
+   },
+   "text": "House 65",
+   "entity": "bld_house_065",
+   "entity_type": "buildings",
+   "anchor": [
+    1427.04,
+    868.665,
+    670.053
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_065"
+   }
+  },
+  {
+   "id": "lbl_bld_house_066",
+   "name": "House 66",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_066.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_066"
+   },
+   "text": "House 66",
+   "entity": "bld_house_066",
+   "entity_type": "buildings",
+   "anchor": [
+    1277.2,
+    870.05,
+    662.089
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_066"
+   }
+  },
+  {
+   "id": "lbl_bld_house_067",
+   "name": "House 67",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_067.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_067"
+   },
+   "text": "House 67",
+   "entity": "bld_house_067",
+   "entity_type": "buildings",
+   "anchor": [
+    1210.75,
+    871.4,
+    657.631
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_authority",
+    "ring": "authority",
+    "group": "labels",
+    "id": "lbl_bld_house_067"
+   }
+  },
+  {
+   "id": "lbl_bld_house_068",
+   "name": "House 68",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_068.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_068"
+   },
+   "text": "House 68",
+   "entity": "bld_house_068",
+   "entity_type": "buildings",
+   "anchor": [
+    1394.856,
+    871.148,
+    668.095
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_068"
+   }
+  },
+  {
+   "id": "lbl_bld_house_069",
+   "name": "House 69",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_069.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_069"
+   },
+   "text": "House 69",
+   "entity": "bld_house_069",
+   "entity_type": "buildings",
+   "anchor": [
+    1032.5,
+    877.1,
+    665.13
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_authority",
+    "ring": "authority",
+    "group": "labels",
+    "id": "lbl_bld_house_069"
+   }
+  },
+  {
+   "id": "lbl_bld_house_070",
+   "name": "House 70",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_070.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_070"
+   },
+   "text": "House 70",
+   "entity": "bld_house_070",
+   "entity_type": "buildings",
+   "anchor": [
+    1363.7,
+    882.45,
+    667.746
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_070"
+   }
+  },
+  {
+   "id": "lbl_bld_house_071",
+   "name": "House 71",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_071.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_071"
+   },
+   "text": "House 71",
+   "entity": "bld_house_071",
+   "entity_type": "buildings",
+   "anchor": [
+    958.413,
+    881.99,
+    675.389
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_071"
+   }
+  },
+  {
+   "id": "lbl_bld_house_072",
+   "name": "House 72",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_072.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_072"
+   },
+   "text": "House 72",
+   "entity": "bld_house_072",
+   "entity_type": "buildings",
+   "anchor": [
+    826.3,
+    883.25,
+    679.028
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_072"
+   }
+  },
+  {
+   "id": "lbl_bld_house_073",
+   "name": "House 73",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_073.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_073"
+   },
+   "text": "House 73",
+   "entity": "bld_house_073",
+   "entity_type": "buildings",
+   "anchor": [
+    865.389,
+    883.326,
+    664.965
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_073"
+   }
+  },
+  {
+   "id": "lbl_bld_house_074",
+   "name": "House 74",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_074.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_074"
+   },
+   "text": "House 74",
+   "entity": "bld_house_074",
+   "entity_type": "buildings",
+   "anchor": [
+    931.88,
+    890.425,
+    667.298
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_074"
+   }
+  },
+  {
+   "id": "lbl_bld_house_075",
+   "name": "House 75",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_075.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_075"
+   },
+   "text": "House 75",
+   "entity": "bld_house_075",
+   "entity_type": "buildings",
+   "anchor": [
+    1396.983,
+    890.51,
+    669.042
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_075"
+   }
+  },
+  {
+   "id": "lbl_bld_house_076",
+   "name": "House 76",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_076.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_076"
+   },
+   "text": "House 76",
+   "entity": "bld_house_076",
+   "entity_type": "buildings",
+   "anchor": [
+    1102.95,
+    936.3,
+    666.168
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_authority",
+    "ring": "authority",
+    "group": "labels",
+    "id": "lbl_bld_house_076"
+   }
+  },
+  {
+   "id": "lbl_bld_house_077",
+   "name": "House 77",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_077.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_077"
+   },
+   "text": "House 77",
+   "entity": "bld_house_077",
+   "entity_type": "buildings",
+   "anchor": [
+    839.2,
+    902.6,
+    674.247
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_077"
+   }
+  },
+  {
+   "id": "lbl_bld_house_078",
+   "name": "House 78",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_078.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_078"
+   },
+   "text": "House 78",
+   "entity": "bld_house_078",
+   "entity_type": "buildings",
+   "anchor": [
+    1376.059,
+    903.347,
+    666.322
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_078"
+   }
+  },
+  {
+   "id": "lbl_bld_house_079",
+   "name": "House 79",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_079.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_079"
+   },
+   "text": "House 79",
+   "entity": "bld_house_079",
+   "entity_type": "buildings",
+   "anchor": [
+    940.75,
+    910.9,
+    676.434
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_079"
+   }
+  },
+  {
+   "id": "lbl_bld_house_080",
+   "name": "House 80",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_080.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_080"
+   },
+   "text": "House 80",
+   "entity": "bld_house_080",
+   "entity_type": "buildings",
+   "anchor": [
+    1042.15,
+    909.0,
+    671.743
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_authority",
+    "ring": "authority",
+    "group": "labels",
+    "id": "lbl_bld_house_080"
+   }
+  },
+  {
+   "id": "lbl_bld_house_081",
+   "name": "House 81",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_081.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_081"
+   },
+   "text": "House 81",
+   "entity": "bld_house_081",
+   "entity_type": "buildings",
+   "anchor": [
+    1320.2,
+    909.75,
+    665.976
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_081"
+   }
+  },
+  {
+   "id": "lbl_bld_house_082",
+   "name": "House 82",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_082.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_082"
+   },
+   "text": "House 82",
+   "entity": "bld_house_082",
+   "entity_type": "buildings",
+   "anchor": [
+    896.66,
+    922.519,
+    674.061
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_082"
+   }
+  },
+  {
+   "id": "lbl_bld_house_083",
+   "name": "House 83",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_083.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_083"
+   },
+   "text": "House 83",
+   "entity": "bld_house_083",
+   "entity_type": "buildings",
+   "anchor": [
+    982.5,
+    922.25,
+    665.678
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_083"
+   }
+  },
+  {
+   "id": "lbl_bld_house_084",
+   "name": "House 84",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_084.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_084"
+   },
+   "text": "House 84",
+   "entity": "bld_house_084",
+   "entity_type": "buildings",
+   "anchor": [
+    882.973,
+    929.839,
+    662.551
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_084"
+   }
+  },
+  {
+   "id": "lbl_bld_house_085",
+   "name": "House 85",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_085.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_085"
+   },
+   "text": "House 85",
+   "entity": "bld_house_085",
+   "entity_type": "buildings",
+   "anchor": [
+    956.2,
+    940.35,
+    674.306
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_085"
+   }
+  },
+  {
+   "id": "lbl_bld_house_086",
+   "name": "House 86",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_086.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_086"
+   },
+   "text": "House 86",
+   "entity": "bld_house_086",
+   "entity_type": "buildings",
+   "anchor": [
+    831.849,
+    947.51,
+    663.241
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_086"
+   }
+  },
+  {
+   "id": "lbl_bld_house_087",
+   "name": "House 87",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_087.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_087"
+   },
+   "text": "House 87",
+   "entity": "bld_house_087",
+   "entity_type": "buildings",
+   "anchor": [
+    1271.6,
+    948.55,
+    671.607
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_087"
+   }
+  },
+  {
+   "id": "lbl_bld_house_088",
+   "name": "House 88",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_088.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_088"
+   },
+   "text": "House 88",
+   "entity": "bld_house_088",
+   "entity_type": "buildings",
+   "anchor": [
+    1351.75,
+    953.85,
+    664.918
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_088"
+   }
+  },
+  {
+   "id": "lbl_bld_house_089",
+   "name": "House 89",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_089.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_089"
+   },
+   "text": "House 89",
+   "entity": "bld_house_089",
+   "entity_type": "buildings",
+   "anchor": [
+    917.25,
+    956.5,
+    673.784
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_089"
+   }
+  },
+  {
+   "id": "lbl_bld_house_090",
+   "name": "House 90",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_090.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_090"
+   },
+   "text": "House 90",
+   "entity": "bld_house_090",
+   "entity_type": "buildings",
+   "anchor": [
+    1220.95,
+    957.8,
+    656.845
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_090"
+   }
+  },
+  {
+   "id": "lbl_bld_house_091",
+   "name": "House 91",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_091.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_091"
+   },
+   "text": "House 91",
+   "entity": "bld_house_091",
+   "entity_type": "buildings",
+   "anchor": [
+    1051.8,
+    962.95,
+    661.49
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_091"
+   }
+  },
+  {
+   "id": "lbl_bld_house_092",
+   "name": "House 92",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_092.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_092"
+   },
+   "text": "House 92",
+   "entity": "bld_house_092",
+   "entity_type": "buildings",
+   "anchor": [
+    808.852,
+    969.2,
+    666.457
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_092"
+   }
+  },
+  {
+   "id": "lbl_bld_house_093",
+   "name": "House 93",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_093.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_093"
+   },
+   "text": "House 93",
+   "entity": "bld_house_093",
+   "entity_type": "buildings",
+   "anchor": [
+    928.077,
+    970.834,
+    661.622
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_093"
+   }
+  },
+  {
+   "id": "lbl_bld_house_094",
+   "name": "House 94",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_094.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_094"
+   },
+   "text": "House 94",
+   "entity": "bld_house_094",
+   "entity_type": "buildings",
+   "anchor": [
+    1103.478,
+    977.754,
+    666.466
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_094"
+   }
+  },
+  {
+   "id": "lbl_bld_house_095",
+   "name": "House 95",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_095.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_095"
+   },
+   "text": "House 95",
+   "entity": "bld_house_095",
+   "entity_type": "buildings",
+   "anchor": [
+    1365.92,
+    979.135,
+    665.02
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_095"
+   }
+  },
+  {
+   "id": "lbl_bld_house_096",
+   "name": "House 96",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_096.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_096"
+   },
+   "text": "House 96",
+   "entity": "bld_house_096",
+   "entity_type": "buildings",
+   "anchor": [
+    987.5,
+    981.85,
+    660.821
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_096"
+   }
+  },
+  {
+   "id": "lbl_bld_house_097",
+   "name": "House 97",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_097.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_097"
+   },
+   "text": "House 97",
+   "entity": "bld_house_097",
+   "entity_type": "buildings",
+   "anchor": [
+    1297.773,
+    981.986,
+    660.621
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_097"
+   }
+  },
+  {
+   "id": "lbl_bld_house_098",
+   "name": "House 98",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_098.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_098"
+   },
+   "text": "House 98",
+   "entity": "bld_house_098",
+   "entity_type": "buildings",
+   "anchor": [
+    1231.468,
+    982.99,
+    665.824
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_098"
+   }
+  },
+  {
+   "id": "lbl_bld_house_099",
+   "name": "House 99",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_099.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_099"
+   },
+   "text": "House 99",
+   "entity": "bld_house_099",
+   "entity_type": "buildings",
+   "anchor": [
+    1039.95,
+    990.05,
+    659.709
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_099"
+   }
+  },
+  {
+   "id": "lbl_bld_house_100",
+   "name": "House 100",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_100.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_100"
+   },
+   "text": "House 100",
+   "entity": "bld_house_100",
+   "entity_type": "buildings",
+   "anchor": [
+    1240.41,
+    1002.268,
+    656.841
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_100"
+   }
+  },
+  {
+   "id": "lbl_bld_house_101",
+   "name": "House 101",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_101.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_101"
+   },
+   "text": "House 101",
+   "entity": "bld_house_101",
+   "entity_type": "buildings",
+   "anchor": [
+    1312.238,
+    1002.781,
+    672.217
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_101"
+   }
+  },
+  {
+   "id": "lbl_bld_house_102",
+   "name": "House 102",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_102.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_102"
+   },
+   "text": "House 102",
+   "entity": "bld_house_102",
+   "entity_type": "buildings",
+   "anchor": [
+    1104.15,
+    1003.55,
+    653.232
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_102"
+   }
+  },
+  {
+   "id": "lbl_bld_house_103",
+   "name": "House 103",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_103.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_103"
+   },
+   "text": "House 103",
+   "entity": "bld_house_103",
+   "entity_type": "buildings",
+   "anchor": [
+    1292.3,
+    1020.3,
+    666.655
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_103"
+   }
+  },
+  {
+   "id": "lbl_bld_house_104",
+   "name": "House 104",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_104.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_104"
+   },
+   "text": "House 104",
+   "entity": "bld_house_104",
+   "entity_type": "buildings",
+   "anchor": [
+    1024.8,
+    1011.8,
+    671.173
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_104"
+   }
+  },
+  {
+   "id": "lbl_bld_house_105",
+   "name": "House 105",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_105.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_105"
+   },
+   "text": "House 105",
+   "entity": "bld_house_105",
+   "entity_type": "buildings",
+   "anchor": [
+    950.7,
+    1021.35,
+    670.707
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_105"
+   }
+  },
+  {
+   "id": "lbl_bld_house_106",
+   "name": "House 106",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_106.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_106"
+   },
+   "text": "House 106",
+   "entity": "bld_house_106",
+   "entity_type": "buildings",
+   "anchor": [
+    1259.1,
+    1021.5,
+    655.213
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_106"
+   }
+  },
+  {
+   "id": "lbl_bld_house_107",
+   "name": "House 107",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_107.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_107"
+   },
+   "text": "House 107",
+   "entity": "bld_house_107",
+   "entity_type": "buildings",
+   "anchor": [
+    1241.663,
+    1029.233,
+    653.21
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_107"
+   }
+  },
+  {
+   "id": "lbl_bld_house_108",
+   "name": "House 108",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_108.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_108"
+   },
+   "text": "House 108",
+   "entity": "bld_house_108",
+   "entity_type": "buildings",
+   "anchor": [
+    1105.249,
+    1031.944,
+    652.923
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_108"
+   }
+  },
+  {
+   "id": "lbl_bld_house_109",
+   "name": "House 109",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_109.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_109"
+   },
+   "text": "House 109",
+   "entity": "bld_house_109",
+   "entity_type": "buildings",
+   "anchor": [
+    1222.65,
+    1036.35,
+    651.578
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_109"
+   }
+  },
+  {
+   "id": "lbl_bld_house_110",
+   "name": "House 110",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_110.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_110"
+   },
+   "text": "House 110",
+   "entity": "bld_house_110",
+   "entity_type": "buildings",
+   "anchor": [
+    982.049,
+    1072.71,
+    658.679
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_110"
+   }
+  },
+  {
+   "id": "lbl_bld_house_111",
+   "name": "House 111",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_111.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_111"
+   },
+   "text": "House 111",
+   "entity": "bld_house_111",
+   "entity_type": "buildings",
+   "anchor": [
+    1240.033,
+    1073.283,
+    648.534
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_111"
+   }
+  },
+  {
+   "id": "lbl_bld_house_112",
+   "name": "House 112",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_112.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_112"
+   },
+   "text": "House 112",
+   "entity": "bld_house_112",
+   "entity_type": "buildings",
+   "anchor": [
+    1076.15,
+    1071.7,
+    655.202
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_112"
+   }
+  },
+  {
+   "id": "lbl_bld_house_113",
+   "name": "House 113",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_house_113.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_house_113"
+   },
+   "text": "House 113",
+   "entity": "bld_house_113",
+   "entity_type": "buildings",
+   "anchor": [
+    1272.808,
+    1088.566,
+    649.7
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_house_113"
+   }
+  },
+  {
+   "id": "lbl_bld_inn",
+   "name": "Inn",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_inn.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_inn"
+   },
+   "text": "Inn",
+   "entity": "bld_inn",
+   "entity_type": "buildings",
+   "anchor": [
+    1349.586,
+    1075.067,
+    670.29
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_inn"
+   }
+  },
+  {
+   "id": "lbl_bld_lockup",
+   "name": "Lockup",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_lockup.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_lockup"
+   },
+   "text": "Lockup",
+   "entity": "bld_lockup",
+   "entity_type": "buildings",
+   "anchor": [
+    1057.242,
+    716.702,
+    665.802
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_authority",
+    "ring": "authority",
+    "group": "labels",
+    "id": "lbl_bld_lockup"
+   }
+  },
+  {
+   "id": "lbl_bld_magistrate_court",
+   "name": "Magistrate's Court",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_magistrate_court.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_magistrate_court"
+   },
+   "text": "Magistrate's Court",
+   "entity": "bld_magistrate_court",
+   "entity_type": "buildings",
+   "anchor": [
+    1047.431,
+    840.007,
+    675.942
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_authority",
+    "ring": "authority",
+    "group": "labels",
+    "id": "lbl_bld_magistrate_court"
+   }
+  },
+  {
+   "id": "lbl_bld_meeting_hall",
+   "name": "Meeting Hall",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_meeting_hall.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_meeting_hall"
+   },
+   "text": "Meeting Hall",
+   "entity": "bld_meeting_hall",
+   "entity_type": "buildings",
+   "anchor": [
+    1050.946,
+    662.292,
+    671.634
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_authority",
+    "ring": "authority",
+    "group": "labels",
+    "id": "lbl_bld_meeting_hall"
+   }
+  },
+  {
+   "id": "lbl_bld_mill",
+   "name": "Mill",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_mill.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_mill"
+   },
+   "text": "Mill",
+   "entity": "bld_mill",
+   "entity_type": "buildings",
+   "anchor": [
+    1232.35,
+    1189.7,
+    658.895
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_farm",
+    "ring": "farm",
+    "group": "labels",
+    "id": "lbl_bld_mill"
+   }
+  },
+  {
+   "id": "lbl_bld_records_house",
+   "name": "Records House",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_records_house.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_records_house"
+   },
+   "text": "Records House",
+   "entity": "bld_records_house",
+   "entity_type": "buildings",
+   "anchor": [
+    1092.7,
+    655.95,
+    677.319
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_authority",
+    "ring": "authority",
+    "group": "labels",
+    "id": "lbl_bld_records_house"
+   }
+  },
+  {
+   "id": "lbl_bld_shed_079",
+   "name": "Shed 79",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_shed_079.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_shed_079"
+   },
+   "text": "Shed 79",
+   "entity": "bld_shed_079",
+   "entity_type": "buildings",
+   "anchor": [
+    956.836,
+    898.811,
+    663.224
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_shed_079"
+   }
+  },
+  {
+   "id": "lbl_bld_shed_092",
+   "name": "Shed 92",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_shed_092.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_shed_092"
+   },
+   "text": "Shed 92",
+   "entity": "bld_shed_092",
+   "entity_type": "buildings",
+   "anchor": [
+    810.4,
+    996.85,
+    661.14
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_shed_092"
+   }
+  },
+  {
+   "id": "lbl_bld_shed_109",
+   "name": "Shed 109",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_shed_109.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_shed_109"
+   },
+   "text": "Shed 109",
+   "entity": "bld_shed_109",
+   "entity_type": "buildings",
+   "anchor": [
+    1220.45,
+    1015.85,
+    650.7
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_shed_109"
+   }
+  },
+  {
+   "id": "lbl_bld_shed_112",
+   "name": "Shed 112",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_shed_112.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_shed_112"
+   },
+   "text": "Shed 112",
+   "entity": "bld_shed_112",
+   "entity_type": "buildings",
+   "anchor": [
+    1072.45,
+    1094.95,
+    647.884
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_shed_112"
+   }
+  },
+  {
+   "id": "lbl_bld_smithy",
+   "name": "Smithy",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_smithy.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_smithy"
+   },
+   "text": "Smithy",
+   "entity": "bld_smithy",
+   "entity_type": "buildings",
+   "anchor": [
+    1363.55,
+    572.4,
+    677.128
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_smithy"
+   }
+  },
+  {
+   "id": "lbl_bld_stables",
+   "name": "Stables",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_stables.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_stables"
+   },
+   "text": "Stables",
+   "entity": "bld_stables",
+   "entity_type": "buildings",
+   "anchor": [
+    1299.05,
+    1119.05,
+    651.926
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "labels",
+    "id": "lbl_bld_stables"
+   }
+  },
+  {
+   "id": "lbl_bld_tax_office",
+   "name": "Tax and Permit Office",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_tax_office.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_tax_office"
+   },
+   "text": "Tax and Permit Office",
+   "entity": "bld_tax_office",
+   "entity_type": "buildings",
+   "anchor": [
+    1234.55,
+    731.45,
+    669.132
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_authority",
+    "ring": "authority",
+    "group": "labels",
+    "id": "lbl_bld_tax_office"
+   }
+  },
+  {
+   "id": "lbl_bld_treasury",
+   "name": "Town Treasury",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_treasury.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_treasury"
+   },
+   "text": "Town Treasury",
+   "entity": "bld_treasury",
+   "entity_type": "buildings",
+   "anchor": [
+    968.473,
+    807.454,
+    679.178
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_authority",
+    "ring": "authority",
+    "group": "labels",
+    "id": "lbl_bld_treasury"
+   }
+  },
+  {
+   "id": "lbl_bld_warden_hall",
+   "name": "Warden's Hall",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_warden_hall.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_warden_hall"
+   },
+   "text": "Warden's Hall",
+   "entity": "bld_warden_hall",
+   "entity_type": "buildings",
+   "anchor": [
+    1041.9,
+    746.0,
+    679.992
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_authority",
+    "ring": "authority",
+    "group": "labels",
+    "id": "lbl_bld_warden_hall"
+   }
+  },
+  {
+   "id": "lbl_bld_wardens_barracks",
+   "name": "Wardens' Barracks",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/buildings/bld_wardens_barracks.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_bld_wardens_barracks"
+   },
+   "text": "Wardens' Barracks",
+   "entity": "bld_wardens_barracks",
+   "entity_type": "buildings",
+   "anchor": [
+    981.239,
+    760.255,
+    680.678
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_authority",
+    "ring": "authority",
+    "group": "labels",
+    "id": "lbl_bld_wardens_barracks"
+   }
+  },
+  {
+   "id": "lbl_wat_river",
+   "name": "The river (name not canon)",
+   "kind": "label",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/water.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:lbl_wat_river"
+   },
+   "text": "The river (name not canon)",
+   "entity": "wat_river",
+   "entity_type": "water",
+   "anchor": [
+    1146.1,
+    750.7,
+    646.756
+   ],
+   "tag_height_ft": 0.0,
+   "tags": {
+    "layer": "labels",
+    "subtype": "label",
+    "district": "dis_authority",
+    "ring": "authority",
+    "group": "labels",
+    "id": "lbl_wat_river"
+   }
+  }
+ ]
+}

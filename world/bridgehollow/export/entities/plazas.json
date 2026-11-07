@@ -1,0 +1,353 @@
+{
+ "format": "varrenmoor-world-pack",
+ "schema_version": "1.0",
+ "type": "plazas",
+ "units": "feet",
+ "items": [
+  {
+   "id": "sqr_3",
+   "name": "Square 3",
+   "kind": "square",
+   "status": "proposed",
+   "notes": "Open plaza grown at a junction.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/districts.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:sqr_3"
+   },
+   "polygon": [
+    [
+     924.4,
+     984.6
+    ],
+    [
+     918.1,
+     975.9
+    ],
+    [
+     909.7,
+     969.1
+    ],
+    [
+     899.9,
+     964.5
+    ],
+    [
+     889.0,
+     962.5
+    ],
+    [
+     877.9,
+     963.4
+    ],
+    [
+     867.3,
+     967.2
+    ],
+    [
+     857.8,
+     973.7
+    ],
+    [
+     850.2,
+     982.5
+    ],
+    [
+     845.1,
+     993.2
+    ],
+    [
+     842.9,
+     1004.9
+    ],
+    [
+     844.6,
+     1016.8
+    ],
+    [
+     849.4,
+     1027.8
+    ],
+    [
+     856.8,
+     1037.2
+    ],
+    [
+     866.3,
+     1044.3
+    ],
+    [
+     877.8,
+     1046.8
+    ],
+    [
+     889.0,
+     1046.1
+    ],
+    [
+     899.1,
+     1042.5
+    ],
+    [
+     907.4,
+     1036.8
+    ],
+    [
+     916.8,
+     1032.7
+    ],
+    [
+     925.2,
+     1025.8
+    ],
+    [
+     931.7,
+     1016.4
+    ],
+    [
+     935.7,
+     1004.9
+    ],
+    [
+     928.2,
+     994.5
+    ]
+   ],
+   "area_ft2": 5736.69,
+   "ring": null,
+   "elevation_ft": 647.4,
+   "label_point": null,
+   "base_elevation_ft": 647.4,
+   "surface": {
+    "material": "mat_cobble",
+    "tile_ft": 14
+   },
+   "tags": {
+    "layer": "plazas",
+    "subtype": "square",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "plazas",
+    "id": "sqr_3"
+   }
+  },
+  {
+   "id": "sqr_court",
+   "name": "Court Square",
+   "kind": "square",
+   "status": "proposed",
+   "notes": "Open plaza grown at a junction.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/districts.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:sqr_court"
+   },
+   "polygon": [
+    [
+     1082.4,
+     732.1
+    ],
+    [
+     1072.3,
+     742.3
+    ],
+    [
+     1065.4,
+     754.3
+    ],
+    [
+     1062.1,
+     767.2
+    ],
+    [
+     1062.6,
+     792.7
+    ],
+    [
+     1066.4,
+     805.2
+    ],
+    [
+     1073.4,
+     816.6
+    ],
+    [
+     1083.5,
+     826.0
+    ],
+    [
+     1096.5,
+     830.2
+    ],
+    [
+     1106.7,
+     830.8
+    ],
+    [
+     1101.2,
+     757.7
+    ],
+    [
+     1103.8,
+     727.3
+    ],
+    [
+     1096.0,
+     727.7
+    ]
+   ],
+   "area_ft2": 3475.335,
+   "ring": null,
+   "elevation_ft": 646.9,
+   "label_point": null,
+   "base_elevation_ft": 646.9,
+   "surface": {
+    "material": "mat_cobble",
+    "tile_ft": 14
+   },
+   "tags": {
+    "layer": "plazas",
+    "subtype": "square",
+    "district": "dis_authority",
+    "ring": "authority",
+    "group": "plazas",
+    "id": "sqr_court"
+   }
+  },
+  {
+   "id": "sqr_market",
+   "name": "Market Square",
+   "kind": "square",
+   "status": "proposed",
+   "notes": "Open plaza grown at a junction.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow/districts.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow:sqr_market"
+   },
+   "polygon": [
+    [
+     1308.6,
+     767.4
+    ],
+    [
+     1299.5,
+     758.2
+    ],
+    [
+     1288.7,
+     751.9
+    ],
+    [
+     1277.4,
+     747.3
+    ],
+    [
+     1265.3,
+     745.8
+    ],
+    [
+     1253.3,
+     747.5
+    ],
+    [
+     1242.1,
+     752.2
+    ],
+    [
+     1231.5,
+     758.6
+    ],
+    [
+     1222.7,
+     767.8
+    ],
+    [
+     1216.5,
+     779.3
+    ],
+    [
+     1213.5,
+     792.4
+    ],
+    [
+     1217.4,
+     805.2
+    ],
+    [
+     1224.4,
+     816.1
+    ],
+    [
+     1233.5,
+     824.2
+    ],
+    [
+     1253.8,
+     835.4
+    ],
+    [
+     1265.3,
+     838.8
+    ],
+    [
+     1277.8,
+     839.0
+    ],
+    [
+     1290.3,
+     835.7
+    ],
+    [
+     1299.3,
+     826.4
+    ],
+    [
+     1305.2,
+     815.5
+    ],
+    [
+     1308.0,
+     803.8
+    ],
+    [
+     1307.6,
+     792.4
+    ],
+    [
+     1315.2,
+     779.0
+    ]
+   ],
+   "area_ft2": 6982.15,
+   "ring": null,
+   "elevation_ft": 651.7,
+   "label_point": null,
+   "base_elevation_ft": 651.7,
+   "surface": {
+    "material": "mat_cobble",
+    "tile_ft": 14
+   },
+   "tags": {
+    "layer": "plazas",
+    "subtype": "square",
+    "district": "dis_authority",
+    "ring": "authority",
+    "group": "plazas",
+    "id": "sqr_market"
+   }
+  }
+ ]
+}
