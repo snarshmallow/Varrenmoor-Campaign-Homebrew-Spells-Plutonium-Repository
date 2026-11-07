@@ -13,6 +13,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import terrain as T  # noqa: E402
 import contours as C  # noqa: E402
+import terrain_smooth as TS  # noqa: E402
 
 REPO = T.REPO
 
@@ -105,6 +106,7 @@ def metrics(h, meta, water_json=None):
     else:
         rise_nr = rise
     out["rise_slope_mean_p95_max"] = [float(s[rise_nr].mean()), float(np.percentile(s[rise_nr], 95)), float(s[rise_nr].max())]
+    out["terracing"] = TS.terrace_metrics(h, cell)
     out["wall_slope_p50_p95"] = [float(np.percentile(s[yy < 300], 50)), float(np.percentile(s[yy < 300], 95))]
     return out
 
@@ -125,4 +127,8 @@ if __name__ == "__main__":
     contour_image(h, meta, os.path.join(a.out, "contours.png"), a.minor, a.index)
     profiles(h, meta, os.path.join(a.out, "profiles.png"))
     relief(h, meta, os.path.join(a.out, "relief.png"))
-    print(json.dumps(metrics(h, meta, os.path.join(REPO, "world", a.place, "water.json")), indent=1))
+    m = metrics(h, meta, os.path.join(REPO, "world", a.place, "water.json"))
+    print(json.dumps(m, indent=1))
+    if not m["terracing"]["terrace_ok"]:
+        print("FAIL: terracing / stair-step score above the limits", TS.TERRACE_LIMITS)
+        sys.exit(1)

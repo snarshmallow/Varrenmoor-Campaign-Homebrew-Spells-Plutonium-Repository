@@ -1,0 +1,39 @@
+{
+ "id": "bld_shed_035",
+ "name": "Shed 35",
+ "kind": "shed",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    998.0,
+    691.6
+   ],
+   [
+    990.8,
+    690.3
+   ],
+   [
+    989.8,
+    696.4
+   ],
+   [
+    996.9,
+    697.7
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 658.0,
+ "site_slope": 0.075,
+ "site_relief_ft": 0.6
+}

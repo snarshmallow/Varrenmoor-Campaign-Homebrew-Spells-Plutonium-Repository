@@ -13,7 +13,8 @@ natural block (all keys optional, defaults shown):
   rugged {octaves 6, gain 0.5, lacunarity 2.1, scale_ft, amp_ft} multifractal ridged noise, rotated per octave
   plateaus [{name, polygon [[x,y],..], elev_ft (absolute) | rel_ft (above base plane), tilt [dx,dy], edge_ft 70,
              noise_ft 3, strength 0.95}]   irregular (Chaikin + warp) benches blended into the terrain
-  terraces {period_ft 26, strength 0.4, min_slope 0.28, max_slope 0.7}  benches on steep faces
+  terraces {period_ft 26, strength 0.0, min_slope 0.28, max_slope 0.7}  benches on steep faces (off by default: they quantise elevation = terracing)
+  smooth {enabled true, ...}  terrain_smooth.finish(): slope-adaptive along-contour smoothing + cliff noise (keys in terrain_smooth.DEFAULTS)
   hydraulic {iterations 28, K 0.06, m 0.5, Kc 1.4, deposit 0.55, max_incise_ft 38, diffusion 0.08}
   thermal {iterations 140, talus_low 0.68, talus_high 1.15, rate 0.5, jitter 0.22}   angle of repose 34 deg at the foot
   hills_south {y_start 1150, amp_ft 26, scale_ft 300}  rounded rolling foothills at the south
@@ -383,12 +384,12 @@ def _defaults(nz):
              spurs=dict(count_per_1000ft=2.4, length_ft=[220, 430], height_frac=[0.35, 0.62], width_ft=[90, 150],
                         inward=0.85, clear_river_ft=160, clear_points=[]),
              rugged=dict(octaves=6, gain=0.5, lacunarity=2.1),
-             plateaus=[], terraces=dict(period_ft=26.0, strength=0.4, min_slope=0.28, max_slope=0.7),
+             plateaus=[], terraces=dict(period_ft=26.0, strength=0.0, min_slope=0.28, max_slope=0.7),
              hydraulic=dict(iterations=28, K=0.06, m=0.5, Kc=1.4, deposit=0.55, max_incise_ft=38.0, diffusion=0.08),
              thermal=dict(iterations=140, talus_low=0.68, talus_high=1.15, rate=0.5, jitter=0.22),
              hills_south=dict(y_start=1150.0, amp_ft=26.0, scale_ft=300.0),
              basin=dict(amp_ft=3.2, scale_ft=260.0, mounds=16, mound_ft=[1.5, 5.0], bowl_ft=7.0, fan=None),
-             keep_clear=[], river_bed=True, final_smooth_cells=0.8)
+             keep_clear=[], river_bed=True, final_smooth_cells=0.8, smooth=dict())
     for k, v in nz.items():
         if isinstance(v, dict) and isinstance(d.get(k), dict):
             d[k].update(v)
@@ -645,6 +646,11 @@ def generate(spec, cell_ft=None, seed=None, verbose=False):
     # ---- final smoothing then river bed enforcement
     if nat["final_smooth_cells"]:
         h = ndi.gaussian_filter(h, nat["final_smooth_cells"], mode="nearest")
+    if nat["smooth"].get("enabled", True):
+        import terrain_smooth
+        h = terrain_smooth.finish(h, cell, nat["smooth"], keep=keep, seed=seed)
+    if nat.get('debug_stages'):
+        STAGES['smooth'] = np.asarray(h).copy()
     if nat["river_bed"]:
         for vi, v in enumerate(spec.get("valleys", [])):
             if v.get("river"):
@@ -699,6 +705,11 @@ def enforce_river(h, X, Y, base, v, rng, nat, cell):
         best_s = np.where(m, sl[ia] + t * (sl[ib] - sl[ia]), best_s)
     d = best_d.reshape(X.shape)
     bedg = np.interp(best_s, sl, bed_s).reshape(X.shape)
+    # Far from the channel the nearest-river-point (hence its arc position and bed height) jumps across the medial axis of
+    # every bend and past the ends: that made 10-70 ft cliff creases ("saw teeth") up to 800 ft away. Blend to a heavily
+    # smoothed bed field outside the banks (the channel itself keeps the exact bed).
+    w_far = sstep((d - 60.0) / 220.0)
+    bedg = bedg * (1 - w_far) + ndi.gaussian_filter(bedg, 12.0, mode="nearest") * w_far
     side = np.interp(best_s, sl, ndi.uniform_filter1d(R[:, 3], 90, mode="nearest")).reshape(X.shape)           # spec side slope at this reach of the river
     tb = sstep((0.45 - side) / 0.22)                                    # 0 in the gorge .. 1 in the basin (continuous)
     bank = side * (1 - 0.65 * tb)                                       # gentle (<=0.1) banks in the basin, steep in the gorge
@@ -711,6 +722,10 @@ def enforce_river(h, X, Y, base, v, rng, nat, cell):
     hn = -k * np.log(np.exp(-h / k) + np.exp(-np.minimum(tgt, h + 200) / k))        # cut only, no levees
     wc = 1.0 - sstep((d - 0.35 * core) / (0.4 * core + 6.0))
     out = hn * (1 - wc) + bedg * wc                                   # exact bed in the channel core
+    # the cut (<= 0) is smoothed away from the channel so the carve never leaves a crease or step in the walls
+    cut = out - h
+    ws = sstep((d - 150.0) / 100.0)       # banks and the floodplain next to the channel (the town) keep the designed cut
+    out = h + cut * (1 - ws) + ndi.gaussian_filter(cut, 2.0, mode="nearest") * ws
     # relax grid stair-steps around the channel without moving the bed noticeably
     wr = 1.0 - sstep((d - core) / 70.0)
     sm = ndi.gaussian_filter(out, 1.2, mode="nearest")

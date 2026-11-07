@@ -7,20 +7,20 @@
   "type": "polygon",
   "points": [
    [
-    1400.8,
-    719.6
+    1314.9,
+    735.5
    ],
    [
-    1377.2,
-    717.8
+    1303.6,
+    744.1
    ],
    [
-    1375.9,
-    735.4
+    1310.7,
+    753.3
    ],
    [
-    1399.4,
-    737.2
+    1321.9,
+    744.7
    ]
   ]
  },
@@ -30,10 +30,10 @@
   "model3d": null,
   "ai_layer": null
  },
- "floors": 2,
+ "floors": 1,
  "rooms": [],
  "doors": [],
- "elevation_ft": 663.6,
- "site_slope": 0.048,
- "site_relief_ft": 0.9
+ "elevation_ft": 659.3,
+ "site_slope": 0.062,
+ "site_relief_ft": 1.0
 }

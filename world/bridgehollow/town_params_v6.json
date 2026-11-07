@@ -1,0 +1,691 @@
+{
+ "_note": "One generation of the Bridgehollow town v5 (all proposed). Feet, y down. area_ft is the terrain-fitted lasso (python illustrator/generators/town_area.py --write-params); edit it freely. Run: python illustrator/generators/town_gen.py",
+ "place": "bridgehollow",
+ "seed": 1103,
+ "detail": 2,
+ "view_preset": "town",
+ "area_ft": [
+  [
+   1385.1,
+   526.3
+  ],
+  [
+   1353.7,
+   543.5
+  ],
+  [
+   1326.5,
+   567.1
+  ],
+  [
+   1298.8,
+   590.1
+  ],
+  [
+   1265.9,
+   603.8
+  ],
+  [
+   1230.8,
+   598.1
+  ],
+  [
+   1199.7,
+   580.1
+  ],
+  [
+   1168.4,
+   562.3
+  ],
+  [
+   1134.3,
+   551.0
+  ],
+  [
+   1098.7,
+   545.4
+  ],
+  [
+   1062.8,
+   542.5
+  ],
+  [
+   1026.8,
+   542.5
+  ],
+  [
+   991.5,
+   549.2
+  ],
+  [
+   958.8,
+   564.1
+  ],
+  [
+   928.8,
+   584.0
+  ],
+  [
+   899.7,
+   605.3
+  ],
+  [
+   871.1,
+   627.2
+  ],
+  [
+   843.7,
+   650.6
+  ],
+  [
+   818.9,
+   676.7
+  ],
+  [
+   798.1,
+   706.1
+  ],
+  [
+   781.8,
+   738.1
+  ],
+  [
+   770.4,
+   772.3
+  ],
+  [
+   765.7,
+   807.9
+  ],
+  [
+   768.5,
+   843.8
+  ],
+  [
+   776.3,
+   878.9
+  ],
+  [
+   785.8,
+   913.7
+  ],
+  [
+   794.0,
+   948.8
+  ],
+  [
+   798.0,
+   984.5
+  ],
+  [
+   796.6,
+   1020.5
+  ],
+  [
+   790.5,
+   1056.0
+  ],
+  [
+   783.4,
+   1091.3
+  ],
+  [
+   781.3,
+   1127.2
+  ],
+  [
+   789.7,
+   1162.0
+  ],
+  [
+   806.7,
+   1193.7
+  ],
+  [
+   825.7,
+   1224.4
+  ],
+  [
+   841.0,
+   1256.9
+  ],
+  [
+   851.3,
+   1291.4
+  ],
+  [
+   859.9,
+   1326.4
+  ],
+  [
+   871.5,
+   1360.5
+  ],
+  [
+   889.8,
+   1391.4
+  ],
+  [
+   914.8,
+   1417.2
+  ],
+  [
+   944.7,
+   1437.2
+  ],
+  [
+   978.4,
+   1449.8
+  ],
+  [
+   1013.9,
+   1455.3
+  ],
+  [
+   1049.9,
+   1455.7
+  ],
+  [
+   1085.6,
+   1451.0
+  ],
+  [
+   1119.6,
+   1439.2
+  ],
+  [
+   1149.1,
+   1418.8
+  ],
+  [
+   1169.7,
+   1389.7
+  ],
+  [
+   1172.6,
+   1354.3
+  ],
+  [
+   1168.6,
+   1318.5
+  ],
+  [
+   1181.2,
+   1285.5
+  ],
+  [
+   1211.8,
+   1268.3
+  ],
+  [
+   1245.7,
+   1277.5
+  ],
+  [
+   1266.0,
+   1306.2
+  ],
+  [
+   1264.2,
+   1341.8
+  ],
+  [
+   1258.7,
+   1377.1
+  ],
+  [
+   1272.5,
+   1409.8
+  ],
+  [
+   1299.6,
+   1433.2
+  ],
+  [
+   1334.0,
+   1441.8
+  ],
+  [
+   1367.1,
+   1429.3
+  ],
+  [
+   1389.4,
+   1401.5
+  ],
+  [
+   1394.7,
+   1366.4
+  ],
+  [
+   1385.8,
+   1331.5
+  ],
+  [
+   1381.7,
+   1296.1
+  ],
+  [
+   1395.4,
+   1263.2
+  ],
+  [
+   1419.4,
+   1236.4
+  ],
+  [
+   1448.7,
+   1215.6
+  ],
+  [
+   1482.3,
+   1203.3
+  ],
+  [
+   1518.2,
+   1201.5
+  ],
+  [
+   1554.0,
+   1205.6
+  ],
+  [
+   1589.9,
+   1207.6
+  ],
+  [
+   1625.1,
+   1200.7
+  ],
+  [
+   1656.2,
+   1182.8
+  ],
+  [
+   1680.1,
+   1156.2
+  ],
+  [
+   1691.2,
+   1122.3
+  ],
+  [
+   1683.1,
+   1087.7
+  ],
+  [
+   1663.6,
+   1057.4
+  ],
+  [
+   1640.9,
+   1029.4
+  ],
+  [
+   1618.2,
+   1001.5
+  ],
+  [
+   1596.1,
+   973.0
+  ],
+  [
+   1575.1,
+   943.8
+  ],
+  [
+   1555.3,
+   913.7
+  ],
+  [
+   1536.7,
+   882.8
+  ],
+  [
+   1519.6,
+   851.1
+  ],
+  [
+   1505.7,
+   817.9
+  ],
+  [
+   1497.3,
+   782.9
+  ],
+  [
+   1494.6,
+   747.0
+  ],
+  [
+   1494.6,
+   711.0
+  ],
+  [
+   1495.9,
+   675.0
+  ],
+  [
+   1496.8,
+   639.0
+  ],
+  [
+   1491.7,
+   603.5
+  ],
+  [
+   1476.0,
+   571.2
+  ],
+  [
+   1451.5,
+   544.9
+  ],
+  [
+   1420.5,
+   527.1
+  ]
+ ],
+ "output": {
+  "streets": true,
+  "plazas": true,
+  "blocks": false,
+  "buildings": true,
+  "fields": true,
+  "districts": true
+ },
+ "limits": {
+  "max_street_grade": 0.08,
+  "max_main_grade": 0.04,
+  "max_build_slope": 0.19,
+  "max_build_relief_ft": 6.0,
+  "max_field_slope": 0.13,
+  "water_margin_ft": 14,
+  "below_datum_is_water": true,
+  "bank_fill_ft": 18,
+  "field_smooth_cells": 1.0
+ },
+ "entry": {
+  "point": [
+   1290,
+   1480
+  ],
+  "via": [
+   [
+    1290,
+    900
+   ]
+  ],
+  "name": "Pilgrim Road",
+  "id": "pilgrim_road",
+  "width_ft": 30,
+  "bridge_width_ft": 26,
+  "grade_weight": 6.0,
+  "grade_exp": 3.0
+ },
+ "ring_spec": {
+  "centre": [
+   1110,
+   780
+  ],
+  "aspect": [
+   0.8,
+   0.95
+  ],
+  "noise": 0.2,
+  "noise_period_ft": 320,
+  "feather_ft": 110,
+  "rings": [
+   {
+    "id": "authority",
+    "name": "Authority Ward",
+    "kind": "civic",
+    "r_max": 230,
+    "street_width": 24,
+    "dsep": [
+     70,
+     85
+    ],
+    "lot_area": [
+     1300,
+     3000
+    ],
+    "build_prob": 0.95
+   },
+   {
+    "id": "commoner",
+    "name": "Commoners' Ring",
+    "kind": "residential",
+    "r_max": 520,
+    "street_width": 18,
+    "dsep": [
+     62,
+     76
+    ],
+    "lot_area": [
+     420,
+     900
+    ],
+    "build_prob": 0.95
+   },
+   {
+    "id": "farm",
+    "name": "Farmland",
+    "kind": "farm",
+    "r_max": 1000000000,
+    "street_width": 13,
+    "dsep": [
+     150,
+     200
+    ],
+    "lot_area": [
+     16000,
+     48000
+    ],
+    "build_prob": 0.3
+   }
+  ],
+  "mode": "terrain"
+ },
+ "plazas": {
+  "enabled": true,
+  "min_area_ft2": 150000,
+  "per_area_ft2": 200000,
+  "max": 4,
+  "radius_ft": [
+   38,
+   62
+  ],
+  "min_sep_ft": 260,
+  "anchors": [
+   {
+    "id": "sqr_market",
+    "name": "Market Square",
+    "type": "road",
+    "near": [
+     1300,
+     760
+    ]
+   },
+   {
+    "id": "sqr_court",
+    "name": "Court Square",
+    "type": "road_end",
+    "near": [
+     1110,
+     780
+    ]
+   }
+  ],
+  "extra_radius_ft": [
+   30,
+   42
+  ]
+ },
+ "named": {
+  "market_plaza": "sqr_market",
+  "court_plaza": "sqr_court",
+  "extra_civic": [
+   {
+    "id": "bld_wardens_barracks",
+    "name": "Wardens' Barracks",
+    "size": [
+     58,
+     34
+    ],
+    "floors": 2,
+    "notes": "Quarters for the wardens' watch, beside the hall."
+   },
+   {
+    "id": "bld_records_house",
+    "name": "Records House",
+    "size": [
+     46,
+     36
+    ],
+    "floors": 2,
+    "near": "court",
+    "notes": "Registers, deeds and court papers."
+   },
+   {
+    "id": "bld_customs_house",
+    "name": "Customs House",
+    "size": [
+     44,
+     34
+    ],
+    "floors": 1,
+    "notes": "Weighs and taxes goods crossing the bridge."
+   },
+   {
+    "id": "bld_treasury",
+    "name": "Town Treasury",
+    "size": [
+     36,
+     32
+    ],
+    "floors": 2,
+    "near": "court",
+    "notes": "Strong room for levies and fines, next to the hall."
+   }
+  ]
+ },
+ "streets": {
+  "trace_grade_margin": 0.6,
+  "stub_min_ft": 110,
+  "loop_max_area_ft2": 5000,
+  "loop_compact": 0.3,
+  "split_steep_factor": 1.0,
+  "smooth_sigma_ft": 12,
+  "edge_inset": true
+ },
+ "lots": {
+  "min_frontage_ft": 10,
+  "house_fill_w": [
+   0.7,
+   0.92
+  ],
+  "house_fill_d": [
+   0.55,
+   0.85
+  ],
+  "min_house_ft": [
+   14,
+   12
+  ],
+  "shed_detail": 2,
+  "shed_min_area_ft2": 700,
+  "shed_prob": 0.5,
+  "max_house_ft": [
+   46,
+   38
+  ],
+  "backland_ft": 32,
+  "edge_fade_ft": 12
+ },
+ "area_mode": "manual",
+ "area_auto": {
+  "seed": 1103,
+  "slope_limit": 0.17,
+  "smoothing_ft": 45,
+  "target_area_ft2": null,
+  "centre": [
+   1110,
+   780
+  ]
+ },
+ "_area_ft_v4_box": [
+  [
+   640,
+   360
+  ],
+  [
+   800,
+   310
+  ],
+  [
+   1100,
+   300
+  ],
+  [
+   1400,
+   310
+  ],
+  [
+   1650,
+   340
+  ],
+  [
+   1760,
+   450
+  ],
+  [
+   1780,
+   700
+  ],
+  [
+   1740,
+   950
+  ],
+  [
+   1650,
+   1130
+  ],
+  [
+   1480,
+   1230
+  ],
+  [
+   1380,
+   1300
+  ],
+  [
+   1330,
+   1490
+  ],
+  [
+   1100,
+   1490
+  ],
+  [
+   1060,
+   1300
+  ],
+  [
+   800,
+   1230
+  ],
+  [
+   650,
+   1100
+  ],
+  [
+   600,
+   850
+  ],
+  [
+   610,
+   600
+  ]
+ ]
+}

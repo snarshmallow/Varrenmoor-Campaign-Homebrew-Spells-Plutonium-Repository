@@ -1,0 +1,39 @@
+{
+ "id": "bld_house_123",
+ "name": "House 123",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    991.0,
+    1081.8
+   ],
+   [
+    981.5,
+    1099.7
+   ],
+   [
+    992.5,
+    1105.5
+   ],
+   [
+    1002.0,
+    1087.6
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 641.3,
+ "site_slope": 0.056,
+ "site_relief_ft": 0.9
+}

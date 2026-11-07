@@ -1,0 +1,39 @@
+{
+ "id": "bld_shed_067",
+ "name": "Shed 67",
+ "kind": "shed",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    916.7,
+    830.0
+   ],
+   [
+    921.6,
+    838.2
+   ],
+   [
+    927.0,
+    835.0
+   ],
+   [
+    922.1,
+    826.8
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 655.4,
+ "site_slope": 0.05,
+ "site_relief_ft": 0.5
+}

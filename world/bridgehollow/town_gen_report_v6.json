@@ -1,0 +1,50 @@
+{
+ "seed": 1103,
+ "detail": 2,
+ "scale_ft_per_in": 100,
+ "sea_level_ft": 0.0,
+ "area": {
+  "area_ft2": 600980,
+  "perimeter_ft": 3408,
+  "vertices": 95,
+  "compactness": 0.65,
+  "slope_mean": 0.077,
+  "slope_p90": 0.115,
+  "frac_over_limit": 0.025,
+  "max_turn_deg": 44.5,
+  "bounds": [
+   766,
+   526,
+   1691,
+   1456
+  ],
+  "mode": "manual"
+ },
+ "warnings": [],
+ "issues": [],
+ "counts": {
+  "streets": 29,
+  "buildings": 136,
+  "fields": 9,
+  "plazas": 3,
+  "blocks": 23,
+  "by_kind": {
+   "civic": 10,
+   "inn": 1,
+   "stable": 1,
+   "craft": 2,
+   "house": 113,
+   "shed": 4,
+   "farmhouse": 3,
+   "barn": 2
+  }
+ },
+ "street_grade_max": 0.059,
+ "street_grade_raw_max": 0.092,
+ "street_grade_cap": 0.08,
+ "streets_over_cap_bed": 0,
+ "streets_over_cap_raw": 1,
+ "street_length_ft": 7088,
+ "street_length_over_cap_ft": 0,
+ "max_cut_fill_ft": 3.0
+}
