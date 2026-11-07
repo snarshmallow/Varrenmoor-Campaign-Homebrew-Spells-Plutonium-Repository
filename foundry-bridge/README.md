@@ -13,6 +13,17 @@ Write (off unless the world setting **Allow writes** is on): `create`, `update`.
 ## Quick start (recommended)
 Install Node 20+ and `cloudflared`, then run `start.bat` (Windows) or `./start.sh`. It installs deps, generates tokens into a git-ignored `.env`, starts the relay on 127.0.0.1, opens a Cloudflare quick tunnel, self-tests it, and prints exactly what to enter in Foundry and in the Claude environment.
 
+## Current topology: GM and relay on Arcturus (LAN, no tunnel)
+Foundry (the server) stays on VEGA. The GM plays in a browser on ARCTURUS at `http://VEGA:30000` (or Vega's LAN IP), and the relay runs on ARCTURUS next to Claude and Illustrator. Players will later reach Foundry through the netsec Cloudflare tunnel (`netsec/PLAN.md`); the GM keeps using the LAN address.
+1. On Arcturus: `start.bat --local` (remembered as `TUNNEL=off` in `.env`). No tunnel; the relay listens on all interfaces at port 3030, because a page served from `http://VEGA:30000` may not open `ws://127.0.0.1`. Allow Node.js on **Private** networks if Windows Firewall asks.
+2. In the Arcturus GM browser, Varrenmoor Bridge settings: Connect ON, **Use launcher relay URL OFF** (that file lives on Vega and would point at a Vega relay), Relay URL = the `ws://<arcturus-lan-ip>:3030/module` the launcher prints, Module token = `BRIDGE_MODULE_TOKEN` from Arcturus's `.env`. Then F5.
+3. `.\bridge.ps1 list -Args '{"collection":"Scene"}'` on Arcturus: it reads `foundry-bridge\client.json` (written by the launcher, git-ignored) and calls `http://127.0.0.1:3030`.
+4. Run only one relay. On Vega remove `Startup\Varrenmoor Bridge.lnk`, stop its `node start.mjs` and `cloudflared`, and delete `Data\modules\varrenmoor-bridge\relay-url.json` and `<dataPath>\bridge\client.json`.
+5. No URL changes across reboots in local mode. Only re-enter the module token when you rotate it. If Arcturus's LAN IP changes, update the Relay URL (a DHCP reservation avoids this).
+6. Asset writes from Arcturus go to `\\VEGA\varrenmoor-3d` (Vega's `Data\assets\varrenmoor-3d`, seen by Foundry as `assets/varrenmoor-3d/...`).
+
+`BIND_HOST` in `.env` overrides the listen address (default: `127.0.0.1` with a tunnel, `0.0.0.0` with `--local`). Local mode sends tokens in plain text over the home LAN; keep it off untrusted networks.
+
 ## Manual install
 1. In Foundry: Add-on Modules > Install Module > Manifest URL: `https://raw.githubusercontent.com/snarshmallow/Varrenmoor-Campaign-Homebrew-Spells-Plutonium-Repository/claude/adoring-shannon-yjixst/foundry-bridge/module/varrenmoor-bridge/module.json` (change `claude/adoring-shannon-yjixst` to `main` after merging; rebuild `module/varrenmoor-bridge.zip` whenever the module changes). Then enable it in the world.
 2. On a machine that can run Node 20+: `cd relay && npm install`, then set two different random tokens (24+ chars) and run:

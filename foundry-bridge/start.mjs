@@ -3,6 +3,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
+import os from 'node:os';
 import http from 'node:http';
 import { spawn, spawnSync } from 'node:child_process';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -25,9 +26,18 @@ const rand = () => crypto.randomBytes(24).toString('base64url');
 env.BRIDGE_API_TOKEN ||= rand();
 env.BRIDGE_MODULE_TOKEN ||= rand();
 env.PORT ||= '3030';
+// --local (remembered as TUNNEL=off): no Cloudflare tunnel; the GM browser on this PC and Claude on this PC talk to
+// the relay over the LAN. It listens on all interfaces so a Foundry page opened from http://VEGA:30000 can reach it
+// at this PC's LAN address (browsers block such a page from opening ws://127.0.0.1).
+if (process.argv.includes('--local')) env.TUNNEL = 'off';
+const local = env.TUNNEL === 'off';
 const save = () => fs.writeFileSync(envFile, Object.entries(env).filter(([, v]) => v).map(([k, v]) => `${k}=${v}`).join('\n') + '\n', { mode: 0o600 });
 save();
 const PORT = Number(env.PORT);
+const BIND = env.BIND_HOST || (local ? '0.0.0.0' : '127.0.0.1');
+const SELF = BIND === '0.0.0.0' ? '127.0.0.1' : BIND;
+const lanIp = Object.values(os.networkInterfaces()).flat()
+  .find((a) => a && a.family === 'IPv4' && !a.internal && /^(10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)/.test(a.address))?.address;
 
 // --- deps ---------------------------------------------------------------
 if (!fs.existsSync(path.join(relayDir, 'node_modules', 'ws'))) {
@@ -36,22 +46,22 @@ if (!fs.existsSync(path.join(relayDir, 'node_modules', 'ws'))) {
   if (r.status !== 0) { console.error('npm install failed'); process.exit(1); }
 }
 
-// --- relay (in-process, IPv4 loopback only; the tunnel is the only way in) --
+// --- relay (in-process; loopback only unless --local, where the tunnel would otherwise be the only way in) --
 process.env.BRIDGE_API_TOKEN = env.BRIDGE_API_TOKEN;
 process.env.BRIDGE_MODULE_TOKEN = env.BRIDGE_MODULE_TOKEN;
 const { createRelay } = await import(pathToFileURL(path.join(relayDir, 'server.js')).href);
 const server = createRelay();
-await new Promise((res, rej) => { server.once('error', rej); server.listen(PORT, '127.0.0.1', res); })
+await new Promise((res, rej) => { server.once('error', rej); server.listen(PORT, BIND, res); })
   .catch((e) => { console.error(e.code === 'EADDRINUSE' ? `Port ${PORT} is already in use (an old relay still running? close it, or set PORT in .env).` : e); process.exit(1); });
 const health = () => new Promise((res) => {
-  http.get({ host: '127.0.0.1', port: PORT, path: '/health' }, (r) => { let b = ''; r.on('data', (c) => b += c); r.on('end', () => res(b)); }).on('error', () => res(null));
+  http.get({ host: SELF, port: PORT, path: '/health' }, (r) => { let b = ''; r.on('data', (c) => b += c); r.on('end', () => res(b)); }).on('error', () => res(null));
 });
-console.log(`Relay listening on 127.0.0.1:${PORT}  health=${await health()}`);
+console.log(`Relay listening on ${BIND}:${PORT}  health=${await health()}`);
 
 // --- tunnel -------------------------------------------------------------
 let publicUrl = env.PUBLIC_URL || '';
 let tunnel = null;
-if (!env.PUBLIC_URL) {
+if (!env.PUBLIC_URL && !local) {
   const probe = spawnSync(win ? 'cloudflared.exe' : 'cloudflared', ['--version'], { shell: win });
   if (probe.error || probe.status !== 0) {
     console.log('\ncloudflared not found. Install it (Windows: `winget install Cloudflare.cloudflared`; mac: `brew install cloudflared`; linux: see Cloudflare docs), then re-run.');
@@ -78,7 +88,8 @@ if (publicUrl) {
   console.log(`Tunnel self-test (${publicUrl}/health): ${ok ? 'OK' : 'not reachable from this PC yet. New quick-tunnel names often take a minute to resolve in local DNS; Claude can usually reach it already.'}`);
 }
 // --- hand the live URL to the Foundry module (same machine only) -----------
-const moduleUrl = publicUrl ? publicUrl.replace('https://', 'wss://') + '/module' : `ws://127.0.0.1:${PORT}/module`;
+const lanHost = BIND === '0.0.0.0' ? (lanIp || os.hostname()) : SELF;
+const moduleUrl = publicUrl ? publicUrl.replace('https://', 'wss://') + '/module' : `ws://${lanHost}:${PORT}/module`;
 let moduleDir = env.FOUNDRY_MODULE_DIR || '';
 if (!moduleDir) {
   try {
@@ -86,7 +97,7 @@ if (!moduleDir) {
     if (opts.dataPath) moduleDir = path.join(opts.dataPath, 'Data', 'modules', 'varrenmoor-bridge');
   } catch {}
 }
-const published = publishClient({ publicUrl, apiToken: env.BRIDGE_API_TOKEN, dir: env.CLIENT_CONFIG_DIR, fallbackDir: root, localUrl: `http://127.0.0.1:${PORT}` });
+const published = publishClient({ publicUrl, apiToken: env.BRIDGE_API_TOKEN, dir: env.CLIENT_CONFIG_DIR, fallbackDir: root, localUrl: `http://${SELF}:${PORT}` });
 let wroteUrlFile = false;
 if (moduleDir && fs.existsSync(moduleDir)) {
   fs.writeFileSync(path.join(moduleDir, 'relay-url.json'), JSON.stringify({ url: moduleUrl, updated: new Date().toISOString() }) + '\n');
@@ -102,7 +113,9 @@ A) FOUNDRY (GM browser tab) -> Game Settings > Configure Settings > Varrenmoor B
    Relay URL (fallback)    : ${moduleUrl}
    Module token            : ${env.BRIDGE_MODULE_TOKEN}
    Allow writes            : OFF (turn on only when you want me to create/update)
-   (Use the wss:// URL even when Foundry is on this PC: Foundry's browser blocks ws://127.0.0.1 unless the page itself was opened from localhost.)
+   ${local
+    ? `(Local mode: no tunnel. ${lanIp ? `${lanIp} is this PC's LAN address; ` : ''}allow Node.js on Private networks if Windows Firewall asks.)`
+    : '(Use the wss:// URL even when Foundry is on this PC: Foundry\'s browser blocks ws://127.0.0.1 unless the page itself was opened from localhost.)'}
 
 B0) CLAUDE CODE ON ANOTHER PC (CLI): ${published.ok ? `configured automatically. ${published.file} now holds the URL and API token; foundry-bridge\\bridge.ps1 reads it from \\\\<this-pc>\\C\\...\\bridge\\client.json. Nothing to paste.` : `not written (${published.reason}).`}
 

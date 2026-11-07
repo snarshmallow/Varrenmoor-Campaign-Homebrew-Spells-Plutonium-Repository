@@ -12,9 +12,10 @@ export function foundryDataPath() {
 }
 
 export function publishClient({ publicUrl, apiToken, dir = process.env.CLIENT_CONFIG_DIR || '', fallbackDir = '', localUrl = '' }) {
-  if (!publicUrl || !apiToken) return { ok: false, reason: 'no public URL or token yet' };
+  if (!(publicUrl || localUrl) || !apiToken) return { ok: false, reason: 'no public URL or token yet' };
   const usingFallback = !dir && !foundryDataPath();
-  if (usingFallback && localUrl) publicUrl = localUrl;   // same-PC client: skip the tunnel (its DNS name can lag locally)
+  // same-PC client: skip the tunnel (its DNS name can lag locally); local mode has no tunnel at all
+  if ((usingFallback || !publicUrl) && localUrl) publicUrl = localUrl;
   // Relay on the Foundry PC: <dataPath>\bridge. Relay on any other PC: next to the launcher (git-ignored), which
   // bridge.ps1 on that same PC reads first.
   const base = dir || (foundryDataPath() && path.join(foundryDataPath(), 'bridge')) || fallbackDir;
