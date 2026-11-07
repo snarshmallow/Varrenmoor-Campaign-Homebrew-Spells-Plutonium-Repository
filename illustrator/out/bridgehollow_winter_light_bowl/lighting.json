@@ -1,0 +1,32 @@
+{
+ "dpi": 150.0,
+ "ppf": 0.75,
+ "scale_ft_per_in": 200,
+ "size_px": [
+  2400,
+  1500
+ ],
+ "bounds_ft": {
+  "x_min": -400.0,
+  "y_min": -250.0,
+  "x_max": 2800.0,
+  "y_max": 1750.0
+ },
+ "y_axis": "down",
+ "layers": [
+  {
+   "png": "shadows.png",
+   "layer": "ART - Shadows",
+   "name": "shadows_png"
+  },
+  {
+   "png": "light_glow.png",
+   "layer": "ART - Light Glow",
+   "name": "light_glow_png"
+  }
+ ],
+ "vector": null,
+ "stats": {
+  "mean_darkness": 0.029099097475409508
+ }
+}

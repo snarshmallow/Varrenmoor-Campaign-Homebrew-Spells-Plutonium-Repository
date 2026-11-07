@@ -1,0 +1,387 @@
+{
+ "place": "bridgehollow",
+ "view": "bowl",
+ "fpi": 200,
+ "k": 0.36,
+ "x0": -400.0,
+ "y0": -250.0,
+ "margin_pt": 36.0,
+ "labels": {
+  "dis_authority": {
+   "cx": 391.57,
+   "cy": 415.33,
+   "w": 122.01,
+   "h": 11.55,
+   "layer": "Labels - Districts",
+   "tier": "districts",
+   "status": "placed",
+   "text": "AUTHORITY WARD",
+   "anchor": [
+    531.97,
+    415.33
+   ],
+   "offset": true,
+   "pinned": false
+  },
+  "dis_farm": {
+   "cx": 795.07,
+   "cy": 464.33,
+   "w": 72.76,
+   "h": 11.55,
+   "layer": "Labels - Districts",
+   "tier": "districts",
+   "status": "placed",
+   "text": "FARMLAND",
+   "anchor": [
+    729.83,
+    484.2
+   ],
+   "offset": true,
+   "pinned": false
+  },
+  "dis_commoner": {
+   "cx": 386.05,
+   "cy": 393.66,
+   "w": 126.81,
+   "h": 11.55,
+   "layer": "Labels - Districts",
+   "tier": "districts",
+   "status": "placed",
+   "text": "COMMONERS' RING",
+   "anchor": [
+    471.6,
+    406.8
+   ],
+   "offset": true,
+   "pinned": false
+  },
+  "sqr_court": {
+   "cx": 705.24,
+   "cy": 314.03,
+   "w": 66.86,
+   "h": 9.02,
+   "layer": "Labels - Districts",
+   "tier": "plazas",
+   "status": "placed",
+   "text": "Court Square",
+   "anchor": [
+    570.38,
+    406.46
+   ],
+   "offset": true,
+   "pinned": false
+  },
+  "sqr_3": {
+   "cx": 448.0,
+   "cy": 485.91,
+   "w": 44.83,
+   "h": 9.02,
+   "layer": "Labels - Districts",
+   "tier": "plazas",
+   "status": "placed",
+   "text": "Square 3",
+   "anchor": [
+    499.1,
+    485.91
+   ],
+   "offset": true,
+   "pinned": false
+  },
+  "sqr_market": {
+   "cx": 751.74,
+   "cy": 411.48,
+   "w": 72.43,
+   "h": 9.02,
+   "layer": "Labels - Districts",
+   "tier": "plazas",
+   "status": "placed",
+   "text": "Market Square",
+   "anchor": [
+    635.45,
+    411.48
+   ],
+   "offset": true,
+   "pinned": false
+  },
+  "str_pilgrim_road_1": {
+   "cx": 686.06,
+   "cy": 498.31,
+   "w": 46.66,
+   "h": 7.04,
+   "layer": "Labels - Streets",
+   "tier": "civic",
+   "status": "placed",
+   "text": "Pilgrim Road *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_tax_office": {
+   "cx": 714.95,
+   "cy": 568.41,
+   "w": 80.48,
+   "h": 7.26,
+   "layer": "Labels - Buildings",
+   "tier": "civic",
+   "status": "placed",
+   "text": "Tax and Permit Office *",
+   "anchor": [
+    665.71,
+    508.5
+   ],
+   "offset": true,
+   "pinned": false
+  },
+  "bld_customs_house": {
+   "cx": 453.95,
+   "cy": 362.53,
+   "w": 54.61,
+   "h": 7.26,
+   "layer": "Labels - Buildings",
+   "tier": "civic",
+   "status": "placed",
+   "text": "Customs House *",
+   "anchor": [
+    525.42,
+    397.69
+   ],
+   "offset": true,
+   "pinned": false
+  },
+  "bld_inn": {
+   "cx": 709.88,
+   "cy": 391.91,
+   "w": 17.95,
+   "h": 7.26,
+   "layer": "Labels - Buildings",
+   "tier": "civic",
+   "status": "placed",
+   "text": "Inn *",
+   "anchor": [
+    626.2,
+    391.91
+   ],
+   "offset": true,
+   "pinned": false
+  },
+  "bld_smithy": {
+   "cx": 487.94,
+   "cy": 518.44,
+   "w": 26.82,
+   "h": 7.26,
+   "layer": "Labels - Buildings",
+   "tier": "civic",
+   "status": "placed",
+   "text": "Smithy *",
+   "anchor": [
+    558.13,
+    470.66
+   ],
+   "offset": true,
+   "pinned": false
+  },
+  "bld_meeting_hall": {
+   "cx": 480.68,
+   "cy": 531.3,
+   "w": 46.77,
+   "h": 7.26,
+   "layer": "Labels - Buildings",
+   "tier": "civic",
+   "status": "placed",
+   "text": "Meeting Hall *",
+   "anchor": [
+    576.9,
+    467.46
+   ],
+   "offset": true,
+   "pinned": false
+  },
+  "bld_wardens_barracks": {
+   "cx": 487.0,
+   "cy": 337.54,
+   "w": 69.98,
+   "h": 7.26,
+   "layer": "Labels - Buildings",
+   "tier": "civic",
+   "status": "placed",
+   "text": "Wardens' Barracks *",
+   "anchor": [
+    560.43,
+    366.98
+   ],
+   "offset": true,
+   "pinned": false
+  },
+  "bld_treasury": {
+   "cx": 681.38,
+   "cy": 284.67,
+   "w": 55.94,
+   "h": 7.26,
+   "layer": "Labels - Buildings",
+   "tier": "civic",
+   "status": "placed",
+   "text": "Town Treasury *",
+   "anchor": [
+    570.33,
+    358.76
+   ],
+   "offset": true,
+   "pinned": false
+  },
+  "bld_stables": {
+   "cx": 670.48,
+   "cy": 298.54,
+   "w": 30.66,
+   "h": 7.26,
+   "layer": "Labels - Buildings",
+   "tier": "civic",
+   "status": "placed",
+   "text": "Stables *",
+   "anchor": [
+    591.03,
+    353.66
+   ],
+   "offset": true,
+   "pinned": false
+  },
+  "bld_gate_watch": {
+   "cx": 709.63,
+   "cy": 632.12,
+   "w": 59.19,
+   "h": 7.26,
+   "layer": "Labels - Buildings",
+   "tier": "civic",
+   "status": "placed",
+   "text": "Gate Watch Post *",
+   "anchor": [
+    663.39,
+    632.12
+   ],
+   "offset": true,
+   "pinned": false
+  },
+  "bld_magistrate_court": {
+   "cx": 420.52,
+   "cy": 428.13,
+   "w": 68.51,
+   "h": 7.26,
+   "layer": "Labels - Buildings",
+   "tier": "civic",
+   "status": "placed",
+   "text": "Magistrate's Court *",
+   "anchor": [
+    552.47,
+    428.13
+   ],
+   "offset": true,
+   "pinned": false
+  },
+  "bld_records_house": {
+   "cx": 453.23,
+   "cy": 352.55,
+   "w": 55.94,
+   "h": 7.26,
+   "layer": "Labels - Buildings",
+   "tier": "civic",
+   "status": "placed",
+   "text": "Records House *",
+   "anchor": [
+    553.46,
+    415.82
+   ],
+   "offset": true,
+   "pinned": false
+  },
+  "bld_warden_hall": {
+   "cx": 557.75,
+   "cy": 388.84,
+   "w": 8.18,
+   "h": 8.18,
+   "layer": "Labels - Buildings",
+   "tier": "civic",
+   "status": "numbered",
+   "text": "Warden's Hall *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false,
+   "number": 1
+  },
+  "bld_lockup": {
+   "cx": 553.09,
+   "cy": 404.01,
+   "w": 8.18,
+   "h": 8.18,
+   "layer": "Labels - Buildings",
+   "tier": "civic",
+   "status": "numbered",
+   "text": "Lockup *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false,
+   "number": 2
+  },
+  "bld_mill": {
+   "cx": 641.18,
+   "cy": 533.55,
+   "w": 17.8,
+   "h": 7.26,
+   "layer": "Labels - Buildings",
+   "tier": "civic",
+   "status": "placed",
+   "text": "Mill *",
+   "anchor": [
+    623.29,
+    566.44
+   ],
+   "offset": true,
+   "pinned": false
+  }
+ },
+ "qa": {
+  "labels_shown": 19,
+  "labels_hidden": 136,
+  "hidden_by_scale": 136,
+  "hidden_by_collision": 0,
+  "numbered": 2,
+  "with_leader": 18,
+  "pinned": 0,
+  "text_over_features_pct": 0.1,
+  "over_features_by_kind_pct": {
+   "road": 0.1
+  },
+  "labels_over_25pct": 0,
+  "label_label_overlaps": 0,
+  "labels_over_contour_labels": 0,
+  "leaders_crossing_other_labels": 0,
+  "worst": [
+   {
+    "id": "sqr_market",
+    "text": "Market Square",
+    "tier": "plazas",
+    "over_pct": 0.9,
+    "by_kind": {
+     "road": 0.01
+    }
+   },
+   {
+    "id": "bld_smithy",
+    "text": "Smithy *",
+    "tier": "civic",
+    "over_pct": 0.3,
+    "by_kind": {
+     "road": 0.0
+    }
+   }
+  ],
+  "overlapping_pairs": [],
+  "hidden": []
+ },
+ "declutter": {
+  "enabled": true,
+  "scale_visibility": true,
+  "collision": "number",
+  "score": true,
+  "legend": true,
+  "quiet": false
+ }
+}

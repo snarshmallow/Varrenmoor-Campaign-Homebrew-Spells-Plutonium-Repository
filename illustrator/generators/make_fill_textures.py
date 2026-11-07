@@ -289,11 +289,246 @@ def t_water(rng):
     return img
 
 
+# ------------------------------------------------------------------ winter set (Bridgehollow winter map; names prefixed w_)
+SNOW = "#eef3f8"
+SNOW_SH = "#c9d6e4"
+
+
+def _snow_base(rng, drift=0.045, ripple=0.03):
+    n = pn(rng, 16) * 0.6 + pn(rng, 5) * 0.4
+    img = mixc(col(SNOW) + np.zeros((S, S, 3)), col(SNOW_SH), sm(0.5 - n * 0.5))
+    img *= (1 + drift * pn(rng, 24))[..., None]
+    wind = pn(rng, 1.6, 9.0)
+    img = mixc(img, col("#ffffff"), sm((wind - 1.2) / 0.6) * 0.5)
+    img = mixc(img, col("#b4c4d6"), sm((-wind - 1.3) / 0.6) * 0.3)
+    spark = sm((pn(rng, 0.6) - 2.3) / 0.25)
+    img = mixc(img, col("#ffffff"), spark * 0.7)
+    return img * (1 + ripple * pn(rng, 0.9))[..., None]
+
+
+def t_w_snow(rng):
+    return _snow_base(rng)
+
+
+def t_w_frost_grass(rng):
+    n = pn(rng, 18) * 0.55 + pn(rng, 5) * 0.45
+    img = paint("#a8a487", n, 0.10)
+    blades = pn(rng, 0.7, 4.5)
+    img = mixc(img, col("#c9c4a2"), sm((blades - 0.7) / 0.7) * 0.5)
+    img = mixc(img, col("#6f6c55"), sm((-blades - 0.9) / 0.7) * 0.4)
+    frost = sm((pn(rng, 2.5) - 0.2) / 0.8) * 0.55 + sm((pn(rng, 0.8) - 1.4) / 0.4) * 0.35
+    img = mixc(img, col("#e6edf2"), np.clip(frost, 0, 0.8))
+    return img
+
+
+def t_w_frozen_earth(rng):
+    n = pn(rng, 20) * 0.6 + pn(rng, 6) * 0.4
+    img = paint("#9b8a76", n, 0.10)
+    clod = sm((pn(rng, 1.4) - 0.8) / 0.5)
+    img = mixc(img, col("#b9aa95"), clod * 0.4)
+    img = mixc(img, col("#6e5f50"), sm((pn(rng, 3) - 0.9) / 0.5) * 0.35)
+    frost = sm((pn(rng, 0.8) - 1.3) / 0.4) * 0.55 + sm((pn(rng, 9) - 0.6) / 0.6) * 0.22
+    img = mixc(img, col("#e2e8ee"), np.clip(frost, 0, 0.75))
+    return img
+
+
+def t_w_ice(rng):
+    n = pn(rng, 10) * 0.6 + pn(rng, 3.5) * 0.4
+    img = paint("#a9cfe0", n, 0.05)
+    img = mixc(img, col("#e3f1f8"), sm((pn(rng, 6, 12) - 0.4) / 0.8) * 0.5)
+    cid, d1, d2, k = voronoi(rng, 5, 0.5)
+    crack = sm(1.0 - (d2 - d1) / 1.6)
+    img = mixc(img, col("#f4fafc"), crack * 0.55)
+    img = mixc(img, col("#6f9bb5"), sm(1.0 - (d2 - d1) / 0.7) * 0.3)
+    bub = sm((pn(rng, 1.1) - 2.0) / 0.3)
+    img = mixc(img, col("#ffffff"), bub * 0.6)
+    return img
+
+
+def t_w_conifer(rng):
+    """Dark conifer crowns with a dusting of snow on the lit side."""
+    cid, d1, d2, k = voronoi(rng, 9, 0.45)
+    tone = rng.random(k)[cid]
+    base = mixc(col("#2b4233") + np.zeros((S, S, 3)), col("#3f5a45"), tone)
+    crown = sm(d1 / 11.0)                                    # 0 at the crown centre, 1 in the gaps
+    img = base * (1.1 - 0.45 * crown)[..., None]
+    img = mixc(img, col("#1c2620"), crown * 0.5)
+    img *= (1 + 0.12 * pn(rng, 0.9))[..., None]
+    snow = sm((pn(rng, 3.5) - 0.2) / 0.7) * 0.55 * (1 - crown * 0.5) + sm((pn(rng, 0.8) - 1.5) / 0.4) * 0.1
+    return mixc(img, col("#dfe8ee"), np.clip(snow, 0, 0.8))
+
+
+def t_w_rock(rng):
+    """Dark grey-blue rock face, snow only in a few crevices."""
+    n = pn(rng, 14) * 0.5 + pn(rng, 4) * 0.5
+    img = paint("#5f6670", n, 0.14)
+    strata = pn(rng, 1.8, 14.0)
+    img = mixc(img, col("#3d434c"), sm((strata - 0.3) / 0.8) * 0.5)
+    img = mixc(img, col("#8d96a1"), sm((-strata - 0.8) / 0.7) * 0.35)
+    img = mixc(img, col("#dfe8ee"), sm((pn(rng, 4) - 1.1) / 0.5) * 0.65)
+    return img * (1 + 0.07 * pn(rng, 0.8))[..., None]
+
+
+def t_w_scree(rng):
+    n = pn(rng, 10) * 0.5 + pn(rng, 3) * 0.5
+    img = paint("#8b8e92", n, 0.14)
+    peb = sm((pn(rng, 0.9) - 1.0) / 0.5)
+    img = mixc(img, col("#b9bcc0"), peb * 0.5)
+    img = mixc(img, col("#4e5258"), sm((-pn(rng, 1.4) - 1.0) / 0.5) * 0.5)
+    return mixc(img, col("#dfe8ee"), sm((pn(rng, 5) - 0.1) / 0.7) * 0.45)
+
+
+def _snow_over(rng, img, amount, scale=12.0, soft=0.7):
+    """Lay snow over `img`; amount ~ fraction covered (0.4 = patchy, 0.75 = mostly covered)."""
+    cover = sm((pn(rng, scale) * 0.7 + pn(rng, scale / 3.0) * 0.3 + (amount * 3.0 - 1.5)) / soft)
+    return mixc(img, _snow_base(rng, 0.03, 0.02), cover * 0.97)
+
+
+def _roof_snow(rng, rows, per, amount, base_a, base_b, edge, round_bottom=0.0, tone_k=0.3):
+    roof = _overlap(rng, rows, per, base_a, base_b, edge, tone_k=tone_k, round_bottom=round_bottom)
+    return _snow_over(rng, roof, amount, 10.0, 0.5)
+
+
+def t_w_roof_snow(rng):
+    """Snow-covered roof: white / pale blue-grey with faint courses showing through."""
+    cid, u, v, r = rows_pattern(rng, 16, 14, offsets=True)
+    n = cid.max() + 1
+    tone = rng.random(n)[cid]
+    img = mixc(col("#f1f5f9") + np.zeros((S, S, 3)), col("#d5e0ec"), tone * 0.8)
+    img *= (1 + 0.03 * pn(rng, 6))[..., None]
+    img *= (1 + 0.16 * (0.5 - v) * 0.8)[..., None]
+    img = mixc(img, col("#9fb0c4"), sm(1.0 - (1 - v) * (S / 16) / 2.2) * 0.35)
+    return mixc(img, col("#ffffff"), sm((pn(rng, 3) - 0.6) / 0.6) * 0.35)
+
+
+def t_w_roof_thatch(rng):
+    """Thatch with snow lying on it (straw yellow shows at the edges of the drifts)."""
+    return _snow_over(rng, t_thatch(rng), 0.6, 9.0, 0.45)
+
+
+def t_w_roof_slate(rng):
+    """Civic slate: dark slate with patchy snow."""
+    return _roof_snow(rng, 16, 8, 0.4, "#3f4650", "#5d6874", "#161a20")
+
+
+def t_w_roof_red(rng):
+    """Inn / tavern: red tile, snow patched so the warm colour still reads."""
+    r = _overlap(rng, 16, 8, "#9b4b34", "#bf6a45", "#3b1a12", tone_k=0.3, shade=0.35)
+    return _snow_over(rng, r, 0.38, 9.0, 0.5)
+
+
+def t_w_roof_timber(rng):
+    """Mill / barn / shed: dark timber boards, snow in drifts along the boards."""
+    pl = _planks(rng, 10, "#554b3f", "#74664f", grain=0.18, gap="#1e1812")
+    return _snow_over(rng, pl, 0.45, 8.0, 0.55)
+
+
+def t_w_cobble(rng):
+    """Cobbles showing through trampled snow (snow packed in the joints and on some stone tops)."""
+    cb = t_cobble(rng)
+    cid, d1, d2, k = voronoi(rng, 12, 0.38)
+    joint = 1.0 - sm((d2 - d1) / 4.5)
+    cover = np.clip(joint * 0.95 + sm((pn(rng, 6) - 0.3) / 0.6) * 0.45, 0, 0.92)
+    sn = _snow_base(rng, 0.03, 0.02) * 0.93
+    return mixc(cb * 0.97, sn, cover)
+
+
+def t_w_slush(rng):
+    """Trampled snow / slush on the main streets: grey-white with brown wheel-track streaks."""
+    n = pn(rng, 14) * 0.6 + pn(rng, 4) * 0.4
+    img = mixc(col("#dfe3e7") + np.zeros((S, S, 3)), col("#aeb2b6"), sm(0.5 - n * 0.45))
+    streak = pn(rng, 1.6, 12.0)
+    img = mixc(img, col("#8f8579"), sm((streak - 0.5) / 0.6) * 0.45)
+    img = mixc(img, col("#f4f7fa"), sm((pn(rng, 3) - 0.8) / 0.6) * 0.45)
+    img = mixc(img, col("#6f685f"), sm((pn(rng, 0.9) - 1.7) / 0.35) * 0.4)
+    return img * (1 + 0.05 * pn(rng, 0.8))[..., None]
+
+
+def t_w_packed(rng):
+    """Packed white lane: clean snow with faint blue ruts."""
+    img = _snow_base(rng, 0.03, 0.02) * 0.97
+    ruts = pn(rng, 2.2, 14.0)
+    return mixc(img, col("#a9bad0"), sm((ruts - 0.6) / 0.7) * 0.35)
+
+
+def t_w_alley(rng):
+    n = pn(rng, 10) * 0.6 + pn(rng, 3) * 0.4
+    img = mixc(col("#bdbfc0") + np.zeros((S, S, 3)), col("#8f8c86"), sm(0.5 - n * 0.5))
+    img = mixc(img, col("#eef2f6"), sm((pn(rng, 3) - 0.5) / 0.6) * 0.4)
+    return img * (1 + 0.05 * pn(rng, 0.8))[..., None]
+
+
+def t_w_plank(rng):
+    pl = _planks(rng, 8, "#6f5a42", "#8d7656")
+    cover = sm((pn(rng, 3, 12) - 0.1) / 0.6) * 0.55
+    return mixc(pl, _snow_base(rng, 0.03, 0.02) * 0.95, cover)
+
+
+def t_w_furrow(rng):
+    """Snowy ploughland: white with the furrow lines in blue-grey shadow, dark soil peeking."""
+    yy = np.arange(S)[:, None] + np.zeros((1, S))
+    ph = 2 * np.pi * yy * 16 / S + pn(rng, 20, 20) * 0.5
+    prof = 0.5 + 0.5 * np.sin(ph)
+    img = mixc(col("#aebfd2") + np.zeros((S, S, 3)), col("#f3f7fa"), sm(prof * 1.2))
+    soil = sm((pn(rng, 1.3) - 1.3) / 0.4) * sm(1.0 - prof * 1.4)
+    img = mixc(img, col("#6d5c4b"), soil * 0.6)
+    img *= (1 + 0.04 * pn(rng, 0.8) + 0.03 * pn(rng, 10))[..., None]
+    return img
+
+
+def t_w_plough(rng):
+    """Frozen ploughed earth: pale brown ridges with frost."""
+    yy = np.arange(S)[:, None] + np.zeros((1, S))
+    ph = 2 * np.pi * yy * 14 / S + pn(rng, 20, 20) * 0.6
+    prof = 0.5 + 0.5 * np.sin(ph)
+    img = mixc(col("#7d6b58") + np.zeros((S, S, 3)), col("#b2a18b"), prof)
+    img = mixc(img, col("#e3e9ee"), sm((pn(rng, 0.9) - 1.0) / 0.5) * 0.55 * prof)
+    img = mixc(img, col("#eef2f6"), sm((pn(rng, 8) - 0.5) / 0.6) * 0.3)
+    img *= (1 + 0.07 * pn(rng, 0.8))[..., None]
+    return img
+
+
+def t_w_stubble(rng):
+    yy = np.arange(S)[:, None] + np.zeros((1, S))
+    prof = 0.5 + 0.5 * np.sin(2 * np.pi * yy * 20 / S + pn(rng, 20, 20) * 0.4)
+    img = mixc(col("#b5a77f") + np.zeros((S, S, 3)), col("#d6c9a2"), prof)
+    img = mixc(img, col("#eef2f6"), sm((pn(rng, 6) - 0.2) / 0.7) * 0.5)
+    img *= (1 + 0.10 * pn(rng, 0.7, 2.2))[..., None]
+    return img
+
+
+def t_w_pasture(rng):
+    n = pn(rng, 16) * 0.55 + pn(rng, 5) * 0.45
+    img = paint("#b4b08f", n, 0.10)
+    img = mixc(img, col("#ecf1f5"), sm((pn(rng, 5) - 0.0) / 0.6) * 0.65)
+    tuft = sm((pn(rng, 0.9) - 1.5) / 0.35)
+    img = mixc(img, col("#8b8667"), tuft * 0.5)
+    return img * (1 + 0.04 * pn(rng, 0.8))[..., None]
+
+
+def t_w_water(rng):
+    """Open winter water: dark steel blue with thin pale ripples."""
+    n = pn(rng, 12) * 0.6 + pn(rng, 4) * 0.4
+    img = paint("#3a6a8a", n, 0.09)
+    a = pn(rng, 3.5, 7.0)
+    crest = sm(((1.0 - np.abs(a)) - 0.93) / 0.07)
+    img = mixc(img, col("#8fb2c6"), crest * 0.45)
+    b = pn(rng, 8, 3.0)
+    img = mixc(img, col("#1b3a52"), sm(((1.0 - np.abs(b)) - 0.95) / 0.05) * 0.4)
+    return img
+
+
 MAKERS = {
     "cobble": t_cobble, "gravel": t_gravel, "packed_earth": t_packed_earth, "mud": t_mud,
     "plank": t_plank, "timber_roof": t_timber_roof, "stone_slab": t_stone_slab,
     "slate": t_slate, "shingle": t_shingle, "red_tile": t_red_tile, "thatch": t_thatch,
     "tilled": t_tilled, "wheat": t_wheat, "crop_green": t_crop_green, "pasture": t_pasture, "water": t_water,
+    "w_snow": t_w_snow, "w_frost_grass": t_w_frost_grass, "w_frozen_earth": t_w_frozen_earth, "w_ice": t_w_ice,
+    "w_conifer": t_w_conifer, "w_rock": t_w_rock, "w_scree": t_w_scree,
+    "w_roof_snow": t_w_roof_snow, "w_roof_thatch": t_w_roof_thatch, "w_roof_slate": t_w_roof_slate, "w_roof_red": t_w_roof_red,
+    "w_roof_timber": t_w_roof_timber, "w_cobble": t_w_cobble, "w_slush": t_w_slush, "w_packed": t_w_packed, "w_alley": t_w_alley,
+    "w_plank": t_w_plank, "w_furrow": t_w_furrow, "w_plough": t_w_plough, "w_stubble": t_w_stubble, "w_pasture": t_w_pasture,
+    "w_water": t_w_water,
 }
 
 

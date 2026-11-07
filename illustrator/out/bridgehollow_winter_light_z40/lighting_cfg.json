@@ -1,0 +1,96 @@
+{
+ "enabled": true,
+ "ambient": 0.42,
+ "terrain_shade": 0.22,
+ "terrain_smooth_ft": 12.0,
+ "shadow": {
+  "color": "#1a2a4c",
+  "opacity": 0.36,
+  "blur_ft": 0.8,
+  "max_length_ft": 380.0,
+  "terrain": false,
+  "buildings": true
+ },
+ "glow": {
+  "enabled": true,
+  "opacity": 0.5
+ },
+ "lights": [
+  {
+   "id": "sun",
+   "type": "sun",
+   "azimuth": 200.0,
+   "altitude": 17.0,
+   "color": "#dbe8ff",
+   "intensity": 1.0,
+   "softness": 0.7,
+   "tint": 0.0
+  },
+  {
+   "id": "glow_bld_inn",
+   "type": "point",
+   "x": 1239,
+   "y": 739,
+   "height": 34.0,
+   "radius": 30.0,
+   "color": "#ffb45a",
+   "intensity": 0.35,
+   "softness": 0.6
+  },
+  {
+   "id": "glow_bld_warden_hall",
+   "type": "point",
+   "x": 1049,
+   "y": 730,
+   "height": 34.0,
+   "radius": 30.0,
+   "color": "#ffb45a",
+   "intensity": 0.24499999999999997,
+   "softness": 0.6
+  },
+  {
+   "id": "glow_bld_magistrate_court",
+   "type": "point",
+   "x": 1035,
+   "y": 839,
+   "height": 34.0,
+   "radius": 30.0,
+   "color": "#ffb45a",
+   "intensity": 0.21,
+   "softness": 0.6
+  },
+  {
+   "id": "glow_bld_meeting_hall",
+   "type": "point",
+   "x": 1103,
+   "y": 948,
+   "height": 34.0,
+   "radius": 30.0,
+   "color": "#ffb45a",
+   "intensity": 0.21,
+   "softness": 0.6
+  },
+  {
+   "id": "glow_bld_treasury",
+   "type": "point",
+   "x": 1084,
+   "y": 647,
+   "height": 34.0,
+   "radius": 30.0,
+   "color": "#ffb45a",
+   "intensity": 0.175,
+   "softness": 0.6
+  },
+  {
+   "id": "glow_bld_smithy",
+   "type": "point",
+   "x": 1050,
+   "y": 957,
+   "height": 34.0,
+   "radius": 30.0,
+   "color": "#ffb45a",
+   "intensity": 0.24499999999999997,
+   "softness": 0.6
+  }
+ ]
+}

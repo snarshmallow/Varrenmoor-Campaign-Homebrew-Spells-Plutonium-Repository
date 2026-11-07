@@ -1,0 +1,66 @@
+{
+ "name": "Winter (snow)",
+ "description": "Winter town fills: snow-covered roofs (white/blue-grey; civic slate and inns keep darker/warmer roofs so building types stay distinct; dark ridge and eaves; a few soot-stained chimneys), trampled snow/slush on roads, packed white lanes, cobbles showing through the snow on plazas, snowy and frozen fields with furrow hints, a river frozen at the banks with open dark water in the channel. Textures are the w_* tiles from make_fill_textures.py.",
+ "full_map": true,
+ "seed": 23,
+ "raster": {"dpi": 200, "min_tile_px": 40},
+ "parts": {},
+ "stroke": "",
+ "types": {
+  "streets": {
+   "road":   {"texture": "w_slush",   "tile_ft": 24, "warp": 0.3, "tint": 0.03},
+   "street": {"texture": "w_slush",   "tile_ft": 30, "warp": 0.3, "tint": 0.04},
+   "lane":   {"texture": "w_packed",  "tile_ft": 30, "tint": 0.03},
+   "alley":  {"texture": "w_alley",   "tile_ft": 30, "tint": 0.04},
+   "bridge": {"texture": "w_plank",   "tile_ft": 9, "align": "across", "tint": 0.03},
+   "classify": {"alley_name": "^Alley\\b", "alley_max_width_ft": 12.5, "narrow_is_alley": true},
+   "edge": {"ft": 2.2, "dark": 0.30},
+   "bridge_shadow": {"dx_ft": 0.9, "dy_ft": -2.5, "blur_ft": 2.0, "alpha": 0.40, "color": "#1c2a44"}
+  },
+  "plazas": {
+   "default": {"texture": "w_cobble", "tile_ft": 14, "warp": 0.2, "tint": 0.05}
+  },
+  "buildings": {
+   "house":     {"textures": [["w_roof_snow", 5], ["w_roof_thatch", 2], ["w_roof_timber", 1]], "tile_ft": 14, "tint": 0.04},
+   "farmhouse": {"textures": [["w_roof_thatch", 3], ["w_roof_snow", 2]], "tile_ft": 16, "tint": 0.04},
+   "shed":      {"textures": [["w_roof_timber", 3], ["w_roof_snow", 2]], "tile_ft": 12, "tint": 0.05},
+   "inn":       {"texture": "w_roof_red", "tile_ft": 14, "tint": 0.04},
+   "tavern":    {"texture": "w_roof_red", "tile_ft": 14, "tint": 0.04},
+   "civic":     {"texture": "w_roof_slate", "tile_ft": 14, "tint": 0.05},
+   "craft":     {"textures": [["w_roof_timber", 2], ["w_roof_slate", 1]], "tile_ft": 14, "tint": 0.05},
+   "mill":      {"texture": "w_roof_timber", "tile_ft": 14, "tint": 0.04},
+   "barn":      {"texture": "w_roof_timber", "tile_ft": 16, "tint": 0.05},
+   "stable":    {"texture": "w_roof_timber", "tile_ft": 14, "tint": 0.05},
+   "default":   {"textures": [["w_roof_snow", 2], ["w_roof_thatch", 1]], "tile_ft": 14, "tint": 0.05},
+   "gable": 0.20,
+   "ridge": 0.34,
+   "light": [-0.34, 0.94],
+   "eave": {"ft": 1.3, "dark": 0.50},
+   "chimney": {"prob": 0.3, "radius_ft": 1.5, "alpha": 0.7, "color": "#2a2523"},
+   "shadow": {"dx_ft": 1.3, "dy_ft": -3.4, "blur_ft": 1.8, "alpha": 0.42, "color": "#1c2a44"}
+  },
+  "fields": {
+   "choose": [["w_furrow", 3], ["w_plough", 2], ["w_pasture", 2], ["w_stubble", 2]],
+   "crops": {
+    "w_furrow":  {"texture": "w_furrow",  "tile_ft": 40, "tint": 0.04},
+    "w_plough":  {"texture": "w_plough",  "tile_ft": 40, "tint": 0.05},
+    "w_pasture": {"texture": "w_pasture", "tile_ft": 60, "tint": 0.04},
+    "w_stubble": {"texture": "w_stubble", "tile_ft": 40, "tint": 0.04},
+    "tilled": {"texture": "w_plough", "tile_ft": 40, "tint": 0.05},
+    "wheat": {"texture": "w_stubble", "tile_ft": 40, "tint": 0.04},
+    "pasture": {"texture": "w_pasture", "tile_ft": 60, "tint": 0.04},
+    "crop_green": {"texture": "w_furrow", "tile_ft": 40, "tint": 0.04}
+   },
+   "border": {"color": "#6f7a88", "ft": 2.5, "alpha": 0.55}
+  },
+  "water": {
+   "river":   {"texture": "w_water", "tile_ft": 50, "warp": 0.35, "shallow": "#5f8fa8", "foam": 0.25, "foam_color": "#eef5f9",
+               "ice": {"texture": "w_ice", "ft": 30, "alpha": 0.93, "tile_ft": 40}},
+   "lake":    {"texture": "w_water", "tile_ft": 60, "warp": 0.35, "shallow": "#5f8fa8", "foam": 0.2,
+               "ice": {"texture": "w_ice", "ft": 40, "alpha": 0.95, "tile_ft": 50}},
+   "default": {"texture": "w_water", "tile_ft": 50, "warp": 0.35, "shallow": "#5f8fa8", "foam": 0.25,
+               "ice": {"texture": "w_ice", "ft": 30, "alpha": 0.93, "tile_ft": 40}},
+   "bank": {"texture": "w_packed", "ft": 9, "tile_ft": 30, "alpha": 0.95, "wet": 0.15}
+  }
+ }
+}

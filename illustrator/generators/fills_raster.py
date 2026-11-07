@@ -38,7 +38,7 @@ CATS = ("fields", "water", "streets", "buildings")
 LAYER = {"fields": "ART - Fill Fields", "water": "ART - Fill Water", "streets": "ART - Fill Streets", "buildings": "ART - Fill Buildings"}
 PART = {"streets": ("Streets", "Roads"), "plazas": ("Plazas", "Roads"), "buildings": ("Roofs", "Buildings"),
         "fields": ("Fields", "Fences"), "water": ("Water", "Water")}
-STRUCTURED = {"plank", "timber_roof", "stone_slab", "slate", "shingle", "red_tile", "tilled", "wheat", "crop_green"}
+STRUCTURED = {"w_roof_snow", "w_roof_thatch", "w_roof_slate", "w_roof_red", "w_roof_timber", "w_plank", "w_furrow", "w_plough", "w_stubble", "plank", "timber_roof", "stone_slab", "slate", "shingle", "red_tile", "tilled", "wheat", "crop_green"}
 SS = 3   # mask supersampling (anti-aliased edges)
 
 
@@ -217,7 +217,7 @@ def edge_darken(canvas, ppf, ft, dark):
     canvas.p[..., :3] *= (f * a + (~a))[..., None].astype(np.float32)
 
 
-def soft_shadow(grid, canvas, geoms, dx_ft, dy_ft, blur_ft, alpha):
+def soft_shadow(grid, canvas, geoms, dx_ft, dy_ft, blur_ft, alpha, color=None):
     """Drop shadow of the union of geoms (offset +x right, +y down, like the light from the north-west)."""
     from shapely.ops import unary_union
     from shapely import affinity
@@ -229,7 +229,10 @@ def soft_shadow(grid, canvas, geoms, dx_ft, dy_ft, blur_ft, alpha):
         return
     m = grid.mask(u, box)
     m = ndi.gaussian_filter(m, blur_ft * grid.ppf)
-    canvas.over(box[0], box[1], np.zeros(m.shape + (3,), np.float32), np.clip(m * alpha, 0, 1))
+    rgb = np.zeros(m.shape + (3,), np.float32)
+    if color:
+        rgb[:] = hexrgb(color)
+    canvas.over(box[0], box[1], rgb, np.clip(m * alpha, 0, 1))
 
 
 # ------------------------------------------------------------------ categories
@@ -296,7 +299,7 @@ def build_streets(cx):
     bs = cfg.get("bridge_shadow", {"dx_ft": 2.5, "dy_ft": 2.5, "blur_ft": 2.0, "alpha": 0.35})
     for group in (others, plazas, bridges):
         if group is bridges and bridges and bs:
-            soft_shadow(grid, cv, [g for _, g, *_ in bridges], bs["dx_ft"], bs["dy_ft"], bs["blur_ft"], bs["alpha"])
+            soft_shadow(grid, cv, [g for _, g, *_ in bridges], bs["dx_ft"], bs["dy_ft"], bs["blur_ft"], bs["alpha"], bs.get("color"))
         for e, geom, cls, part, tc in group:
             box = grid.crop(geom.bounds, 1.0)
             if not box:
@@ -328,7 +331,7 @@ def build_buildings(cx):
             geoms.append((b, pg))
     sd = cfg.get("shadow", {"dx_ft": 3.0, "dy_ft": 3.0, "blur_ft": 1.6, "alpha": 0.38})
     if sd:
-        soft_shadow(grid, cv, [g for _, g in geoms], sd["dx_ft"], sd["dy_ft"], sd["blur_ft"], sd["alpha"])
+        soft_shadow(grid, cv, [g for _, g in geoms], sd["dx_ft"], sd["dy_ft"], sd["blur_ft"], sd["alpha"], sd.get("color"))
     eave = cfg.get("eave", {"ft": 1.1, "dark": 0.38})
     gable = float(cfg.get("gable", 0.22))
     for b, pg in geoms:
@@ -347,15 +350,24 @@ def build_buildings(cx):
         th = math.radians(ang)
         vperp = -math.sin(th) * (X - cxx) + math.cos(th) * (Y - cyy)          # signed distance across the ridge (ft)
         ndir = (-math.sin(th), math.cos(th))
-        light = ndir[0] * -0.7071 + ndir[1] * -0.7071                           # facet normal . direction to the light (NW)
+        ld = cfg.get("light", [-0.7071, -0.7071])                              # direction to the light (x east, y south)
+        light = ndir[0] * ld[0] + ndir[1] * ld[1]                           # facet normal . direction to the light (NW)
         side = np.tanh(vperp / 0.8)
         k = gable * (0.5 + 0.5 * abs(light) * 1.4) * (1 if light >= 0 else -1)
         rgb = rgb * (1 + k * side)[..., None]
         ridge = np.exp(-(vperp / 0.5) ** 2)
-        rgb = rgb * (1 - 0.16 * ridge)[..., None]
+        rgb = rgb * (1 - float(cfg.get('ridge', 0.16)) * ridge)[..., None]
         d = ndi.distance_transform_edt(np.pad(a > 0.5, 1, mode='edge'))[1:-1, 1:-1] / cx.ppf
         e_ft = max(eave["ft"], 1.2 / cx.ppf)
         rgb = rgb * (1 - eave["dark"] * np.exp(-np.maximum(d - 0.5 / cx.ppf, 0) / e_ft))[..., None]
+        chim = cfg.get("chimney")
+        if chim and b.get("kind", "") in chim.get("kinds", ["house", "farmhouse", "inn", "tavern", "craft", "mill"]) and rng.random() < float(chim.get("prob", 0.25)):
+            al = rng.uniform(-0.3, 0.3) * L                                   # chimney sits on the ridge, off-centre along it
+            px, py = cxx + al * math.cos(th), cyy + al * math.sin(th)
+            r2 = (X - px) ** 2 + (Y - py) ** 2
+            R = float(chim.get("radius_ft", 1.6))
+            soot = np.exp(-r2 / (R * R)) + 0.45 * np.exp(-r2 / ((2.6 * R) ** 2))   # dark core, smoky halo (snow melted / stained)
+            rgb = rgb * (1 - np.clip(soot * float(chim.get("alpha", 0.6)), 0, 0.85))[..., None] + hexrgb(chim.get("color", "#2a2523")) * np.clip(soot * float(chim.get("alpha", 0.6)), 0, 0.85)[..., None] * 0.6
         cv.over(box[0], box[1], rgb.astype(np.float32), a)
         cx.note("buildings", spec, cx.smp.mean(spec), b["id"])
     return cv
@@ -429,6 +441,15 @@ def build_water(cx):
         rgb = rgb * t + (rgb * 0.65 + hexrgb(tc.get("shallow", "#9fd0d0")) * 0.35) * (1 - t)
         foam = np.exp(-(ins / max(1.1, 1.2 / cx.ppf))) [..., None] * tc.get("foam", 0.5)
         rgb = rgb * (1 - foam) + hexrgb(tc.get("foam_color", "#e8f2f0")) * foam
+        ice = tc.get("ice")
+        if ice:                                                    # partly frozen: ice from the banks, open water in the channel
+            fi = float(ice.get("ft", 14.0))
+            nz = cx.smp.field("ice", 28.0, X, Y)
+            reach = fi * (0.65 + 0.55 * nz) + 0.8
+            wi = (1 - sh.smoothstep(np.clip(((ins - 0.6) / np.maximum(reach, 1.0) - 0.4) / 0.5, 0, 1)))
+            wi = wi * (ins > 0) * float(ice.get("alpha", 0.92))
+            irgb = cx.smp.sample(ice.get("texture", "w_ice"), X, Y, ice.get("tile_ft", 40), 0.4, 0, 0, 0, (0, 0), key="ice", vary=0.03)
+            rgb = rgb * (1 - wi[..., None]) + irgb * wi[..., None]
         cv.over(box[0], box[1], rgb.astype(np.float32), a)
         for e in ents:
             cx.note("water", spec, cx.smp.mean(spec), e["id"])

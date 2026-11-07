@@ -1,0 +1,28 @@
+{
+ "png": "bridgehollow_winter_shading_town.png",
+ "width_px": 3200,
+ "height_px": 2000,
+ "ppf": 2.0,
+ "dpi": 200.0,
+ "scale_ft_per_in": 100.0,
+ "bounds_ft": {
+  "x_min": 400.0,
+  "y_min": 250.0,
+  "x_max": 2000.0,
+  "y_max": 1250.0
+ },
+ "y_axis": "down",
+ "page_size_in": [
+  16.0,
+  10.0
+ ],
+ "phases": [
+  "farmland",
+  "grass",
+  "floor_snow",
+  "snow",
+  "forest",
+  "scree",
+  "rock"
+ ]
+}

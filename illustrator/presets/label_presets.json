@@ -36,5 +36,104 @@
   "label_offset": {"color": "#ffffff", "casing": true},
   "declutter": {"enabled": true, "collision": "number", "legend": true, "legend_title": "Key",
                 "tiers": {"civic": {"number": true, "max_fpi": 300}, "houses": {"max_fpi": 25}}}
+ },
+ "winter_legible": {
+  "_title": "Winter legible: near-black navy text on a 86% white box, bold districts, larger minimum sizes, white leaders with dark casing, tiers per scale, nothing on water",
+  "label_style": {
+   "default": {
+    "mode": "box",
+    "color": "#0b1730",
+    "box_color": "#ffffff",
+    "box_opacity": 0.86,
+    "box_pad": 2.2,
+    "box_radius": 2.4,
+    "font": "Arial",
+    "bold": false,
+    "halo_color": "#ffffff",
+    "halo_width": 2.4,
+    "halo_opacity": 0.9
+   },
+   "districts": {
+    "size": 10.5,
+    "bold": true,
+    "letter_spacing": 0.8,
+    "wrap": "auto",
+    "max_lines": 2,
+    "box_opacity": 0.9,
+    "box_pad": 3.0
+   },
+   "streets": {
+    "size": 6.4,
+    "bold": true,
+    "italic": false,
+    "mode": "halo",
+    "halo_width": 2.8,
+    "halo_opacity": 0.95,
+    "color": "#0b1730"
+   },
+   "buildings": {
+    "size": 6.6,
+    "bold": true,
+    "max_lines": 2,
+    "fit_shape": false,
+    "box_pad": 1.8
+   },
+   "elevation": {
+    "color": "#27415f",
+    "mode": "halo",
+    "halo_color": "#ffffff",
+    "halo_width": 1.6,
+    "halo_opacity": 0.85,
+    "knockout": true,
+    "knockout_pad": 1.2,
+    "size": 5.2
+   }
+  },
+  "label_offset": {
+   "color": "#ffffff",
+   "casing": true,
+   "casing_color": "#0b1730",
+   "stroke_width": 0.9,
+   "casing_width": 2.0,
+   "lock_leaders": true,
+   "max_offset_pt": 120
+  },
+  "declutter": {
+   "enabled": true,
+   "collision": "number",
+   "legend": true,
+   "legend_title": "Key",
+   "area_move": 0.05,
+   "quiet": false,
+   "weights": {
+    "building": 3.0,
+    "plaza": 1.5,
+    "road": 3.0,
+    "water": 8.0,
+    "junction": 1.5
+   },
+   "tiers": {
+    "districts": {
+     "max_fpi": 1000
+    },
+    "plazas": {
+     "max_fpi": 1000
+    },
+    "civic": {
+     "max_fpi": 300,
+     "size": 1.0,
+     "max_cover": 0.5
+    },
+    "streets": {
+     "max_fpi": 120,
+     "size": 1.0,
+     "max_cover": 0.45
+    },
+    "houses": {
+     "max_fpi": 45,
+     "max_cover": 0.3
+    }
+   }
+  }
  }
 }

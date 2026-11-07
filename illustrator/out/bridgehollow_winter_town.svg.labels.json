@@ -1,0 +1,621 @@
+{
+ "place": "bridgehollow",
+ "view": "town",
+ "fpi": 100,
+ "k": 0.72,
+ "x0": 400.0,
+ "y0": 250.0,
+ "margin_pt": 36.0,
+ "labels": {
+  "dis_farm": {
+   "cx": 847.66,
+   "cy": 572.4,
+   "w": 72.76,
+   "h": 11.55,
+   "layer": "Labels - Districts",
+   "tier": "districts",
+   "status": "placed",
+   "text": "FARMLAND",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "dis_authority": {
+   "cx": 283.98,
+   "cy": 336.71,
+   "w": 122.01,
+   "h": 11.55,
+   "layer": "Labels - Districts",
+   "tier": "districts",
+   "status": "placed",
+   "text": "AUTHORITY WARD",
+   "anchor": [
+    451.94,
+    434.66
+   ],
+   "offset": true,
+   "pinned": false
+  },
+  "dis_commoner": {
+   "cx": 234.63,
+   "cy": 393.44,
+   "w": 126.81,
+   "h": 11.55,
+   "layer": "Labels - Districts",
+   "tier": "districts",
+   "status": "placed",
+   "text": "COMMONERS' RING",
+   "anchor": [
+    331.2,
+    417.6
+   ],
+   "offset": true,
+   "pinned": false
+  },
+  "sqr_3": {
+   "cx": 386.21,
+   "cy": 575.82,
+   "w": 44.83,
+   "h": 9.02,
+   "layer": "Labels - Districts",
+   "tier": "plazas",
+   "status": "placed",
+   "text": "Square 3",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "sqr_market": {
+   "cx": 658.91,
+   "cy": 426.96,
+   "w": 35.61,
+   "h": 18.04,
+   "layer": "Labels - Districts",
+   "tier": "plazas",
+   "status": "placed",
+   "text": "Market Square",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "sqr_court": {
+   "cx": 454.85,
+   "cy": 385.42,
+   "w": 66.86,
+   "h": 9.02,
+   "layer": "Labels - Districts",
+   "tier": "plazas",
+   "status": "placed",
+   "text": "Court Square",
+   "anchor": [
+    528.77,
+    416.92
+   ],
+   "offset": true,
+   "pinned": false
+  },
+  "bld_mill": {
+   "cx": 634.57,
+   "cy": 736.88,
+   "w": 17.8,
+   "h": 7.26,
+   "layer": "Labels - Buildings",
+   "tier": "civic",
+   "status": "placed",
+   "text": "Mill *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "str_pilgrim_road_1": {
+   "cx": 733.18,
+   "cy": 676.98,
+   "w": 46.66,
+   "h": 7.04,
+   "layer": "Labels - Streets",
+   "tier": "civic",
+   "status": "placed",
+   "text": "Pilgrim Road *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_tax_office": {
+   "cx": 856.82,
+   "cy": 709.15,
+   "w": 80.48,
+   "h": 7.26,
+   "layer": "Labels - Buildings",
+   "tier": "civic",
+   "status": "placed",
+   "text": "Tax and Permit Office *",
+   "anchor": [
+    719.42,
+    621.0
+   ],
+   "offset": true,
+   "pinned": false
+  },
+  "bld_customs_house": {
+   "cx": 438.84,
+   "cy": 399.38,
+   "w": 8.18,
+   "h": 8.18,
+   "layer": "Labels - Buildings",
+   "tier": "civic",
+   "status": "numbered",
+   "text": "Customs House *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false,
+   "number": 1
+  },
+  "bld_inn": {
+   "cx": 613.03,
+   "cy": 387.83,
+   "w": 17.95,
+   "h": 7.26,
+   "layer": "Labels - Buildings",
+   "tier": "civic",
+   "status": "placed",
+   "text": "Inn *",
+   "anchor": [
+    640.4,
+    387.83
+   ],
+   "offset": true,
+   "pinned": false
+  },
+  "bld_smithy": {
+   "cx": 548.63,
+   "cy": 567.29,
+   "w": 26.82,
+   "h": 7.26,
+   "layer": "Labels - Buildings",
+   "tier": "civic",
+   "status": "placed",
+   "text": "Smithy *",
+   "anchor": [
+    504.25,
+    545.33
+   ],
+   "offset": true,
+   "pinned": false
+  },
+  "bld_meeting_hall": {
+   "cx": 658.47,
+   "cy": 623.21,
+   "w": 46.77,
+   "h": 7.26,
+   "layer": "Labels - Buildings",
+   "tier": "civic",
+   "status": "placed",
+   "text": "Meeting Hall *",
+   "anchor": [
+    541.8,
+    538.92
+   ],
+   "offset": true,
+   "pinned": false
+  },
+  "bld_wardens_barracks": {
+   "cx": 405.63,
+   "cy": 278.73,
+   "w": 69.98,
+   "h": 7.26,
+   "layer": "Labels - Buildings",
+   "tier": "civic",
+   "status": "placed",
+   "text": "Wardens' Barracks *",
+   "anchor": [
+    508.86,
+    337.97
+   ],
+   "offset": true,
+   "pinned": false
+  },
+  "bld_treasury": {
+   "cx": 565.63,
+   "cy": 248.68,
+   "w": 55.94,
+   "h": 7.26,
+   "layer": "Labels - Buildings",
+   "tier": "civic",
+   "status": "placed",
+   "text": "Town Treasury *",
+   "anchor": [
+    528.66,
+    321.52
+   ],
+   "offset": true,
+   "pinned": false
+  },
+  "bld_stables": {
+   "cx": 594.39,
+   "cy": 258.74,
+   "w": 30.66,
+   "h": 7.26,
+   "layer": "Labels - Buildings",
+   "tier": "civic",
+   "status": "placed",
+   "text": "Stables *",
+   "anchor": [
+    570.06,
+    311.33
+   ],
+   "offset": true,
+   "pinned": false
+  },
+  "bld_magistrate_court": {
+   "cx": 492.95,
+   "cy": 460.26,
+   "w": 8.18,
+   "h": 8.18,
+   "layer": "Labels - Buildings",
+   "tier": "civic",
+   "status": "numbered",
+   "text": "Magistrate's Court *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false,
+   "number": 3
+  },
+  "bld_records_house": {
+   "cx": 494.93,
+   "cy": 435.64,
+   "w": 8.18,
+   "h": 8.18,
+   "layer": "Labels - Buildings",
+   "tier": "civic",
+   "status": "numbered",
+   "text": "Records House *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false,
+   "number": 2
+  },
+  "bld_warden_hall": {
+   "cx": 376.14,
+   "cy": 289.29,
+   "w": 51.95,
+   "h": 7.26,
+   "layer": "Labels - Buildings",
+   "tier": "civic",
+   "status": "placed",
+   "text": "Warden's Hall *",
+   "anchor": [
+    503.5,
+    381.67
+   ],
+   "offset": true,
+   "pinned": false
+  },
+  "bld_lockup": {
+   "cx": 403.16,
+   "cy": 479.3,
+   "w": 29.48,
+   "h": 7.26,
+   "layer": "Labels - Buildings",
+   "tier": "civic",
+   "status": "placed",
+   "text": "Lockup *",
+   "anchor": [
+    494.17,
+    412.02
+   ],
+   "offset": true,
+   "pinned": false
+  },
+  "str_005": {
+   "cx": 435.16,
+   "cy": 307.84,
+   "w": 43.08,
+   "h": 7.04,
+   "layer": "Labels - Streets",
+   "tier": "streets",
+   "status": "hidden",
+   "text": "Cooper Row *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "str_006": {
+   "cx": 715.44,
+   "cy": 304.76,
+   "w": 49.24,
+   "h": 7.04,
+   "layer": "Labels - Streets",
+   "tier": "streets",
+   "status": "hidden",
+   "text": "Weavers Walk *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "str_007": {
+   "cx": 773.03,
+   "cy": 291.57,
+   "w": 43.08,
+   "h": 7.04,
+   "layer": "Labels - Streets",
+   "tier": "streets",
+   "status": "placed",
+   "text": "Brook Lane *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "str_008": {
+   "cx": 360.58,
+   "cy": 382.79,
+   "w": 40.5,
+   "h": 7.04,
+   "layer": "Labels - Streets",
+   "tier": "streets",
+   "status": "placed",
+   "text": "Hollow Way *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "str_011": {
+   "cx": 430.47,
+   "cy": 428.06,
+   "w": 45.52,
+   "h": 7.04,
+   "layer": "Labels - Streets",
+   "tier": "streets",
+   "status": "hidden",
+   "text": "Cobbler Row *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "str_013": {
+   "cx": 815.04,
+   "cy": 508.08,
+   "w": 52.97,
+   "h": 7.04,
+   "layer": "Labels - Streets",
+   "tier": "streets",
+   "status": "placed",
+   "text": "Thatchers Way *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "str_014": {
+   "cx": 457.02,
+   "cy": 454.54,
+   "w": 51.68,
+   "h": 7.04,
+   "layer": "Labels - Streets",
+   "tier": "streets",
+   "status": "hidden",
+   "text": "Warden Street *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "str_015": {
+   "cx": 747.03,
+   "cy": 444.06,
+   "w": 61.57,
+   "h": 7.04,
+   "layer": "Labels - Streets",
+   "tier": "streets",
+   "status": "hidden",
+   "text": "Wheelwright Lane *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "str_016": {
+   "cx": 395.87,
+   "cy": 489.88,
+   "w": 41.79,
+   "h": 7.04,
+   "layer": "Labels - Streets",
+   "tier": "streets",
+   "status": "hidden",
+   "text": "Dyers Walk *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "str_021": {
+   "cx": 682.49,
+   "cy": 572.94,
+   "w": 63.79,
+   "h": 7.04,
+   "layer": "Labels - Streets",
+   "tier": "streets",
+   "status": "hidden",
+   "text": "Cartwright Lane 2 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "str_022": {
+   "cx": 781.2,
+   "cy": 568.94,
+   "w": 52.75,
+   "h": 7.04,
+   "layer": "Labels - Streets",
+   "tier": "streets",
+   "status": "hidden",
+   "text": "Tanners Row 2 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "str_024": {
+   "cx": 398.24,
+   "cy": 725.68,
+   "w": 55.19,
+   "h": 7.04,
+   "layer": "Labels - Streets",
+   "tier": "streets",
+   "status": "placed",
+   "text": "Weavers Walk 2 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "str_027": {
+   "cx": 877.4,
+   "cy": 643.75,
+   "w": 43.08,
+   "h": 7.04,
+   "layer": "Labels - Streets",
+   "tier": "streets",
+   "status": "placed",
+   "text": "Hedge Lane *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  }
+ },
+ "qa": {
+  "labels_shown": 22,
+  "labels_hidden": 141,
+  "hidden_by_scale": 133,
+  "hidden_by_collision": 8,
+  "numbered": 3,
+  "with_leader": 12,
+  "pinned": 0,
+  "text_over_features_pct": 3.7,
+  "over_features_by_kind_pct": {
+   "building": 0.4,
+   "road": 3.2
+  },
+  "labels_over_25pct": 1,
+  "label_label_overlaps": 0,
+  "labels_over_contour_labels": 0,
+  "leaders_crossing_other_labels": 0,
+  "worst": [
+   {
+    "id": "sqr_court",
+    "text": "Court Square",
+    "tier": "plazas",
+    "over_pct": 42.7,
+    "by_kind": {
+     "road": 0.43
+    }
+   },
+   {
+    "id": "bld_meeting_hall",
+    "text": "Meeting Hall *",
+    "tier": "civic",
+    "over_pct": 11.1,
+    "by_kind": {
+     "building": 0.11
+    }
+   },
+   {
+    "id": "bld_tax_office",
+    "text": "Tax and Permit Office *",
+    "tier": "civic",
+    "over_pct": 10.7,
+    "by_kind": {
+     "road": 0.11
+    }
+   },
+   {
+    "id": "str_008",
+    "text": "Hollow Way *",
+    "tier": "streets",
+    "over_pct": 5.5,
+    "by_kind": {
+     "road": 0.05
+    }
+   },
+   {
+    "id": "bld_lockup",
+    "text": "Lockup *",
+    "tier": "civic",
+    "over_pct": 3.9,
+    "by_kind": {
+     "building": 0.04
+    }
+   },
+   {
+    "id": "str_013",
+    "text": "Thatchers Way *",
+    "tier": "streets",
+    "over_pct": 0.6,
+    "by_kind": {
+     "road": 0.01
+    }
+   },
+   {
+    "id": "bld_treasury",
+    "text": "Town Treasury *",
+    "tier": "civic",
+    "over_pct": 0.3,
+    "by_kind": {
+     "road": 0.0
+    }
+   }
+  ],
+  "overlapping_pairs": [],
+  "hidden": [
+   {
+    "id": "str_005",
+    "text": "Cooper Row *",
+    "tier": "streets",
+    "why": "collision"
+   },
+   {
+    "id": "str_006",
+    "text": "Weavers Walk *",
+    "tier": "streets",
+    "why": "collision"
+   },
+   {
+    "id": "str_011",
+    "text": "Cobbler Row *",
+    "tier": "streets",
+    "why": "collision"
+   },
+   {
+    "id": "str_014",
+    "text": "Warden Street *",
+    "tier": "streets",
+    "why": "collision"
+   },
+   {
+    "id": "str_015",
+    "text": "Wheelwright Lane *",
+    "tier": "streets",
+    "why": "collision"
+   },
+   {
+    "id": "str_016",
+    "text": "Dyers Walk *",
+    "tier": "streets",
+    "why": "collision"
+   },
+   {
+    "id": "str_021",
+    "text": "Cartwright Lane 2 *",
+    "tier": "streets",
+    "why": "collision"
+   },
+   {
+    "id": "str_022",
+    "text": "Tanners Row 2 *",
+    "tier": "streets",
+    "why": "collision"
+   }
+  ]
+ },
+ "declutter": {
+  "enabled": true,
+  "scale_visibility": true,
+  "collision": "number",
+  "score": true,
+  "legend": true,
+  "quiet": false
+ }
+}

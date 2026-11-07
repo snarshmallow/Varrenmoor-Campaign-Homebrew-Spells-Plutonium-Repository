@@ -1,0 +1,128 @@
+{
+ "id": "winter_town",
+ "continue_on_error": false,
+ "actions": [
+  {
+   "action": "place_svg",
+   "path": "illustrator/out/bridgehollow_winter_town.svg",
+   "mode": "open"
+  },
+  {
+   "action": "place_image",
+   "path": "illustrator/out/bridgehollow_winter_shading_town.png",
+   "rect": [
+    36.0,
+    36.0,
+    1188.0,
+    756.0
+   ],
+   "layer": "ART - Shading",
+   "below": "LINES",
+   "name": "shading_png",
+   "lock": true,
+   "embed": true
+  },
+  {
+   "action": "place_image",
+   "path": "illustrator/out/bridgehollow_winter_fills_town_fills/fill_fields.png",
+   "rect": [
+    36.0,
+    36.0,
+    1188.0,
+    756.0
+   ],
+   "layer": "ART - Fill Fields",
+   "below": "LINES",
+   "name": "fill_fields_png",
+   "lock": true,
+   "embed": true
+  },
+  {
+   "action": "place_image",
+   "path": "illustrator/out/bridgehollow_winter_fills_town_fills/fill_water.png",
+   "rect": [
+    36.0,
+    36.0,
+    1188.0,
+    756.0
+   ],
+   "layer": "ART - Fill Water",
+   "below": "LINES",
+   "name": "fill_water_png",
+   "lock": true,
+   "embed": true
+  },
+  {
+   "action": "place_image",
+   "path": "illustrator/out/bridgehollow_winter_fills_town_fills/fill_streets.png",
+   "rect": [
+    36.0,
+    36.0,
+    1188.0,
+    756.0
+   ],
+   "layer": "ART - Fill Streets",
+   "below": "LINES",
+   "name": "fill_streets_png",
+   "lock": true,
+   "embed": true
+  },
+  {
+   "action": "place_image",
+   "path": "illustrator/out/bridgehollow_winter_fills_town_fills/fill_buildings.png",
+   "rect": [
+    36.0,
+    36.0,
+    1188.0,
+    756.0
+   ],
+   "layer": "ART - Fill Buildings",
+   "below": "LINES",
+   "name": "fill_buildings_png",
+   "lock": true,
+   "embed": true
+  },
+  {
+   "action": "place_image",
+   "path": "illustrator/out/bridgehollow_winter_light_town/shadows.png",
+   "rect": [
+    36.0,
+    36.0,
+    1188.0,
+    756.0
+   ],
+   "layer": "ART - Shadows",
+   "below": "LINES",
+   "name": "shadows_png",
+   "lock": true,
+   "embed": true
+  },
+  {
+   "action": "place_image",
+   "path": "illustrator/out/bridgehollow_winter_light_town/light_glow.png",
+   "rect": [
+    36.0,
+    36.0,
+    1188.0,
+    756.0
+   ],
+   "layer": "ART - Light Glow",
+   "below": "LINES",
+   "name": "light_glow_png",
+   "lock": true,
+   "embed": true
+  },
+  {
+   "action": "get_layer_tree"
+  },
+  {
+   "action": "save_ai",
+   "path": "illustrator/out/bridgehollow_winter_town.ai"
+  },
+  {
+   "action": "export_png",
+   "path": "illustrator/out/bridgehollow_winter_town.png",
+   "scale": 200
+  }
+ ]
+}
