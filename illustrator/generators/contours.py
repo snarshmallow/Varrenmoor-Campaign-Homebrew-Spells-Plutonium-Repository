@@ -186,7 +186,7 @@ def build(h, cell_ft, frame, params=None, mask_polys=None):
     cs.emphasize_datum = p.emphasize_datum
     if p.labels:
         cs.labels = _place_labels(pieces, frame, p, mask, mat)
-    halos = [lb["box"].buffer(p.halo_pt) for lb in cs.labels]
+    halos = [lb["box"].buffer(p.halo_pt) for lb in cs.labels] if p.halo_pt > 0 else []
     if halos:
         tree = STRtree(halos)
         for pc in pieces:
@@ -286,7 +286,31 @@ def _d(pts, closed):
     return s + (" Z" if closed else "")
 
 
-def emit(tree, cs, layer_minor=LAYER_MINOR, layer_index=LAYER_INDEX, layer_labels=LAYER_LABELS):
+def cut_pieces(cs, geom, min_len=1.5):
+    """Remove the parts of every contour piece under `geom` (page pt), splitting pieces into open paths; ids are renumbered."""
+    if geom is None or geom.is_empty or not cs.pieces:
+        return 0
+    tree = STRtree([geom])
+    out, n_cut, counters = [], 0, {}
+    for pc in cs.pieces:
+        ls = LineString(pc["pts"])
+        if not tree.query(ls).size or not ls.intersects(geom):
+            out.append(pc)
+            continue
+        n_cut += 1
+        for seg in _merge(ls.difference(geom)):
+            if seg.length >= min_len:
+                out.append({**pc, "pts": list(seg.coords), "closed": False})
+    if n_cut:
+        for pc in out:
+            e = f"{pc['elev']:g}"
+            counters[e] = counters.get(e, 0) + 1
+            pc["id"] = f"contour_{e}_{counters[e]}"
+    cs.pieces = out
+    return n_cut
+
+
+def emit(tree, cs, layer_minor=LAYER_MINOR, layer_index=LAYER_INDEX, layer_labels=LAYER_LABELS, labels=True):
     for pc in cs.pieces:
         cls = "contour-index" if pc["index"] else "contour-minor"
         if pc.get("datum") and getattr(cs, "emphasize_datum", True):
@@ -294,7 +318,7 @@ def emit(tree, cs, layer_minor=LAYER_MINOR, layer_index=LAYER_INDEX, layer_label
         pts = pc["pts"][:-1] if pc["closed"] else pc["pts"]
         tree.add(layer_index if pc["index"] else layer_minor,
                  f'<path id="{pc["id"]}" class="{cls}" fill="none" d="{_d(pts, pc["closed"])}"/>')
-    for lb in cs.labels:
+    for lb in (cs.labels if labels else []):
         tr = f' transform="rotate({lb["rot"]:.2f} {lb["x"]:.2f} {lb["y"]:.2f})"' if abs(lb["rot"]) > 0.01 else ""
         tree.add(layer_labels,
                  f'<text id="{lb["id"]}" class="contour-label" x="{lb["x"]:.2f}" y="{lb["y"] + lb["size"] * 0.35:.2f}" '

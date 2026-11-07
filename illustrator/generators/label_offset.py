@@ -58,6 +58,14 @@ def text_box(cx, cy, w, h, rot=None):
 
 
 @dataclass
+class Layout:
+    """One way to set a label's text: wrapped lines and the size of the text block (page pt)."""
+    lines: list
+    w: float
+    h: float
+
+
+@dataclass
 class Result:
     id: str
     x: float                      # text anchor position (baseline centre of the text box, see anchor)
@@ -67,6 +75,11 @@ class Result:
     leader: list = None           # polyline pts in page pt, from anchor point to the text
     dot: tuple = None
     offset: bool = False
+    cx: float = 0.0               # centre of the text block
+    cy: float = 0.0
+    w: float = 0.0
+    h: float = 0.0
+    lines: list = None
 
 
 @dataclass
@@ -80,6 +93,12 @@ class _Item:
     point: tuple
     w: float = 0.0
     h: float = 0.0
+    layouts: list = None          # layouts tried (in order) to fit inside the shape
+    offset_layout: Layout = None  # layout used when the text moves outside
+    lines: list = None
+
+    def use(self, lay):
+        self.w, self.h, self.lines = lay.w, lay.h, lay.lines
 
 
 class Placer:
@@ -92,7 +111,9 @@ class Placer:
         self.shapes = [(i, Polygon(p).buffer(0)) for i, p in shapes if len(p) >= 3]
         self._tree = STRtree([g for _, g in self.shapes]) if self.shapes else None
 
-    def add(self, id_, poly_pts, text, size, bold=False, rot=None, point=None):
+    def add(self, id_, poly_pts, text, size, bold=False, rot=None, point=None, layouts=None, offset_layout=None):
+        """layouts: [Layout, ...] wrapped variants tried in order for fitting inside (default: the one-line text);
+        offset_layout: the one used when the text has to move outside (default: layouts[0])."""
         if len(poly_pts) < 3:
             return
         pg = Polygon(poly_pts).buffer(0)
@@ -101,7 +122,10 @@ class Placer:
         if pg.geom_type == "MultiPolygon":
             pg = max(pg.geoms, key=lambda g: g.area)
         w, h = text_size(text, size, bold)
-        self.items.append(_Item(id_, pg, text, size, bold, rot, tuple(point) if point else None, w, h))
+        lays = layouts or [Layout([text], w, h)]
+        it = _Item(id_, pg, text, size, bold, rot, tuple(point) if point else None, w, h, lays, offset_layout or lays[0])
+        it.use(lays[0])
+        self.items.append(it)
 
     def add_fixed_box(self, b):
         self.fixed.append(b)
@@ -156,16 +180,24 @@ class Placer:
         for it in self.items:
             cands = self._inside_candidates(it)
             hit = None
-            if self.p.enabled:
-                hit = next((c for c in cands if self._fits(it, c) and not self._collides(it, c, placed)), None)
-            else:
-                hit = cands[0]
-            if hit is None and self.p.enabled and any(self._fits(it, c) for c in cands):
-                hit = self._shifted(it, cands[0], placed)       # fits, but another label sits on it: slide within the shape
+            for lay in it.layouts:
+                it.use(lay)
+                if self.p.enabled:
+                    hit = next((c for c in cands if self._fits(it, c) and not self._collides(it, c, placed)), None)
+                    if hit is None and any(self._fits(it, c) for c in cands):
+                        hit = self._shifted(it, cands[0], placed)       # fits, but another label sits on it: slide within the shape
+                else:
+                    hit = next((c for c in cands if self._fits(it, c)), None)
+                if hit is not None:
+                    break
+            if hit is None:
+                it.use(it.offset_layout)
+                if not self.p.enabled:
+                    hit = cands[0]
             if hit is not None:
                 b = text_box(hit[0], hit[1], it.w, it.h, it.rot)
                 placed.append(b)
-                results.append(Result(it.id, hit[0], hit[1] + it.size * 0.35, "middle", it.rot))
+                results.append(Result(it.id, hit[0], hit[1] + it.size * 0.35, "middle", it.rot, cx=hit[0], cy=hit[1], w=it.w, h=it.h, lines=it.lines))
             else:
                 todo.append((it, cands))
         leaders = []
@@ -175,7 +207,7 @@ class Placer:
             if r is None:                     # nowhere to put it: leave it centred (overflowing)
                 c = cands[0]
                 placed.append(text_box(c[0], c[1], it.w, it.h, it.rot))
-                r = Result(it.id, c[0], c[1] + it.size * 0.35, "middle", it.rot)
+                r = Result(it.id, c[0], c[1] + it.size * 0.35, "middle", it.rot, cx=c[0], cy=c[1], w=it.w, h=it.h, lines=it.lines)
             results.append(r)
         return results
 
@@ -243,7 +275,7 @@ class Placer:
         if self.frame is not None and not self.frame.contains(ln):
             return None
         anc = "start" if side > 0 else "end"
-        r = Result(it.id, tx0, cy + it.size * 0.35, anc, None, pts, anchor if self.p.dot else None, True)
+        r = Result(it.id, tx0, cy + it.size * 0.35, anc, None, pts, anchor if self.p.dot else None, True, cx, cy, it.w, it.h, it.lines)
         return r, tb, ln
 
 

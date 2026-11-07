@@ -21,7 +21,7 @@ The generator takes `--view town|bowl|street:<id>|building:<id>` and crops/scale
 ## 3. Illustrator file structure (top to bottom)
 Everything toggles from the Layers panel. Only the layers marked GEN are rewritten by the generator.
 1. `NOTES` (GEN): design notes, "proposed" flags.
-2. `LABELS` (GEN) with sublayers `Labels - Districts`, `Labels - Streets`, `Labels - Buildings`, `Labels - Rooms`. Text only, so one eye icon hides them all.
+2. `LABELS` (GEN) with sublayers `Labels - Districts`, `Labels - Streets`, `Labels - Buildings`, `Labels - Rooms`, `Labels - Elevation`, `Leaders` and `Label Backing` (halo copies / boxes, toggleable). Text and its backing only, so one eye icon hides them all.
 3. `ART - Top` (USER, empty): effects, lettering, props.
 4. `ART - Fills` (USER, empty), `ART - Textures` (USER, empty), `ART - Masks` (USER, empty).
 5. `LINES` (GEN) with sublayers `Walls`, `Buildings`, `Roads`, `Water`, `Terrain`, `Fences`. Each shape is a **closed path or compound path named by its entity id**, so it can be used directly as a clipping mask, Live Paint region or fill target.

@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:i="http://ns.adobe.com/AdobeIllustrator/10.0/" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" width="1224pt" height="792pt" viewBox="0 0 1224 792">
+<style><![CDATA[
+path { fill: none; }
+.guide-line { fill: none; stroke: #7a7a7a; stroke-width: 0.35; }
+.guide-major { fill: none; stroke: #5a5a5a; stroke-width: 0.6; }
+.field { fill: none; stroke: #5d7a3a; stroke-width: 0.4; }
+.guide-major { fill: none; stroke: #5a5a5a; stroke-width: 0.6; }
+.field { fill: none; stroke: #5d7a3a; stroke-width: 0.4; }
+.wall { fill: none; stroke: #000000; stroke-width: 1.25; }
+.road { fill: none; stroke: #000000; stroke-width: 0.75; }
+.water { fill: none; stroke: #1a4f8a; stroke-width: 0.75; }
+.proposed { stroke-dasharray: 3 1.5; }
+text { fill: #000000; stroke: none; font-family: Arial, sans-serif; }
+.leader { fill: none; stroke: #000000; }
+.leader-dot { stroke: none; fill: #000000; }
+.contour-minor { fill: none; stroke: #8a5a2b; stroke-width: 0.3; stroke-linejoin: round; stroke-linecap: round; }
+.contour-index { fill: none; stroke: #8a5a2b; stroke-width: 0.85; stroke-linejoin: round; stroke-linecap: round; }
+.contour-datum { fill: none; stroke: #1a4f8a; stroke-width: 1.1; }
+.contour-label { fill: #6b4423; stroke: none; font-family: Arial, sans-serif; }
+]]></style>
+<g id="GUIDES" inkscape:groupmode="layer" i:layer="yes" inkscape:label="GUIDES" sodipodi:insensitive="true">
+  <g id="Bounds" inkscape:groupmode="layer" i:layer="yes" inkscape:label="Bounds" sodipodi:insensitive="true">
+    <path id="bounds_x5F_place" class="guide-line" fill="none" d="M36.00,756.00 L36.00,36.00 L1188.00,36.00 L1188.00,756.00 Z"/>
+    <path id="bounds_x5F_view" class="wall" fill="none" d="M36.00,36.00 L1188.00,36.00 L1188.00,756.00 L36.00,756.00 Z"/>
+  </g>
+  <g id="North arrow" inkscape:groupmode="layer" i:layer="yes" inkscape:label="North arrow" sodipodi:insensitive="true">
+    <path id="north_x5F_arrow" class="wall" fill="none" d="M1164.00,724.00 L1171.00,758.00 L1164.00,752.00 L1157.00,758.00 Z"/>
+    <text id="north_x5F_label" x="1164.00" y="719.00" font-size="9" text-anchor="middle" font-weight="bold">N</text>
+  </g>
+  <g id="Scale bar" inkscape:groupmode="layer" i:layer="yes" inkscape:label="Scale bar" sodipodi:insensitive="true">
+    <path id="scalebar_x5F_a" class="wall" fill="none" d="M40.00,766.00 L112.00,766.00 L112.00,771.00 L40.00,771.00 Z M184.00,766.00 L256.00,766.00 L256.00,771.00 L184.00,771.00 Z M328.00,766.00 L400.00,766.00 L400.00,771.00 L328.00,771.00 Z"/>
+    <path id="scalebar_x5F_b" class="guide-line" fill="none" d="M112.00,766.00 L184.00,766.00 L184.00,771.00 L112.00,771.00 Z M256.00,766.00 L328.00,766.00 L328.00,771.00 L256.00,771.00 Z"/>
+    <text id="scalebar_x5F_t0" x="40.00" y="782.00" font-size="7" text-anchor="middle">0</text>
+    <text id="scalebar_x5F_t1" x="112.00" y="782.00" font-size="7" text-anchor="middle">40</text>
+    <text id="scalebar_x5F_t2" x="184.00" y="782.00" font-size="7" text-anchor="middle">80</text>
+    <text id="scalebar_x5F_t3" x="256.00" y="782.00" font-size="7" text-anchor="middle">120</text>
+    <text id="scalebar_x5F_t4" x="328.00" y="782.00" font-size="7" text-anchor="middle">160</text>
+    <text id="scalebar_x5F_t5" x="400.00" y="782.00" font-size="7" text-anchor="middle">200</text>
+    <text id="scalebar_x5F_unit" x="410.00" y="771.00" font-size="8" text-anchor="start">ft   (1 in = 40 ft)</text>
+  </g>
+  <g id="Grid" inkscape:groupmode="layer" i:layer="yes" inkscape:label="Grid" sodipodi:insensitive="true">
+    <path id="grid_x5F_100ft" class="guide-line" fill="none" d="M72.00,36.00 L72.00,756.00 M432.00,36.00 L432.00,756.00 M612.00,36.00 L612.00,756.00 M792.00,36.00 L792.00,756.00 M972.00,36.00 L972.00,756.00 M36.00,126.00 L1188.00,126.00 M36.00,306.00 L1188.00,306.00 M36.00,486.00 L1188.00,486.00 M36.00,666.00 L1188.00,666.00"/>
+    <path id="grid_x5F_major_x5F_500ft" class="guide-major" fill="none" d="M252.00,36.00 L252.00,756.00 M1152.00,36.00 L1152.00,756.00"/>
+  </g>
+</g>
+<g id="LINES" inkscape:groupmode="layer" i:layer="yes" inkscape:label="LINES">
+  <g id="Fences" inkscape:groupmode="layer" i:layer="yes" inkscape:label="Fences">
+    <path id="fld_x5F_001" class="field proposed" fill="none" d="M919.80,53.82 L843.12,63.18 L894.96,195.48 L911.88,205.56 L942.12,221.40 L964.62,230.04 L985.68,234.00 L995.94,233.64 L1100.52,205.92 L1081.26,163.80 L1067.58,146.16 L1023.48,101.52 L980.10,71.28 Z"/>
+    <path id="fld_x5F_002" class="field proposed" fill="none" d="M1158.48,541.98 L1153.80,562.14 L1121.94,560.16 L1090.44,565.20 L1014.48,592.38 L1044.90,682.38 L1057.14,726.66 L1061.42,756.00 L1103.46,756.00 L1139.04,751.50 L1166.94,754.92 L1169.96,756.00 L1188.00,756.00 L1188.00,606.19 L1180.44,595.62 L1162.62,559.44 Z"/>
+  </g>
+  <g id="Terrain" inkscape:groupmode="layer" i:layer="yes" inkscape:label="Terrain">
+    <g id="Contours - Index" inkscape:groupmode="layer" i:layer="yes" inkscape:label="Contours - Index">
+      <path id="contour_x5F_650_x5F_1" class="contour-index" fill="none" d="M596.00,264.05 L594.84,264.65 L592.03,266.32 L588.94,268.33 L585.56,270.69 L582.19,273.26 L578.81,276.03 L575.44,279.02 L572.06,282.21 L568.69,285.55 L565.31,289.02 L561.94,292.62 L558.56,296.37 L553.50,302.24 L546.75,310.23 L538.31,320.35 L528.19,332.59 L518.91,343.73 L515.15,348.19"/>
+      <path id="contour_x5F_650_x5F_2" class="contour-index" fill="none" d="M687.81,335.69 L687.57,334.36 L685.62,324.56 L684.21,318.94 L682.70,313.54 L681.11,308.38 L679.43,303.45 L677.66,298.75 L676.05,294.72 L674.60,291.34 L673.31,288.63 L672.19,286.59 L671.06,284.67 L669.94,282.88 L668.81,281.22 L667.69,279.70 L666.56,278.27 L665.44,276.94 L664.31,275.70 L663.19,274.57 L661.78,273.34 L660.09,272.03 L658.12,270.62 L655.88,269.12 L653.62,267.77 L651.38,266.56 L649.12,265.49 L646.88,264.56 L644.62,263.71 L642.38,262.94 L640.12,262.24 L637.88,261.61 L635.62,261.04 L633.38,260.53 L631.12,260.07 L628.88,259.67 L626.62,259.34 L624.38,259.07 L622.12,258.88 L619.88,258.75 L617.34,258.80 L616.29,258.88"/>
+    </g>
+    <g id="Contours - Minor" inkscape:groupmode="layer" i:layer="yes" inkscape:label="Contours - Minor">
+      <path id="contour_x5F_670_x5F_1" class="contour-minor" fill="none" d="M274.75,36.00 L262.57,42.13 L244.69,51.01 L227.81,59.25 L214.31,65.97 L204.19,71.18 L197.44,74.88 L194.06,77.06 L190.21,79.86 L185.89,83.28 L181.10,87.33 L175.83,92.00 L170.95,96.23 L166.45,100.02 L162.33,103.37 L158.60,106.28 L155.24,108.82 L152.25,110.97 L149.62,112.73 L147.38,114.12 L145.12,115.41 L142.88,116.60 L140.62,117.69 L138.38,118.69 L135.84,119.64 L133.03,120.55 L129.94,121.43 L126.56,122.26 L122.91,122.95 L118.97,123.49 L114.75,123.88 L110.25,124.12 L104.62,124.20 L97.88,124.11 L90.00,123.85 L81.00,123.43 L70.88,122.84 L59.62,122.08 L47.25,121.15 L36.00,120.23"/>
+      <path id="contour_x5F_670_x5F_2" class="contour-minor" fill="none" d="M1188.00,414.86 L1187.24,409.50 L1186.07,400.50 L1184.85,387.00 L1183.55,369.00 L1182.19,346.50 L1180.76,319.50 L1179.43,296.72 L1178.20,278.16 L1177.06,263.81 L1176.02,253.69 L1174.99,244.69 L1173.97,236.81 L1172.95,230.06 L1171.95,224.44 L1170.94,219.38 L1169.95,214.88 L1168.95,210.94 L1167.96,207.56 L1166.87,204.26 L1165.69,201.04 L1164.42,197.89 L1163.05,194.81 L1161.46,191.64 L1159.65,188.36 L1157.62,184.99 L1155.38,181.53 L1152.84,177.94 L1150.03,174.22 L1146.94,170.38 L1143.56,166.42 L1140.19,162.61 L1136.81,158.95 L1133.44,155.44 L1130.06,152.07 L1124.44,147.03 L1116.56,140.30 L1106.44,131.89 L1094.06,121.80 L1083.66,113.59 L1075.22,107.26 L1068.75,102.82 L1064.25,100.27 L1058.62,97.51 L1051.88,94.56 L1044.00,91.41 L1035.00,88.07 L1026.84,84.87 L1019.53,81.83 L1013.06,78.94 L1007.44,76.20 L1001.53,73.06 L995.34,69.51 L988.88,65.56 L982.12,61.21 L974.81,56.23 L966.94,50.62 L958.50,44.39 L949.50,37.54 L947.57,36.00"/>
+    </g>
+    <path id="dis_x5F_authority" class="guide-line proposed" fill="none" d="M388.98,216.00 L324.00,238.68 L274.14,270.00 L234.00,308.88 L199.80,360.00 L177.48,414.00 L166.14,468.00 L167.58,540.00 L180.00,593.46 L195.84,630.00 L220.14,666.00 L252.00,696.96 L288.00,720.36 L342.00,742.14 L395.02,756.00 L589.70,756.00 L612.00,744.48 L648.00,712.80 L684.72,666.00 L712.62,612.00 L729.72,558.00 L739.26,486.00 L737.10,432.00 L725.76,378.00 L704.16,324.00 L684.00,292.50 L663.30,270.00 L630.00,246.96 L576.00,227.16 L504.00,212.76 L450.00,208.98 Z"/>
+    <path id="dis_x5F_commoner" class="guide-line proposed" fill="none" d="M36.00,756.00 L1033.02,756.00 L1033.02,756.00 L1036.62,594.00 L1047.06,450.00 L1042.02,378.00 L1019.16,288.00 L986.40,216.00 L934.38,144.00 L850.14,58.14 L793.08,70.20 L729.54,62.28 L683.49,36.00 L287.95,36.00 L200.70,95.94 L36.00,174.55 Z"/>
+    <path id="dis_x5F_farm" class="guide-line proposed" fill="none" d="M1188.00,756.00 L1188.00,581.53 L1164.96,524.70 L1136.16,399.06 L1126.26,270.36 L1110.60,207.90 L1078.74,151.92 L1034.64,104.94 L981.72,68.04 L920.16,50.22 L850.86,58.50 L934.38,144.00 L975.42,198.00 L1012.32,270.00 L1038.96,360.00 L1047.06,450.00 L1036.62,594.00 L1034.64,738.00 L1032.24,756.00 Z"/>
+  </g>
+  <g id="Water" inkscape:groupmode="layer" i:layer="yes" inkscape:label="Water">
+    <path id="wat_x5F_river" class="water" fill="none" d="M638.10,36.00 L638.10,36.00 L620.10,126.00 L598.50,216.00 L574.20,306.00 L548.64,396.00 L523.26,486.00 L499.32,576.00 L478.44,666.00 L461.70,756.00 L461.70,756.00 L581.94,756.00 L581.94,756.00 L595.08,666.00 L610.92,576.00 L629.46,486.00 L649.62,396.00 L670.86,306.00 L692.64,216.00 L713.70,126.00 L733.32,36.00 L733.32,36.00 Z"/>
+  </g>
+  <g id="Roads" inkscape:groupmode="layer" i:layer="yes" inkscape:label="Roads">
+    <path id="sqr_x5F_market" class="road proposed" fill="none" d="M812.88,415.44 L802.08,396.72 L786.24,380.70 L765.36,371.88 L742.86,368.46 L720.18,371.16 L698.94,379.62 L681.66,394.74 L672.66,408.06 L660.96,460.98 L661.32,477.72 L667.80,499.32 L679.86,518.94 L697.14,534.96 L720.36,540.00 L742.86,538.74 L763.20,531.72 L780.12,520.20 L798.48,511.38 L814.68,497.34 L827.10,478.44 L834.48,455.76 L818.10,435.78 Z"/>
+    <path id="str_x5F_pilgrim_x5F_road_x5F_1" class="road proposed" fill="none" d="M830.40,756.00 L796.85,691.83 L795.80,690.00 L742.88,605.58 L741.44,603.51 L674.48,516.03 L653.04,532.44 L644.29,554.14 L631.80,549.11 L697.79,635.33 L749.48,717.79 L769.46,756.00 Z"/>
+    <path id="str_x5F_pilgrim_x5F_road_x5F_bridge" class="wall proposed" fill="none" d="M503.21,446.84 L485.71,490.24 L644.29,554.14 L661.79,510.74 Z"/>
+    <path id="str_x5F_pilgrim_x5F_road_x5F_3" class="road proposed" fill="none" d="M439.61,474.92 L484.07,493.46 L494.46,468.54 L503.21,446.84 L503.47,446.94 L504.85,443.62 L460.39,425.08 Z"/>
+    <path id="str_x5F_004" class="road proposed" fill="none" d="M36.00,223.54 L58.77,240.37 L60.46,241.46 L74.86,249.56 L78.25,250.99 L85.63,253.15 L89.41,253.78 L96.97,254.14 L100.77,253.87 L108.33,252.43 L111.07,251.66 L118.63,248.78 L120.84,247.74 L135.78,239.28 L137.41,238.22 L216.57,179.89 L245.79,159.87 L275.75,140.90 L314.05,118.28 L345.05,101.10 L417.10,65.07 L402.62,36.09 L330.26,72.27 L329.65,72.59 L298.15,90.05 L297.76,90.27 L259.06,113.13 L258.63,113.39 L228.21,132.65 L227.73,132.97 L198.03,153.31 L197.57,153.64 L118.97,211.56 L105.95,218.94 L100.87,220.87 L96.59,221.69 L92.88,221.51 L89.13,220.41 L77.22,213.71 L49.77,193.43 L47.58,192.07 L37.14,186.67 L36.00,188.88 Z"/>
+    <path id="str_x5F_005" class="road proposed" fill="none" d="M406.71,36.00 L404.23,39.31 L417.10,65.07 L373.54,86.85 L366.71,98.43 L366.18,99.40 L354.30,123.52 L353.92,124.36 L343.66,149.02 L343.35,149.83 L334.53,175.21 L334.20,176.28 L332.66,182.13 L350.11,167.67 L351.04,166.95 L374.94,149.74 L380.66,135.99 L392.10,112.78 L409.78,82.83 L424.28,61.18 L440.00,40.22 L443.55,36.00 Z M318.18,256.98 L318.08,258.10 L317.18,275.92 L317.16,276.95 L317.52,294.77 L317.58,295.85 L320.10,322.49 L320.16,323.02 L322.37,339.83 L330.85,339.31 L331.79,338.10 L333.21,336.46 L349.14,319.74 L349.11,319.48 L346.67,293.65 L346.33,276.88 L347.17,260.14 L350.45,234.60 L355.66,209.25 L356.18,207.29 L345.14,216.44 L320.36,239.96 Z"/>
+    <path id="str_x5F_006" class="road proposed" fill="none" d="M105.01,171.26 L108.61,175.22 L111.07,177.35 L116.11,180.77 L118.11,181.90 L124.41,184.78 L126.34,185.49 L142.00,189.99 L142.99,190.24 L146.82,191.04 L176.80,168.94 L165.77,166.85 L149.11,163.38 L134.93,159.31 L130.62,157.34 L127.89,155.49 L126.88,154.38 L125.62,151.55 L100.46,162.73 L102.62,167.59 Z M292.61,218.91 L317.22,195.54 L220.47,177.21 L216.57,179.89 L189.99,199.47 Z"/>
+    <path id="str_x5F_007" class="road proposed" fill="none" d="M235.62,331.03 L236.12,330.50 L289.60,271.46 L313.81,246.19 L345.14,216.44 L371.60,194.51 L406.61,169.30 L443.54,146.61 L497.34,116.87 L545.47,92.07 L548.02,86.23 L548.35,85.53 L568.87,43.59 L577.11,47.63 L583.70,52.67 L572.26,39.59 L481.37,86.42 L480.92,86.66 L426.56,116.72 L425.88,117.11 L388.08,140.33 L387.04,141.03 L351.04,166.95 L350.11,167.67 L322.75,190.35 L321.88,191.11 L289.84,221.53 L289.27,222.11 L264.61,247.85 L264.28,248.20 L210.88,307.15 L174.42,344.15 L173.95,344.65 L161.79,358.01 L166.42,355.16 L168.81,353.92 L176.37,350.68 L179.53,349.66 L187.45,347.86 L189.54,347.51 L197.82,346.61 L200.38,346.51 L219.76,347.12 Z"/>
+    <path id="str_x5F_008" class="road proposed" fill="none" d="M577.11,47.63 L568.87,43.59 L548.35,85.53 L548.02,86.23 L537.22,110.89 L536.97,111.50 L527.07,136.52 L526.76,137.36 L518.12,162.74 L517.70,164.15 L511.82,187.35 L562.04,147.95 L570.99,125.32 L581.50,101.32 L601.85,59.73 L603.68,52.81 L602.73,45.73 L599.15,39.54 L594.53,36.00 L576.47,36.00 L573.27,37.84 L571.83,39.10 L583.70,52.67 Z M483.14,322.95 L473.57,366.06 L464.46,399.84 L447.37,450.22 L449.59,450.98 L460.39,425.08 L490.43,437.61 L499.43,411.08 L499.77,409.96 L509.13,375.22 L509.32,374.42 L519.04,330.68 L519.14,330.21 L537.94,233.70 L541.72,218.80 L496.53,254.26 Z"/>
+    <path id="str_x5F_009" class="road proposed" fill="none" d="M728.57,170.92 L725.15,173.44 L719.67,180.58 L718.05,184.72 L716.95,191.13 L717.13,196.89 L717.47,199.72 L718.91,206.56 L719.44,208.48 L722.26,216.70 L725.09,203.51 L754.13,209.74 L750.44,199.00 L750.44,199.00 L749.78,192.54 L749.85,192.38 L749.76,192.35 L747.16,166.76 L736.54,167.84 Z M762.56,334.08 L781.93,396.31 L812.87,386.69 L793.43,324.23 L793.28,323.78 L758.55,222.62 L753.43,246.49 L753.19,247.49 L744.16,280.47 Z"/>
+    <path id="str_x5F_010" class="road proposed" fill="none" d="M1009.94,236.75 L985.57,237.56 L978.82,236.75 L963.60,233.46 L940.68,224.62 L910.27,208.81 L872.62,185.94 L820.58,151.07 L800.14,181.57 L852.52,216.67 L853.21,217.11 L891.73,240.51 L892.79,241.11 L924.65,257.67 L926.51,258.51 L951.71,268.23 L954.44,269.04 L971.90,272.82 L973.59,273.11 L982.59,274.19 L985.39,274.31 L1012.39,273.41 L1014.84,273.16 L1041.48,268.66 L1042.83,268.38 L1095.21,255.42 L1086.39,219.78 L1034.68,232.57 Z"/>
+    <path id="str_x5F_011" class="road proposed" fill="none" d="M48.20,249.77 L46.63,250.63 L36.00,257.37 L36.00,290.80 L40.01,287.44 L60.61,274.37 L90.04,260.71 L91.37,260.00 L101.81,253.68 L100.77,253.87 L96.97,254.14 L89.41,253.78 L85.63,253.15 L78.25,250.99 L74.86,249.56 L63.01,242.90 Z"/>
+    <path id="str_x5F_012" class="road proposed" fill="none" d="M706.00,280.79 L695.21,314.40 L674.58,373.77 L709.26,385.83 L729.96,326.25 L730.10,325.83 L741.08,291.63 L741.31,290.87 L753.19,247.49 L753.43,246.49 L760.99,211.21 L725.09,203.51 L717.64,238.29 Z"/>
+    <path id="str_x5F_013" class="road proposed" fill="none" d="M36.00,407.86 L73.39,441.69 L98.26,417.82 L36.00,361.50 Z M121.60,482.18 L122.39,482.77 L151.73,503.47 L152.81,504.17 L175.67,517.85 L177.67,518.87 L193.87,525.89 L195.16,526.39 L212.08,532.15 L212.87,532.40 L236.69,539.25 L240.15,521.32 L240.74,518.99 L244.85,505.82 L222.77,499.47 L206.90,494.07 L192.36,487.77 L171.02,475.00 L142.61,454.96 L126.19,441.91 L101.17,465.93 Z"/>
+    <path id="str_x5F_014" class="road proposed" fill="none" d="M36.00,525.99 L85.80,480.68 L86.15,480.34 L131.15,437.14 L131.55,436.76 L168.07,399.52 L179.66,390.13 L184.51,387.14 L189.30,385.09 L194.56,383.90 L200.51,383.25 L233.60,384.29 L234.55,384.30 L252.37,383.94 L253.91,383.84 L303.05,378.71 L314.14,360.97 L315.41,359.16 L330.85,339.31 L321.62,339.87 L320.83,339.94 L250.86,347.24 L234.28,347.57 L200.38,346.51 L197.82,346.61 L189.54,347.51 L187.45,347.86 L179.53,349.66 L176.37,350.68 L168.81,353.92 L166.42,355.16 L159.40,359.48 L157.46,360.86 L144.14,371.66 L142.59,373.06 L105.53,410.85 L60.90,453.69 L36.00,476.34 Z M372.04,377.53 L386.41,381.24 L400.58,387.07 L431.09,403.37 L448.39,370.99 L417.07,354.25 L415.40,353.46 L399.20,346.80 L396.81,346.00 L386.92,343.45 L382.23,347.64 L365.22,365.48 L357.27,375.71 Z"/>
+    <path id="str_x5F_015" class="road proposed" fill="none" d="M856.22,228.19 L874.08,278.02 L891.01,328.28 L920.43,430.88 L920.53,431.23 L936.37,482.17 L936.48,482.50 L956.28,541.72 L956.53,542.42 L982.20,608.85 L994.10,641.89 L1010.29,692.24 L1021.92,734.35 L1025.07,750.23 L1025.60,756.00 L1058.14,756.00 L1057.25,746.40 L1057.01,744.75 L1053.59,727.47 L1053.32,726.31 L1041.44,683.29 L1041.24,682.64 L1024.86,631.70 L1024.68,631.17 L1012.62,597.69 L1012.49,597.34 L986.89,531.09 L967.26,472.39 L951.52,421.78 L922.05,319.00 L921.83,318.29 L904.73,267.53 L904.63,267.23 L895.83,242.69 L892.79,241.11 L891.73,240.51 L853.21,217.11 L852.52,216.67 L851.37,215.90 Z M873.31,183.23 L873.00,182.51 L826.56,79.73 L797.04,93.07 L824.40,153.63 L872.62,185.94 L874.93,187.34 Z"/>
+    <path id="str_x5F_016" class="road proposed" fill="none" d="M271.60,756.00 L272.14,754.77 L273.29,751.44 L277.61,734.52 L278.19,731.10 L280.53,704.82 L280.62,702.68 L280.26,667.04 L280.23,666.06 L276.30,595.45 L276.47,570.28 L277.75,554.45 L282.34,530.70 L289.68,507.18 L302.15,475.14 L316.41,443.83 L332.32,413.40 L350.19,384.81 L365.22,365.48 L382.23,347.64 L401.25,330.68 L441.94,297.09 L596.35,175.93 L569.69,141.95 L415.07,263.27 L414.65,263.60 L373.43,297.62 L372.80,298.16 L352.82,315.98 L351.57,317.20 L333.21,336.46 L331.79,338.10 L315.41,359.16 L314.14,360.97 L295.24,391.21 L294.42,392.65 L277.86,424.33 L277.34,425.39 L262.58,457.79 L262.11,458.91 L249.15,492.21 L248.66,493.61 L240.74,518.99 L240.15,521.32 L235.11,547.42 L234.79,549.78 L233.35,567.60 L233.28,569.19 L233.10,595.83 L233.13,597.18 L237.07,667.97 L237.41,702.05 L235.32,725.53 L231.87,739.05 L226.19,752.00 L223.69,756.00 Z"/>
+    <path id="str_x5F_017" class="road proposed" fill="none" d="M743.66,592.01 L743.51,605.65 L743.37,606.37 L767.01,644.07 L774.24,633.01 L776.17,629.14 L778.87,621.76 L779.71,618.71 L781.15,610.97 L781.47,607.71 L781.65,591.15 L781.50,588.60 L777.18,553.86 L776.90,552.20 L772.40,531.32 L735.28,539.32 L739.60,559.38 Z"/>
+    <path id="str_x5F_018" class="road proposed" fill="none" d="M1139.14,529.29 L1121.50,528.93 L1119.84,529.00 L1102.02,530.80 L1100.46,531.05 L1083.18,534.83 L1081.99,535.15 L1056.25,543.25 L1055.70,543.43 L1030.32,552.61 L1029.89,552.77 L999.90,564.77 L1009.83,590.46 L1039.90,578.43 L1064.79,569.43 L1089.67,561.60 L1105.57,558.12 L1121.77,556.48 L1137.78,556.81 L1152.64,558.86 L1156.40,531.58 L1140.74,529.42 Z M938.53,589.32 L913.76,597.28 L889.45,603.03 L879.13,603.77 L880.06,606.60 L888.60,630.70 L892.53,630.41 L894.70,630.08 L920.62,623.96 L921.68,623.67 L947.42,615.39 L948.31,615.07 L979.75,602.49 L969.82,576.80 Z M836.06,595.85 L795.64,578.47 L793.77,577.82 L779.69,574.04 L781.50,588.60 L781.65,591.15 L781.52,603.05 L785.67,604.16 L825.80,621.41 L827.05,621.88 L843.97,627.28 L845.49,627.67 L853.73,629.30 L849.45,617.24 L849.32,616.85 L843.21,598.13 Z M737.04,575.83 L734.69,576.53 L724.05,580.79 L741.43,603.50 L743.54,602.65 L743.66,592.01 L741.53,574.91 Z"/>
+    <path id="str_x5F_019" class="road proposed" fill="none" d="M36.00,636.42 L40.48,639.87 L81.70,677.85 L107.37,657.44 L61.92,615.57 L60.84,614.65 L36.00,595.49 Z M116.73,712.75 L156.28,756.00 L200.19,756.00 L140.47,690.71 L140.14,690.35 L133.53,683.55 L108.04,703.82 Z"/>
+    <path id="str_x5F_020" class="road proposed" fill="none" d="M36.00,755.39 L44.33,751.03 L45.92,750.09 L60.68,740.37 L61.58,739.74 L83.00,723.72 L83.43,723.39 L166.48,657.34 L187.26,642.92 L209.06,629.87 L231.08,618.61 L234.26,617.46 L233.13,597.18 L233.10,595.83 L233.22,578.78 L217.49,584.48 L215.38,585.39 L191.80,597.45 L190.73,598.05 L167.87,611.73 L166.83,612.40 L145.05,627.52 L144.09,628.23 L60.79,694.48 L40.02,710.01 L36.00,712.66 Z M347.85,591.10 L348.47,590.97 L381.17,583.07 L384.20,575.89 L384.72,574.74 L396.60,550.62 L397.31,549.30 L402.66,540.10 L340.16,555.20 L276.64,568.24 L276.47,570.28 L276.30,595.45 L276.87,605.68 Z M460.97,563.79 L454.90,538.66 L443.33,556.09 L435.24,570.00 Z"/>
+    <path id="str_x5F_021" class="road proposed" fill="none" d="M36.00,756.00 L43.36,756.00 L43.12,755.45 L41.70,752.40 L36.00,755.39 Z"/>
+    <path id="str_x5F_022" class="road proposed" fill="none" d="M367.30,756.00 L374.67,736.16 L375.03,735.09 L406.94,633.12 L423.76,593.26 L435.03,570.37 L443.33,556.09 L486.76,490.66 L485.71,490.24 L493.35,471.30 L493.32,471.28 L484.07,493.46 L444.11,476.80 L406.98,532.73 L406.31,533.82 L397.31,549.30 L396.60,550.62 L384.72,574.74 L384.20,575.89 L366.74,617.29 L366.03,619.23 L333.97,721.65 L325.17,745.36 L320.03,756.00 Z"/>
+    <path id="str_x5F_023" class="road proposed" fill="none" d="M591.56,756.00 L630.61,756.00 L627.41,742.59 L626.49,739.74 L624.33,734.52 L589.23,749.04 L590.82,752.87 Z"/>
+    <path id="str_x5F_024" class="road proposed" fill="none" d="M733.34,715.13 L732.18,717.59 L729.30,725.33 L728.65,727.54 L726.85,735.82 L726.49,738.74 L725.95,755.66 L725.97,756.00 L758.51,756.00 L758.38,755.18 L758.82,741.26 L759.69,737.30 L749.48,717.79 L740.29,703.11 Z"/>
+    <path id="str_x5F_025" class="road proposed" fill="none" d="M824.30,540.17 L849.32,616.85 L849.45,617.24 L864.39,659.36 L864.56,659.81 L901.99,756.00 L936.75,756.00 L894.85,648.29 L880.06,606.60 L855.17,530.34 L839.94,478.55 L808.86,487.69 L824.16,539.71 Z"/>
+    <path id="str_x5F_026" class="road proposed" fill="none" d="M1152.50,756.00 L1149.60,755.47 L1147.74,755.28 L1139.10,755.10 L1138.02,755.13 L1125.97,756.00 Z"/>
+  </g>
+  <g id="Blocks" inkscape:groupmode="layer" i:layer="yes" inkscape:label="Blocks">
+  </g>
+  <g id="Buildings" inkscape:groupmode="layer" i:layer="yes" inkscape:label="Buildings">
+    <path id="bld_x5F_house_x5F_003" class="wall proposed" fill="none" d="M538.47,36.00 L517.13,36.00 L515.16,53.10 L536.22,55.44 Z"/>
+    <path id="bld_x5F_house_x5F_004" class="wall proposed" fill="none" d="M358.36,36.00 L361.98,44.10 L380.14,36.00 Z"/>
+    <path id="bld_x5F_house_x5F_005" class="wall proposed" fill="none" d="M497.52,52.56 L500.78,36.00 L464.01,36.00 L462.06,45.54 Z"/>
+    <path id="bld_x5F_house_x5F_006" class="wall proposed" fill="none" d="M323.86,36.00 L315.42,36.00 L296.82,46.44 L311.04,71.46 L335.88,57.42 Z"/>
+    <path id="bld_x5F_house_x5F_007" class="wall proposed" fill="none" d="M487.62,64.98 L466.74,59.94 L462.96,76.14 L483.66,81.00 Z"/>
+    <path id="bld_x5F_house_x5F_008" class="wall proposed" fill="none" d="M424.44,106.38 L448.02,70.92 L435.24,62.28 L411.48,97.74 Z"/>
+    <path id="bld_x5F_house_x5F_009" class="wall proposed" fill="none" d="M246.42,78.30 L223.92,89.28 L238.50,118.80 L261.00,107.64 Z"/>
+    <path id="bld_x5F_house_x5F_010" class="wall proposed" fill="none" d="M762.48,97.92 L754.74,134.10 L789.12,141.48 L796.86,105.48 Z"/>
+    <path id="bld_x5F_house_x5F_011" class="wall proposed" fill="none" d="M215.10,92.88 L180.90,111.06 L198.00,142.92 L232.20,124.74 Z"/>
+    <path id="bld_x5F_house_x5F_012" class="wall proposed" fill="none" d="M313.74,156.24 L295.20,167.04 L308.16,189.54 L326.70,178.74 Z"/>
+    <path id="bld_x5F_house_x5F_013" class="wall proposed" fill="none" d="M781.56,156.06 L775.98,174.42 L797.76,180.90 L803.16,162.54 Z"/>
+    <path id="bld_x5F_house_x5F_014" class="wall proposed" fill="none" d="M473.58,147.60 L438.84,168.66 L465.84,213.48 L500.58,192.42 Z"/>
+    <path id="bld_x5F_house_x5F_015" class="wall proposed" fill="none" d="M428.58,169.74 L412.74,178.92 L439.02,224.64 L454.86,215.46 Z"/>
+    <path id="bld_x5F_house_x5F_016" class="wall proposed" fill="none" d="M416.34,210.42 L399.60,222.66 L418.68,248.58 L435.42,236.16 Z"/>
+    <path id="bld_x5F_house_x5F_017" class="wall proposed" fill="none" d="M171.00,239.40 L186.12,224.64 L174.96,213.30 L159.84,228.06 Z"/>
+    <path id="bld_x5F_house_x5F_018" class="wall proposed" fill="none" d="M806.58,241.38 L797.04,214.56 L769.86,224.10 L779.22,250.92 Z"/>
+    <path id="bld_x5F_house_x5F_019" class="wall proposed" fill="none" d="M232.20,238.32 L248.22,253.44 L268.92,231.48 L252.72,216.36 Z"/>
+    <path id="bld_x5F_house_x5F_021" class="wall proposed" fill="none" d="M829.08,220.50 L842.04,263.88 L858.96,259.02 L846.00,215.46 Z"/>
+    <path id="bld_x5F_house_x5F_022" class="wall proposed" fill="none" d="M205.38,240.12 L190.26,257.58 L218.88,282.24 L234.00,264.60 Z"/>
+    <path id="bld_x5F_house_x5F_023" class="wall proposed" fill="none" d="M123.12,277.92 L147.96,253.44 L136.98,242.10 L112.14,266.58 Z"/>
+    <path id="bld_x5F_house_x5F_024" class="wall proposed" fill="none" d="M818.28,277.92 L813.24,259.38 L787.68,266.22 L792.54,284.76 Z"/>
+    <path id="bld_x5F_house_x5F_026" class="wall proposed" fill="none" d="M149.94,312.84 L188.64,272.88 L173.16,257.94 L134.46,297.72 Z"/>
+    <path id="bld_x5F_house_x5F_027" class="wall proposed" fill="none" d="M94.50,305.10 L108.36,289.08 L86.76,270.36 L72.90,286.38 Z"/>
+    <path id="bld_x5F_house_x5F_028" class="wall proposed" fill="none" d="M841.50,293.04 L851.94,327.42 L874.44,320.58 L864.00,286.20 Z"/>
+    <path id="bld_x5F_house_x5F_029" class="wall proposed" fill="none" d="M36.00,318.34 L40.32,322.92 L66.42,298.44 L51.48,282.78 L36.00,297.40 Z"/>
+    <path id="bld_x5F_house_x5F_030" class="wall proposed" fill="none" d="M190.26,285.12 L162.72,315.72 L177.66,329.04 L205.02,298.26 Z"/>
+    <path id="bld_x5F_house_x5F_031" class="wall proposed" fill="none" d="M257.94,317.16 L281.88,339.12 L313.38,304.74 L289.44,282.78 Z"/>
+    <path id="bld_x5F_house_x5F_032" class="wall proposed" fill="none" d="M69.48,344.34 L92.70,318.78 L76.68,304.20 L53.46,329.76 Z"/>
+    <path id="bld_x5F_house_x5F_033" class="wall proposed" fill="none" d="M130.86,313.74 L106.02,350.10 L124.56,362.88 L149.58,326.34 Z"/>
+    <path id="bld_x5F_house_x5F_034" class="wall proposed" fill="none" d="M735.30,322.38 L733.68,360.18 L754.38,361.08 L755.82,323.28 Z"/>
+    <path id="bld_x5F_house_x5F_035" class="wall proposed" fill="none" d="M70.56,359.64 L36.00,328.44 L36.00,355.22 L57.24,374.40 Z"/>
+    <path id="bld_x5F_house_x5F_037" class="wall proposed" fill="none" d="M106.20,374.40 L90.36,395.10 L105.30,406.44 L121.14,385.74 Z"/>
+    <path id="bld_x5F_house_x5F_038" class="wall proposed" fill="none" d="M857.34,385.56 L865.26,403.38 L898.74,388.62 L890.82,370.80 Z"/>
+    <path id="bld_x5F_house_x5F_040" class="wall proposed" fill="none" d="M36.00,443.73 L46.08,432.54 L36.00,423.52 Z"/>
+    <path id="bld_x5F_house_x5F_041" class="wall proposed" fill="none" d="M881.82,414.90 L898.20,452.70 L921.24,442.80 L904.86,405.00 Z"/>
+    <path id="bld_x5F_house_x5F_042" class="wall proposed" fill="none" d="M866.70,414.90 L833.40,428.94 L841.86,448.92 L875.16,434.70 Z"/>
+    <path id="bld_x5F_house_x5F_044" class="wall proposed" fill="none" d="M882.36,472.50 L872.82,451.44 L846.18,463.32 L855.72,484.38 Z"/>
+    <path id="bld_x5F_house_x5F_046" class="wall proposed" fill="none" d="M912.96,475.02 L925.20,511.02 L941.40,505.44 L929.16,469.62 Z"/>
+    <path id="bld_x5F_house_x5F_047" class="wall proposed" fill="none" d="M911.70,518.04 L897.30,481.86 L874.08,491.22 L888.48,527.40 Z"/>
+    <path id="bld_x5F_house_x5F_048" class="wall proposed" fill="none" d="M85.14,505.80 L136.98,542.52 L154.44,517.68 L102.60,480.96 Z"/>
+    <path id="bld_x5F_house_x5F_049" class="wall proposed" fill="none" d="M874.80,529.56 L863.46,495.54 L848.70,500.58 L860.04,534.60 Z"/>
+    <path id="bld_x5F_house_x5F_050" class="wall proposed" fill="none" d="M806.22,553.14 L798.30,520.92 L775.26,526.68 L783.18,558.90 Z"/>
+    <path id="bld_x5F_house_x5F_052" class="wall proposed" fill="none" d="M915.66,527.94 L930.42,567.90 L950.76,560.52 L936.00,520.56 Z"/>
+    <path id="bld_x5F_house_x5F_053" class="wall proposed" fill="none" d="M97.74,566.28 L108.36,551.70 L77.94,529.38 L67.32,543.96 Z"/>
+    <path id="bld_x5F_house_x5F_054" class="wall proposed" fill="none" d="M919.26,568.26 L906.12,535.86 L886.14,543.96 L899.28,576.36 Z"/>
+    <path id="bld_x5F_house_x5F_055" class="wall proposed" fill="none" d="M154.26,555.30 L197.10,587.52 L217.98,559.80 L175.14,527.58 Z"/>
+    <path id="bld_x5F_house_x5F_056" class="wall proposed" fill="none" d="M80.64,567.18 L54.18,544.86 L36.00,566.44 L36.00,580.33 L55.62,596.88 Z"/>
+    <path id="bld_x5F_house_x5F_057" class="wall proposed" fill="none" d="M95.94,602.10 L82.08,588.78 L67.68,603.90 L81.54,617.04 Z"/>
+    <path id="bld_x5F_house_x5F_058" class="wall proposed" fill="none" d="M130.86,575.64 L103.86,610.74 L133.38,633.60 L160.38,598.50 Z"/>
+    <path id="bld_x5F_house_x5F_061" class="wall proposed" fill="none" d="M786.42,636.30 L812.52,646.02 L817.92,631.26 L791.82,621.72 Z"/>
+    <path id="bld_x5F_house_x5F_062" class="wall proposed" fill="none" d="M952.20,620.28 L965.52,663.66 L986.22,657.36 L972.90,613.98 Z"/>
+    <path id="bld_x5F_house_x5F_063" class="wall proposed" fill="none" d="M933.66,664.74 L955.62,657.54 L945.18,625.68 L923.22,632.70 Z"/>
+    <path id="bld_x5F_house_x5F_065" class="wall proposed" fill="none" d="M330.66,700.02 L354.96,627.84 L307.26,611.64 L282.96,683.82 Z"/>
+    <path id="bld_x5F_house_x5F_066" class="wall proposed" fill="none" d="M837.00,650.16 L845.46,670.86 L860.76,664.56 L852.30,643.86 Z"/>
+    <path id="bld_x5F_house_x5F_067" class="wall proposed" fill="none" d="M194.04,665.28 L212.94,687.60 L231.66,671.76 L212.94,649.44 Z"/>
+    <path id="bld_x5F_house_x5F_068" class="wall proposed" fill="none" d="M833.22,679.32 L822.96,652.50 L790.20,664.92 L800.64,691.92 Z"/>
+    <path id="bld_x5F_house_x5F_070" class="wall proposed" fill="none" d="M424.08,696.78 L443.34,636.84 L417.96,628.74 L398.70,688.50 Z"/>
+    <path id="bld_x5F_house_x5F_071" class="wall proposed" fill="none" d="M687.96,669.42 L710.46,718.56 L731.88,708.84 L709.56,659.70 Z"/>
+    <path id="bld_x5F_house_x5F_072" class="wall proposed" fill="none" d="M200.16,705.06 L163.44,665.64 L145.80,682.02 L182.52,721.26 Z"/>
+    <path id="bld_x5F_house_x5F_073" class="wall proposed" fill="none" d="M954.18,683.10 L967.86,713.16 L986.04,704.88 L972.36,675.00 Z"/>
+    <path id="bld_x5F_house_x5F_074" class="wall proposed" fill="none" d="M827.46,694.98 L839.34,717.66 L874.08,699.48 L862.20,676.80 Z"/>
+    <path id="bld_x5F_house_x5F_075" class="wall proposed" fill="none" d="M953.82,711.00 L941.94,683.28 L925.20,690.30 L937.08,718.20 Z"/>
+    <path id="bld_x5F_house_x5F_077" class="wall proposed" fill="none" d="M692.82,719.82 L672.66,676.44 L620.28,701.10 L640.44,744.30 Z"/>
+    <path id="bld_x5F_house_x5F_078" class="wall proposed" fill="none" d="M841.50,723.60 L851.58,746.64 L883.80,732.42 L873.72,709.38 Z"/>
+    <path id="bld_x5F_house_x5F_079" class="wall proposed" fill="none" d="M211.68,719.46 L192.06,736.56 L208.82,756.00 L209.18,756.00 L228.60,738.90 Z"/>
+    <path id="bld_x5F_house_x5F_080" class="wall proposed" fill="none" d="M948.06,734.40 L955.37,756.00 L963.16,756.00 L1015.92,738.36 L1007.82,714.42 Z"/>
+    <path id="bld_x5F_house_x5F_081" class="wall proposed" fill="none" d="M85.32,733.68 L104.91,756.00 L130.97,756.00 L137.70,750.06 L106.74,714.78 Z"/>
+    <path id="bld_x5F_house_x5F_082" class="wall proposed" fill="none" d="M859.72,756.00 L890.43,756.00 L883.98,743.40 Z"/>
+    <path id="bld_x5F_house_x5F_083" class="wall proposed" fill="none" d="M75.00,756.00 L71.64,750.78 L63.58,756.00 Z"/>
+    <path id="bld_x5F_inn" class="wall proposed" fill="none" d="M455.94,295.74 L422.10,342.90 L448.02,361.44 L481.68,314.28 Z"/>
+    <path id="bld_x5F_lockup" class="wall proposed" fill="none" d="M368.64,512.82 L326.70,487.08 L305.28,522.18 L347.22,547.92 Z"/>
+    <path id="bld_x5F_magistrate_x5F_court" class="wall proposed" fill="none" d="M540.72,300.96 L555.84,244.80 L544.68,241.92 L529.56,297.90 Z"/>
+    <path id="bld_x5F_meeting_x5F_hall" class="wall proposed" fill="none" d="M988.02,391.32 L1091.34,359.82 L1068.30,284.04 L964.98,315.54 Z"/>
+    <path id="bld_x5F_shed_x5F_016" class="wall proposed" fill="none" d="M397.08,207.90 L408.78,199.44 L400.50,187.74 L388.80,196.20 Z"/>
+    <path id="bld_x5F_shed_x5F_031" class="wall proposed" fill="none" d="M247.14,329.22 L239.40,337.14 L247.32,344.70 L254.88,336.96 Z"/>
+    <path id="bld_x5F_shed_x5F_065" class="wall proposed" fill="none" d="M346.14,611.46 L366.84,606.78 L364.32,595.08 L343.62,599.58 Z"/>
+    <path id="bld_x5F_smithy" class="wall proposed" fill="none" d="M375.84,756.00 L375.84,756.00 L375.84,756.00 Z"/>
+    <path id="bld_x5F_stables" class="wall proposed" fill="none" d="M364.32,278.46 L396.90,250.92 L382.50,233.82 L349.74,261.36 Z"/>
+    <path id="bld_x5F_tax_x5F_office" class="wall proposed" fill="none" d="M631.80,623.88 L649.26,660.42 L678.42,646.38 L660.96,609.84 Z"/>
+    <path id="bld_x5F_warden_x5F_hall" class="wall proposed" fill="none" d="M333.00,448.92 L410.76,495.72 L449.82,430.92 L372.06,384.12 Z"/>
+  </g>
+  <g id="Walls" inkscape:groupmode="layer" i:layer="yes" inkscape:label="Walls">
+  </g>
+</g>
+<g id="ART - Masks" inkscape:groupmode="layer" i:layer="yes" inkscape:label="ART - Masks">
+</g>
+<g id="ART - Textures" inkscape:groupmode="layer" i:layer="yes" inkscape:label="ART - Textures">
+</g>
+<g id="ART - Fills" inkscape:groupmode="layer" i:layer="yes" inkscape:label="ART - Fills">
+</g>
+<g id="ART - Top" inkscape:groupmode="layer" i:layer="yes" inkscape:label="ART - Top">
+</g>
+<g id="LABELS" inkscape:groupmode="layer" i:layer="yes" inkscape:label="LABELS">
+  <g id="Label Backing" inkscape:groupmode="layer" i:layer="yes" inkscape:label="Label Backing">
+    <text id="lbl_x5F_str_x5F_pilgrim_x5F_road_x5F_bridge_x5F_halo" x="547.91" y="472.86" font-size="9.5" text-anchor="start" style="font-family:'Trebuchet MS';font-weight:bold;font-style:italic;fill:#fff6d0;stroke:#fff6d0;stroke-width:2.80;stroke-linejoin:round;stroke-linecap:round;stroke-opacity:0.90;fill-opacity:0.90" transform="rotate(21.95 586.22 469.53)">Pilgrim Bridge *</text>
+    <text id="lbl_x5F_str_x5F_004_x5F_halo" x="160.01" y="141.85" font-size="9.5" text-anchor="start" style="font-family:'Trebuchet MS';font-weight:bold;font-style:italic;fill:#fff6d0;stroke:#fff6d0;stroke-width:2.80;stroke-linejoin:round;stroke-linecap:round;stroke-opacity:0.90;fill-opacity:0.90" transform="rotate(-34.85 201.97 138.52)">Cartwright Lane *</text>
+    <text id="lbl_x5F_str_x5F_005_x5F_halo" x="297.90" y="155.94" font-size="9.5" text-anchor="start" style="font-family:'Trebuchet MS';font-weight:bold;font-style:italic;fill:#fff6d0;stroke:#fff6d0;stroke-width:2.80;stroke-linejoin:round;stroke-linecap:round;stroke-opacity:0.90;fill-opacity:0.90" transform="rotate(-69.83 331.83 152.61)">Tanners Row *</text>
+    <text id="lbl_x5F_str_x5F_006_x5F_halo" x="196.35" y="171.73" font-size="9.5" text-anchor="start" style="font-family:'Trebuchet MS';font-weight:bold;font-style:italic;fill:#fff6d0;stroke:#fff6d0;stroke-width:2.80;stroke-linejoin:round;stroke-linecap:round;stroke-opacity:0.90;fill-opacity:0.90" transform="rotate(10.73 227.57 168.41)">Cooper Row *</text>
+    <text id="lbl_x5F_str_x5F_007_x5F_halo" x="302.91" y="167.57" font-size="9.5" text-anchor="start" style="font-family:'Trebuchet MS';font-weight:bold;font-style:italic;fill:#fff6d0;stroke:#fff6d0;stroke-width:2.80;stroke-linejoin:round;stroke-linecap:round;stroke-opacity:0.90;fill-opacity:0.90" transform="rotate(-38.36 338.61 164.25)">Weavers Walk *</text>
+    <text id="lbl_x5F_str_x5F_008_x5F_halo" x="460.70" y="247.78" font-size="9.5" text-anchor="start" style="font-family:'Trebuchet MS';font-weight:bold;font-style:italic;fill:#fff6d0;stroke:#fff6d0;stroke-width:2.80;stroke-linejoin:round;stroke-linecap:round;stroke-opacity:0.90;fill-opacity:0.90" transform="rotate(-78.90 488.27 244.46)">Court Row *</text>
+    <text id="lbl_x5F_str_x5F_009_x5F_halo" x="755.30" y="276.70" font-size="9.5" text-anchor="start" style="font-family:'Trebuchet MS';font-weight:bold;font-style:italic;fill:#fff6d0;stroke:#fff6d0;stroke-width:2.80;stroke-linejoin:round;stroke-linecap:round;stroke-opacity:0.90;fill-opacity:0.90" transform="rotate(71.05 786.52 273.37)">Brook Lane *</text>
+    <text id="lbl_x5F_str_x5F_010_x5F_halo" x="922.85" y="221.70" font-size="9.5" text-anchor="start" style="font-family:'Trebuchet MS';font-weight:bold;font-style:italic;fill:#fff6d0;stroke:#fff6d0;stroke-width:2.80;stroke-linejoin:round;stroke-linecap:round;stroke-opacity:0.90;fill-opacity:0.90" transform="rotate(22.23 952.19 218.37)">Hollow Way *</text>
+    <text id="lbl_x5F_str_x5F_011_x5F_halo" x="-6.25" y="253.04" font-size="9.5" text-anchor="start" style="font-family:'Trebuchet MS';font-weight:bold;font-style:italic;fill:#fff6d0;stroke:#fff6d0;stroke-width:2.80;stroke-linejoin:round;stroke-linecap:round;stroke-opacity:0.90;fill-opacity:0.90" transform="rotate(-32.68 29.45 249.71)">Chandler Row *</text>
+    <text id="lbl_x5F_str_x5F_012_x5F_halo" x="670.48" y="289.56" font-size="9.5" text-anchor="start" style="font-family:'Trebuchet MS';font-weight:bold;font-style:italic;fill:#fff6d0;stroke:#fff6d0;stroke-width:2.80;stroke-linejoin:round;stroke-linecap:round;stroke-opacity:0.90;fill-opacity:0.90" transform="rotate(-72.93 693.77 286.24)">Alley 12 *</text>
+    <text id="lbl_x5F_str_x5F_013_x5F_halo" x="67.41" y="408.03" font-size="9.5" text-anchor="start" style="font-family:'Trebuchet MS';font-weight:bold;font-style:italic;fill:#fff6d0;stroke:#fff6d0;stroke-width:2.80;stroke-linejoin:round;stroke-linecap:round;stroke-opacity:0.90;fill-opacity:0.90" transform="rotate(42.14 98.62 404.71)">Baker Lane *</text>
+    <text id="lbl_x5F_str_x5F_014_x5F_halo" x="72.78" y="394.15" font-size="9.5" text-anchor="start" style="font-family:'Trebuchet MS';font-weight:bold;font-style:italic;fill:#fff6d0;stroke:#fff6d0;stroke-width:2.80;stroke-linejoin:round;stroke-linecap:round;stroke-opacity:0.90;fill-opacity:0.90" transform="rotate(-45.42 111.20 390.82)">Thatchers Way *</text>
+    <text id="lbl_x5F_str_x5F_015_x5F_halo" x="934.92" y="481.13" font-size="9.5" text-anchor="start" style="font-family:'Trebuchet MS';font-weight:bold;font-style:italic;fill:#fff6d0;stroke:#fff6d0;stroke-width:2.80;stroke-linejoin:round;stroke-linecap:round;stroke-opacity:0.90;fill-opacity:0.90" transform="rotate(71.87 979.59 477.81)">Wheelwright Lane *</text>
+    <text id="lbl_x5F_str_x5F_016_x5F_halo" x="187.51" y="551.07" font-size="9.5" text-anchor="start" style="font-family:'Trebuchet MS';font-weight:bold;font-style:italic;fill:#fff6d0;stroke:#fff6d0;stroke-width:2.80;stroke-linejoin:round;stroke-linecap:round;stroke-opacity:0.90;fill-opacity:0.90" transform="rotate(-82.65 224.98 547.74)">Warden Street *</text>
+    <text id="lbl_x5F_str_x5F_018_x5F_halo" x="896.53" y="586.81" font-size="9.5" text-anchor="start" style="font-family:'Trebuchet MS';font-weight:bold;font-style:italic;fill:#fff6d0;stroke:#fff6d0;stroke-width:2.80;stroke-linejoin:round;stroke-linecap:round;stroke-opacity:0.90;fill-opacity:0.90" transform="rotate(-17.95 924.10 583.48)">Rope Walk *</text>
+    <text id="lbl_x5F_str_x5F_019_x5F_halo" x="26.70" y="603.78" font-size="9.5" text-anchor="start" style="font-family:'Trebuchet MS';font-weight:bold;font-style:italic;fill:#fff6d0;stroke:#fff6d0;stroke-width:2.80;stroke-linejoin:round;stroke-linecap:round;stroke-opacity:0.90;fill-opacity:0.90" transform="rotate(38.89 58.75 600.45)">Fuller Lane *</text>
+    <text id="lbl_x5F_str_x5F_020_x5F_halo" x="117.18" y="615.79" font-size="9.5" text-anchor="start" style="font-family:'Trebuchet MS';font-weight:bold;font-style:italic;fill:#fff6d0;stroke:#fff6d0;stroke-width:2.80;stroke-linejoin:round;stroke-linecap:round;stroke-opacity:0.90;fill-opacity:0.90" transform="rotate(-34.94 149.23 612.47)">Potters Row *</text>
+    <text id="lbl_x5F_str_x5F_022_x5F_halo" x="286.57" y="695.14" font-size="9.5" text-anchor="start" style="font-family:'Trebuchet MS';font-weight:bold;font-style:italic;fill:#fff6d0;stroke:#fff6d0;stroke-width:2.80;stroke-linejoin:round;stroke-linecap:round;stroke-opacity:0.90;fill-opacity:0.90" transform="rotate(-72.62 332.86 691.82)">Cartwright Lane 2 *</text>
+    <text id="lbl_x5F_str_x5F_025_x5F_halo" x="900.08" y="740.46" font-size="9.5" text-anchor="start" style="font-family:'Trebuchet MS';font-weight:bold;font-style:italic;fill:#fff6d0;stroke:#fff6d0;stroke-width:2.80;stroke-linejoin:round;stroke-linecap:round;stroke-opacity:0.90;fill-opacity:0.90" transform="rotate(68.57 940.11 737.13)">Weavers Walk 2 *</text>
+    <text id="lbl_x5F_dis_x5F_authority_x5F_halo" x="317.70" y="494.50" font-size="14.2" text-anchor="start" style="font-family:Georgia, serif;font-weight:bold;font-style:normal;letter-spacing:0.6;fill:#fff6d0;stroke:#fff6d0;stroke-width:4.00;stroke-linejoin:round;stroke-linecap:round;stroke-opacity:0.90;fill-opacity:0.90"><tspan x="317.70" dy="0.00">AUTHORITY</tspan><tspan x="317.70" dy="15.62">WARD</tspan></text>
+    <text id="lbl_x5F_sqr_x5F_market_x5F_halo" x="723.52" y="452.01" font-size="11.1" text-anchor="start" style="font-family:Georgia, serif;font-weight:bold;font-style:normal;letter-spacing:0.6;fill:#fff6d0;stroke:#fff6d0;stroke-width:4.00;stroke-linejoin:round;stroke-linecap:round;stroke-opacity:0.90;fill-opacity:0.90"><tspan x="723.52" dy="0.00">Market</tspan><tspan x="723.52" dy="12.21">Square</tspan></text>
+    <text id="lbl_x5F_bld_x5F_meeting_x5F_hall_x5F_halo" x="1006.13" y="335.46" font-size="11.1" text-anchor="start" style="font-family:Georgia, serif;font-weight:normal;font-style:normal;fill:#fff6d0;stroke:#fff6d0;stroke-width:5.00;stroke-linejoin:round;stroke-linecap:round;stroke-opacity:0.90;fill-opacity:0.90"><tspan x="1006.13" dy="0.00">Meeting</tspan><tspan x="1006.13" dy="12.21">Hall *</tspan></text>
+    <text id="lbl_x5F_bld_x5F_warden_x5F_hall_x5F_halo" x="364.98" y="437.70" font-size="11.1" text-anchor="start" style="font-family:Georgia, serif;font-weight:normal;font-style:normal;fill:#fff6d0;stroke:#fff6d0;stroke-width:5.00;stroke-linejoin:round;stroke-linecap:round;stroke-opacity:0.90;fill-opacity:0.90"><tspan x="364.98" dy="0.00">Warden's</tspan><tspan x="364.98" dy="12.21">Hall *</tspan></text>
+    <text id="lbl_x5F_bld_x5F_magistrate_x5F_court_x5F_halo" x="551.70" y="294.39" font-size="11.1" text-anchor="start" style="font-family:Georgia, serif;font-weight:normal;font-style:normal;fill:#fff6d0;stroke:#fff6d0;stroke-width:5.00;stroke-linejoin:round;stroke-linecap:round;stroke-opacity:0.90;fill-opacity:0.90"><tspan x="551.70" dy="0.00">Magistrate's</tspan><tspan x="551.70" dy="12.21">Court *</tspan></text>
+    <text id="lbl_x5F_bld_x5F_stables_x5F_halo" x="392.41" y="270.12" font-size="11.1" text-anchor="start" style="font-family:Georgia, serif;font-weight:normal;font-style:normal;fill:#fff6d0;stroke:#fff6d0;stroke-width:5.00;stroke-linejoin:round;stroke-linecap:round;stroke-opacity:0.90;fill-opacity:0.90">Stables *</text>
+    <text id="lbl_x5F_bld_x5F_tax_x5F_office_x5F_halo" x="542.72" y="615.62" font-size="11.1" text-anchor="start" style="font-family:Georgia, serif;font-weight:normal;font-style:normal;fill:#fff6d0;stroke:#fff6d0;stroke-width:5.00;stroke-linejoin:round;stroke-linecap:round;stroke-opacity:0.90;fill-opacity:0.90"><tspan x="542.72" dy="0.00">Tax and Permit</tspan><tspan x="542.72" dy="12.21">Office *</tspan></text>
+    <text id="lbl_x5F_bld_x5F_inn_x5F_halo" x="523.47" y="332.47" font-size="11.1" text-anchor="start" style="font-family:Georgia, serif;font-weight:normal;font-style:normal;fill:#fff6d0;stroke:#fff6d0;stroke-width:5.00;stroke-linejoin:round;stroke-linecap:round;stroke-opacity:0.90;fill-opacity:0.90">Inn *</text>
+    <text id="lbl_x5F_bld_x5F_lockup_x5F_halo" x="427.85" y="603.28" font-size="11.1" text-anchor="start" style="font-family:Georgia, serif;font-weight:normal;font-style:normal;fill:#fff6d0;stroke:#fff6d0;stroke-width:5.00;stroke-linejoin:round;stroke-linecap:round;stroke-opacity:0.90;fill-opacity:0.90">Lockup *</text>
+  </g>
+  <g id="Labels - Elevation" inkscape:groupmode="layer" i:layer="yes" inkscape:label="Labels - Elevation">
+    <text id="contour_x5F_label_x5F_650_x5F_1" class="contour-label" x="596.78" y="263.80" font-size="9.48683" text-anchor="start" style="font-family:Georgia, serif;font-weight:normal;font-style:normal;fill:#6b4423" transform="rotate(-13.95 605.90 260.48)">650</text>
+  </g>
+  <g id="Labels - Rooms" inkscape:groupmode="layer" i:layer="yes" inkscape:label="Labels - Rooms">
+  </g>
+  <g id="Labels - Buildings" inkscape:groupmode="layer" i:layer="yes" inkscape:label="Labels - Buildings">
+    <text id="lbl_x5F_bld_x5F_meeting_x5F_hall" x="1006.13" y="335.46" font-size="11.1" text-anchor="start" style="font-family:Georgia, serif;font-weight:normal;font-style:normal;fill:#111111"><tspan x="1006.13" dy="0.00">Meeting</tspan><tspan x="1006.13" dy="12.21">Hall *</tspan></text>
+    <text id="lbl_x5F_bld_x5F_warden_x5F_hall" x="364.98" y="437.70" font-size="11.1" text-anchor="start" style="font-family:Georgia, serif;font-weight:normal;font-style:normal;fill:#111111"><tspan x="364.98" dy="0.00">Warden's</tspan><tspan x="364.98" dy="12.21">Hall *</tspan></text>
+    <text id="lbl_x5F_bld_x5F_magistrate_x5F_court" x="551.70" y="294.39" font-size="11.1" text-anchor="start" style="font-family:Georgia, serif;font-weight:normal;font-style:normal;fill:#111111"><tspan x="551.70" dy="0.00">Magistrate's</tspan><tspan x="551.70" dy="12.21">Court *</tspan></text>
+    <text id="lbl_x5F_bld_x5F_stables" x="392.41" y="270.12" font-size="11.1" text-anchor="start" style="font-family:Georgia, serif;font-weight:normal;font-style:normal;fill:#111111">Stables *</text>
+    <text id="lbl_x5F_bld_x5F_tax_x5F_office" x="542.72" y="615.62" font-size="11.1" text-anchor="start" style="font-family:Georgia, serif;font-weight:normal;font-style:normal;fill:#111111"><tspan x="542.72" dy="0.00">Tax and Permit</tspan><tspan x="542.72" dy="12.21">Office *</tspan></text>
+    <text id="lbl_x5F_bld_x5F_inn" x="523.47" y="332.47" font-size="11.1" text-anchor="start" style="font-family:Georgia, serif;font-weight:normal;font-style:normal;fill:#111111">Inn *</text>
+    <text id="lbl_x5F_bld_x5F_lockup" x="427.85" y="603.28" font-size="11.1" text-anchor="start" style="font-family:Georgia, serif;font-weight:normal;font-style:normal;fill:#111111">Lockup *</text>
+  </g>
+  <g id="Labels - Streets" inkscape:groupmode="layer" i:layer="yes" inkscape:label="Labels - Streets">
+    <text id="lbl_x5F_str_x5F_pilgrim_x5F_road_x5F_bridge" x="547.91" y="472.86" font-size="9.5" text-anchor="start" style="font-family:'Trebuchet MS';font-weight:bold;font-style:italic;fill:#111111" transform="rotate(21.95 586.22 469.53)">Pilgrim Bridge *</text>
+    <text id="lbl_x5F_str_x5F_004" x="160.01" y="141.85" font-size="9.5" text-anchor="start" style="font-family:'Trebuchet MS';font-weight:bold;font-style:italic;fill:#111111" transform="rotate(-34.85 201.97 138.52)">Cartwright Lane *</text>
+    <text id="lbl_x5F_str_x5F_005" x="297.90" y="155.94" font-size="9.5" text-anchor="start" style="font-family:'Trebuchet MS';font-weight:bold;font-style:italic;fill:#111111" transform="rotate(-69.83 331.83 152.61)">Tanners Row *</text>
+    <text id="lbl_x5F_str_x5F_006" x="196.35" y="171.73" font-size="9.5" text-anchor="start" style="font-family:'Trebuchet MS';font-weight:bold;font-style:italic;fill:#111111" transform="rotate(10.73 227.57 168.41)">Cooper Row *</text>
+    <text id="lbl_x5F_str_x5F_007" x="302.91" y="167.57" font-size="9.5" text-anchor="start" style="font-family:'Trebuchet MS';font-weight:bold;font-style:italic;fill:#111111" transform="rotate(-38.36 338.61 164.25)">Weavers Walk *</text>
+    <text id="lbl_x5F_str_x5F_008" x="460.70" y="247.78" font-size="9.5" text-anchor="start" style="font-family:'Trebuchet MS';font-weight:bold;font-style:italic;fill:#111111" transform="rotate(-78.90 488.27 244.46)">Court Row *</text>
+    <text id="lbl_x5F_str_x5F_009" x="755.30" y="276.70" font-size="9.5" text-anchor="start" style="font-family:'Trebuchet MS';font-weight:bold;font-style:italic;fill:#111111" transform="rotate(71.05 786.52 273.37)">Brook Lane *</text>
+    <text id="lbl_x5F_str_x5F_010" x="922.85" y="221.70" font-size="9.5" text-anchor="start" style="font-family:'Trebuchet MS';font-weight:bold;font-style:italic;fill:#111111" transform="rotate(22.23 952.19 218.37)">Hollow Way *</text>
+    <text id="lbl_x5F_str_x5F_011" x="-6.25" y="253.04" font-size="9.5" text-anchor="start" style="font-family:'Trebuchet MS';font-weight:bold;font-style:italic;fill:#111111" transform="rotate(-32.68 29.45 249.71)">Chandler Row *</text>
+    <text id="lbl_x5F_str_x5F_012" x="670.48" y="289.56" font-size="9.5" text-anchor="start" style="font-family:'Trebuchet MS';font-weight:bold;font-style:italic;fill:#111111" transform="rotate(-72.93 693.77 286.24)">Alley 12 *</text>
+    <text id="lbl_x5F_str_x5F_013" x="67.41" y="408.03" font-size="9.5" text-anchor="start" style="font-family:'Trebuchet MS';font-weight:bold;font-style:italic;fill:#111111" transform="rotate(42.14 98.62 404.71)">Baker Lane *</text>
+    <text id="lbl_x5F_str_x5F_014" x="72.78" y="394.15" font-size="9.5" text-anchor="start" style="font-family:'Trebuchet MS';font-weight:bold;font-style:italic;fill:#111111" transform="rotate(-45.42 111.20 390.82)">Thatchers Way *</text>
+    <text id="lbl_x5F_str_x5F_015" x="934.92" y="481.13" font-size="9.5" text-anchor="start" style="font-family:'Trebuchet MS';font-weight:bold;font-style:italic;fill:#111111" transform="rotate(71.87 979.59 477.81)">Wheelwright Lane *</text>
+    <text id="lbl_x5F_str_x5F_016" x="187.51" y="551.07" font-size="9.5" text-anchor="start" style="font-family:'Trebuchet MS';font-weight:bold;font-style:italic;fill:#111111" transform="rotate(-82.65 224.98 547.74)">Warden Street *</text>
+    <text id="lbl_x5F_str_x5F_018" x="896.53" y="586.81" font-size="9.5" text-anchor="start" style="font-family:'Trebuchet MS';font-weight:bold;font-style:italic;fill:#111111" transform="rotate(-17.95 924.10 583.48)">Rope Walk *</text>
+    <text id="lbl_x5F_str_x5F_019" x="26.70" y="603.78" font-size="9.5" text-anchor="start" style="font-family:'Trebuchet MS';font-weight:bold;font-style:italic;fill:#111111" transform="rotate(38.89 58.75 600.45)">Fuller Lane *</text>
+    <text id="lbl_x5F_str_x5F_020" x="117.18" y="615.79" font-size="9.5" text-anchor="start" style="font-family:'Trebuchet MS';font-weight:bold;font-style:italic;fill:#111111" transform="rotate(-34.94 149.23 612.47)">Potters Row *</text>
+    <text id="lbl_x5F_str_x5F_022" x="286.57" y="695.14" font-size="9.5" text-anchor="start" style="font-family:'Trebuchet MS';font-weight:bold;font-style:italic;fill:#111111" transform="rotate(-72.62 332.86 691.82)">Cartwright Lane 2 *</text>
+    <text id="lbl_x5F_str_x5F_025" x="900.08" y="740.46" font-size="9.5" text-anchor="start" style="font-family:'Trebuchet MS';font-weight:bold;font-style:italic;fill:#111111" transform="rotate(68.57 940.11 737.13)">Weavers Walk 2 *</text>
+  </g>
+  <g id="Labels - Districts" inkscape:groupmode="layer" i:layer="yes" inkscape:label="Labels - Districts">
+    <text id="lbl_x5F_dis_x5F_authority" x="317.70" y="494.50" font-size="14.2" text-anchor="start" style="font-family:Georgia, serif;font-weight:bold;font-style:normal;letter-spacing:0.6;fill:#111111"><tspan x="317.70" dy="0.00">AUTHORITY</tspan><tspan x="317.70" dy="15.62">WARD</tspan></text>
+    <text id="lbl_x5F_sqr_x5F_market" x="723.52" y="452.01" font-size="11.1" text-anchor="start" style="font-family:Georgia, serif;font-weight:bold;font-style:normal;letter-spacing:0.6;fill:#111111"><tspan x="723.52" dy="0.00">Market</tspan><tspan x="723.52" dy="12.21">Square</tspan></text>
+  </g>
+  <g id="Leaders" inkscape:groupmode="layer" i:layer="yes" inkscape:label="Leaders">
+    <path id="bld_x5F_magistrate_x5F_court_x5F_leader" class="leader" fill="none" stroke="#000000" stroke-width="0.4" d="M542.70,271.44 L542.70,296.61 L549.70,296.61"/>
+    <circle id="bld_x5F_magistrate_x5F_court_x5F_leader_x5F_dot" class="leader-dot" cx="542.70" cy="271.44" r="0.80" fill="#000000" stroke="none"/>
+    <path id="bld_x5F_stables_x5F_leader" class="leader" fill="none" stroke="#000000" stroke-width="0.4" d="M373.32,256.14 L383.41,266.23 L390.41,266.23"/>
+    <circle id="bld_x5F_stables_x5F_leader_x5F_dot" class="leader-dot" cx="373.32" cy="256.14" r="0.80" fill="#000000" stroke="none"/>
+    <path id="bld_x5F_tax_x5F_office_x5F_leader" class="leader" fill="none" stroke="#000000" stroke-width="0.4" d="M655.11,635.13 L637.82,617.84 L630.82,617.84"/>
+    <circle id="bld_x5F_tax_x5F_office_x5F_leader_x5F_dot" class="leader-dot" cx="655.11" cy="635.13" r="0.80" fill="#000000" stroke="none"/>
+    <path id="bld_x5F_inn_x5F_leader" class="leader" fill="none" stroke="#000000" stroke-width="0.4" d="M451.89,328.59 L514.47,328.59 L521.47,328.59"/>
+    <circle id="bld_x5F_inn_x5F_leader_x5F_dot" class="leader-dot" cx="451.89" cy="328.59" r="0.80" fill="#000000" stroke="none"/>
+    <path id="bld_x5F_lockup_x5F_leader" class="leader" fill="none" stroke="#000000" stroke-width="0.4" d="M336.96,517.50 L418.85,599.39 L425.85,599.39"/>
+    <circle id="bld_x5F_lockup_x5F_leader_x5F_dot" class="leader-dot" cx="336.96" cy="517.50" r="0.80" fill="#000000" stroke="none"/>
+  </g>
+</g>
+<g id="NOTES" inkscape:groupmode="layer" i:layer="yes" inkscape:label="NOTES">
+  <text id="note_x5F_title" x="36.00" y="22.00" font-size="11" text-anchor="start" font-weight="bold">Bridgehollow (draft) - town view  (1 in = 40 ft, grid 100 ft)</text>
+  <text id="note_x5F_status" x="36.00" y="34.00" font-size="7" text-anchor="start">DRAFT - every entity is PROPOSED (no canon layout). * = proposed. Dashed strokes = proposed.</text>
+  <text id="note_x5F_regen" x="1188.00" y="22.00" font-size="7" text-anchor="end">GEN layers are rewritten on regeneration; draw in ART layers.</text>
+</g>
+</svg>

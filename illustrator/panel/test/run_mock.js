@@ -107,6 +107,22 @@ const actions = () => hostLog.map(h => h.action);
     st.contours.labels = true; st.contours.follow_line = true; st.contours.mask = true; st.contours.decimals = 0;
     check("contours stale cleared", st.stale.contours === false);
   }
+  if (want("labels")) {
+    const pyDef = JSON.parse(cp.execFileSync("python", ["-X", "utf8", "-c", "import sys,json;sys.path.insert(0,'" + ROOT + "/illustrator/generators');import label_style as L;print(json.dumps(L.defaults()))"], { encoding: "utf8" }));
+    const jsDef = VB.labelDefaults();
+    check("label defaults agree (python == panel)", JSON.stringify(Object.keys(jsDef).sort()) === JSON.stringify(Object.keys(pyDef).filter(k => k in jsDef).sort())
+      && Object.keys(pyDef.default).every(k => jsDef.default[k] === pyDef.default[k]) && VB.LABEL_CATS.every(c => JSON.stringify(jsDef[c]) === JSON.stringify(pyDef[c])), JSON.stringify([jsDef, pyDef]));
+    let r = await run(VB.jobLabels(st, d));
+    check("labels job ok", r.ok, r.error);
+    const rl = hostLog.find(h => h.action === "replace_layer");
+    check("labels job replaces label + backing + cut linework layers", rl && ["Label Backing", "Leaders", "Labels - Districts", "Roads", "Contours - Minor", "Grid"].every(n => rl.names.includes(n)), JSON.stringify(rl && rl.names));
+    st.labels.styles.default.mode = "mask"; st.labels.styles.districts.size = 12; st.labels.styles.default.font = "Georgia"; st.labels.mask_targets.water = true; st.labels.backing_layer = false;
+    const js = JSON.parse(Buffer.from(VB.labelStyleFlags(st)[1], "base64").toString("utf8"));
+    check("label flags carry style, targets and backing option", js.default.font === "Georgia" && js.districts.size === 12 && js.mask_targets.includes("water") && js.backing_layer === false);
+    r = await run(VB.jobLabels(st, d));
+    check("labels job with mask/font/size/no backing layer renders", r.ok, r.error);
+    st.labels.styles.default.mode = "halo"; st.labels.styles.districts = VB.labelDefaults().districts; st.labels.styles.default.font = "Arial"; st.labels.mask_targets.water = false; st.labels.backing_layer = true;
+  }
   if (want("shading")) {
     st.stale.shading = true;
     let r = await run(VB.jobShading(st, d));

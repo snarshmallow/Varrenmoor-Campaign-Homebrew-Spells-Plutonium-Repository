@@ -23,6 +23,7 @@ import contours as ct  # noqa: E402
 import viewcfg  # noqa: E402
 import terrain as tr  # noqa: E402
 import label_offset as lbo  # noqa: E402
+import label_style as lst  # noqa: E402
 import worldio  # noqa: E402
 from xml.sax.saxutils import escape  # noqa: E402
 
@@ -31,7 +32,7 @@ PAGE_W_IN, PAGE_H_IN, MARGIN_IN = 17, 11, 0.5   # defaults; the active view_sett
 
 SPEC = [
     ("NOTES", []),
-    ("LABELS", ["Leaders", "Labels - Districts", "Labels - Streets", "Labels - Buildings", "Labels - Rooms", ct.LAYER_LABELS]),
+    ("LABELS", ["Leaders", "Labels - Districts", "Labels - Streets", "Labels - Buildings", "Labels - Rooms", ct.LAYER_LABELS, lst.LAYER_BACKING]),
     ("ART - Top", []),
     ("ART - Fills", []),
     ("ART - Textures", []),
@@ -211,7 +212,8 @@ def text(id_, x, y, s, size, rot=None, bold=False, anchor="middle"):
 CIVIC_SKIP = {"house", "shed", "farmhouse", "barn"}
 
 
-def street_label(t, v, e, size, fpi):
+def street_label(v, e, size, fpi, name):
+    """-> (x, y, angle) page-pt anchor of the street name (baseline point, rotated along the street) or None."""
     from shapely.geometry import LineString
     ln = LineString(e["geometry"]["points"])
     if ln.length < max(2.0 * fpi, 40):
@@ -235,8 +237,30 @@ def street_label(t, v, e, size, fpi):
     if ny_ > 0:                      # keep the label on the upper side of the street on the page
         nx_, ny_ = -nx_, -ny_
     x, y = v.px((m.x + nx_ * off, m.y + ny_ * off))
-    t.add("Labels - Streets", text(f"lbl_{e['id']}", x, y, e["name"] + " *", size, rot=ang))
-    return x, y, e["name"] + " *", size, ang
+    return x, y, ang
+
+
+def cut_d(rings, cut, closed=True):
+    """Path data for rings (page pt) with the parts under `cut` removed (real geometry: open sub-paths, no clipping paths)."""
+    from shapely.geometry import LineString
+    from shapely.ops import linemerge
+    parts, changed = [], False
+    for ring in rings:
+        pts = list(ring) + ([ring[0]] if closed else [])
+        ls = LineString(pts)
+        if not ls.intersects(cut):
+            parts.append("M" + " L".join(f"{x:.2f},{y:.2f}" for x, y in ring) + (" Z" if closed else ""))
+            continue
+        changed = True
+        diff = ls.difference(cut)
+        segs = [diff] if diff.geom_type == "LineString" else [g for g in getattr(diff, "geoms", []) if g.geom_type == "LineString"]
+        if len(segs) > 1:
+            m = linemerge(segs)
+            segs = [m] if m.geom_type == "LineString" else list(m.geoms)
+        for g in segs:
+            if g.length >= 0.4 and not g.is_empty:
+                parts.append("M" + " L".join(f"{x:.2f},{y:.2f}" for x, y in g.coords))
+    return " ".join(parts), changed
 
 
 def compute_view(model, view_arg, cfg_over=None):
@@ -279,7 +303,7 @@ def compute_view(model, view_arg, cfg_over=None):
     return v, cfg, title, kind, ident
 
 
-def render(model, view_arg, out_path, topts=None, cfg_over=None, lopts=None):
+def render(model, view_arg, out_path, topts=None, cfg_over=None, lopts=None, lstyle=None):
     place = model["place"]
     bw, bh = place["bounds"]["width_ft"], place["bounds"]["height_ft"]
     streets = {s["id"]: s for s in model["streets"]}
@@ -294,36 +318,42 @@ def render(model, view_arg, out_path, topts=None, cfg_over=None, lopts=None):
 
     t = LayerTree(SPEC, pw, ph, css=CSS, locked=["GUIDES", "Grid", "Scale bar", "North arrow", "Bounds"])
 
-    def addpoly(layer, id_, poly, cls, status):
+    lcfg = lst.merge(viewcfg.label_style(place["id"]), *(lstyle if isinstance(lstyle, list) else [lstyle]))
+    styles = {c_: lst.resolve(lcfg, c_) for c_ in lst.CATEGORIES}
+    targets = set(lcfg.get("mask_targets") or [])
+    backing = lst.LAYER_BACKING if lcfg.get("backing_layer", True) else None
+    lines = []        # linework is written after the labels are placed, so label knock-outs can cut it
+
+    def addpoly(layer, id_, poly, cls, status, target):
         poly = v.clip(poly)
         if not poly:
             return None
         c = cls + (" proposed" if status == "proposed" else "")
-        t.add(layer, path(id_, v.d([poly]), c))
+        lines.append((layer, id_, [poly], c, target))
         return poly
 
     # LINES
     for e in model["water"]:
-        addpoly("Water", e["id"], entity_polygon(e), "water", None)     # solid bank line: a dashed outline made the river read as a wide dashed band
+        addpoly("Water", e["id"], entity_polygon(e), "water", None, "water")     # solid bank line: a dashed outline made the river read as a wide dashed band
     for e in model["districts"]:
         k = e["kind"]
         layer, cls = {"square": ("Roads", "road"), "field": ("Fences", "field"),
                       "block": ("Blocks", "guide-line")}.get(k, ("Terrain", "guide-line"))
-        addpoly(layer, e["id"], entity_polygon(e), cls, e.get("status"))
+        addpoly(layer, e["id"], entity_polygon(e), cls, e.get("status"), {"Roads": "streets", "Fences": "fences"}.get(layer, "blocks"))
     shapes = street_shapes(model["streets"])
     for e in model["streets"]:
         rings = [r for r in (v.clip(r) for r in shape_rings(shapes[e["id"]])) if r]
         if rings:
             c = ("wall" if e["kind"] == "bridge" else "road") + (" proposed" if e.get("status") == "proposed" else "")
-            t.add("Roads", path(e["id"], v.d(rings), c))
+            lines.append(("Roads", e["id"], rings, c, "streets"))
     for e in model["buildings"]:
-        addpoly("Buildings", e["id"], entity_polygon(e), "wall", e.get("status"))
+        addpoly("Buildings", e["id"], entity_polygon(e), "wall", e.get("status"), "buildings")
         if kind == "building" and e["id"] == ident:
             for r in e.get("rooms", []):
-                addpoly("Walls", r["id"], entity_polygon(r), "wall", r.get("status"))
+                addpoly("Walls", r["id"], entity_polygon(r), "wall", r.get("status"), "buildings")
             for dr in e.get("doors", []):
                 if "geometry" in dr:
-                    addpoly("Walls", dr["id"], entity_polygon(dr), "guide-line", dr.get("status"))
+                    addpoly("Walls", dr["id"], entity_polygon(dr), "guide-line", dr.get("status"), "buildings")
 
     cs = None
     # TERRAIN contours + elevation labels (heightmap from world/<place>/terrain/)
@@ -346,17 +376,19 @@ def render(model, view_arg, out_path, topts=None, cfg_over=None, lopts=None):
                     if e["kind"] == "square":
                         mask.append(Polygon(entity_polygon(e)).buffer(0))
         frame = ct.Frame(v.x0, v.y0, v.x1, v.y1, v.k, margin * 72, margin * 72)
-        cp = ct.ContourParams(minor=topts["minor"], index=topts["index"], font_size=topts["label_size"] * lf,
+        est = styles["elevation"]
+        cp = ct.ContourParams(minor=topts["minor"], index=topts["index"], font_size=est.size or topts["label_size"] * lf,
+                              halo_pt=est.knockout_pad if est.knock else 0.0,
                               units=topts["units"], use_mask=topts["use_mask"],
                               sea_level_ft=float(meta.get("sea_level_ft", 0.0)),
                               **{k_: topts[k_] for k_ in ("decimals", "label_spacing_ft", "min_len_ft", "follow_line",
                                                           "upright", "labels", "emphasize_datum") if k_ in topts})
         cs = ct.build(h, meta["cell_ft"], frame, cp, mask)
-        ct.emit(t, cs)
         print(f"contours: {len(cs.pieces)} paths, {len(cs.labels)} labels, relief {meta['elev_min']:.0f}..{meta['elev_max']:.0f} ft, "
               f"mask={'on (%d polygons)' % len(mask) if mask else 'off'}")
 
-    # LABELS (closed shapes get an offset + leader when the text does not fit inside; see label_offset.py)
+    # LABELS (closed shapes get an offset + leader when the text does not fit inside; see label_offset.py).
+    # Text styling, wrapping, halo / backing box / knock-out: label_style.py
     lp = lbo.LabelParams.from_dict(lopts if lopts is not None else cfg.get("label_offset"))
     m_pt = margin * 72
     shapes_pt = []
@@ -370,52 +402,95 @@ def render(model, view_arg, out_path, topts=None, cfg_over=None, lopts=None):
             if rc:
                 shapes_pt.append((f"{sid}#{i_}", [v.px(q) for q in rc]))
     placer = lbo.Placer(lp, frame=(m_pt, m_pt, W - m_pt, H - m_pt), shapes=shapes_pt)
+    recs = []                                           # every label as a lst.Rec
+    est = styles["elevation"]
     if cs is not None:
         for lb in cs.labels:
-            w_, h_ = lbo.text_size(lb["text"], lb["size"])
-            placer.add_fixed_box(lbo.text_box(lb["x"], lb["y"], w_, h_, lb["rot"]).buffer(1.0))
-    layer_of = {}
+            w_ = max(lst.measure(lb["text"], lb["size"], est), 1.0)
+            rec = lst.Rec(lb["id"], ct.LAYER_LABELS, [lb["text"]], lb["x"], lb["y"], w_, lst.block_height(1, lb["size"], est),
+                          lb["rot"], lb["size"], est, "contour-label")
+            recs.append(rec)
+            placer.add_fixed_box(lst.rec_box(rec).buffer(1.0))
+    meta = {}
 
-    def lab(layer, e, s, size, bold=False, rot=None):
+    def lab(cat, layer, e, s, size, auto_upper=False, ratio=1.0):
         pg = v.clip(entity_polygon(e))
         c = tuple(e["label_point"]) if e.get("label_point") else centroid(entity_polygon(e))
         if not pg or not v.inside(c):
             return
-        layer_of[e["id"]] = (layer, bold, size)
-        placer.add(e["id"], [v.px(q) for q in pg], s, size, bold, rot, point=v.px(c))
+        st = styles[cat]
+        sz = round(st.size * ratio, 1) if st.size else size
+        meta[e["id"]] = (layer, sz, st)
+        lays, off = lst.build_layouts(lst.apply_case(s, st, auto_upper), st, sz, v.k)
+        placer.add(e["id"], [v.px(q) for q in pg], s, sz, st.bold, None, point=v.px(c), layouts=lays, offset_layout=off)
 
     for e in model["districts"]:
         if e["kind"] == "district":
             if kind != "building":
-                lab("Labels - Districts", e, e["name"].upper(), ls(9), True)
+                lab("districts", "Labels - Districts", e, e["name"], ls(9), True)
         elif e["kind"] == "square":
-            lab("Labels - Districts", e, e["name"], ls(7), True)
+            lab("districts", "Labels - Districts", e, e["name"], ls(7), ratio=7 / 9)
     if kind in ("town", "street", "bowl"):
+        sst = styles["streets"]
         for e in model["streets"]:
             if kind == "bowl" and e["geometry"]["width_ft"] < 22 and e["kind"] != "road":
                 continue
-            r_ = street_label(t, v, e, ls(6), fpi)
+            sz = sst.size or ls(6)
+            txt = lst.apply_case(e["name"] + " *", sst)
+            r_ = street_label(v, e, sz, fpi, txt)
             if r_:
-                w_, h_ = lbo.text_size(r_[2], r_[3])
-                placer.add_fixed_box(lbo.text_box(r_[0], r_[1], w_, h_, r_[4]).buffer(1.0))
+                x_, y_, ang = r_
+                th = math.radians(ang)
+                w_, h_ = lst.measure(txt, sz, sst), lst.block_height(1, sz, sst)
+                rec = lst.Rec(f"lbl_{e['id']}", "Labels - Streets", [txt], x_ + 0.35 * sz * math.sin(th), y_ - 0.35 * sz * math.cos(th),
+                              w_, h_, ang, sz, sst)
+                recs.append(rec)
+                placer.add_fixed_box(lst.rec_box(rec).buffer(1.0))
     for e in model["buildings"]:
         if kind != "building" and e["kind"] in CIVIC_SKIP and fpi >= 40:
             continue
-        lab("Labels - Buildings", e, e["name"] + " *", ls(7) if kind != "building" else 10)
+        lab("buildings", "Labels - Buildings", e, e["name"] + " *", ls(7) if kind != "building" else 10)
     if kind == "building":
         for r in blds[ident].get("rooms", []):
-            lab("Labels - Rooms", r, r["name"], 8)
+            lab("rooms", "Labels - Rooms", r, r["name"], 8)
     n_off = 0
-    texts = {it.id: it.text for it in placer.items}
     for res in placer.solve():
-        layer, bold, size = layer_of[res.id]
-        t.add(layer, text(f"lbl_{res.id}", res.x, res.y, texts[res.id], size, rot=res.rot, bold=bold, anchor=res.anchor))
+        layer, sz, st = meta[res.id]
+        recs.append(lst.Rec(f"lbl_{res.id}", layer, res.lines, res.cx, res.cy, res.w, res.h, res.rot, sz, st))
         if res.leader:
             n_off += 1
             for sv in lbo.leader_svg(res, lp.stroke_width):
                 t.add("Leaders", sv)
     if lp.enabled:
         print(f"label offsets: {n_off} labels moved outside their shape with a leader")
+    n_wrapped = sum(1 for r in recs if len(r.lines) > 1)
+    if n_wrapped:
+        print(f"label wrapping: {n_wrapped} labels set on more than one line")
+
+    # knock-out: padded rounded boxes of the labels in mask mode (or with knockout on) cut the linework underneath
+    from shapely.ops import unary_union
+    cut = unary_union([lst.knock_geom(r) for r in recs if r.st.knock and r.layer != ct.LAYER_LABELS]) if any(
+        r.st.knock and r.layer != ct.LAYER_LABELS for r in recs) else None
+    if cut is not None and cut.is_empty:
+        cut = None
+    if cs is not None:
+        n_c = ct.cut_pieces(cs, cut) if (cut is not None and "contours" in targets) else 0
+        ct.emit(t, cs, labels=False)
+        if n_c:
+            print(f"label mask: {n_c} contour pieces cut under labels")
+    n_l = 0
+    for layer, id_, polys, c, target in lines:
+        if cut is not None and target in targets:
+            d_, changed = cut_d([[v.px(q) for q in poly] for poly in polys], cut)
+            n_l += 1 if changed else 0
+            if d_:
+                t.add(layer, path(id_, d_, c))
+        else:
+            t.add(layer, path(id_, v.d(polys), c))
+    if n_l:
+        print(f"label mask: {n_l} line paths cut under labels")
+    for rec in recs:
+        lst.emit(t, rec, None if rec.layer == ct.LAYER_LABELS else backing)
 
     # GUIDES: minor + major grid
     k = v.k
@@ -428,14 +503,18 @@ def render(model, view_arg, out_path, topts=None, cfg_over=None, lopts=None):
         while g * grid_ft <= hi:
             pos = g * grid_ft
             q = v.px((pos, pos))
-            seg = (f"M{q[0]:.2f},{py0:.2f} L{q[0]:.2f},{py1:.2f}" if axis == "x"
-                   else f"M{px0:.2f},{q[1]:.2f} L{px1:.2f},{q[1]:.2f}")
+            seg = ([(q[0], py0), (q[0], py1)] if axis == "x" else [(px0, q[1]), (px1, q[1])])
             (major if major_n and g % major_n == 0 else minor).append(seg)
             g += 1
+    def grid_d(segs):
+        if cut is not None and "grid" in targets:
+            return cut_d(segs, cut, closed=False)[0]
+        return " ".join("M" + " L".join(f"{x:.2f},{y:.2f}" for x, y in sg) for sg in segs)
+
     if minor and nlines < 900:
-        t.add("Grid", path(f"grid_{grid_ft:g}ft", " ".join(minor), "guide-line"))
+        t.add("Grid", path(f"grid_{grid_ft:g}ft", grid_d(minor), "guide-line"))
     if major:
-        t.add("Grid", path(f"grid_major_{major_ft:g}ft", " ".join(major), "guide-major"))
+        t.add("Grid", path(f"grid_major_{major_ft:g}ft", grid_d(major), "guide-major"))
 
     bar_ft = cfg["scale_bar_ft"]
     seg_ft = bar_ft / 5.0
@@ -483,6 +562,8 @@ if __name__ == "__main__":
     ap.add_argument("--label-max-offset", type=float, help="max distance (page pt) outside the shape")
     ap.add_argument("--leader-dot", dest="leader_dot", action="store_true", default=None)
     ap.add_argument("--no-leader-dot", dest="leader_dot", action="store_false")
+    ap.add_argument("--label-style", help="label styling as JSON text or @file (see label_style.py): fonts, wrapping, halo/box/mask")
+    ap.add_argument("--label-style-b64", help="same as --label-style, base64 of the JSON (used by the panel)")
     ap.add_argument("--view", default="town", help="town | bowl | street:<id> | building:<id>")
     ap.add_argument("--preset", help="view_settings preset (default follows --view)")
     ap.add_argument("--scale", type=float, help="feet per paper inch (overrides the preset)")
@@ -531,4 +612,5 @@ if __name__ == "__main__":
              "margin_pct": a.label_fit_margin, "max_offset_pt": a.label_max_offset, "dot": a.leader_dot}
     lopts = {**viewcfg.label_offset(a.place), **{k: v_ for k, v_ in lopts.items() if v_ is not None}}
     render(load_place(a.place, a.model_dir), a.view, out, topts,
-           {"preset": a.preset, "scale": a.scale, "grid": a.grid, "page": a.page, "major_every": a.grid_major}, lopts)
+           {"preset": a.preset, "scale": a.scale, "grid": a.grid, "page": a.page, "major_every": a.grid_major}, lopts,
+           [lst.parse_cli(a.label_style), lst.decode_b64(a.label_style_b64)])

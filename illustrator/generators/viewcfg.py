@@ -37,6 +37,11 @@ def label_offset(place):
     return {**FALLBACK["label_offset"], **load_raw(place).get("label_offset", {})}
 
 
+def label_style(place):
+    """label_style block of view_settings.json (fonts, wrapping, halo/box/mask; see label_style.py), {} when absent."""
+    return load_raw(place).get("label_style", {})
+
+
 def parse_page(s):
     if s is None:
         return None

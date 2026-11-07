@@ -60,7 +60,28 @@
     if (el.type === "number") return el.value === "" ? null : Number(el.value);
     return el.value;
   }
+  // Labels tab: inputs with data-ls edit state.labels.styles[<category>][key]; non-default categories show inherited values
+  function lsStyle(cat) { var S = state.labels.styles; return Object.assign({}, S["default"], cat === "default" ? {} : (S[cat] || {})); }
+  function paintLabelStyle() {
+    var cat = state.labels.cat || "default", eff = lsStyle(cat), sel = $("lsFont");
+    if (sel && !sel.options.length) VB.FONTS.forEach(function (f) { var o = document.createElement("option"); o.value = f; o.textContent = f; sel.appendChild(o); });
+    $$("[data-ls]").forEach(function (el) {
+      var v = eff[el.getAttribute("data-ls")];
+      if (el.type === "checkbox") el.checked = !!v; else el.value = (v === null || v === undefined) ? "" : v;
+    });
+  }
+  function bindLabelStyle() {
+    $$("[data-ls]").forEach(function (el) {
+      el.addEventListener(el.tagName === "SELECT" || el.type === "checkbox" || el.type === "color" ? "change" : "input", function () {
+        var cat = state.labels.cat || "default", k = el.getAttribute("data-ls");
+        if (!state.labels.styles[cat]) state.labels.styles[cat] = {};
+        state.labels.styles[cat][k] = coerce(el); save();
+      });
+    });
+    $("lsCat").addEventListener("change", paintLabelStyle);
+  }
   function paintInputs() {
+    paintLabelStyle();
     $$("[data-s]").forEach(function (el) {
       var v = VB.getPath(state, el.getAttribute("data-s"));
       if (el.type === "checkbox") el.checked = !!v; else if (v !== undefined && v !== null) el.value = v; else el.value = "";
@@ -397,6 +418,8 @@
     patch_undo: function () { return startJob(VB.jobPatchCmd(state, d, "undo"), refreshPatches); },
     patch_redo: function () { return startJob(VB.jobPatchCmd(state, d, "redo"), refreshPatches); },
     patch_refresh: function () { refreshPatches(); },
+    labels_run: function () { return startJob(VB.jobLabels(state, d)); },
+    labels_reset_cat: function () { var c = state.labels.cat; if (c && c !== "default") { state.labels.styles[c] = VB.labelDefaults()[c]; save(); paintLabelStyle(); } },
     contours_run: function () { return startJob(VB.jobContours(state, d)); },
     shading_load_preset: function () { loadPreset(state.shading.preset); },
     shading_add_phase: addPhase,
@@ -409,6 +432,8 @@
     water_capture_lake: function () { return startJob(VB.jobCapture(state, d, { what: "lake polygon", layer: "WATER DRAW", closed: true, store: "water.lake_polygon", srcName: "water.lake_src" })); },
     water_add_lake: function () { return startJob(VB.jobWaterLake(state, d)); },
     town_capture: function () { return startJob(VB.jobCapture(state, d, { what: "town lasso", layer: "TOWN AREA", closed: true, store: "town.area", srcName: "town.area_src" })); },
+    town_area_auto: function () { return startJob(VB.jobTownArea(state, d, "auto")); },
+    town_area_snap: function () { return startJob(VB.jobTownArea(state, d, "snap")); },
     town_load_params: function () { state.town.area = []; loadFiles("town"); refreshAll(); },
     town_generate: function () { return startJob(VB.jobTown(state, d)); },
     town_accept: function () { return startJob(VB.jobTownAccept(state, d)); },
@@ -432,8 +457,6 @@
 
   // ------------------------------------------------------------ Foundry tab (all reads/writes run in foundry_push.py; the panel only spawns it)
   var fBusy = false, autoTimer = null, autoMtime = 0, autoPending = 0;
-    town_area_auto: function () { return startJob(VB.jobTownArea(state, d, "auto")); },
-    town_area_snap: function () { return startJob(VB.jobTownArea(state, d, "snap")); },
   function fOut(msg, level) { var e = $("fOut"); e.textContent = msg || ""; e.style.color = level === "bad" ? "var(--bad)" : level === "warn" ? "var(--warn)" : ""; }
   async function fPy(args) {
     var r = await runner.execPy(VB.FOUNDRY_PY, args, function (l, isErr) { if (l.charAt(0) !== "{") logLine((isErr ? "! " : "  ") + l); });
@@ -641,7 +664,7 @@
     var places = listPlaces(), sel = $("place");
     places.forEach(function (p) { var o = document.createElement("option"); o.value = p; o.textContent = p; sel.appendChild(o); });
     state = VB.normalize(null); d = VB.dirs(root, state.place);
-    makeRunner(); bindTabs(); bindInputs();
+    makeRunner(); bindTabs(); bindInputs(); bindLabelStyle();
     $$("[data-act]").forEach(function (b) { b.addEventListener("click", function () { act(b.getAttribute("data-act")); }); });
     $("cancel").addEventListener("click", function () { if (runner.cancel()) logLine("cancel requested"); });
     $("toggleLog").addEventListener("click", function () { var l = $("log"); l.hidden = !l.hidden; });

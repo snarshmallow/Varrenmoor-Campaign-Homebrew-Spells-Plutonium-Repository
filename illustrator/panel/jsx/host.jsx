@@ -179,6 +179,19 @@ function VB_run(json) {
         try { out.path = gd.fullName.fsName; } catch (e) { out.path = ""; }
         out.selection = gd.selection.length; break;
       }
+      case "list_fonts": {
+        // installed font families (optionally only those matching a.names) with their PostScript names, to check the Labels tab font list
+        var fams = {}, want = a.names || null;
+        for (var fi = 0; fi < app.textFonts.length; fi++) {
+          var tf = app.textFonts[fi];
+          if (!fams[tf.family]) fams[tf.family] = [];
+          fams[tf.family].push(tf.name);
+        }
+        out.families = []; out.missing = [];
+        for (var k in fams) if (fams.hasOwnProperty(k) && (!want || want.indexOf(k) >= 0)) out.families.push({ family: k, fonts: fams[k] });
+        if (want) for (var wi = 0; wi < want.length; wi++) if (!fams[want[wi]]) out.missing.push(want[wi]);
+        break;
+      }
       case "get_layer_tree": {
         if (app.documents.length === 0) throw new Error("no open document");
         var walk = function (c) {

@@ -3,12 +3,31 @@
 (function (root) {
   "use strict";
   var VB = {};
-  var GEN_LAYERS = ["Labels - Districts", "Labels - Streets", "Labels - Buildings", "Labels - Rooms", "Labels - Elevation", "Leaders", "NOTES",
+  var GEN_LAYERS = ["Labels - Districts", "Labels - Streets", "Labels - Buildings", "Labels - Rooms", "Labels - Elevation", "Label Backing", "Leaders", "NOTES",
     "Walls", "Buildings", "Blocks", "Roads", "Water", "Contours - Minor", "Contours - Index", "Fences",
     "Grid", "Scale bar", "North arrow", "Bounds"];
   var GUIDE_LAYERS = ["GUIDES", "Grid", "Scale bar", "North arrow", "Bounds"];
   var CONTOUR_LAYERS = ["Contours - Minor", "Contours - Index", "Labels - Elevation"];
-  var TOWN_LAYERS = ["Buildings", "Blocks", "Roads", "Water", "Fences", "Labels - Districts", "Labels - Streets", "Labels - Buildings", "Leaders", "NOTES"];
+  var TOWN_LAYERS = ["Buildings", "Blocks", "Roads", "Water", "Fences", "Labels - Districts", "Labels - Streets", "Labels - Buildings", "Label Backing", "Leaders", "NOTES"];
+  // label styling (mirrors generators/label_style.py; run_mock.js checks both agree)
+  var LABEL_CATS = ["districts", "streets", "buildings", "rooms", "elevation"];
+  var LABEL_LAYERS = ["Leaders", "Labels - Districts", "Labels - Streets", "Labels - Buildings", "Labels - Rooms", "Labels - Elevation", "Label Backing"];
+  var LABEL_TARGETS = { contours: ["Contours - Minor", "Contours - Index"], streets: ["Roads"], buildings: ["Buildings", "Walls"], blocks: ["Blocks"],
+    water: ["Water"], fences: ["Fences"], grid: ["Grid"] };
+  var LABEL_DEFAULT = { font: "Arial", size: null, bold: false, italic: false, letter_spacing: 0, case: "asis", color: "#111111", auto_contrast: false,
+    wrap: "auto", wrap_width: 120, wrap_unit: "pt", max_lines: 3, line_spacing: 1.1, align: "center",
+    mode: "halo", halo_color: "#ffffff", halo_width: 1.6, halo_opacity: 0.9, box_color: "#ffffff", box_pad: 2, box_radius: 2, box_opacity: 0.8,
+    knockout: false, knockout_pad: 2.5 };
+  var LABEL_CAT_DEFAULT = {
+    districts: { bold: true, "case": "auto", letter_spacing: 0.6, halo_width: 2 }, streets: { wrap: "off", italic: true, halo_width: 1.4 },
+    buildings: { max_lines: 2 }, rooms: { max_lines: 2 }, elevation: { wrap: "off", color: "#6b4423", mode: "none", knockout: true, knockout_pad: 1.5 } };
+  VB.LABEL_CATS = LABEL_CATS; VB.LABEL_LAYERS = LABEL_LAYERS; VB.LABEL_TARGETS = LABEL_TARGETS;
+  VB.FONTS = ["Arial", "Georgia", "Times New Roman", "Garamond", "Palatino Linotype", "Trebuchet MS", "Verdana", "Cambria", "Constantia", "Calibri", "Tahoma", "Candara", "Baskerville"];
+  VB.labelDefaults = function () {
+    var o = { "default": JSON.parse(JSON.stringify(LABEL_DEFAULT)) };
+    LABEL_CATS.forEach(function (c) { o[c] = JSON.parse(JSON.stringify(LABEL_CAT_DEFAULT[c] || {})); });
+    return o;
+  };
   var RAISE = ["mountain", "rolling_hills", "mesa", "plateau", "dunes", "rocky_crags", "ridge_line"];
   var DEPRESS = ["bowl", "valley", "trench", "sinkhole", "seabed_shelf"];
   var EXTRA_SWATCHES = [
@@ -55,6 +74,8 @@
       },
       contours: { minor: 10, index: 50, units: "ft", label_size: 6, decimals: 0, label_spacing_ft: 500, min_len_ft: 120,
         follow_line: true, upright: true, labels: true, datum: true, mask: true },
+      labels: { cat: "default", backing_layer: true, redraw_lines: true,
+        mask_targets: { contours: true, streets: true, buildings: true, blocks: true, water: false, fences: false, grid: true }, styles: VB.labelDefaults() },
       label_offset: { enabled: true, style: "elbow", stroke_width: 0.4, margin_pct: 10, max_offset_pt: 90, dot: true },
       shading: { preset: "alpine_steep", base_color: "#6f9a48", phases: [], loaded: false,
         hillshade: { enabled: true, azimuth: 315, altitude: 40, strength: 0.35, ambient: 0.3, exaggeration: 1 } },
@@ -231,11 +252,24 @@
   VB.panelioViewFlags = function (st) {
     return VB.viewFlags(st).map(function (x) { return x === "--grid-major" ? "--major" : x; });
   };
+  // label style as the JSON the generators read (default = full, categories = overrides), base64 so it survives any shell quoting
+  VB.labelStyleJson = function (st) {
+    var l = st.labels || {}, o = JSON.parse(JSON.stringify(l.styles || VB.labelDefaults()));
+    o.backing_layer = l.backing_layer !== false;
+    o.mask_targets = Object.keys(l.mask_targets || {}).filter(function (k) { return l.mask_targets[k]; });
+    return o;
+  };
+  VB.b64 = function (str) {
+    var u = unescape(encodeURIComponent(str));
+    if (typeof btoa === "function") return btoa(u);
+    return Buffer.from(u, "binary").toString("base64");
+  };
+  VB.labelStyleFlags = function (st) { return ["--label-style-b64", VB.b64(JSON.stringify(VB.labelStyleJson(st)))]; };
   VB.labelFlags = function (st) {
-    var o = st.label_offset || {};
-    if (o.enabled === false) return ["--no-label-offset"];
-    return ["--label-offset", "--leader-style", o.style || "elbow", "--leader-width", String(o.stroke_width), "--label-fit-margin", String(o.margin_pct),
-      "--label-max-offset", String(o.max_offset_pt), o.dot === false ? "--no-leader-dot" : "--leader-dot"];
+    var o = st.label_offset || {}, sf = VB.labelStyleFlags(st);
+    if (o.enabled === false) return ["--no-label-offset"].concat(sf);
+    return sf.concat(["--label-offset", "--leader-style", o.style || "elbow", "--leader-width", String(o.stroke_width), "--label-fit-margin", String(o.margin_pct),
+      "--label-max-offset", String(o.max_offset_pt), o.dot === false ? "--no-leader-dot" : "--leader-dot"]);
   };
   VB.contourFlags = function (st) {
     var c = st.contours, f = ["--contours", c.mask ? "--contour-mask" : "--no-contour-mask", "--contour-interval", String(c.minor), "--index-interval", String(c.index),
@@ -306,6 +340,17 @@
       steps: [py(GEN + "render_world.py", ["--place", st.place].concat(VB.viewFlags(st), VB.contourFlags(st), VB.labelFlags(st), VB.srcFlags(st), ["--out", svg]), "render_world --contours")]
         .concat(VB.replaceSteps(svg, CONTOUR_LAYERS, "replace contour layers")),
       clearStale: ["contours"]
+    };
+  };
+  // re-render only the labels (text, backing, leaders) and, when asked, the linework they cut (contours, roads, buildings ...)
+  VB.jobLabels = function (st, d) {
+    var svg = d.panel + "/labels.svg", l = st.labels || {}, names = LABEL_LAYERS.slice();
+    var cut = l.redraw_lines !== false;
+    if (cut) Object.keys(LABEL_TARGETS).forEach(function (k) { names = names.concat(LABEL_TARGETS[k]); });
+    var args = ["--place", st.place].concat(VB.viewFlags(st), VB.labelFlags(st), VB.srcFlags(st), VB.contourFlags(st), ["--out", svg]);
+    return {
+      kind: "labels", label: "Redraw labels", params: { labels: st.labels, offset: st.label_offset },
+      steps: [py(GEN + "render_world.py", args, "render_world (labels)")].concat(VB.replaceSteps(svg, names, "replace label layers"))
     };
   };
   VB.jobTerrainGenerate = function (st, d) {
