@@ -1,0 +1,98 @@
+{
+ "name": "alpine_steep",
+ "description": "Bridgehollow default: farmland/grass low, forest floor mid, scree and rock on steep, snow high.",
+ "base_color": "#6f9a48",
+ "hillshade": {
+  "enabled": true,
+  "azimuth": 315,
+  "altitude": 40,
+  "strength": 0.55,
+  "exaggeration": 1.0
+ },
+ "phases": [
+  {
+   "id": "farmland",
+   "name": "Farmland (low flats)",
+   "texture": "../textures/farmland.png",
+   "elev_min": null,
+   "elev_max": 700,
+   "slope_min_deg": 0,
+   "slope_max_deg": 10,
+   "elev_blend_ft": 50,
+   "slope_blend_deg": 5,
+   "opacity": 1.0,
+   "noise_jitter": 0.7,
+   "tile_scale_ft": 60
+  },
+  {
+   "id": "grass",
+   "name": "Grass",
+   "texture": "../textures/grass.png",
+   "elev_min": null,
+   "elev_max": 820,
+   "slope_min_deg": 0,
+   "slope_max_deg": 24,
+   "elev_blend_ft": 50,
+   "slope_blend_deg": 6,
+   "opacity": 1.0,
+   "noise_jitter": 0.7,
+   "tile_scale_ft": 45
+  },
+  {
+   "id": "forest",
+   "name": "Forest floor",
+   "texture": "../textures/forest_floor.png",
+   "elev_min": 780,
+   "elev_max": 960,
+   "slope_min_deg": 6,
+   "slope_max_deg": 32,
+   "elev_blend_ft": 60,
+   "slope_blend_deg": 6,
+   "opacity": 1.0,
+   "noise_jitter": 0.9,
+   "tile_scale_ft": 40
+  },
+  {
+   "id": "scree",
+   "name": "Scree",
+   "texture": "../textures/scree.png",
+   "elev_min": null,
+   "elev_max": null,
+   "slope_min_deg": 26,
+   "slope_max_deg": 38,
+   "elev_blend_ft": 40,
+   "slope_blend_deg": 6,
+   "opacity": 1.0,
+   "noise_jitter": 0.8,
+   "tile_scale_ft": 35
+  },
+  {
+   "id": "rock",
+   "name": "Bare rock",
+   "texture": "../textures/rock.png",
+   "elev_min": null,
+   "elev_max": null,
+   "slope_min_deg": 36,
+   "slope_max_deg": 90,
+   "elev_blend_ft": 40,
+   "slope_blend_deg": 6,
+   "opacity": 1.0,
+   "noise_jitter": 0.6,
+   "tile_scale_ft": 35
+  },
+  {
+   "id": "snow",
+   "name": "Snow",
+   "texture": "../textures/snow.png",
+   "elev_min": 960,
+   "elev_max": null,
+   "slope_min_deg": 0,
+   "slope_max_deg": 40,
+   "elev_blend_ft": 50,
+   "slope_blend_deg": 6,
+   "opacity": 1.0,
+   "noise_jitter": 1.0,
+   "tile_scale_ft": 60
+  }
+ ]
+}

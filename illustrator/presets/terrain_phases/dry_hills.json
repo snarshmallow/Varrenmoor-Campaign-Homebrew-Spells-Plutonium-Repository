@@ -1,0 +1,84 @@
+{
+ "name": "dry_hills",
+ "description": "Dry grass, scrub, sand, red rock; no snow.",
+ "base_color": "#b2a35f",
+ "hillshade": {
+  "enabled": true,
+  "azimuth": 315,
+  "altitude": 40,
+  "strength": 0.5,
+  "exaggeration": 1.0
+ },
+ "phases": [
+  {
+   "id": "dry_grass",
+   "name": "Dry grass",
+   "texture": "../textures/dry_grass.png",
+   "elev_min": null,
+   "elev_max": null,
+   "slope_min_deg": 0,
+   "slope_max_deg": 90,
+   "elev_blend_ft": 30,
+   "slope_blend_deg": 6,
+   "opacity": 1.0,
+   "noise_jitter": 0.6,
+   "tile_scale_ft": 45
+  },
+  {
+   "id": "scrub",
+   "name": "Scrub",
+   "texture": "../textures/scrub.png",
+   "elev_min": null,
+   "elev_max": null,
+   "slope_min_deg": 8,
+   "slope_max_deg": 28,
+   "elev_blend_ft": 30,
+   "slope_blend_deg": 6,
+   "opacity": 1.0,
+   "noise_jitter": 0.8,
+   "tile_scale_ft": 45
+  },
+  {
+   "id": "sand",
+   "name": "Sand (low flats)",
+   "texture": "../textures/sand.png",
+   "elev_min": null,
+   "elev_max": 700,
+   "slope_min_deg": 0,
+   "slope_max_deg": 8,
+   "elev_blend_ft": 40,
+   "slope_blend_deg": 4,
+   "opacity": 1.0,
+   "noise_jitter": 0.7,
+   "tile_scale_ft": 45
+  },
+  {
+   "id": "red_rock",
+   "name": "Red rock",
+   "texture": "../textures/red_rock.png",
+   "elev_min": null,
+   "elev_max": null,
+   "slope_min_deg": 30,
+   "slope_max_deg": 90,
+   "elev_blend_ft": 30,
+   "slope_blend_deg": 6,
+   "opacity": 1.0,
+   "noise_jitter": 0.6,
+   "tile_scale_ft": 45
+  },
+  {
+   "id": "scree",
+   "name": "Scree",
+   "texture": "../textures/scree.png",
+   "elev_min": null,
+   "elev_max": null,
+   "slope_min_deg": 24,
+   "slope_max_deg": 34,
+   "elev_blend_ft": 30,
+   "slope_blend_deg": 5,
+   "opacity": 1.0,
+   "noise_jitter": 0.7,
+   "tile_scale_ft": 45
+  }
+ ]
+}

@@ -1,0 +1,27 @@
+{
+ "png": "bridgehollow_shading.png",
+ "width_px": 3600,
+ "height_px": 2250,
+ "ppf": 1.5,
+ "dpi": 150.0,
+ "scale_ft_per_in": 100.0,
+ "bounds_ft": {
+  "x_min": 0,
+  "y_min": 0,
+  "x_max": 2400,
+  "y_max": 1500
+ },
+ "y_axis": "down",
+ "page_size_in": [
+  24.0,
+  15.0
+ ],
+ "phases": [
+  "farmland",
+  "grass",
+  "forest",
+  "scree",
+  "rock",
+  "snow"
+ ]
+}

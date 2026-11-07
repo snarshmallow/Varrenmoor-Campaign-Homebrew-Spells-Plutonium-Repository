@@ -1,0 +1,68 @@
+{
+ "name": "coastal_basin",
+ "description": "Seabed, depth-graded shallows, beach, grass, rock; elevations are signed feet vs sea_level_ft datum (0).",
+ "base_color": "#8fd0d0",
+ "hillshade": {
+  "enabled": true,
+  "azimuth": 315,
+  "altitude": 40,
+  "strength": 0.5
+ },
+ "phases": [
+  {
+   "id": "seabed",
+   "name": "Seabed",
+   "texture": "../textures/sand.png",
+   "below_datum": true,
+   "elev_blend_ft": 10,
+   "noise_jitter": 0.3,
+   "tile_scale_ft": 50
+  },
+  {
+   "id": "water",
+   "name": "Water depth gradient",
+   "below_datum": true,
+   "water_depth": {
+    "shallow": "#8fd0d0",
+    "deep": "#12395e",
+    "max_depth_ft": 80
+   },
+   "elev_blend_ft": 4,
+   "noise_jitter": 0.2,
+   "opacity": 0.92
+  },
+  {
+   "id": "beach",
+   "name": "Beach",
+   "texture": "../textures/sand.png",
+   "elev_min": -4,
+   "elev_max": 14,
+   "elev_blend_ft": 8,
+   "slope_max_deg": 14,
+   "slope_blend_deg": 4,
+   "noise_jitter": 0.8,
+   "tile_scale_ft": 30
+  },
+  {
+   "id": "grass",
+   "name": "Grass",
+   "texture": "../textures/grass.png",
+   "elev_min": 6,
+   "elev_blend_ft": 14,
+   "slope_max_deg": 26,
+   "slope_blend_deg": 6,
+   "noise_jitter": 0.7
+  },
+  {
+   "id": "rock",
+   "name": "Rock",
+   "texture": "../textures/rock.png",
+   "elev_min": -2,
+   "slope_min_deg": 30,
+   "slope_blend_deg": 6,
+   "elev_blend_ft": 6,
+   "noise_jitter": 0.6,
+   "tile_scale_ft": 35
+  }
+ ]
+}

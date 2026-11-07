@@ -1,0 +1,84 @@
+{
+ "name": "temperate_valley",
+ "description": "Grass, meadow, dirt, rock, snow.",
+ "base_color": "#6f9a48",
+ "hillshade": {
+  "enabled": true,
+  "azimuth": 315,
+  "altitude": 40,
+  "strength": 0.5,
+  "exaggeration": 1.0
+ },
+ "phases": [
+  {
+   "id": "grass",
+   "name": "Grass",
+   "texture": "../textures/grass.png",
+   "elev_min": null,
+   "elev_max": null,
+   "slope_min_deg": 0,
+   "slope_max_deg": 90,
+   "elev_blend_ft": 30,
+   "slope_blend_deg": 6,
+   "opacity": 1.0,
+   "noise_jitter": 0.6,
+   "tile_scale_ft": 45
+  },
+  {
+   "id": "meadow",
+   "name": "Meadow",
+   "texture": "../textures/meadow.png",
+   "elev_min": null,
+   "elev_max": 760,
+   "slope_min_deg": 0,
+   "slope_max_deg": 12,
+   "elev_blend_ft": 60,
+   "slope_blend_deg": 5,
+   "opacity": 1.0,
+   "noise_jitter": 0.6,
+   "tile_scale_ft": 45
+  },
+  {
+   "id": "dirt",
+   "name": "Dirt",
+   "texture": "../textures/dirt.png",
+   "elev_min": null,
+   "elev_max": null,
+   "slope_min_deg": 18,
+   "slope_max_deg": 30,
+   "elev_blend_ft": 30,
+   "slope_blend_deg": 6,
+   "opacity": 1.0,
+   "noise_jitter": 0.8,
+   "tile_scale_ft": 45
+  },
+  {
+   "id": "rock",
+   "name": "Rock",
+   "texture": "../textures/rock.png",
+   "elev_min": null,
+   "elev_max": null,
+   "slope_min_deg": 32,
+   "slope_max_deg": 90,
+   "elev_blend_ft": 30,
+   "slope_blend_deg": 6,
+   "opacity": 1.0,
+   "noise_jitter": 0.6,
+   "tile_scale_ft": 45
+  },
+  {
+   "id": "snow",
+   "name": "Snow",
+   "texture": "../textures/snow.png",
+   "elev_min": 980,
+   "elev_max": null,
+   "slope_min_deg": 0,
+   "slope_max_deg": 42,
+   "elev_blend_ft": 40,
+   "slope_blend_deg": 6,
+   "opacity": 1.0,
+   "noise_jitter": 1.0,
+   "tile_scale_ft": 45
+  }
+ ]
+}
