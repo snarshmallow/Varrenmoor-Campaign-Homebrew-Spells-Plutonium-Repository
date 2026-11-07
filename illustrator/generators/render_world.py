@@ -51,6 +51,7 @@ path { fill: none; }
 .wall { fill: none; stroke: #000000; stroke-width: 1.25; }
 .road { fill: none; stroke: #000000; stroke-width: 0.75; }
 .water { fill: none; stroke: #1a4f8a; stroke-width: 0.75; }
+.bar { fill: none; stroke: #9c8556; stroke-width: 0.4; }
 .proposed { stroke-dasharray: 3 1.5; }
 text { fill: #000000; stroke: none; font-family: Arial, sans-serif; }
 .leader { fill: none; stroke: #000000; }
@@ -335,6 +336,9 @@ def render(model, view_arg, out_path, topts=None, cfg_over=None, lopts=None, lst
     # LINES
     for e in model["water"]:
         addpoly("Water", e["id"], entity_polygon(e), "water", None, "water")     # solid bank line: a dashed outline made the river read as a wide dashed band
+    for e in model["water"]:
+        for bi, bp in enumerate(e.get("bars", [])):          # point-bar / sandbar hints on the inner bends (water.json `bars`)
+            addpoly("Water", "%s_bar%d" % (e["id"], bi + 1), [tuple(p) for p in bp], "bar", None, "water")
     for e in model["districts"]:
         k = e["kind"]
         layer, cls = {"square": ("Roads", "road"), "field": ("Fences", "field"),

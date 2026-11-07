@@ -338,6 +338,16 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
     <button data-act="water_carve">Carve rivers</button>
     <button data-act="water_crossings">Bridges report</button>
   </div>
+  <h4>River meander (Bridgehollow)</h4>
+  <div class="grid">
+    <label>Preset <select data-s="water.rivergen.preset"><option>straight</option><option selected>gentle</option><option>lazy</option></select></label>
+    <label>Amplitude (ft, blank = preset) <input type="number" data-s="water.rivergen.amplitude_ft" min="0" step="any"></label>
+    <label>Wavelength (ft) <input type="number" data-s="water.rivergen.wavelength_ft" min="100" step="any"></label>
+    <label>Width variation (0-0.5) <input type="number" data-s="water.rivergen.width_var" min="0" max="0.5" step="0.02"></label>
+    <label>Seed <input type="number" data-s="water.rivergen.seed" step="1"></label>
+    <label class="chk"><input type="checkbox" data-s="water.rivergen.bars"> Sandbar hints</label>
+  </div>
+  <div class="btns"><button data-act="water_river_meander" title="Writes the meander into terrain_spec.json, regenerates the heightmap (valley, floodplain follow it) and water.json. Re-run the town afterwards; child regions need Refresh from parent.">Regenerate river + terrain</button></div>
   <h4>Add river</h4>
   <div class="grid">
     <label>Name <input type="text" data-s="water.river.name"></label>

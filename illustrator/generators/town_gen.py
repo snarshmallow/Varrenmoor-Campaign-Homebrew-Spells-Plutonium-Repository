@@ -916,6 +916,8 @@ class TownGen:
         placed = []
         for k in range(count):
             r = self.rand.uniform(rmin, rmax)
+            if k >= len(anchors) and PZ.get("extra_radius_ft"):
+                r = self.rand.uniform(*PZ["extra_radius_ft"])          # later squares (not the named anchors) can be smaller
             nm, pid, c = None, None, None
             if k < len(anchors):
                 a = anchors[k]
@@ -1242,11 +1244,16 @@ class TownGen:
             place("stables", "bld_stables", "Stables", "stable", s["size"], free(s["size"][0] * s["size"][1] * 0.75),
                   lambda l: math.hypot(l["c"][0] - lot["c"][0], l["c"][1] - lot["c"][1]), "Stables beside the inn.")
         s = N.get("meeting_hall", {"size": [60, 44]})
-        place("meeting", "bld_meeting_hall", "Meeting Hall", "civic", s["size"], free(s["size"][0] * s["size"][1] * 0.75, ["residential"]),
+        place("meeting", "bld_meeting_hall", "Meeting Hall", "civic", s["size"], free(s["size"][0] * s["size"][1] * 0.75, ["residential", "civic"]),
               lambda l: Point(l["c"]).distance(mpoly) + 0.1 * dist_c(l), "Plain hall for town meetings; no religious use.")
         s = N.get("smithy", {"size": [40, 30]})
         place("smithy", "bld_smithy", "Smithy", "craft", s["size"], free(s["size"][0] * s["size"][1] * 0.75, ["residential"]),
               lambda l: abs(dist_c(l) - 300) * 0.5 + abs(self.dwater_at(*l["c"]) - 60), "Forge near water, away from the thatched core.")
+        for j, x in enumerate(N.get("extra_civic", [])):                  # more civic buildings round the hall: [{id,name,size,floors,notes,near}]
+            sz = x.get("size", [44, 34])
+            place("civic_%d" % j, x["id"], x["name"], "civic", sz, free(sz[0] * sz[1] * 0.75, ["civic", "residential"]),
+                  lambda l, x=x: math.hypot(l["c"][0] - hall_c[0], l["c"][1] - hall_c[1]) + (Point(l["c"]).distance(pc) * 0.3 if x.get("near") == "court" else 0)
+                  + (0 if su.distance(Point(l["c"])) < 30 else 60), x.get("notes", ""), x.get("floors", 1))
         # gate watch: beside the main road near the entry
         ent = Point(self.P["entry"]["point"])
         g0 = self.main_lines_road[0] if self.main_lines_road else None

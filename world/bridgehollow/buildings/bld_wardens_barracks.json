@@ -1,0 +1,39 @@
+{
+ "id": "bld_wardens_barracks",
+ "name": "Wardens' Barracks",
+ "kind": "civic",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    970.6,
+    747.8
+   ],
+   [
+    977.2,
+    776.2
+   ],
+   [
+    991.9,
+    772.8
+   ],
+   [
+    985.3,
+    744.3
+   ]
+  ]
+ },
+ "notes": "Quarters for the wardens' watch, beside the hall.",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 2,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 656.9,
+ "site_slope": 0.065,
+ "site_relief_ft": 1.8
+}

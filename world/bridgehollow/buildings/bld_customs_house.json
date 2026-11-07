@@ -1,0 +1,39 @@
+{
+ "id": "bld_customs_house",
+ "name": "Customs House",
+ "kind": "civic",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    1046.0,
+    777.2
+   ],
+   [
+    1028.3,
+    777.0
+   ],
+   [
+    1028.2,
+    791.9
+   ],
+   [
+    1045.8,
+    792.1
+   ]
+  ]
+ },
+ "notes": "Weighs and taxes goods crossing the bridge.",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 652.7,
+ "site_slope": 0.078,
+ "site_relief_ft": 1.7
+}

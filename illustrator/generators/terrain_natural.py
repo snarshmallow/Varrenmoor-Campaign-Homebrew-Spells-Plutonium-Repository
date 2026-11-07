@@ -407,6 +407,16 @@ def _chaikin(P, n=3):
     return P
 
 
+def _river_P(v):
+    """River route [x, y, rel, side]: the spec points, or the dense meandered route when the valley has a "meander" block
+    (river_meander.py, shared with the water generator so the carved valley and the drawn river are the same line)."""
+    ds = v.get("side_slope", 0.3)
+    if v.get("meander"):
+        import river_meander
+        return river_meander.river_points(v)
+    return np.array([[p[0], p[1], p[2], p[3] if len(p) > 3 else ds] for p in v["points"]], float)
+
+
 def generate(spec, cell_ft=None, seed=None, verbose=False):
     import time
     t0 = time.time()
@@ -427,8 +437,7 @@ def generate(spec, cell_ft=None, seed=None, verbose=False):
     river_polys = []
     for v in spec.get("valleys", []):
         if v.get("river"):
-            river_polys.append(naturalize([p[:4] + [0.0] * (4 - len(p)) for p in v["points"]], sub_rng(seed, 9), nat, 2,
-                                          wander=False, vary=False)[:, :2])
+            river_polys.append(naturalize(_river_P(v), sub_rng(seed, 9), nat, 2, wander=False, vary=False)[:, :2])
     river_pts = np.vstack([densify(np.c_[r, np.zeros(len(r))], 25.0)[:, :2] for r in river_polys]) if river_polys else np.zeros((0, 2))
     avoid = [tuple(a) for a in nat["spurs"].get("clear_points", [])]
     avoid += [tuple(a) for a in nat["keep_clear"]]
@@ -545,7 +554,7 @@ def generate(spec, cell_ft=None, seed=None, verbose=False):
     for vi, v in enumerate(spec.get("valleys", []) + spec.get("passes", [])):
         ds = v.get("side_slope", 0.3)
         is_river = bool(v.get("river"))
-        P = np.array([[p[0], p[1], p[2], p[3] if len(p) > 3 else ds] for p in v["points"]], float)
+        P = _river_P(v) if is_river else np.array([[p[0], p[1], p[2], p[3] if len(p) > 3 else ds] for p in v["points"]], float)
         rng = sub_rng(seed, 7, vi)
         local = dict(nat)
         local["wander_ft"] = 0.0 if is_river else nat["wander_ft"] * 0.5
@@ -654,9 +663,7 @@ def generate(spec, cell_ft=None, seed=None, verbose=False):
 
 def river_bed_profile(base_fn, v, nat):
     """Dense river centreline (x,y) and a bed elevation that never rises downstream."""
-    ds = v.get("side_slope", 0.3)
-    P = np.array([[p[0], p[1], p[2], p[3] if len(p) > 3 else ds] for p in v["points"]], float)
-    R = catmull(P, 6.0)
+    R = catmull(_river_P(v), 6.0)
     bed = base_fn(R[:, 0], R[:, 1]) + R[:, 2]
     # flow direction = order of points (north to south here); enforce non-climbing
     bed = np.minimum.accumulate(bed)

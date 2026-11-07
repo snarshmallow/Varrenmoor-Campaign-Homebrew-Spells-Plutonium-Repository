@@ -1,26 +1,26 @@
 {
- "id": "bld_shed_016",
- "name": "Shed 16",
+ "id": "bld_shed_112",
+ "name": "Shed 112",
  "kind": "shed",
  "status": "proposed",
  "geometry": {
   "type": "polygon",
   "points": [
    [
-    1080.6,
-    645.5
+    1077.8,
+    1100.1
    ],
    [
-    1087.1,
-    640.8
+    1079.6,
+    1092.9
    ],
    [
-    1082.5,
-    634.3
+    1067.1,
+    1089.8
    ],
    [
-    1076.0,
-    639.0
+    1065.3,
+    1097.0
    ]
   ]
  },
@@ -33,7 +33,7 @@
  "floors": 1,
  "rooms": [],
  "doors": [],
- "elevation_ft": 658.7,
- "site_slope": 0.087,
- "site_relief_ft": 0.8
+ "elevation_ft": 636.4,
+ "site_slope": 0.111,
+ "site_relief_ft": 1.6
 }

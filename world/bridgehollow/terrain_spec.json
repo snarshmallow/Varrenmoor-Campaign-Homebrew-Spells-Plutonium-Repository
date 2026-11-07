@@ -315,7 +315,11 @@
      0.2
     ]
    ],
-   "river": true
+   "river": true,
+   "meander": {
+    "preset": "gentle",
+    "seed": 1103
+   }
   },
   {
    "name": "hanging valley (east wall)",

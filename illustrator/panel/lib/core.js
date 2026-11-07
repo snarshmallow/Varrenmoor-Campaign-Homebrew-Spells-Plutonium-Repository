@@ -81,6 +81,7 @@
         hillshade: { enabled: true, azimuth: 315, altitude: 40, strength: 0.35, ambient: 0.3, exaggeration: 1 } },
       water: { sea_level_ft: 0, threshold_cells: 150, outlet_width: 60, inflow: "", delta: false, meander: true, bank_ft: 12,
         use_working: false, use_carved: false, redraw: true,
+        rivergen: { preset: "gentle", amplitude_ft: "", wavelength_ft: "", width_var: "", seed: "", bars: true },
         river: { name: "", width: 10, width_end: 0, depth: 1.5, flow: 8, meander: 0, join: "", carve: false },
         lake: { name: "", level: 0, depth: 8, kind: "pond", auto_level: true },
         river_path: [], lake_polygon: [], river_src: "", lake_src: "" },
@@ -466,6 +467,16 @@
         { t: "fn", label: "check polygon", fn: function () { if (!st.water.lake_polygon || st.water.lake_polygon.length < 3) throw new Error("no lake polygon: select a closed path (or draw on a WATER DRAW layer) and press Capture polygon"); } },
         py(GEN + "water.py", a, "water add-lake")
       ].concat(VB.waterRedraw(st, d)), setStale: ["contours", "shading", "town"] };
+  };
+  // regenerate the Bridgehollow river meander (spec -> terrain -> water.json); town is re-run separately from the Town tab
+  VB.jobRiverMeander = function (st, d) {
+    var g = st.water.rivergen, a = ["world/gen_bridgehollow.py", "--terrain", "--no-town", "--meander", g.preset || "gentle"];
+    [["amplitude_ft", "--meander-amplitude"], ["wavelength_ft", "--meander-wavelength"], ["width_var", "--width-var"], ["seed", "--meander-seed"]].forEach(function (k) {
+      if (g[k[0]] !== "" && g[k[0]] != null) a.push(k[1], String(g[k[0]]));
+    });
+    if (g.bars === false) a.push("--no-bars");
+    return { kind: "water_river_meander", label: "Regenerate river meander", params: { rivergen: g },
+      steps: [py(a[0], a.slice(1), "gen_bridgehollow river + terrain")].concat(VB.waterRedraw(st, d)), setStale: ["contours", "shading", "town"] };
   };
   VB.jobWaterCarve = function (st, d) {
     return { kind: "water_carve", label: "Carve rivers into heightmap", params: { bank_ft: st.water.bank_ft },

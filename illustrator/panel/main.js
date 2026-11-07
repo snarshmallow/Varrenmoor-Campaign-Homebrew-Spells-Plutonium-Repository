@@ -427,6 +427,7 @@
     light_render: function () { return window.VBLightUI.actions.light_render(); }, light_preview: function () { return window.VBLightUI.actions.light_preview(); },
     light_clear: function () { return window.VBLightUI.actions.light_clear(); }, light_capture: function () { return window.VBLightUI.actions.light_capture(); },
     water_analyze: function () { return startJob(VB.jobWaterAnalyze(state, d)); },
+    water_river_meander: function () { return startJob(VB.jobRiverMeander(state, d)); },
     water_carve: function () { return startJob(VB.jobWaterCarve(state, d)); },
     water_crossings: function () { return startJob(VB.jobWaterCrossings(state, d), showCrossings); },
     water_capture_river: function () { return startJob(VB.jobCapture(state, d, { what: "river path", layer: "WATER DRAW", open: true, store: "water.river_path", srcName: "water.river_src" })); },
