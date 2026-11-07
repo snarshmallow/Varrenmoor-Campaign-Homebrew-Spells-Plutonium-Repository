@@ -49,7 +49,7 @@ def text_size(s, size, bold=False):
     w = 0.0
     for ch in s:
         w += 0.28 if ch == " " else 0.70 if ch.isupper() else 0.55 if ch.isdigit() else 0.34 if ch in "ilIjt.,'*!|" else 0.52
-    return w * size * (1.08 if bold else 1.0) + 0.5, size * 0.95
+    return w * size * (1.12 if bold else 1.05) + 0.5, size * 1.1
 
 
 def text_box(cx, cy, w, h, rot=None):
@@ -84,7 +84,7 @@ class _Item:
 
 class Placer:
     def __init__(self, params, frame=None, shapes=()):
-        """frame: (x0, y0, x1, y1) page pt box the text must stay in. shapes: [(id, pts)] closed objects to avoid."""
+        """frame: (x0, y0, x1, y1) page pt box the text must stay in. shapes: [(id, pts)] closed objects to avoid (ids containing '#' are soft: text avoids them, leaders may cross)."""
         self.p = params
         self.frame = box(*frame) if frame else None
         self.items = []
@@ -113,6 +113,7 @@ class Placer:
 
     def _collides(self, it, c, placed):
         b = text_box(c[0], c[1], it.w, it.h, it.rot)
+        b = b.buffer(1.5, join_style=2)
         return any(b.intersects(o) for o in placed)
 
     def _shifted(self, it, c0, placed):
@@ -178,12 +179,12 @@ class Placer:
             results.append(r)
         return results
 
-    def _others_hit(self, it, g):
+    def _others_hit(self, it, g, skip_soft=False):
         if not self._tree:
             return False
         for i in self._tree.query(g):
             sid, sg = self.shapes[int(i)]
-            if sid != it.id and sg.intersects(g) and sg.intersection(g).area > 0.25 * g.area:
+            if sid != it.id and not (skip_soft and "#" in sid) and sg.intersects(g):
                 return True
         return False
 
@@ -202,7 +203,7 @@ class Placer:
             re_ = 0.0 if inter.is_empty else max(math.hypot(x - anchor[0], y - anchor[1]) for x, y in _coords(inter))
             exits.append((u, re_))
         nsteps = int(p.max_offset_pt / 2.5) + 1
-        for strict in (True, False):
+        for strict in (3, 2, 1, 0):
             for i in range(nsteps):
                 for u, r_exit in exits:
                     r = r_exit + 3.0 + i * 2.5
@@ -234,7 +235,9 @@ class Placer:
             return None
         if any(ln.crosses(o) for o in leaders):
             return None
-        if strict and self._others_hit(it, tb_pad):
+        if strict and self._others_hit(it, tb_pad, skip_soft=strict < 3):
+            return None
+        if strict >= 2 and self._others_hit(it, ln, skip_soft=True):
             return None
         # keep the leader inside the frame too
         if self.frame is not None and not self.frame.contains(ln):

@@ -56,6 +56,25 @@ def main():
     assert not boxes[0].intersects(boxes[1]), "labels do not overlap"
     assert not L.LineString(r2["a"].leader).crosses(L.LineString(r2["b"].leader)), "leaders do not cross"
 
+    # a plaza label inside a district whose label sits at the same point: they must not overlap
+    dist, plaza = rect(100, 100, 300, 200), rect(200, 160, 80, 80)
+    r3 = solve(P, [("dist", dist, "AUTHORITY WARD", 9, {"bold": True, "point": (240, 200)}),
+                   ("plaza", plaza, "Court Square", 7, {"bold": True, "point": (240, 200)})], [("plaza", plaza)])
+    b3 = []
+    for k, t_, sz in (("dist", "AUTHORITY WARD", 9), ("plaza", "Court Square", 7)):
+        r, (w, h) = r3[k], L.text_size(t_, sz, True)
+        dx = {"middle": 0, "start": w / 2, "end": -w / 2}[r.anchor]
+        b3.append(L.text_box(r.x + dx, r.y - sz * 0.35, w, h))
+    assert not b3[0].intersects(b3[1]), "plaza and district labels do not overlap"
+
+    # offset text avoids a neighbouring shape's outline when there is free space
+    tiny, nb = rect(300, 200, 8, 8), rect(312, 190, 40, 30)
+    r4 = solve(P, [("tiny", tiny, "Tiny Shed", 7)], [("tiny", tiny), ("nb", nb)])["tiny"]
+    w, h = L.text_size("Tiny Shed", 7)
+    t4 = L.text_box(r4.x + (w / 2 if r4.anchor == "start" else -w / 2), r4.y - 2.45, w, h)
+    assert not t4.intersects(Polygon(nb)), "offset text does not cross a neighbour"
+    assert not L.LineString(r4.leader).intersects(Polygon(nb)), "leader does not cross a neighbour"
+
     # svg ids
     svg = "".join(L.leader_svg(sm, 0.4))
     root = ET.fromstring(f'<svg xmlns="http://www.w3.org/2000/svg">{svg}</svg>')

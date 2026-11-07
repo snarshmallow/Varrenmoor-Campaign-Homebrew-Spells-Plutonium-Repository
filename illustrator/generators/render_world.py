@@ -364,6 +364,11 @@ def render(model, view_arg, out_path, topts=None, cfg_over=None, lopts=None):
         pg = v.clip(entity_polygon(e))
         if pg:
             shapes_pt.append((e["id"], [v.px(q) for q in pg]))
+    for sid, sh in shapes.items():                      # street outlines are avoided too (softly, like other shapes)
+        for i_, ring in enumerate(shape_rings(sh)):
+            rc = v.clip(ring)
+            if rc:
+                shapes_pt.append((f"{sid}#{i_}", [v.px(q) for q in rc]))
     placer = lbo.Placer(lp, frame=(m_pt, m_pt, W - m_pt, H - m_pt), shapes=shapes_pt)
     if cs is not None:
         for lb in cs.labels:
