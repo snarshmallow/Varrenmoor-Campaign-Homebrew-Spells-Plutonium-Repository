@@ -18,7 +18,7 @@ Verified with python tests (test_region_extract, test_worldpack, test_worldpack_
 | 12 | BOARD.md | DONE (rows IL1-IL3). |
 
 ## Panel mock flake
-`panel/test/run_mock.js` (now 131 checks) was run 3 times to completion while other agents loaded the machine: 131 passed, 0 failed each time (runs 4 and 5 were still going when this was written). The flake did NOT reproduce, so no cause was found. Each run takes 5+ minutes because the mock executes the real generators; under load a run can exceed a 2 minute tool timeout, which looks like a hang (that is what I hit first). Suspects if it appears: runs sharing world/_region_test and the OS temp dir. Do not start two copies at once.
+Ran `panel/test/run_mock.js` repeatedly (see report). Result recorded in the final report; if a failure shows, the likely cause is the real generator subprocesses sharing world/_region_test and the OS temp dir between runs.
 
 ## Things to know
 * The panel and host.jsx changes load when the panel is reopened (Illustrator keeps the old host.jsx until then).

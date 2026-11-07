@@ -159,39 +159,6 @@ class Ctx:
         return (wp.bilinear(self.h, self.pack.cell_ft, x_ft, y_ft) - self.fr.z_origin_ft) * FT
 
 
-def uv_offset(key):
-    """Stable per-entity texture offset (in repeats) so neighbouring houses do not show the same board at the same place."""
-    import hashlib
-    d = hashlib.md5(str(key).encode()).digest()
-    return (d[0] / 255.0, d[1] / 255.0)
-
-
-def world_uv(pts, tile_ft, off=(0.0, 0.0), v0_m=0.0):
-    """UVs for one planar polygon (Blender frame, metres) at constant texel density: one image repeat = tile_ft feet on every face.
-    Orientation: u runs along the horizontal direction of the face (course direction: planks, shingle rows, stone courses), v runs DOWN the
-    face's steepest slope (image row 0 = up-slope), so thatch strands and board-and-batten follow the slope and gable triangles are upright.
-    Near-horizontal faces use plan (x, -y). v0_m shifts walls so a texture's rails sit on the floor line (z of the floor)."""
-    P = np.asarray(pts, float)
-    n = np.zeros(3)
-    for i in range(len(P)):
-        a, b = P[i], P[(i + 1) % len(P)]
-        n += np.array([(a[1] - b[1]) * (a[2] + b[2]), (a[2] - b[2]) * (a[0] + b[0]), (a[0] - b[0]) * (a[1] + b[1])])
-    ln = np.linalg.norm(n)
-    n = n / ln if ln > 1e-12 else np.array([0, 0, 1.0])
-    t = float(tile_ft) * FT
-    if abs(n[2]) > 0.95:
-        u, s = np.array([1.0, 0, 0]), np.array([0, -1.0, 0])
-        v0 = 0.0
-    else:
-        u = np.cross([0, 0, 1.0], n)
-        u /= np.linalg.norm(u)
-        s = np.cross(n, u)
-        if s[2] < 0:
-            s = -s
-        v0 = v0_m
-    return [((float(p @ u)) / t + off[0], -(float(p @ s) - v0) / t + off[1]) for p in P]
-
-
 def uv_ft(x_ft, y_ft, tile_ft):
     t = float(tile_ft or 10.0)
     return (x_ft / t, y_ft / t)
@@ -291,7 +258,7 @@ def _add_kerbs(cx, b, e):
         d = np.hypot(cl[:-1, 0] + t * seg[:, 0] - x, cl[:-1, 1] + t * seg[:, 1] - y)
         i = int(np.argmin(d))
         return zc[i] + t[i] * (zc[i + 1] - zc[i])
-    mat, tile = "mat_kerb", 4.0
+    mat, tile = "mat_cobble", 8.0
     for ring in e["kerbs"]:
         P = [tuple(p) for p in ring]
         # densify long edges so the kerb follows the road profile
@@ -347,7 +314,6 @@ def build_drape(cx, e, lift, max_edge_ft=25.0):
 
 
 def build_building(cx, e):
-    import worldpack_pbr as pbr
     b = Builder()
     z0 = (e["base_elevation_ft"] - e["skirt_depth_ft"] - cx.fr.z_origin_ft) * FT
     zf = (e["base_elevation_ft"] - cx.fr.z_origin_ft) * FT
@@ -356,17 +322,20 @@ def build_building(cx, e):
     area2 = sum(P[i][0] * P[(i + 1) % len(P)][1] - P[(i + 1) % len(P)][0] * P[i][1] for i in range(len(P)))
     if area2 < 0:
         P.reverse()
-    wm_, wt = e["wall"]["surface"]["material"], pbr.tile_ft(e["wall"]["surface"]["material"], e["wall"]["surface"].get("tile_ft") or 8)
-    off = uv_offset(e["id"])
-
-    def F(mat, pts, tile, v0=0.0):
-        b.face(mat, pts, world_uv(pts, tile, off, v0))
+    wm, wt = e["wall"]["surface"]["material"], e["wall"]["surface"]["tile_ft"]
+    cum = 0.0
     for i in range(len(P)):
         p, q = P[i], P[(i + 1) % len(P)]
-        F(wm_, [(p[0], p[1], z0), (q[0], q[1], z0), (q[0], q[1], zt), (p[0], p[1], zt)], wt, zf)
+        L = math.dist(p, q) / FT
+        a0 = b.vert((p[0], p[1], z0), (cum / wt, (zt - z0) / FT / wt))
+        a1 = b.vert((q[0], q[1], z0), ((cum + L) / wt, (zt - z0) / FT / wt))
+        a2 = b.vert((q[0], q[1], zt), ((cum + L) / wt, 0.0))
+        a3 = b.vert((p[0], p[1], zt), (cum / wt, 0.0))
+        b.quad(wm, a0, a1, a2, a3)
+        cum += L
     cap = [b.vert((p[0], p[1], zt - WALL_CAP_DROP_M), (p[0] / FT / wt, -p[1] / FT / wt)) for p in P]
     for t in earclip(P):
-        b.tri(wm_, *[cap[i] for i in t])
+        b.tri(wm, *[cap[i] for i in t])
     # roof on the oriented bounding box
     o = e["obb"]
     cxm, cym = cx.B(o["center"][0], o["center"][1])
@@ -379,25 +348,34 @@ def build_building(cx, e):
     rise = r["ridge_height_ft"] * FT
     ze = zt - ov * (rise / max(o["width_ft"] * FT / 2, 1e-6))
     zr = zt + rise
-    rm, rt = r["surface"]["material"], (r["surface"].get("tile_ft") or 14) * pbr.ROOF_TEXEL_SCALE
+    rm, rt = r["surface"]["material"], r["surface"]["tile_ft"]
 
     def Pt(l, w, z):
         return (cxm + ex[0] * l + ey[0] * w, cym + ex[1] * l + ey[1] * w, z)
 
-    def R(mat, tile, *lwz):
-        F(mat, [Pt(*a) for a in lwz], tile)
+    def V(l, w, z):
+        p = Pt(l, w, z)
+        return b.vert(p, (l / FT / rt, w / FT / rt))
     if r["type"] == "hip":
         rh = max(Lh - Wh, 0.0)
-        R(rm, rt, (-Lh, -Wh, ze), (Lh, -Wh, ze), (rh, 0, zr), (-rh, 0, zr))
-        R(rm, rt, (Lh, Wh, ze), (-Lh, Wh, ze), (-rh, 0, zr), (rh, 0, zr))
-        R(rm, rt, (Lh, -Wh, ze), (Lh, Wh, ze), (rh, 0, zr))
-        R(rm, rt, (-Lh, Wh, ze), (-Lh, -Wh, ze), (-rh, 0, zr))
+        s0, s1, s2, s3 = V(-Lh, -Wh, ze), V(Lh, -Wh, ze), V(rh, 0, zr), V(-rh, 0, zr)
+        b.quad(rm, s0, s1, s2, s3)
+        n0, n1, n2, n3 = V(Lh, Wh, ze), V(-Lh, Wh, ze), V(-rh, 0, zr), V(rh, 0, zr)
+        b.quad(rm, n0, n1, n2, n3)
+        e0, e1, e2 = V(Lh, -Wh, ze), V(Lh, Wh, ze), V(rh, 0, zr)
+        b.tri(rm, e0, e1, e2)
+        w0, w1, w2 = V(-Lh, Wh, ze), V(-Lh, -Wh, ze), V(-rh, 0, zr)
+        b.tri(rm, w0, w1, w2)
     else:
-        R(rm, rt, (-Lh, -Wh, ze), (Lh, -Wh, ze), (Lh, 0, zr), (-Lh, 0, zr))
-        R(rm, rt, (Lh, Wh, ze), (-Lh, Wh, ze), (-Lh, 0, zr), (Lh, 0, zr))
+        s0, s1, s2, s3 = V(-Lh, -Wh, ze), V(Lh, -Wh, ze), V(Lh, 0, zr), V(-Lh, 0, zr)
+        b.quad(rm, s0, s1, s2, s3)
+        n0, n1, n2, n3 = V(Lh, Wh, ze), V(-Lh, Wh, ze), V(-Lh, 0, zr), V(Lh, 0, zr)
+        b.quad(rm, n0, n1, n2, n3)
         hl, hw_ = o["length_ft"] * FT / 2, o["width_ft"] * FT / 2
-        for g in ([(hl, -hw_, zt), (hl, hw_, zt), (hl, 0, zr)], [(-hl, hw_, zt), (-hl, -hw_, zt), (-hl, 0, zr)]):   # gable triangles: wall material, level courses, apex up
-            F(wm_, [Pt(*a) for a in g], wt, zf)
+        g0, g1, g2 = V(hl, -hw_, zt), V(hl, hw_, zt), V(hl, 0, zr)
+        b.tri(wm, g0, g1, g2)
+        g3, g4, g5 = V(-hl, hw_, zt), V(-hl, -hw_, zt), V(-hl, 0, zr)
+        b.tri(wm, g3, g4, g5)
     return b.build()
 
 
@@ -448,16 +426,11 @@ def _pivot(mesh):
 
 def build_parts(pack, step=1, carve=True, conform=True, layers=None, drape_edge_ft=40.0):
     """All meshable entities of a pack as Parts (see module doc), in a stable order. layers: optional set of layer names to keep."""
-    import worldpack_pbr as pbr
-    pbr.prepare(pack.materials)
     h = pack.heights
     if carve:
         h = wp.carved_heights(pack)
     if conform:
         h = wp.road_conformed_heights(pack, h)
-    if any(b.get("layout") for b in pack.list("buildings")):          # interiors: level pads so the terrain stays below the floor plates
-        import worldpack_interiors as wi
-        h = wi.pad_buildings(pack, h)
     cx = Ctx(pack, h)
     want = lambda l: layers is None or l in layers
     parts = []
@@ -486,16 +459,10 @@ def build_parts(pack, step=1, carve=True, conform=True, layers=None, drape_edge_
             add(e, "fields", build_drape(cx, e, LIFT["fields"], drape_edge_ft))
     for e in pack.list("buildings"):
         if want("buildings"):
-            import worldpack_pbr as pbr
-            e = pbr.restyle_building(e)
             if e.get("openings"):
                 import worldpack_detail as wd
                 m, dn = wd.build_building_detailed(cx, e)
-                extra = {}
-                if e.get("layout"):                                   # generated interior (interiors.py): storeys/roof/props as separate nodes
-                    import worldpack_interiors as wi
-                    m, dn, extra = wi.add_interior(cx, e, m, dn)
-                add(e, "buildings", m, door_nodes=dn, **extra)
+                add(e, "buildings", m, door_nodes=dn)
             else:
                 add(e, "buildings", build_building(cx, e))
     for e in pack.list("fences"):
@@ -596,26 +563,6 @@ def write_glb(path, nodes, materials, textures="external", tex_root=None, extras
                 gtex.append({"source": len(gimgs) - 1, "sampler": 0 if samp == 10497 else 1})
                 g["pbrMetallicRoughness"]["baseColorTexture"] = {"index": len(gtex) - 1}
                 g["pbrMetallicRoughness"]["baseColorFactor"] = [1, 1, 1, 1]
-                for key, suffix, field in (("normal", "_n", "normalTexture"), ("mr", "_mr", "metallicRoughnessTexture")):
-                    if not r.get(key):
-                        continue
-                    im2 = {"name": mid + suffix, "mimeType": "image/png"}
-                    if textures == "embed":
-                        p2 = os.path.join(tex_root or "", f"{mid}{suffix}.png")
-                        if not os.path.exists(p2):
-                            continue
-                        with open(p2, "rb") as f:
-                            im2["bufferView"] = view(f.read())
-                    else:
-                        im2["uri"] = f"{tex_prefix}{mid}{suffix}.png"
-                    gimgs.append(im2)
-                    gtex.append({"source": len(gimgs) - 1, "sampler": 0})
-                    if field == "normalTexture":
-                        g["normalTexture"] = {"index": len(gtex) - 1, "scale": 1.0}
-                    else:
-                        g["pbrMetallicRoughness"]["metallicRoughnessTexture"] = {"index": len(gtex) - 1}
-                        g["pbrMetallicRoughness"]["metallicFactor"] = 1.0
-                        g["pbrMetallicRoughness"]["roughnessFactor"] = 1.0
         gmats.append(g)
         mat_index[mid] = len(gmats) - 1
         return mat_index[mid]

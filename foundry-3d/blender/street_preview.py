@@ -14,7 +14,6 @@ from mathutils import Vector
 a = sys.argv[sys.argv.index("--") + 1:]
 pack, out = a[0], a[1]
 focus = a[a.index("--focus") + 1] if "--focus" in a else None
-sky = a[a.index("--sky") + 1] if "--sky" in a else None      # equirect image (illustrator/generators/skybox.py): centre = east = Blender +X, so no rotation is needed
 pl = json.load(open(os.path.join(pack, "placements.json")))
 bpy.ops.wm.read_factory_settings(use_empty=True)
 objs = {}
@@ -36,10 +35,6 @@ sc.world = w
 w.use_nodes = True
 w.node_tree.nodes["Background"].inputs[0].default_value = (0.62, 0.74, 0.9, 1)
 w.node_tree.nodes["Background"].inputs[1].default_value = 1.0
-if sky:
-    env = w.node_tree.nodes.new("ShaderNodeTexEnvironment")
-    env.image = bpy.data.images.load(sky)
-    w.node_tree.links.new(env.outputs["Color"], w.node_tree.nodes["Background"].inputs[0])
 sun = bpy.data.objects.new("s", bpy.data.lights.new("s", "SUN"))
 sun.data.energy = 4.0
 sun.rotation_euler = (math.radians(50), math.radians(8), math.radians(-35))
