@@ -154,6 +154,8 @@ def split_export(pack_dir, out_dir=None, split=None, textures="external", step=1
         for mid, r in pack.materials.items():                                  # copy every pack texture next to the models once
             if r.get("texture") and os.path.exists(pack.path(r["texture"])):
                 shutil.copyfile(pack.path(r["texture"]), os.path.join(out, "models", "textures", mid + ".png"))
+        import worldpack_pbr as pbr
+        pbr.install(pack, os.path.join(out, "models", "textures"))         # normal / metallicRoughness maps, new surfaces, detailed terrain albedo
     for rel, ps in files.items():
         key = f"models/{rel}"
         if only and not (ids & {p["id"] for p in ps}):

@@ -230,6 +230,11 @@ def load_pack(path):
         raise ValueError(f"{root}: schema {m['schema_version']} is not supported by this loader ({SCHEMA_VERSION})")
     ents = {t: (_jload(os.path.join(root, info["file"]))["items"] if info.get("file") else []) for t, info in m["entities"].items()}
     mats = {x["id"]: x for x in _jload(os.path.join(root, m["materials_file"]))["materials"]}
+    try:
+        import worldpack_pbr
+        worldpack_pbr.prepare(mats)       # PBR factors, normal/metallicRoughness flags, extra surface materials (in memory only)
+    except ImportError:
+        pass
     return WorldPack(root, m, ents, mats)
 
 
