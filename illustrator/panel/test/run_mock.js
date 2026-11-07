@@ -306,6 +306,22 @@ const actions = () => hostLog.map(h => h.action);
     S.regions.link_apply = true; check("link apply needs the checkbox", VB.jobRegionLink(S, d, st.regions.sel).steps[1].args.includes("--apply"));
     fs.rmSync(childDir, { recursive: true, force: true });
   }
+  if (want("links")) {
+    check("embed is the default for placed rasters", VB.embedOn(st) === true && st.settings.link_images === false);
+    let r = await run(VB.jobFullFills(st, d));
+    const pe = hostLog.filter(h => h.action === "place_image");
+    check("fills placed with embed true", r.ok && pe.length > 0 && pe.every(h => h.embed === true), r.error);
+    check("fills job ends with check_links", actions()[actions().length - 1] === "check_links");
+    st.settings.link_images = true;
+    await run(VB.jobFullFills(st, d));
+    check("link toggle places linked images", hostLog.filter(h => h.action === "place_image").every(h => h.embed === false));
+    st.settings.link_images = false;
+    r = await run(VB.jobCheckLinks(st, d, true));
+    const rl2 = hostLog.find(h => h.action === "relink");
+    check("relink job searches the render folders and embeds", r.ok && rl2 && rl2.embed === true && rl2.folders.some(f => /panel\/bridgehollow\/fills$/.test(f)), JSON.stringify(rl2));
+    r = await run(VB.jobCheckLinks(st, d, false));
+    check("check_links job ok", r.ok && actions().join() === "check_links", r.error);
+  }
   const logs = fs.existsSync(path.join(jobsDir, "done")) ? fs.readdirSync(path.join(jobsDir, "done")) : [];
   check("each run logged exact params to jobs/done", logs.length > 3 && logs.every(f => /^panel_\d{8}_\d{6}_.+\.json$/.test(f)), logs.length + " files");
   if (logs.length) { const j = JSON.parse(fs.readFileSync(path.join(jobsDir, "done", logs[0]), "utf8")); check("log has params + steps", j.params !== undefined && Array.isArray(j.steps)); }

@@ -402,9 +402,13 @@
     var j = VB.jobScaleApply(state, d, true);
     j.kind = "new_doc"; j.label = "New document + draw everything";
     j.steps.unshift(VB.steps.host({ action: "new_document", width_in: state.scale.page_w_in, height_in: state.scale.page_h_in, landscape: true }, "new document"));
+    j.steps.push(VB.checkLinksStep(state, d));
     return j;
   };
   var acts = {
+    check_links: function () { return startJob(VB.jobCheckLinks(state, d, false)); },
+    embed_all: function () { return startJob(VB.jobEmbedAll(state, d)); },
+    relink_images: function () { return startJob(VB.jobCheckLinks(state, d, true)); },
     scale_apply: function () { return startJob(VB.jobScaleApply(state, d, false)); },
     redraw_all: function () { return startJob(VB.jobScaleApply(state, d, true)); },
     new_doc: function () { return startJob(NEWDOC()); },

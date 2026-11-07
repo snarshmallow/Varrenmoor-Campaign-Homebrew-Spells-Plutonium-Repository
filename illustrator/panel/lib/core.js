@@ -63,7 +63,7 @@
   VB.defaults = function () {
     return {
       v: 1, place: "bridgehollow",
-      settings: { python: "python", dpi: 150, view: "town" },
+      settings: { python: "python", dpi: 150, view: "town", link_images: false },
       scale: { preset: "town", scale_ft_per_in: 100, grid_ft: 100, grid_major_every: 5, page_w_in: 17, page_h_in: 11, units: "ft", loaded: false },
       terrain: {
         spec: { seed: 1103, cell_ft: 10, base_elevation_ft: 660, ridged_amp_ft: 110, noise_scale_ft: 420, thermal_iterations: 60, smooth_sigma_cells: 1 },
@@ -102,6 +102,29 @@
   };
   // fill in keys missing from a state loaded from an older file
   VB.normalize = function (s) { return VB.deepMerge(VB.defaults(), s || {}); };
+
+  // Placed rasters are embedded unless the Scale tab's "Link instead of embed" is on (linked PNGs under out/panel go missing when scratch files are cleaned).
+  VB.embedOn = function (st) { return !((st.settings || {}).link_images); };
+  VB.RENDER_FOLDERS = function (d) { return [d.panel + "/fills", d.panel + "/lighting", d.panel, d.root + "/illustrator/out"]; };
+  // host step: list missing links after a build and log the result (never fails the job)
+  VB.checkLinksStep = function (st, d) {
+    return { t: "fn", label: "check linked images", fn: async function (run) {
+      var r = await run.host({ action: "check_links" }, true);
+      run.log(r && r.missing && r.missing.length ? "WARNING: " + r.missing.length + " missing link(s): " + r.missing.map(function (m) { return m.name + " -> " + m.path; }).join("; ") : "linked images: all present (" + ((r && r.total) || 0) + " linked)");
+    } };
+  };
+  VB.jobEmbedAll = function (st, d) {
+    return { kind: "embed_all", label: "Embed all linked images", params: {},
+      steps: [{ t: "fn", label: "embed_all", fn: async function (run) { var r = await run.host({ action: "embed_all" }, true); run.log("embedded " + r.embedded + ", missing: " + ((r.missing || []).join(", ") || "none")); } }] };
+  };
+  VB.jobCheckLinks = function (st, d, relink) {
+    return { kind: relink ? "relink" : "check_links", label: relink ? "Relink images" : "Check linked images", params: {},
+      steps: [{ t: "fn", label: relink ? "relink" : "check_links", fn: async function (run) {
+        var r = await run.host(relink ? { action: "relink", folders: VB.RENDER_FOLDERS(d), embed: VB.embedOn(st) } : { action: "check_links" }, true);
+        if (relink) run.log("relinked " + ((r.relinked || []).length));
+        run.log(r.missing && r.missing.length ? "missing: " + r.missing.map(function (m) { return m.name + " (" + m.layer + ") " + m.path; }).join("; ") : "no missing links (" + (r.total || 0) + " linked)");
+      } }] };
+  };
 
   // ---------------------------------------------------------------- paths
   VB.dirs = function (rootDir, place) {
@@ -425,7 +448,7 @@
         { t: "fn", label: "place PNG", fn: function (run) {
           var side = run.readJson(png.replace(/\.png$/, ".json"), null);
           if (!side) throw new Error("shading sidecar .json missing");
-          return run.host({ action: "place_image", path: png, rect: VB.imageRect(run.vars.view, side.bounds_ft), layer: "ART - Shading", below: VB.fillBelow("ART - Shading"), name: "shading_png", lock: true }, true);
+          return run.host({ action: "place_image", path: png, rect: VB.imageRect(run.vars.view, side.bounds_ft), layer: "ART - Shading", below: VB.fillBelow("ART - Shading"), name: "shading_png", lock: true, embed: VB.embedOn(st) }, true);
         } }
       ],
       clearStale: ["shading"]
@@ -507,7 +530,7 @@
         var info = run.readJson(out + "/fills.json"), rect = VB.imageRect(run.vars.view, info.bounds_ft);
         for (var i = 0; i < info.layers.length; i++) {
           var L = info.layers[i];
-          await run.host({ action: "place_image", path: out + "/" + L.png, rect: rect, layer: L.layer, below: VB.fillBelow(L.layer), name: L.name, lock: true, embed: !!f.embed }, true);
+          await run.host({ action: "place_image", path: out + "/" + L.png, rect: rect, layer: L.layer, below: VB.fillBelow(L.layer), name: L.name, lock: true, embed: VB.embedOn(st) }, true);
         }
         if (f.flat !== false) {
           var as = info.flat.map(function (g) {
@@ -516,7 +539,8 @@
           await run.host({ action: "apply_fills", clear: [VB.FILL_SHAPES], assignments: as }, true);
         }
         run.log("fills: " + info.layers.length + " raster layers, " + info.flat.length + " flat swatch groups");
-      } }
+      } },
+      VB.checkLinksStep(st, d)
     ];
   };
   // fills after a drawing job: textured full map when on (needs a style with a 'types' map), else the flat per-part swatches

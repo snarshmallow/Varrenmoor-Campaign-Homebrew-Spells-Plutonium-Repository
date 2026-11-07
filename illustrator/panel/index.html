@@ -108,6 +108,9 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
   <div class="grid">
     <label>Python executable <input type="text" data-s="settings.python"></label>
     <label>Shading dpi <input type="number" data-s="settings.dpi" min="30" max="600" step="10"></label>
+    <label class="chk"><input type="checkbox" data-s="settings.link_images"> Link instead of embed (smaller files, relink on re-render)</label>
+  </div>
+  <div class="btns"><button data-act="check_links" title="Lists placed images whose file is missing">Check images</button><button data-act="relink_images" title="Relinks missing images by file name from the panel render folders">Relink images</button><button data-act="embed_all" title="Embeds every linked image that still exists, so the document no longer depends on the PNG files">Embed all images</button>
   </div>
 </section>
 
@@ -312,7 +315,6 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
     <label class="chk"><input type="checkbox" data-s="lighting.auto"> Auto re-render on change (preview dpi)</label>
     <label>Preview dpi <input type="number" data-s="lighting.preview_dpi" min="20" max="200" step="10"></label>
     <label>Full dpi <input type="number" data-s="lighting.dpi" min="30" max="400" step="10"></label>
-    <label class="chk"><input type="checkbox" data-s="lighting.embed"> Embed PNGs</label>
   </div>
   <div class="btns"><button data-act="light_preview">Preview (low dpi)</button><button class="primary" data-act="light_render">Render shadows</button><button data-act="light_clear" title="Removes the placed PNGs; the vector sublayer is kept">Remove images</button></div>
   <p class="note">Places ART - Shadows (multiply-style dark, set the layer's blend mode to Multiply for the usual look) and ART - Light Glow (set it to Screen or Soft Light) above the fill layers and below LINES. Heights come from <code>presets/building_heights.json</code> (a building's own <code>height_ft</code> wins).</p>
@@ -428,7 +430,6 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
     <label>Full-map style <select id="fullStyle" data-s="town.fills.style"></select></label>
     <label>Fill dpi <input type="number" step="25" min="50" max="400" data-s="town.fills.dpi"></label>
     <label class="chk"><input type="checkbox" data-s="town.fills.flat"> Flat vector swatches on ART - Fill Shapes</label>
-    <label class="chk"><input type="checkbox" data-s="town.fills.embed"> Embed PNGs in the document</label>
   </div>
   <div class="btns"><button data-act="fills_render">Render map with fills</button></div>
   <p class="note">Streets, plazas, buildings, fields and water get a texture chosen by their type (road, street, lane, alley, bridge; house, civic, inn, mill, barn...; crop; river, lake) from the style's <code>types</code> map. Rasters go on <code>ART - Fill Fields / Water / Streets / Buildings</code> below LINES and are replaced on each run; the linework and labels stay vector on top.</p>

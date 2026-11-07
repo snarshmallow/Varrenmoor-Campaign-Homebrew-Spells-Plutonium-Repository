@@ -245,9 +245,60 @@ function VB_run(json) {
         var w2 = a.rect[2] - a.rect[0], h2 = a.rect[3] - a.rect[1];
         pim.width = w2; pim.height = h2;
         pim.position = [ab[0] + a.rect[0], ab[1] - a.rect[1]];
-        if (a.embed) pim.embed();
+        if (a.embed) {
+          try { if (pf.length > 300 * 1024 * 1024) out.warn = "embedding a very large image (" + Math.round(pf.length / 1048576) + " MB); consider a lower dpi or 'Link instead of embed'"; } catch (e) {}
+          pim.embed(); out.embedded = true;
+        }
         pl.locked = (a.lock !== false);
         out.layer = lname; out.width = w2; out.height = h2; break;
+      }
+      case "check_links": case "relink": {
+        // check_links: placed (linked) items whose file is missing -> out.missing [{name, layer, path}].
+        // relink: a.mapping {itemName: path} and/or a.folders [dir]: a missing item is relinked to mapping[name] or to a file of the same
+        // name found in a folder; a.embed embeds it afterwards. Embedded images are RasterItems and never listed.
+        if (app.documents.length === 0) throw new Error("no open document");
+        var kd = app.activeDocument, miss = [], fixed = [], total = kd.placedItems.length;
+        for (var ki = 0; ki < kd.placedItems.length; ki++) {
+          var kp = kd.placedItems[ki], kpath = "", kok = true;
+          try { kpath = kp.file.fsName; kok = kp.file.exists; } catch (e) { kok = false; }
+          if (kok) continue;
+          var klay = ""; try { klay = kp.layer.name; } catch (e) {}
+          var kinfo = { name: kp.name, layer: klay, path: kpath };
+          if (a.action === "relink") {
+            var cand = [];
+            if (a.mapping && a.mapping[kp.name]) cand.push(a.mapping[kp.name]);
+            var base = kpath ? kpath.replace(/^.*[\\\/]/, "") : "";
+            var fl = a.folders || [];
+            for (var fi2 = 0; fi2 < fl.length && base; fi2++) cand.push(fl[fi2] + "/" + base);
+            var nf2 = null;
+            for (var ci2 = 0; ci2 < cand.length; ci2++) { var cf = new File(cand[ci2]); if (cf.exists) { nf2 = cf; break; } }
+            if (nf2) {
+              var kl = null, kwas = false; try { kl = kp.layer; kwas = kl.locked; kl.locked = false; } catch (e) {}
+              try { kp.locked = false; } catch (e) {}
+              kp.file = nf2; if (a.embed) kp.embed();
+              if (kl) { try { kl.locked = kwas; } catch (e) {} }
+              kinfo.relinked = nf2.fsName; fixed.push(kinfo); ki--; continue;
+            }
+          }
+          miss.push(kinfo);
+        }
+        out.total = total; out.missing = miss; out.relinked = fixed;
+        if (miss.length) out.warn = miss.length + " linked image(s) missing: " + miss.map(function (m) { return m.name + " (" + m.layer + ")"; }).join(", ");
+        break;
+      }
+      case "embed_all": {
+        // embed every still-linked placed image that exists on disk (repairs a doc so it no longer depends on scratch PNGs); missing ones are listed
+        if (app.documents.length === 0) throw new Error("no open document");
+        var ed2 = app.activeDocument, emb = 0, emiss = [];
+        for (var ei = ed2.placedItems.length - 1; ei >= 0; ei--) {
+          var ep = ed2.placedItems[ei], eok = false;
+          try { eok = ep.file.exists; } catch (e) {}
+          if (!eok) { emiss.push(ep.name); continue; }
+          var el = null, ewas = false; try { el = ep.layer; ewas = el.locked; el.locked = false; ep.locked = false; } catch (e) {}
+          ep.embed(); emb++;
+          if (el) { try { el.locked = ewas; } catch (e) {} }
+        }
+        out.embedded = emb; out.missing = emiss; break;
       }
       case "apply_fills": {
         // assignments: [{layer, match (regex on item name), swatch, fill [r,g,b]|null, stroke [r,g,b]|null, stroke_w}]

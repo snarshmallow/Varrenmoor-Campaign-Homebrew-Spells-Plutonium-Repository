@@ -117,7 +117,7 @@
           var tree = await run.host({ action: "get_layer_tree" }, true);
           for (var i = 0; i < info.layers.length; i++) {
             var l = info.layers[i]; have[l.layer] = true;
-            await run.host({ action: "place_image", path: out + "/" + l.png, rect: rect, layer: l.layer, below: VB.resolveBelow(VB.fillBelow(l.layer), tree), name: l.name, lock: true, embed: !!L.embed }, true);
+            await run.host({ action: "place_image", path: out + "/" + l.png, rect: rect, layer: l.layer, below: VB.resolveBelow(VB.fillBelow(l.layer), tree), name: l.name, lock: true, embed: VB.embedOn(st) }, true);
           }
           if (!have[VB.GLOW_LAYER]) await run.host({ action: "remove_item", layer: VB.GLOW_LAYER, name: "light_glow_png" }, true);
           if (info.vector) {
