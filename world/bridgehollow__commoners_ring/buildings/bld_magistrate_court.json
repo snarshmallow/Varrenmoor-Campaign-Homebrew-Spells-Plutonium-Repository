@@ -1,0 +1,46 @@
+{
+ "id": "bld_magistrate_court",
+ "name": "Magistrate's Court",
+ "kind": "civic",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    1048.0,
+    852.1
+   ],
+   [
+    1050.0,
+    828.9
+   ],
+   [
+    1021.3,
+    826.4
+   ],
+   [
+    1019.3,
+    849.6
+   ]
+  ]
+ },
+ "notes": "Faces the court square.",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 2,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 650.6,
+ "site_slope": 0.086,
+ "site_relief_ft": 3.1,
+ "region": {
+  "parent_id": "bld_magistrate_court",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

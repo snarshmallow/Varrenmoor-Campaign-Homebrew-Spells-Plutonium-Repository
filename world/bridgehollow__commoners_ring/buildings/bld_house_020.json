@@ -1,0 +1,46 @@
+{
+ "id": "bld_house_020",
+ "name": "House 20",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    933.6,
+    641.9
+   ],
+   [
+    922.4,
+    653.2
+   ],
+   [
+    934.4,
+    665.1
+   ],
+   [
+    945.6,
+    653.8
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 662.9,
+ "site_slope": 0.074,
+ "site_relief_ft": 1.3,
+ "region": {
+  "parent_id": "bld_house_020",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

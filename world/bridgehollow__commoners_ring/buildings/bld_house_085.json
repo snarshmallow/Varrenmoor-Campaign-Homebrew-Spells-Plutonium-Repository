@@ -1,0 +1,46 @@
+{
+ "id": "bld_house_085",
+ "name": "House 85",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    1263.4,
+    919.0
+   ],
+   [
+    1252.5,
+    900.8
+   ],
+   [
+    1244.9,
+    905.3
+   ],
+   [
+    1255.8,
+    923.5
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 646.1,
+ "site_slope": 0.08,
+ "site_relief_ft": 0.7,
+ "region": {
+  "parent_id": "bld_house_085",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

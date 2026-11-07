@@ -1,0 +1,2148 @@
+{
+ "schema": 1,
+ "child": "bridgehollow__dyers_walk_local",
+ "parent": "bridgehollow__commoners_ring",
+ "name": "Dyers Walk",
+ "region": {
+  "kind": "entity",
+  "id": "str_016",
+  "name": "Dyers Walk",
+  "polygon_parent_ft": [
+   [
+    785.39,
+    782.05
+   ],
+   [
+    794.04,
+    793.49
+   ],
+   [
+    804.65,
+    809.65
+   ],
+   [
+    819.64,
+    835.16
+   ],
+   [
+    820.14,
+    835.91
+   ],
+   [
+    831.84,
+    851.91
+   ],
+   [
+    832.27,
+    852.46
+   ],
+   [
+    841.97,
+    863.76
+   ],
+   [
+    842.35,
+    864.17
+   ],
+   [
+    849.25,
+    871.27
+   ],
+   [
+    849.69,
+    871.7
+   ],
+   [
+    871.81,
+    891.52
+   ],
+   [
+    882.35,
+    901.48
+   ],
+   [
+    892.37,
+    911.99
+   ],
+   [
+    901.96,
+    922.83
+   ],
+   [
+    910.76,
+    934.25
+   ],
+   [
+    930.66,
+    962.37
+   ],
+   [
+    938.67,
+    974.58
+   ],
+   [
+    951.27,
+    995.71
+   ],
+   [
+    951.57,
+    996.18
+   ],
+   [
+    957.17,
+    1004.38
+   ],
+   [
+    957.76,
+    1005.15
+   ],
+   [
+    967.26,
+    1016.25
+   ],
+   [
+    967.99,
+    1017.01
+   ],
+   [
+    981.39,
+    1029.41
+   ],
+   [
+    982.06,
+    1029.97
+   ],
+   [
+    982.79,
+    1030.47
+   ],
+   [
+    983.57,
+    1030.9
+   ],
+   [
+    984.38,
+    1031.24
+   ],
+   [
+    985.22,
+    1031.51
+   ],
+   [
+    986.09,
+    1031.69
+   ],
+   [
+    986.97,
+    1031.78
+   ],
+   [
+    987.85,
+    1031.79
+   ],
+   [
+    988.73,
+    1031.72
+   ],
+   [
+    989.6,
+    1031.55
+   ],
+   [
+    990.44,
+    1031.3
+   ],
+   [
+    991.26,
+    1030.98
+   ],
+   [
+    992.05,
+    1030.57
+   ],
+   [
+    992.79,
+    1030.08
+   ],
+   [
+    993.47,
+    1029.53
+   ],
+   [
+    994.11,
+    1028.91
+   ],
+   [
+    994.67,
+    1028.24
+   ],
+   [
+    995.17,
+    1027.51
+   ],
+   [
+    995.6,
+    1026.73
+   ],
+   [
+    995.94,
+    1025.92
+   ],
+   [
+    996.21,
+    1025.08
+   ],
+   [
+    996.39,
+    1024.21
+   ],
+   [
+    996.48,
+    1023.33
+   ],
+   [
+    996.49,
+    1022.45
+   ],
+   [
+    996.42,
+    1021.57
+   ],
+   [
+    996.25,
+    1020.7
+   ],
+   [
+    996.0,
+    1019.86
+   ],
+   [
+    995.68,
+    1019.04
+   ],
+   [
+    995.27,
+    1018.25
+   ],
+   [
+    994.78,
+    1017.51
+   ],
+   [
+    994.23,
+    1016.83
+   ],
+   [
+    993.61,
+    1016.19
+   ],
+   [
+    980.6,
+    1004.15
+   ],
+   [
+    971.76,
+    993.82
+   ],
+   [
+    966.59,
+    986.25
+   ],
+   [
+    954.03,
+    965.19
+   ],
+   [
+    953.83,
+    964.86
+   ],
+   [
+    945.63,
+    952.36
+   ],
+   [
+    945.45,
+    952.1
+   ],
+   [
+    925.35,
+    923.7
+   ],
+   [
+    925.13,
+    923.4
+   ],
+   [
+    916.03,
+    911.6
+   ],
+   [
+    915.64,
+    911.14
+   ],
+   [
+    905.74,
+    899.94
+   ],
+   [
+    905.51,
+    899.69
+   ],
+   [
+    895.21,
+    888.89
+   ],
+   [
+    894.88,
+    888.56
+   ],
+   [
+    884.08,
+    878.36
+   ],
+   [
+    883.91,
+    878.2
+   ],
+   [
+    861.94,
+    858.51
+   ],
+   [
+    855.45,
+    851.83
+   ],
+   [
+    846.16,
+    841.0
+   ],
+   [
+    834.93,
+    825.65
+   ],
+   [
+    820.06,
+    800.34
+   ],
+   [
+    819.82,
+    799.96
+   ],
+   [
+    808.92,
+    783.36
+   ],
+   [
+    808.58,
+    782.87
+   ],
+   [
+    799.58,
+    770.97
+   ],
+   [
+    799.23,
+    770.54
+   ],
+   [
+    790.73,
+    760.64
+   ],
+   [
+    790.12,
+    760.0
+   ],
+   [
+    789.45,
+    759.42
+   ],
+   [
+    788.73,
+    758.91
+   ],
+   [
+    787.97,
+    758.47
+   ],
+   [
+    787.16,
+    758.11
+   ],
+   [
+    786.32,
+    757.83
+   ],
+   [
+    785.46,
+    757.64
+   ],
+   [
+    784.58,
+    757.53
+   ],
+   [
+    783.7,
+    757.5
+   ],
+   [
+    782.82,
+    757.57
+   ],
+   [
+    781.95,
+    757.71
+   ],
+   [
+    781.1,
+    757.95
+   ],
+   [
+    780.27,
+    758.26
+   ],
+   [
+    779.48,
+    758.66
+   ],
+   [
+    778.73,
+    759.13
+   ],
+   [
+    778.04,
+    759.67
+   ],
+   [
+    777.4,
+    760.28
+   ],
+   [
+    776.82,
+    760.95
+   ],
+   [
+    776.31,
+    761.67
+   ],
+   [
+    775.87,
+    762.43
+   ],
+   [
+    775.51,
+    763.24
+   ],
+   [
+    775.23,
+    764.08
+   ],
+   [
+    775.04,
+    764.94
+   ],
+   [
+    774.93,
+    765.82
+   ],
+   [
+    774.9,
+    766.7
+   ],
+   [
+    774.97,
+    767.58
+   ],
+   [
+    775.11,
+    768.45
+   ],
+   [
+    775.35,
+    769.3
+   ],
+   [
+    775.66,
+    770.13
+   ],
+   [
+    776.06,
+    770.92
+   ],
+   [
+    776.53,
+    771.67
+   ],
+   [
+    777.07,
+    772.36
+   ]
+  ],
+  "area_ft2": 6176.5
+ },
+ "work_area_polygon_parent_ft": [
+  [
+   754.23,
+   807.17
+  ],
+  [
+   761.34,
+   816.56
+  ],
+  [
+   770.67,
+   830.77
+  ],
+  [
+   785.15,
+   855.42
+  ],
+  [
+   786.21,
+   857.12
+  ],
+  [
+   786.71,
+   857.88
+  ],
+  [
+   787.85,
+   859.52
+  ],
+  [
+   799.55,
+   875.52
+  ],
+  [
+   800.49,
+   876.76
+  ],
+  [
+   800.93,
+   877.31
+  ],
+  [
+   801.92,
+   878.52
+  ],
+  [
+   811.62,
+   889.82
+  ],
+  [
+   812.44,
+   890.74
+  ],
+  [
+   812.81,
+   891.15
+  ],
+  [
+   813.66,
+   892.05
+  ],
+  [
+   820.56,
+   899.15
+  ],
+  [
+   821.54,
+   900.12
+  ],
+  [
+   821.98,
+   900.55
+  ],
+  [
+   822.99,
+   901.49
+  ],
+  [
+   844.72,
+   920.96
+  ],
+  [
+   854.12,
+   929.84
+  ],
+  [
+   862.9,
+   939.05
+  ],
+  [
+   871.1,
+   948.32
+  ],
+  [
+   878.58,
+   958.03
+  ],
+  [
+   897.6,
+   984.9
+  ],
+  [
+   904.75,
+   995.8
+  ],
+  [
+   916.91,
+   1016.19
+  ],
+  [
+   917.56,
+   1017.24
+  ],
+  [
+   917.86,
+   1017.71
+  ],
+  [
+   918.54,
+   1018.73
+  ],
+  [
+   924.14,
+   1026.93
+  ],
+  [
+   925.41,
+   1028.7
+  ],
+  [
+   926.0,
+   1029.47
+  ],
+  [
+   927.37,
+   1031.16
+  ],
+  [
+   936.87,
+   1042.26
+  ],
+  [
+   938.44,
+   1043.98
+  ],
+  [
+   939.16,
+   1044.74
+  ],
+  [
+   940.82,
+   1046.36
+  ],
+  [
+   954.22,
+   1058.76
+  ],
+  [
+   955.69,
+   1060.06
+  ],
+  [
+   956.37,
+   1060.63
+  ],
+  [
+   959.5,
+   1063.0
+  ],
+  [
+   960.23,
+   1063.5
+  ],
+  [
+   963.57,
+   1065.55
+  ],
+  [
+   964.35,
+   1065.98
+  ],
+  [
+   967.88,
+   1067.69
+  ],
+  [
+   968.69,
+   1068.04
+  ],
+  [
+   972.37,
+   1069.4
+  ],
+  [
+   973.22,
+   1069.66
+  ],
+  [
+   977.01,
+   1070.66
+  ],
+  [
+   977.88,
+   1070.84
+  ],
+  [
+   981.76,
+   1071.45
+  ],
+  [
+   982.63,
+   1071.55
+  ],
+  [
+   986.55,
+   1071.78
+  ],
+  [
+   987.43,
+   1071.79
+  ],
+  [
+   991.36,
+   1071.64
+  ],
+  [
+   992.24,
+   1071.56
+  ],
+  [
+   996.13,
+   1071.03
+  ],
+  [
+   996.99,
+   1070.86
+  ],
+  [
+   1000.81,
+   1069.95
+  ],
+  [
+   1001.66,
+   1069.7
+  ],
+  [
+   1005.37,
+   1068.42
+  ],
+  [
+   1006.19,
+   1068.09
+  ],
+  [
+   1009.75,
+   1066.45
+  ],
+  [
+   1010.54,
+   1066.04
+  ],
+  [
+   1013.92,
+   1064.05
+  ],
+  [
+   1014.66,
+   1063.57
+  ],
+  [
+   1017.84,
+   1061.27
+  ],
+  [
+   1018.53,
+   1060.71
+  ],
+  [
+   1021.46,
+   1058.11
+  ],
+  [
+   1022.1,
+   1057.49
+  ],
+  [
+   1024.76,
+   1054.61
+  ],
+  [
+   1025.33,
+   1053.93
+  ],
+  [
+   1027.7,
+   1050.8
+  ],
+  [
+   1028.2,
+   1050.07
+  ],
+  [
+   1030.25,
+   1046.73
+  ],
+  [
+   1030.68,
+   1045.95
+  ],
+  [
+   1032.39,
+   1042.42
+  ],
+  [
+   1032.74,
+   1041.61
+  ],
+  [
+   1034.1,
+   1037.93
+  ],
+  [
+   1034.36,
+   1037.08
+  ],
+  [
+   1035.36,
+   1033.29
+  ],
+  [
+   1035.54,
+   1032.42
+  ],
+  [
+   1036.15,
+   1028.54
+  ],
+  [
+   1036.25,
+   1027.67
+  ],
+  [
+   1036.48,
+   1023.75
+  ],
+  [
+   1036.49,
+   1022.87
+  ],
+  [
+   1036.34,
+   1018.94
+  ],
+  [
+   1036.26,
+   1018.06
+  ],
+  [
+   1035.73,
+   1014.17
+  ],
+  [
+   1035.56,
+   1013.31
+  ],
+  [
+   1034.65,
+   1009.49
+  ],
+  [
+   1034.4,
+   1008.64
+  ],
+  [
+   1033.12,
+   1004.93
+  ],
+  [
+   1032.79,
+   1004.11
+  ],
+  [
+   1031.15,
+   1000.55
+  ],
+  [
+   1030.74,
+   999.76
+  ],
+  [
+   1028.75,
+   996.38
+  ],
+  [
+   1028.27,
+   995.64
+  ],
+  [
+   1025.97,
+   992.46
+  ],
+  [
+   1025.41,
+   991.77
+  ],
+  [
+   1022.81,
+   988.84
+  ],
+  [
+   1022.19,
+   988.2
+  ],
+  [
+   1020.78,
+   986.84
+  ],
+  [
+   1009.47,
+   976.37
+  ],
+  [
+   1003.56,
+   969.46
+  ],
+  [
+   1000.31,
+   964.71
+  ],
+  [
+   988.39,
+   944.71
+  ],
+  [
+   987.94,
+   943.97
+  ],
+  [
+   987.73,
+   943.65
+  ],
+  [
+   987.27,
+   942.92
+  ],
+  [
+   979.07,
+   930.42
+  ],
+  [
+   978.68,
+   929.84
+  ],
+  [
+   978.5,
+   929.57
+  ],
+  [
+   978.1,
+   928.99
+  ],
+  [
+   958.0,
+   900.59
+  ],
+  [
+   957.52,
+   899.93
+  ],
+  [
+   957.3,
+   899.63
+  ],
+  [
+   956.8,
+   898.98
+  ],
+  [
+   947.7,
+   887.18
+  ],
+  [
+   946.87,
+   886.13
+  ],
+  [
+   946.48,
+   885.67
+  ],
+  [
+   945.61,
+   884.65
+  ],
+  [
+   935.71,
+   873.45
+  ],
+  [
+   935.21,
+   872.89
+  ],
+  [
+   934.98,
+   872.63
+  ],
+  [
+   934.46,
+   872.08
+  ],
+  [
+   924.16,
+   861.28
+  ],
+  [
+   923.43,
+   860.54
+  ],
+  [
+   923.09,
+   860.2
+  ],
+  [
+   922.34,
+   859.48
+  ],
+  [
+   911.54,
+   849.28
+  ],
+  [
+   911.16,
+   848.92
+  ],
+  [
+   910.99,
+   848.76
+  ],
+  [
+   910.61,
+   848.41
+  ],
+  [
+   889.66,
+   829.64
+  ],
+  [
+   884.99,
+   824.84
+  ],
+  [
+   877.53,
+   816.13
+  ],
+  [
+   868.4,
+   803.66
+  ],
+  [
+   854.55,
+   780.08
+  ],
+  [
+   854.03,
+   779.23
+  ],
+  [
+   853.8,
+   778.84
+  ],
+  [
+   853.26,
+   778.01
+  ],
+  [
+   842.36,
+   761.41
+  ],
+  [
+   841.61,
+   760.31
+  ],
+  [
+   841.27,
+   759.82
+  ],
+  [
+   840.48,
+   758.74
+  ],
+  [
+   831.48,
+   746.84
+  ],
+  [
+   830.72,
+   745.87
+  ],
+  [
+   830.37,
+   745.43
+  ],
+  [
+   829.58,
+   744.48
+  ],
+  [
+   821.08,
+   734.58
+  ],
+  [
+   819.76,
+   733.12
+  ],
+  [
+   819.15,
+   732.48
+  ],
+  [
+   816.32,
+   729.77
+  ],
+  [
+   815.65,
+   729.19
+  ],
+  [
+   812.56,
+   726.77
+  ],
+  [
+   811.84,
+   726.26
+  ],
+  [
+   808.53,
+   724.15
+  ],
+  [
+   807.76,
+   723.71
+  ],
+  [
+   804.26,
+   721.94
+  ],
+  [
+   803.45,
+   721.58
+  ],
+  [
+   799.79,
+   720.16
+  ],
+  [
+   798.96,
+   719.88
+  ],
+  [
+   795.17,
+   718.82
+  ],
+  [
+   794.31,
+   718.63
+  ],
+  [
+   790.45,
+   717.95
+  ],
+  [
+   789.57,
+   717.84
+  ],
+  [
+   785.66,
+   717.54
+  ],
+  [
+   784.77,
+   717.52
+  ],
+  [
+   780.85,
+   717.6
+  ],
+  [
+   779.97,
+   717.67
+  ],
+  [
+   776.07,
+   718.14
+  ],
+  [
+   775.2,
+   718.29
+  ],
+  [
+   771.37,
+   719.14
+  ],
+  [
+   770.52,
+   719.37
+  ],
+  [
+   766.79,
+   720.59
+  ],
+  [
+   765.96,
+   720.91
+  ],
+  [
+   762.37,
+   722.49
+  ],
+  [
+   761.58,
+   722.89
+  ],
+  [
+   758.16,
+   724.82
+  ],
+  [
+   757.41,
+   725.29
+  ],
+  [
+   754.2,
+   727.54
+  ],
+  [
+   753.5,
+   728.08
+  ],
+  [
+   750.52,
+   730.64
+  ],
+  [
+   749.88,
+   731.25
+  ],
+  [
+   747.17,
+   734.08
+  ],
+  [
+   746.59,
+   734.75
+  ],
+  [
+   744.17,
+   737.84
+  ],
+  [
+   743.66,
+   738.56
+  ],
+  [
+   741.55,
+   741.87
+  ],
+  [
+   741.11,
+   742.64
+  ],
+  [
+   739.34,
+   746.14
+  ],
+  [
+   738.98,
+   746.95
+  ],
+  [
+   737.56,
+   750.61
+  ],
+  [
+   737.28,
+   751.44
+  ],
+  [
+   736.22,
+   755.23
+  ],
+  [
+   736.03,
+   756.09
+  ],
+  [
+   735.35,
+   759.95
+  ],
+  [
+   735.24,
+   760.83
+  ],
+  [
+   734.94,
+   764.74
+  ],
+  [
+   734.92,
+   765.63
+  ],
+  [
+   735.0,
+   769.55
+  ],
+  [
+   735.07,
+   770.43
+  ],
+  [
+   735.54,
+   774.33
+  ],
+  [
+   735.69,
+   775.2
+  ],
+  [
+   736.54,
+   779.03
+  ],
+  [
+   736.77,
+   779.88
+  ],
+  [
+   737.99,
+   783.61
+  ],
+  [
+   738.31,
+   784.44
+  ],
+  [
+   739.89,
+   788.03
+  ],
+  [
+   740.29,
+   788.82
+  ],
+  [
+   742.22,
+   792.24
+  ],
+  [
+   742.69,
+   792.99
+  ],
+  [
+   744.94,
+   796.2
+  ],
+  [
+   745.48,
+   796.9
+  ],
+  [
+   746.72,
+   798.42
+  ]
+ ],
+ "margin_ft": 40.0,
+ "transform": {
+  "type": "translate",
+  "origin_ft": [
+   730.0,
+   710.0
+  ],
+  "scale": 1.0,
+  "note": "child = parent - origin_ft (feet, y down); zoom is the view scale only"
+ },
+ "window_parent_ft": [
+  734.92,
+  717.52,
+  1036.49,
+  1071.79
+ ],
+ "parent_source": {
+  "git_commit": "48a17e12cd95917f20e6f1e5abc3fb5fe928e11b",
+  "parent_dirty": true,
+  "content_sha1": "f4f52e1a6305117e9ea371c853d5ab090481129f"
+ },
+ "extracted_at": "2026-11-07T21:11:12+00:00",
+ "params": {
+  "margin": 40.0,
+  "terrain_cell_ft": 2.5,
+  "seed": 7,
+  "scale": 20.0,
+  "grid": 5.0,
+  "detail": "all",
+  "detail_params": {},
+  "clip_buildings": false,
+  "local_origin": true,
+  "detail_ft": 0.45,
+  "flatten_pads": true,
+  "terrain": true,
+  "parent_root": null
+ },
+ "id_map": {
+  "bld_house_041": [
+   "bld_house_041"
+  ],
+  "bld_house_044": [
+   "bld_house_044"
+  ],
+  "bld_house_052": [
+   "bld_house_052"
+  ],
+  "bld_house_053": [
+   "bld_house_053"
+  ],
+  "bld_house_054": [
+   "bld_house_054"
+  ],
+  "bld_house_056": [
+   "bld_house_056"
+  ],
+  "bld_house_057": [
+   "bld_house_057"
+  ],
+  "bld_house_062": [
+   "bld_house_062"
+  ],
+  "bld_house_063": [
+   "bld_house_063"
+  ],
+  "bld_house_064": [
+   "bld_house_064"
+  ],
+  "bld_house_065": [
+   "bld_house_065"
+  ],
+  "bld_house_066": [
+   "bld_house_066"
+  ],
+  "bld_house_069": [
+   "bld_house_069"
+  ],
+  "bld_house_072": [
+   "bld_house_072"
+  ],
+  "bld_house_078": [
+   "bld_house_078"
+  ],
+  "bld_house_082": [
+   "bld_house_082"
+  ],
+  "bld_house_084": [
+   "bld_house_084"
+  ],
+  "bld_house_086": [
+   "bld_house_086"
+  ],
+  "bld_house_087": [
+   "bld_house_087"
+  ],
+  "bld_house_089": [
+   "bld_house_089"
+  ],
+  "bld_house_090": [
+   "bld_house_090"
+  ],
+  "bld_house_094": [
+   "bld_house_094"
+  ],
+  "bld_house_099": [
+   "bld_house_099"
+  ],
+  "bld_house_107": [
+   "bld_house_107"
+  ],
+  "bld_house_109": [
+   "bld_house_109"
+  ],
+  "str_008": [
+   "str_008"
+  ],
+  "str_014": [
+   "str_014"
+  ],
+  "str_016": [
+   "str_016"
+  ],
+  "str_018": [
+   "str_018"
+  ],
+  "str_019": [
+   "str_019"
+  ],
+  "str_020": [
+   "str_020"
+  ],
+  "dis_commoner": [
+   "dis_commoner"
+  ],
+  "sqr_3": [
+   "sqr_3"
+  ]
+ },
+ "dropped": [
+  {
+   "id": "bld_barn_002",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_customs_house",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_001",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_002",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_003",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_004",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_005",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_006",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_007",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_008",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_009",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_010",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_011",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_012",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_013",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_014",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_015",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_016",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_017",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_018",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_019",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_020",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_021",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_022",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_023",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_024",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_025",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_026",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_027",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_028",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_029",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_030",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_031",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_032",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_033",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_034",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_035",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_036",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_037",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_038",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_039",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_040",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_042",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_043",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_045",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_046",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_047",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_048",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_049",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_050",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_051",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_055",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_058",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_059",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_060",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_061",
+   "reason": "mostly outside",
+   "inside_frac": 0.057
+  },
+  {
+   "id": "bld_house_067",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_068",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_070",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_071",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_073",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_074",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_075",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_076",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_077",
+   "reason": "mostly outside",
+   "inside_frac": 0.162
+  },
+  {
+   "id": "bld_house_079",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_080",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_081",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_083",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_085",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_088",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_091",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_092",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_093",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_095",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_096",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_097",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_098",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_100",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_101",
+   "reason": "mostly outside",
+   "inside_frac": 0.387
+  },
+  {
+   "id": "bld_house_102",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_103",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_104",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_105",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_106",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_108",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_110",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_111",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_112",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_113",
+   "reason": "mostly outside",
+   "inside_frac": 0.086
+  },
+  {
+   "id": "bld_house_114",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_115",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_116",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_117",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_118",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_119",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_120",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_121",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_122",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_123",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_124",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_inn",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_lockup",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_magistrate_court",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_meeting_hall",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_records_house",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_shed_018",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_shed_035",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_shed_049",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_shed_067",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_shed_079",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_smithy",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_stables",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_tax_office",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_treasury",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_warden_hall",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_wardens_barracks",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  }
+ ],
+ "counts": {
+  "buildings": 25,
+  "streets": 6,
+  "water": 0,
+  "districts": 2
+ },
+ "snapshot": {
+  "bld_house_041": "49343e9ae284",
+  "bld_house_044": "df3da7afc5d7",
+  "bld_house_052": "d2c019f5c408",
+  "bld_house_053": "ce10ef4e80e2",
+  "bld_house_054": "9ef873b62b5e",
+  "bld_house_056": "138a808fcc32",
+  "bld_house_057": "3fed3cf15023",
+  "bld_house_062": "120937ac5fe4",
+  "bld_house_063": "a9db364d0fe3",
+  "bld_house_064": "ffafec1bdcc8",
+  "bld_house_065": "f6d072a1fd08",
+  "bld_house_066": "2e460a00fc7e",
+  "bld_house_069": "516a0e4551cd",
+  "bld_house_072": "3b0967e157b1",
+  "bld_house_078": "ea4a1106b9d2",
+  "bld_house_082": "7a87f29da573",
+  "bld_house_084": "dc055dbd161d",
+  "bld_house_086": "a54272a4c324",
+  "bld_house_087": "33284ffb2ab4",
+  "bld_house_089": "685719be9956",
+  "bld_house_090": "6e5e0029a880",
+  "bld_house_094": "3618c9c74d17",
+  "bld_house_099": "414d1c6aab83",
+  "bld_house_107": "4ebdef991ffe",
+  "bld_house_109": "b8de34168eb9",
+  "str_008": "0c2605ea5eb6",
+  "str_014": "228912e07f70",
+  "str_016": "d9802f8a311e",
+  "str_018": "fe4ca8985df8",
+  "str_019": "cea7a95148dd",
+  "str_020": "fd24a281ab68",
+  "dis_commoner": "e0d40a000d04",
+  "sqr_3": "fd806a74fe21"
+ },
+ "interiors": {},
+ "terrain": {
+  "cell_ft": 2.5,
+  "parent_cell_ft": 2.5,
+  "upres_factor": 1,
+  "nx": 127,
+  "ny": 147,
+  "elev_min": 639.6032104492188,
+  "elev_max": 690.3215942382812,
+  "max_node_dev_ft": 0.348,
+  "max_node_dev_outside_pads_ft": 0.0,
+  "origin_ft": [
+   -2.5,
+   2.5
+  ],
+  "detail_ft": 0.45,
+  "seed": 7
+ },
+ "sync": {
+  "shared_attrs": [
+   "name",
+   "kind",
+   "status",
+   "notes",
+   "floors",
+   "links",
+   "geometry (unclipped, unshifted-aware)"
+  ],
+  "rule": "child -> parent only through `region_extract.py sync --child ID --apply` (diff first)"
+ }
+}

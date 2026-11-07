@@ -1,0 +1,46 @@
+{
+ "id": "bld_house_088",
+ "name": "House 88",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    1333.5,
+    914.7
+   ],
+   [
+    1322.4,
+    923.1
+   ],
+   [
+    1328.4,
+    931.1
+   ],
+   [
+    1339.6,
+    922.8
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 2,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 650.4,
+ "site_slope": 0.08,
+ "site_relief_ft": 1.2,
+ "region": {
+  "parent_id": "bld_house_088",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

@@ -1,0 +1,111 @@
+{
+ "format": "varrenmoor-world-pack",
+ "schema_version": "1.0",
+ "type": "plazas",
+ "units": "feet",
+ "items": [
+  {
+   "id": "sqr_3",
+   "name": "Square 3",
+   "kind": "square",
+   "status": "proposed",
+   "notes": "Open plaza grown at a junction.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow__dyers_walk_local/districts.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow__dyers_walk_local:sqr_3"
+   },
+   "polygon": [
+    [
+     176.8,
+     254.2
+    ],
+    [
+     166.9,
+     249.6
+    ],
+    [
+     156.1,
+     247.6
+    ],
+    [
+     148.71,
+     248.2
+    ],
+    [
+     167.6,
+     274.9
+    ],
+    [
+     174.75,
+     285.8
+    ],
+    [
+     186.91,
+     306.19
+    ],
+    [
+     187.56,
+     307.24
+    ],
+    [
+     187.86,
+     307.71
+    ],
+    [
+     188.54,
+     308.73
+    ],
+    [
+     190.8,
+     312.05
+    ],
+    [
+     192.2,
+     310.9
+    ],
+    [
+     198.8,
+     301.5
+    ],
+    [
+     202.8,
+     290.0
+    ],
+    [
+     195.2,
+     279.6
+    ],
+    [
+     191.4,
+     269.6
+    ],
+    [
+     185.1,
+     261.0
+    ]
+   ],
+   "area_ft2": 1359.043,
+   "ring": null,
+   "elevation_ft": 647.4,
+   "label_point": null,
+   "base_elevation_ft": 647.4,
+   "surface": {
+    "material": "mat_cobble",
+    "tile_ft": 14
+   },
+   "tags": {
+    "layer": "plazas",
+    "subtype": "square",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "plazas",
+    "id": "sqr_3"
+   }
+  }
+ ]
+}

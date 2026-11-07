@@ -103,6 +103,10 @@ def _entry(pack, rel, parts, textures, out, tex_mode):
         nodes = [(p["id"], m.translated([-pivot[0], -pivot[1], -pivot[2]]), {"id": p["id"], "layer": p["layer"], "group": p["group"]}) for p, m in zip(parts, absm)]
         lo, hi = merged.bbox()
         size_m = [float(v) for v in (hi - lo)]
+        for p in parts:                                          # movable door leaves: own glTF nodes, origin on the hinge
+            for dn in p.get("door_nodes", []):
+                hx, hy, hz = dn["hinge"]
+                nodes.append((dn["id"], dn["mesh"], {**dn["extras"], "_t": (hx - pivot[0], hy - pivot[1], hz - pivot[2])}))
     full = os.path.join(out, "models", rel)
     depth = rel.count("/")
     wm.write_glb(full, nodes, pack.materials, textures=tex_mode, tex_root=os.path.join(out, "models", "textures"), tex_prefix="../" * depth + "textures/")

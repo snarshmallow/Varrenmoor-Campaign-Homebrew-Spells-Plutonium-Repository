@@ -1,0 +1,318 @@
+{
+ "format": "varrenmoor-world-pack",
+ "schema_version": "1.0",
+ "type": "materials",
+ "materials": [
+  {
+   "id": "mat_cobble",
+   "name": "cobble",
+   "kind": "image",
+   "texture": "textures/cobble.png",
+   "source": "illustrator/presets/textures/cobble.png",
+   "sha256": "8b0dd5330168c9cebb4522a243c9e2c956c77580105e96498eabc59862ce372a",
+   "mean_color": "#837b6e",
+   "roughness": 0.9,
+   "metallic": 0.0,
+   "foundry": {
+    "pipelineId": "mat:bridgehollow__dyers_walk_local:cobble"
+   }
+  },
+  {
+   "id": "mat_farmland",
+   "name": "farmland",
+   "kind": "image",
+   "texture": "textures/farmland.png",
+   "source": "illustrator/presets/textures/farmland.png",
+   "sha256": "9010c3960d7cf803dc04f468e5da0d4af44b94facebed7da5d1b43249d840e14",
+   "mean_color": "#b1a75f",
+   "roughness": 0.9,
+   "metallic": 0.0,
+   "foundry": {
+    "pipelineId": "mat:bridgehollow__dyers_walk_local:farmland"
+   }
+  },
+  {
+   "id": "mat_forest_floor",
+   "name": "forest_floor",
+   "kind": "image",
+   "texture": "textures/forest_floor.png",
+   "source": "illustrator/presets/textures/forest_floor.png",
+   "sha256": "e7cdfa555618bed0bebe684062efe33a69ace280fd7cb059abc72fcc7b998a39",
+   "mean_color": "#4b5c36",
+   "roughness": 0.9,
+   "metallic": 0.0,
+   "foundry": {
+    "pipelineId": "mat:bridgehollow__dyers_walk_local:forest_floor"
+   }
+  },
+  {
+   "id": "mat_grass",
+   "name": "grass",
+   "kind": "image",
+   "texture": "textures/grass.png",
+   "source": "illustrator/presets/textures/grass.png",
+   "sha256": "6cfe3f89e0ea3bb6dfb4ef884058c11a6d342df0826fd04ea1ef3d463946718e",
+   "mean_color": "#6d9847",
+   "roughness": 0.9,
+   "metallic": 0.0,
+   "foundry": {
+    "pipelineId": "mat:bridgehollow__dyers_walk_local:grass"
+   }
+  },
+  {
+   "id": "mat_gravel",
+   "name": "gravel",
+   "kind": "image",
+   "texture": "textures/gravel.png",
+   "source": "illustrator/presets/textures/gravel.png",
+   "sha256": "178a44b19a764a591fb9f9afec950fc73a198e1734de83c205c82148cd8cd1ff",
+   "mean_color": "#9d9483",
+   "roughness": 0.9,
+   "metallic": 0.0,
+   "foundry": {
+    "pipelineId": "mat:bridgehollow__dyers_walk_local:gravel"
+   }
+  },
+  {
+   "id": "mat_packed_earth",
+   "name": "packed_earth",
+   "kind": "image",
+   "texture": "textures/packed_earth.png",
+   "source": "illustrator/presets/textures/packed_earth.png",
+   "sha256": "73dcab01d84b1dd8014803dc9b649a2c3dce9aba494a6c1110381283ff3421c8",
+   "mean_color": "#977955",
+   "roughness": 0.9,
+   "metallic": 0.0,
+   "foundry": {
+    "pipelineId": "mat:bridgehollow__dyers_walk_local:packed_earth"
+   }
+  },
+  {
+   "id": "mat_plank",
+   "name": "plank",
+   "kind": "image",
+   "texture": "textures/plank.png",
+   "source": "illustrator/presets/textures/plank.png",
+   "sha256": "a1401ccde6a674b0d6da0dc68cb29b4f44092fafdc622a167faa2e7160cd132e",
+   "mean_color": "#91734c",
+   "roughness": 0.9,
+   "metallic": 0.0,
+   "foundry": {
+    "pipelineId": "mat:bridgehollow__dyers_walk_local:plank"
+   }
+  },
+  {
+   "id": "mat_rock",
+   "name": "rock",
+   "kind": "image",
+   "texture": "textures/rock.png",
+   "source": "illustrator/presets/textures/rock.png",
+   "sha256": "66f90de2b5440d683d630feb92e45d07239d64b638f9c76c876414372efe81e3",
+   "mean_color": "#6b6866",
+   "roughness": 0.9,
+   "metallic": 0.0,
+   "foundry": {
+    "pipelineId": "mat:bridgehollow__dyers_walk_local:rock"
+   }
+  },
+  {
+   "id": "mat_scree",
+   "name": "scree",
+   "kind": "image",
+   "texture": "textures/scree.png",
+   "source": "illustrator/presets/textures/scree.png",
+   "sha256": "5246e5b44bfd860433fd71b3fac6f32a46b05d548db118bb35b5d093e5e8cd3c",
+   "mean_color": "#89847d",
+   "roughness": 0.9,
+   "metallic": 0.0,
+   "foundry": {
+    "pipelineId": "mat:bridgehollow__dyers_walk_local:scree"
+   }
+  },
+  {
+   "id": "mat_shingle",
+   "name": "shingle",
+   "kind": "image",
+   "texture": "textures/shingle.png",
+   "source": "illustrator/presets/textures/shingle.png",
+   "sha256": "2dad22d35e03364ae39a4cd8abd181963380134171793026d9151348c7cf9297",
+   "mean_color": "#77593d",
+   "roughness": 0.9,
+   "metallic": 0.0,
+   "foundry": {
+    "pipelineId": "mat:bridgehollow__dyers_walk_local:shingle"
+   }
+  },
+  {
+   "id": "mat_snow",
+   "name": "snow",
+   "kind": "image",
+   "texture": "textures/snow.png",
+   "source": "illustrator/presets/textures/snow.png",
+   "sha256": "01e67c68e9b8c4466bea54f84bd2be94f778a670f2bb8d32f1e1a7571af61424",
+   "mean_color": "#f0f3f7",
+   "roughness": 0.9,
+   "metallic": 0.0,
+   "foundry": {
+    "pipelineId": "mat:bridgehollow__dyers_walk_local:snow"
+   }
+  },
+  {
+   "id": "mat_thatch",
+   "name": "thatch",
+   "kind": "image",
+   "texture": "textures/thatch.png",
+   "source": "illustrator/presets/textures/thatch.png",
+   "sha256": "1670a55b504f045742715fc361cdf53e6edb4cad8473aec289767b01af446104",
+   "mean_color": "#98824a",
+   "roughness": 0.9,
+   "metallic": 0.0,
+   "foundry": {
+    "pipelineId": "mat:bridgehollow__dyers_walk_local:thatch"
+   }
+  },
+  {
+   "id": "mat_timber_roof",
+   "name": "timber_roof",
+   "kind": "image",
+   "texture": "textures/timber_roof.png",
+   "source": "illustrator/presets/textures/timber_roof.png",
+   "sha256": "8773492128ddedb2a07895c0fa3a6a84a24b65bfb74d8bcedd39eb4aa2fcf625",
+   "mean_color": "#6a5e4d",
+   "roughness": 0.9,
+   "metallic": 0.0,
+   "foundry": {
+    "pipelineId": "mat:bridgehollow__dyers_walk_local:timber_roof"
+   }
+  },
+  {
+   "id": "mat_terrain_albedo",
+   "name": "terrain_albedo",
+   "kind": "image",
+   "texture": "terrain/albedo.png",
+   "source": null,
+   "sha256": "76326060b60974f08f3d86a9e5b1ca9556c5026ac53d810f8dbe3a1f84a906a5",
+   "mean_color": "#6f9a48",
+   "roughness": 0.95,
+   "metallic": 0.0,
+   "uv": "unit",
+   "foundry": {
+    "pipelineId": "mat:bridgehollow__dyers_walk_local:terrain_albedo"
+   }
+  },
+  {
+   "id": "mat_tree_bark",
+   "name": "tree_bark",
+   "kind": "flat",
+   "texture": null,
+   "source": null,
+   "sha256": null,
+   "mean_color": "#5a4632",
+   "roughness": 0.95,
+   "metallic": 0.0,
+   "foundry": {
+    "pipelineId": "mat:bridgehollow__dyers_walk_local:tree_bark"
+   }
+  },
+  {
+   "id": "mat_tree_leaf",
+   "name": "tree_leaf",
+   "kind": "flat",
+   "texture": null,
+   "source": null,
+   "sha256": null,
+   "mean_color": "#3f6b35",
+   "roughness": 0.95,
+   "metallic": 0.0,
+   "foundry": {
+    "pipelineId": "mat:bridgehollow__dyers_walk_local:tree_leaf"
+   }
+  },
+  {
+   "id": "mat_door_wood",
+   "name": "door_wood",
+   "kind": "flat",
+   "texture": null,
+   "source": null,
+   "sha256": null,
+   "mean_color": "#6b4a2b",
+   "roughness": 0.8,
+   "metallic": 0.0,
+   "foundry": {
+    "pipelineId": "mat:bridgehollow__dyers_walk_local:door_wood"
+   }
+  },
+  {
+   "id": "mat_trim",
+   "name": "trim",
+   "kind": "flat",
+   "texture": null,
+   "source": null,
+   "sha256": null,
+   "mean_color": "#d8d0bc",
+   "roughness": 0.8,
+   "metallic": 0.0,
+   "foundry": {
+    "pipelineId": "mat:bridgehollow__dyers_walk_local:trim"
+   }
+  },
+  {
+   "id": "mat_glass",
+   "name": "glass",
+   "kind": "flat",
+   "texture": null,
+   "source": null,
+   "sha256": null,
+   "mean_color": "#9fc4d6",
+   "roughness": 0.2,
+   "metallic": 0.0,
+   "foundry": {
+    "pipelineId": "mat:bridgehollow__dyers_walk_local:glass"
+   },
+   "alpha": 0.45
+  },
+  {
+   "id": "mat_plaster",
+   "name": "plaster",
+   "kind": "flat",
+   "texture": null,
+   "source": null,
+   "sha256": null,
+   "mean_color": "#cbbfa6",
+   "roughness": 0.95,
+   "metallic": 0.0,
+   "foundry": {
+    "pipelineId": "mat:bridgehollow__dyers_walk_local:plaster"
+   }
+  },
+  {
+   "id": "mat_interior_floor",
+   "name": "interior_floor",
+   "kind": "flat",
+   "texture": null,
+   "source": null,
+   "sha256": null,
+   "mean_color": "#7a5f40",
+   "roughness": 0.9,
+   "metallic": 0.0,
+   "foundry": {
+    "pipelineId": "mat:bridgehollow__dyers_walk_local:interior_floor"
+   }
+  },
+  {
+   "id": "mat_iron",
+   "name": "iron",
+   "kind": "flat",
+   "texture": null,
+   "source": null,
+   "sha256": null,
+   "mean_color": "#3a3a3d",
+   "roughness": 0.6,
+   "metallic": 0.0,
+   "foundry": {
+    "pipelineId": "mat:bridgehollow__dyers_walk_local:iron"
+   }
+  }
+ ],
+ "note": "texture paths are relative to the pack; 'source' is the repo path they were copied from"
+}

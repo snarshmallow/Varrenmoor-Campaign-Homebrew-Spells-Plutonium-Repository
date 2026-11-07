@@ -100,6 +100,9 @@ def load_terrain(place, source=None, root=None):
         pj, pi = int(round(o[0] / c)), int(round(o[1] / c))
         if h.shape[0] + pi > 6000 or h.shape[1] + pj > 6000:
             raise SystemExit("child terrain frame too large to pad: use --local-origin when extracting far from the parent origin")
+        if pi < 0 or pj < 0:      # --local-origin: the crop starts a cell or two before the shifted frame; drop those rows/cols
+            h = h[max(-pi, 0):, max(-pj, 0):]
+            pi, pj = max(pi, 0), max(pj, 0)
         h = np.pad(h, ((pi, 0), (pj, 0)), mode="edge")
         meta = dict(meta)
         meta["padded_origin_ft"], meta["origin_ft"] = list(o), [0.0, 0.0]

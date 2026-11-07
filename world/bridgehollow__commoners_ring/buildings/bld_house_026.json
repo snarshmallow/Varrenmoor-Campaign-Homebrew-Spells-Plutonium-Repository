@@ -1,0 +1,46 @@
+{
+ "id": "bld_house_026",
+ "name": "House 26",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    991.2,
+    659.4
+   ],
+   [
+    983.4,
+    676.2
+   ],
+   [
+    996.5,
+    682.3
+   ],
+   [
+    1004.3,
+    665.4
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 659.0,
+ "site_slope": 0.084,
+ "site_relief_ft": 1.5,
+ "region": {
+  "parent_id": "bld_house_026",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

@@ -238,7 +238,45 @@ def build_road(cx, e):
     br = bool(e.get("bridge"))
     _ribbon(b, e["surface"]["material"], pts, [e["width_ft"] * FT] * len(pts), zs, e["surface"]["tile_ft"], 0.0 if br else LIFT["roads"],
             BRIDGE_THICK_M if br else 0.0)
+    if e.get("kerbs"):
+        _add_kerbs(cx, b, e)
     return b.build()
+
+
+KERB_H_FT = 0.5
+
+
+def _add_kerbs(cx, b, e):
+    """Raised stone kerb bands (e['kerbs'] rings in feet): top at road surface + 0.5 ft, vertical sides, heights follow the road centreline profile."""
+    cl = np.array([[p[0], p[1]] for p in e["points"]], float)
+    zc = np.array([p[2] for p in e["points"]], float)
+    seg = np.diff(cl, axis=0)
+    sl2 = np.maximum((seg ** 2).sum(1), 1e-9)
+
+    def zroad(x, y):
+        t = np.clip(((x - cl[:-1, 0]) * seg[:, 0] + (y - cl[:-1, 1]) * seg[:, 1]) / sl2, 0, 1)
+        d = np.hypot(cl[:-1, 0] + t * seg[:, 0] - x, cl[:-1, 1] + t * seg[:, 1] - y)
+        i = int(np.argmin(d))
+        return zc[i] + t[i] * (zc[i + 1] - zc[i])
+    mat, tile = "mat_cobble", 8.0
+    for ring in e["kerbs"]:
+        P = [tuple(p) for p in ring]
+        # densify long edges so the kerb follows the road profile
+        D = []
+        for i, p in enumerate(P):
+            q = P[(i + 1) % len(P)]
+            n = max(1, int(math.dist(p, q) / 6.0))
+            D += [(p[0] + (q[0] - p[0]) * k / n, p[1] + (q[1] - p[1]) * k / n) for k in range(n)]
+        Bp = [(x, cx.fr.height_ft - y) for x, y in D]
+        zb = [(zroad(x, y) - cx.fr.z_origin_ft) * FT + LIFT["roads"] for x, y in D]
+        top = [b.vert((x * FT, yb * FT, z + KERB_H_FT * FT), (x / tile, yb / tile)) for (x, yb), z in zip(Bp, zb)]
+        for t in earclip(Bp):
+            b.tri(mat, *[top[i] for i in t])
+        for i in range(len(D)):
+            j = (i + 1) % len(D)
+            a0 = b.vert((Bp[i][0] * FT, Bp[i][1] * FT, zb[i] + 0.002), (0, 0))
+            a1 = b.vert((Bp[j][0] * FT, Bp[j][1] * FT, zb[j] + 0.002), (1, 0))
+            b.quad(mat, a0, a1, top[j], top[i])
 
 
 def build_water(cx, e):
@@ -421,7 +459,12 @@ def build_parts(pack, step=1, carve=True, conform=True, layers=None, drape_edge_
             add(e, "fields", build_drape(cx, e, LIFT["fields"], drape_edge_ft))
     for e in pack.list("buildings"):
         if want("buildings"):
-            add(e, "buildings", build_building(cx, e))
+            if e.get("openings"):
+                import worldpack_detail as wd
+                m, dn = wd.build_building_detailed(cx, e)
+                add(e, "buildings", m, door_nodes=dn)
+            else:
+                add(e, "buildings", build_building(cx, e))
     for e in pack.list("fences"):
         if want("fences"):
             add(e, "fences", build_fence(cx, e))
@@ -499,6 +542,9 @@ def write_glb(path, nodes, materials, textures="external", tex_root=None, extras
         rgb = [int(col[i:i + 2], 16) / 255 for i in (1, 3, 5)]
         g = {"name": mid, "doubleSided": True, "pbrMetallicRoughness": {"baseColorFactor": [*rgb, 1.0], "metallicFactor": float(r.get("metallic", 0.0)),
                                                                            "roughnessFactor": float(r.get("roughness", 0.9))}}
+        if r.get("alpha") is not None:
+            g["alphaMode"] = "BLEND"
+            g["pbrMetallicRoughness"]["baseColorFactor"][3] = float(r["alpha"])
         tex = r.get("texture")
         if tex and textures != "none":
             src = os.path.join(tex_root or "", tex if textures == "embed" else f"{mid}.png") if tex_root is not None else None
@@ -538,7 +584,12 @@ def write_glb(path, nodes, materials, textures="external", tex_root=None, extras
                 at["NORMAL"] = nrm_acc
             prims.append({"attributes": at, "indices": accessor(F.reshape(-1).tobytes(), 5125, "SCALAR", F.size, 34963), "material": material(mid)})
         gmeshes.append({"name": name, "primitives": prims})
-        gnodes.append({"name": name, "mesh": len(gmeshes) - 1, "extras": ex or {}})
+        ex = dict(ex or {})
+        tr = ex.pop("_t", None)                                   # node translation in Blender axes (metres): door leaves sit on their hinge
+        gn = {"name": name, "mesh": len(gmeshes) - 1, "extras": ex}
+        if tr is not None:
+            gn["translation"] = [float(tr[0]), float(tr[2]), -float(tr[1])]
+        gnodes.append(gn)
     g = {"asset": {"version": "2.0", "generator": "varrenmoor worldpack_mesh.py", "extras": extras or {}}, "scene": 0, "scenes": [{"nodes": list(range(len(gnodes)))}],
          "nodes": gnodes, "meshes": gmeshes, "materials": gmats, "accessors": acc, "bufferViews": views, "buffers": [{"byteLength": off[0]}],
          "samplers": [{"wrapS": 10497, "wrapT": 10497, "magFilter": 9729, "minFilter": 9987}, {"wrapS": 33071, "wrapT": 33071, "magFilter": 9729, "minFilter": 9987}]}

@@ -1,0 +1,46 @@
+{
+ "id": "bld_house_045",
+ "name": "House 45",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    1314.9,
+    735.5
+   ],
+   [
+    1303.6,
+    744.1
+   ],
+   [
+    1310.7,
+    753.3
+   ],
+   [
+    1321.9,
+    744.7
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 659.3,
+ "site_slope": 0.062,
+ "site_relief_ft": 1.0,
+ "region": {
+  "parent_id": "bld_house_045",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

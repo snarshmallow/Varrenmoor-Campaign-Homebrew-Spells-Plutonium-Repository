@@ -1,0 +1,46 @@
+{
+ "id": "bld_house_051",
+ "name": "House 51",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    1332.1,
+    793.2
+   ],
+   [
+    1342.2,
+    787.7
+   ],
+   [
+    1331.4,
+    767.6
+   ],
+   [
+    1321.3,
+    773.1
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 660.1,
+ "site_slope": 0.173,
+ "site_relief_ft": 1.4,
+ "region": {
+  "parent_id": "bld_house_051",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

@@ -1,0 +1,46 @@
+{
+ "id": "bld_house_025",
+ "name": "House 25",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    971.3,
+    674.1
+   ],
+   [
+    979.4,
+    657.1
+   ],
+   [
+    971.1,
+    653.2
+   ],
+   [
+    963.0,
+    670.2
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 660.6,
+ "site_slope": 0.083,
+ "site_relief_ft": 1.1,
+ "region": {
+  "parent_id": "bld_house_025",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

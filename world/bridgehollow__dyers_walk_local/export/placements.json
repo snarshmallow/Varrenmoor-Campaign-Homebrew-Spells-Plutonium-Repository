@@ -1,0 +1,2110 @@
+{
+ "format": "varrenmoor-world-placements",
+ "schema_version": "1.0",
+ "place": "bridgehollow__dyers_walk_local",
+ "pack": {
+  "dir": ".",
+  "generated": "2026-11-07T21:18:22+00:00",
+  "git_commit": "48a17e12cd95917f20e6f1e5abc3fb5fe928e11b"
+ },
+ "frame": {
+  "px_per_ft": 20.0,
+  "z_origin_ft": 630.0,
+  "height_ft": 361.79,
+  "width_ft": 306.49,
+  "tile_rotation_deg": 0,
+  "note": "tile.x/y = pivot px at the pack's px_per_ft; push-models rescales to the target scene's calibration"
+ },
+ "split": {
+  "terrain": "layer",
+  "water": "layer",
+  "roads": "layer",
+  "plazas": "layer",
+  "fields": "layer",
+  "fences": "layer",
+  "foliage": "species",
+  "buildings": "entity",
+  "lights": "none"
+ },
+ "textures": "external",
+ "files": [
+  {
+   "id": "model:bridgehollow__dyers_walk_local:buildings_bld_house_041",
+   "file": "models/buildings/bld_house_041.glb",
+   "kind": "mesh",
+   "layer": "buildings",
+   "layers": [
+    "buildings"
+   ],
+   "group": "buildings:dis_commoner",
+   "ids": [
+    "bld_house_041"
+   ],
+   "pivot": {
+    "x_ft": 78.95,
+    "y_ft": 20.95,
+    "z_ft": 657.8,
+    "blender_m": [
+     24.064,
+     103.888,
+     8.4734
+    ],
+    "foundry_px": [
+     1579.0,
+     419.0
+    ],
+    "rel_z_ft": 27.8
+   },
+   "rotation_deg": 0.0,
+   "scale": 1.0,
+   "size_m": [
+    6.2412,
+    5.8666,
+    4.6909
+   ],
+   "size_ft": [
+    20.476,
+    19.247,
+    15.39
+   ],
+   "tile": {
+    "x": 1579.0,
+    "y": 419.0,
+    "width": 409.52,
+    "height": 384.94,
+    "depth": 307.8,
+    "elevation_ft": 27.8,
+    "rotation": 0
+   },
+   "tris": 264,
+   "bytes": 19072,
+   "sha256": "2866073648e8f480dd401f43b89e732d7869e2e90fd188c4f3c79e3e5ebf25cd",
+   "members": [
+    {
+     "id": "bld_house_041",
+     "layer": "buildings",
+     "tags": {
+      "layer": "buildings",
+      "subtype": "house",
+      "district": "dis_commoner",
+      "ring": "commoner",
+      "group": "buildings:dis_commoner",
+      "id": "bld_house_041"
+     },
+     "offset_m": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    }
+   ]
+  },
+  {
+   "id": "model:bridgehollow__dyers_walk_local:buildings_bld_house_044",
+   "file": "models/buildings/bld_house_044.glb",
+   "kind": "mesh",
+   "layer": "buildings",
+   "layers": [
+    "buildings"
+   ],
+   "group": "buildings:dis_commoner",
+   "ids": [
+    "bld_house_044"
+   ],
+   "pivot": {
+    "x_ft": 62.926,
+    "y_ft": 35.322,
+    "z_ft": 657.4,
+    "blender_m": [
+     19.1798,
+     99.5074,
+     8.3515
+    ],
+    "foundry_px": [
+     1258.52,
+     706.44
+    ],
+    "rel_z_ft": 27.4
+   },
+   "rotation_deg": 0.0,
+   "scale": 1.0,
+   "size_m": [
+    7.2151,
+    7.0638,
+    7.9632
+   ],
+   "size_ft": [
+    23.672,
+    23.175,
+    26.126
+   ],
+   "tile": {
+    "x": 1258.52,
+    "y": 706.44,
+    "width": 473.44,
+    "height": 463.5,
+    "depth": 522.52,
+    "elevation_ft": 27.4,
+    "rotation": 0
+   },
+   "tris": 584,
+   "bytes": 35720,
+   "sha256": "728ed052ccd3355db9bc8328a3e0ad172c7a76c0104e21b181c96280347a0237",
+   "members": [
+    {
+     "id": "bld_house_044",
+     "layer": "buildings",
+     "tags": {
+      "layer": "buildings",
+      "subtype": "house",
+      "district": "dis_commoner",
+      "ring": "commoner",
+      "group": "buildings:dis_commoner",
+      "id": "bld_house_044"
+     },
+     "offset_m": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    }
+   ]
+  },
+  {
+   "id": "model:bridgehollow__dyers_walk_local:buildings_bld_house_052",
+   "file": "models/buildings/bld_house_052.glb",
+   "kind": "mesh",
+   "layer": "buildings",
+   "layers": [
+    "buildings"
+   ],
+   "group": "buildings:dis_commoner",
+   "ids": [
+    "bld_house_052"
+   ],
+   "pivot": {
+    "x_ft": 96.05,
+    "y_ft": 82.75,
+    "z_ft": 655.2,
+    "blender_m": [
+     29.276,
+     85.0514,
+     7.681
+    ],
+    "foundry_px": [
+     1921.0,
+     1655.0
+    ],
+    "rel_z_ft": 25.2
+   },
+   "rotation_deg": 0.0,
+   "scale": 1.0,
+   "size_m": [
+    6.2321,
+    7.2721,
+    4.4598
+   ],
+   "size_ft": [
+    20.446,
+    23.859,
+    14.632
+   ],
+   "tile": {
+    "x": 1921.0,
+    "y": 1655.0,
+    "width": 408.92,
+    "height": 477.18,
+    "depth": 292.64,
+    "elevation_ft": 25.2,
+    "rotation": 0
+   },
+   "tris": 264,
+   "bytes": 19068,
+   "sha256": "34314a44d864f9f0e23417f82e7063c16cf3d381bcd7bb1c89c3d925804cdf3b",
+   "members": [
+    {
+     "id": "bld_house_052",
+     "layer": "buildings",
+     "tags": {
+      "layer": "buildings",
+      "subtype": "house",
+      "district": "dis_commoner",
+      "ring": "commoner",
+      "group": "buildings:dis_commoner",
+      "id": "bld_house_052"
+     },
+     "offset_m": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    }
+   ]
+  },
+  {
+   "id": "model:bridgehollow__dyers_walk_local:buildings_bld_house_053",
+   "file": "models/buildings/bld_house_053.glb",
+   "kind": "mesh",
+   "layer": "buildings",
+   "layers": [
+    "buildings"
+   ],
+   "group": "buildings:dis_commoner",
+   "ids": [
+    "bld_house_053"
+   ],
+   "pivot": {
+    "x_ft": 125.25,
+    "y_ft": 86.8,
+    "z_ft": 655.1,
+    "blender_m": [
+     38.1762,
+     83.817,
+     7.6505
+    ],
+    "foundry_px": [
+     2505.0,
+     1736.0
+    ],
+    "rel_z_ft": 25.1
+   },
+   "rotation_deg": 0.0,
+   "scale": 1.0,
+   "size_m": [
+    6.5697,
+    8.5544,
+    7.6526
+   ],
+   "size_ft": [
+    21.554,
+    28.066,
+    25.107
+   ],
+   "tile": {
+    "x": 2505.0,
+    "y": 1736.0,
+    "width": 431.08,
+    "height": 561.32,
+    "depth": 502.14,
+    "elevation_ft": 25.1,
+    "rotation": 0
+   },
+   "tris": 748,
+   "bytes": 44248,
+   "sha256": "15071ae40ff71adad465fc71839e4eb430ac5bb56f1509e610ac079be6d2f0b3",
+   "members": [
+    {
+     "id": "bld_house_053",
+     "layer": "buildings",
+     "tags": {
+      "layer": "buildings",
+      "subtype": "house",
+      "district": "dis_commoner",
+      "ring": "commoner",
+      "group": "buildings:dis_commoner",
+      "id": "bld_house_053"
+     },
+     "offset_m": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    }
+   ]
+  },
+  {
+   "id": "model:bridgehollow__dyers_walk_local:buildings_bld_house_054",
+   "file": "models/buildings/bld_house_054.glb",
+   "kind": "mesh",
+   "layer": "buildings",
+   "layers": [
+    "buildings"
+   ],
+   "group": "buildings:dis_commoner",
+   "ids": [
+    "bld_house_054"
+   ],
+   "pivot": {
+    "x_ft": 47.75,
+    "y_ft": 97.4,
+    "z_ft": 654.3,
+    "blender_m": [
+     14.5542,
+     80.5861,
+     7.4066
+    ],
+    "foundry_px": [
+     955.0,
+     1948.0
+    ],
+    "rel_z_ft": 24.3
+   },
+   "rotation_deg": 0.0,
+   "scale": 1.0,
+   "size_m": [
+    5.3163,
+    8.2105,
+    5.1484
+   ],
+   "size_ft": [
+    17.442,
+    26.937,
+    16.891
+   ],
+   "tile": {
+    "x": 955.0,
+    "y": 1948.0,
+    "width": 348.84,
+    "height": 538.74,
+    "depth": 337.82,
+    "elevation_ft": 24.3,
+    "rotation": 0
+   },
+   "tris": 522,
+   "bytes": 32492,
+   "sha256": "8376b2ce807d1ea985cd6e149da29725db8021eef051c8a3b0707a41fd35e809",
+   "members": [
+    {
+     "id": "bld_house_054",
+     "layer": "buildings",
+     "tags": {
+      "layer": "buildings",
+      "subtype": "house",
+      "district": "dis_commoner",
+      "ring": "commoner",
+      "group": "buildings:dis_commoner",
+      "id": "bld_house_054"
+     },
+     "offset_m": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    }
+   ]
+  },
+  {
+   "id": "model:bridgehollow__dyers_walk_local:buildings_bld_house_056",
+   "file": "models/buildings/bld_house_056.glb",
+   "kind": "mesh",
+   "layer": "buildings",
+   "layers": [
+    "buildings"
+   ],
+   "group": "buildings:dis_commoner",
+   "ids": [
+    "bld_house_056"
+   ],
+   "pivot": {
+    "x_ft": 67.652,
+    "y_ft": 105.492,
+    "z_ft": 654.4,
+    "blender_m": [
+     20.6203,
+     78.1196,
+     7.4371
+    ],
+    "foundry_px": [
+     1353.04,
+     2109.84
+    ],
+    "rel_z_ft": 24.4
+   },
+   "rotation_deg": 0.0,
+   "scale": 1.0,
+   "size_m": [
+    3.6569,
+    4.842,
+    7.456
+   ],
+   "size_ft": [
+    11.998,
+    15.886,
+    24.462
+   ],
+   "tile": {
+    "x": 1353.04,
+    "y": 2109.84,
+    "width": 239.96,
+    "height": 317.72,
+    "depth": 489.24,
+    "elevation_ft": 24.4,
+    "rotation": 0
+   },
+   "tris": 256,
+   "bytes": 18656,
+   "sha256": "6938d8827816443dbde12b53de7aedd488aeb94063aa56d51a9958f6c8c035b7",
+   "members": [
+    {
+     "id": "bld_house_056",
+     "layer": "buildings",
+     "tags": {
+      "layer": "buildings",
+      "subtype": "house",
+      "district": "dis_commoner",
+      "ring": "commoner",
+      "group": "buildings:dis_commoner",
+      "id": "bld_house_056"
+     },
+     "offset_m": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    }
+   ]
+  },
+  {
+   "id": "model:bridgehollow__dyers_walk_local:buildings_bld_house_057",
+   "file": "models/buildings/bld_house_057.glb",
+   "kind": "mesh",
+   "layer": "buildings",
+   "layers": [
+    "buildings"
+   ],
+   "group": "buildings:dis_commoner",
+   "ids": [
+    "bld_house_057"
+   ],
+   "pivot": {
+    "x_ft": 110.9,
+    "y_ft": 104.5,
+    "z_ft": 654.3,
+    "blender_m": [
+     33.8023,
+     78.422,
+     7.4066
+    ],
+    "foundry_px": [
+     2218.0,
+     2090.0
+    ],
+    "rel_z_ft": 24.3
+   },
+   "rotation_deg": 0.0,
+   "scale": 1.0,
+   "size_m": [
+    6.3387,
+    6.4704,
+    7.7742
+   ],
+   "size_ft": [
+    20.796,
+    21.228,
+    25.506
+   ],
+   "tile": {
+    "x": 2218.0,
+    "y": 2090.0,
+    "width": 415.92,
+    "height": 424.56,
+    "depth": 510.12,
+    "elevation_ft": 24.3,
+    "rotation": 0
+   },
+   "tris": 584,
+   "bytes": 35720,
+   "sha256": "f2d72f8ea325fb0d7b84cb5db366603cc4e22d3a6834af9317b29cde50b52d0e",
+   "members": [
+    {
+     "id": "bld_house_057",
+     "layer": "buildings",
+     "tags": {
+      "layer": "buildings",
+      "subtype": "house",
+      "district": "dis_commoner",
+      "ring": "commoner",
+      "group": "buildings:dis_commoner",
+      "id": "bld_house_057"
+     },
+     "offset_m": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    }
+   ]
+  },
+  {
+   "id": "model:bridgehollow__dyers_walk_local:buildings_bld_house_062",
+   "file": "models/buildings/bld_house_062.glb",
+   "kind": "mesh",
+   "layer": "buildings",
+   "layers": [
+    "buildings"
+   ],
+   "group": "buildings:dis_commoner",
+   "ids": [
+    "bld_house_062"
+   ],
+   "pivot": {
+    "x_ft": 126.879,
+    "y_ft": 116.514,
+    "z_ft": 653.5,
+    "blender_m": [
+     38.6727,
+     74.7601,
+     7.1628
+    ],
+    "foundry_px": [
+     2537.58,
+     2330.28
+    ],
+    "rel_z_ft": 23.5
+   },
+   "rotation_deg": 0.0,
+   "scale": 1.0,
+   "size_m": [
+    9.3078,
+    8.3537,
+    4.9259
+   ],
+   "size_ft": [
+    30.537,
+    27.407,
+    16.161
+   ],
+   "tile": {
+    "x": 2537.58,
+    "y": 2330.28,
+    "width": 610.74,
+    "height": 548.14,
+    "depth": 323.22,
+    "elevation_ft": 23.5,
+    "rotation": 0
+   },
+   "tris": 522,
+   "bytes": 32492,
+   "sha256": "7b026396e5f6b3bd6694d19e73fc86c8bbc0e317f9e2dcc33971760acb422cfb",
+   "members": [
+    {
+     "id": "bld_house_062",
+     "layer": "buildings",
+     "tags": {
+      "layer": "buildings",
+      "subtype": "house",
+      "district": "dis_commoner",
+      "ring": "commoner",
+      "group": "buildings:dis_commoner",
+      "id": "bld_house_062"
+     },
+     "offset_m": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    }
+   ]
+  },
+  {
+   "id": "model:bridgehollow__dyers_walk_local:buildings_bld_house_063",
+   "file": "models/buildings/bld_house_063.glb",
+   "kind": "mesh",
+   "layer": "buildings",
+   "layers": [
+    "buildings"
+   ],
+   "group": "buildings:dis_commoner",
+   "ids": [
+    "bld_house_063"
+   ],
+   "pivot": {
+    "x_ft": 82.05,
+    "y_ft": 128.2,
+    "z_ft": 653.4,
+    "blender_m": [
+     25.0088,
+     71.1982,
+     7.1323
+    ],
+    "foundry_px": [
+     1641.0,
+     2564.0
+    ],
+    "rel_z_ft": 23.4
+   },
+   "rotation_deg": 0.0,
+   "scale": 1.0,
+   "size_m": [
+    4.6086,
+    5.0704,
+    7.5368
+   ],
+   "size_ft": [
+    15.12,
+    16.635,
+    24.727
+   ],
+   "tile": {
+    "x": 1641.0,
+    "y": 2564.0,
+    "width": 302.4,
+    "height": 332.7,
+    "depth": 494.54,
+    "elevation_ft": 23.4,
+    "rotation": 0
+   },
+   "tris": 256,
+   "bytes": 18656,
+   "sha256": "82e2233017290a753d4ec36bec006544b8e96985a7cc32f17e234879561feaa7",
+   "members": [
+    {
+     "id": "bld_house_063",
+     "layer": "buildings",
+     "tags": {
+      "layer": "buildings",
+      "subtype": "house",
+      "district": "dis_commoner",
+      "ring": "commoner",
+      "group": "buildings:dis_commoner",
+      "id": "bld_house_063"
+     },
+     "offset_m": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    }
+   ]
+  },
+  {
+   "id": "model:bridgehollow__dyers_walk_local:buildings_bld_house_064",
+   "file": "models/buildings/bld_house_064.glb",
+   "kind": "mesh",
+   "layer": "buildings",
+   "layers": [
+    "buildings"
+   ],
+   "group": "buildings:dis_commoner",
+   "ids": [
+    "bld_house_064"
+   ],
+   "pivot": {
+    "x_ft": 140.617,
+    "y_ft": 132.272,
+    "z_ft": 652.4,
+    "blender_m": [
+     42.8601,
+     69.9571,
+     6.8275
+    ],
+    "foundry_px": [
+     2812.34,
+     2645.44
+    ],
+    "rel_z_ft": 22.4
+   },
+   "rotation_deg": 0.0,
+   "scale": 1.0,
+   "size_m": [
+    10.2437,
+    9.6074,
+    5.4535
+   ],
+   "size_ft": [
+    33.608,
+    31.52,
+    17.892
+   ],
+   "tile": {
+    "x": 2812.34,
+    "y": 2645.44,
+    "width": 672.16,
+    "height": 630.4,
+    "depth": 357.84,
+    "elevation_ft": 22.4,
+    "rotation": 0
+   },
+   "tris": 522,
+   "bytes": 32508,
+   "sha256": "0542e4fbc47eb4413496123b823085f895704d371379868600c0269c13117fa5",
+   "members": [
+    {
+     "id": "bld_house_064",
+     "layer": "buildings",
+     "tags": {
+      "layer": "buildings",
+      "subtype": "house",
+      "district": "dis_commoner",
+      "ring": "commoner",
+      "group": "buildings:dis_commoner",
+      "id": "bld_house_064"
+     },
+     "offset_m": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    }
+   ]
+  },
+  {
+   "id": "model:bridgehollow__dyers_walk_local:buildings_bld_house_065",
+   "file": "models/buildings/bld_house_065.glb",
+   "kind": "mesh",
+   "layer": "buildings",
+   "layers": [
+    "buildings"
+   ],
+   "group": "buildings:dis_commoner",
+   "ids": [
+    "bld_house_065"
+   ],
+   "pivot": {
+    "x_ft": 50.15,
+    "y_ft": 136.5,
+    "z_ft": 653.2,
+    "blender_m": [
+     15.2857,
+     68.6684,
+     7.0714
+    ],
+    "foundry_px": [
+     1003.0,
+     2730.0
+    ],
+    "rel_z_ft": 23.2
+   },
+   "rotation_deg": 0.0,
+   "scale": 1.0,
+   "size_m": [
+    6.2964,
+    8.8235,
+    5.078
+   ],
+   "size_ft": [
+    20.657,
+    28.948,
+    16.66
+   ],
+   "tile": {
+    "x": 1003.0,
+    "y": 2730.0,
+    "width": 413.14,
+    "height": 578.96,
+    "depth": 333.2,
+    "elevation_ft": 23.2,
+    "rotation": 0
+   },
+   "tris": 436,
+   "bytes": 28020,
+   "sha256": "07bc882d5557884b0f8c582a402b28a4fb06a8a4e2b3ad6d9577f86b5012cac6",
+   "members": [
+    {
+     "id": "bld_house_065",
+     "layer": "buildings",
+     "tags": {
+      "layer": "buildings",
+      "subtype": "house",
+      "district": "dis_commoner",
+      "ring": "commoner",
+      "group": "buildings:dis_commoner",
+      "id": "bld_house_065"
+     },
+     "offset_m": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    }
+   ]
+  },
+  {
+   "id": "model:bridgehollow__dyers_walk_local:buildings_bld_house_066",
+   "file": "models/buildings/bld_house_066.glb",
+   "kind": "mesh",
+   "layer": "buildings",
+   "layers": [
+    "buildings"
+   ],
+   "group": "buildings:dis_commoner",
+   "ids": [
+    "bld_house_066"
+   ],
+   "pivot": {
+    "x_ft": 173.4,
+    "y_ft": 138.5,
+    "z_ft": 652.8,
+    "blender_m": [
+     52.8523,
+     68.0588,
+     6.9494
+    ],
+    "foundry_px": [
+     3468.0,
+     2770.0
+    ],
+    "rel_z_ft": 22.8
+   },
+   "rotation_deg": 0.0,
+   "scale": 1.0,
+   "size_m": [
+    5.7822,
+    6.2715,
+    7.5398
+   ],
+   "size_ft": [
+    18.97,
+    20.576,
+    24.737
+   ],
+   "tile": {
+    "x": 3468.0,
+    "y": 2770.0,
+    "width": 379.4,
+    "height": 411.52,
+    "depth": 494.74,
+    "elevation_ft": 22.8,
+    "rotation": 0
+   },
+   "tris": 256,
+   "bytes": 18656,
+   "sha256": "844e937ff9de03a9d6ab5aaebdd955a84bfcdbbd031e2f34c99aa7e2713aaac1",
+   "members": [
+    {
+     "id": "bld_house_066",
+     "layer": "buildings",
+     "tags": {
+      "layer": "buildings",
+      "subtype": "house",
+      "district": "dis_commoner",
+      "ring": "commoner",
+      "group": "buildings:dis_commoner",
+      "id": "bld_house_066"
+     },
+     "offset_m": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    }
+   ]
+  },
+  {
+   "id": "model:bridgehollow__dyers_walk_local:buildings_bld_house_069",
+   "file": "models/buildings/bld_house_069.glb",
+   "kind": "mesh",
+   "layer": "buildings",
+   "layers": [
+    "buildings"
+   ],
+   "group": "buildings:dis_commoner",
+   "ids": [
+    "bld_house_069"
+   ],
+   "pivot": {
+    "x_ft": 153.882,
+    "y_ft": 155.176,
+    "z_ft": 651.5,
+    "blender_m": [
+     46.9032,
+     62.9759,
+     6.5532
+    ],
+    "foundry_px": [
+     3077.64,
+     3103.52
+    ],
+    "rel_z_ft": 21.5
+   },
+   "rotation_deg": 0.0,
+   "scale": 1.0,
+   "size_m": [
+    6.6565,
+    6.6601,
+    8.0065
+   ],
+   "size_ft": [
+    21.839,
+    21.851,
+    26.268
+   ],
+   "tile": {
+    "x": 3077.64,
+    "y": 3103.52,
+    "width": 436.78,
+    "height": 437.02,
+    "depth": 525.36,
+    "elevation_ft": 21.5,
+    "rotation": 0
+   },
+   "tris": 584,
+   "bytes": 35716,
+   "sha256": "23577ddb88121dae55c1918e41fd576f05e7697b2666499cf1517754fa17295f",
+   "members": [
+    {
+     "id": "bld_house_069",
+     "layer": "buildings",
+     "tags": {
+      "layer": "buildings",
+      "subtype": "house",
+      "district": "dis_commoner",
+      "ring": "commoner",
+      "group": "buildings:dis_commoner",
+      "id": "bld_house_069"
+     },
+     "offset_m": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    }
+   ]
+  },
+  {
+   "id": "model:bridgehollow__dyers_walk_local:buildings_bld_house_072",
+   "file": "models/buildings/bld_house_072.glb",
+   "kind": "mesh",
+   "layer": "buildings",
+   "layers": [
+    "buildings"
+   ],
+   "group": "buildings:dis_commoner",
+   "ids": [
+    "bld_house_072"
+   ],
+   "pivot": {
+    "x_ft": 103.05,
+    "y_ft": 159.9,
+    "z_ft": 651.2,
+    "blender_m": [
+     31.4096,
+     61.5361,
+     6.4618
+    ],
+    "foundry_px": [
+     2061.0,
+     3198.0
+    ],
+    "rel_z_ft": 21.2
+   },
+   "rotation_deg": 0.0,
+   "scale": 1.0,
+   "size_m": [
+    6.055,
+    6.9331,
+    7.8696
+   ],
+   "size_ft": [
+    19.865,
+    22.746,
+    25.819
+   ],
+   "tile": {
+    "x": 2061.0,
+    "y": 3198.0,
+    "width": 397.3,
+    "height": 454.92,
+    "depth": 516.38,
+    "elevation_ft": 21.2,
+    "rotation": 0
+   },
+   "tris": 584,
+   "bytes": 35720,
+   "sha256": "3910e46370327f924fae1d26b9e75fa9681a30afee4a8de53e847e7c62cc94cf",
+   "members": [
+    {
+     "id": "bld_house_072",
+     "layer": "buildings",
+     "tags": {
+      "layer": "buildings",
+      "subtype": "house",
+      "district": "dis_commoner",
+      "ring": "commoner",
+      "group": "buildings:dis_commoner",
+      "id": "bld_house_072"
+     },
+     "offset_m": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    }
+   ]
+  },
+  {
+   "id": "model:bridgehollow__dyers_walk_local:buildings_bld_house_078",
+   "file": "models/buildings/bld_house_078.glb",
+   "kind": "mesh",
+   "layer": "buildings",
+   "layers": [
+    "buildings"
+   ],
+   "group": "buildings:dis_commoner",
+   "ids": [
+    "bld_house_078"
+   ],
+   "pivot": {
+    "x_ft": 175.95,
+    "y_ft": 173.25,
+    "z_ft": 650.4,
+    "blender_m": [
+     53.6296,
+     57.467,
+     6.2179
+    ],
+    "foundry_px": [
+     3519.0,
+     3465.0
+    ],
+    "rel_z_ft": 20.4
+   },
+   "rotation_deg": 0.0,
+   "scale": 1.0,
+   "size_m": [
+    8.6337,
+    8.7675,
+    5.1063
+   ],
+   "size_ft": [
+    28.326,
+    28.765,
+    16.753
+   ],
+   "tile": {
+    "x": 3519.0,
+    "y": 3465.0,
+    "width": 566.52,
+    "height": 575.3,
+    "depth": 335.06,
+    "elevation_ft": 20.4,
+    "rotation": 0
+   },
+   "tris": 436,
+   "bytes": 28012,
+   "sha256": "94bc9178fe4a9a57bc62a0910d393532cb66a9bdebb21f5ce12e5e633c15b0fa",
+   "members": [
+    {
+     "id": "bld_house_078",
+     "layer": "buildings",
+     "tags": {
+      "layer": "buildings",
+      "subtype": "house",
+      "district": "dis_commoner",
+      "ring": "commoner",
+      "group": "buildings:dis_commoner",
+      "id": "bld_house_078"
+     },
+     "offset_m": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    }
+   ]
+  },
+  {
+   "id": "model:bridgehollow__dyers_walk_local:buildings_bld_house_082",
+   "file": "models/buildings/bld_house_082.glb",
+   "kind": "mesh",
+   "layer": "buildings",
+   "layers": [
+    "buildings"
+   ],
+   "group": "buildings:dis_commoner",
+   "ids": [
+    "bld_house_082"
+   ],
+   "pivot": {
+    "x_ft": 193.922,
+    "y_ft": 185.873,
+    "z_ft": 650.0,
+    "blender_m": [
+     59.1074,
+     53.6195,
+     6.096
+    ],
+    "foundry_px": [
+     3878.44,
+     3717.46
+    ],
+    "rel_z_ft": 20.0
+   },
+   "rotation_deg": 0.0,
+   "scale": 1.0,
+   "size_m": [
+    7.6759,
+    7.612,
+    4.632
+   ],
+   "size_ft": [
+    25.184,
+    24.974,
+    15.197
+   ],
+   "tile": {
+    "x": 3878.44,
+    "y": 3717.46,
+    "width": 503.68,
+    "height": 499.48,
+    "depth": 303.94,
+    "elevation_ft": 20.0,
+    "rotation": 0
+   },
+   "tris": 436,
+   "bytes": 28020,
+   "sha256": "7340248c67263d7688af0ce4828e0afdec3b498b06923197c78914525bd1c806",
+   "members": [
+    {
+     "id": "bld_house_082",
+     "layer": "buildings",
+     "tags": {
+      "layer": "buildings",
+      "subtype": "house",
+      "district": "dis_commoner",
+      "ring": "commoner",
+      "group": "buildings:dis_commoner",
+      "id": "bld_house_082"
+     },
+     "offset_m": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    }
+   ]
+  },
+  {
+   "id": "model:bridgehollow__dyers_walk_local:buildings_bld_house_084",
+   "file": "models/buildings/bld_house_084.glb",
+   "kind": "mesh",
+   "layer": "buildings",
+   "layers": [
+    "buildings"
+   ],
+   "group": "buildings:dis_commoner",
+   "ids": [
+    "bld_house_084"
+   ],
+   "pivot": {
+    "x_ft": 99.95,
+    "y_ft": 195.8,
+    "z_ft": 648.7,
+    "blender_m": [
+     30.4648,
+     50.5938,
+     5.6998
+    ],
+    "foundry_px": [
+     1999.0,
+     3916.0
+    ],
+    "rel_z_ft": 18.7
+   },
+   "rotation_deg": 0.0,
+   "scale": 1.0,
+   "size_m": [
+    6.834,
+    7.1019,
+    5.4264
+   ],
+   "size_ft": [
+    22.421,
+    23.3,
+    17.803
+   ],
+   "tile": {
+    "x": 1999.0,
+    "y": 3916.0,
+    "width": 448.42,
+    "height": 466.0,
+    "depth": 356.06,
+    "elevation_ft": 18.7,
+    "rotation": 0
+   },
+   "tris": 350,
+   "bytes": 23560,
+   "sha256": "5e2a9b599f08e2246c214c0d3012d10a235b874a2d5e32c3876f7dda8e171f33",
+   "members": [
+    {
+     "id": "bld_house_084",
+     "layer": "buildings",
+     "tags": {
+      "layer": "buildings",
+      "subtype": "house",
+      "district": "dis_commoner",
+      "ring": "commoner",
+      "group": "buildings:dis_commoner",
+      "id": "bld_house_084"
+     },
+     "offset_m": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    }
+   ]
+  },
+  {
+   "id": "model:bridgehollow__dyers_walk_local:buildings_bld_house_086",
+   "file": "models/buildings/bld_house_086.glb",
+   "kind": "mesh",
+   "layer": "buildings",
+   "layers": [
+    "buildings"
+   ],
+   "group": "buildings:dis_commoner",
+   "ids": [
+    "bld_house_086"
+   ],
+   "pivot": {
+    "x_ft": 149.15,
+    "y_ft": 202.05,
+    "z_ft": 648.3,
+    "blender_m": [
+     45.4609,
+     48.6888,
+     5.5778
+    ],
+    "foundry_px": [
+     2983.0,
+     4041.0
+    ],
+    "rel_z_ft": 18.3
+   },
+   "rotation_deg": 0.0,
+   "scale": 1.0,
+   "size_m": [
+    7.4484,
+    7.5369,
+    4.7598
+   ],
+   "size_ft": [
+    24.437,
+    24.727,
+    15.616
+   ],
+   "tile": {
+    "x": 2983.0,
+    "y": 4041.0,
+    "width": 488.74,
+    "height": 494.54,
+    "depth": 312.32,
+    "elevation_ft": 18.3,
+    "rotation": 0
+   },
+   "tris": 436,
+   "bytes": 28020,
+   "sha256": "41820456169dbd0caa1ed1d778f56d856835f06b14e0c61bc72c85af46899f27",
+   "members": [
+    {
+     "id": "bld_house_086",
+     "layer": "buildings",
+     "tags": {
+      "layer": "buildings",
+      "subtype": "house",
+      "district": "dis_commoner",
+      "ring": "commoner",
+      "group": "buildings:dis_commoner",
+      "id": "bld_house_086"
+     },
+     "offset_m": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    }
+   ]
+  },
+  {
+   "id": "model:bridgehollow__dyers_walk_local:buildings_bld_house_087",
+   "file": "models/buildings/bld_house_087.glb",
+   "kind": "mesh",
+   "layer": "buildings",
+   "layers": [
+    "buildings"
+   ],
+   "group": "buildings:dis_commoner",
+   "ids": [
+    "bld_house_087"
+   ],
+   "pivot": {
+    "x_ft": 209.65,
+    "y_ft": 209.1,
+    "z_ft": 648.6,
+    "blender_m": [
+     63.9013,
+     46.5399,
+     5.6693
+    ],
+    "foundry_px": [
+     4193.0,
+     4182.0
+    ],
+    "rel_z_ft": 18.6
+   },
+   "rotation_deg": 0.0,
+   "scale": 1.0,
+   "size_m": [
+    10.2186,
+    10.3246,
+    5.4943
+   ],
+   "size_ft": [
+    33.526,
+    33.873,
+    18.026
+   ],
+   "tile": {
+    "x": 4193.0,
+    "y": 4182.0,
+    "width": 670.52,
+    "height": 677.46,
+    "depth": 360.52,
+    "elevation_ft": 18.6,
+    "rotation": 0
+   },
+   "tris": 436,
+   "bytes": 28016,
+   "sha256": "e3beb62da29156a50789017d21d1ecae5de3d97575b46b31dc5eaec255365154",
+   "members": [
+    {
+     "id": "bld_house_087",
+     "layer": "buildings",
+     "tags": {
+      "layer": "buildings",
+      "subtype": "house",
+      "district": "dis_commoner",
+      "ring": "commoner",
+      "group": "buildings:dis_commoner",
+      "id": "bld_house_087"
+     },
+     "offset_m": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    }
+   ]
+  },
+  {
+   "id": "model:bridgehollow__dyers_walk_local:buildings_bld_house_089",
+   "file": "models/buildings/bld_house_089.glb",
+   "kind": "mesh",
+   "layer": "buildings",
+   "layers": [
+    "buildings"
+   ],
+   "group": "buildings:dis_commoner",
+   "ids": [
+    "bld_house_089"
+   ],
+   "pivot": {
+    "x_ft": 159.2,
+    "y_ft": 224.85,
+    "z_ft": 647.6,
+    "blender_m": [
+     48.5242,
+     41.7393,
+     5.3645
+    ],
+    "foundry_px": [
+     3184.0,
+     4497.0
+    ],
+    "rel_z_ft": 17.6
+   },
+   "rotation_deg": 0.0,
+   "scale": 1.0,
+   "size_m": [
+    6.218,
+    5.704,
+    4.7122
+   ],
+   "size_ft": [
+    20.4,
+    18.714,
+    15.46
+   ],
+   "tile": {
+    "x": 3184.0,
+    "y": 4497.0,
+    "width": 408.0,
+    "height": 374.28,
+    "depth": 309.2,
+    "elevation_ft": 17.6,
+    "rotation": 0
+   },
+   "tris": 350,
+   "bytes": 23548,
+   "sha256": "f29e89520b078221a24eaeee7fed07564ca20616b95318b5a364c89ee760411a",
+   "members": [
+    {
+     "id": "bld_house_089",
+     "layer": "buildings",
+     "tags": {
+      "layer": "buildings",
+      "subtype": "house",
+      "district": "dis_commoner",
+      "ring": "commoner",
+      "group": "buildings:dis_commoner",
+      "id": "bld_house_089"
+     },
+     "offset_m": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    }
+   ]
+  },
+  {
+   "id": "model:bridgehollow__dyers_walk_local:buildings_bld_house_090",
+   "file": "models/buildings/bld_house_090.glb",
+   "kind": "mesh",
+   "layer": "buildings",
+   "layers": [
+    "buildings"
+   ],
+   "group": "buildings:dis_commoner",
+   "ids": [
+    "bld_house_090"
+   ],
+   "pivot": {
+    "x_ft": 237.384,
+    "y_ft": 231.462,
+    "z_ft": 648.1,
+    "blender_m": [
+     72.3546,
+     39.724,
+     5.5169
+    ],
+    "foundry_px": [
+     4747.68,
+     4629.24
+    ],
+    "rel_z_ft": 18.1
+   },
+   "rotation_deg": 0.0,
+   "scale": 1.0,
+   "size_m": [
+    5.8005,
+    5.5089,
+    7.3707
+   ],
+   "size_ft": [
+    19.03,
+    18.074,
+    24.182
+   ],
+   "tile": {
+    "x": 4747.68,
+    "y": 4629.24,
+    "width": 380.6,
+    "height": 361.48,
+    "depth": 483.64,
+    "elevation_ft": 18.1,
+    "rotation": 0
+   },
+   "tris": 256,
+   "bytes": 18668,
+   "sha256": "0a2fb2a9750cd84647bd7ba9ace3326a77f5228a586dacebf79ce812613ba5a8",
+   "members": [
+    {
+     "id": "bld_house_090",
+     "layer": "buildings",
+     "tags": {
+      "layer": "buildings",
+      "subtype": "house",
+      "district": "dis_commoner",
+      "ring": "commoner",
+      "group": "buildings:dis_commoner",
+      "id": "bld_house_090"
+     },
+     "offset_m": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    }
+   ]
+  },
+  {
+   "id": "model:bridgehollow__dyers_walk_local:buildings_bld_house_094",
+   "file": "models/buildings/bld_house_094.glb",
+   "kind": "mesh",
+   "layer": "buildings",
+   "layers": [
+    "buildings"
+   ],
+   "group": "buildings:dis_commoner",
+   "ids": [
+    "bld_house_094"
+   ],
+   "pivot": {
+    "x_ft": 183.9,
+    "y_ft": 243.9,
+    "z_ft": 646.9,
+    "blender_m": [
+     56.0527,
+     35.9329,
+     5.1511
+    ],
+    "foundry_px": [
+     3678.0,
+     4878.0
+    ],
+    "rel_z_ft": 16.9
+   },
+   "rotation_deg": 0.0,
+   "scale": 1.0,
+   "size_m": [
+    9.0251,
+    9.878,
+    4.8606
+   ],
+   "size_ft": [
+    29.61,
+    32.408,
+    15.947
+   ],
+   "tile": {
+    "x": 3678.0,
+    "y": 4878.0,
+    "width": 592.2,
+    "height": 648.16,
+    "depth": 318.94,
+    "elevation_ft": 16.9,
+    "rotation": 0
+   },
+   "tris": 694,
+   "bytes": 41440,
+   "sha256": "d9f8cf45daf0f66c54dd9d4b86ec6970e096af090b7f4be1170afcd231961205",
+   "members": [
+    {
+     "id": "bld_house_094",
+     "layer": "buildings",
+     "tags": {
+      "layer": "buildings",
+      "subtype": "house",
+      "district": "dis_commoner",
+      "ring": "commoner",
+      "group": "buildings:dis_commoner",
+      "id": "bld_house_094"
+     },
+     "offset_m": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    }
+   ]
+  },
+  {
+   "id": "model:bridgehollow__dyers_walk_local:buildings_bld_house_099",
+   "file": "models/buildings/bld_house_099.glb",
+   "kind": "mesh",
+   "layer": "buildings",
+   "layers": [
+    "buildings"
+   ],
+   "group": "buildings:dis_commoner",
+   "ids": [
+    "bld_house_099"
+   ],
+   "pivot": {
+    "x_ft": 252.989,
+    "y_ft": 277.035,
+    "z_ft": 645.2,
+    "blender_m": [
+     77.111,
+     25.8333,
+     4.633
+    ],
+    "foundry_px": [
+     5059.78,
+     5540.7
+    ],
+    "rel_z_ft": 15.2
+   },
+   "rotation_deg": 0.0,
+   "scale": 1.0,
+   "size_m": [
+    7.5485,
+    7.29,
+    4.8805
+   ],
+   "size_ft": [
+    24.765,
+    23.917,
+    16.012
+   ],
+   "tile": {
+    "x": 5059.78,
+    "y": 5540.7,
+    "width": 495.3,
+    "height": 478.34,
+    "depth": 320.24,
+    "elevation_ft": 15.2,
+    "rotation": 0
+   },
+   "tris": 350,
+   "bytes": 23544,
+   "sha256": "a2bede2e447c117be7cb7b424c3bc64ee97edf3c74530b4d1c1c2bf893fa9c05",
+   "members": [
+    {
+     "id": "bld_house_099",
+     "layer": "buildings",
+     "tags": {
+      "layer": "buildings",
+      "subtype": "house",
+      "district": "dis_commoner",
+      "ring": "commoner",
+      "group": "buildings:dis_commoner",
+      "id": "bld_house_099"
+     },
+     "offset_m": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    }
+   ]
+  },
+  {
+   "id": "model:bridgehollow__dyers_walk_local:buildings_bld_house_107",
+   "file": "models/buildings/bld_house_107.glb",
+   "kind": "mesh",
+   "layer": "buildings",
+   "layers": [
+    "buildings"
+   ],
+   "group": "buildings:dis_commoner",
+   "ids": [
+    "bld_house_107"
+   ],
+   "pivot": {
+    "x_ft": 224.734,
+    "y_ft": 309.575,
+    "z_ft": 644.1,
+    "blender_m": [
+     68.4989,
+     15.9151,
+     4.2977
+    ],
+    "foundry_px": [
+     4494.68,
+     6191.5
+    ],
+    "rel_z_ft": 14.1
+   },
+   "rotation_deg": 0.0,
+   "scale": 1.0,
+   "size_m": [
+    9.4273,
+    8.6317,
+    5.1642
+   ],
+   "size_ft": [
+    30.929,
+    28.319,
+    16.943
+   ],
+   "tile": {
+    "x": 4494.68,
+    "y": 6191.5,
+    "width": 618.58,
+    "height": 566.38,
+    "depth": 338.86,
+    "elevation_ft": 14.1,
+    "rotation": 0
+   },
+   "tris": 436,
+   "bytes": 28000,
+   "sha256": "e0fa73f459c9f092118878b702710d9f0bf84c074a3fbeb05fb689adc44943e7",
+   "members": [
+    {
+     "id": "bld_house_107",
+     "layer": "buildings",
+     "tags": {
+      "layer": "buildings",
+      "subtype": "house",
+      "district": "dis_commoner",
+      "ring": "commoner",
+      "group": "buildings:dis_commoner",
+      "id": "bld_house_107"
+     },
+     "offset_m": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    }
+   ]
+  },
+  {
+   "id": "model:bridgehollow__dyers_walk_local:buildings_bld_house_109",
+   "file": "models/buildings/bld_house_109.glb",
+   "kind": "mesh",
+   "layer": "buildings",
+   "layers": [
+    "buildings"
+   ],
+   "group": "buildings:dis_commoner",
+   "ids": [
+    "bld_house_109"
+   ],
+   "pivot": {
+    "x_ft": 284.349,
+    "y_ft": 317.251,
+    "z_ft": 641.1,
+    "blender_m": [
+     86.6696,
+     13.5755,
+     3.3833
+    ],
+    "foundry_px": [
+     5686.98,
+     6345.02
+    ],
+    "rel_z_ft": 11.1
+   },
+   "rotation_deg": 0.0,
+   "scale": 1.0,
+   "size_m": [
+    7.831,
+    8.1955,
+    5.0838
+   ],
+   "size_ft": [
+    25.692,
+    26.888,
+    16.679
+   ],
+   "tile": {
+    "x": 5686.98,
+    "y": 6345.02,
+    "width": 513.84,
+    "height": 537.76,
+    "depth": 333.58,
+    "elevation_ft": 11.1,
+    "rotation": 0
+   },
+   "tris": 436,
+   "bytes": 28020,
+   "sha256": "97ea1ae00ad5636dbac696d586f8d173cb452fdf55d34d46f7297e7c6459010f",
+   "members": [
+    {
+     "id": "bld_house_109",
+     "layer": "buildings",
+     "tags": {
+      "layer": "buildings",
+      "subtype": "house",
+      "district": "dis_commoner",
+      "ring": "commoner",
+      "group": "buildings:dis_commoner",
+      "id": "bld_house_109"
+     },
+     "offset_m": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    }
+   ]
+  },
+  {
+   "id": "model:bridgehollow__dyers_walk_local:plazas",
+   "file": "models/plazas.glb",
+   "kind": "mesh",
+   "layer": "plazas",
+   "layers": [
+    "plazas"
+   ],
+   "group": "plazas",
+   "ids": [
+    "sqr_3"
+   ],
+   "pivot": {
+    "x_ft": 175.755,
+    "y_ft": 279.825,
+    "z_ft": 646.497,
+    "blender_m": [
+     53.5701,
+     24.9829,
+     5.0283
+    ],
+    "foundry_px": [
+     3515.1,
+     5596.5
+    ],
+    "rel_z_ft": 16.497
+   },
+   "rotation_deg": 0.0,
+   "scale": 1.0,
+   "size_m": [
+    16.4866,
+    19.6444,
+    0.9893
+   ],
+   "size_ft": [
+    54.09,
+    64.45,
+    3.246
+   ],
+   "tile": {
+    "x": 3515.1,
+    "y": 5596.5,
+    "width": 1081.8,
+    "height": 1289.0,
+    "depth": 64.92,
+    "elevation_ft": 16.497,
+    "rotation": 0
+   },
+   "tris": 39,
+   "bytes": 2500,
+   "sha256": "7c056abd7db4846bb6ddf9598a11e6e00809a352f9d48300f4b592a0943dcc1f",
+   "members": [
+    {
+     "id": "sqr_3",
+     "layer": "plazas",
+     "tags": {
+      "layer": "plazas",
+      "subtype": "square",
+      "district": "dis_commoner",
+      "ring": "commoner",
+      "group": "plazas",
+      "id": "sqr_3"
+     },
+     "offset_m": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    }
+   ]
+  },
+  {
+   "id": "model:bridgehollow__dyers_walk_local:roads",
+   "file": "models/roads.glb",
+   "kind": "mesh",
+   "layer": "roads",
+   "layers": [
+    "roads"
+   ],
+   "group": null,
+   "ids": [
+    "str_008",
+    "str_014",
+    "str_016",
+    "str_018",
+    "str_019",
+    "str_020"
+   ],
+   "pivot": {
+    "x_ft": 174.356,
+    "y_ft": 199.771,
+    "z_ft": 642.42,
+    "blender_m": [
+     53.1439,
+     49.3834,
+     3.7857
+    ],
+    "foundry_px": [
+     3487.13,
+     3995.42
+    ],
+    "rel_z_ft": 12.42
+   },
+   "rotation_deg": 0.0,
+   "scale": 1.0,
+   "size_m": [
+    78.1943,
+    98.2389,
+    5.395
+   ],
+   "size_ft": [
+    256.543,
+    322.306,
+    17.7
+   ],
+   "tile": {
+    "x": 3487.13,
+    "y": 3995.42,
+    "width": 5130.86,
+    "height": 6446.12,
+    "depth": 354.0,
+    "elevation_ft": 12.42,
+    "rotation": 0
+   },
+   "tris": 1264,
+   "bytes": 48012,
+   "sha256": "947e301ef29cc742380001b60bdd63dd6c37db6c3901615a0121609ec088d0ae",
+   "members": [
+    {
+     "id": "str_008",
+     "layer": "roads",
+     "tags": {
+      "layer": "roads",
+      "subtype": "street",
+      "district": "dis_commoner",
+      "ring": "commoner",
+      "group": "roads:street",
+      "id": "str_008"
+     },
+     "offset_m": [
+      -28.4351,
+      42.193,
+      5.1511
+     ]
+    },
+    {
+     "id": "str_014",
+     "layer": "roads",
+     "tags": {
+      "layer": "roads",
+      "subtype": "street",
+      "district": "dis_commoner",
+      "ring": "authority",
+      "group": "roads:street",
+      "id": "str_014"
+     },
+     "offset_m": [
+      25.8019,
+      -34.4616,
+      4.8463
+     ]
+    },
+    {
+     "id": "str_016",
+     "layer": "roads",
+     "tags": {
+      "layer": "roads",
+      "subtype": "street",
+      "district": "dis_commoner",
+      "ring": "commoner",
+      "group": "roads:street",
+      "id": "str_016"
+     },
+     "offset_m": [
+      -5.9459,
+      4.6461,
+      1.8593
+     ]
+    },
+    {
+     "id": "str_018",
+     "layer": "roads",
+     "tags": {
+      "layer": "roads",
+      "subtype": "street",
+      "district": "dis_commoner",
+      "ring": "commoner",
+      "group": "roads:street",
+      "id": "str_018"
+     },
+     "offset_m": [
+      -12.6676,
+      -5.1705,
+      2.3165
+     ]
+    },
+    {
+     "id": "str_019",
+     "layer": "roads",
+     "tags": {
+      "layer": "roads",
+      "subtype": "street",
+      "district": "dis_commoner",
+      "ring": "commoner",
+      "group": "roads:street",
+      "id": "str_019"
+     },
+     "offset_m": [
+      16.059,
+      -17.4102,
+      1.7374
+     ]
+    },
+    {
+     "id": "str_020",
+     "layer": "roads",
+     "tags": {
+      "layer": "roads",
+      "subtype": "lane",
+      "district": "dis_commoner",
+      "ring": "commoner",
+      "group": "roads:lane",
+      "id": "str_020"
+     },
+     "offset_m": [
+      27.7708,
+      -41.1363,
+      0.0
+     ]
+    }
+   ]
+  },
+  {
+   "id": "model:bridgehollow__dyers_walk_local:terrain",
+   "file": "models/terrain.glb",
+   "kind": "mesh",
+   "layer": "terrain",
+   "layers": [
+    "terrain"
+   ],
+   "group": "terrain",
+   "ids": [
+    "terrain_bridgehollow__dyers_walk_local"
+   ],
+   "pivot": {
+    "x_ft": 156.25,
+    "y_ft": 183.75,
+    "z_ft": 639.603,
+    "blender_m": [
+     47.625,
+     54.2666,
+     2.9271
+    ],
+    "foundry_px": [
+     3125.0,
+     3675.0
+    ],
+    "rel_z_ft": 9.603
+   },
+   "rotation_deg": 0.0,
+   "scale": 1.0,
+   "size_m": [
+    95.25,
+    112.014,
+    14.9506
+   ],
+   "size_ft": [
+    312.5,
+    367.5,
+    49.051
+   ],
+   "tile": {
+    "x": 3125.0,
+    "y": 3675.0,
+    "width": 6250.0,
+    "height": 7350.0,
+    "depth": 981.02,
+    "elevation_ft": 9.603,
+    "rotation": 0
+   },
+   "tris": 36750,
+   "bytes": 1039364,
+   "sha256": "2cf6e7a749b5ae457cbee25c71e9cad50718834ce6c20e143a57e27791b1d5b9",
+   "members": [
+    {
+     "id": "terrain_bridgehollow__dyers_walk_local",
+     "layer": "terrain",
+     "tags": {
+      "layer": "terrain",
+      "subtype": "terrain",
+      "district": null,
+      "ring": null,
+      "group": "terrain",
+      "id": "terrain_bridgehollow__dyers_walk_local"
+     },
+     "offset_m": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,46 @@
+{
+ "id": "bld_house_019",
+ "name": "House 19",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    1302.9,
+    649.6
+   ],
+   [
+    1290.0,
+    637.5
+   ],
+   [
+    1281.5,
+    646.6
+   ],
+   [
+    1294.5,
+    658.7
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 655.4,
+ "site_slope": 0.107,
+ "site_relief_ft": 2.3,
+ "region": {
+  "parent_id": "bld_house_019",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

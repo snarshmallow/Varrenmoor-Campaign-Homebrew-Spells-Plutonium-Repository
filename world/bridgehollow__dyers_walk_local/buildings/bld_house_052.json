@@ -1,0 +1,46 @@
+{
+ "id": "bld_house_052",
+ "name": "House 52",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    104.9,
+    88.6
+   ],
+   [
+    95.0,
+    72.2
+   ],
+   [
+    87.2,
+    76.9
+   ],
+   [
+    97.1,
+    93.3
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 657.1,
+ "site_slope": 0.045,
+ "site_relief_ft": 0.9,
+ "region": {
+  "parent_id": "bld_house_052",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 0.0
+ }
+}

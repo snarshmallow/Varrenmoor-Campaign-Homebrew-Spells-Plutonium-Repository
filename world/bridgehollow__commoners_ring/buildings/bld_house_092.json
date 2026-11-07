@@ -1,0 +1,46 @@
+{
+ "id": "bld_house_092",
+ "name": "House 92",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    1283.3,
+    949.4
+   ],
+   [
+    1273.5,
+    935.3
+   ],
+   [
+    1262.5,
+    943.1
+   ],
+   [
+    1272.3,
+    957.1
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 646.1,
+ "site_slope": 0.07,
+ "site_relief_ft": 1.0,
+ "region": {
+  "parent_id": "bld_house_092",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

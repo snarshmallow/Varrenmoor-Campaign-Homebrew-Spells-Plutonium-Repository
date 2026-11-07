@@ -1,0 +1,46 @@
+{
+ "id": "bld_house_041",
+ "name": "House 41",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    805.6,
+    722.7
+   ],
+   [
+    800.1,
+    731.8
+   ],
+   [
+    812.3,
+    739.2
+   ],
+   [
+    817.8,
+    730.1
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 660.0,
+ "site_slope": 0.079,
+ "site_relief_ft": 1.2,
+ "region": {
+  "parent_id": "bld_house_041",
+  "clipped": false,
+  "edge": true,
+  "inside_frac": 0.988,
+  "in_region_frac": 0.0
+ }
+}

@@ -1,0 +1,46 @@
+{
+ "id": "bld_house_069",
+ "name": "House 69",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    893.4,
+    866.5
+   ],
+   [
+    885.1,
+    855.7
+   ],
+   [
+    874.4,
+    863.9
+   ],
+   [
+    882.6,
+    874.7
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 2,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 653.7,
+ "site_slope": 0.068,
+ "site_relief_ft": 1.2,
+ "region": {
+  "parent_id": "bld_house_069",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 0.0
+ }
+}

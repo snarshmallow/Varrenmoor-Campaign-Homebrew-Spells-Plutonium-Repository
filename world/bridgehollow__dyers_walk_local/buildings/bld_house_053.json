@@ -1,0 +1,46 @@
+{
+ "id": "bld_house_053",
+ "name": "House 53",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    134.7,
+    95.3
+   ],
+   [
+    124.9,
+    74.1
+   ],
+   [
+    115.8,
+    78.3
+   ],
+   [
+    125.6,
+    99.5
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 2,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 657.2,
+ "site_slope": 0.046,
+ "site_relief_ft": 1.1,
+ "region": {
+  "parent_id": "bld_house_053",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 0.0
+ }
+}

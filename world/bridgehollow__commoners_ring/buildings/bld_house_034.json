@@ -1,0 +1,46 @@
+{
+ "id": "bld_house_034",
+ "name": "House 34",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    1386.2,
+    685.4
+   ],
+   [
+    1386.6,
+    698.2
+   ],
+   [
+    1398.8,
+    697.9
+   ],
+   [
+    1398.4,
+    685.0
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 2,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 663.5,
+ "site_slope": 0.055,
+ "site_relief_ft": 0.7,
+ "region": {
+  "parent_id": "bld_house_034",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

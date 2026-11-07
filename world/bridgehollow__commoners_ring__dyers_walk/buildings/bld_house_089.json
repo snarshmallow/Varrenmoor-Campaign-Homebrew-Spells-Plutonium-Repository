@@ -1,0 +1,46 @@
+{
+ "id": "bld_house_089",
+ "name": "House 89",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    880.3,
+    932.2
+   ],
+   [
+    884.6,
+    942.9
+   ],
+   [
+    898.1,
+    937.5
+   ],
+   [
+    893.8,
+    926.8
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 649.6,
+ "site_slope": 0.057,
+ "site_relief_ft": 1.0,
+ "region": {
+  "parent_id": "bld_house_089",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 0.0
+ }
+}

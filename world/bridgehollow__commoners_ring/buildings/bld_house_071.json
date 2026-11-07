@@ -1,0 +1,46 @@
+{
+ "id": "bld_house_071",
+ "name": "House 71",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    1357.1,
+    876.9
+   ],
+   [
+    1373.1,
+    868.3
+   ],
+   [
+    1367.0,
+    856.9
+   ],
+   [
+    1350.9,
+    865.4
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 655.3,
+ "site_slope": 0.078,
+ "site_relief_ft": 1.6,
+ "region": {
+  "parent_id": "bld_house_071",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

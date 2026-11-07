@@ -1,0 +1,2808 @@
+{
+ "format": "varrenmoor-world-pack",
+ "schema_version": "1.0",
+ "type": "buildings",
+ "units": "feet",
+ "items": [
+  {
+   "id": "bld_house_041",
+   "name": "House 41",
+   "kind": "house",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow__dyers_walk_local/buildings/bld_house_041.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow__dyers_walk_local:bld_house_041"
+   },
+   "polygon": [
+    [
+     75.6,
+     12.7
+    ],
+    [
+     70.1,
+     21.8
+    ],
+    [
+     82.3,
+     29.2
+    ],
+    [
+     87.8,
+     20.1
+    ]
+   ],
+   "area_ft2": 151.72,
+   "floors": 1,
+   "base_elevation_ft": 660.0,
+   "skirt_depth_ft": 2.2,
+   "wall_height_ft": 10.0,
+   "height_ft": 13.19,
+   "obb": {
+    "center": [
+     78.95,
+     20.95
+    ],
+    "angle_deg": 31.239,
+    "length_ft": 14.286,
+    "width_ft": 10.633
+   },
+   "roof": {
+    "type": "gable",
+    "pitch": 0.6,
+    "ridge_axis_deg": 31.239,
+    "ridge_height_ft": 3.19,
+    "overhang_ft": 1.0,
+    "surface": {
+     "material": "mat_shingle",
+     "tile_ft": 14
+    }
+   },
+   "wall": {
+    "surface": {
+     "material": "mat_plank",
+     "tile_ft": 8
+    }
+   },
+   "site_slope": 0.079,
+   "site_relief_ft": 1.2,
+   "district": "dis_commoner",
+   "interior": {
+    "json": "world/bridgehollow__dyers_walk_local/buildings/bld_house_041.json",
+    "room_ids": [],
+    "door_ids": []
+   },
+   "rooms": [],
+   "doors": [],
+   "derived": [
+    "wall_height_ft",
+    "height_ft",
+    "roof",
+    "wall",
+    "skirt_depth_ft",
+    "obb",
+    "openings"
+   ],
+   "openings": {
+    "doors": [
+     {
+      "id": "bld_house_041_door1",
+      "point": [
+       85.05,
+       24.65
+      ],
+      "width_ft": 3.5,
+      "facing": [
+       0.856,
+       0.517
+      ]
+     }
+    ],
+    "windows": "derived at mesh time (worldpack_detail.py)",
+    "wall_thickness_ft": 0.75,
+    "canon": false
+   },
+   "tags": {
+    "layer": "buildings",
+    "subtype": "house",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "buildings:dis_commoner",
+    "id": "bld_house_041"
+   }
+  },
+  {
+   "id": "bld_house_044",
+   "name": "House 44",
+   "kind": "house",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow__dyers_walk_local/buildings/bld_house_044.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow__dyers_walk_local:bld_house_044"
+   },
+   "polygon": [
+    [
+     73.3,
+     36.0
+    ],
+    [
+     60.6,
+     25.2
+    ],
+    [
+     52.5,
+     34.6
+    ],
+    [
+     65.3,
+     45.5
+    ]
+   ],
+   "area_ft2": 207.83,
+   "floors": 2,
+   "base_elevation_ft": 659.8,
+   "skirt_depth_ft": 2.4,
+   "wall_height_ft": 20.0,
+   "height_ft": 23.726,
+   "obb": {
+    "center": [
+     62.926,
+     35.322
+    ],
+    "angle_deg": 40.416,
+    "length_ft": 16.812,
+    "width_ft": 12.42
+   },
+   "roof": {
+    "type": "gable",
+    "pitch": 0.6,
+    "ridge_axis_deg": 40.416,
+    "ridge_height_ft": 3.726,
+    "overhang_ft": 1.0,
+    "surface": {
+     "material": "mat_shingle",
+     "tile_ft": 14
+    }
+   },
+   "wall": {
+    "surface": {
+     "material": "mat_plank",
+     "tile_ft": 8
+    }
+   },
+   "site_slope": 0.141,
+   "site_relief_ft": 1.4,
+   "district": "dis_commoner",
+   "interior": {
+    "json": "world/bridgehollow__dyers_walk_local/buildings/bld_house_044.json",
+    "room_ids": [],
+    "door_ids": []
+   },
+   "rooms": [],
+   "doors": [],
+   "derived": [
+    "wall_height_ft",
+    "height_ft",
+    "roof",
+    "wall",
+    "skirt_depth_ft",
+    "obb",
+    "openings"
+   ],
+   "openings": {
+    "doors": [
+     {
+      "id": "bld_house_044_door1",
+      "point": [
+       58.9,
+       40.05
+      ],
+      "width_ft": 3.5,
+      "facing": [
+       -0.648,
+       0.761
+      ]
+     }
+    ],
+    "windows": "derived at mesh time (worldpack_detail.py)",
+    "wall_thickness_ft": 0.75,
+    "canon": false
+   },
+   "tags": {
+    "layer": "buildings",
+    "subtype": "house",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "buildings:dis_commoner",
+    "id": "bld_house_044"
+   }
+  },
+  {
+   "id": "bld_house_052",
+   "name": "House 52",
+   "kind": "house",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow__dyers_walk_local/buildings/bld_house_052.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow__dyers_walk_local:bld_house_052"
+   },
+   "polygon": [
+    [
+     104.9,
+     88.6
+    ],
+    [
+     95.0,
+     72.2
+    ],
+    [
+     87.2,
+     76.9
+    ],
+    [
+     97.1,
+     93.3
+    ]
+   ],
+   "area_ft2": 174.45,
+   "floors": 1,
+   "base_elevation_ft": 657.1,
+   "skirt_depth_ft": 1.9,
+   "wall_height_ft": 10.0,
+   "height_ft": 12.732,
+   "obb": {
+    "center": [
+     96.05,
+     82.75
+    ],
+    "angle_deg": 58.882,
+    "length_ft": 19.164,
+    "width_ft": 9.107
+   },
+   "roof": {
+    "type": "gable",
+    "pitch": 0.6,
+    "ridge_axis_deg": 58.882,
+    "ridge_height_ft": 2.732,
+    "overhang_ft": 1.0,
+    "surface": {
+     "material": "mat_shingle",
+     "tile_ft": 14
+    }
+   },
+   "wall": {
+    "surface": {
+     "material": "mat_plank",
+     "tile_ft": 8
+    }
+   },
+   "site_slope": 0.045,
+   "site_relief_ft": 0.9,
+   "district": "dis_commoner",
+   "interior": {
+    "json": "world/bridgehollow__dyers_walk_local/buildings/bld_house_052.json",
+    "room_ids": [],
+    "door_ids": []
+   },
+   "rooms": [],
+   "doors": [],
+   "derived": [
+    "wall_height_ft",
+    "height_ft",
+    "roof",
+    "wall",
+    "skirt_depth_ft",
+    "obb",
+    "openings"
+   ],
+   "openings": {
+    "doors": [
+     {
+      "id": "bld_house_052_door1",
+      "point": [
+       92.15,
+       85.1
+      ],
+      "width_ft": 3.5,
+      "facing": [
+       -0.856,
+       0.517
+      ]
+     }
+    ],
+    "windows": "derived at mesh time (worldpack_detail.py)",
+    "wall_thickness_ft": 0.75,
+    "canon": false
+   },
+   "tags": {
+    "layer": "buildings",
+    "subtype": "house",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "buildings:dis_commoner",
+    "id": "bld_house_052"
+   }
+  },
+  {
+   "id": "bld_house_053",
+   "name": "House 53",
+   "kind": "house",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow__dyers_walk_local/buildings/bld_house_053.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow__dyers_walk_local:bld_house_053"
+   },
+   "polygon": [
+    [
+     134.7,
+     95.3
+    ],
+    [
+     124.9,
+     74.1
+    ],
+    [
+     115.8,
+     78.3
+    ],
+    [
+     125.6,
+     99.5
+    ]
+   ],
+   "area_ft2": 234.08,
+   "floors": 2,
+   "base_elevation_ft": 657.2,
+   "skirt_depth_ft": 2.1,
+   "wall_height_ft": 20.0,
+   "height_ft": 23.007,
+   "obb": {
+    "center": [
+     125.25,
+     86.8
+    ],
+    "angle_deg": 65.191,
+    "length_ft": 23.362,
+    "width_ft": 10.022
+   },
+   "roof": {
+    "type": "gable",
+    "pitch": 0.6,
+    "ridge_axis_deg": 65.191,
+    "ridge_height_ft": 3.007,
+    "overhang_ft": 1.0,
+    "surface": {
+     "material": "mat_shingle",
+     "tile_ft": 14
+    }
+   },
+   "wall": {
+    "surface": {
+     "material": "mat_plank",
+     "tile_ft": 8
+    }
+   },
+   "site_slope": 0.046,
+   "site_relief_ft": 1.1,
+   "district": "dis_commoner",
+   "interior": {
+    "json": "world/bridgehollow__dyers_walk_local/buildings/bld_house_053.json",
+    "room_ids": [],
+    "door_ids": []
+   },
+   "rooms": [],
+   "doors": [],
+   "derived": [
+    "wall_height_ft",
+    "height_ft",
+    "roof",
+    "wall",
+    "skirt_depth_ft",
+    "obb",
+    "openings"
+   ],
+   "openings": {
+    "doors": [
+     {
+      "id": "bld_house_053_door1",
+      "point": [
+       120.35,
+       76.2
+      ],
+      "width_ft": 3.5,
+      "facing": [
+       -0.419,
+       -0.908
+      ]
+     }
+    ],
+    "windows": "derived at mesh time (worldpack_detail.py)",
+    "wall_thickness_ft": 0.75,
+    "canon": false
+   },
+   "tags": {
+    "layer": "buildings",
+    "subtype": "house",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "buildings:dis_commoner",
+    "id": "bld_house_053"
+   }
+  },
+  {
+   "id": "bld_house_054",
+   "name": "House 54",
+   "kind": "house",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow__dyers_walk_local/buildings/bld_house_054.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow__dyers_walk_local:bld_house_054"
+   },
+   "polygon": [
+    [
+     40.1,
+     108.8
+    ],
+    [
+     53.7,
+     109.8
+    ],
+    [
+     55.4,
+     86.0
+    ],
+    [
+     41.8,
+     85.0
+    ]
+   ],
+   "area_ft2": 325.38,
+   "floors": 1,
+   "base_elevation_ft": 657.1,
+   "skirt_depth_ft": 2.8,
+   "wall_height_ft": 10.0,
+   "height_ft": 14.091,
+   "obb": {
+    "center": [
+     47.75,
+     97.4
+    ],
+    "angle_deg": 94.086,
+    "length_ft": 23.889,
+    "width_ft": 13.637
+   },
+   "roof": {
+    "type": "gable",
+    "pitch": 0.6,
+    "ridge_axis_deg": 94.086,
+    "ridge_height_ft": 4.091,
+    "overhang_ft": 1.0,
+    "surface": {
+     "material": "mat_thatch",
+     "tile_ft": 14
+    }
+   },
+   "wall": {
+    "surface": {
+     "material": "mat_plank",
+     "tile_ft": 8
+    }
+   },
+   "site_slope": 0.105,
+   "site_relief_ft": 1.8,
+   "district": "dis_commoner",
+   "interior": {
+    "json": "world/bridgehollow__dyers_walk_local/buildings/bld_house_054.json",
+    "room_ids": [],
+    "door_ids": []
+   },
+   "rooms": [],
+   "doors": [],
+   "derived": [
+    "wall_height_ft",
+    "height_ft",
+    "roof",
+    "wall",
+    "skirt_depth_ft",
+    "obb",
+    "openings"
+   ],
+   "openings": {
+    "doors": [
+     {
+      "id": "bld_house_054_door1",
+      "point": [
+       48.6,
+       85.5
+      ],
+      "width_ft": 3.5,
+      "facing": [
+       0.073,
+       -0.997
+      ]
+     }
+    ],
+    "windows": "derived at mesh time (worldpack_detail.py)",
+    "wall_thickness_ft": 0.75,
+    "canon": false
+   },
+   "tags": {
+    "layer": "buildings",
+    "subtype": "house",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "buildings:dis_commoner",
+    "id": "bld_house_054"
+   }
+  },
+  {
+   "id": "bld_house_056",
+   "name": "House 56",
+   "kind": "house",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow__dyers_walk_local/buildings/bld_house_056.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow__dyers_walk_local:bld_house_056"
+   },
+   "polygon": [
+    [
+     62.8,
+     99.1
+    ],
+    [
+     63.4,
+     112.3
+    ],
+    [
+     72.6,
+     111.9
+    ],
+    [
+     71.9,
+     98.6
+    ]
+   ],
+   "area_ft2": 121.53,
+   "floors": 2,
+   "base_elevation_ft": 656.1,
+   "skirt_depth_ft": 1.7,
+   "wall_height_ft": 20.0,
+   "height_ft": 22.762,
+   "obb": {
+    "center": [
+     67.652,
+     105.492
+    ],
+    "angle_deg": 86.987,
+    "length_ft": 13.318,
+    "width_ft": 9.208
+   },
+   "roof": {
+    "type": "gable",
+    "pitch": 0.6,
+    "ridge_axis_deg": 86.987,
+    "ridge_height_ft": 2.762,
+    "overhang_ft": 1.0,
+    "surface": {
+     "material": "mat_shingle",
+     "tile_ft": 14
+    }
+   },
+   "wall": {
+    "surface": {
+     "material": "mat_plank",
+     "tile_ft": 8
+    }
+   },
+   "site_slope": 0.051,
+   "site_relief_ft": 0.7,
+   "district": "dis_commoner",
+   "interior": {
+    "json": "world/bridgehollow__dyers_walk_local/buildings/bld_house_056.json",
+    "room_ids": [],
+    "door_ids": []
+   },
+   "rooms": [],
+   "doors": [],
+   "derived": [
+    "wall_height_ft",
+    "height_ft",
+    "roof",
+    "wall",
+    "skirt_depth_ft",
+    "obb",
+    "openings"
+   ],
+   "openings": {
+    "doors": [
+     {
+      "id": "bld_house_056_door1",
+      "point": [
+       72.25,
+       105.25
+      ],
+      "width_ft": 3.5,
+      "facing": [
+       0.999,
+       -0.053
+      ]
+     }
+    ],
+    "windows": "derived at mesh time (worldpack_detail.py)",
+    "wall_thickness_ft": 0.75,
+    "canon": false
+   },
+   "tags": {
+    "layer": "buildings",
+    "subtype": "house",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "buildings:dis_commoner",
+    "id": "bld_house_056"
+   }
+  },
+  {
+   "id": "bld_house_057",
+   "name": "House 57",
+   "kind": "house",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow__dyers_walk_local/buildings/bld_house_057.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow__dyers_walk_local:bld_house_057"
+   },
+   "polygon": [
+    [
+     119.9,
+     106.6
+    ],
+    [
+     111.6,
+     95.3
+    ],
+    [
+     101.9,
+     102.4
+    ],
+    [
+     110.2,
+     113.7
+    ]
+   ],
+   "area_ft2": 168.54,
+   "floors": 2,
+   "base_elevation_ft": 656.2,
+   "skirt_depth_ft": 1.9,
+   "wall_height_ft": 20.0,
+   "height_ft": 23.606,
+   "obb": {
+    "center": [
+     110.9,
+     104.5
+    ],
+    "angle_deg": 53.702,
+    "length_ft": 14.041,
+    "width_ft": 12.021
+   },
+   "roof": {
+    "type": "gable",
+    "pitch": 0.6,
+    "ridge_axis_deg": 53.702,
+    "ridge_height_ft": 3.606,
+    "overhang_ft": 1.0,
+    "surface": {
+     "material": "mat_shingle",
+     "tile_ft": 14
+    }
+   },
+   "wall": {
+    "surface": {
+     "material": "mat_plank",
+     "tile_ft": 8
+    }
+   },
+   "site_slope": 0.049,
+   "site_relief_ft": 0.9,
+   "district": "dis_commoner",
+   "interior": {
+    "json": "world/bridgehollow__dyers_walk_local/buildings/bld_house_057.json",
+    "room_ids": [],
+    "door_ids": []
+   },
+   "rooms": [],
+   "doors": [],
+   "derived": [
+    "wall_height_ft",
+    "height_ft",
+    "roof",
+    "wall",
+    "skirt_depth_ft",
+    "obb",
+    "openings"
+   ],
+   "openings": {
+    "doors": [
+     {
+      "id": "bld_house_057_door1",
+      "point": [
+       106.05,
+       108.05
+      ],
+      "width_ft": 3.5,
+      "facing": [
+       -0.806,
+       0.592
+      ]
+     }
+    ],
+    "windows": "derived at mesh time (worldpack_detail.py)",
+    "wall_thickness_ft": 0.75,
+    "canon": false
+   },
+   "tags": {
+    "layer": "buildings",
+    "subtype": "house",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "buildings:dis_commoner",
+    "id": "bld_house_057"
+   }
+  },
+  {
+   "id": "bld_house_062",
+   "name": "House 62",
+   "kind": "house",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow__dyers_walk_local/buildings/bld_house_062.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow__dyers_walk_local:bld_house_062"
+   },
+   "polygon": [
+    [
+     140.7,
+     114.8
+    ],
+    [
+     133.5,
+     104.2
+    ],
+    [
+     113.0,
+     118.2
+    ],
+    [
+     120.3,
+     128.8
+    ]
+   ],
+   "area_ft2": 318.27,
+   "floors": 1,
+   "base_elevation_ft": 655.8,
+   "skirt_depth_ft": 2.3,
+   "wall_height_ft": 10.0,
+   "height_ft": 13.861,
+   "obb": {
+    "center": [
+     126.879,
+     116.514
+    ],
+    "angle_deg": 145.67,
+    "length_ft": 24.824,
+    "width_ft": 12.87
+   },
+   "roof": {
+    "type": "gable",
+    "pitch": 0.6,
+    "ridge_axis_deg": 145.67,
+    "ridge_height_ft": 3.861,
+    "overhang_ft": 1.0,
+    "surface": {
+     "material": "mat_thatch",
+     "tile_ft": 14
+    }
+   },
+   "wall": {
+    "surface": {
+     "material": "mat_plank",
+     "tile_ft": 8
+    }
+   },
+   "site_slope": 0.055,
+   "site_relief_ft": 1.3,
+   "district": "dis_commoner",
+   "interior": {
+    "json": "world/bridgehollow__dyers_walk_local/buildings/bld_house_062.json",
+    "room_ids": [],
+    "door_ids": []
+   },
+   "rooms": [],
+   "doors": [],
+   "derived": [
+    "wall_height_ft",
+    "height_ft",
+    "roof",
+    "wall",
+    "skirt_depth_ft",
+    "obb",
+    "openings"
+   ],
+   "openings": {
+    "doors": [
+     {
+      "id": "bld_house_062_door1",
+      "point": [
+       116.65,
+       123.5
+      ],
+      "width_ft": 3.5,
+      "facing": [
+       -0.824,
+       0.567
+      ]
+     }
+    ],
+    "windows": "derived at mesh time (worldpack_detail.py)",
+    "wall_thickness_ft": 0.75,
+    "canon": false
+   },
+   "tags": {
+    "layer": "buildings",
+    "subtype": "house",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "buildings:dis_commoner",
+    "id": "bld_house_062"
+   }
+  },
+  {
+   "id": "bld_house_063",
+   "name": "House 63",
+   "kind": "house",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow__dyers_walk_local/buildings/bld_house_063.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow__dyers_walk_local:bld_house_063"
+   },
+   "polygon": [
+    [
+     75.7,
+     123.5
+    ],
+    [
+     78.6,
+     135.3
+    ],
+    [
+     88.4,
+     132.9
+    ],
+    [
+     85.5,
+     121.1
+    ]
+   ],
+   "area_ft2": 122.6,
+   "floors": 2,
+   "base_elevation_ft": 655.1,
+   "skirt_depth_ft": 1.7,
+   "wall_height_ft": 20.0,
+   "height_ft": 23.027,
+   "obb": {
+    "center": [
+     82.05,
+     128.2
+    ],
+    "angle_deg": 76.192,
+    "length_ft": 12.159,
+    "width_ft": 10.09
+   },
+   "roof": {
+    "type": "gable",
+    "pitch": 0.6,
+    "ridge_axis_deg": 76.192,
+    "ridge_height_ft": 3.027,
+    "overhang_ft": 1.0,
+    "surface": {
+     "material": "mat_shingle",
+     "tile_ft": 14
+    }
+   },
+   "wall": {
+    "surface": {
+     "material": "mat_plank",
+     "tile_ft": 8
+    }
+   },
+   "site_slope": 0.049,
+   "site_relief_ft": 0.7,
+   "district": "dis_commoner",
+   "interior": {
+    "json": "world/bridgehollow__dyers_walk_local/buildings/bld_house_063.json",
+    "room_ids": [],
+    "door_ids": []
+   },
+   "rooms": [],
+   "doors": [],
+   "derived": [
+    "wall_height_ft",
+    "height_ft",
+    "roof",
+    "wall",
+    "skirt_depth_ft",
+    "obb",
+    "openings"
+   ],
+   "openings": {
+    "doors": [
+     {
+      "id": "bld_house_063_door1",
+      "point": [
+       86.95,
+       127.0
+      ],
+      "width_ft": 3.5,
+      "facing": [
+       0.971,
+       -0.239
+      ]
+     }
+    ],
+    "windows": "derived at mesh time (worldpack_detail.py)",
+    "wall_thickness_ft": 0.75,
+    "canon": false
+   },
+   "tags": {
+    "layer": "buildings",
+    "subtype": "house",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "buildings:dis_commoner",
+    "id": "bld_house_063"
+   }
+  },
+  {
+   "id": "bld_house_064",
+   "name": "House 64",
+   "kind": "house",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow__dyers_walk_local/buildings/bld_house_064.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow__dyers_walk_local:bld_house_064"
+   },
+   "polygon": [
+    [
+     156.0,
+     132.5
+    ],
+    [
+     146.2,
+     117.9
+    ],
+    [
+     125.2,
+     132.0
+    ],
+    [
+     135.1,
+     146.6
+    ]
+   ],
+   "area_ft2": 444.755,
+   "floors": 1,
+   "base_elevation_ft": 655.0,
+   "skirt_depth_ft": 2.6,
+   "wall_height_ft": 10.0,
+   "height_ft": 15.292,
+   "obb": {
+    "center": [
+     140.617,
+     132.272
+    ],
+    "angle_deg": 146.121,
+    "length_ft": 25.294,
+    "width_ft": 17.64
+   },
+   "roof": {
+    "type": "gable",
+    "pitch": 0.6,
+    "ridge_axis_deg": 146.121,
+    "ridge_height_ft": 5.292,
+    "overhang_ft": 1.0,
+    "surface": {
+     "material": "mat_timber_roof",
+     "tile_ft": 14
+    }
+   },
+   "wall": {
+    "surface": {
+     "material": "mat_plank",
+     "tile_ft": 8
+    }
+   },
+   "site_slope": 0.065,
+   "site_relief_ft": 1.6,
+   "district": "dis_commoner",
+   "interior": {
+    "json": "world/bridgehollow__dyers_walk_local/buildings/bld_house_064.json",
+    "room_ids": [],
+    "door_ids": []
+   },
+   "rooms": [],
+   "doors": [],
+   "derived": [
+    "wall_height_ft",
+    "height_ft",
+    "roof",
+    "wall",
+    "skirt_depth_ft",
+    "obb",
+    "openings"
+   ],
+   "openings": {
+    "doors": [
+     {
+      "id": "bld_house_064_door1",
+      "point": [
+       130.15,
+       139.3
+      ],
+      "width_ft": 3.5,
+      "facing": [
+       -0.828,
+       0.561
+      ]
+     }
+    ],
+    "windows": "derived at mesh time (worldpack_detail.py)",
+    "wall_thickness_ft": 0.75,
+    "canon": false
+   },
+   "tags": {
+    "layer": "buildings",
+    "subtype": "house",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "buildings:dis_commoner",
+    "id": "bld_house_064"
+   }
+  },
+  {
+   "id": "bld_house_065",
+   "name": "House 65",
+   "kind": "house",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow__dyers_walk_local/buildings/bld_house_065.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow__dyers_walk_local:bld_house_065"
+   },
+   "polygon": [
+    [
+     41.0,
+     125.9
+    ],
+    [
+     45.7,
+     149.8
+    ],
+    [
+     59.3,
+     147.1
+    ],
+    [
+     54.6,
+     123.2
+    ]
+   ],
+   "area_ft2": 337.73,
+   "floors": 1,
+   "base_elevation_ft": 655.7,
+   "skirt_depth_ft": 2.5,
+   "wall_height_ft": 10.0,
+   "height_ft": 14.16,
+   "obb": {
+    "center": [
+     50.15,
+     136.5
+    ],
+    "angle_deg": 78.875,
+    "length_ft": 24.383,
+    "width_ft": 13.865
+   },
+   "roof": {
+    "type": "gable",
+    "pitch": 0.6,
+    "ridge_axis_deg": 78.875,
+    "ridge_height_ft": 4.16,
+    "overhang_ft": 1.0,
+    "surface": {
+     "material": "mat_shingle",
+     "tile_ft": 14
+    }
+   },
+   "wall": {
+    "surface": {
+     "material": "mat_plank",
+     "tile_ft": 8
+    }
+   },
+   "site_slope": 0.146,
+   "site_relief_ft": 1.5,
+   "district": "dis_commoner",
+   "interior": {
+    "json": "world/bridgehollow__dyers_walk_local/buildings/bld_house_065.json",
+    "room_ids": [],
+    "door_ids": []
+   },
+   "rooms": [],
+   "doors": [],
+   "derived": [
+    "wall_height_ft",
+    "height_ft",
+    "roof",
+    "wall",
+    "skirt_depth_ft",
+    "obb",
+    "openings"
+   ],
+   "openings": {
+    "doors": [
+     {
+      "id": "bld_house_065_door1",
+      "point": [
+       56.95,
+       135.15
+      ],
+      "width_ft": 3.5,
+      "facing": [
+       0.981,
+       -0.193
+      ]
+     }
+    ],
+    "windows": "derived at mesh time (worldpack_detail.py)",
+    "wall_thickness_ft": 0.75,
+    "canon": false
+   },
+   "tags": {
+    "layer": "buildings",
+    "subtype": "house",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "buildings:dis_commoner",
+    "id": "bld_house_065"
+   }
+  },
+  {
+   "id": "bld_house_066",
+   "name": "House 66",
+   "kind": "house",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow__dyers_walk_local/buildings/bld_house_066.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow__dyers_walk_local:bld_house_066"
+   },
+   "polygon": [
+    [
+     165.3,
+     134.8
+    ],
+    [
+     173.6,
+     147.4
+    ],
+    [
+     181.5,
+     142.2
+    ],
+    [
+     173.2,
+     129.6
+    ]
+   ],
+   "area_ft2": 142.7,
+   "floors": 2,
+   "base_elevation_ft": 654.7,
+   "skirt_depth_ft": 1.9,
+   "wall_height_ft": 20.0,
+   "height_ft": 22.837,
+   "obb": {
+    "center": [
+     173.4,
+     138.5
+    ],
+    "angle_deg": 56.626,
+    "length_ft": 15.091,
+    "width_ft": 9.458
+   },
+   "roof": {
+    "type": "gable",
+    "pitch": 0.6,
+    "ridge_axis_deg": 56.626,
+    "ridge_height_ft": 2.837,
+    "overhang_ft": 1.0,
+    "surface": {
+     "material": "mat_shingle",
+     "tile_ft": 14
+    }
+   },
+   "wall": {
+    "surface": {
+     "material": "mat_plank",
+     "tile_ft": 8
+    }
+   },
+   "site_slope": 0.054,
+   "site_relief_ft": 0.9,
+   "district": "dis_commoner",
+   "interior": {
+    "json": "world/bridgehollow__dyers_walk_local/buildings/bld_house_066.json",
+    "room_ids": [],
+    "door_ids": []
+   },
+   "rooms": [],
+   "doors": [],
+   "derived": [
+    "wall_height_ft",
+    "height_ft",
+    "roof",
+    "wall",
+    "skirt_depth_ft",
+    "obb",
+    "openings"
+   ],
+   "openings": {
+    "doors": [
+     {
+      "id": "bld_house_066_door1",
+      "point": [
+       169.45,
+       141.1
+      ],
+      "width_ft": 3.5,
+      "facing": [
+       -0.835,
+       0.55
+      ]
+     }
+    ],
+    "windows": "derived at mesh time (worldpack_detail.py)",
+    "wall_thickness_ft": 0.75,
+    "canon": false
+   },
+   "tags": {
+    "layer": "buildings",
+    "subtype": "house",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "buildings:dis_commoner",
+    "id": "bld_house_066"
+   }
+  },
+  {
+   "id": "bld_house_069",
+   "name": "House 69",
+   "kind": "house",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow__dyers_walk_local/buildings/bld_house_069.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow__dyers_walk_local:bld_house_069"
+   },
+   "polygon": [
+    [
+     163.4,
+     156.5
+    ],
+    [
+     155.1,
+     145.7
+    ],
+    [
+     144.4,
+     153.9
+    ],
+    [
+     152.6,
+     164.7
+    ]
+   ],
+   "area_ft2": 183.75,
+   "floors": 2,
+   "base_elevation_ft": 653.7,
+   "skirt_depth_ft": 2.2,
+   "wall_height_ft": 20.0,
+   "height_ft": 24.068,
+   "obb": {
+    "center": [
+     153.882,
+     155.176
+    ],
+    "angle_deg": 52.792,
+    "length_ft": 13.621,
+    "width_ft": 13.56
+   },
+   "roof": {
+    "type": "gable",
+    "pitch": 0.6,
+    "ridge_axis_deg": 52.792,
+    "ridge_height_ft": 4.068,
+    "overhang_ft": 1.0,
+    "surface": {
+     "material": "mat_shingle",
+     "tile_ft": 14
+    }
+   },
+   "wall": {
+    "surface": {
+     "material": "mat_plank",
+     "tile_ft": 8
+    }
+   },
+   "site_slope": 0.068,
+   "site_relief_ft": 1.2,
+   "district": "dis_commoner",
+   "interior": {
+    "json": "world/bridgehollow__dyers_walk_local/buildings/bld_house_069.json",
+    "room_ids": [],
+    "door_ids": []
+   },
+   "rooms": [],
+   "doors": [],
+   "derived": [
+    "wall_height_ft",
+    "height_ft",
+    "roof",
+    "wall",
+    "skirt_depth_ft",
+    "obb",
+    "openings"
+   ],
+   "openings": {
+    "doors": [
+     {
+      "id": "bld_house_069_door1",
+      "point": [
+       148.5,
+       159.3
+      ],
+      "width_ft": 3.5,
+      "facing": [
+       -0.796,
+       0.605
+      ]
+     }
+    ],
+    "windows": "derived at mesh time (worldpack_detail.py)",
+    "wall_thickness_ft": 0.75,
+    "canon": false
+   },
+   "tags": {
+    "layer": "buildings",
+    "subtype": "house",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "buildings:dis_commoner",
+    "id": "bld_house_069"
+   }
+  },
+  {
+   "id": "bld_house_072",
+   "name": "House 72",
+   "kind": "house",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow__dyers_walk_local/buildings/bld_house_072.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow__dyers_walk_local:bld_house_072"
+   },
+   "polygon": [
+    [
+     94.4,
+     153.9
+    ],
+    [
+     100.0,
+     170.0
+    ],
+    [
+     111.7,
+     165.9
+    ],
+    [
+     106.1,
+     149.8
+    ]
+   ],
+   "area_ft2": 211.33,
+   "floors": 2,
+   "base_elevation_ft": 653.3,
+   "skirt_depth_ft": 2.1,
+   "wall_height_ft": 20.0,
+   "height_ft": 23.719,
+   "obb": {
+    "center": [
+     103.05,
+     159.9
+    ],
+    "angle_deg": 70.821,
+    "length_ft": 17.075,
+    "width_ft": 12.398
+   },
+   "roof": {
+    "type": "gable",
+    "pitch": 0.6,
+    "ridge_axis_deg": 70.821,
+    "ridge_height_ft": 3.719,
+    "overhang_ft": 1.0,
+    "surface": {
+     "material": "mat_thatch",
+     "tile_ft": 14
+    }
+   },
+   "wall": {
+    "surface": {
+     "material": "mat_plank",
+     "tile_ft": 8
+    }
+   },
+   "site_slope": 0.065,
+   "site_relief_ft": 1.1,
+   "district": "dis_commoner",
+   "interior": {
+    "json": "world/bridgehollow__dyers_walk_local/buildings/bld_house_072.json",
+    "room_ids": [],
+    "door_ids": []
+   },
+   "rooms": [],
+   "doors": [],
+   "derived": [
+    "wall_height_ft",
+    "height_ft",
+    "roof",
+    "wall",
+    "skirt_depth_ft",
+    "obb",
+    "openings"
+   ],
+   "openings": {
+    "doors": [
+     {
+      "id": "bld_house_072_door1",
+      "point": [
+       108.9,
+       157.85
+      ],
+      "width_ft": 3.5,
+      "facing": [
+       0.944,
+       -0.329
+      ]
+     }
+    ],
+    "windows": "derived at mesh time (worldpack_detail.py)",
+    "wall_thickness_ft": 0.75,
+    "canon": false
+   },
+   "tags": {
+    "layer": "buildings",
+    "subtype": "house",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "buildings:dis_commoner",
+    "id": "bld_house_072"
+   }
+  },
+  {
+   "id": "bld_house_078",
+   "name": "House 78",
+   "kind": "house",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow__dyers_walk_local/buildings/bld_house_078.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow__dyers_walk_local:bld_house_078"
+   },
+   "polygon": [
+    [
+     188.7,
+     176.4
+    ],
+    [
+     173.9,
+     160.3
+    ],
+    [
+     163.2,
+     170.1
+    ],
+    [
+     178.0,
+     186.2
+    ]
+   ],
+   "area_ft2": 317.31,
+   "floors": 1,
+   "base_elevation_ft": 652.8,
+   "skirt_depth_ft": 2.4,
+   "wall_height_ft": 10.0,
+   "height_ft": 14.353,
+   "obb": {
+    "center": [
+     175.95,
+     173.25
+    ],
+    "angle_deg": 47.409,
+    "length_ft": 21.895,
+    "width_ft": 14.51
+   },
+   "roof": {
+    "type": "gable",
+    "pitch": 0.6,
+    "ridge_axis_deg": 47.409,
+    "ridge_height_ft": 4.353,
+    "overhang_ft": 1.0,
+    "surface": {
+     "material": "mat_thatch",
+     "tile_ft": 14
+    }
+   },
+   "wall": {
+    "surface": {
+     "material": "mat_plank",
+     "tile_ft": 8
+    }
+   },
+   "site_slope": 0.066,
+   "site_relief_ft": 1.4,
+   "district": "dis_commoner",
+   "interior": {
+    "json": "world/bridgehollow__dyers_walk_local/buildings/bld_house_078.json",
+    "room_ids": [],
+    "door_ids": []
+   },
+   "rooms": [],
+   "doors": [],
+   "derived": [
+    "wall_height_ft",
+    "height_ft",
+    "roof",
+    "wall",
+    "skirt_depth_ft",
+    "obb",
+    "openings"
+   ],
+   "openings": {
+    "doors": [
+     {
+      "id": "bld_house_078_door1",
+      "point": [
+       170.6,
+       178.15
+      ],
+      "width_ft": 3.5,
+      "facing": [
+       -0.736,
+       0.677
+      ]
+     }
+    ],
+    "windows": "derived at mesh time (worldpack_detail.py)",
+    "wall_thickness_ft": 0.75,
+    "canon": false
+   },
+   "tags": {
+    "layer": "buildings",
+    "subtype": "house",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "buildings:dis_commoner",
+    "id": "bld_house_078"
+   }
+  },
+  {
+   "id": "bld_house_082",
+   "name": "House 82",
+   "kind": "house",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow__dyers_walk_local/buildings/bld_house_082.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow__dyers_walk_local:bld_house_082"
+   },
+   "polygon": [
+    [
+     205.1,
+     182.2
+    ],
+    [
+     197.9,
+     174.8
+    ],
+    [
+     182.8,
+     189.6
+    ],
+    [
+     189.9,
+     196.9
+    ]
+   ],
+   "area_ft2": 216.815,
+   "floors": 1,
+   "base_elevation_ft": 652.1,
+   "skirt_depth_ft": 2.1,
+   "wall_height_ft": 10.0,
+   "height_ft": 13.097,
+   "obb": {
+    "center": [
+     193.922,
+     185.873
+    ],
+    "angle_deg": 135.785,
+    "length_ft": 21.145,
+    "width_ft": 10.325
+   },
+   "roof": {
+    "type": "gable",
+    "pitch": 0.6,
+    "ridge_axis_deg": 135.785,
+    "ridge_height_ft": 3.097,
+    "overhang_ft": 1.0,
+    "surface": {
+     "material": "mat_shingle",
+     "tile_ft": 14
+    }
+   },
+   "wall": {
+    "surface": {
+     "material": "mat_plank",
+     "tile_ft": 8
+    }
+   },
+   "site_slope": 0.053,
+   "site_relief_ft": 1.1,
+   "district": "dis_commoner",
+   "interior": {
+    "json": "world/bridgehollow__dyers_walk_local/buildings/bld_house_082.json",
+    "room_ids": [],
+    "door_ids": []
+   },
+   "rooms": [],
+   "doors": [],
+   "derived": [
+    "wall_height_ft",
+    "height_ft",
+    "roof",
+    "wall",
+    "skirt_depth_ft",
+    "obb",
+    "openings"
+   ],
+   "openings": {
+    "doors": [
+     {
+      "id": "bld_house_082_door1",
+      "point": [
+       186.35,
+       193.25
+      ],
+      "width_ft": 3.5,
+      "facing": [
+       -0.717,
+       0.697
+      ]
+     }
+    ],
+    "windows": "derived at mesh time (worldpack_detail.py)",
+    "wall_thickness_ft": 0.75,
+    "canon": false
+   },
+   "tags": {
+    "layer": "buildings",
+    "subtype": "house",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "buildings:dis_commoner",
+    "id": "bld_house_082"
+   }
+  },
+  {
+   "id": "bld_house_084",
+   "name": "House 84",
+   "kind": "house",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow__dyers_walk_local/buildings/bld_house_084.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow__dyers_walk_local:bld_house_084"
+   },
+   "polygon": [
+    [
+     89.9,
+     188.2
+    ],
+    [
+     92.9,
+     206.3
+    ],
+    [
+     110.0,
+     203.4
+    ],
+    [
+     107.0,
+     185.3
+    ]
+   ],
+   "area_ft2": 318.21,
+   "floors": 1,
+   "base_elevation_ft": 651.3,
+   "skirt_depth_ft": 2.6,
+   "wall_height_ft": 10.0,
+   "height_ft": 15.203,
+   "obb": {
+    "center": [
+     99.95,
+     195.8
+    ],
+    "angle_deg": 80.589,
+    "length_ft": 18.412,
+    "width_ft": 17.344
+   },
+   "roof": {
+    "type": "gable",
+    "pitch": 0.6,
+    "ridge_axis_deg": 80.589,
+    "ridge_height_ft": 5.203,
+    "overhang_ft": 1.0,
+    "surface": {
+     "material": "mat_timber_roof",
+     "tile_ft": 14
+    }
+   },
+   "wall": {
+    "surface": {
+     "material": "mat_plank",
+     "tile_ft": 8
+    }
+   },
+   "site_slope": 0.08,
+   "site_relief_ft": 1.6,
+   "district": "dis_commoner",
+   "interior": {
+    "json": "world/bridgehollow__dyers_walk_local/buildings/bld_house_084.json",
+    "room_ids": [],
+    "door_ids": []
+   },
+   "rooms": [],
+   "doors": [],
+   "derived": [
+    "wall_height_ft",
+    "height_ft",
+    "roof",
+    "wall",
+    "skirt_depth_ft",
+    "obb",
+    "openings"
+   ],
+   "openings": {
+    "doors": [
+     {
+      "id": "bld_house_084_door1",
+      "point": [
+       108.5,
+       194.35
+      ],
+      "width_ft": 3.5,
+      "facing": [
+       0.987,
+       -0.164
+      ]
+     }
+    ],
+    "windows": "derived at mesh time (worldpack_detail.py)",
+    "wall_thickness_ft": 0.75,
+    "canon": false
+   },
+   "tags": {
+    "layer": "buildings",
+    "subtype": "house",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "buildings:dis_commoner",
+    "id": "bld_house_084"
+   }
+  },
+  {
+   "id": "bld_house_086",
+   "name": "House 86",
+   "kind": "house",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow__dyers_walk_local/buildings/bld_house_086.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow__dyers_walk_local:bld_house_086"
+   },
+   "polygon": [
+    [
+     151.7,
+     213.0
+    ],
+    [
+     159.9,
+     205.1
+    ],
+    [
+     146.6,
+     191.1
+    ],
+    [
+     138.4,
+     199.0
+    ]
+   ],
+   "area_ft2": 219.87,
+   "floors": 1,
+   "base_elevation_ft": 650.5,
+   "skirt_depth_ft": 2.2,
+   "wall_height_ft": 10.0,
+   "height_ft": 13.416,
+   "obb": {
+    "center": [
+     149.15,
+     202.05
+    ],
+    "angle_deg": 46.469,
+    "length_ft": 19.39,
+    "width_ft": 11.386
+   },
+   "roof": {
+    "type": "gable",
+    "pitch": 0.6,
+    "ridge_axis_deg": 46.469,
+    "ridge_height_ft": 3.416,
+    "overhang_ft": 1.0,
+    "surface": {
+     "material": "mat_shingle",
+     "tile_ft": 14
+    }
+   },
+   "wall": {
+    "surface": {
+     "material": "mat_plank",
+     "tile_ft": 8
+    }
+   },
+   "site_slope": 0.073,
+   "site_relief_ft": 1.2,
+   "district": "dis_commoner",
+   "interior": {
+    "json": "world/bridgehollow__dyers_walk_local/buildings/bld_house_086.json",
+    "room_ids": [],
+    "door_ids": []
+   },
+   "rooms": [],
+   "doors": [],
+   "derived": [
+    "wall_height_ft",
+    "height_ft",
+    "roof",
+    "wall",
+    "skirt_depth_ft",
+    "obb",
+    "openings"
+   ],
+   "openings": {
+    "doors": [
+     {
+      "id": "bld_house_086_door1",
+      "point": [
+       153.25,
+       198.1
+      ],
+      "width_ft": 3.5,
+      "facing": [
+       0.725,
+       -0.689
+      ]
+     }
+    ],
+    "windows": "derived at mesh time (worldpack_detail.py)",
+    "wall_thickness_ft": 0.75,
+    "canon": false
+   },
+   "tags": {
+    "layer": "buildings",
+    "subtype": "house",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "buildings:dis_commoner",
+    "id": "bld_house_086"
+   }
+  },
+  {
+   "id": "bld_house_087",
+   "name": "House 87",
+   "kind": "house",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow__dyers_walk_local/buildings/bld_house_087.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow__dyers_walk_local:bld_house_087"
+   },
+   "polygon": [
+    [
+     225.0,
+     211.9
+    ],
+    [
+     208.1,
+     193.6
+    ],
+    [
+     194.3,
+     206.3
+    ],
+    [
+     211.2,
+     224.6
+    ]
+   ],
+   "area_ft2": 467.17,
+   "floors": 1,
+   "base_elevation_ft": 651.0,
+   "skirt_depth_ft": 2.4,
+   "wall_height_ft": 10.0,
+   "height_ft": 15.626,
+   "obb": {
+    "center": [
+     209.65,
+     209.1
+    ],
+    "angle_deg": 47.278,
+    "length_ft": 24.942,
+    "width_ft": 18.754
+   },
+   "roof": {
+    "type": "gable",
+    "pitch": 0.6,
+    "ridge_axis_deg": 47.278,
+    "ridge_height_ft": 5.626,
+    "overhang_ft": 1.0,
+    "surface": {
+     "material": "mat_shingle",
+     "tile_ft": 14
+    }
+   },
+   "wall": {
+    "surface": {
+     "material": "mat_plank",
+     "tile_ft": 8
+    }
+   },
+   "site_slope": 0.049,
+   "site_relief_ft": 1.4,
+   "district": "dis_commoner",
+   "interior": {
+    "json": "world/bridgehollow__dyers_walk_local/buildings/bld_house_087.json",
+    "room_ids": [],
+    "door_ids": []
+   },
+   "rooms": [],
+   "doors": [],
+   "derived": [
+    "wall_height_ft",
+    "height_ft",
+    "roof",
+    "wall",
+    "skirt_depth_ft",
+    "obb",
+    "openings"
+   ],
+   "openings": {
+    "doors": [
+     {
+      "id": "bld_house_087_door1",
+      "point": [
+       202.75,
+       215.45
+      ],
+      "width_ft": 3.5,
+      "facing": [
+       -0.735,
+       0.678
+      ]
+     }
+    ],
+    "windows": "derived at mesh time (worldpack_detail.py)",
+    "wall_thickness_ft": 0.75,
+    "canon": false
+   },
+   "tags": {
+    "layer": "buildings",
+    "subtype": "house",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "buildings:dis_commoner",
+    "id": "bld_house_087"
+   }
+  },
+  {
+   "id": "bld_house_089",
+   "name": "House 89",
+   "kind": "house",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow__dyers_walk_local/buildings/bld_house_089.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow__dyers_walk_local:bld_house_089"
+   },
+   "polygon": [
+    [
+     150.3,
+     222.2
+    ],
+    [
+     154.6,
+     232.9
+    ],
+    [
+     168.1,
+     227.5
+    ],
+    [
+     163.8,
+     216.8
+    ]
+   ],
+   "area_ft2": 167.67,
+   "floors": 1,
+   "base_elevation_ft": 649.6,
+   "skirt_depth_ft": 2.0,
+   "wall_height_ft": 10.0,
+   "height_ft": 13.46,
+   "obb": {
+    "center": [
+     159.2,
+     224.85
+    ],
+    "angle_deg": 158.199,
+    "length_ft": 14.559,
+    "width_ft": 11.532
+   },
+   "roof": {
+    "type": "gable",
+    "pitch": 0.6,
+    "ridge_axis_deg": 158.199,
+    "ridge_height_ft": 3.46,
+    "overhang_ft": 1.0,
+    "surface": {
+     "material": "mat_shingle",
+     "tile_ft": 14
+    }
+   },
+   "wall": {
+    "surface": {
+     "material": "mat_plank",
+     "tile_ft": 8
+    }
+   },
+   "site_slope": 0.057,
+   "site_relief_ft": 1.0,
+   "district": "dis_commoner",
+   "interior": {
+    "json": "world/bridgehollow__dyers_walk_local/buildings/bld_house_089.json",
+    "room_ids": [],
+    "door_ids": []
+   },
+   "rooms": [],
+   "doors": [],
+   "derived": [
+    "wall_height_ft",
+    "height_ft",
+    "roof",
+    "wall",
+    "skirt_depth_ft",
+    "obb",
+    "openings"
+   ],
+   "openings": {
+    "doors": [
+     {
+      "id": "bld_house_089_door1",
+      "point": [
+       152.45,
+       227.55
+      ],
+      "width_ft": 3.5,
+      "facing": [
+       -0.928,
+       0.373
+      ]
+     }
+    ],
+    "windows": "derived at mesh time (worldpack_detail.py)",
+    "wall_thickness_ft": 0.75,
+    "canon": false
+   },
+   "tags": {
+    "layer": "buildings",
+    "subtype": "house",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "buildings:dis_commoner",
+    "id": "bld_house_089"
+   }
+  },
+  {
+   "id": "bld_house_090",
+   "name": "House 90",
+   "kind": "house",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow__dyers_walk_local/buildings/bld_house_090.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow__dyers_walk_local:bld_house_090"
+   },
+   "polygon": [
+    [
+     240.1,
+     223.9
+    ],
+    [
+     229.3,
+     231.9
+    ],
+    [
+     234.6,
+     239.1
+    ],
+    [
+     245.5,
+     231.0
+    ]
+   ],
+   "area_ft2": 120.645,
+   "floors": 2,
+   "base_elevation_ft": 649.6,
+   "skirt_depth_ft": 1.5,
+   "wall_height_ft": 20.0,
+   "height_ft": 22.682,
+   "obb": {
+    "center": [
+     237.384,
+     231.462
+    ],
+    "angle_deg": 143.383,
+    "length_ft": 13.58,
+    "width_ft": 8.94
+   },
+   "roof": {
+    "type": "gable",
+    "pitch": 0.6,
+    "ridge_axis_deg": 143.383,
+    "ridge_height_ft": 2.682,
+    "overhang_ft": 1.0,
+    "surface": {
+     "material": "mat_timber_roof",
+     "tile_ft": 14
+    }
+   },
+   "wall": {
+    "surface": {
+     "material": "mat_plank",
+     "tile_ft": 8
+    }
+   },
+   "site_slope": 0.053,
+   "site_relief_ft": 0.5,
+   "district": "dis_commoner",
+   "interior": {
+    "json": "world/bridgehollow__dyers_walk_local/buildings/bld_house_090.json",
+    "room_ids": [],
+    "door_ids": []
+   },
+   "rooms": [],
+   "doors": [],
+   "derived": [
+    "wall_height_ft",
+    "height_ft",
+    "roof",
+    "wall",
+    "skirt_depth_ft",
+    "obb",
+    "openings"
+   ],
+   "openings": {
+    "doors": [
+     {
+      "id": "bld_house_090_door1",
+      "point": [
+       240.05,
+       235.05
+      ],
+      "width_ft": 3.5,
+      "facing": [
+       0.596,
+       0.803
+      ]
+     }
+    ],
+    "windows": "derived at mesh time (worldpack_detail.py)",
+    "wall_thickness_ft": 0.75,
+    "canon": false
+   },
+   "tags": {
+    "layer": "buildings",
+    "subtype": "house",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "buildings:dis_commoner",
+    "id": "bld_house_090"
+   }
+  },
+  {
+   "id": "bld_house_094",
+   "name": "House 94",
+   "kind": "house",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow__dyers_walk_local/buildings/bld_house_094.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow__dyers_walk_local:bld_house_094"
+   },
+   "polygon": [
+    [
+     170.6,
+     236.4
+    ],
+    [
+     188.0,
+     258.7
+    ],
+    [
+     197.3,
+     251.4
+    ],
+    [
+     179.8,
+     229.1
+    ]
+   ],
+   "area_ft2": 333.66,
+   "floors": 1,
+   "base_elevation_ft": 649.3,
+   "skirt_depth_ft": 2.4,
+   "wall_height_ft": 10.0,
+   "height_ft": 13.547,
+   "obb": {
+    "center": [
+     183.9,
+     243.9
+    ],
+    "angle_deg": 51.877,
+    "length_ft": 28.348,
+    "width_ft": 11.823
+   },
+   "roof": {
+    "type": "gable",
+    "pitch": 0.6,
+    "ridge_axis_deg": 51.877,
+    "ridge_height_ft": 3.547,
+    "overhang_ft": 1.0,
+    "surface": {
+     "material": "mat_thatch",
+     "tile_ft": 14
+    }
+   },
+   "wall": {
+    "surface": {
+     "material": "mat_plank",
+     "tile_ft": 8
+    }
+   },
+   "site_slope": 0.057,
+   "site_relief_ft": 1.4,
+   "district": "dis_commoner",
+   "interior": {
+    "json": "world/bridgehollow__dyers_walk_local/buildings/bld_house_094.json",
+    "room_ids": [],
+    "door_ids": []
+   },
+   "rooms": [],
+   "doors": [],
+   "derived": [
+    "wall_height_ft",
+    "height_ft",
+    "roof",
+    "wall",
+    "skirt_depth_ft",
+    "obb",
+    "openings"
+   ],
+   "openings": {
+    "doors": [
+     {
+      "id": "bld_house_094_door1",
+      "point": [
+       188.55,
+       240.25
+      ],
+      "width_ft": 3.5,
+      "facing": [
+       0.787,
+       -0.617
+      ]
+     }
+    ],
+    "windows": "derived at mesh time (worldpack_detail.py)",
+    "wall_thickness_ft": 0.75,
+    "canon": false
+   },
+   "tags": {
+    "layer": "buildings",
+    "subtype": "house",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "buildings:dis_commoner",
+    "id": "bld_house_094"
+   }
+  },
+  {
+   "id": "bld_house_099",
+   "name": "House 99",
+   "kind": "house",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow__dyers_walk_local/buildings/bld_house_099.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow__dyers_walk_local:bld_house_099"
+   },
+   "polygon": [
+    [
+     256.1,
+     266.5
+    ],
+    [
+     242.0,
+     276.4
+    ],
+    [
+     249.9,
+     287.6
+    ],
+    [
+     263.9,
+     277.7
+    ]
+   ],
+   "area_ft2": 235.075,
+   "floors": 1,
+   "base_elevation_ft": 647.1,
+   "skirt_depth_ft": 1.9,
+   "wall_height_ft": 10.0,
+   "height_ft": 14.112,
+   "obb": {
+    "center": [
+     252.989,
+     277.035
+    ],
+    "angle_deg": 144.802,
+    "length_ft": 17.228,
+    "width_ft": 13.706
+   },
+   "roof": {
+    "type": "gable",
+    "pitch": 0.6,
+    "ridge_axis_deg": 144.802,
+    "ridge_height_ft": 4.112,
+    "overhang_ft": 1.0,
+    "surface": {
+     "material": "mat_shingle",
+     "tile_ft": 14
+    }
+   },
+   "wall": {
+    "surface": {
+     "material": "mat_plank",
+     "tile_ft": 8
+    }
+   },
+   "site_slope": 0.063,
+   "site_relief_ft": 0.9,
+   "district": "dis_commoner",
+   "interior": {
+    "json": "world/bridgehollow__dyers_walk_local/buildings/bld_house_099.json",
+    "room_ids": [],
+    "door_ids": []
+   },
+   "rooms": [],
+   "doors": [],
+   "derived": [
+    "wall_height_ft",
+    "height_ft",
+    "roof",
+    "wall",
+    "skirt_depth_ft",
+    "obb",
+    "openings"
+   ],
+   "openings": {
+    "doors": [
+     {
+      "id": "bld_house_099_door1",
+      "point": [
+       256.9,
+       282.65
+      ],
+      "width_ft": 3.5,
+      "facing": [
+       0.577,
+       0.816
+      ]
+     }
+    ],
+    "windows": "derived at mesh time (worldpack_detail.py)",
+    "wall_thickness_ft": 0.75,
+    "canon": false
+   },
+   "tags": {
+    "layer": "buildings",
+    "subtype": "house",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "buildings:dis_commoner",
+    "id": "bld_house_099"
+   }
+  },
+  {
+   "id": "bld_house_107",
+   "name": "House 107",
+   "kind": "house",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow__dyers_walk_local/buildings/bld_house_107.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow__dyers_walk_local:bld_house_107"
+   },
+   "polygon": [
+    [
+     210.7,
+     309.2
+    ],
+    [
+     230.7,
+     322.3
+    ],
+    [
+     238.8,
+     310.0
+    ],
+    [
+     218.8,
+     296.8
+    ]
+   ],
+   "area_ft2": 353.515,
+   "floors": 1,
+   "base_elevation_ft": 646.6,
+   "skirt_depth_ft": 2.5,
+   "wall_height_ft": 10.0,
+   "height_ft": 14.443,
+   "obb": {
+    "center": [
+     224.734,
+     309.575
+    ],
+    "angle_deg": 33.366,
+    "length_ft": 23.963,
+    "width_ft": 14.811
+   },
+   "roof": {
+    "type": "gable",
+    "pitch": 0.6,
+    "ridge_axis_deg": 33.366,
+    "ridge_height_ft": 4.443,
+    "overhang_ft": 1.0,
+    "surface": {
+     "material": "mat_thatch",
+     "tile_ft": 14
+    }
+   },
+   "wall": {
+    "surface": {
+     "material": "mat_plank",
+     "tile_ft": 8
+    }
+   },
+   "site_slope": 0.066,
+   "site_relief_ft": 1.5,
+   "district": "dis_commoner",
+   "interior": {
+    "json": "world/bridgehollow__dyers_walk_local/buildings/bld_house_107.json",
+    "room_ids": [],
+    "door_ids": []
+   },
+   "rooms": [],
+   "doors": [],
+   "derived": [
+    "wall_height_ft",
+    "height_ft",
+    "roof",
+    "wall",
+    "skirt_depth_ft",
+    "obb",
+    "openings"
+   ],
+   "openings": {
+    "doors": [
+     {
+      "id": "bld_house_107_door1",
+      "point": [
+       228.8,
+       303.4
+      ],
+      "width_ft": 3.5,
+      "facing": [
+       0.551,
+       -0.835
+      ]
+     }
+    ],
+    "windows": "derived at mesh time (worldpack_detail.py)",
+    "wall_thickness_ft": 0.75,
+    "canon": false
+   },
+   "tags": {
+    "layer": "buildings",
+    "subtype": "house",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "buildings:dis_commoner",
+    "id": "bld_house_107"
+   }
+  },
+  {
+   "id": "bld_house_109",
+   "name": "House 109",
+   "kind": "house",
+   "status": "proposed",
+   "notes": "",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "source": "world/bridgehollow__dyers_walk_local/buildings/bld_house_109.json",
+   "foundry": {
+    "pipelineId": "world:bridgehollow__dyers_walk_local:bld_house_109"
+   },
+   "polygon": [
+    [
+     295.8,
+     313.5
+    ],
+    [
+     284.2,
+     305.3
+    ],
+    [
+     272.9,
+     321.0
+    ],
+    [
+     284.5,
+     329.3
+    ]
+   ],
+   "area_ft2": 275.925,
+   "floors": 1,
+   "base_elevation_ft": 643.5,
+   "skirt_depth_ft": 2.4,
+   "wall_height_ft": 10.0,
+   "height_ft": 14.279,
+   "obb": {
+    "center": [
+     284.349,
+     317.251
+    ],
+    "angle_deg": 125.572,
+    "length_ft": 19.425,
+    "width_ft": 14.264
+   },
+   "roof": {
+    "type": "gable",
+    "pitch": 0.6,
+    "ridge_axis_deg": 125.572,
+    "ridge_height_ft": 4.279,
+    "overhang_ft": 1.0,
+    "surface": {
+     "material": "mat_thatch",
+     "tile_ft": 14
+    }
+   },
+   "wall": {
+    "surface": {
+     "material": "mat_plank",
+     "tile_ft": 8
+    }
+   },
+   "site_slope": 0.087,
+   "site_relief_ft": 1.4,
+   "district": "dis_commoner",
+   "interior": {
+    "json": "world/bridgehollow__dyers_walk_local/buildings/bld_house_109.json",
+    "room_ids": [],
+    "door_ids": []
+   },
+   "rooms": [],
+   "doors": [],
+   "derived": [
+    "wall_height_ft",
+    "height_ft",
+    "roof",
+    "wall",
+    "skirt_depth_ft",
+    "obb",
+    "openings"
+   ],
+   "openings": {
+    "doors": [
+     {
+      "id": "bld_house_109_door1",
+      "point": [
+       278.55,
+       313.15
+      ],
+      "width_ft": 3.5,
+      "facing": [
+       -0.812,
+       -0.584
+      ]
+     }
+    ],
+    "windows": "derived at mesh time (worldpack_detail.py)",
+    "wall_thickness_ft": 0.75,
+    "canon": false
+   },
+   "tags": {
+    "layer": "buildings",
+    "subtype": "house",
+    "district": "dis_commoner",
+    "ring": "commoner",
+    "group": "buildings:dis_commoner",
+    "id": "bld_house_109"
+   }
+  }
+ ]
+}

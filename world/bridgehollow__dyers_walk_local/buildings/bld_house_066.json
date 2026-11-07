@@ -1,0 +1,46 @@
+{
+ "id": "bld_house_066",
+ "name": "House 66",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    165.3,
+    134.8
+   ],
+   [
+    173.6,
+    147.4
+   ],
+   [
+    181.5,
+    142.2
+   ],
+   [
+    173.2,
+    129.6
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 2,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 654.7,
+ "site_slope": 0.054,
+ "site_relief_ft": 0.9,
+ "region": {
+  "parent_id": "bld_house_066",
+  "clipped": false,
+  "edge": true,
+  "inside_frac": 0.963,
+  "in_region_frac": 0.0
+ }
+}

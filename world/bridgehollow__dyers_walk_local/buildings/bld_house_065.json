@@ -1,0 +1,46 @@
+{
+ "id": "bld_house_065",
+ "name": "House 65",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    41.0,
+    125.9
+   ],
+   [
+    45.7,
+    149.8
+   ],
+   [
+    59.3,
+    147.1
+   ],
+   [
+    54.6,
+    123.2
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 655.7,
+ "site_slope": 0.146,
+ "site_relief_ft": 1.5,
+ "region": {
+  "parent_id": "bld_house_065",
+  "clipped": false,
+  "edge": true,
+  "inside_frac": 0.516,
+  "in_region_frac": 0.0
+ }
+}

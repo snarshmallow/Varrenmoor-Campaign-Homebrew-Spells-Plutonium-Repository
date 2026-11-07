@@ -1,0 +1,46 @@
+{
+ "id": "bld_meeting_hall",
+ "name": "Meeting Hall",
+ "kind": "civic",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    1110.8,
+    965.9
+   ],
+   [
+    1108.1,
+    930.0
+   ],
+   [
+    1094.2,
+    931.1
+   ],
+   [
+    1097.0,
+    967.0
+   ]
+  ]
+ },
+ "notes": "Plain hall for town meetings; no religious use.",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 642.3,
+ "site_slope": 0.103,
+ "site_relief_ft": 2.2,
+ "region": {
+  "parent_id": "bld_meeting_hall",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

@@ -1,0 +1,46 @@
+{
+ "id": "bld_house_090",
+ "name": "House 90",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    240.1,
+    223.9
+   ],
+   [
+    229.3,
+    231.9
+   ],
+   [
+    234.6,
+    239.1
+   ],
+   [
+    245.5,
+    231.0
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 2,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 649.6,
+ "site_slope": 0.053,
+ "site_relief_ft": 0.5,
+ "region": {
+  "parent_id": "bld_house_090",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 0.0
+ }
+}

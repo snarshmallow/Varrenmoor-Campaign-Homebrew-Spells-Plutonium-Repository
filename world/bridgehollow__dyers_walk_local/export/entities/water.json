@@ -1,0 +1,7 @@
+{
+ "format": "varrenmoor-world-pack",
+ "schema_version": "1.0",
+ "type": "water",
+ "units": "feet",
+ "items": []
+}

@@ -1,0 +1,416 @@
+{
+ "format": "varrenmoor-world-pack",
+ "schema_version": "1.0",
+ "place": {
+  "id": "bridgehollow__dyers_walk_local",
+  "name": "Bridgehollow (draft) - Commoners Ring - Dyers Walk",
+  "kind": "district",
+  "status": "proposed"
+ },
+ "generated": {
+  "timestamp": "2026-11-07T21:18:22+00:00",
+  "git_commit": "48a17e12cd95917f20e6f1e5abc3fb5fe928e11b",
+  "git_dirty_inputs": true,
+  "tool": "illustrator/generators/worldpack.py",
+  "style": "full_map"
+ },
+ "units": {
+  "length": "feet",
+  "elevation": "feet above the datum (sea_level_ft is the datum's water level)",
+  "ft_to_m": 0.3048,
+  "metric_view": "Blender metres, see axes.blender"
+ },
+ "axes": {
+  "world": {
+   "x": "east, feet",
+   "y": "south (down the page), feet",
+   "z": "up, feet",
+   "origin": "top-left (north-west) corner of the place",
+   "note": "this is the frame of every coordinate in entities/*.json and of terrain pixel rows (row 0 = y 0)"
+  },
+  "blender": {
+   "x": "east, metres",
+   "y": "north, metres",
+   "z": "up, metres",
+   "origin": "south-west corner of the place at z_origin_ft",
+   "formula": "X = x_ft * 0.3048; Y = (height_ft - y_ft) * 0.3048; Z = (z_ft - z_origin_ft) * 0.3048"
+  },
+  "gltf": {
+   "formula": "(X, Y, Z)_gltf = (X_blender, Z_blender, -Y_blender): Y-up; Blender's importer undoes this",
+   "note": "terrain_lod*.glb already use this frame"
+  },
+  "foundry": {
+   "formula": "px = scene_offset + (x_ft - x0_ft) * px_per_ft; py likewise with y (y down, same sense as the world frame)",
+   "tile": "3D Canvas tile centre = centre of the model's footprint in px; model metres: 100 px = 1.524 m; rotation 0 puts Blender north at the canvas top (make-scene.ps1 and item.py, 'verified'; foundry-3d/README says 180: confirm with orientation_test.glb, then change manifest foundry.tile_rotation_deg)"
+  }
+ },
+ "origin": {
+  "corner": "north-west",
+  "x_ft": 0.0,
+  "y_ft": 0.0
+ },
+ "extent": {
+  "width_ft": 306.49,
+  "height_ft": 361.79,
+  "min": [
+   0.0,
+   0.0
+  ],
+  "max": [
+   306.49,
+   361.79
+  ],
+  "width_m": 93.418,
+  "height_m": 110.274
+ },
+ "sea_level_ft": 0.0,
+ "z_origin_ft": 630.0,
+ "elevation_range_ft": [
+  639.603,
+  688.654
+ ],
+ "scale_presets": {
+  "default": "district",
+  "page_in": [
+   16.5,
+   19.0
+  ],
+  "presets": {
+   "town": {
+    "scale_ft_per_in": 100,
+    "grid_ft": 100,
+    "grid_major_every": 5,
+    "focus": [
+     155.7,
+     184.7
+    ],
+    "scale_bar_ft": 500
+   },
+   "bowl": {
+    "scale_ft_per_in": 200,
+    "grid_ft": 100,
+    "grid_major_every": 5,
+    "focus": [
+     155.7,
+     184.7
+    ],
+    "scale_bar_ft": 1000
+   },
+   "street": {
+    "scale_ft_per_in": 20,
+    "grid_ft": 20,
+    "grid_major_every": 5,
+    "focus": "entity",
+    "scale_bar_ft": 100
+   },
+   "room": {
+    "scale_ft_per_in": 5,
+    "grid_ft": 5,
+    "grid_major_every": 5,
+    "focus": "entity",
+    "scale_bar_ft": 25
+   },
+   "district": {
+    "scale_ft_per_in": 20.0,
+    "grid_ft": 5.0,
+    "grid_major_every": 4,
+    "focus": [
+     155.7,
+     184.7
+    ],
+    "scale_bar_ft": 100,
+    "page_in": [
+     16.5,
+     19.0
+    ]
+   }
+  }
+ },
+ "grid": {
+  "foundry_grid_ft": 5.0,
+  "foundry_grid_px": 100.0,
+  "view_grid_ft": 5.0
+ },
+ "foundry": {
+  "px_per_ft": 20.0,
+  "x0_ft": 0.0,
+  "y0_ft": 0.0,
+  "grid_ft": 5.0,
+  "tile_rotation_deg": 0,
+  "pipeline_id_pattern": "world:<place>:<entity id>",
+  "px_per_m": 65.617
+ },
+ "terrain": {
+  "cell_ft": 2.5,
+  "nx": 126,
+  "ny": 148,
+  "size_ft": [
+   312.5,
+   367.5
+  ],
+  "elev_min_ft": 639.603,
+  "elev_max_ft": 688.654,
+  "heights_dtype": "float32-le",
+  "heights_layout": "row-major [ny][nx]; h[i][j] at x=j*cell_ft, y=i*cell_ft (y south); row 0 is the north edge",
+  "png16": {
+   "min_ft": 639.6032104492188,
+   "max_ft": 688.6537475585938,
+   "decode": "elev_ft = min_ft + value / 65535 * (max_ft - min_ft)"
+  },
+  "source": "base",
+  "pipeline": "region_upres_v1",
+  "seed": 7,
+  "meshes": [
+   {
+    "file": "terrain/terrain_lod1.glb",
+    "step_cells": 1,
+    "vertices": 18648,
+    "triangles": 36750
+   }
+  ],
+  "slope_png": "terrain/slope.png",
+  "normal_png": "terrain/normal.png",
+  "albedo": {
+   "file": "terrain/albedo.png",
+   "px_per_ft": 0.5,
+   "size_px": [
+    156,
+    184
+   ],
+   "note": "baked shading phases, no hillshade; UV = (x / width_ft, y / height_ft), row 0 north"
+  },
+  "splat": {
+   "cell_ft": 5.0,
+   "size_px": [
+    61,
+    72
+   ],
+   "preset": "alpine_steep",
+   "files": [
+    {
+     "file": "terrain/splat_0.png",
+     "channels": [
+      "base",
+      "farmland",
+      "grass",
+      "forest"
+     ]
+    },
+    {
+     "file": "terrain/splat_1.png",
+     "channels": [
+      "scree",
+      "rock",
+      "snow",
+      null
+     ]
+    }
+   ],
+   "phases": [
+    {
+     "id": "farmland",
+     "name": "Farmland (low flats)",
+     "material": "mat_farmland",
+     "tile_ft": 60,
+     "elev_min_ft": null,
+     "elev_max_ft": 700,
+     "slope_min_deg": 0,
+     "slope_max_deg": 10,
+     "water": false
+    },
+    {
+     "id": "grass",
+     "name": "Grass",
+     "material": "mat_grass",
+     "tile_ft": 45,
+     "elev_min_ft": null,
+     "elev_max_ft": 820,
+     "slope_min_deg": 0,
+     "slope_max_deg": 24,
+     "water": false
+    },
+    {
+     "id": "forest",
+     "name": "Forest floor",
+     "material": "mat_forest_floor",
+     "tile_ft": 40,
+     "elev_min_ft": 780,
+     "elev_max_ft": 960,
+     "slope_min_deg": 6,
+     "slope_max_deg": 32,
+     "water": false
+    },
+    {
+     "id": "scree",
+     "name": "Scree",
+     "material": "mat_scree",
+     "tile_ft": 35,
+     "elev_min_ft": null,
+     "elev_max_ft": null,
+     "slope_min_deg": 26,
+     "slope_max_deg": 38,
+     "water": false
+    },
+    {
+     "id": "rock",
+     "name": "Bare rock",
+     "material": "mat_rock",
+     "tile_ft": 35,
+     "elev_min_ft": null,
+     "elev_max_ft": null,
+     "slope_min_deg": 36,
+     "slope_max_deg": 90,
+     "water": false
+    },
+    {
+     "id": "snow",
+     "name": "Snow",
+     "material": "mat_snow",
+     "tile_ft": 60,
+     "elev_min_ft": 960,
+     "elev_max_ft": null,
+     "slope_min_deg": 0,
+     "slope_max_deg": 40,
+     "water": false
+    }
+   ],
+   "note": "weights sum to 1 per pixel (base + phases, painter-order composited as the 2D shading does); RGBA 8-bit, row 0 north"
+  },
+  "heights_npy": "terrain/heightmap_f32.npy",
+  "heights_bin": "terrain/heightmap_f32.bin",
+  "heights_png16": "terrain/heightmap_16.png",
+  "albedo_png": "terrain/albedo.png"
+ },
+ "entities": {
+  "roads": {
+   "file": "entities/roads.json",
+   "count": 6
+  },
+  "buildings": {
+   "file": "entities/buildings.json",
+   "count": 25
+  },
+  "plazas": {
+   "file": "entities/plazas.json",
+   "count": 1
+  },
+  "fields": {
+   "file": "entities/fields.json",
+   "count": 0
+  },
+  "districts": {
+   "file": "entities/districts.json",
+   "count": 1
+  },
+  "water": {
+   "file": "entities/water.json",
+   "count": 0
+  },
+  "fences": {
+   "file": "entities/fences.json",
+   "count": 0
+  },
+  "foliage": {
+   "file": "entities/foliage.json",
+   "count": 0
+  },
+  "props": {
+   "file": "entities/props.json",
+   "count": 0
+  },
+  "lights": {
+   "file": "entities/lights.json",
+   "count": 0
+  },
+  "labels": {
+   "file": "entities/labels.json",
+   "count": 33
+  }
+ },
+ "materials_file": "materials.json",
+ "sources": {
+  "style": "illustrator/presets/town_styles/full_map.json",
+  "terrain_source": "base",
+  "world_dir": "world/bridgehollow__dyers_walk_local/",
+  "town_params": null
+ },
+ "files": {
+  "entities/buildings.json": "9c919240dce8c6f85e235eb9e2b264bc4ad5acb9ac3bc7aa2d84b0ab921a7849",
+  "entities/districts.json": "03a2f607826ab9576b3d4872428cd10798a188cda8b805f9e2205784b27d2905",
+  "entities/fences.json": "b4484dda99a5b9e1c9d8dcdf42ca7f23b811401668a4806919cc119622f18b16",
+  "entities/fields.json": "ffb9498899522cd53b8b34bdb244173101ab6dce5611d37987721829d171b541",
+  "entities/foliage.json": "7ec8f25fa089cabc0c27a2993fd1288089d0fc9ee821a45fece255b8f97e3232",
+  "entities/labels.json": "de46ea5438058e9f27344d73e9f757ae57f62009a7077e344ceee7c6b9a53c2e",
+  "entities/lights.json": "b2ab9a3237c2224ab6fe4dd6637ae00ad801d05faea133bd60981ad2ef406139",
+  "entities/plazas.json": "77af24dcfa37a0cfa5bcfc0a970ccec3d53fd70f3860a76f7ef7f9ed29f4a55b",
+  "entities/props.json": "6cca73327dae115532d4755aa2eb3d6511073e06000b98e49b75c40e92f3ee66",
+  "entities/roads.json": "55935fbd761a196008511c93cf499b48896eb604c0ff74a1d1a0a42da20644bc",
+  "entities/water.json": "b1fd98075aaf7ee6abd7f21f0a1af2a4aedc6a938f15811cd594675eafa76b7a",
+  "materials.json": "8f1da4e66ba4fc0d49a532400d988341b63949cd087f9758f7a0b3729cdd13db",
+  "models/buildings/bld_house_041.glb": "2866073648e8f480dd401f43b89e732d7869e2e90fd188c4f3c79e3e5ebf25cd",
+  "models/buildings/bld_house_044.glb": "728ed052ccd3355db9bc8328a3e0ad172c7a76c0104e21b181c96280347a0237",
+  "models/buildings/bld_house_052.glb": "34314a44d864f9f0e23417f82e7063c16cf3d381bcd7bb1c89c3d925804cdf3b",
+  "models/buildings/bld_house_053.glb": "15071ae40ff71adad465fc71839e4eb430ac5bb56f1509e610ac079be6d2f0b3",
+  "models/buildings/bld_house_054.glb": "8376b2ce807d1ea985cd6e149da29725db8021eef051c8a3b0707a41fd35e809",
+  "models/buildings/bld_house_056.glb": "6938d8827816443dbde12b53de7aedd488aeb94063aa56d51a9958f6c8c035b7",
+  "models/buildings/bld_house_057.glb": "f2d72f8ea325fb0d7b84cb5db366603cc4e22d3a6834af9317b29cde50b52d0e",
+  "models/buildings/bld_house_062.glb": "7b026396e5f6b3bd6694d19e73fc86c8bbc0e317f9e2dcc33971760acb422cfb",
+  "models/buildings/bld_house_063.glb": "82e2233017290a753d4ec36bec006544b8e96985a7cc32f17e234879561feaa7",
+  "models/buildings/bld_house_064.glb": "0542e4fbc47eb4413496123b823085f895704d371379868600c0269c13117fa5",
+  "models/buildings/bld_house_065.glb": "07bc882d5557884b0f8c582a402b28a4fb06a8a4e2b3ad6d9577f86b5012cac6",
+  "models/buildings/bld_house_066.glb": "844e937ff9de03a9d6ab5aaebdd955a84bfcdbbd031e2f34c99aa7e2713aaac1",
+  "models/buildings/bld_house_069.glb": "23577ddb88121dae55c1918e41fd576f05e7697b2666499cf1517754fa17295f",
+  "models/buildings/bld_house_072.glb": "3910e46370327f924fae1d26b9e75fa9681a30afee4a8de53e847e7c62cc94cf",
+  "models/buildings/bld_house_078.glb": "94bc9178fe4a9a57bc62a0910d393532cb66a9bdebb21f5ce12e5e633c15b0fa",
+  "models/buildings/bld_house_082.glb": "7340248c67263d7688af0ce4828e0afdec3b498b06923197c78914525bd1c806",
+  "models/buildings/bld_house_084.glb": "5e2a9b599f08e2246c214c0d3012d10a235b874a2d5e32c3876f7dda8e171f33",
+  "models/buildings/bld_house_086.glb": "41820456169dbd0caa1ed1d778f56d856835f06b14e0c61bc72c85af46899f27",
+  "models/buildings/bld_house_087.glb": "e3beb62da29156a50789017d21d1ecae5de3d97575b46b31dc5eaec255365154",
+  "models/buildings/bld_house_089.glb": "f29e89520b078221a24eaeee7fed07564ca20616b95318b5a364c89ee760411a",
+  "models/buildings/bld_house_090.glb": "0a2fb2a9750cd84647bd7ba9ace3326a77f5228a586dacebf79ce812613ba5a8",
+  "models/buildings/bld_house_094.glb": "d9f8cf45daf0f66c54dd9d4b86ec6970e096af090b7f4be1170afcd231961205",
+  "models/buildings/bld_house_099.glb": "a2bede2e447c117be7cb7b424c3bc64ee97edf3c74530b4d1c1c2bf893fa9c05",
+  "models/buildings/bld_house_107.glb": "e0fa73f459c9f092118878b702710d9f0bf84c074a3fbeb05fb689adc44943e7",
+  "models/buildings/bld_house_109.glb": "97ea1ae00ad5636dbac696d586f8d173cb452fdf55d34d46f7297e7c6459010f",
+  "models/plazas.glb": "7c056abd7db4846bb6ddf9598a11e6e00809a352f9d48300f4b592a0943dcc1f",
+  "models/roads.glb": "947e301ef29cc742380001b60bdd63dd6c37db6c3901615a0121609ec088d0ae",
+  "models/terrain.glb": "2cf6e7a749b5ae457cbee25c71e9cad50718834ce6c20e143a57e27791b1d5b9",
+  "models/textures/mat_cobble.png": "8b0dd5330168c9cebb4522a243c9e2c956c77580105e96498eabc59862ce372a",
+  "models/textures/mat_farmland.png": "9010c3960d7cf803dc04f468e5da0d4af44b94facebed7da5d1b43249d840e14",
+  "models/textures/mat_forest_floor.png": "e7cdfa555618bed0bebe684062efe33a69ace280fd7cb059abc72fcc7b998a39",
+  "models/textures/mat_grass.png": "6cfe3f89e0ea3bb6dfb4ef884058c11a6d342df0826fd04ea1ef3d463946718e",
+  "models/textures/mat_gravel.png": "178a44b19a764a591fb9f9afec950fc73a198e1734de83c205c82148cd8cd1ff",
+  "models/textures/mat_packed_earth.png": "73dcab01d84b1dd8014803dc9b649a2c3dce9aba494a6c1110381283ff3421c8",
+  "models/textures/mat_plank.png": "a1401ccde6a674b0d6da0dc68cb29b4f44092fafdc622a167faa2e7160cd132e",
+  "models/textures/mat_rock.png": "66f90de2b5440d683d630feb92e45d07239d64b638f9c76c876414372efe81e3",
+  "models/textures/mat_scree.png": "5246e5b44bfd860433fd71b3fac6f32a46b05d548db118bb35b5d093e5e8cd3c",
+  "models/textures/mat_shingle.png": "2dad22d35e03364ae39a4cd8abd181963380134171793026d9151348c7cf9297",
+  "models/textures/mat_snow.png": "01e67c68e9b8c4466bea54f84bd2be94f778a670f2bb8d32f1e1a7571af61424",
+  "models/textures/mat_terrain_albedo.png": "76326060b60974f08f3d86a9e5b1ca9556c5026ac53d810f8dbe3a1f84a906a5",
+  "models/textures/mat_thatch.png": "1670a55b504f045742715fc361cdf53e6edb4cad8473aec289767b01af446104",
+  "models/textures/mat_timber_roof.png": "8773492128ddedb2a07895c0fa3a6a84a24b65bfb74d8bcedd39eb4aa2fcf625",
+  "placements.json": "88756ea247e69ab59159510c0188aca414d15c993a9c44e41f958cec030c2baf",
+  "terrain/albedo.png": "76326060b60974f08f3d86a9e5b1ca9556c5026ac53d810f8dbe3a1f84a906a5",
+  "terrain/heightmap_16.png": "02c4e63d4599152b3705c77b250903e4e496502cc9c074af41c67c40dd6dddbc",
+  "terrain/heightmap_f32.bin": "253c168f2e119788692111c64e7ac79e571fbc819e1368dfcca05a5810239eee",
+  "terrain/heightmap_f32.npy": "e66b7a17f0c13503f22eb4db994b5e55302f2535d84c240c3c395c1996d05bb3",
+  "terrain/normal.png": "eb65f23fe80b7dff5a3e075e8fffecc12a74caf7f86d7c236c00a2c3e82883a7",
+  "terrain/slope.png": "6406d7e04e2622fa463eefec5d3b7e5eb42b44a2afd734a49ff707699e956ad1",
+  "terrain/splat_0.png": "36eb816cff2ec9d4718fb2367f5e50dc3703ca57278397a627ea8d78dd9eb5fd",
+  "terrain/splat_1.png": "b18a1022d11436dedbf626cbeac1279f729bc141064664beb1652cf4c3b50678",
+  "terrain/terrain_lod1.glb": "0786039572626627d583b22750b15f02ed838e46d577a6f938d7fdb47469a1fe",
+  "textures/cobble.png": "8b0dd5330168c9cebb4522a243c9e2c956c77580105e96498eabc59862ce372a",
+  "textures/farmland.png": "9010c3960d7cf803dc04f468e5da0d4af44b94facebed7da5d1b43249d840e14",
+  "textures/forest_floor.png": "e7cdfa555618bed0bebe684062efe33a69ace280fd7cb059abc72fcc7b998a39",
+  "textures/grass.png": "6cfe3f89e0ea3bb6dfb4ef884058c11a6d342df0826fd04ea1ef3d463946718e",
+  "textures/gravel.png": "178a44b19a764a591fb9f9afec950fc73a198e1734de83c205c82148cd8cd1ff",
+  "textures/packed_earth.png": "73dcab01d84b1dd8014803dc9b649a2c3dce9aba494a6c1110381283ff3421c8",
+  "textures/plank.png": "a1401ccde6a674b0d6da0dc68cb29b4f44092fafdc622a167faa2e7160cd132e",
+  "textures/rock.png": "66f90de2b5440d683d630feb92e45d07239d64b638f9c76c876414372efe81e3",
+  "textures/scree.png": "5246e5b44bfd860433fd71b3fac6f32a46b05d548db118bb35b5d093e5e8cd3c",
+  "textures/shingle.png": "2dad22d35e03364ae39a4cd8abd181963380134171793026d9151348c7cf9297",
+  "textures/snow.png": "01e67c68e9b8c4466bea54f84bd2be94f778a670f2bb8d32f1e1a7571af61424",
+  "textures/thatch.png": "1670a55b504f045742715fc361cdf53e6edb4cad8473aec289767b01af446104",
+  "textures/timber_roof.png": "8773492128ddedb2a07895c0fa3a6a84a24b65bfb74d8bcedd39eb4aa2fcf625"
+ }
+}

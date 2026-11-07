@@ -1,0 +1,48 @@
+{
+ "id": "bridgehollow__commoners_ring__dyers_walk",
+ "name": "Bridgehollow (draft) - Commoners Ring - Dyers Walk",
+ "kind": "district",
+ "status": "proposed",
+ "units": "feet",
+ "origin": "top-left, y down",
+ "bounds": {
+  "width_ft": 1036.49,
+  "height_ft": 1071.79
+ },
+ "window_ft": [
+  734.92,
+  717.52,
+  1036.49,
+  1071.79
+ ],
+ "parent": {
+  "place": "bridgehollow__commoners_ring",
+  "region": "region.json"
+ },
+ "notes": "Zoom-in child of bridgehollow__commoners_ring (region Dyers Walk). Same ids and foot coordinates as the parent. See region.json; details.json is generated, not canon.",
+ "files": {
+  "districts": "districts.json",
+  "streets": "streets.json",
+  "water": "water.json",
+  "buildings": "buildings/",
+  "view_settings": "view_settings.json",
+  "terrain": "terrain/",
+  "region": "region.json",
+  "details": "details.json",
+  "markers": "markers.json"
+ },
+ "view_focus": {
+  "district": [
+   885.7,
+   894.7
+  ]
+ },
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null,
+  "parent_place": "bridgehollow__commoners_ring"
+ },
+ "generated_by": "region_extract.py",
+ "sea_level_ft": 0.0
+}

@@ -93,3 +93,8 @@ the parent scene's calibration; it only prints unless `--apply`. Foundry module 
 ## 3D / world pack
 The child is a normal place for `worldpack.py` (same ids, feet, terrain through `worldio`); `place.json.parent` and `region.json.transform` carry the parent link and the shift so a pack for the district
 can be placed in the parent's frame. (Use a child id matching `[a-z0-9_]+`, i.e. not `--sandbox`, for the pack schema's pipelineId pattern.)
+
+### Detailed buildings in the pack (2026-11-07)
+When the place has `details.json` (any region child), `worldpack.py export` adds `openings` (the generated doors) to buildings and `kerbs` to streets; `worldpack_mesh.build_parts` then builds hollow
+buildings (0.75 ft walls, door/window holes, trim, glass, floor, door leaves as separate hinge-origin nodes) via `worldpack_detail.py`. See `illustrator/out/commoners_ring_notes.md` for limits (no interiors).
+`--local-origin` children now export (negative terrain origin fixed in `worldio.load_terrain`).

@@ -1,0 +1,46 @@
+{
+ "id": "bld_house_017",
+ "name": "House 17",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    870.9,
+    643.6
+   ],
+   [
+    881.2,
+    654.8
+   ],
+   [
+    892.5,
+    644.5
+   ],
+   [
+    882.1,
+    633.3
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 2,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 664.6,
+ "site_slope": 0.064,
+ "site_relief_ft": 1.3,
+ "region": {
+  "parent_id": "bld_house_017",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

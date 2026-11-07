@@ -304,6 +304,40 @@ def _common(e, place, type_, src):
             "foundry": {"pipelineId": f"world:{place}:{e['id']}"}}
 
 
+KERB_W_FT = 0.7
+
+
+def _road_kerbs(roads, street_ids):
+    """Region children: kerb bands along the edge of every street that has a detail-pass kerb, trimmed where other roads cross (feet, simple polygons).
+    Stored as road['kerbs'] = [ring, ...]; worldpack_mesh.build_road raises them above the road surface."""
+    if not street_ids:
+        return
+    from shapely.geometry import Polygon
+    from shapely.ops import unary_union
+    polys = {r["id"]: Polygon(r["outline"]).buffer(0) for r in roads if r.get("outline") and len(r["outline"]) >= 3}
+    for r in roads:
+        if r["id"] not in street_ids or r["id"] not in polys or r.get("bridge"):
+            continue
+        p = polys[r["id"]]
+        band = p.buffer(KERB_W_FT, join_style=2).difference(p)
+        others = [q for k, q in polys.items() if k != r["id"]]
+        if others:
+            band = band.difference(unary_union(others).buffer(0.5))
+        rings = []
+        for g in ([band] if band.geom_type == "Polygon" else list(getattr(band, "geoms", []))):
+            if g.geom_type == "Polygon" and g.area > 1.0:
+                g = g.simplify(0.05)
+                rings.append([[r3(x), r3(y)] for x, y in list(g.exterior.coords)[:-1]])
+        if rings:
+            r["kerbs"] = rings
+            r.setdefault("derived", []).append("kerbs")
+
+
+def _detail_mats():
+    import worldpack_detail
+    return worldpack_detail.DETAIL_MATS
+
+
 def _load_model(place, world_root):
     import worldio
     root = os.path.join(world_root or os.path.join(REPO, "world"), place)
@@ -318,6 +352,8 @@ def _load_model(place, world_root):
             m["buildings"].append(b)
     vs = os.path.join(root, "view_settings.json")
     m["view"] = _jload(vs) if os.path.exists(vs) else {}
+    dp = os.path.join(root, "details.json")                      # region children: generated doors etc. (not canon) -> building openings
+    m["details"] = _jload(dp) if os.path.exists(dp) else {}
     return m
 
 
@@ -646,6 +682,7 @@ def export_world(place, out_dir=None, lod=(1, 4), world_root=None, terrain_sourc
                         if sg.geom_type == "LineString" and sg.length > 1.0:
                             e["fords"].append({"water": w["id"], "length_ft": r3(sg.length), "points": [[r3(a), r3(b)] for a, b in sg.coords]})
         ents["roads"].append(e)
+    _road_kerbs(ents["roads"], {k["street"] for k in model.get("details", {}).get("kerbs", [])})
     # ---- buildings
     bc = types.get("buildings", {})
     for b in sorted(model["buildings"], key=lambda e: e["id"]):
@@ -673,6 +710,11 @@ def export_world(place, out_dir=None, lod=(1, 4), world_root=None, terrain_sourc
                                                  "door_ids": [d.get("id") for d in b.get("doors", [])]},
                   "rooms": b.get("rooms", []), "doors": b.get("doors", []),
                   "derived": ["wall_height_ft", "height_ft", "roof", "wall", "skirt_depth_ft", "obb"]})
+        dr = [d for d in model.get("details", {}).get("doors", []) if d.get("building") == b["id"]]
+        if dr:
+            e["openings"] = {"doors": [{"id": d["id"], "point": d["point"], "width_ft": d.get("width_ft"), "facing": d.get("facing")} for d in dr],
+                             "windows": "derived at mesh time (worldpack_detail.py)", "wall_thickness_ft": 0.75, "canon": False}
+            e["derived"].append("openings")
         ents["buildings"].append(e)
     # ---- districts, plazas, fields, fences
     dists = []
@@ -805,9 +847,15 @@ def export_world(place, out_dir=None, lod=(1, 4), world_root=None, terrain_sourc
     mats.append({"id": "mat_terrain_albedo", "name": "terrain_albedo", "kind": "image", "texture": "terrain/albedo.png", "source": None,
                  "sha256": files_sha(out, "terrain/albedo.png"), "mean_color": "#6f9a48", "roughness": 0.95, "metallic": 0.0, "uv": "unit",
                  "foundry": {"pipelineId": f"mat:{place}:terrain_albedo"}})
-    for nm, col in (("tree_bark", "#5a4632"), ("tree_leaf", "#3f6b35")):
+    for nm, col in (("tree_bark", "#5a4632"), ("tree_leaf", "#3f6b35")) + (tuple((k[4:], v[0]) for k, v in _detail_mats().items()) if any(e.get("openings") for e in ents["buildings"]) else ()):
         mats.append({"id": "mat_" + nm, "name": nm, "kind": "flat", "texture": None, "source": None, "sha256": None, "mean_color": col, "roughness": 0.95,
                      "metallic": 0.0, "foundry": {"pipelineId": f"mat:{place}:{nm}"}})
+    dm = _detail_mats()
+    for m_ in mats:
+        if m_["id"] in dm:
+            m_["roughness"] = dm[m_["id"]][1]
+            if dm[m_["id"]][2] is not None:
+                m_["alpha"] = dm[m_["id"]][2]
     _jdump(os.path.join(out, "materials.json"), {"format": FORMAT, "schema_version": SCHEMA_VERSION, "type": "materials", "materials": mats,
                                                  "note": "texture paths are relative to the pack; 'source' is the repo path they were copied from"})
     vs = model["view"]

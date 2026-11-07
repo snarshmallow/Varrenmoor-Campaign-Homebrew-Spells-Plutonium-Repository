@@ -1,0 +1,46 @@
+{
+ "id": "bld_house_082",
+ "name": "House 82",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    935.1,
+    892.2
+   ],
+   [
+    927.9,
+    884.8
+   ],
+   [
+    912.8,
+    899.6
+   ],
+   [
+    919.9,
+    906.9
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 652.1,
+ "site_slope": 0.053,
+ "site_relief_ft": 1.1,
+ "region": {
+  "parent_id": "bld_house_082",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}
