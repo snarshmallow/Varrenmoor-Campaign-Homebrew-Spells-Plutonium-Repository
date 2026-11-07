@@ -6,7 +6,7 @@
   "enabled": true,
   "azimuth": 315,
   "altitude": 40,
-  "strength": 0.55,
+  "strength": 0.35, "ambient": 0.3,
   "exaggeration": 1.0
  },
  "phases": [

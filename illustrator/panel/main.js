@@ -237,7 +237,7 @@
     var doc = readJson(d.presets + "/terrain_phases/" + name + ".json", null);
     if (!doc) { showError("terrain phase preset not found: " + name); return; }
     var sh = state.shading; sh.preset = name; sh.base_color = doc.base_color || "#808080";
-    if (doc.hillshade) sh.hillshade = Object.assign({ enabled: true, azimuth: 315, altitude: 40, strength: 0.55, exaggeration: 1 }, doc.hillshade);
+    if (doc.hillshade) sh.hillshade = Object.assign({ enabled: true, azimuth: 315, altitude: 40, strength: 0.35, ambient: 0.3, exaggeration: 1 }, doc.hillshade);
     sh.phases = (doc.phases || (Array.isArray(doc) ? doc : [])).map(function (p) {
       var q = VB.clone(p); q.texture = VB.texName(q.texture) || "#808080"; if (q.enabled === undefined) q.enabled = true; return q;
     });
@@ -306,11 +306,11 @@
     if (!state.town.rings.length) { host.innerHTML = '<div class="note">no rings loaded: press "Reload town_params.json"</div>'; return; }
     state.town.rings.forEach(function (r, i) {
       var el = document.createElement("div"); el.className = "grid"; el.style.marginBottom = "3px";
-      el.innerHTML = '<label>' + esc(r.name || r.id) + ' radius<input type="number" data-r="r_max" value="' + r.r_max + '" step="any"></label>' +
+      el.innerHTML = '<label>' + esc(r.name || r.id) + ' radius<input type="number" data-r="r_max" value="' + (r.r_max >= 1e8 ? "" : r.r_max) + '" placeholder="no limit" step="any"></label>' +
         '<label>street width<input type="number" data-r="street_width" value="' + r.street_width + '" step="any"></label>' +
         '<label>lot min ft2<input type="number" data-r="lot_min" value="' + r.lot_min + '" step="100"></label>' +
         '<label>lot max ft2<input type="number" data-r="lot_max" value="' + r.lot_max + '" step="100"></label>';
-      el.addEventListener("input", function (ev) { var k = ev.target.getAttribute("data-r"); if (k) { r[k] = Number(ev.target.value); save(); } });
+      el.addEventListener("input", function (ev) { var k = ev.target.getAttribute("data-r"); if (k) { r[k] = (k === "r_max" && ev.target.value === "") ? 1e9 : Number(ev.target.value); save(); } });
       host.appendChild(el);
     });
   }

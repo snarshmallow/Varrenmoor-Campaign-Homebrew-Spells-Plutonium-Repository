@@ -57,7 +57,7 @@
         follow_line: true, upright: true, labels: true, datum: true, mask: true },
       label_offset: { enabled: true, style: "elbow", stroke_width: 0.4, margin_pct: 10, max_offset_pt: 90, dot: true },
       shading: { preset: "alpine_steep", base_color: "#6f9a48", phases: [], loaded: false,
-        hillshade: { enabled: true, azimuth: 315, altitude: 40, strength: 0.55, exaggeration: 1 } },
+        hillshade: { enabled: true, azimuth: 315, altitude: 40, strength: 0.35, ambient: 0.3, exaggeration: 1 } },
       water: { sea_level_ft: 0, threshold_cells: 150, outlet_width: 60, inflow: "", delta: false, meander: true, bank_ft: 12,
         use_working: false, use_carved: false, redraw: true,
         river: { name: "", width: 10, width_end: 0, depth: 1.5, flow: 8, meander: 0, join: "", carve: false },
@@ -204,7 +204,7 @@
     var h = sh.hillshade;
     return {
       name: "panel", base_color: sh.base_color,
-      hillshade: { enabled: !!h.enabled, azimuth: +h.azimuth, altitude: +h.altitude, strength: +h.strength, exaggeration: +h.exaggeration },
+      hillshade: { enabled: !!h.enabled, azimuth: +h.azimuth, altitude: +h.altitude, strength: +h.strength, ambient: +(h.ambient === undefined || h.ambient === "" ? 0.3 : h.ambient), exaggeration: +h.exaggeration },
       phases: sh.phases.map(function (p) {
         var q = clone(p);
         ["elev_min", "elev_max"].forEach(function (k) { if (q[k] === "" || q[k] === undefined) q[k] = null; });
@@ -364,7 +364,7 @@
     var phases = d.panel + "/phases.json", png = d.panel + "/shading.png", h = st.shading.hillshade;
     var args = ["--place", st.place, "--phases", phases, "--scale-ft-per-in", String(st.scale.scale_ft_per_in), "--dpi", String(st.settings.dpi), "--out", png,
       "--terrain-source", st.water.use_carved ? "carved" : "patched"];
-    if (h.enabled) args = args.concat(["--hillshade", "--azimuth", String(h.azimuth), "--altitude", String(h.altitude), "--strength", String(h.strength), "--exaggeration", String(h.exaggeration)]);
+    if (h.enabled) args = args.concat(["--hillshade", "--azimuth", String(h.azimuth), "--altitude", String(h.altitude), "--strength", String(h.strength), "--ambient", String(h.ambient === undefined || h.ambient === "" ? 0.3 : h.ambient), "--exaggeration", String(h.exaggeration)]);
     else args.push("--no-hillshade");
     return {
       kind: "shading", label: "Render shading", params: { shading: st.shading, scale: st.scale.scale_ft_per_in, dpi: st.settings.dpi },

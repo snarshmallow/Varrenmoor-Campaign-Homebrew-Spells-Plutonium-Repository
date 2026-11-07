@@ -24,6 +24,8 @@ DEFAULTS = dict(texture="#808080", elev_min=None, elev_max=None, slope_min_deg=0
                 elev_blend_ft=20.0, slope_blend_deg=5.0, opacity=1.0, noise_jitter=0.5,
                 tile_scale_ft=40.0, enabled=True, noise_scale_ft=70.0, grain=0.06,
                 below_datum=False, water_depth=None)
+HILL_STRENGTH = 0.35     # default hillshade strength (lighter than the old 0.55-0.6)
+HILL_AMBIENT = 0.3       # default ambient fill 0..1
 JITTER_ELEV_FT = 40.0     # noise_jitter 1.0 shifts elevation thresholds by up to +-this
 JITTER_SLOPE_DEG = 8.0    # ... and slope thresholds by up to +-this
 
@@ -104,6 +106,25 @@ def sample_tile(tile, X, Y, tile_ft):
             (tile[i1, j0] * (1 - fu) + tile[i1, j1] * fu) * fv)
 
 
+def sample_tile_nt(tile, X, Y, tile_ft, ppf, seed):
+    """Non-repeating sampling of a tileable texture: domain-warp the coordinates with low-frequency noise and
+    blend two copies (different scale/rotation/offset) with a noise weight, so no regular grid shows.
+    Blend is variance-compensated so texture contrast is kept."""
+    ny, nx = X.shape
+    wscale = tile_ft * 2.7
+    wx = field_noise(ny, nx, ppf, wscale, seed + 101) * tile_ft * 0.6
+    wy = field_noise(ny, nx, ppf, wscale, seed + 102) * tile_ft * 0.6
+    a = sample_tile(tile, X + wx, Y + wy, tile_ft)
+    th = np.radians(31.0)
+    c, s_ = np.cos(th), np.sin(th)
+    X2, Y2 = (c * X - s_ * Y) + 0.37 * tile_ft, (s_ * X + c * Y) + 0.61 * tile_ft
+    b = sample_tile(tile, X2 + wy, Y2 - wx, tile_ft * 1.31)
+    t = field_noise(ny, nx, ppf, tile_ft * 3.3, seed + 103)
+    w = smoothstep(t * 1.4 * 0.5 + 0.5)[..., None]
+    m = tile.reshape(-1, 3).mean(0)
+    return m + ((a - m) * (1 - w) + (b - m) * w) / np.sqrt((1 - w) ** 2 + w ** 2)
+
+
 def make_textures(outdir=TEX_DIR, size=192):
     """Procedural tileable PNG tiles (flat colour + multi-scale wrapped noise)."""
     from PIL import Image
@@ -149,6 +170,7 @@ def slope_deg_native(h, cell, smooth=1.0):
 
 
 def hillshade(h, cell, azimuth=315.0, altitude=40.0, exag=1.0):
+    h = ndi.gaussian_filter(h, 1.5, mode="nearest")   # soften: no per-cell speckle
     gy, gx = np.gradient(h * exag, cell)
     az, alt = np.radians(azimuth), np.radians(altitude)
     lx, ly, lz = np.sin(az) * np.cos(alt), -np.cos(az) * np.cos(alt), np.sin(alt)
@@ -215,7 +237,7 @@ def render(h, meta, phases, ppf, base_dir=".", hill=None, seed=None, base_color=
             n = field_noise(ny, nx, ppf, max(ph["tile_scale_ft"] / 8, 1), seed + i * 13 + 5)
             col = flat[None, None, :] * (1 + ph["grain"] * 2 * n[..., None])
         else:
-            col = sample_tile(tile, X, Y, ph["tile_scale_ft"])
+            col = sample_tile_nt(tile, X, Y, ph["tile_scale_ft"], ppf, seed + i * 17 + 9)
         out = out * (1 - w[..., None]) + col * w[..., None]
         weights[p.get("id", str(i))] = w
         if verbose:
@@ -224,8 +246,11 @@ def render(h, meta, phases, ppf, base_dir=".", hill=None, seed=None, base_color=
         alt = hill.get("altitude", 40)
         hs = hillshade(h, cell, hill.get("azimuth", 315), alt, hill.get("exaggeration", 1.0))
         hs = resample(hs, X, Y, cell)
-        k = hill.get("strength", 0.6)
-        out = out * np.clip(1 + (hs - np.sin(np.radians(alt))) * k * 2.0, 0.3, 1.4)[..., None]
+        k = hill.get("strength", HILL_STRENGTH)
+        amb = float(hill.get("ambient", HILL_AMBIENT))   # 0 = full contrast, 1 = no shading
+        flat = np.sin(np.radians(alt))
+        hs = amb + (1 - amb) * hs
+        out = out * np.clip(1 + (hs - (amb + (1 - amb) * flat)) * k * 2.0, 0.55, 1.3)[..., None]
     img = np.clip(out, 0, 255).astype(np.uint8)
     if masks_dir:
         from PIL import Image
@@ -300,7 +325,8 @@ def main():
     ap.add_argument("--no-hillshade", action="store_true")
     ap.add_argument("--azimuth", type=float, default=315)
     ap.add_argument("--altitude", type=float, default=40)
-    ap.add_argument("--strength", type=float, default=0.6)
+    ap.add_argument("--strength", type=float, default=HILL_STRENGTH)
+    ap.add_argument("--ambient", type=float, default=HILL_AMBIENT)
     ap.add_argument("--exaggeration", type=float, default=1.0)
     ap.add_argument("--masks", action="store_true", help="also write per-phase mask PNGs")
     ap.add_argument("--vector", help="also write per-phase thresholded SVG here")
@@ -338,7 +364,7 @@ def main():
     ppf = a.dpi / a.scale_ft_per_in
     hill = doc.get("hillshade")
     if a.hillshade:
-        hill = dict(azimuth=a.azimuth, altitude=a.altitude, strength=a.strength, exaggeration=a.exaggeration)
+        hill = dict(azimuth=a.azimuth, altitude=a.altitude, strength=a.strength, ambient=a.ambient, exaggeration=a.exaggeration)
     if a.no_hillshade:
         hill = None
     base_dir = os.path.dirname(os.path.abspath(pp))
