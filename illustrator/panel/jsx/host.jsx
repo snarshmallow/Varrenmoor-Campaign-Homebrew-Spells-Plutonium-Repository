@@ -215,6 +215,7 @@ function VB_run(json) {
           if (ref) { try { pl.move(ref, ElementPlacement.PLACEAFTER); } catch (e) {} }
         }
         pl.locked = false; pl.visible = true;
+        if (a.below) { var ref2 = VB_find(pd, a.below); if (ref2) { try { pl.move(ref2, ElementPlacement.PLACEAFTER); } catch (e) {} } }   // also reposition an existing layer
         var iname = a.name || "shading_png", old2 = VB_direct(pl);
         for (var oi2 = old2.length - 1; oi2 >= 0; oi2--) {
           if (old2[oi2].name === iname) { try { old2[oi2].locked = false; } catch (e) {} old2[oi2].remove(); }
