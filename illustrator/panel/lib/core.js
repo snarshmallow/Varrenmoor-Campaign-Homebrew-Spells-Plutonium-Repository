@@ -64,7 +64,7 @@
     return {
       v: 1, place: "bridgehollow",
       settings: { python: "python", dpi: 150, view: "town", link_images: false },
-      scale: { preset: "town", scale_ft_per_in: 100, grid_ft: 100, grid_major_every: 5, page_w_in: 17, page_h_in: 11, units: "ft", loaded: false },
+      scale: { preset: "town", scale_ft_per_in: 100, grid_ft: 100, grid_major_every: 5, page_w_in: 17, page_h_in: 11, units: "ft", grid_full_page: false, loaded: false },
       terrain: {
         spec: { seed: 1103, cell_ft: 10, base_elevation_ft: 660, ridged_amp_ft: 110, noise_scale_ft: 420, thermal_iterations: 60, smooth_sigma_cells: 1 },
         spec_loaded: false,
@@ -73,12 +73,14 @@
         selected_patch: null
       },
       contours: { minor: 10, index: 50, units: "ft", label_size: 6, decimals: 0, label_spacing_ft: 500, min_len_ft: 120,
-        follow_line: true, upright: true, labels: true, datum: true, mask: true },
-      labels: { cat: "default", backing_layer: true, redraw_lines: true,
+        follow_line: true, upright: true, labels: true, datum: true, mask: true, halo: true },
+      labels: { cat: "default", backing_layer: true, redraw_lines: true, live_reroute: true, preset: "working", qa: null,
+        declutter: JSON.parse(JSON.stringify(VB.DECLUTTER_DEFAULT)),
         mask_targets: { contours: true, streets: true, buildings: true, blocks: true, water: false, fences: false, grid: true }, styles: VB.labelDefaults() },
       label_offset: { enabled: true, style: "elbow", stroke_width: 0.4, margin_pct: 10, max_offset_pt: 90, dot: true },
-      shading: { preset: "alpine_steep", base_color: "#6f9a48", phases: [], loaded: false,
-        hillshade: { enabled: true, azimuth: 315, altitude: 40, strength: 0.35, ambient: 0.3, exaggeration: 1 } },
+      shading: { preset: "alpine_steep_calm", base_color: "#8aa066", phases: [], loaded: false, slope_smooth_ft: 12,
+        muted: { saturation: 0.62, contrast: 0.86, tint: "#d9cba3", tint_strength: 0.12 },
+        hillshade: { enabled: true, azimuth: 315, altitude: 40, strength: 0.36, ambient: 0.38, exaggeration: 1 } },
       water: { sea_level_ft: 0, threshold_cells: 150, outlet_width: 60, inflow: "", delta: false, meander: true, bank_ft: 12,
         use_working: false, use_carved: false, redraw: true,
         rivergen: { preset: "gentle", amplitude_ft: "", wavelength_ft: "", width_var: "", seed: "", bars: true },
@@ -252,10 +254,16 @@
   VB.phaseFile = function (sh) {
     var h = sh.hillshade;
     return {
-      name: "panel", base_color: sh.base_color,
+      name: "panel", base_color: sh.base_color, slope_smooth_ft: +(sh.slope_smooth_ft || 0),
+      muted: VB.mutedOf(sh),
       hillshade: { enabled: !!h.enabled, azimuth: +h.azimuth, altitude: +h.altitude, strength: +h.strength, ambient: +(h.ambient === undefined || h.ambient === "" ? 0.3 : h.ambient), exaggeration: +h.exaggeration },
       phases: sh.phases.map(function (p) {
         var q = clone(p);
+  // global 'muted' control (shading.py apply_muted): saturation / contrast 0..1 (1 = unchanged), tint colour (blank = none)
+  VB.mutedOf = function (sh) {
+    var m = sh.muted || {}, n = function (v, d) { return v === undefined || v === "" || isNaN(+v) ? d : Math.min(1, Math.max(0, +v)); };
+    return { saturation: n(m.saturation, 1), contrast: n(m.contrast, 1), tint: /^#[0-9a-fA-F]{6}$/.test(m.tint || "") ? m.tint : null, tint_strength: n(m.tint_strength, 0.12) };
+  };
         ["elev_min", "elev_max"].forEach(function (k) { if (q[k] === "" || q[k] === undefined) q[k] = null; });
         q.enabled = p.enabled !== false; return q;
       })
@@ -270,11 +278,11 @@
   VB.viewFlags = function (st) {
     var sc = st.scale;
     return ["--view", st.settings.view || "town", "--preset", sc.preset, "--scale", String(sc.scale_ft_per_in), "--grid", String(sc.grid_ft),
-      "--grid-major", String(sc.grid_major_every), "--page", sc.page_w_in + "x" + sc.page_h_in];
+      "--grid-major", String(sc.grid_major_every), "--page", sc.page_w_in + "x" + sc.page_h_in].concat(sc.grid_full_page ? ["--grid-full-page"] : []);
   };
   // panelio.py view takes --major instead of --grid-major
   VB.panelioViewFlags = function (st) {
-    return VB.viewFlags(st).map(function (x) { return x === "--grid-major" ? "--major" : x; });
+    return VB.viewFlags(st).filter(function (x) { return x !== "--grid-full-page"; }).map(function (x) { return x === "--grid-major" ? "--major" : x; });
   };
   // label style as the JSON the generators read (default = full, categories = overrides), base64 so it survives any shell quoting
   VB.labelStyleJson = function (st) {
@@ -326,6 +334,7 @@
   VB.fillAssignments = function (st, textures) {
     var tex = {}; (textures || []).forEach(function (t) { tex[t.name] = t.rgb; });
     EXTRA_SWATCHES.forEach(function (t) { tex[t.name] = t.rgb; });
+    if (c.halo === false) f.push("--no-contour-halo");
     var hex = function (h) { var m = /^#?([0-9a-f]{6})$/i.exec(h || ""); return m ? [0, 2, 4].map(function (i) { return parseInt(m[1].substr(i, 2), 16); }) : null; };
     var out = [];
     Object.keys(VB.PARTS).forEach(function (k) {

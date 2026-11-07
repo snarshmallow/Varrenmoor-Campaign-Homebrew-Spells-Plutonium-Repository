@@ -1,0 +1,88 @@
+{
+ "name": "coastal_basin_calm",
+ "description": "Map-calm version of coastal_basin: muted saturation/contrast, smoother and more gradual masks, softer scree, flatter textures. Seabed, depth-graded shallows, beach, grass, rock; elevations are signed feet vs sea_level_ft datum (0).",
+ "base_color": "#8fd0d0",
+ "hillshade": {
+  "enabled": true,
+  "azimuth": 315,
+  "altitude": 40,
+  "strength": 0.36,
+  "ambient": 0.38
+ },
+ "phases": [
+  {
+   "id": "seabed",
+   "name": "Seabed",
+   "texture": "../textures/sand.png",
+   "below_datum": true,
+   "elev_blend_ft": 50,
+   "noise_jitter": 0.15,
+   "tile_scale_ft": 75,
+   "texture_contrast": 0.7,
+   "noise_scale_ft": 120,
+   "slope_blend_deg": 5
+  },
+  {
+   "id": "water",
+   "name": "Water depth gradient",
+   "below_datum": true,
+   "water_depth": {
+    "shallow": "#8fd0d0",
+    "deep": "#12395e",
+    "max_depth_ft": 80
+   },
+   "elev_blend_ft": 4,
+   "noise_jitter": 0.2,
+   "opacity": 0.92
+  },
+  {
+   "id": "beach",
+   "name": "Beach",
+   "texture": "../textures/sand.png",
+   "elev_min": -4,
+   "elev_max": 14,
+   "elev_blend_ft": 50,
+   "slope_max_deg": 14,
+   "slope_blend_deg": 5,
+   "noise_jitter": 0.4,
+   "tile_scale_ft": 45,
+   "texture_contrast": 0.7,
+   "noise_scale_ft": 120
+  },
+  {
+   "id": "grass",
+   "name": "Grass",
+   "texture": "../textures/grass.png",
+   "elev_min": 6,
+   "elev_blend_ft": 50,
+   "slope_max_deg": 26,
+   "slope_blend_deg": 6,
+   "noise_jitter": 0.35,
+   "texture_contrast": 0.7,
+   "noise_scale_ft": 120,
+   "tile_scale_ft": 60
+  },
+  {
+   "id": "rock",
+   "name": "Rock",
+   "texture": "../textures/rock.png",
+   "elev_min": -2,
+   "slope_min_deg": 30,
+   "slope_blend_deg": 6.5,
+   "elev_blend_ft": 50,
+   "noise_jitter": 0.3,
+   "tile_scale_ft": 52,
+   "texture_contrast": 0.45,
+   "noise_scale_ft": 120,
+   "opacity": 0.94
+  }
+ ],
+ "muted": {
+  "saturation": 0.7,
+  "contrast": 0.8,
+  "tint": "#d9cba3",
+  "tint_strength": 0.1,
+  "pivot": 160
+ },
+ "slope_smooth_ft": 12
+}

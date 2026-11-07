@@ -93,6 +93,7 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
     <label>Scale (ft per inch) <input type="number" data-s="scale.scale_ft_per_in" min="1" step="any"></label>
     <label>Grid (ft) <input type="number" data-s="scale.grid_ft" min="0.5" step="any"></label>
     <label>Major every <input type="number" data-s="scale.grid_major_every" min="1" step="1"></label>
+    <label class="chk"><input type="checkbox" data-s="scale.grid_full_page"> Grid over the whole page (default: only inside the map)</label>
     <label>Page width (in) <input type="number" data-s="scale.page_w_in" min="1" step="any"></label>
     <label>Page height (in) <input type="number" data-s="scale.page_h_in" min="1" step="any"></label>
     <label>Units <select data-s="scale.units"><option>ft</option><option>m</option></select></label>
@@ -175,6 +176,7 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
     <label class="chk"><input type="checkbox" data-s="contours.follow_line"> Along-line rotation</label>
     <label class="chk"><input type="checkbox" data-s="contours.upright"> Upright flip</label>
     <label class="chk"><input type="checkbox" data-s="contours.datum"> Emphasise datum</label>
+    <label class="chk"><input type="checkbox" data-s="contours.halo"> Casing under contours (auto by shading)</label>
     <label class="chk"><input type="checkbox" data-s="contours.mask"> Mask under buildings/streets</label>
   </div>
   <p class="note">Label text, halo, backing and offsets are on the Labels tab.</p>
@@ -322,6 +324,15 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
 
 <section id="tab-water" role="tabpanel">
   <h4>Water</h4>
+  <h4>Muted (map-calm)</h4>
+  <div class="grid">
+    <label>Saturation 0..1 <input type="number" data-s="shading.muted.saturation" min="0" max="1" step="0.05"></label>
+    <label>Contrast 0..1 <input type="number" data-s="shading.muted.contrast" min="0" max="1" step="0.05"></label>
+    <label>Tint <input type="text" data-s="shading.muted.tint" placeholder="#d9cba3"></label>
+    <label>Tint amount <input type="number" data-s="shading.muted.tint_strength" min="0" max="1" step="0.02"></label>
+    <label>Smooth slope (ft) <input type="number" data-s="shading.slope_smooth_ft" min="0" max="200" step="5"></label>
+  </div>
+  <p class="note">1 / 1 = full colour. The calm presets set about 0.6 / 0.86 with a warm paper tint; changing these does not edit the preset file.</p>
   <div class="grid">
     <label>Sea level (ft) <input type="number" data-s="water.sea_level_ft" step="any"></label>
     <label>River threshold (cells) <input type="number" data-s="water.threshold_cells" min="1" step="any"></label>

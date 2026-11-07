@@ -23,7 +23,9 @@ PRESET_DIR = os.path.join(ILL, "presets", "terrain_phases")
 DEFAULTS = dict(texture="#808080", elev_min=None, elev_max=None, slope_min_deg=0.0, slope_max_deg=90.0,
                 elev_blend_ft=20.0, slope_blend_deg=5.0, opacity=1.0, noise_jitter=0.5,
                 tile_scale_ft=40.0, enabled=True, noise_scale_ft=70.0, grain=0.06,
-                below_datum=False, water_depth=None)
+                below_datum=False, water_depth=None, texture_contrast=1.0, texture_brightness=1.0)
+MUTED_DEFAULT = dict(saturation=1.0, contrast=1.0, tint=None, tint_strength=0.12, pivot=150.0)
+DEFAULT_PRESET = "alpine_steep_calm"   # default phase preset for new renders (the older presets stay available by name)
 HILL_STRENGTH = 0.35     # default hillshade strength (lighter than the old 0.55-0.6)
 HILL_AMBIENT = 0.3       # default ambient fill 0..1
 JITTER_ELEV_FT = 40.0     # noise_jitter 1.0 shifts elevation thresholds by up to +-this
@@ -66,6 +68,30 @@ def field_noise(ny, nx, ppf, scale_ft, seed):
     out = a + 0.5 * b
     out = np.pad(out, ((0, max(0, ny - out.shape[0])), (0, max(0, nx - out.shape[1]))), mode="edge")
     return out / 1.5
+
+
+def apply_muted(rgb, m):
+    """Global 'muted' control on an HxWx3 0..255 image (applied after the phases, before hillshade).
+    saturation 0..1 (1 = unchanged, 0 = grey), contrast 0..1 (1 = unchanged, lower pulls toward `pivot`),
+    tint = hex colour blended in luminance-preserving at tint_strength (default 0.12). No-op at the defaults."""
+    if not m:
+        return rgb
+    m = {**MUTED_DEFAULT, **{k: v for k, v in m.items() if v is not None}}
+    sat, con = float(m["saturation"]), float(m["contrast"])
+    tint = m.get("tint")
+    if sat >= 0.999 and con >= 0.999 and not tint:
+        return rgb
+    w = np.array([0.299, 0.587, 0.114])
+    luma = (rgb @ w)[..., None]
+    out = luma + (rgb - luma) * sat
+    piv = float(m["pivot"])
+    out = piv + (out - piv) * con
+    if tint:
+        t = parse_color(tint)
+        k = float(m["tint_strength"])
+        lo = (out @ w)[..., None]
+        out = out * (1 - k) + t[None, None, :] * (lo / max(float(t @ w), 1.0)) * k
+    return np.clip(out, 0, 255)
 
 
 # ---------------------------------------------------------------- textures
@@ -205,7 +231,7 @@ def phase_weight(p, i, elev, slope, ppf, seed, sea=0.0):
 
 
 def render(h, meta, phases, ppf, base_dir=".", hill=None, seed=None, base_color="#808080",
-           masks_dir=None, max_px=60_000_000, verbose=True, window=None):
+           masks_dir=None, max_px=60_000_000, verbose=True, window=None, muted=None, slope_smooth_ft=0.0):
     """window = (x0, y0, x1, y1) feet: render only that part (region children: the page window, not the whole padded frame)."""
     cell = meta["cell_ft"]
     W_ft, H_ft = meta["size_ft"]
@@ -219,7 +245,10 @@ def render(h, meta, phases, ppf, base_dir=".", hill=None, seed=None, base_color=
     sea = float(meta.get("sea_level_ft", 0.0))
     X, Y = np.meshgrid(ox + (np.arange(nx) + .5) / ppf, oy + (np.arange(ny) + .5) / ppf)
     elev = resample(h, X, Y, cell)
-    slope = resample(slope_deg_native(h, cell), X, Y, cell)
+    sl = slope_deg_native(h, cell)
+    if slope_smooth_ft and slope_smooth_ft > 0:       # calm presets: smooth the slope field so scree/rock masks are not speckled
+        sl = ndi.gaussian_filter(sl, slope_smooth_ft / cell, mode="nearest")
+    slope = resample(sl, X, Y, cell)
     out = np.empty((ny, nx, 3))
     out[:] = parse_color(base_color)
     weights = {}
@@ -239,13 +268,20 @@ def render(h, meta, phases, ppf, base_dir=".", hill=None, seed=None, base_color=
             pass
         elif tile is None:
             n = field_noise(ny, nx, ppf, max(ph["tile_scale_ft"] / 8, 1), seed + i * 13 + 5)
-            col = flat[None, None, :] * (1 + ph["grain"] * 2 * n[..., None])
+            col = flat[None, None, :] * (1 + ph["grain"] * 2 * n[..., None] * float(ph["texture_contrast"]))
         else:
             col = sample_tile_nt(tile, X, Y, ph["tile_scale_ft"], ppf, seed + i * 17 + 9)
+            tc = float(ph["texture_contrast"])
+            if tc != 1.0:                                  # calm: pull the texture toward its own mean colour
+                mt = tile.reshape(-1, 3).mean(0)
+                col = mt + (col - mt) * tc
+        if float(ph["texture_brightness"]) != 1.0:
+            col = col * float(ph["texture_brightness"])
         out = out * (1 - w[..., None]) + col * w[..., None]
         weights[p.get("id", str(i))] = w
         if verbose:
             print(f"  phase {p.get('id', i):>14}: mean weight {w.mean():.3f}")
+    out = apply_muted(out, muted)
     if hill and hill.get("enabled", True):
         alt = hill.get("altitude", 40)
         hs = hillshade(h, cell, hill.get("azimuth", 315), alt, hill.get("exaggeration", 1.0))
@@ -310,13 +346,31 @@ def vector_svg(h, meta, phases, ppf, base_dir, path, cell_ft=4.0, seed=None, min
 
 
 # ---------------------------------------------------------------- CLI
+def muted_from(doc, a=None):
+    """The preset's `muted` block with CLI overrides (a = argparse namespace or None) -> dict or None."""
+    m = dict(doc.get("muted") or {})
+    if a is not None:
+        if getattr(a, "no_muted", False):
+            return None
+        for k in ("saturation", "contrast", "tint", "tint_strength"):
+            v = getattr(a, "muted_" + k, None)
+            if v is not None:
+                m[k] = v
+    return m or None
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--place", default="bridgehollow")
     ap.add_argument("--heightmap", help=".npy (default: current terrain via worldio: patched/carved/base)")
     ap.add_argument("--terrain-source", choices=["auto", "base", "patched", "carved"], help="which heightmap (default per panel_state / auto)")
     ap.add_argument("--meta", help="terrain_meta.json (default next to heightmap)")
-    ap.add_argument("--phases", help="phase-list JSON path, or preset name")
+    ap.add_argument("--phases", default=DEFAULT_PRESET, help=f"phase-list JSON path, or preset name (default {DEFAULT_PRESET})")
+    ap.add_argument("--muted-saturation", type=float, help="0..1 global saturation (1 = unchanged); overrides the preset's muted block")
+    ap.add_argument("--muted-contrast", type=float, help="0..1 global contrast about a mid grey (1 = unchanged)")
+    ap.add_argument("--muted-tint", help="#rrggbb tint blended in over the whole image (luminance preserving)")
+    ap.add_argument("--muted-tint-strength", type=float, help="0..1 tint amount (default 0.12)")
+    ap.add_argument("--no-muted", action="store_true", help="ignore the preset's muted block (full colour)")
     ap.add_argument("--reverse", action="store_true", help="reverse the phase order (quick re-order test)")
     ap.add_argument("--order", help="comma list of phase ids giving a new order")
     ap.add_argument("--scale-ft-per-in", type=float, default=100.0)
@@ -341,8 +395,8 @@ def main():
     if a.make_textures:
         print("textures:", ", ".join(make_textures()))
         return
-    if not (a.phases and a.out):
-        ap.error("--phases and --out are required")
+    if not a.out:
+        ap.error("--out is required")
     if a.heightmap:
         h = np.load(a.heightmap)
         meta = json.load(open(a.meta or os.path.join(os.path.dirname(a.heightmap), "terrain_meta.json"), encoding="utf-8"))
@@ -366,6 +420,7 @@ def main():
         phases = [byid[k] for k in a.order.split(",")]
     if a.reverse:
         phases = phases[::-1]
+    muted = muted_from(doc, a)
     ppf = a.dpi / a.scale_ft_per_in
     win = [float(v) for v in a.window.split(",")] if a.window else None
     hill = doc.get("hillshade")
@@ -378,7 +433,8 @@ def main():
     os.makedirs(os.path.dirname(out), exist_ok=True)
     base = os.path.splitext(out)[0]
     img, _ = render(h, meta, phases, ppf, base_dir, hill, a.seed, doc.get("base_color", "#808080"),
-                    masks_dir=base + "_masks" if a.masks else None, window=win)
+                    masks_dir=base + "_masks" if a.masks else None, window=win, muted=muted,
+                    slope_smooth_ft=float(doc.get("slope_smooth_ft") or 0.0))
     from PIL import Image
     Image.fromarray(img).save(out, dpi=(a.dpi, a.dpi))
     W_ft, H_ft = meta["size_ft"]

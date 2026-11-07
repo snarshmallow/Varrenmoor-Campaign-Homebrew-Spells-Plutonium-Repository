@@ -1,0 +1,103 @@
+{
+ "name": "temperate_valley_calm",
+ "description": "Map-calm version of temperate_valley: muted saturation/contrast, smoother and more gradual masks, softer scree, flatter textures. Grass, meadow, dirt, rock, snow.",
+ "base_color": "#8aa066",
+ "hillshade": {
+  "enabled": true,
+  "azimuth": 315,
+  "altitude": 40,
+  "strength": 0.36,
+  "ambient": 0.38,
+  "exaggeration": 1.0
+ },
+ "phases": [
+  {
+   "id": "grass",
+   "name": "Grass",
+   "texture": "../textures/grass.png",
+   "elev_min": null,
+   "elev_max": null,
+   "slope_min_deg": 0,
+   "slope_max_deg": 90,
+   "elev_blend_ft": 50,
+   "slope_blend_deg": 6,
+   "opacity": 1.0,
+   "noise_jitter": 0.3,
+   "tile_scale_ft": 68,
+   "texture_contrast": 0.7,
+   "noise_scale_ft": 120
+  },
+  {
+   "id": "meadow",
+   "name": "Meadow",
+   "texture": "../textures/meadow.png",
+   "elev_min": null,
+   "elev_max": 760,
+   "slope_min_deg": 0,
+   "slope_max_deg": 12,
+   "elev_blend_ft": 60,
+   "slope_blend_deg": 5,
+   "opacity": 1.0,
+   "noise_jitter": 0.3,
+   "tile_scale_ft": 68,
+   "texture_contrast": 0.7,
+   "noise_scale_ft": 120
+  },
+  {
+   "id": "dirt",
+   "name": "Dirt",
+   "texture": "../textures/dirt.png",
+   "elev_min": null,
+   "elev_max": null,
+   "slope_min_deg": 18,
+   "slope_max_deg": 30,
+   "elev_blend_ft": 50,
+   "slope_blend_deg": 6,
+   "opacity": 1.0,
+   "noise_jitter": 0.4,
+   "tile_scale_ft": 68,
+   "texture_contrast": 0.7,
+   "noise_scale_ft": 120
+  },
+  {
+   "id": "rock",
+   "name": "Rock",
+   "texture": "../textures/rock.png",
+   "elev_min": null,
+   "elev_max": null,
+   "slope_min_deg": 32,
+   "slope_max_deg": 90,
+   "elev_blend_ft": 50,
+   "slope_blend_deg": 6.5,
+   "opacity": 0.94,
+   "noise_jitter": 0.3,
+   "tile_scale_ft": 68,
+   "texture_contrast": 0.45,
+   "noise_scale_ft": 120
+  },
+  {
+   "id": "snow",
+   "name": "Snow",
+   "texture": "../textures/snow.png",
+   "elev_min": 980,
+   "elev_max": null,
+   "slope_min_deg": 0,
+   "slope_max_deg": 42,
+   "elev_blend_ft": 100,
+   "slope_blend_deg": 6.5,
+   "opacity": 0.94,
+   "noise_jitter": 0.5,
+   "tile_scale_ft": 68,
+   "texture_contrast": 0.7,
+   "noise_scale_ft": 120
+  }
+ ],
+ "muted": {
+  "saturation": 0.62,
+  "contrast": 0.86,
+  "tint": "#d9cba3",
+  "tint_strength": 0.12,
+  "pivot": 150
+ },
+ "slope_smooth_ft": 12
+}

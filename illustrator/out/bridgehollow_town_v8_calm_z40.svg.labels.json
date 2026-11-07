@@ -1,0 +1,1791 @@
+{
+ "place": "bridgehollow",
+ "view": "town",
+ "fpi": 40.0,
+ "k": 1.8,
+ "x0": 880.0,
+ "y0": 550.0,
+ "margin_pt": 36.0,
+ "labels": {
+  "dis_authority": {
+   "cx": 278.87,
+   "cy": 387.32,
+   "w": 158.08,
+   "h": 15.62,
+   "layer": "Labels - Districts",
+   "tier": "districts",
+   "status": "placed",
+   "text": "AUTHORITY WARD",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "sqr_court": {
+   "cx": 403.92,
+   "cy": 448.29,
+   "w": 45.13,
+   "h": 24.42,
+   "layer": "Labels - Districts",
+   "tier": "plazas",
+   "status": "placed",
+   "text": "Court Square",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "sqr_market": {
+   "cx": 729.27,
+   "cy": 473.4,
+   "w": 91.59,
+   "h": 12.21,
+   "layer": "Labels - Districts",
+   "tier": "plazas",
+   "status": "placed",
+   "text": "Market Square",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_inn": {
+   "cx": 683.01,
+   "cy": 375.57,
+   "w": 20.78,
+   "h": 24.42,
+   "layer": "Labels - Buildings",
+   "tier": "civic",
+   "status": "placed",
+   "text": "Inn *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_records_house": {
+   "cx": 319.32,
+   "cy": 495.09,
+   "w": 45.02,
+   "h": 24.42,
+   "layer": "Labels - Buildings",
+   "tier": "civic",
+   "status": "placed",
+   "text": "Records House *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_warden_hall": {
+   "cx": 340.74,
+   "cy": 360.18,
+   "w": 48.98,
+   "h": 24.42,
+   "layer": "Labels - Buildings",
+   "tier": "civic",
+   "status": "placed",
+   "text": "Warden's Hall *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_lockup": {
+   "cx": 317.43,
+   "cy": 436.05,
+   "w": 46.19,
+   "h": 12.21,
+   "layer": "Labels - Buildings",
+   "tier": "civic",
+   "status": "placed",
+   "text": "Lockup *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "str_pilgrim_road_bridge": {
+   "cx": 588.77,
+   "cy": 476.16,
+   "w": 73.32,
+   "h": 10.45,
+   "layer": "Labels - Streets",
+   "tier": "civic",
+   "status": "placed",
+   "text": "Pilgrim Bridge *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_meeting_hall": {
+   "cx": 496.06,
+   "cy": 739.47,
+   "w": 73.46,
+   "h": 12.21,
+   "layer": "Labels - Buildings",
+   "tier": "civic",
+   "status": "placed",
+   "text": "Meeting Hall *",
+   "anchor": [
+    436.5,
+    753.3
+   ],
+   "offset": true,
+   "pinned": false
+  },
+  "bld_customs_house": {
+   "cx": 231.01,
+   "cy": 431.04,
+   "w": 85.81,
+   "h": 12.21,
+   "layer": "Labels - Buildings",
+   "tier": "civic",
+   "status": "placed",
+   "text": "Customs House *",
+   "anchor": [
+    179.1,
+    404.46
+   ],
+   "offset": true,
+   "pinned": false
+  },
+  "bld_wardens_barracks": {
+   "cx": 418.18,
+   "cy": 319.5,
+   "w": 110.06,
+   "h": 12.21,
+   "layer": "Labels - Buildings",
+   "tier": "civic",
+   "status": "placed",
+   "text": "Wardens' Barracks *",
+   "anchor": [
+    354.15,
+    250.92
+   ],
+   "offset": true,
+   "pinned": false
+  },
+  "bld_treasury": {
+   "cx": 522.87,
+   "cy": 276.05,
+   "w": 87.91,
+   "h": 12.21,
+   "layer": "Labels - Buildings",
+   "tier": "civic",
+   "status": "placed",
+   "text": "Town Treasury *",
+   "anchor": [
+    403.65,
+    209.79
+   ],
+   "offset": true,
+   "pinned": false
+  },
+  "bld_stables": {
+   "cx": 556.38,
+   "cy": 200.53,
+   "w": 48.05,
+   "h": 12.21,
+   "layer": "Labels - Buildings",
+   "tier": "civic",
+   "status": "placed",
+   "text": "Stables *",
+   "anchor": [
+    507.15,
+    184.32
+   ],
+   "offset": true,
+   "pinned": false
+  },
+  "bld_magistrate_court": {
+   "cx": 479.76,
+   "cy": 556.65,
+   "w": 107.73,
+   "h": 12.21,
+   "layer": "Labels - Buildings",
+   "tier": "civic",
+   "status": "placed",
+   "text": "Magistrate's Court *",
+   "anchor": [
+    314.37,
+    556.65
+   ],
+   "offset": true,
+   "pinned": false
+  },
+  "str_003": {
+   "cx": 148.63,
+   "cy": 144.31,
+   "w": 37.07,
+   "h": 9.9,
+   "layer": "Labels - Streets",
+   "tier": "streets",
+   "status": "placed",
+   "text": "Alley 3 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "str_004": {
+   "cx": 437.05,
+   "cy": 163.89,
+   "w": 37.07,
+   "h": 9.9,
+   "layer": "Labels - Streets",
+   "tier": "streets",
+   "status": "placed",
+   "text": "Alley 4 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "str_005": {
+   "cx": 240.62,
+   "cy": 116.18,
+   "w": 56.63,
+   "h": 9.9,
+   "layer": "Labels - Streets",
+   "tier": "streets",
+   "status": "placed",
+   "text": "Cooper Row *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "str_006": {
+   "cx": 965.71,
+   "cy": 193.82,
+   "w": 64.76,
+   "h": 9.9,
+   "layer": "Labels - Streets",
+   "tier": "streets",
+   "status": "placed",
+   "text": "Weavers Walk *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "str_007": {
+   "cx": 1007.45,
+   "cy": 136.74,
+   "w": 56.63,
+   "h": 9.9,
+   "layer": "Labels - Streets",
+   "tier": "streets",
+   "status": "placed",
+   "text": "Brook Lane *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "str_008": {
+   "cx": 229.75,
+   "cy": 308.02,
+   "w": 53.23,
+   "h": 9.9,
+   "layer": "Labels - Streets",
+   "tier": "streets",
+   "status": "placed",
+   "text": "Hollow Way *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "str_010": {
+   "cx": 698.78,
+   "cy": 275.65,
+   "w": 64.76,
+   "h": 9.9,
+   "layer": "Labels - Streets",
+   "tier": "streets",
+   "status": "placed",
+   "text": "Chandler Row *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "str_011": {
+   "cx": 196.18,
+   "cy": 560.19,
+   "w": 59.85,
+   "h": 9.9,
+   "layer": "Labels - Streets",
+   "tier": "streets",
+   "status": "placed",
+   "text": "Cobbler Row *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "str_012": {
+   "cx": 1070.87,
+   "cy": 395.95,
+   "w": 56.63,
+   "h": 9.9,
+   "layer": "Labels - Streets",
+   "tier": "streets",
+   "status": "placed",
+   "text": "Baker Lane *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "str_013": {
+   "cx": 1112.84,
+   "cy": 679.06,
+   "w": 69.67,
+   "h": 9.9,
+   "layer": "Labels - Streets",
+   "tier": "streets",
+   "status": "placed",
+   "text": "Thatchers Way *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "str_014": {
+   "cx": 231.9,
+   "cy": 542.41,
+   "w": 67.97,
+   "h": 9.9,
+   "layer": "Labels - Streets",
+   "tier": "streets",
+   "status": "placed",
+   "text": "Warden Street *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "str_015": {
+   "cx": 1034.86,
+   "cy": 478.97,
+   "w": 81.01,
+   "h": 9.9,
+   "layer": "Labels - Streets",
+   "tier": "streets",
+   "status": "placed",
+   "text": "Wheelwright Lane *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "str_016": {
+   "cx": 66.51,
+   "cy": 635.93,
+   "w": 54.93,
+   "h": 9.9,
+   "layer": "Labels - Streets",
+   "tier": "streets",
+   "status": "placed",
+   "text": "Dyers Walk *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "str_017": {
+   "cx": 1018.48,
+   "cy": 652.7,
+   "w": 50.02,
+   "h": 9.9,
+   "layer": "Labels - Streets",
+   "tier": "streets",
+   "status": "placed",
+   "text": "Rope Walk *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "str_019": {
+   "cx": 347.67,
+   "cy": 686.7,
+   "w": 58.15,
+   "h": 9.9,
+   "layer": "Labels - Streets",
+   "tier": "streets",
+   "status": "placed",
+   "text": "Potters Row *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "str_021": {
+   "cx": 714.66,
+   "cy": 717.41,
+   "w": 83.94,
+   "h": 9.9,
+   "layer": "Labels - Streets",
+   "tier": "streets",
+   "status": "hidden",
+   "text": "Cartwright Lane 2 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "str_022": {
+   "cx": 924.17,
+   "cy": 670.78,
+   "w": 69.39,
+   "h": 9.9,
+   "layer": "Labels - Streets",
+   "tier": "streets",
+   "status": "placed",
+   "text": "Tanners Row 2 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_058": {
+   "cx": 198.99,
+   "cy": 513.36,
+   "w": 29.69,
+   "h": 22.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "placed",
+   "text": "House 58 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_081": {
+   "cx": 965.7,
+   "cy": 659.25,
+   "w": 29.69,
+   "h": 22.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "placed",
+   "text": "House 81 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_080": {
+   "cx": 345.33,
+   "cy": 644.67,
+   "w": 29.69,
+   "h": 22.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "placed",
+   "text": "House 80 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_shed_035": {
+   "cx": 241.02,
+   "cy": 295.2,
+   "w": 45.23,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "Shed 35 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_shed_079": {
+   "cx": 623.7,
+   "cy": 589.23,
+   "w": 45.23,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "Shed 79 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_shed_018": {
+   "cx": 271.26,
+   "cy": 218.7,
+   "w": 45.23,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "Shed 18 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_shed_067": {
+   "cx": 111.33,
+   "cy": 544.5,
+   "w": 45.23,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "Shed 67 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_046": {
+   "cx": 37.89,
+   "cy": 410.13,
+   "w": 50.69,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 46 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_090": {
+   "cx": 193.32,
+   "cy": 740.7,
+   "w": 50.69,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 90 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_shed_049": {
+   "cx": 221.13,
+   "cy": 451.98,
+   "w": 45.23,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "Shed 49 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_011": {
+   "cx": 320.94,
+   "cy": 144.36,
+   "w": 50.69,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 11 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_028": {
+   "cx": 950.76,
+   "cy": 254.16,
+   "w": 50.69,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 28 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_039": {
+   "cx": 844.47,
+   "cy": 337.41,
+   "w": 50.69,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 39 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_060": {
+   "cx": 860.94,
+   "cy": 523.26,
+   "w": 50.69,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 60 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_088": {
+   "cx": 847.8,
+   "cy": 707.22,
+   "w": 50.69,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 88 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_013": {
+   "cx": 898.11,
+   "cy": 157.14,
+   "w": 50.69,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 13 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_066": {
+   "cx": 78.12,
+   "cy": 573.3,
+   "w": 50.69,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 66 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_047": {
+   "cx": 936.54,
+   "cy": 436.68,
+   "w": 50.69,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 47 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_023": {
+   "cx": 81.45,
+   "cy": 243.27,
+   "w": 50.69,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 23 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_017": {
+   "cx": 39.06,
+   "cy": 205.29,
+   "w": 50.69,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 17 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_069": {
+   "cx": 43.02,
+   "cy": 603.36,
+   "w": 50.69,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 69 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_008": {
+   "cx": 349.56,
+   "cy": 115.11,
+   "w": 44.91,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 8 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_034": {
+   "cx": 958.5,
+   "cy": 290.88,
+   "w": 50.69,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 34 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_005": {
+   "cx": 389.97,
+   "cy": 93.42,
+   "w": 44.91,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 5 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_009": {
+   "cx": 822.42,
+   "cy": 118.8,
+   "w": 44.91,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 9 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_076": {
+   "cx": 775.26,
+   "cy": 629.37,
+   "w": 50.69,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 76 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_016": {
+   "cx": 101.52,
+   "cy": 196.29,
+   "w": 50.69,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 16 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_018": {
+   "cx": 241.56,
+   "cy": 200.88,
+   "w": 50.69,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 18 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_045": {
+   "cx": 814.95,
+   "cy": 385.92,
+   "w": 50.69,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 45 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_089": {
+   "cx": 52.56,
+   "cy": 728.73,
+   "w": 50.69,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 89 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_068": {
+   "cx": 960.3,
+   "cy": 589.77,
+   "w": 50.69,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 68 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_025": {
+   "cx": 200.16,
+   "cy": 240.57,
+   "w": 50.69,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 25 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_092": {
+   "cx": 743.22,
+   "cy": 749.16,
+   "w": 50.69,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 92 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_001": {
+   "cx": 484.38,
+   "cy": 59.67,
+   "w": 44.91,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 1 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_074": {
+   "cx": 944.01,
+   "cy": 625.59,
+   "w": 50.69,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 74 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_014": {
+   "cx": 947.43,
+   "cy": 166.95,
+   "w": 50.69,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 14 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_036": {
+   "cx": 74.97,
+   "cy": 317.34,
+   "w": 50.69,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 36 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_085": {
+   "cx": 709.47,
+   "cy": 687.87,
+   "w": 50.69,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 85 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_091": {
+   "cx": 651.96,
+   "cy": 742.77,
+   "w": 50.69,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 91 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_038": {
+   "cx": 921.51,
+   "cy": 327.51,
+   "w": 50.69,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 38 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_030": {
+   "cx": 47.61,
+   "cy": 279.63,
+   "w": 50.69,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 30 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_012": {
+   "cx": 533.34,
+   "cy": 135.45,
+   "w": 50.69,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 12 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_083": {
+   "cx": 827.1,
+   "cy": 658.17,
+   "w": 50.69,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 83 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_042": {
+   "cx": 922.77,
+   "cy": 362.07,
+   "w": 50.69,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 42 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_082": {
+   "cx": 115.11,
+   "cy": 658.53,
+   "w": 50.69,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 82 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_019": {
+   "cx": 777.96,
+   "cy": 212.58,
+   "w": 50.69,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 19 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_003": {
+   "cx": 202.86,
+   "cy": 71.82,
+   "w": 44.91,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 3 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_071": {
+   "cx": 903.6,
+   "cy": 606.42,
+   "w": 50.69,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 71 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_033": {
+   "cx": 923.31,
+   "cy": 291.15,
+   "w": 50.69,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 33 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_006": {
+   "cx": 893.25,
+   "cy": 98.01,
+   "w": 44.91,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 6 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_040": {
+   "cx": 957.78,
+   "cy": 348.03,
+   "w": 50.69,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 40 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_075": {
+   "cx": 1007.28,
+   "cy": 627.48,
+   "w": 50.69,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 75 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_051": {
+   "cx": 849.15,
+   "cy": 450.72,
+   "w": 50.69,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 51 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_059": {
+   "cx": 896.76,
+   "cy": 519.21,
+   "w": 50.69,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 59 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_026": {
+   "cx": 240.93,
+   "cy": 253.53,
+   "w": 50.69,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 26 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_043": {
+   "cx": 763.11,
+   "cy": 363.69,
+   "w": 50.69,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 43 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_020": {
+   "cx": 133.2,
+   "cy": 222.3,
+   "w": 50.69,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 20 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_061": {
+   "cx": 71.01,
+   "cy": 532.53,
+   "w": 50.69,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 61 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_004": {
+   "cx": 249.03,
+   "cy": 78.12,
+   "w": 44.91,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 4 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_070": {
+   "cx": 801.27,
+   "cy": 605.16,
+   "w": 50.69,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 70 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_024": {
+   "cx": 908.28,
+   "cy": 241.29,
+   "w": 50.69,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 24 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_067": {
+   "cx": 132.3,
+   "cy": 588.87,
+   "w": 50.69,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 67 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_029": {
+   "cx": 101.43,
+   "cy": 271.62,
+   "w": 50.69,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 29 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_007": {
+   "cx": 584.82,
+   "cy": 110.88,
+   "w": 44.91,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 7 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_021": {
+   "cx": 816.57,
+   "cy": 225.18,
+   "w": 50.69,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 21 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_010": {
+   "cx": 199.35,
+   "cy": 131.67,
+   "w": 50.69,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 10 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_055": {
+   "cx": 54.63,
+   "cy": 501.66,
+   "w": 50.69,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 55 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_002": {
+   "cx": 286.47,
+   "cy": 67.68,
+   "w": 44.91,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 2 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_032": {
+   "cx": 828.0,
+   "cy": 291.51,
+   "w": 50.69,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 32 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_078": {
+   "cx": 82.71,
+   "cy": 635.85,
+   "w": 50.69,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 78 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_079": {
+   "cx": 629.46,
+   "cy": 641.61,
+   "w": 50.69,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 79 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_035": {
+   "cx": 200.88,
+   "cy": 296.19,
+   "w": 50.69,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 35 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_048": {
+   "cx": 59.58,
+   "cy": 445.05,
+   "w": 50.69,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 48 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_050": {
+   "cx": 1030.95,
+   "cy": 457.47,
+   "w": 50.69,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 50 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_015": {
+   "cx": 289.26,
+   "cy": 169.83,
+   "w": 50.69,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 15 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_049": {
+   "cx": 171.09,
+   "cy": 458.82,
+   "w": 50.69,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 49 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_087": {
+   "cx": 143.37,
+   "cy": 700.38,
+   "w": 50.69,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 87 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  },
+  "bld_house_073": {
+   "cx": 222.75,
+   "cy": 615.42,
+   "w": 50.69,
+   "h": 11.0,
+   "layer": "Labels - Buildings",
+   "tier": "houses",
+   "status": "hidden",
+   "text": "House 73 *",
+   "anchor": null,
+   "offset": false,
+   "pinned": false
+  }
+ },
+ "qa": {
+  "labels_shown": 33,
+  "labels_hidden": 76,
+  "hidden_by_scale": 0,
+  "hidden_by_collision": 76,
+  "numbered": 0,
+  "with_leader": 6,
+  "pinned": 0,
+  "text_over_features_pct": 19.7,
+  "over_features_by_kind_pct": {
+   "building": 2.4,
+   "road": 7.9,
+   "water": 9.4
+  },
+  "labels_over_25pct": 10,
+  "label_label_overlaps": 0,
+  "labels_over_contour_labels": 0,
+  "leaders_crossing_other_labels": 0,
+  "worst": [
+   {
+    "id": "bld_treasury",
+    "text": "Town Treasury *",
+    "tier": "civic",
+    "over_pct": 73.8,
+    "by_kind": {
+     "water": 0.74
+    }
+   },
+   {
+    "id": "bld_meeting_hall",
+    "text": "Meeting Hall *",
+    "tier": "civic",
+    "over_pct": 72.2,
+    "by_kind": {
+     "water": 0.72
+    }
+   },
+   {
+    "id": "bld_magistrate_court",
+    "text": "Magistrate's Court *",
+    "tier": "civic",
+    "over_pct": 59.2,
+    "by_kind": {
+     "water": 0.59
+    }
+   },
+   {
+    "id": "str_016",
+    "text": "Dyers Walk *",
+    "tier": "streets",
+    "over_pct": 43.2,
+    "by_kind": {
+     "building": 0.43
+    }
+   },
+   {
+    "id": "bld_customs_house",
+    "text": "Customs House *",
+    "tier": "civic",
+    "over_pct": 43.0,
+    "by_kind": {
+     "road": 0.43
+    }
+   },
+   {
+    "id": "bld_wardens_barracks",
+    "text": "Wardens' Barracks *",
+    "tier": "civic",
+    "over_pct": 42.7,
+    "by_kind": {
+     "road": 0.43
+    }
+   },
+   {
+    "id": "str_006",
+    "text": "Weavers Walk *",
+    "tier": "streets",
+    "over_pct": 36.9,
+    "by_kind": {
+     "building": 0.07,
+     "road": 0.3
+    }
+   },
+   {
+    "id": "str_pilgrim_road_bridge",
+    "text": "Pilgrim Bridge *",
+    "tier": "civic",
+    "over_pct": 32.6,
+    "by_kind": {
+     "water": 0.33
+    }
+   }
+  ],
+  "overlapping_pairs": [],
+  "hidden": [
+   {
+    "id": "str_021",
+    "text": "Cartwright Lane 2 *",
+    "tier": "streets",
+    "why": "collision"
+   },
+   {
+    "id": "bld_shed_035",
+    "text": "Shed 35 *",
+    "tier": "houses",
+    "why": "collision"
+   },
+   {
+    "id": "bld_shed_079",
+    "text": "Shed 79 *",
+    "tier": "houses",
+    "why": "collision"
+   },
+   {
+    "id": "bld_shed_018",
+    "text": "Shed 18 *",
+    "tier": "houses",
+    "why": "collision"
+   },
+   {
+    "id": "bld_shed_067",
+    "text": "Shed 67 *",
+    "tier": "houses",
+    "why": "collision"
+   },
+   {
+    "id": "bld_house_046",
+    "text": "House 46 *",
+    "tier": "houses",
+    "why": "collision"
+   },
+   {
+    "id": "bld_house_090",
+    "text": "House 90 *",
+    "tier": "houses",
+    "why": "collision"
+   },
+   {
+    "id": "bld_shed_049",
+    "text": "Shed 49 *",
+    "tier": "houses",
+    "why": "collision"
+   },
+   {
+    "id": "bld_house_011",
+    "text": "House 11 *",
+    "tier": "houses",
+    "why": "collision"
+   },
+   {
+    "id": "bld_house_028",
+    "text": "House 28 *",
+    "tier": "houses",
+    "why": "collision"
+   },
+   {
+    "id": "bld_house_039",
+    "text": "House 39 *",
+    "tier": "houses",
+    "why": "collision"
+   },
+   {
+    "id": "bld_house_060",
+    "text": "House 60 *",
+    "tier": "houses",
+    "why": "collision"
+   },
+   {
+    "id": "bld_house_088",
+    "text": "House 88 *",
+    "tier": "houses",
+    "why": "collision"
+   },
+   {
+    "id": "bld_house_013",
+    "text": "House 13 *",
+    "tier": "houses",
+    "why": "collision"
+   },
+   {
+    "id": "bld_house_066",
+    "text": "House 66 *",
+    "tier": "houses",
+    "why": "collision"
+   },
+   {
+    "id": "bld_house_047",
+    "text": "House 47 *",
+    "tier": "houses",
+    "why": "collision"
+   },
+   {
+    "id": "bld_house_023",
+    "text": "House 23 *",
+    "tier": "houses",
+    "why": "collision"
+   },
+   {
+    "id": "bld_house_017",
+    "text": "House 17 *",
+    "tier": "houses",
+    "why": "collision"
+   },
+   {
+    "id": "bld_house_069",
+    "text": "House 69 *",
+    "tier": "houses",
+    "why": "collision"
+   },
+   {
+    "id": "bld_house_008",
+    "text": "House 8 *",
+    "tier": "houses",
+    "why": "collision"
+   },
+   {
+    "id": "bld_house_034",
+    "text": "House 34 *",
+    "tier": "houses",
+    "why": "collision"
+   },
+   {
+    "id": "bld_house_005",
+    "text": "House 5 *",
+    "tier": "houses",
+    "why": "collision"
+   },
+   {
+    "id": "bld_house_009",
+    "text": "House 9 *",
+    "tier": "houses",
+    "why": "collision"
+   },
+   {
+    "id": "bld_house_076",
+    "text": "House 76 *",
+    "tier": "houses",
+    "why": "collision"
+   },
+   {
+    "id": "bld_house_016",
+    "text": "House 16 *",
+    "tier": "houses",
+    "why": "collision"
+   },
+   {
+    "id": "bld_house_018",
+    "text": "House 18 *",
+    "tier": "houses",
+    "why": "collision"
+   },
+   {
+    "id": "bld_house_045",
+    "text": "House 45 *",
+    "tier": "houses",
+    "why": "collision"
+   },
+   {
+    "id": "bld_house_089",
+    "text": "House 89 *",
+    "tier": "houses",
+    "why": "collision"
+   },
+   {
+    "id": "bld_house_068",
+    "text": "House 68 *",
+    "tier": "houses",
+    "why": "collision"
+   },
+   {
+    "id": "bld_house_025",
+    "text": "House 25 *",
+    "tier": "houses",
+    "why": "collision"
+   },
+   {
+    "id": "bld_house_092",
+    "text": "House 92 *",
+    "tier": "houses",
+    "why": "collision"
+   },
+   {
+    "id": "bld_house_001",
+    "text": "House 1 *",
+    "tier": "houses",
+    "why": "collision"
+   },
+   {
+    "id": "bld_house_074",
+    "text": "House 74 *",
+    "tier": "houses",
+    "why": "collision"
+   },
+   {
+    "id": "bld_house_014",
+    "text": "House 14 *",
+    "tier": "houses",
+    "why": "collision"
+   },
+   {
+    "id": "bld_house_036",
+    "text": "House 36 *",
+    "tier": "houses",
+    "why": "collision"
+   },
+   {
+    "id": "bld_house_085",
+    "text": "House 85 *",
+    "tier": "houses",
+    "why": "collision"
+   },
+   {
+    "id": "bld_house_091",
+    "text": "House 91 *",
+    "tier": "houses",
+    "why": "collision"
+   },
+   {
+    "id": "bld_house_038",
+    "text": "House 38 *",
+    "tier": "houses",
+    "why": "collision"
+   },
+   {
+    "id": "bld_house_030",
+    "text": "House 30 *",
+    "tier": "houses",
+    "why": "collision"
+   },
+   {
+    "id": "bld_house_012",
+    "text": "House 12 *",
+    "tier": "houses",
+    "why": "collision"
+   }
+  ]
+ },
+ "declutter": {
+  "enabled": true,
+  "scale_visibility": true,
+  "collision": "hide",
+  "score": true,
+  "legend": true,
+  "quiet": false
+ }
+}

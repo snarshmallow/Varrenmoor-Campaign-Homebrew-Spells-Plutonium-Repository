@@ -1,0 +1,27 @@
+{
+ "png": "bridgehollow_town_v8_calm_shading_bowl.png",
+ "width_px": 2400,
+ "height_px": 1500,
+ "ppf": 1.0,
+ "dpi": 200.0,
+ "scale_ft_per_in": 200.0,
+ "bounds_ft": {
+  "x_min": 0.0,
+  "y_min": 0.0,
+  "x_max": 2400.0,
+  "y_max": 1500.0
+ },
+ "y_axis": "down",
+ "page_size_in": [
+  12.0,
+  7.5
+ ],
+ "phases": [
+  "farmland",
+  "grass",
+  "forest",
+  "scree",
+  "rock",
+  "snow"
+ ]
+}

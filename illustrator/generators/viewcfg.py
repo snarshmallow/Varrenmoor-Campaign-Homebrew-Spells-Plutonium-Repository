@@ -3,6 +3,7 @@
   cfg = viewcfg.load(place, preset="town", scale=None, grid=None, page=None)
   cfg -> dict: preset, scale_ft_per_in, grid_ft, grid_major_every, page_in, margin_in, focus, scale_bar_ft,
                units, min_street_width_ft, contour_mask, label_offset
+  grid_extent = "window" (default, the grid stays inside the place bounds so margins are clean paper) | "page" (full page)
   label_offset = {enabled, style: straight|elbow, stroke_width (pt), margin_pct, max_offset_pt (page pt), dot}; see label_offset.py
 Scale bar length defaults to 5 paper inches of ground. Feet are always the model unit; only drawing changes.
 """
@@ -51,7 +52,7 @@ def parse_page(s):
     return [float(a), float(b)]
 
 
-def load(place, preset="town", scale=None, grid=None, page=None, major_every=None):
+def load(place, preset="town", scale=None, grid=None, page=None, major_every=None, grid_extent=None):
     raw = load_raw(place)
     preset = VIEW_TO_PRESET.get(preset, preset)
     presets = raw.get("presets", FALLBACK["presets"])
@@ -73,6 +74,8 @@ def load(place, preset="town", scale=None, grid=None, page=None, major_every=Non
     if not c.get("scale_bar_ft"):
         c["scale_bar_ft"] = _nice(5 * c["scale_ft_per_in"])
     return c
+    if grid_extent:
+        c["grid_extent"] = grid_extent            # "window" (default: grid only inside the map window) | "page" (whole page)
 
 
 def _nice(v):

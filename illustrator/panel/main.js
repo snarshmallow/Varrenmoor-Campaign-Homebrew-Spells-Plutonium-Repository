@@ -296,6 +296,7 @@
         else p[k] = t.value;
         save();
       });
+    sh.muted = Object.assign({ saturation: 1, contrast: 1, tint: "", tint_strength: 0.12 }, doc.muted || {}); sh.slope_smooth_ft = doc.slope_smooth_ft || 0;
       el.addEventListener("change", function (ev) { if (ev.target.tagName === "SELECT") { p.texture = ev.target.value; save(); } });
       el.addEventListener("click", function (ev) {
         var b = ev.target.closest("button[data-op]"); if (!b) return; var op = b.getAttribute("data-op"), a = state.shading.phases;

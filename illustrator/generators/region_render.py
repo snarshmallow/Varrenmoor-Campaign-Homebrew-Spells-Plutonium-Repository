@@ -56,7 +56,7 @@ def main(argv=None):
     ap.add_argument("--index-interval", type=float, default=10.0)
     ap.add_argument("--no-contours", action="store_true")
     ap.add_argument("--no-fills", action="store_true")
-    ap.add_argument("--shading", default="temperate_valley")
+    ap.add_argument("--shading", default="temperate_valley_calm")
     ap.add_argument("--dpi", type=float, default=120.0)
     ap.add_argument("--style", default="full_map")
     ap.add_argument("--max-fill-px", type=float, default=36e6)

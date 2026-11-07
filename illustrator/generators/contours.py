@@ -24,8 +24,14 @@ from xml.sax.saxutils import escape
 M_PER_FT = 0.3048
 
 CSS = """\
-.contour-minor { fill: none; stroke: #8a5a2b; stroke-width: 0.3; stroke-linejoin: round; stroke-linecap: round; }
-.contour-index { fill: none; stroke: #8a5a2b; stroke-width: 0.85; stroke-linejoin: round; stroke-linecap: round; }
+.contour-minor { fill: none; stroke: #7d5226; stroke-width: 0.35; stroke-linejoin: round; stroke-linecap: round; }
+.contour-index { fill: none; stroke: #6b4220; stroke-width: 1.1; stroke-linejoin: round; stroke-linecap: round; }
+.contour-halo-minor { fill: none; stroke: #f6edd2; stroke-width: 1.1; stroke-opacity: 0.45; stroke-linejoin: round; stroke-linecap: round; }
+.contour-halo-index { fill: none; stroke: #f6edd2; stroke-width: 2.4; stroke-opacity: 0.55; stroke-linejoin: round; stroke-linecap: round; }
+.contour-halo-minor-lt { fill: none; stroke: #f6edd2; stroke-width: 0.9; stroke-opacity: 0.25; stroke-linejoin: round; stroke-linecap: round; }
+.contour-halo-index-lt { fill: none; stroke: #f6edd2; stroke-width: 2.0; stroke-opacity: 0.35; stroke-linejoin: round; stroke-linecap: round; }
+.contour-halo-minor-dk { fill: none; stroke: #f6edd2; stroke-width: 1.3; stroke-opacity: 0.70; stroke-linejoin: round; stroke-linecap: round; }
+.contour-halo-index-dk { fill: none; stroke: #f6edd2; stroke-width: 2.8; stroke-opacity: 0.80; stroke-linejoin: round; stroke-linecap: round; }
 .contour-datum { fill: none; stroke: #1a4f8a; stroke-width: 1.1; }
 .contour-label { fill: #6b4423; stroke: none; font-family: Arial, sans-serif; }"""
 
@@ -310,14 +316,39 @@ def cut_pieces(cs, geom, min_len=1.5):
     return n_cut
 
 
-def emit(tree, cs, layer_minor=LAYER_MINOR, layer_index=LAYER_INDEX, layer_labels=LAYER_LABELS, labels=True):
+DARK_LUMA, LIGHT_LUMA = 0.34, 0.60     # shading luminance (0..1) below / above which a contour counts as over dark / light ground
+
+
+def classify_tone(cs, luma_at, n=48):
+    """Set pc['tone'] ('dark' | 'mid' | 'light') on every piece from the median shading luminance under it.
+    luma_at(x_pt, y_pt arrays) -> luminance 0..1 at page points. The line stays brown; the cream casing under it is
+    strong over dark ground, medium in between and faint over light ground."""
     for pc in cs.pieces:
-        cls = "contour-index" if pc["index"] else "contour-minor"
-        if pc.get("datum") and getattr(cs, "emphasize_datum", True):
+        a = np.asarray(pc["pts"], float)
+        sel = a[np.linspace(0, len(a) - 1, min(n, len(a))).astype(int)]
+        lu = float(np.median(luma_at(sel[:, 0], sel[:, 1])))
+        pc["luma"] = lu
+        pc["tone"] = "dark" if lu < DARK_LUMA else "light" if lu > LIGHT_LUMA else "mid"
+    return cs
+
+
+def emit(tree, cs, layer_minor=LAYER_MINOR, layer_index=LAYER_INDEX, layer_labels=LAYER_LABELS, labels=True, halo=True):
+    """Contour paths. With halo (default) every contour gets a casing path underneath (class contour-halo-*), so it reads over any shading;
+    pieces classified by classify_tone() get a stronger casing on darker ground."""
+    for pc in cs.pieces:
+        tone = pc.get("tone", "mid")
+        kind = "index" if pc["index"] else "minor"
+        cls = f"contour-{kind}"
+        datum = pc.get("datum") and getattr(cs, "emphasize_datum", True)
+        if datum:
             cls = "contour-datum"
         pts = pc["pts"][:-1] if pc["closed"] else pc["pts"]
-        tree.add(layer_index if pc["index"] else layer_minor,
-                 f'<path id="{pc["id"]}" class="{cls}" fill="none" d="{_d(pts, pc["closed"])}"/>')
+        lay = layer_index if pc["index"] else layer_minor
+        d = _d(pts, pc["closed"])
+        if halo and not datum:
+            hc = f"contour-halo-{kind}" + ("-dk" if tone == "dark" else "-lt" if tone == "light" else "")
+            tree.add(lay, f'<path id="{pc["id"]}_halo" class="{hc}" fill="none" d="{d}"/>')
+        tree.add(lay, f'<path id="{pc["id"]}" class="{cls}" fill="none" d="{d}"/>')
     for lb in (cs.labels if labels else []):
         tr = f' transform="rotate({lb["rot"]:.2f} {lb["x"]:.2f} {lb["y"]:.2f})"' if abs(lb["rot"]) > 0.01 else ""
         tree.add(layer_labels,

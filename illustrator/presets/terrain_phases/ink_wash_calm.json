@@ -1,0 +1,85 @@
+{
+ "name": "ink_wash_calm",
+ "description": "Map-calm version of ink_wash: muted saturation/contrast, smoother and more gradual masks, softer scree, flatter textures. Monochrome greys for line-art friendly shading.",
+ "base_color": "#e6e6e6",
+ "hillshade": {
+  "enabled": true,
+  "azimuth": 315,
+  "altitude": 40,
+  "strength": 0.36,
+  "ambient": 0.4,
+  "exaggeration": 1.0
+ },
+ "phases": [
+  {
+   "id": "light",
+   "name": "Light wash",
+   "texture": "../textures/ink_light.png",
+   "elev_min": null,
+   "elev_max": null,
+   "slope_min_deg": 0,
+   "slope_max_deg": 90,
+   "elev_blend_ft": 50,
+   "slope_blend_deg": 6,
+   "opacity": 1.0,
+   "noise_jitter": 0.3,
+   "tile_scale_ft": 68,
+   "texture_contrast": 0.7,
+   "noise_scale_ft": 120
+  },
+  {
+   "id": "mid",
+   "name": "Mid wash (higher)",
+   "texture": "../textures/ink_mid.png",
+   "elev_min": 800,
+   "elev_max": null,
+   "slope_min_deg": 0,
+   "slope_max_deg": 90,
+   "elev_blend_ft": 80,
+   "slope_blend_deg": 6,
+   "opacity": 1.0,
+   "noise_jitter": 0.4,
+   "tile_scale_ft": 68,
+   "texture_contrast": 0.7,
+   "noise_scale_ft": 120
+  },
+  {
+   "id": "dark",
+   "name": "Dark wash (steep)",
+   "texture": "../textures/ink_dark.png",
+   "elev_min": null,
+   "elev_max": null,
+   "slope_min_deg": 25,
+   "slope_max_deg": 90,
+   "elev_blend_ft": 50,
+   "slope_blend_deg": 6,
+   "opacity": 1.0,
+   "noise_jitter": 0.35,
+   "tile_scale_ft": 68,
+   "texture_contrast": 0.7,
+   "noise_scale_ft": 120
+  },
+  {
+   "id": "black",
+   "name": "Deep (cliff)",
+   "texture": "../textures/ink_black.png",
+   "elev_min": null,
+   "elev_max": null,
+   "slope_min_deg": 40,
+   "slope_max_deg": 90,
+   "elev_blend_ft": 50,
+   "slope_blend_deg": 6,
+   "opacity": 1.0,
+   "noise_jitter": 0.25,
+   "tile_scale_ft": 68,
+   "texture_contrast": 0.7,
+   "noise_scale_ft": 120
+  }
+ ],
+ "muted": {
+  "saturation": 1.0,
+  "contrast": 0.85,
+  "pivot": 170
+ },
+ "slope_smooth_ft": 12
+}

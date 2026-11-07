@@ -50,6 +50,8 @@ path { fill: none; }
 .guide-major { fill: none; stroke: #5a5a5a; stroke-width: 0.6; }
 .field { fill: none; stroke: #5d7a3a; stroke-width: 0.4; }
 .wall { fill: none; stroke: #000000; stroke-width: 1.25; }
+.grid-minor { fill: none; stroke: #7a766c; stroke-width: 0.3; stroke-opacity: 0.38; }
+.grid-major { fill: none; stroke: #6c685e; stroke-width: 0.5; stroke-opacity: 0.55; }
 .road { fill: none; stroke: #000000; stroke-width: 0.75; }
 .water { fill: none; stroke: #1a4f8a; stroke-width: 0.75; }
 .bar { fill: none; stroke: #9c8556; stroke-width: 0.4; }
@@ -280,7 +282,7 @@ def compute_view(model, view_arg, cfg_over=None):
         kind = "town"
         o["preset"] = o.get("preset") or "district"
     cfg = viewcfg.load(place["id"], o.get("preset") or kind, scale=o.get("scale"), grid=o.get("grid"),
-                       page=o.get("page"), major_every=o.get("major_every"))
+                       page=o.get("page"), major_every=o.get("major_every"), grid_extent=o.get("grid_extent"))
     fpi, grid_ft, major_n = cfg["scale_ft_per_in"], cfg["grid_ft"], cfg["grid_major_every"]
     pw, ph = cfg["page_in"]
     margin = cfg["margin_in"]
@@ -311,7 +313,20 @@ def compute_view(model, view_arg, cfg_over=None):
     return v, cfg, title, kind, ident
 
 
-def render(model, view_arg, out_path, topts=None, cfg_over=None, lopts=None, lstyle=None):
+def shading_luma(h, meta, phases="auto", ppf=0.4):
+    """Luminance (0..1) of the terrain shading at ppf px/ft over the whole terrain -> (array, ppf). Picks contour colour/casing."""
+    import numpy as np
+    import shading as sh
+    name = sh.DEFAULT_PRESET if phases in (None, "", "auto") else phases
+    pp = name if os.path.exists(name) else os.path.join(sh.PRESET_DIR, name if name.endswith(".json") else name + ".json")
+    doc = sh.load_phase_file(pp)
+    img, _ = sh.render(h, meta, doc["phases"], ppf, os.path.dirname(os.path.abspath(pp)), doc.get("hillshade"), None,
+                       doc.get("base_color", "#808080"), verbose=False, muted=sh.muted_from(doc),
+                       slope_smooth_ft=float(doc.get("slope_smooth_ft") or 0.0))
+    return (img.astype(float) @ np.array([0.299, 0.587, 0.114])) / 255.0, ppf
+
+
+def render(model, view_arg, out_path, topts=None, cfg_over=None, lopts=None, lstyle=None, dopts=None):
     place = model["place"]
     bw, bh = place["bounds"]["width_ft"], place["bounds"]["height_ft"]
     streets = {s["id"]: s for s in model["streets"]}
@@ -427,6 +442,15 @@ def render(model, view_arg, out_path, topts=None, cfg_over=None, lopts=None, lst
     def lab(cat, layer, e, s, size, auto_upper=False, ratio=1.0):
         pg = v.clip(entity_polygon(e))
         c = tuple(e["label_point"]) if e.get("label_point") else centroid(entity_polygon(e))
+        cs.halo = topts.get("halo", True)
+        if topts.get("shade_luma") != "none" and cs.halo:      # contour colour/casing follows the shading under it
+            from scipy import ndimage as ndi_
+            lum, lppf = shading_luma(h, meta, topts.get("shade_luma") or "auto")
+            def luma_at(xp, yp, _l=lum, _f=frame, _p=lppf):
+                return ndi_.map_coordinates(_l, [((yp - _f.oy) / _f.k + _f.y0) * _p, ((xp - _f.ox) / _f.k + _f.x0) * _p], order=1, mode="nearest")
+            ct.classify_tone(cs, luma_at)
+            tc = {k_: sum(1 for p_ in cs.pieces if p_.get("tone") == k_) for k_ in ("dark", "mid", "light")}
+            print(f"contour tone by shading: {tc}")
         if not pg or not v.inside(c):
             return
         st = styles[cat]
@@ -486,7 +510,7 @@ def render(model, view_arg, out_path, topts=None, cfg_over=None, lopts=None, lst
         cut = None
     if cs is not None:
         n_c = ct.cut_pieces(cs, cut) if (cut is not None and "contours" in targets) else 0
-        ct.emit(t, cs, labels=False)
+        ct.emit(t, cs, labels=False, halo=getattr(cs, "halo", True))
         if n_c:
             print(f"label mask: {n_c} contour pieces cut under labels")
     n_l = 0
@@ -505,13 +529,20 @@ def render(model, view_arg, out_path, topts=None, cfg_over=None, lopts=None, lst
 
     # GUIDES: minor + major grid
     k = v.k
-    px0, py0 = v.px((v.x0, v.y0)); px1, py1 = v.px((v.x1, v.y1))
+    # the grid covers the map window (the place bounds) only, so the paper margin around a small map stays clean;
+    # grid_extent "page" (view_settings or --grid-full-page) keeps the old full-page grid
+    wf0 = place.get("window_ft") or [0, 0, bw, bh]
+    if (cfg.get("grid_extent") or "window") == "page":
+        gx0, gy0, gx1, gy1 = v.x0, v.y0, v.x1, v.y1
+    else:
+        gx0, gy0, gx1, gy1 = max(v.x0, wf0[0]), max(v.y0, wf0[1]), min(v.x1, wf0[2]), min(v.y1, wf0[3])
+    px0, py0 = v.px((gx0, gy0)); px1, py1 = v.px((gx1, gy1))
     minor, major = [], []
     major_ft = grid_ft * major_n
-    nlines = (v.x1 - v.x0) / grid_ft + (v.y1 - v.y0) / grid_ft
-    for axis, lo, hi in (("x", v.x0, v.x1), ("y", v.y0, v.y1)):
+    nlines = (gx1 - gx0) / grid_ft + (gy1 - gy0) / grid_ft
+    for axis, lo, hi in (("x", gx0, gx1), ("y", gy0, gy1)):
         g = math.ceil(lo / grid_ft)
-        while g * grid_ft <= hi:
+        while g * grid_ft <= hi and gx1 > gx0 and gy1 > gy0:
             pos = g * grid_ft
             q = v.px((pos, pos))
             seg = ([(q[0], py0), (q[0], py1)] if axis == "x" else [(px0, q[1]), (px1, q[1])])
@@ -523,9 +554,9 @@ def render(model, view_arg, out_path, topts=None, cfg_over=None, lopts=None, lst
         return " ".join("M" + " L".join(f"{x:.2f},{y:.2f}" for x, y in sg) for sg in segs)
 
     if minor and nlines < 900:
-        t.add("Grid", path(f"grid_{grid_ft:g}ft", grid_d(minor), "guide-line"))
+        t.add("Grid", path(f"grid_{grid_ft:g}ft", grid_d(minor), "grid-minor"))
     if major:
-        t.add("Grid", path(f"grid_major_{major_ft:g}ft", grid_d(major), "guide-major"))
+        t.add("Grid", path(f"grid_major_{major_ft:g}ft", grid_d(major), "grid-major"))
 
     bar_ft = cfg["scale_bar_ft"]
     seg_ft = bar_ft / 5.0
@@ -620,12 +651,16 @@ if __name__ == "__main__":
                  "units": a.units, "use_mask": use_mask, "decimals": a.label_decimals,
                  "label_spacing_ft": a.label_spacing, "min_len_ft": a.min_contour_len,
                  "follow_line": not a.no_follow_line, "upright": not a.no_upright, "labels": not a.no_labels,
-                 "emphasize_datum": not a.no_datum}
+                 "emphasize_datum": not a.no_datum, "halo": not a.no_contour_halo, "shade_luma": a.contour_shading}
     suffix = "terrain" if topts and a.view == "town" else a.view.replace(":", "_")
     out = a.out or os.path.join(REPO, "illustrator", "out", f"{a.place}_{suffix}.svg")
     lopts = {"enabled": a.label_offset, "style": a.leader_style, "stroke_width": a.leader_width,
              "margin_pct": a.label_fit_margin, "max_offset_pt": a.label_max_offset, "dot": a.leader_dot}
     lopts = {**viewcfg.label_offset(a.place), **{k: v_ for k, v_ in lopts.items() if v_ is not None}}
     render(load_place(a.place, a.model_dir), a.view, out, topts,
-           {"preset": a.preset, "scale": a.scale, "grid": a.grid, "page": a.page, "major_every": a.grid_major}, lopts,
-           [lst.parse_cli(a.label_style), lst.decode_b64(a.label_style_b64)])
+           {"preset": a.preset, "scale": a.scale, "grid": a.grid, "page": a.page, "major_every": a.grid_major, "grid_extent": "page" if a.grid_full_page else None}, lopts,
+           [pre.get("label_style"), lst.parse_cli(a.label_style), lst.decode_b64(a.label_style_b64)], dopts)
+    ap.add_argument("--grid-full-page", action="store_true", help="draw the grid over the whole page (default: only inside the map window / place bounds)")
+    ap.add_argument("--no-contour-halo", action="store_true", help="plain contour lines, no casing / no tone-by-shading")
+    ap.add_argument("--contour-shading", default="auto", help="phase preset used to pick contour colour/casing per underlying shading luminance "
+                    "(auto = the default calm preset, none = ignore shading)")

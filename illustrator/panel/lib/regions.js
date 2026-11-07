@@ -19,7 +19,7 @@
     var det = {}; VB.REGION_DETAILS.forEach(function (k) { det[k] = true; });
     return { mode: "district", district: "", polygon: [], polygon_src: "", rect: [0, 0, 0, 0], margin_ft: 40, name: "",
       preset: "street20", scale_ft_per_in: 20, grid_ft: 5, terrain_cell_ft: 2.5, contour_minor: 2, contour_index: 10, detail_ft: 0.45,
-      detail: det, detail_on: true, seed: "", fills: true, fills_dpi: 120, shading: "temperate_valley", flatten_pads: true, clip_buildings: false,
+      detail: det, detail_on: true, seed: "", fills: true, fills_dpi: 120, shading: "temperate_valley_calm", flatten_pads: true, clip_buildings: false,
       local_origin: false, sandbox: false, px_per_grid: 80, scene_name: "", parent_scene_name: "", link_apply: false,
       sel: "", children: [], diff: null, last: null };
   };
