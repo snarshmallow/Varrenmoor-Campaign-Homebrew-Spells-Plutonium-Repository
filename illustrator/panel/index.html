@@ -492,6 +492,28 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
     <label class="chk"><input type="checkbox" data-s="water.lake.auto_level"> Level = lowest rim</label>
   </div>
   <div class="btns"><button data-act="water_capture_lake" title="Selected closed path, or path on layer WATER DRAW">Capture polygon</button><span id="lakePoly" class="tag">none</span><button data-act="water_add_lake">Add lake</button></div>
+  <h4>3D water in Foundry (3D Canvas shader)</h4>
+  <p class="note">Flowing, lightly rippled water for the 3D scene. Pick a preset and tune it; the values are saved with this place and used by the next export / Foundry push, or push them now to a scene that already has the water tiles. Water bodies use the preset of their kind (river, pond, lake, sea = ocean) unless the box below forces one preset for all.</p>
+  <div class="grid">
+    <label>Preset <select id="w3Preset"></select></label>
+    <label class="chk"><input type="checkbox" data-s="water3d.force"> Use this preset for all water in this place</label>
+  </div>
+  <p class="note" id="w3Note"></p>
+  <div id="w3Sliders"></div>
+  <div class="grid">
+    <label>Shallow colour <input type="color" id="w3Shallow"></label>
+    <label>Deep colour <input type="color" id="w3Deep"></label>
+  </div>
+  <div class="btns"><button id="w3Reset" title="Back to the preset's own values">Reset this preset</button></div>
+  <div class="grid">
+    <label>Foundry scene <select id="w3Scene"></select></label>
+    <label>or paste uuid <input type="text" data-s="water3d.scene_uuid" placeholder="Scene.xxxxxxxx"></label>
+    <label class="chk"><input type="checkbox" data-s="water3d.dry_run"> Dry run (shows what would change, writes nothing)</label>
+  </div>
+  <div class="btns"><button data-act="w3_scenes" title="Read-only: lists the scenes in Foundry">Refresh scenes</button>
+    <button class="primary" data-act="w3_install" title="Writes the water shader script and these settings into every water tile of the scene (only tiles the pipeline created). Safe to repeat.">Install on scene</button>
+    <button data-act="w3_apply" title="Updates the settings on the scene's water tiles live (the tile reloads once)">Push values</button></div>
+  <div id="w3Out" class="note"></div>
   <h4>Bridges and fords</h4>
   <div id="crossInfo">Run "Bridges report".</div>
 </section>
@@ -882,6 +904,13 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
     <label>Merge preset <select data-s="foundry.models.preset"><option value="layer">merge by layer</option><option value="district">merge by district</option><option value="all">merge all</option><option value="individual">keep individual</option></select></label>
     <label>Layers to push <input type="text" data-s="foundry.models.layers" placeholder="all (terrain,buildings,roads,...)"></label>
     <label>LOD <select data-s="foundry.models.lod"><option value="0">0 full</option><option value="1">1</option><option value="2">2</option></select></label>
+    <label>Roof mode <select id="fRoofMode" data-s="foundry.models.roofMode"><option value="none">None: roofs merged into buildings (cheapest)</option><option value="per_building">Per building: hide each roof separately</option><option value="per_scene">Per scene: one switch for all roofs</option></select></label>
+  </div>
+  <p class="note" id="fRoofNote">Applies to Export world pack / Export split models. None: roofs are part of each building, nothing can be hidden (default, fewest tiles). Per building: every roof is its own tile (about 1 extra tile per building, same triangles), so you can hide one roof to look inside. Per scene: all roofs are ONE tile (one extra tile in total, fewer draw calls): hide or show every roof at once; buildings are exported open at the top. Hiding a roof in Foundry: Install roof macros once, then use the hotbar macros (GM sees a hidden roof as a ghost, players see nothing).</p>
+  <div class="btns">
+    <button data-act="wp_roof_macros" title="Creates the 'Roofs: toggle all' and 'Roofs: toggle selected / at token / pick' macros in the Foundry world (no module update needed)">Install roof macros</button>
+    <button data-act="wp_roofs_hide" title="Hide every roof tile on the picked existing scene">Hide roofs</button>
+    <button data-act="wp_roofs_show" title="Show every roof tile on the picked existing scene">Show roofs</button>
   </div>
   <!-- ROAD GRADING block (generators/road_grade.py): used by Export split models -->
   <h4>Roads (3D)</h4>
@@ -904,13 +933,6 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
     <label>Item filter <input type="text" data-s="foundry.filter.items"></label>
     <label>Item <select id="fItem" data-s="foundry.itemUuid"></select></label>
     <label>Image file <input type="text" data-s="foundry.image" placeholder="png / jpg / webp"></label>
-    <label>Roof mode <select id="fRoofMode" data-s="foundry.models.roofMode"><option value="none">None: roofs merged into buildings (cheapest)</option><option value="per_building">Per building: hide each roof separately</option><option value="per_scene">Per scene: one switch for all roofs</option></select></label>
-  </div>
-  <p class="note" id="fRoofNote">Applies to Export world pack / Export split models. None: roofs are part of each building, nothing can be hidden (default, fewest tiles). Per building: every roof is its own tile (about 1 extra tile per building, same triangles), so you can hide one roof to look inside. Per scene: all roofs are ONE tile (one extra tile in total, fewer draw calls): hide or show every roof at once; buildings are exported open at the top. Hiding a roof in Foundry: Install roof macros once, then use the hotbar macros (GM sees a hidden roof as a ghost, players see nothing).</p>
-  <div class="btns">
-    <button data-act="wp_roof_macros" title="Creates the 'Roofs: toggle all' and 'Roofs: toggle selected / at token / pick' macros in the Foundry world (no module update needed)">Install roof macros</button>
-    <button data-act="wp_roofs_hide" title="Hide every roof tile on the picked existing scene">Hide roofs</button>
-    <button data-act="wp_roofs_show" title="Show every roof tile on the picked existing scene">Show roofs</button>
     <label>NPC / item spec (json) <input type="text" data-s="foundry.spec" placeholder="foundry-tools spec"></label>
     <label>Place at (bld_id, str_id or x,y ft) <input type="text" data-s="foundry.at"></label>
     <label>Token size (ft) <input type="number" data-s="foundry.sizeFt" min="1" step="any"></label>
@@ -1007,6 +1029,8 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
 <script src="foliage_ui.js"></script>
 <script src="lib/skybox.js"></script><!-- SKYBOX -->
 <script src="skybox_ui.js"></script><!-- SKYBOX -->
+<script src="lib/water.js"></script><!-- 3D WATER -->
+<script src="water_ui.js"></script><!-- 3D WATER -->
 <script src="lib/padding.js"></script>
 <script src="padding_ui.js"></script>
 <script src="lib/bridges.js"></script><!-- BRIDGES -->

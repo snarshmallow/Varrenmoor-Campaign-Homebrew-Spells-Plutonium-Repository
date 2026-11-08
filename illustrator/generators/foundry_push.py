@@ -14,8 +14,10 @@ Every command prints log lines, then ONE final JSON line on stdout ({"ok": true,
   push-token   --scene-uuid U --actor-uuid A (--at bld_id|str_id|x,y | --px sx,sy) [--image F] [--size-ft 5] [--key K] [--yes]
   push-actor   (--spec npc.json | --actor-uuid U) [--image F] [--portrait F --token F] [--yes]
   push-item    (--spec item.json | --name N) [--description T] [--image F] [--item-uuid U] [--yes]
+  scene-audit  --scene-uuid U --placements P[,P2] [--foliage-placements F]   read-only: duplicate/stale pipeline tiles (same source drawn twice, orphans, moved/elevation/model/version) + repair plan
   push-models  --placements P (--scene-uuid U | --scene-name N) [--layers L] [--ids I] [--lod 0|1|2] [--px-per-ft F] [--prune] [--dry-run]
                one 3D Canvas tile per model of a world pack (worldpack_split.py), upserted by pipelineId model:<place>:<id>
+  install-water / set-water --scene-uuid U [--place P] [--preset river|pond|lake|ocean] [--force] [--set key=value]     3D water shader on the scene's water tiles (foundry_water.py)
   roofs        --scene-uuid U [--roof-state hide|show|toggle] [--ids bld_a,bld_b]      show/hide the roof tiles (pack built with --roof-mode per_building|per_scene)
   install-roof-macros                      create the 'Roofs: toggle all' and 'Roofs: toggle selected / at token / pick' macros in the world (foundry_macros/*.js)
   import-scene --scene-uuid U [--place-id ID] [--include walls,tiles,regions,lights,tokens,notes] [--no-image] [--closed-as lines|buildings] [--force] [--dry-run] [--scene-json F]
@@ -729,7 +731,7 @@ def build_model_tiles(doc, scene_calib, a, publish=None):
         rot0 = e["tile"]["rotation"] + e.get("rotation_deg", 0.0)
         flags = lambda extra: {"levels-3d-preview": {"model3d": path, "autoGround": True, "autoCenter": False, "collision": False, "sight": False, **extra},
                                FLAG: {"modelFile": e["file"], "sha256": e["sha256"], "layer": e["layer"],
-                                      "ids": [("roof:" + i if e["layer"] == "roofs" else i) for i in e["ids"][:50]],      # roofs are NOT the building's source id (scene_audit: one tile per source)
+                                      "ids": [("roof:" + i if e["layer"] == "roofs" else i) for i in e["ids"][:400]],      # roofs are NOT the building's source id (scene_audit: one tile per source)
                                       **({"roof": {**e["roof"], "scope": "building" if e["roof"]["mode"] == "per_building" else "scene"}} if e.get("roof") else {})}}
         if e["kind"] == "instances":
             for ins in e["instances"]:
@@ -746,7 +748,8 @@ def build_model_tiles(doc, scene_calib, a, publish=None):
             "x": round(px), "y": round(py), "width": max(4, round(sz[0] * sc * ppf)), "height": max(4, round(sz[1] * sc * ppf)), "elevation": e["pivot"]["rel_z_ft"],
             "rotation": rot0, "texture": {"src": "modules/levels-3d-preview/assets/blank.webp"}, "flags": flags({"depth": max(2, round(sz[2] * sc * ppf))}),
             **({"hidden": True} if e.get("roof") and getattr(a, "roofs_hidden", False) else {})}})        # roof tiles: flags.varrenmoor.roof, hidden = roof off
-    return items
+    import foundry_water
+    return foundry_water.decorate_items(items, doc)          # water tiles carry the 3D Canvas water shader + the panel's Water settings
 
 
 ASSET_PREFIX = "assets/varrenmoor-3d/"
@@ -910,8 +913,24 @@ def cmd_push_models(br, a):
     items = build_model_tiles(doc, c, a, pub)
     LOG(f"{len(items)} model tiles for {len(doc['files'])} files at {ppf:g} px/ft ({'calibration of the scene' if calib else 'pack default'})")
     result = {"ok": True, "tiles": len(items), "px_per_ft": ppf, "set": set_name, "dry_run": bool(a.dry_run), "sample": items[0] if items else None}
+    import scene_audit as sa
+    dup = sa.check_plan_unique(items)
+    if dup:
+        raise PushError("one source model must be drawn by one tile only (merged layer OR individual files, not both in one plan): " + "; ".join(dup[:5]))
+    result["representation"] = sa.representation(items)             # per layer: merged tile(s) or individual tiles
+    stale = sa.stale_tiles({**sc, "uuid": uuid}, items, place) if sc else []
+    result["stale_tiles"] = [{"pipelineId": p, "reason": r, "uuid": u} for u, p, r in stale]
+    if stale:
+        LOG(f"{len(stale)} stale pipeline tile(s) of {place} in the scene: " + ", ".join(f"{p} ({r})" for _, p, r in stale[:12]) + (" ..." if len(stale) > 12 else ""))
     if a.dry_run:
+        result["would_delete"] = len(stale)
         return result
+    if stale and not a.prune and len(stale) > sa.PRUNE_LIMIT:
+        raise PushError(f"{len(stale)} stale pipeline tiles (superseded or no longer in the plan, e.g. the other representation of the same buildings) would be deleted, "
+                        f"more than {sa.PRUNE_LIMIT}: nothing was written. Review them with --dry-run or `scene-audit`, then repeat with --prune.")
+    partial = bool(getattr(a, "layers", None) or getattr(a, "ids", None))
+    # only the other representation of the pushed sources is replaced by default; tiles that are merely absent from the plan need --prune and a full push
+    stale = [x for x in stale if x[2] == "superseded" or (a.prune and not partial)]
     if not uuid:
         if not a.scene_name:
             raise PushError("give --scene-uuid or --scene-name")
@@ -937,7 +956,12 @@ def cmd_push_models(br, a):
         raise PushError(f"{len(bad)} model problem(s), no tiles were written:\n  " + "\n  ".join(bad[:25]))
     if a.prune and not items:
         LOG("WARNING: --prune ignored: this push has 0 tiles, existing model tiles are kept")
-    r = br.call("upsert_many", documentName="Tile", parentUuid=uuid, items=items, prefix=f"model:{place}:", prune=bool(a.prune) and bool(items))
+    r = br.call("upsert_many", documentName="Tile", parentUuid=uuid, items=items, prefix=f"model:{place}:", prune=False)      # stale tiles are deleted explicitly below (scoped, listed)
+    if items and stale:
+        for u, _, _ in stale:
+            br.call("delete", uuid=u)
+        r["deleted"] = len(stale)
+        LOG(f"removed {len(stale)} stale pipeline tile(s)")
     LOG(f"tiles: {r}")
     result.update(scene_uuid=uuid, tile_ops=r)
     result["roofs_removed"] = prune_stale_roofs(br, uuid, items, a, place)     # roof mode changes leave stale roof tiles behind: remove only those
@@ -1051,6 +1075,47 @@ SCENE_3D_ORDER = ["geometry", "models", "foliage", "padding", "lights", "flags",
 PADDING_PUSH = None          # tests replace this; default calls padding_heightmap.main(["push", ...])
 
 
+def cmd_scene_audit(br, a):
+    """Read-only: duplicate or stale pipeline model tiles of a scene (same source drawn twice, orphans, moved/elevation/model/version mismatch) and a repair plan.
+    The plan = --placements (comma list; default the place's export placements.json) + --foliage-placements; the tiles the plan draws are the ones to keep."""
+    import scene_audit as sa
+    if not a.scene_uuid:
+        raise PushError("give --scene-uuid")
+    sc = br.call("get", uuid=a.scene_uuid)
+    sc.setdefault("uuid", a.scene_uuid)
+    calib = (sc.get("flags", {}).get(FLAG, {}) or {}).get("calib") or {}
+    root = a.assets_dir or assets_dir()
+    paths = [x for x in (a.placements or os.path.join(REPO, "world", a.place, "export", "placements.json")).split(",") if x] + ([a.foliage_placements] if a.foliage_placements else [])
+    items, place = [], None
+    for pp in paths:
+        with open(pp, encoding="utf-8") as f:
+            doc = json.load(f)
+        place = place or doc["place"]
+        ppf = float(a.px_per_ft or calib.get("ppf") or doc["frame"]["px_per_ft"])
+        c = {"ppf": ppf, "x0": calib.get("x0", 0.0), "y0": calib.get("y0", 0.0), "sceneX": calib.get("sceneX", 0), "sceneY": calib.get("sceneY", 0)}
+        items += build_model_tiles(doc, c, argparse.Namespace(layers=a.layers, ids=a.ids, lod=a.lod, roofs_hidden=False), None)
+
+    def newest(m3):
+        loc = local_asset_path(m3, root)
+        if not loc:
+            return None
+        d, bn = os.path.dirname(loc), os.path.basename(loc)
+        stem = re.sub(r"_v\d+(\.[a-z0-9]+)$", "", bn)
+        ext = os.path.splitext(bn)[1]
+        vs = [int(m.group(1)) for fn in (os.listdir(d) if os.path.isdir(d) else []) for m in [re.match(re.escape(stem) + r"_v(\d+)" + re.escape(ext) + "$", fn)] if m]
+        return max(vs) if vs else None
+    res = sa.audit(sc, items, place, newest)
+    plan = sa.repair_plan(res, a.scene_uuid, "--placements " + ",".join(paths))
+    for ln in plan:
+        LOG(ln)
+    by = {}
+    for x in res["findings"]:
+        by[x["kind"]] = by.get(x["kind"], 0) + 1
+    return {"ok": True, "clean": res["ok"], "scene": sc.get("name"), "tiles_in_scene": len(sa.our_tiles(sc, place)), "tiles_in_plan": len(items), "counts": by,
+            "findings": res["findings"], "delete": [{"uuid": u, "pipelineId": p, "reason": w} for u, p, w in res["delete"]], "repush": res["repush"],
+            "keep": len(res["keep"]), "missing": res["missing"], "repair_plan": plan}
+
+
 def cmd_push_scene_3d(br, a):
     """One idempotent push of a whole 3D test scene: terrain/buildings -> foliage -> padding -> lights -> skybox + sun/ambient/tint flags (last) -> verification
     (files exist and load, scene flags read back). Re-running changes nothing that is byte-identical (versioned assets, id-keyed upserts)."""
@@ -1061,7 +1126,7 @@ def cmd_push_scene_3d(br, a):
 
     def models(placements):
         b = argparse.Namespace(**vars(base))
-        b.placements, b.prune, b.cmd, b.scene_mode, b.lighting, b.set_name = placements, False, "push-models", None, None, None
+        b.placements, b.prune, b.cmd, b.scene_mode, b.lighting, b.set_name = placements, bool(getattr(a, "prune", False)), "push-models", None, None, None
         b.assets_dir = root
         r = cmd_push_models(br, b)
         if not r.get("ok"):
@@ -1151,7 +1216,7 @@ def cmd_push_scene_3d(br, a):
 
 def parser():
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
-    ap.add_argument("cmd", choices=["status", "places", "list", "export-info", "push-scene", "push-token", "push-actor", "push-item", "push-models", "delete-scene", "link-region", "bake-texture", "push-lights", "import-scene", "push-scene-3d", "install-roof-macros", "roofs"])
+    ap.add_argument("cmd", choices=["status", "places", "list", "export-info", "push-scene", "push-token", "push-actor", "push-item", "push-models", "delete-scene", "link-region", "bake-texture", "push-lights", "import-scene", "push-scene-3d", "install-roof-macros", "roofs", "scene-audit"])
     ap.add_argument("--place", default="bridgehollow")
     ap.add_argument("--view", default="town")
     ap.add_argument("--preset")
@@ -1302,7 +1367,7 @@ def cmd_roofs(br, a):
 CMDS = {"status": cmd_status, "places": cmd_places, "list": cmd_list, "export-info": cmd_export_info, "push-scene": cmd_push_scene,
         "push-token": cmd_push_token, "push-actor": cmd_push_actor, "push-item": cmd_push_item, "push-models": cmd_push_models, "delete-scene": cmd_delete_scene,
         "link-region": cmd_link_region, "bake-texture": cmd_bake_texture, "push-lights": cmd_push_lights, "import-scene": cmd_import_scene, "push-scene-3d": cmd_push_scene_3d,
-        "install-roof-macros": cmd_install_roof_macros, "roofs": cmd_roofs}
+        "install-roof-macros": cmd_install_roof_macros, "roofs": cmd_roofs, "scene-audit": cmd_scene_audit}
 
 
 def main(argv=None, bridge=None):
@@ -1312,6 +1377,9 @@ def main(argv=None, bridge=None):
         import padding_heightmap
         return padding_heightmap.main(["push"] + _av[1:])
     # --- end padding
+    if _av and _av[0] in ("install-water", "set-water"):       # 3D water shader on a scene's water tiles (foundry_water.py)
+        import foundry_water
+        return foundry_water.main(_av, bridge)
     a = parser().parse_args(argv)
     try:
         res = CMDS[a.cmd](bridge or PsBridge(), a)

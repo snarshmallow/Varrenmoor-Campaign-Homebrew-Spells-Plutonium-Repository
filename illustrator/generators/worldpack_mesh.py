@@ -24,7 +24,7 @@ WALL_CAP_DROP_M = 0.02
 
 # ------------------------------------------------------------------ mesh container
 class Mesh:
-    def __init__(self, V, UV, subs, smooth=False, N=None, C=None):
+    def __init__(self, V, UV, subs, smooth=False, N=None, C=None, X=None):
         # N: optional explicit per-vertex normals (z-up frame, foliage crowns use spherical normals); C: optional per-vertex RGBA 0..1 (COLOR_0, AO / tint)
         self.N = None if N is None else np.asarray(N, float).reshape(-1, 3)
         self.C = None if C is None else np.asarray(C, float).reshape(-1, 4)
@@ -32,6 +32,7 @@ class Mesh:
         self.UV = np.asarray(UV, float).reshape(-1, 2)
         self.subs = {k: np.asarray(v, np.int64).reshape(-1, 3) for k, v in subs.items() if len(v)}
         self.smooth = smooth
+        self.X = {k: np.asarray(v, float).reshape(len(v), -1) for k, v in (X or {}).items()}      # custom per-vertex glTF attributes (name -> (n, k) float), e.g. _VBWATER (worldpack_water.py)
 
     @property
     def tri_count(self):
@@ -41,7 +42,7 @@ class Mesh:
         return self.V.min(0), self.V.max(0)
 
     def translated(self, d):
-        return Mesh(self.V + np.asarray(d, float), self.UV, self.subs, self.smooth, self.N, self.C)
+        return Mesh(self.V + np.asarray(d, float), self.UV, self.subs, self.smooth, self.N, self.C, self.X)
 
     def transformed(self, scale=1.0, rot_deg=0.0, offset=(0, 0, 0)):
         c, s = math.cos(math.radians(rot_deg)), math.sin(math.radians(rot_deg))
@@ -50,7 +51,7 @@ class Mesh:
         N = None
         if self.N is not None:
             N = np.stack([self.N[:, 0] * c - self.N[:, 1] * s, self.N[:, 0] * s + self.N[:, 1] * c, self.N[:, 2]], 1)
-        return Mesh(V + np.asarray(offset, float), self.UV, self.subs, self.smooth, N, self.C)
+        return Mesh(V + np.asarray(offset, float), self.UV, self.subs, self.smooth, N, self.C, self.X)
 
 
 def merge_meshes(meshes):
@@ -64,7 +65,8 @@ def merge_meshes(meshes):
         smooth = smooth and m.smooth
     if not V:
         return Mesh(np.zeros((0, 3)), np.zeros((0, 2)), {})
-    return Mesh(np.concatenate(V), np.concatenate(UV), {k: np.concatenate(v) for k, v in subs.items()}, smooth)
+    xk = set.intersection(*[set(m.X) for m in meshes])                  # custom attributes survive only when every part has them
+    return Mesh(np.concatenate(V), np.concatenate(UV), {k: np.concatenate(v) for k, v in subs.items()}, smooth, X={k: np.concatenate([m.X[k] for m in meshes]) for k in xk})
 
 
 class Builder:
@@ -360,7 +362,17 @@ def _add_kerbs(cx, b, e):
             b.quad(mat, a0, a1, top[j], top[i])
 
 
-def build_water(cx, e):
+def build_water(cx, e, settings=None, extras=None):
+    """Water surface with the data the 3D Canvas water shader reads (worldpack_water.py). The old flat-ribbon builder is kept as build_water_flat.
+    extras: optional dict, filled with the node extras ({"vbWater": ...})."""
+    import worldpack_water as ww
+    m, ex = ww.build(cx, e, settings)
+    if extras is not None:
+        extras.update(ex)
+    return m
+
+
+def build_water_flat(cx, e):
     b = Builder()
     mat, tile = e["surface"]["material"], e["surface"]["tile_ft"]
     if e.get("centerline"):
@@ -507,6 +519,9 @@ def terrain_heights(pack, carve=True, conform=True, road_grade=True, carve_bridg
     h = pack.heights
     if carve:
         h = wp.carved_heights(pack)
+        if carve_edge_ease_ft:                                         # river bed / valley eased back to bank level over the last N ft before the tile boundary (no cliff, no trench into the apron)
+            import terrain_edge as _te
+            h = _te.ease_carve_at_edge(h, pack.heights, pack.cell_ft, carve_edge_ease_ft)
     runs = None
     LAST_ROAD_GRADE.clear()
     gp = wg.params(road_grade)
@@ -519,9 +534,6 @@ def terrain_heights(pack, carve=True, conform=True, road_grade=True, carve_bridg
             if pk:
                 LAST_ROAD_GRADE.setdefault("lod", {})[f"step{lod_step}"] = pk
                 LAST_ROAD_GRADE["warnings"] = list(LAST_ROAD_GRADE.get("warnings", [])) + [
-        if carve_edge_ease_ft:                                         # river bed / valley eased back to bank level over the last N ft before the tile boundary (no cliff, no trench into the apron)
-            import terrain_edge as _te
-            h = _te.ease_carve_at_edge(h, pack.heights, pack.cell_ft, carve_edge_ease_ft)
                     f"terrain LOD step {lod_step}: {len(pk)} road(s) would be cut by the coarse terrain by up to {max(v['max_poke_ft'] for v in pk.values()):.1f} ft "
                     f"({', '.join(sorted(pk)[:4])}); build the LOD tile from worldpack_mesh.lod_terrain_heights() or skip that LOD"]
     elif conform:
@@ -559,9 +571,14 @@ def build_parts(pack, step=1, carve=True, conform=True, layers=None, drape_edge_
     """All meshable entities of a pack as Parts (see module doc), in a stable order. layers: optional set of layer names to keep.
     roof_mode (worldpack_roofs.py): none = roofs stay in the building mesh; per_building / per_scene = roofs are separate Parts of layer "roofs"."""
     import worldpack_pbr as pbr
+    import worldpack_roofs as wr
+    roof_mode = wr.check_mode(roof_mode)
+    roof_list = []
     pbr.prepare(pack.materials)
     h, runs, gp = terrain_heights(pack, carve, conform, road_grade, carve_bridges)
     cx = Ctx(pack, h)
+    import water_presets as _wz
+    water_settings = _wz.load_place_settings(pack.place)               # panel "Water" group (world/<place>/panel_state.json water3d), read only
     want = lambda l: layers is None or l in layers
     parts = []
 
@@ -571,16 +588,14 @@ def build_parts(pack, step=1, carve=True, conform=True, layers=None, drape_edge_
                       "members": [e["id"]], "instance": None, "foundry": e.get("foundry", {}), "entity": e, **kw})
     if want("terrain"):
         tid = f"terrain_{pack.place}"
-    import worldpack_roofs as wr
-    roof_mode = wr.check_mode(roof_mode)
-    roof_list = []
         t = {"layer": "terrain", "subtype": "terrain", "district": None, "ring": None, "group": "terrain", "id": tid}
         m = build_terrain(cx, step)
         parts.append({"id": tid, "layer": "terrain", "type": "terrain", "group": "terrain", "tags": t, "mesh": m, "pivot": _pivot(m), "members": [tid], "instance": None,
                       "foundry": {"pipelineId": f"world:{pack.place}:{tid}"}, "entity": {"id": tid, "name": "Terrain", "kind": "terrain", "tags": t}})
     for e in pack.list("water"):
         if want("water"):
-            add(e, "water", build_water(cx, e))
+            wx = {}
+            add(e, "water", build_water(cx, e, water_settings, wx), extras=wx)
     for e in pack.list("roads"):
         if want("roads"):
             if runs is not None and e["id"] in runs:
@@ -617,6 +632,10 @@ def build_parts(pack, step=1, carve=True, conform=True, layers=None, drape_edge_
                 if e.get("layout"):                                   # generated interior (interiors.py): storeys/roof/props as separate nodes
                     import worldpack_interiors as wi
                     m, dn, extra = wi.add_interior(cx, e, m, dn)
+                if roof_mode != "none":                               # roof becomes its own Part (worldpack_roofs.py)
+                    m, extra, rm_ = wr.separate(cx, e, m, extra)
+                    if rm_ is not None:
+                        roof_list.append((e, rm_))
                 add(e, "buildings", m, door_nodes=dn, **extra)
             else:
                 m = build_building(cx, e)
@@ -639,10 +658,6 @@ def build_parts(pack, step=1, carve=True, conform=True, layers=None, drape_edge_
     if want("foliage"):
         tmpl = {}
         for e in pack.list("foliage"):
-                if roof_mode != "none":                               # roof becomes its own Part (worldpack_roofs.py)
-                    m, extra, rm_ = wr.separate(cx, e, m, extra)
-                    if rm_ is not None:
-                        roof_list.append((e, rm_))
             x, y, z = e["points"][0]
             hm = e["height_ft"] * FT
             key = (e["species"], round(hm / e["scale"], 3) if e["scale"] else hm)
@@ -710,6 +725,9 @@ def write_glb(path, nodes, materials, textures="external", tex_root=None, extras
         if mid in mat_index:
             return mat_index[mid]
         r = materials.get(mid)
+        if r is None and mid.startswith("VB_water_"):           # 3D water (worldpack_water.py): plain translucent surface, the shader does the rest
+            import worldpack_water as _ww
+            r = _ww.material_record(mid)
         if r is None:                                           # dynamic building-style materials (building_styles.py) need no entry in the pack
             import building_styles as _bs
             r = _bs.material_record(mid) if mid.startswith("mat_s_") else None
@@ -781,9 +799,11 @@ def write_glb(path, nodes, materials, textures="external", tex_root=None, extras
             cb = np.clip(np.round(m.C * 255), 0, 255).astype("u1")
             col_acc = accessor(cb.tobytes(), 5121, "VEC4", len(cb), 34962)
             acc[col_acc]["normalized"] = True
+        xacc = {k: accessor(np.ascontiguousarray(v.astype("<f4")).tobytes(), 5126, {2: "VEC2", 3: "VEC3", 4: "VEC4"}[v.shape[1]], len(v), 34962)
+                for k, v in (getattr(m, "X", None) or {}).items() if m.subs and v.shape[1] in (2, 3, 4)}
         for mid in sorted(m.subs):
             F = m.subs[mid].astype("<u4")
-            at = {"POSITION": pos_acc, "TEXCOORD_0": uv_acc}
+            at = {"POSITION": pos_acc, "TEXCOORD_0": uv_acc, **xacc}
             if nrm_acc is not None:
                 at["NORMAL"] = nrm_acc
             if col_acc is not None:
@@ -820,7 +840,7 @@ def read_glb(path):
     g = json.loads(raw[20:20 + jl])
     bn = raw[20 + jl + 8:]
     comp = {5126: "<f4", 5125: "<u4", 5123: "<u2"}
-    ncomp = {"SCALAR": 1, "VEC2": 2, "VEC3": 3}
+    ncomp = {"SCALAR": 1, "VEC2": 2, "VEC3": 3, "VEC4": 4}
 
     def arr(i):
         a = g["accessors"][i]
@@ -833,17 +853,19 @@ def read_glb(path):
         V = UV = None
         subs = {}
         smooth = False
+        X = {}
         for p in m["primitives"]:
             P = arr(p["attributes"]["POSITION"]).astype(float)
             V = np.stack([P[:, 0], -P[:, 2], P[:, 1]], 1)
             UV = arr(p["attributes"]["TEXCOORD_0"]).astype(float)
             smooth = "NORMAL" in p["attributes"]
+            X = {k: arr(i).astype(float) for k, i in p["attributes"].items() if k.startswith("_")}
             subs[g["materials"][p["material"]]["name"]] = arr(p["indices"]).reshape(-1, 3).astype(np.int64)
         ex = dict(nd.get("extras", {}))
         if nd.get("translation"):                       # inverse of write_glb: glTF (x, y up, z south) -> Blender metres; "_t" is popped again by write_glb
             tx, ty, tz = nd["translation"]
             ex["_t"] = (tx, -tz, ty)
-        out.append((nd["name"], ex, Mesh(V if V is not None else np.zeros((0, 3)), UV if UV is not None else np.zeros((0, 2)), subs, smooth)))
+        out.append((nd["name"], ex, Mesh(V if V is not None else np.zeros((0, 3)), UV if UV is not None else np.zeros((0, 2)), subs, smooth, X=X)))
     return out, g
 
 

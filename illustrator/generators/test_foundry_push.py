@@ -139,7 +139,14 @@ class FakeBridge:
         return {"uuid": uuid}
 
     def op_delete(self, uuid):
-        kind, i = uuid.split(".")
+        parts = uuid.split(".")
+        if len(parts) == 4:        # embedded document: Scene.<id>.Tile.<id>
+            d = self.emb.get(parts[1], {}).get(parts[2], {})
+            if not self._pid(d.get(parts[3], {})):
+                raise fp.PushError("refusing to delete a document without the pipeline flag")
+            del d[parts[3]]
+            return {"deleted": uuid}
+        kind, i = parts
         if not self._pid(self.docs[kind][i]):
             raise fp.PushError("refusing to delete a document without the pipeline flag")
         del self.docs[kind][i]
