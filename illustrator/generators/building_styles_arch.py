@@ -521,3 +521,47 @@ def gable_rose(g, R, S, zt, spec):
         hub = circle(0.0, zc, 0.3 * r, 12)
         for k in range(len(hub)):
             bar(hub[k], hub[(k + 1) % len(hub)])
+
+
+# ------------------------------------------------------------------ gatehouse carriage arch (a through passage, open at both ends)
+def carriage_arch(edge_holes, P, special, zf):
+    """Town gatehouse: on the two longest opposite walls of a four-sided footprint everything within the arch span is replaced by one wide round-arched opening
+    (kind door, `carriage` True, no leaf) so a road can pass through; build_building_detailed adds the passage walls and barrel vault (carriage_tunnel).
+    special = {"carriage_arch": {width_ft, height_ft}}. Returns {i, j, u0, u1, z0, zs, z1, depth} or None (not four-sided / too narrow)."""
+    spec = (special or {}).get("carriage_arch")
+    n = len(P)
+    if not spec or n != 4:
+        return None
+    L = [math.dist(P[k], P[(k + 1) % n]) for k in range(n)]
+    i = 0 if L[0] + L[2] >= L[1] + L[3] else 1
+    j = i + 2
+    w = min(spec.get("width_ft", 10.0) * FT, 0.6 * L[i])
+    hgt = min(spec.get("height_ft", 12.0) * FT, 3.0 * w)
+    if w < 6.0 * FT:
+        return None
+    info = None
+    for k in (i, j):
+        c = L[k] / 2.0
+        u0, u1 = c - w / 2, c + w / 2
+        keep = [h for h in edge_holes[k] if h["u1"] < u0 - 1.0 * FT or h["u0"] > u1 + 1.0 * FT]
+        hole = {"u0": u0, "u1": u1, "z0": zf, "z1": zf + hgt, "kind": "door", "door": None, "carriage": True}
+        prep(hole, "round_arch")
+        edge_holes[k] = sorted(keep + [hole], key=lambda h: (h["u0"], h["z0"]))
+        if k == i:
+            info = {"i": i, "j": j, "u0": u0, "u1": u1, "z0": zf, "zs": hole["zs"], "z1": hole["z1"], "depth": L[(i + 1) % n]}
+    return info
+
+
+def carriage_tunnel(face, X, info, t, mat):
+    """Passage side walls and barrel vault between the two carriage openings, in edge i's frame X(u, v, z) (v inward from the outside face). Faces look into the passage."""
+    u0, u1, z0, zs = info["u0"], info["u1"], info["z0"], info["zs"]
+    va, vb = t, info["depth"] - t
+    if vb <= va:
+        return
+    mid = X((u0 + u1) / 2, (va + vb) / 2, (z0 + zs) / 2)
+    face_ = lambda pts: _oriented(face, mat, pts, mid)
+    for u in (u0, u1):                                                       # side walls up to the springing line
+        face_([X(u, va, z0), X(u, vb, z0), X(u, vb, zs), X(u, va, zs)])
+    cv = curve(u0, u1, zs, "round_arch")
+    for a, b in zip(cv, cv[1:]):                                             # barrel vault
+        face_([X(a[0], va, a[1]), X(a[0], vb, a[1]), X(b[0], vb, b[1]), X(b[0], va, b[1])])

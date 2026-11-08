@@ -158,7 +158,7 @@ class Geometry(unittest.TestCase):
                 self.assertIn(S["beam_mat"], mats, pid)
             if S["plinth"]:
                 self.assertIn(S["plinth_mat"], mats, pid)
-            self.assertEqual(len(dn), 1, pid)                              # the one door leaf stays a separate node
+            self.assertEqual(len(dn), 0 if pid == "town_gatehouse" else 1, pid)    # the one door leaf stays a separate node (the gatehouse has an open carriage arch instead)
             self.assertLess(m.tri_count, 20000, pid)
             bs.register_materials(pk.materials, S)
 
@@ -246,9 +246,10 @@ class ArchedOpenings(unittest.TestCase):
             W, D = e["_style"]["windows"], e["_style"]["door"]
             self.assertIn(W["shape"], wshape, pid)
             self.assertEqual(D["shape"], dshape, pid)
-            self.assertEqual(len(dn), 1, pid)
+            self.assertEqual(len(dn), 0 if pid == "town_gatehouse" else 1, pid)
             self.assertIn("mat_glass", m.subs, pid)
-            self.assertEqual(len(dn[0]["mesh"].subs), 1, pid)                       # the door node stays one material
+            if dn:
+                self.assertEqual(len(dn[0]["mesh"].subs), 1, pid)                   # the door node stays one material
 
     def test_shape_holes_stay_inside_old_span_and_storey(self):
         import building_styles_arch as bsa
@@ -387,6 +388,75 @@ class RoseWindowIsReal(unittest.TestCase):
 
 def _tri_area(P):
     return 0.5 * abs((P[1][0] - P[0][0]) * (P[2][1] - P[0][1]) - (P[2][0] - P[0][0]) * (P[1][1] - P[0][1]))
+
+
+class GatehouseCarriageArch(unittest.TestCase):
+    @staticmethod
+    def _ray_hits(m, o, d):
+        V = m.V
+        n = 0
+        for F in m.subs.values():
+            F = np.asarray(F)
+            A, B, C = V[F[:, 0]], V[F[:, 1]], V[F[:, 2]]
+            e1, e2 = B - A, C - A
+            pv = np.cross(d, e2)
+            det = (e1 * pv).sum(1)
+            ok = np.abs(det) > 1e-12
+            inv = np.where(ok, 1.0 / np.where(ok, det, 1.0), 0.0)
+            tv = o - A
+            u = (tv * pv).sum(1) * inv
+            qv = np.cross(tv, e1)
+            v = (qv * d).sum(1) * inv
+            t = (qv * e2).sum(1) * inv
+            n += int((ok & (u >= 0) & (v >= 0) & (u + v <= 1) & (t > 0)).sum())
+        return n
+
+    def _gate(self, with_arch=True):
+        pk = pack()
+        e = bsp.sample_entity(pk, "town_gatehouse", pk.list("buildings")[0])
+        e = bs.apply_style(e)
+        if not with_arch:
+            e["_style"] = dict(e["_style"], special={k: v for k, v in e["_style"]["special"].items() if k != "carriage_arch"})
+        cx = wm.Ctx(pk)
+        m, dn = wd.build_building_detailed(cx, e)
+        return e, m, dn, cx
+
+    def test_passage_is_open_end_to_end(self):
+        import building_styles_arch as bsa
+        e, m, dn, cx = self._gate(True)
+        e0, m0, dn0, _ = self._gate(False)
+        self.assertEqual(e["_style"]["special"]["carriage_arch"]["width_ft"], 10.0)
+        self.assertEqual(len(dn), 0)
+        self.assertEqual(len(dn0), 1)
+        P = [cx.B(p[0], p[1]) for p in e["polygon"]]
+        if sum(P[k][0] * P[(k + 1) % len(P)][1] - P[(k + 1) % len(P)][0] * P[k][1] for k in range(len(P))) < 0:
+            P.reverse()
+        holes = [[] for _ in P]
+        zf = (e["base_elevation_ft"] - cx.fr.z_origin_ft) * FT
+        info = bsa.carriage_arch(holes, P, e["_style"]["special"], zf)
+        self.assertIsNotNone(info)
+        for k in (info["i"], info["j"]):
+            car = [h for h in holes[k] if h.get("carriage")]
+            self.assertEqual(len(car), 1)
+            self.assertEqual(car[0]["shape"], "round_arch")
+            self.assertAlmostEqual(car[0]["u1"] - car[0]["u0"], 10.0 * FT, places=3)
+        i = info["i"]
+        a, b = np.array(P[i]), np.array(P[(i + 1) % 4])
+        d = (b - a) / np.linalg.norm(b - a)
+        nrm = np.array([-d[1], d[0]])
+        if np.dot(nrm, np.mean(P, axis=0) - a) < 0:
+            nrm = -nrm
+        c = a + d * (info["u0"] + info["u1"]) / 2
+        o = np.array([c[0] - nrm[0] * 3.0, c[1] - nrm[1] * 3.0, zf + 3.0 * FT])      # 3 ft above the floor, starting 3 m outside the front wall
+        dirv = np.array([nrm[0], nrm[1], 0.0])
+        self.assertEqual(self._ray_hits(m, o, dirv), 0)                                 # straight through: no wall, no door
+        self.assertGreaterEqual(self._ray_hits(m0, o, dirv), 2)                         # without the arch the ray hits both walls
+
+    def test_no_arch_when_not_requested(self):
+        import building_styles_arch as bsa
+        holes = [[] for _ in range(4)]
+        self.assertIsNone(bsa.carriage_arch(holes, [(0, 0), (6, 0), (6, 5), (0, 5)], {}, 0.0))
+        self.assertIsNone(bsa.carriage_arch(holes, [(0, 0), (1, 0), (1, 1)], {"carriage_arch": {}}, 0.0))
 
 
 class AssignCli(unittest.TestCase):

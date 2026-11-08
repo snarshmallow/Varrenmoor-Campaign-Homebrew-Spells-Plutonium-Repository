@@ -115,6 +115,9 @@ def build_building_detailed(cx, e):
     if e.get("_style"):                                      # arched / pointed windows and doors (building_styles_arch.py); the hole list stays the single source
         edge_holes = bsa.shape_holes(edge_holes, e["_style"]["windows"], zf, bool(e.get("layout")))
         edge_holes = bsa.shape_doors(edge_holes, e["_style"]["door"])
+        carriage = None if e.get("layout") else bsa.carriage_arch(edge_holes, P, e["_style"].get("special"), zf)   # town gatehouse: a real through passage
+    else:
+        carriage = None
     door_nodes = []
 
     def X(i, u, v, z):
@@ -192,6 +195,8 @@ def build_building_detailed(cx, e):
                 box(i, "mat_trim", u0 - tw, u0, -to, 0, za, zb_ + tw, skip=("v1",))
                 box(i, "mat_trim", u1, u1 + tw, -to, 0, za, zb_ + tw, skip=("v1",))
                 box(i, "mat_trim", u0, u1, -to, 0, zb_, zb_ + tw, skip=("v1",))
+            if h.get("carriage"):                # open passage: no leaf, no frame
+                continue
             if h["kind"] == "window":
                 box(i, "mat_trim", u0 - tw, u1 + tw, -2 * to, 0, za - tw, za, skip=("v1",))
                 pm, zm = (u0 + u1) / 2, (za + zb_) / 2
@@ -228,6 +233,8 @@ def build_building_detailed(cx, e):
                 did = h["door"].get("id") or f"{e['id']}_door"
                 door_nodes.append({"id": did, "hinge": (hx, hy, hz), "mesh": Mesh(Vb, M.UV, M.subs),
                                    "extras": {"isDoor": True, "doorId": did, "doorStyle": 1, "doorAnimateAngle": 1.5708, "building": e["id"]}})
+    if carriage:
+        bsa.carriage_tunnel(face, X_i(carriage["i"]), carriage, t, wmat)
     if S:                       # style geometry: timber frame, plinth, window bars, roof trim, chimney, towers (building_styles_geo.py)
         import building_styles_geo as bsg
         bsg.decorate(cx, e, b, S, P, D, N, edge_holes, zf, zt, storeys, lambda i: (lambda u, v, z: X(i, u, v, z)), t, uvo)
