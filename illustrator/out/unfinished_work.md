@@ -46,5 +46,14 @@ Everything below needs a live Illustrator or Foundry session. Nothing here was c
 * Git: untracked (`??`), 1.7 MB. Decision: keep it as a local-only scratch place, do NOT commit it. Delete it when the bigger-town tuning is finished; regenerate any time from `town_gen.py` with `town_params.json` seed 7 and area_scale 3.
 * Do not use it for 3D export; it has no export pack.
 
-## C. Not done by the offline agents
-See the final report of the coordinator for the items that were not reached.
+## C. Added after the offline passes (all offline-tested only)
+Live checks for the second pass of work (each needs the user's Foundry GM tab signed in and a fresh export + push):
+1. Padding streaks: run the padding push for Dyers Walk (`padding_heightmap.py push ...`, then `skybox.py set-flag ... --apply`), look at the apron from straight above: no radial colour streaks should run out from the terrain edge. Offline proof: `illustrator/out/padding_streaks_before_after.png`.
+2. Rose window: build a parish church (`building_styles_preview.py` or any place with `parish_church`), look at the gable end: you should see sky/interior light through the glazed circle, with a stone reveal. Try `special.rose.foil` = `trefoil` / `quatrefoil` in the preset.
+3. Gatehouse carriage arch: export a pack with a `town_gatehouse` building and walk a token through the arch in Foundry 3D; the gatehouse has no door node any more (check the interior layout generator is not asked for one).
+4. Town walls: run `worldpack_walls.py inject --place <walled place>` after `worldpack.py export`, then `worldpack_split.py split`; layer `walls` should appear as one GLB; push and check towers at gates, lintel across each gate, wall following the slope. Never run on a real pack yet (only synthetic tests).
+5. Bridges: Dyers Walk has no bridges, so the new auto terrain carving and the new preset choice were only tested on synthetic crossings; run Detect/Apply on a place with a river and re-export.
+6. Foliage on the final graded terrain: after an export with road grading (cut/fill on) push the foliage and compare tree heights next to a cut/fill road; trees on road beds, bridge decks and building footprints are now skipped (report: `foliage_merge_report.json` -> `keep_out_dropped_ids`).
+7. Climate mixes with the imported Baileywiki trees: scatter with `"climate": "temperate"`, merge, and check `triangle_report` / `lod_warnings` in `foliage_merge_report.json` (the beech hero is 30k triangles).
+8. New place layouts: Places tab, layout `radial` and `linear`; look at the result on the map (sheet: `illustrator/out/layout_templates_sheet.png`).
+9. Terrain LODs vs roads: `terrain_lod*.glb` written by `worldpack.py` (not changed, owned by another change set) can still cut roads at distance; use `worldpack_mesh.lod_terrain_heights` there (see road_grade_notes.md).
