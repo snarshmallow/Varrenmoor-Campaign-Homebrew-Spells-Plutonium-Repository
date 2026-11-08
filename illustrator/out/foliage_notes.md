@@ -37,7 +37,7 @@ Why: v1 crowns were solid low-poly blobs. v2 builds every tree from a bark skele
   (habits: round, oval, weep with hanging strands, pine = tufts on a long bare trunk), conifers = tiers of two drooping card rings plus leader tuft and an opaque core, shrubs/hedges = cards around a small opaque core.
   Every vertex has an explicit spherical normal (outward + a little up, so crowns shade as soft volumes) and COLOR_0 (AO: darker inside/low, per-cluster tint). Needs worldpack_mesh.Mesh N/C (added, optional, other callers unaffected).
   Cards are one segment (2 tris). LOD0 about 350-700 tris per tree (v1: 50-200), LOD1 about 1/3, LOD2 two crossed impostor quads (painted impostor tiles).
-- Imported (foliage_import.py, presets/foliage/imported/*.npz+png): found by listing Foundry data through the GM client (FilePicker) and read from `\VEGA\C\FoundryVTT resources\Data` (read-only); source
+- Imported (foliage_import.py, third_party/baileywiki/*.npz+png): found by listing Foundry data through the GM client (FilePicker) and read from `\VEGA\C\FoundryVTT resources\Data` (read-only); source
   baileywiki-content/assets/modules/baileywiki-3d/models/2025/02-february/trees/frontier-europeanbeech-xl-02.gltf (+zz-meshes, zz-textures) and
   .../maps-modular/ancient-castle/foliage-debris-clutter-etc/ancient-ash-tree-01/03.glb, ancient-bush-01/03.glb. All Draco; dumped via foundry-3d/blender/dump_gltf_npz.py. Raw copies stay in
   illustrator/out/foundry_trees/ (not committed). Species beech_bw (30.6k tris, hero: its canopy is 8.5k real photo-scan spray cards, LOD1 9k), ash_bw (9.3k), ash_small_bw (540), bush_bw1 (650), bush_bw3 (115).

@@ -1,7 +1,7 @@
 """Imported third-party tree meshes (Baileywiki 3D models from our Foundry data) as foliage species.
 
 Source: http://VEGA:30000/baileywiki-content/assets/modules/baileywiki-3d/models/... (Draco glTF; dumped with foundry-3d/blender/dump_gltf_npz.py into
-presets/foliage/imported/*.npz, textures resized into the shared atlas by foliage_mesh.write_atlas). Private use only (never distributed).
+third_party/baileywiki/*.npz, textures resized into the shared atlas by foliage_mesh.write_atlas). Private use only (never distributed).
 
 A species with gen {"type": "glb", "file": "<name>.npz", "parts": [{"mat": i, "tile": "<atlas tile>", "kind": "leaf"|"bark"|"skip", "uv": "direct"|"wrap"}]}
 loads the dump, re-scales it to the species' nominal height (mean height_ft), puts the pivot at the trunk base (z = 0 at the ground, xy = mean xy of the
@@ -18,7 +18,7 @@ import numpy as np
 import worldpack_mesh as wm
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-IMPORTED = os.path.join(HERE, "..", "presets", "foliage", "imported")
+IMPORTED = os.path.join(HERE, "..", "..", "third_party", "baileywiki")  # THIRD PARTY (paid Baileywiki assets): remove before any public release, see third_party/README.md
 FT = 0.3048
 _cache = {}
 
