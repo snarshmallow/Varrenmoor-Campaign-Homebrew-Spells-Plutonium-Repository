@@ -24,6 +24,18 @@ let socket = null;
 let retry = 1000;
 let timer = null;
 let generation = 0;
+let evicted = false;       // true after the relay closed us with 4002 ("replaced"): another GM tab took over, so do NOT auto-reconnect
+const lastNotice = new Map();
+const NOTICE_GAP_MS = 60000;
+
+// Rate-limited notification: the same key is shown at most once per NOTICE_GAP_MS (a reconnect loop must never spam the GM).
+function notify(level, key, msg, force = false) {
+  const now = Date.now();
+  if (!force && now - (lastNotice.get(key) ?? -Infinity) < NOTICE_GAP_MS) return false;
+  lastNotice.set(key, now);
+  try { ui.notifications[level](msg); } catch { /* UI not ready */ }
+  return true;
+}
 
 // start.bat writes the live tunnel URL here; Foundry serves it from the module folder (same origin).
 async function launcherUrl() {
@@ -35,8 +47,10 @@ async function launcherUrl() {
   } catch { return null; }
 }
 
+// connect() is the single entry point; settings changes call it too, which also clears the "evicted" state (user intent).
 async function connect() {
   clearTimeout(timer);
+  evicted = false;
   const gen = ++generation;
   if (socket) { socket.onclose = null; socket.close(); socket = null; }
   if (!game.user?.isGM || !game.settings.get(MOD, 'enabled')) return;
@@ -48,12 +62,28 @@ async function connect() {
   ws.onopen = () => ws.send(JSON.stringify({ type: 'hello', token }));
   ws.onmessage = async (ev) => {
     const m = JSON.parse(ev.data);
-    if (m.type === 'welcome') { retry = 1000; ui.notifications.info('Varrenmoor Bridge connected.'); return; }
+    if (m.type === 'welcome') {
+      retry = 1000;
+      // Rate-limited (once per minute): a flapping link must not spam 'connected'.
+      notify('info', 'connected', 'Varrenmoor Bridge connected.');
+      return;
+    }
     if (!m.id) return;
     try { ws.send(JSON.stringify({ id: m.id, result: await handle(m.op, m.args ?? {}) })); }
     catch (e) { ws.send(JSON.stringify({ id: m.id, error: String(e?.message ?? e) })); }
   };
-  ws.onclose = () => { timer = setTimeout(connect, retry); retry = Math.min(retry * 2, 30000); };
+  ws.onclose = (ev) => {
+    if (socket === ws) socket = null;
+    // 4002 = the relay replaced this client with a newer GM tab. Reconnecting would evict that tab in turn and both would
+    // fight forever (one "connected" notice per second). Stay disconnected; reloading this tab (F5) or toggling the
+    // settings takes the connection back on purpose.
+    if (ev && ev.code === 4002) {
+      evicted = true;
+      notify('warn', 'evicted', 'Varrenmoor Bridge: another GM tab took over the connection, so this tab disconnected. Close the extra GM tab, or press F5 here to take it back.');
+      return;
+    }
+    timer = setTimeout(connect, retry); retry = Math.min(retry * 2, 30000);
+  };
 }
 
 const coll = (name) => {

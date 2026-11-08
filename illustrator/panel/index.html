@@ -868,6 +868,20 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
   </div>
   <p class="note">Everything the pipeline creates is flagged, so pushing again updates in place. Existing documents you did not make are only changed after a confirm. Needs Varrenmoor Bridge module 0.3.0 on the Foundry server (foundry-bridge/DEPLOY_MODULE.md). Token: scene = the picked/last pushed one.</p>
   <div id="fOut" class="note" style="white-space:pre-wrap"></div>
+  <!-- BRIDGE SECTION (bridge_ui.js, lib/bridge.js; foundry-bridge/bridgectl.mjs) -->
+  <style>.bgrow{margin:2px 0;display:flex;flex-wrap:wrap;gap:4px;align-items:center}.bgk{color:var(--dim)}.bgrow code{background:var(--bg3);padding:0 3px;overflow-wrap:anywhere}#bgWarn{color:var(--bad);border:1px solid var(--bad);padding:3px 5px;margin:4px 0}#bgLog{max-height:130px;overflow:auto;white-space:pre-wrap;background:var(--bg2);border:1px solid var(--line);padding:2px 4px;font:10px monospace}#bgModal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:50}#bgModal[hidden]{display:none}#bgModal .box{background:var(--bg2);border:1px solid var(--line);padding:10px;max-width:280px}</style>
+  <h4>Bridge relay <span class="tag" id="bgStatus">not checked</span></h4>
+  <div class="btns"><button class="primary" data-act="bg_launch" title="Starts the Foundry relay as a hidden background process (no cmd window). If one is already running you are asked whether to restart it.">Launch Bridge</button><button data-act="bg_stop">Stop</button><button data-act="bg_status">Status</button><button data-act="bg_reveal" id="bgReveal">Reveal tokens</button></div>
+  <div id="bgWarn" hidden></div>
+  <div id="bgInfo"></div>
+  <div class="note">Relay log (last lines)</div><pre id="bgLog"></pre>
+  <details><summary class="note">Bridge options</summary><div class="grid">
+    <label>Node executable (blank = node on PATH) <input type="text" data-s="bridge.node" placeholder="node"></label>
+    <label>Env file (blank = foundry-bridge/.env) <input type="text" data-s="bridge.env"></label>
+    <label>State/log folder (blank = foundry-bridge/run) <input type="text" data-s="bridge.state"></label>
+    <label class="chk"><input type="checkbox" data-s="bridge.cim"> Start via WMI (escapes a host that kills its children)</label></div></details>
+  <div id="bgModal" hidden><div class="box"><p id="bgModalMsg"></p><div class="btns"><button class="primary" id="bgModalYes">OK</button><button id="bgModalNo">Cancel</button></div></div></div>
+  <!-- /BRIDGE SECTION -->
 </section>
 
 <!-- BRIDGES TAB (bridges_ui.js, lib/bridges.js; python generators/bridge_maker.py, bridge_preview.py; data world/<place>/bridges.json) -->
@@ -956,5 +970,7 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
 <script src="bridges_ui.js"></script><!-- BRIDGES -->
 <script src="lib/places.js"></script><!-- PLACES -->
 <script src="places_ui.js"></script><!-- PLACES -->
+<script src="lib/bridge.js"></script><!-- BRIDGE SECTION -->
+<script src="bridge_ui.js"></script><!-- BRIDGE SECTION -->
 <script src="main.js"></script>
 </body></html>

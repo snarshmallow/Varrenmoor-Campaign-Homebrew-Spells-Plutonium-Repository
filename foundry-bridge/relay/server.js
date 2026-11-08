@@ -23,6 +23,8 @@ export function createRelay({ apiToken = API_TOKEN, moduleToken = MODULE_TOKEN, 
   };
 
   let moduleSocket = null;
+  const startedAt = new Date().toISOString();
+  const replacedAt = [];   // times of 4002 evictions (two GM tabs fighting), for /health
   const pending = new Map();
 
   const server = http.createServer(async (req, res) => {
@@ -31,7 +33,9 @@ export function createRelay({ apiToken = API_TOKEN, moduleToken = MODULE_TOKEN, 
       res.end(JSON.stringify(body));
     };
     if (req.method === 'GET' && req.url === '/health') {
-      return send(200, { ok: true, moduleConnected: !!moduleSocket });
+      const cut = Date.now() - 60000;
+      while (replacedAt.length && replacedAt[0] < cut) replacedAt.shift();
+      return send(200, { ok: true, moduleConnected: !!moduleSocket, pid: process.pid, startedAt, replacedLastMinute: replacedAt.length });
     }
     if (req.method !== 'POST' || req.url !== '/rpc') return send(404, { error: 'not found' });
     const auth = req.headers.authorization || '';
@@ -70,7 +74,7 @@ export function createRelay({ apiToken = API_TOKEN, moduleToken = MODULE_TOKEN, 
         if (m.type === 'hello' && typeof m.token === 'string' && same(m.token, moduleToken)) {
           authed = true;
           clearTimeout(deadline);
-          if (moduleSocket && moduleSocket !== ws) moduleSocket.close(4002, 'replaced');
+          if (moduleSocket && moduleSocket !== ws) { replacedAt.push(Date.now()); moduleSocket.close(4002, 'replaced'); log('WARN replacing an existing module client (4002): two GM tabs are open?'); }
           moduleSocket = ws;
           ws.send(JSON.stringify({ type: 'welcome' }));
           log('module authenticated');

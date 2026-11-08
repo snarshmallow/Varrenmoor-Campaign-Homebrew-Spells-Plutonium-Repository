@@ -1,4 +1,4 @@
-# Varrenmoor Foundry Bridge (module 0.3.0)
+# Varrenmoor Foundry Bridge (module 0.3.1)
 
 ```
 Claude (HTTPS) --POST /rpc, Bearer API token--> relay --WebSocket--> Foundry module (GM browser tab)
@@ -23,6 +23,22 @@ Foundry (the server) stays on VEGA. The GM plays in a browser on ARCTURUS at `ht
 6. Asset writes from Arcturus go to `\\VEGA\varrenmoor-3d` (Vega's `Data\assets\varrenmoor-3d`, seen by Foundry as `assets/varrenmoor-3d/...`).
 
 `BIND_HOST` in `.env` overrides the listen address (default: `127.0.0.1` with a tunnel, `0.0.0.0` with `--local`). Local mode sends tokens in plain text over the home LAN; keep it off untrusted networks.
+
+## Managed relay (no cmd window): `bridgectl.mjs`
+```
+node bridgectl.mjs start|stop|restart|status|info|logs [--env F] [--state D] [--node EXE] [--cim] [--json] [--secrets]
+```
+The relay runs as `node daemon.mjs`, a hidden detached Node process (no console at all), started by `bridgectl.mjs`. Why this and not `start.bat` or `Start-Process -WindowStyle Hidden`: the glitches come from the console host (QuickEdit selection freezing output, a cmd window tied to the launching shell, `pause`). A Node process with no console cannot be frozen that way, survives the launching shell closing, needs no PowerShell or cmd, and writes its own log with `appendFileSync` so nothing buffers. `--cim` starts it through WMI (`Win32_Process.Create`), which also escapes a parent's Windows Job Object; use it if a host (a CEP panel, a task runner) kills its children on exit. Restart after a reboot is manual (Launch Bridge in the panel, or `node bridgectl.mjs start`); no startup entry is created.
+- Config: the same git-ignored `.env` as `start.bat` (tokens, `PORT`, `TUNNEL=off` = listen on all interfaces, `BIND_HOST`). Missing tokens are generated; existing values are never changed. It writes `client.json` for `bridge.ps1` like `start.bat` does. No Cloudflare tunnel: use `start.bat` for tunnel mode.
+- State: `run/relay.pid.json` (pid, port, bind, start time) and `run/relay.log` (rotated at 2 MB), both git-ignored.
+- Health: `GET /health` now returns `{ok, moduleConnected, pid, startedAt, replacedLastMinute}`. `status` is healthy only if the health pid matches the PID file ("managed"); a healthy relay without a matching PID file (an old `start.bat` relay) is reported "unmanaged", and `restart`/`stop` find its pid with `netstat` and refuse to kill anything that is not `node.exe`.
+- `info` prints the relay URLs (LAN and localhost), listen mode and the module settings; tokens only with `--secrets` (used by the panel).
+- Illustrator: the Foundry tab has a Launch/Stop/Status block over this (see `illustrator/README.md`).
+- Tests: `node --test foundry-bridge/bridgectl.test.mjs` (throwaway port 8799+, temp env, throwaway tokens; start, second start, info, 4002 eviction, restart, stop, stale PID file).
+- Not covered: surviving a Windows logoff or reboot (it does not), and the Job Object case for the default spawn mode (that is what `--cim` is for; not tested inside Illustrator).
+
+## Two GM tabs fighting (close code 4002)
+The relay keeps one module connection; a second authenticated GM client replaces the first (the first is closed with 4002). Module 0.3.0 reconnected on every close, so two GM tabs evicted each other about once per second and Foundry showed "Varrenmoor Bridge connected" each time. Module 0.3.1 does not reconnect after a 4002 close; it shows a single warning ("another GM tab took over ... close the extra tab, or press F5 to take it back"), and notices are rate limited to one per minute per kind. The relay now logs `WARN replacing an existing module client (4002)` and counts evictions in `/health` (`replacedLastMinute`). Until the module is redeployed (DEPLOY_MODULE.md), an old tab still loops: close the extra GM tab.
 
 ## Manual install
 1. In Foundry: Add-on Modules > Install Module > Manifest URL: `https://raw.githubusercontent.com/snarshmallow/Varrenmoor-Campaign-Homebrew-Spells-Plutonium-Repository/claude/adoring-shannon-yjixst/foundry-bridge/module/varrenmoor-bridge/module.json` (change `claude/adoring-shannon-yjixst` to `main` after merging; rebuild `module/varrenmoor-bridge.zip` whenever the module changes). Then enable it in the world.

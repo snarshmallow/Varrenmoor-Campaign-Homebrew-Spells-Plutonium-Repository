@@ -1,3 +1,7 @@
 node_modules/
 .env
 client.json
+run/
+*.log
+*.log.1
+*.pid.json
