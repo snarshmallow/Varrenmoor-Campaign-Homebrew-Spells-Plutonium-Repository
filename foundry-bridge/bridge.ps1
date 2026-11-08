@@ -5,7 +5,8 @@
 #   .\bridge.ps1 create -Args '{"documentName":"Scene","data":{...}}'
 # Settings are found, in order: -Config <file>, env FOUNDRY_BRIDGE_URL + FOUNDRY_BRIDGE_TOKEN, env FOUNDRY_BRIDGE_CONFIG,
 # then client.json that start.mjs / publish-client.mjs writes on the Foundry PC (<dataPath>\bridge\client.json), read
-# over the network at \\<host>\C\FoundryVTT resources\bridge\client.json (host guessed from foundry-3d\.env, else VEGA).
+# over the network at \\<host>\C\FoundryVTT resources\bridge\client.json. <host> is env FOUNDRY_BRIDGE_HOST, else the host of FOUNDRY_ASSETS_DIR in
+# foundry-3d\.env; no host is built in. env FOUNDRY_BRIDGE_SHARE overrides the whole share path ({host} is replaced). The Illustrator panel (Bridge > Advanced) shows which file is used.
 param([Parameter(Mandatory)][string]$Op, [string]$Args = '{}', [string]$Config = '', [string]$ArgsFile = '')
 $ErrorActionPreference = 'Stop'
 
@@ -14,18 +15,22 @@ function Find-Config {
   if ($env:FOUNDRY_BRIDGE_CONFIG) { return $env:FOUNDRY_BRIDGE_CONFIG }
   $local = Join-Path $PSScriptRoot 'client.json'     # written by start.mjs when the relay runs on this PC
   if (Test-Path $local) { return $local }
-  $hostName = 'VEGA'
+  $hostName = $env:FOUNDRY_BRIDGE_HOST
   $envFile = Join-Path $PSScriptRoot '..\foundry-3d\.env'
-  if (Test-Path $envFile) {
+  if (-not $hostName -and (Test-Path $envFile)) {
     foreach ($l in Get-Content $envFile) { if ($l -match '^\s*FOUNDRY_ASSETS_DIR\s*=\s*\\\\([^\\]+)\\') { $hostName = $Matches[1] } }
   }
-  $cands = @("\\$hostName\C\FoundryVTT resources\bridge\client.json")
+  $cands = @()
+  if ($hostName) {
+    $tmpl = if ($env:FOUNDRY_BRIDGE_SHARE) { $env:FOUNDRY_BRIDGE_SHARE } else { '\\{host}\C\FoundryVTT resources\bridge\client.json' }
+    $cands += $tmpl.Replace('{host}', $hostName)
+  }
   if ($env:LOCALAPPDATA) {
     $opt = Join-Path $env:LOCALAPPDATA 'FoundryVTT\Config\options.json'
     if (Test-Path $opt) { $cands += (Join-Path ((Get-Content $opt -Raw | ConvertFrom-Json).dataPath) 'bridge\client.json') }
   }
   foreach ($c in $cands) { if (Test-Path -LiteralPath $c) { return $c } }
-  throw "No bridge settings found. On the Foundry PC run: node foundry-bridge\publish-client.mjs (or restart start.bat). Looked for: $($cands -join '; ')"
+  throw "No bridge settings found. Set FOUNDRY_BRIDGE_HOST (the relay PC) or FOUNDRY_BRIDGE_CONFIG (a client.json), or on the relay PC run: node foundry-bridge\publish-client.mjs (or restart start.bat). Looked for: $($cands -join '; ')"
 }
 
 if ($env:FOUNDRY_BRIDGE_URL -and $env:FOUNDRY_BRIDGE_TOKEN) {

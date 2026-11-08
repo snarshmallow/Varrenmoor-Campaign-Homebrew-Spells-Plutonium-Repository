@@ -1,4 +1,5 @@
 import * as Pair from './pairing.js';
+import * as Crypto from './seccrypto.js';
 
 const MOD = 'varrenmoor-bridge';
 const COLLECTIONS = new Set(['Actor', 'Item', 'Scene', 'JournalEntry', 'Macro', 'RollTable', 'Playlist', 'Folder']);   // Folder: list/get/create/update only (no delete op exists)
@@ -15,10 +16,11 @@ const PIPE_DOCS = new Set([...COLLECTIONS, ...Object.keys(EMBEDDED)]);
 Hooks.once('init', () => {
   game.settings.register(MOD, 'enabled', { name: 'Connect to relay', hint: 'Only this GM client connects. Off by default.', scope: 'client', config: true, type: Boolean, default: false, onChange: () => connect() });
   game.settings.register(MOD, 'autoUrl', { name: 'Use launcher relay URL', hint: 'Read the current tunnel URL that start.bat writes into this module folder (relay-url.json), so quick-tunnel restarts need no re-pasting. Falls back to Relay URL below.', scope: 'client', config: true, type: Boolean, default: true, onChange: () => connect() });
-  game.settings.register(MOD, 'relayUrl', { name: 'Relay URL', hint: 'e.g. wss://name.trycloudflare.com/module. Used when the launcher file is missing or the option above is off.', scope: 'client', config: true, type: String, default: 'ws://127.0.0.1:3030/module', onChange: () => connect() });
-  game.settings.register(MOD, 'token', { name: 'Module token', hint: 'BRIDGE_MODULE_TOKEN from the relay.', scope: 'client', config: true, type: String, default: '', onChange: () => connect() });
-  game.settings.register(MOD, 'pairHost', { name: 'Relay address for pairing', hint: 'host or host:port of the PC running the relay on your LAN, e.g. 10.0.0.20:3030. Blank: the Pair button scans this PC\'s /24 network.', scope: 'client', config: true, type: String, default: '' });
-  game.settings.register(MOD, 'autoPair', { name: 'Offer pairing when not set up', hint: 'On startup, if there is no token and no pairing, look for the relay at the address above and offer to pair.', scope: 'client', config: true, type: Boolean, default: true });
+  game.settings.register(MOD, 'relayUrl', { name: 'Relay URL (manual token fallback)', hint: 'e.g. wss://name.trycloudflare.com/module. Leave at the default: the relay is then looked for beside Foundry (this page\'s own host, relay port below). Only used with the Module token below.', scope: 'client', config: true, type: String, default: 'ws://127.0.0.1:3030/module', onChange: () => connect() });
+  game.settings.register(MOD, 'token', { name: 'Module token (fallback, not needed when paired)', hint: 'BRIDGE_MODULE_TOKEN from the relay. Pairing replaces this: nothing to copy.', scope: 'client', config: true, type: String, default: '', onChange: () => connect() });
+  game.settings.register(MOD, 'relayPort', { name: 'Relay port', hint: 'Port the relay listens on (default 3030). With no address typed, the relay is expected on this page\'s own host at this port, e.g. Foundry at http://10.0.0.5:30000 means relay 10.0.0.5:3030.', scope: 'client', config: true, type: Number, default: 3030 });
+  game.settings.register(MOD, 'pairHost', { name: 'Relay address (optional)', hint: 'Only if the relay is NOT on the Foundry PC: host or host:port of the relay PC, e.g. 10.0.0.20:3030. Blank: found automatically beside Foundry; the Pair button also scans this PC\'s /24 network.', scope: 'client', config: true, type: String, default: '' });
+  game.settings.register(MOD, 'autoPair', { name: 'Ask for pairing automatically', hint: 'When this browser is not paired, ask the relay (if it allows auto-requests) as soon as the GM page loads and show a code to confirm on the Illustrator panel or relay window. Needs the Foundry page opened as http://<host>:30000.', scope: 'client', config: true, type: Boolean, default: true });
   game.settings.register(MOD, 'deviceAuth', { name: 'Paired device (internal)', scope: 'client', config: false, type: String, default: '' });
   game.settings.register(MOD, 'allowWrites', { name: 'Allow writes', hint: 'Permit create/update requests, and delete of documents that carry the pipeline flag (flags.varrenmoor.pipelineId) only. Leave off for read-only.', scope: 'world', config: true, type: Boolean, default: false });
 });
@@ -27,51 +29,60 @@ Hooks.once('ready', () => {
   try { const m = game.modules.get(MOD); if (m) m.api = { pair: (o) => startPairing({ scan: true, ...o }), unpair: () => forgetDevice(), status: () => ({ paired: !!readDevice(), connected: !!(socket && socket.readyState === 1) }) }; } catch { /* no api */ }
   if (!game.user.isGM) return;
   connect();
-  // No token and no pairing yet: look for a relay at the configured address and offer to pair (never scans the network on its own).
-  if (game.settings.get(MOD, 'enabled') && !readDevice() && !game.settings.get(MOD, 'token') && game.settings.get(MOD, 'autoPair') !== false) startPairing({ scan: false, silent: true });
+  // Not paired and no manual token: look for the relay beside Foundry (this page's own host, relay port) or at the typed address and, when the relay allows auto-requests,
+  // ask for pairing right away. Never scans the network on its own; one attempt per page load.
+  if (!readDevice() && !game.settings.get(MOD, 'token') && game.settings.get(MOD, 'autoPair') !== false) startPairing({ scan: false, silent: true, auto: true });
 });
 
-// ---- LAN pairing (0.4.0): no tokens to type. The relay shows "Approve this device?" with the same code this browser shows; the device token it issues is
-// kept in this browser's client-scoped setting 'deviceAuth' only. The manual Module token path below keeps working as a fallback.
+// ---- LAN pairing (0.5.0, encrypted handshake): no tokens to type. The relay (panel / relay window) shows "Approve this device?" with the same code this browser shows; the per-device
+// secret it issues arrives sealed under a key only this browser and the relay derive, and is kept in this browser's client-scoped setting 'deviceAuth' only. It is never sent again:
+// every connection proves it with an HMAC challenge-response. The manual Module token path below keeps working as a fallback.
 Hooks.on?.('renderSettingsConfig', (app, html) => {
   try {
     const root = html instanceof HTMLElement ? html : html[0] ?? html;
     const input = root.querySelector(`[name="${MOD}.pairHost"]`);
     if (!input || root.querySelector('.vb-pair-buttons')) return;
     const row = document.createElement('div'); row.className = 'form-group vb-pair-buttons';
-    row.innerHTML = '<label>Pairing</label><div class="form-fields"><button type="button" data-vb="pair"><i class="fa-solid fa-link"></i> Pair with relay</button> <button type="button" data-vb="unpair">Forget pairing</button></div><p class="hint">Pair: asks the relay PC for approval (relay window or Illustrator panel). No token is typed.</p>';
+    row.innerHTML = '<label>Pairing</label><div class="form-fields"><button type="button" data-vb="pair"><i class="fa-solid fa-link"></i> Pair with relay</button> <button type="button" data-vb="unpair">Forget pairing</button></div><p class="hint">Pair: finds the relay beside Foundry and asks for approval (Illustrator panel or relay window). No token is typed.</p>';
     row.querySelector('[data-vb="pair"]').addEventListener('click', () => startPairing({ scan: true }));
     row.querySelector('[data-vb="unpair"]').addEventListener('click', () => forgetDevice());
     (input.closest('.form-group') ?? input).after(row);
   } catch { /* settings UI differs: the console API still works */ }
 });
 
-const readDevice = () => { try { const d = JSON.parse(game.settings.get(MOD, 'deviceAuth') || 'null'); return d && d.host && d.deviceId && d.token ? d : null; } catch { return null; } };
+const readDevice = () => { try { const d = JSON.parse(game.settings.get(MOD, 'deviceAuth') || 'null'); return d && d.host && d.deviceId && d.secret ? d : null; } catch { return null; } };
+const pageIsHttps = () => String(globalThis.location?.protocol || 'http:').toLowerCase() === 'https:';
+const relayPort = () => Number(game.settings.get(MOD, 'relayPort')) || Pair.DEFAULT_PORT;
 const saveDevice = (d) => game.settings.set(MOD, 'deviceAuth', d ? JSON.stringify(d) : '');
 async function forgetDevice() { await saveDevice(null); notify('info', 'unpaired', 'Varrenmoor Bridge: pairing forgotten on this browser (revoke it on the relay too, in the Illustrator panel).', true); connect(); }
 
 const escapeHtml = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 let pairingRun = null, codeDialog = null;
 function showCode({ code, host }, state) {
-  const body = `<p>Pairing with the relay at <b>${escapeHtml(host)}</b>.</p><p>Look at the relay window or the Illustrator panel. It must show this exact code, and only then press <b>Approve</b> there:</p><p style="font-size:2em;letter-spacing:.15em;text-align:center"><b>${escapeHtml(code)}</b></p><p class="hint">If the code differs, press Deny there: someone else on the network is asking.</p>`;
+  const body = `<p>Pairing with the relay at <b>${escapeHtml(host)}</b> (encrypted handshake).</p><p>Open the Illustrator panel (Foundry tab) or look at the relay window. It must show this exact code, and only then press <b>Approve</b> there:</p><p style="font-size:2em;letter-spacing:.15em;text-align:center"><b>${escapeHtml(code)}</b></p><p class="hint">If the code differs, press Deny there: someone else on the network is asking.</p>`;
   try {
     const D = foundry.applications.api.DialogV2;
     codeDialog = new D({ window: { title: 'Pair Varrenmoor Bridge' }, content: body, buttons: [{ action: 'cancel', label: 'Cancel', default: true, callback: () => { state.cancelled = true; } }], rejectClose: false });
     codeDialog.render({ force: true });
   } catch { notify('info', 'pair-code', `Varrenmoor Bridge pairing code ${code}: approve on the relay only if it shows the same code.`, true); }
 }
-async function startPairing({ scan = false, silent = false } = {}) {
+async function startPairing({ scan = false, silent = false, auto = false } = {}) {
   if (!game.user?.isGM) { if (!silent) notify('warn', 'pair-gm', 'Only a GM can pair the bridge.', true); return { ok: false, reason: 'not a GM' }; }
   if (pairingRun) return { ok: false, reason: 'already pairing' };
+  // players and the Cloudflare route use https://foundry.<domain>: the relay refuses pairing from there on purpose, and an https page cannot reach it anyway (mixed content)
+  if (pageIsHttps()) { if (!silent) notify('warn', 'pair-https', 'Varrenmoor Bridge: pairing is only possible from a Foundry page opened over the local network as http://<foundry-PC>:30000, not through the https/Cloudflare address. Open that LAN address and press Pair again.', true); return { ok: false, reason: 'https page' }; }
+  try { Crypto.selfTest(); } catch (e) { if (!silent) notify('warn', 'pair-crypto', 'Varrenmoor Bridge: ' + (e?.message || e) + '. Pairing is disabled; re-copy the module files.', true); return { ok: false, reason: 'crypto self-test failed' }; }
   const state = pairingRun = { cancelled: false };
   try {
-    const found = await Pair.findRelay({ candidates: Pair.candidateHosts({ pairHost: game.settings.get(MOD, 'pairHost'), relayUrl: game.settings.get(MOD, 'relayUrl'), stored: readDevice() }), hostname: location.hostname, scan }, (...a) => fetch(...a));
-    if (!found) { if (!silent) notify('warn', 'pair-none', 'Varrenmoor Bridge: no relay found. Is it running (Launch Bridge in Illustrator)? You can type its address (host:3030) in the setting "Relay address for pairing".', true); return { ok: false, reason: 'no relay found' }; }
+    const found = await Pair.findRelay({ candidates: Pair.candidateHosts({ pairHost: game.settings.get(MOD, 'pairHost'), relayUrl: game.settings.get(MOD, 'relayUrl'), stored: readDevice(), pageHost: location.hostname, pageProtocol: location.protocol, relayPort: relayPort() }), hostname: location.hostname, scan }, (...a) => fetch(...a));
+    if (!found) { if (!silent) notify('warn', 'pair-none', `Varrenmoor Bridge: no relay found beside Foundry (${location.hostname}:${relayPort()}). Is it running? If it is on another PC, type its address (host:3030) in the setting "Relay address".`, true); return { ok: false, reason: 'no relay found' }; }
+    if (!found.info.pairing) { if (!silent) notify('warn', 'pair-off', `Varrenmoor Bridge: the relay at ${found.host} is running but pairing is switched off. Switch it on in the Illustrator panel (Foundry tab > Pairing), then press Pair again.`, true); return { ok: false, reason: 'pairing is off' }; }
+    if (auto && !found.info.autoRequest) return { ok: false, reason: 'relay does not allow auto-requests' };
     const res = await Pair.runPairing({ host: found.host, device: Pair.describeDevice({ user: game.user, world: game.world, location, ua: navigator.userAgent }), fetchFn: (...a) => fetch(...a),
       hooks: { onCode: (c) => showCode(c, state), cancelled: () => state.cancelled } });
     try { codeDialog?.close({ animate: false }); } catch { /* already closed */ } codeDialog = null;
     if (!res.ok) { notify('warn', 'pair-fail', `Varrenmoor Bridge pairing: ${res.reason}.`, true); return res; }
-    await saveDevice({ host: res.host, relayId: res.relayId, deviceId: res.deviceId, token: res.token, expiresAt: res.expiresAt });
+    await saveDevice({ host: res.host, relayId: res.relayId, deviceId: res.deviceId, secret: res.secret, expiresAt: res.expiresAt });
     await game.settings.set(MOD, 'enabled', true);
     notify('info', 'paired', 'Varrenmoor Bridge paired with the relay. No token needed from now on.', true);
     connect();
@@ -115,19 +126,28 @@ async function connect() {
   if (socket) { socket.onclose = null; socket.close(); socket = null; }
   if (!game.user?.isGM || !game.settings.get(MOD, 'enabled')) return;
   const token = game.settings.get(MOD, 'token');
-  const dev = readDevice();   // a paired-device token wins over the manual token; the manual token stays as the fallback when not paired
-  const url = dev ? Pair.wsUrlFor(dev.host) : (game.settings.get(MOD, 'autoUrl') && await launcherUrl()) || game.settings.get(MOD, 'relayUrl');
+  const dev = readDevice();   // a paired device wins over the manual token; the manual token stays as the fallback when not paired
+  // manual-token URL: the launcher file, else a relay URL the user typed, else (zero config) the relay beside Foundry: this page's own host at the relay port (plain-http pages only)
+  const typed = String(game.settings.get(MOD, 'relayUrl') || '').trim(), typedIsDefault = !typed || /^wss?:\/\/(127\.0\.0\.1|localhost|\[::1\]):3030\/module$/i.test(typed);
+  const derived = Pair.deriveRelayHost({ pageHost: globalThis.location?.hostname, pageProtocol: globalThis.location?.protocol, relayPort: relayPort() });
+  const url = dev ? Pair.wsUrlFor(dev.host) : (game.settings.get(MOD, 'autoUrl') && await launcherUrl()) || (typedIsDefault && derived ? Pair.wsUrlFor(derived) : typed);
   if (gen !== generation || !url || !(dev || token)) return;
   const ws = new WebSocket(url);
   socket = ws;
   let welcomed = false;
-  ws.onopen = () => ws.send(JSON.stringify(dev ? { type: 'hello', deviceId: dev.deviceId, deviceToken: dev.token } : { type: 'hello', token }));
+  const auth = dev ? Pair.deviceAuth(dev) : null;
+  ws.onopen = () => ws.send(JSON.stringify(dev ? auth.hello() : { type: 'hello', token }));
   ws.onmessage = async (ev) => {
     const m = JSON.parse(ev.data);
+    if (m.type === 'challenge' && auth) { ws.send(JSON.stringify(auth.answer(m))); return; }
     if (m.type === 'welcome') {
+      if (auth) {
+        const w = auth.welcome(m);
+        if (!w.ok) { evicted = true; try { ws.close(); } catch { /* closed */ } notify('warn', 'proof', 'Varrenmoor Bridge: ' + w.reason + '. Not connecting to it.', true); return; }
+        // the relay rotates the device secret near expiry or on request from the panel (sealed under a key only we and the relay derive); keep the new one (the old works for 5 more minutes)
+        if (w.secret) saveDevice({ ...dev, secret: w.secret, expiresAt: w.expiresAt || dev.expiresAt });
+      }
       retry = 1000; welcomed = true; unreachable = 0;
-      // the relay rotates the device token near expiry or on request from the panel; keep the new one (the old one works for 5 more minutes)
-      if (m.rotate && m.rotate.token && dev) saveDevice({ ...dev, token: m.rotate.token, expiresAt: m.rotate.expiresAt || dev.expiresAt });
       // Rate-limited (once per minute): a flapping link must not spam 'connected'.
       notify('info', 'connected', 'Varrenmoor Bridge connected.');
       return;

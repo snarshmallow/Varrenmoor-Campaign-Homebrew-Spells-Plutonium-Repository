@@ -1,12 +1,12 @@
-// Bridge section (Foundry tab): connect to (attach) or launch the Foundry relay via foundry-bridge/bridgectl.mjs, status, stop/restart, and the device
-// pairing list (approve / deny / revoke / rotate). Pure logic, no DOM: also loaded by test/test_bridge_jobs.js.
+// Bridge section (Foundry tab): connect to (attach) or launch the Foundry relay via foundry-bridge/bridgectl.mjs, status, stop/restart, pairing on/off and the device
+// pairing list (approve / deny / revoke / rotate; encrypted handshake, protocol 2). Pure logic, no DOM: also loaded by test/test_bridge_jobs.js.
 // Secrets (module token, API token, manual entries) are kept ONLY in memory (VB.bridgeMem) and are never written to panel_state.json, job logs or the panel log.
 (function (root) {
   "use strict";
   var VB = root.VBCore || (typeof require !== "undefined" ? require("./core.js") : null);
   if (!VB) return;
   VB.bridgeRoot = VB.bridgeRoot || "";                 // repo root; set by bridge_ui.js (ctx.root) or the test
-  VB.bridgeMem = { info: null, secrets: null, at: 0, manual: { api: "", module: "" }, found: [], pair: null, local: null, client: null }; // in-memory only
+  VB.bridgeMem = { info: null, secrets: null, at: 0, manual: { api: "", module: "" }, found: [], pair: null, local: null, client: null, clientSecrets: null }; // in-memory only
   // injectable for tests: (nodeExe, args, cwd) -> Promise<{code, out, err}>
   VB.bridgeExec = function (nodeExe, args, cwd) {
     return new Promise(function (resolve) {
@@ -17,11 +17,18 @@
     });
   };
   // injectable for tests: ({method, host, port, path, token, body}) -> Promise<{status, body}>. The token goes in the Authorization header only.
+  // Admin calls are SIGNED (X-VB-Auth: HMAC of the request keyed by the API token): the token itself never travels over the plain-http LAN. Same format as foundry-bridge/relay/adminauth.js.
+  VB.bridgeSign = function (token, method, url, body, ts, nonce) {
+    var c = require("crypto"); ts = ts || Date.now(); nonce = nonce || c.randomBytes(12).toString("base64").replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+    var sig = c.createHmac("sha256", token).update(["vb-admin-v1", String(method).toUpperCase(), url, String(ts), nonce, c.createHash("sha256").update(body || "").digest("hex")].join("\n")).digest("base64").replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+    return "v1 ts=" + ts + " n=" + nonce + " sig=" + sig;
+  };
   VB.bridgeHttp = function (o) {
     return new Promise(function (resolve, reject) {
       var data = o.body ? JSON.stringify(o.body) : "";
       var headers = { "content-type": "application/json", "content-length": Buffer.byteLength(data) };
-      if (o.token) headers.authorization = "Bearer " + o.token;
+      if (o.token && o.sign) headers["x-vb-auth"] = VB.bridgeSign(o.token, o.method || "POST", o.path, data);
+      else if (o.token) headers.authorization = "Bearer " + o.token;
       var req = require("http").request({ method: o.method || "POST", host: o.host, port: o.port, path: o.path, headers: headers, timeout: 4000 }, function (r) {
         var b = ""; r.on("data", function (c) { b += c; });
         r.on("end", function () { var j = {}; try { j = JSON.parse(b); } catch (e) { /* empty */ } resolve({ status: r.statusCode, body: j }); });
@@ -30,9 +37,10 @@
       req.end(data);
     });
   };
-  // Attach is the primary mode: the relay normally runs on the always-on PC (Vega). target = where to attach (editable, remembered; not a secret).
-  VB.BRIDGE_ATTACH_DEFAULT = "http://10.0.0.15:3030";
-  VB.bridgeDefaults = function () { return { node: "", env: "", state: "", cim: false, hidden: false, terminal: "auto", target: VB.BRIDGE_ATTACH_DEFAULT, mode: "attach", last: null }; };
+  // Attach is the primary mode: the relay normally runs on an always-on PC. target = where to attach (editable, remembered; not a secret). No address is built in: it comes from the
+  // saved setting, else from the relay URL in the client.json the tools already use (VB.bridgeMem.client.url), else it stays blank until "Find relays" / typing.
+  VB.BRIDGE_ATTACH_DEFAULT = "";
+  VB.bridgeDefaults = function () { return { node: "", env: "", state: "", cim: false, hidden: false, terminal: "auto", target: VB.BRIDGE_ATTACH_DEFAULT, mode: "attach", clientFile: "", last: null }; };
   // "http://10.0.0.15:3030" / "10.0.0.15" / "localhost:3030" -> { host, port } (port null when not given); blank -> {host:"",port:null}
   VB.bridgeParseTarget = function (s) {
     s = String(s || "").trim(); if (!s) return { host: "", port: null };
@@ -41,29 +49,54 @@
   };
   VB.bridgeIsLoopback = function (host) { host = String(host || "").toLowerCase(); return !host || host === "localhost" || host === "::1" || /^127\./.test(host); };
   // the address attach mode talks to: the saved one, else the default; "local" mode (Launch local bridge) has none
-  VB.bridgeAttachTarget = function (st) { var b = (st && st.bridge) || {}; return b.mode === "local" ? "" : (String(b.target || "").trim() || VB.BRIDGE_ATTACH_DEFAULT); };
+  VB.bridgeAttachTarget = function (st) { var b = (st && st.bridge) || {}; if (b.mode === "local") return ""; var c = VB.bridgeMem && VB.bridgeMem.client; return String(b.target || "").trim() || (c && c.url) || VB.BRIDGE_ATTACH_DEFAULT; };
   var sameRelay = function (a, b) {
     var x = VB.bridgeParseTarget(a), y = VB.bridgeParseTarget(b); if (!x.host || !y.host) return false;
     var lo = function (h) { return VB.bridgeIsLoopback(h) ? "loopback" : h.toLowerCase(); };
     return lo(x.host) === lo(y.host) && (x.port || 80) === (y.port || 80);
   };
-  // Where foundry_push.py (via foundry-bridge/bridge.ps1) gets its relay URL, in bridge.ps1's order: env FOUNDRY_BRIDGE_URL, FOUNDRY_BRIDGE_CONFIG, foundry-bridge/client.json,
-  // then \\<host>\C\FoundryVTT resources\bridge\client.json (host from foundry-3d/.env FOUNDRY_ASSETS_DIR, default VEGA). Only the url is read; the token is never kept.
-  // io = { fs, env, root, readShare(path) -> Promise<string|null> } (injectable for tests)
+  // Where foundry_push.py (via foundry-bridge/bridge.ps1) gets its relay URL AND token, in bridge.ps1's order: env FOUNDRY_BRIDGE_URL+TOKEN, a file chosen in Advanced (bridge.clientFile),
+  // env FOUNDRY_BRIDGE_CONFIG, foundry-bridge/client.json, then \\<host>\...\client.json on the PC that runs the relay. Nothing is hard-coded: <host> is env FOUNDRY_BRIDGE_HOST, the host of
+  // foundry-3d/.env FOUNDRY_ASSETS_DIR, or the host the panel is attached to; the path under the share is env FOUNDRY_BRIDGE_SHARE ({host} is replaced) or the default guess
+  // "\\{host}\C\FoundryVTT resources\bridge\client.json" (the file start.bat writes next to Foundry's data folder).
+  // io = { fs, env, root, readShare(path) -> Promise<string|null>, attachHost, clientFile } (injectable for tests). Returns { url, source, localFile, share, tried }; the url only: the tokens
+  // found in the file go to VB.bridgeMem.clientSecrets (memory only) and are never part of the result, a log line or panel_state.json.
   VB.bridgeClientInfo = function (io) {
     var fs = io.fs, env = io.env || {}, root = String(io.root || "").replace(/\\/g, "/");
-    var urlOf = function (txt) { try { var j = JSON.parse(String(txt).replace(/^\uFEFF/, "")); return j && j.url ? String(j.url) : ""; } catch (e) { return ""; } };
+    var parse = function (txt) { try { var j = JSON.parse(String(txt).replace(/^\uFEFF/, "")); return j && typeof j === "object" ? j : null; } catch (e) { return null; } };
     var readLocal = function (f) { try { return fs.readFileSync(f, "utf8"); } catch (e) { return null; } };
-    if (env.FOUNDRY_BRIDGE_URL && env.FOUNDRY_BRIDGE_TOKEN) return Promise.resolve({ url: env.FOUNDRY_BRIDGE_URL, source: "environment FOUNDRY_BRIDGE_URL", localFile: false });
-    var cfg = env.FOUNDRY_BRIDGE_CONFIG; if (cfg) { var t0 = readLocal(cfg); if (t0 !== null) return Promise.resolve({ url: urlOf(t0), source: cfg, localFile: false }); }
-    var local = root + "/foundry-bridge/client.json", t1 = readLocal(local);
-    if (t1 !== null) return Promise.resolve({ url: urlOf(t1), source: "foundry-bridge/client.json on this PC", localFile: true });
-    var host = "VEGA", e = readLocal(root + "/foundry-3d/.env"), m = e && e.match(/^\s*FOUNDRY_ASSETS_DIR\s*=\s*\\\\([^\\]+)\\/m); if (m) host = m[1];
-    var share = "\\\\" + host + "\\C\\FoundryVTT resources\\bridge\\client.json";
-    return Promise.resolve(io.readShare ? io.readShare(share) : null).then(function (txt) {
-      return txt === null || txt === undefined ? { url: "", source: "none found (no foundry-bridge/client.json here, and " + share + " is unreachable)", localFile: false, share: share }
-        : { url: urlOf(txt), source: share, localFile: false, share: share };
-    });
+    var isUnc = function (f) { return /^\\\\/.test(f) || /^\/\//.test(f); };
+    var done = function (txt, source, extra) {
+      var j = parse(txt) || {}; VB.bridgeMem.clientSecrets = { api: j.token ? String(j.token) : "", module: j.moduleToken ? String(j.moduleToken) : "", url: j.url ? String(j.url) : "", source: source };
+      return Object.assign({ url: j.url ? String(j.url) : "", source: source, localFile: false }, extra || {});
+    };
+    VB.bridgeMem.clientSecrets = null;
+    if (env.FOUNDRY_BRIDGE_URL && env.FOUNDRY_BRIDGE_TOKEN) { VB.bridgeMem.clientSecrets = { api: String(env.FOUNDRY_BRIDGE_TOKEN), module: "", url: String(env.FOUNDRY_BRIDGE_URL), source: "environment" }; return Promise.resolve({ url: env.FOUNDRY_BRIDGE_URL, source: "environment FOUNDRY_BRIDGE_URL", localFile: false }); }
+    var explicit = []; if (io.clientFile) explicit.push(io.clientFile); if (env.FOUNDRY_BRIDGE_CONFIG) explicit.push(env.FOUNDRY_BRIDGE_CONFIG);
+    var local = root + "/foundry-bridge/client.json";
+    var hosts = [], addHost = function (h) { h = String(h || "").trim(); if (h && !VB.bridgeIsLoopback(h) && hosts.indexOf(h) < 0) hosts.push(h); };
+    addHost(env.FOUNDRY_BRIDGE_HOST);
+    var e = readLocal(root + "/foundry-3d/.env"), m = e && e.match(/^\s*FOUNDRY_ASSETS_DIR\s*=\s*\\\\([^\\]+)\\/m); if (m) addHost(m[1]);
+    addHost(io.attachHost);
+    var tmpl = env.FOUNDRY_BRIDGE_SHARE || "\\\\{host}\\C\\FoundryVTT resources\\bridge\\client.json";
+    var shares = hosts.map(function (h) { return tmpl.replace(/\{host\}/g, h); });
+    var tried = [], i, t;
+    for (i = 0; i < explicit.length; i++) {   // a file chosen on purpose: a local path or a share
+      if (isUnc(explicit[i]) && io.readShare) continue;
+      t = readLocal(explicit[i]); tried.push(explicit[i]); if (t !== null) return Promise.resolve(done(t, explicit[i], { localFile: false }));
+    }
+    t = readLocal(local); tried.push(local);
+    if (t !== null) return Promise.resolve(done(t, "foundry-bridge/client.json on this PC", { localFile: true }));
+    var remote = explicit.filter(function (f) { return isUnc(f); }).concat(shares), idx = 0;
+    var next = function () {
+      if (idx >= remote.length) {
+        var why = remote.length ? "none found (no foundry-bridge/client.json here, and nothing readable at " + remote.join(" or ") + ")" : "none found (no foundry-bridge/client.json here, and no relay PC known to look on: attach to a relay first, set FOUNDRY_BRIDGE_HOST, or choose the file under Advanced)";
+        return { url: "", source: why, localFile: false, share: remote[0] || "", tried: tried.concat(remote) };
+      }
+      var f = remote[idx++]; tried.push(f);
+      return Promise.resolve(io.readShare ? io.readShare(f) : null).then(function (txt) { return txt === null || txt === undefined ? next() : done(txt, f, { share: f }); });
+    };
+    return Promise.resolve(next());
   };
   // compares the URL foundry_push would use with the relay this panel is attached to; { ok, text }
   VB.bridgeClientCheck = function (clientUrl, attach) {
@@ -131,21 +164,32 @@
   VB.bridgeTwoRelays = function (localUp, remoteUp, attachIsLocal) { return !!(localUp && remoteUp && !attachIsLocal); };
   VB.bridgeStatusSummary =function (s) { return { at: new Date().toISOString(), running: !!s.running, managed: !!s.managed, mode: s.mode || null, port: s.port, host: s.host || null, pid: s.pid || null, moduleConnected: !!s.moduleConnected, bind: s.bind, startedAt: s.startedAt || null }; };
   // keeps the manual token entries across refreshes
-  VB.bridgeRemember = function (info) { var m = VB.bridgeMem.manual || { api: "", module: "" }; VB.bridgeMem = { info: info, secrets: info.secrets || null, at: Date.now(), manual: m, found: VB.bridgeMem.found || [], pair: VB.bridgeMem.pair, local: VB.bridgeMem.local, client: VB.bridgeMem.client }; };
-  // the API token pairing admin calls need: the relay's own .env on this PC, else the manual entry
-  VB.bridgeApiToken = function () { var s = VB.bridgeMem.secrets; return (s && s.apiToken) || VB.bridgeMem.manual.api || ""; };
-  VB.bridgeModuleToken = function () { var s = VB.bridgeMem.secrets; return (s && s.moduleToken) || VB.bridgeMem.manual.module || ""; };
+  VB.bridgeRemember = function (info) { var m = VB.bridgeMem.manual || { api: "", module: "" }; VB.bridgeMem = { info: info, secrets: info.secrets || null, at: Date.now(), manual: m, found: VB.bridgeMem.found || [], pair: VB.bridgeMem.pair, local: VB.bridgeMem.local, client: VB.bridgeMem.client, clientSecrets: VB.bridgeMem.clientSecrets }; };
+  // Where the admin (API) token comes from, in order: (1) the relay's own .env, ONLY when the attached relay runs on this PC; (2) the client.json the tools already use
+  // (foundry-bridge/client.json or the share), when it names the relay this panel is attached to; (3) a password typed in Advanced (memory only). Returns { token, source }.
+  VB.bridgeTokenSource = function (kind) {   // kind: "api" | "module"
+    var m = VB.bridgeMem, info = m.info, remote = !!(info && info.status && info.status.remote), key = kind === "module" ? "moduleToken" : "apiToken";
+    if (m.secrets && m.secrets[key] && !remote) return { token: m.secrets[key], source: "the relay's .env on this PC" };
+    var cs = m.clientSecrets, att = (typeof VB.bridgeAttachNow === "function" && VB.bridgeAttachNow()) || "";
+    if (cs && cs[kind] && (!att || !cs.url || sameRelay(cs.url, att))) return { token: cs[kind], source: "client.json (" + (cs.source || "found by the tools") + ")" };
+    var man = kind === "module" ? m.manual.module : m.manual.api;
+    return man ? { token: man, source: "typed (memory only)" } : { token: "", source: "" };
+  };
+  VB.bridgeApiToken = function () { return VB.bridgeTokenSource("api").token; };
+  VB.bridgeModuleToken = function () { return VB.bridgeTokenSource("module").token; };
 
   // ---- pairing admin (HTTP to the relay; LAN/loopback only on the relay side) --------------------------------------------------------
-  function relayAddr() {
-    var i = VB.bridgeMem.info, s = i && i.status; if (!s || !s.running) throw new Error("the relay is not running");
-    return { host: s.remote ? s.host : "127.0.0.1", port: s.port };
+  function relayAddr() {   // the relay a status job found running; else the attached address (so pairing works right after the panel opens, before any job ran)
+    var i = VB.bridgeMem.info, s = i && i.status; if (s && s.running) return { host: s.remote ? s.host : "127.0.0.1", port: s.port };
+    var t = VB.bridgeParseTarget(typeof VB.bridgeAttachNow === "function" ? VB.bridgeAttachNow() : ""); if (t.host) return { host: t.host, port: t.port || 3030 };
+    throw new Error("the relay is not running");
   }
   VB.bridgePairCall = function (p, body) {
-    var tok = VB.bridgeApiToken(); if (!tok) return Promise.reject(new Error("no API token: it is read from foundry-bridge/.env on this PC, or type it under Tokens for another PC"));
+    var tok = VB.bridgeApiToken(); if (!tok) return Promise.reject(new Error("no API token yet: it is read from client.json (the file the tools use) or the relay's .env; otherwise type it under Advanced"));
     var a = relayAddr();
-    return VB.bridgeHttp({ method: "POST", host: a.host, port: a.port, path: p, token: tok, body: body || {} }).then(function (r) {
-      if (r.status === 401) throw new Error("the relay rejected the API token");
+    return VB.bridgeHttp({ method: "POST", host: a.host, port: a.port, path: p, token: tok, sign: true, body: body || {} }).then(function (r) {
+      if (r.status === 401) throw new Error(r.body && /clock/.test(r.body.error || "") ? "the PCs' clocks differ by more than 5 minutes (fix the time on one of them)" : "the relay rejected the API token (wrong token, or the relay is older than 0.5: restart it once with the current start.bat)");
+      if (r.status === 404 && r.body && r.body.error === "not found") throw new Error("this relay is older than 0.5 and has no pairing admin: close its window and run start.bat once on that PC (nothing else to do)");
       if (r.status === 403) throw new Error("the relay refuses pairing admin from this address (LAN/loopback only)");
       if (r.status >= 400) throw new Error((r.body && r.body.error) || "relay answered " + r.status);
       return r.body;
@@ -156,6 +200,8 @@
   VB.bridgePairDeny = function (id) { return VB.bridgePairCall("/pair/deny", { id: id }); };
   VB.bridgePairRevoke = function (deviceId) { return VB.bridgePairCall("/pair/revoke", { deviceId: deviceId }); };
   VB.bridgePairRotate = function (deviceId) { return VB.bridgePairCall("/pair/rotate", { deviceId: deviceId }); };
+  // switch pairing on/off (and auto-request) on the running relay, no restart. enabled/autoRequest are booleans; omit to leave unchanged.
+  VB.bridgePairConfig = function (cfg) { return VB.bridgePairCall("/pair/config", cfg || {}); };
 
   var infoStep = function (st) { return { t: "fn", label: "read setup info", fn: function (run) {
     return ctl(st, "info", ["--secrets"]).then(function (i) { VB.bridgeRemember(i); run.setState("bridge.last", VB.bridgeStatusSummary(i.status)); run.log("bridge: " + (i.status.running ? (i.status.mode || "running") + " on " + (i.status.host || "127.0.0.1") + ":" + i.status.port : "not running")); }); } }; };

@@ -801,43 +801,53 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
 <!-- /PLACES TAB -->
 
 <section id="tab-foundry" role="tabpanel">
-  <!-- BRIDGE SECTION (bridge_ui.js, lib/bridge.js; foundry-bridge/bridgectl.mjs). Kept at the TOP of the Foundry tab so it is easy to find. -->
-  <style>.bgrow{margin:2px 0;display:flex;flex-wrap:wrap;gap:4px;align-items:center}.bgk{color:var(--dim)}.bgpend{border:1px solid var(--warn);padding:3px 5px;margin:3px 0;background:var(--bg2)}.bgcode{font-size:15px;letter-spacing:2px;color:var(--warn)}.bgbad{color:var(--bad)}.bgrow code{background:var(--bg3);padding:0 3px;overflow-wrap:anywhere}#bgWarn,#bgTwo{color:var(--bad);border:1px solid var(--bad);padding:3px 5px;margin:4px 0}#bgTwo{font-weight:bold;background:rgba(226,104,92,.12)}#bgWarn[hidden],#bgTwo[hidden]{display:none}#bgLog{max-height:130px;overflow:auto;white-space:pre-wrap;background:var(--bg2);border:1px solid var(--line);padding:2px 4px;font:10px monospace}#bgModal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:50}#bgModal[hidden]{display:none}#bgModal .box{background:var(--bg2);border:1px solid var(--line);padding:10px;max-width:280px}.bgbox{border:1px solid var(--line);background:var(--bg2);padding:4px 6px;margin:5px 0}.bgbox.main{border-color:var(--acc)}.bgbox h5{margin:0 0 3px;font-size:12px}.bgbox .btns{margin:3px 0}#bgAttachSt.ok{color:var(--ok)}#bgAttachSt.no{color:var(--warn)}#bgClient.bad{color:var(--warn)}#bgCloseBtn{min-width:120px}</style>
+  <!-- BRIDGE SECTION (bridge_ui.js, lib/bridge.js; foundry-bridge/bridgectl.mjs). Kept at the TOP of the Foundry tab. Everyday use: status, pairing requests, paired devices. Everything else is under Advanced. -->
+  <style>.bgrow{margin:2px 0;display:flex;flex-wrap:wrap;gap:4px;align-items:center}.bgk{color:var(--dim)}.bgpend{border:1px solid var(--warn);padding:3px 5px;margin:3px 0;background:var(--bg2)}.bgcode{font-size:15px;letter-spacing:2px;color:var(--warn)}.bgbad{color:var(--bad)}.bgrow code{background:var(--bg3);padding:0 3px;overflow-wrap:anywhere}#bgWarn,#bgTwo{color:var(--bad);border:1px solid var(--bad);padding:3px 5px;margin:4px 0}#bgTwo{font-weight:bold;background:rgba(226,104,92,.12)}#bgWarn[hidden],#bgTwo[hidden],#bgLocalBox[hidden]{display:none}#bgLog{max-height:130px;overflow:auto;white-space:pre-wrap;background:var(--bg2);border:1px solid var(--line);padding:2px 4px;font:10px monospace}#bgModal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:50}#bgModal[hidden]{display:none}#bgModal .box{background:var(--bg2);border:1px solid var(--line);padding:10px;max-width:280px}.bgbox{border:1px solid var(--line);background:var(--bg2);padding:4px 6px;margin:5px 0}.bgbox.main{border-color:var(--acc)}.bgbox h5{margin:0 0 3px;font-size:12px}.bgbox .btns{margin:3px 0}#bgAttachSt.ok{color:var(--ok)}#bgAttachSt.no{color:var(--warn)}#bgClient.bad{color:var(--warn)}#bgCloseBtn{min-width:120px}.bgst{display:grid;grid-template-columns:auto minmax(0,1fr);gap:2px 8px;margin:3px 0}.bgst>span{min-width:0;overflow-wrap:anywhere}.bgst>.bgk{white-space:nowrap}.bgon{color:var(--ok)}.bgoff{color:var(--warn)}#bgAdv{margin:6px 0;border:1px solid var(--line);padding:2px 6px;background:var(--bg2)}#bgAdv>summary{cursor:pointer}#bgAdv h6{margin:8px 0 2px;font-size:11px;color:var(--dim);text-transform:uppercase}</style>
   <h4 id="bridgeRelayHead">Bridge relay <span class="tag" id="bgStatus">not checked</span></h4>
   <div id="bgTwo" hidden></div>
   <div class="bgbox main">
-    <h5>Attach to existing bridge <span class="tag">default</span></h5>
-    <div class="note">The relay normally runs on the always-on PC (Vega). This PC only attaches to it; nothing is started or restarted here.</div>
-    <label>Relay address (saved in the panel settings; not a secret) <input type="text" data-s="bridge.target" id="bgTarget" placeholder="http://10.0.0.15:3030"></label>
-    <div class="btns"><button class="primary" data-act="bg_attach" id="bgAttachBtn" title="Checks the relay at this address (read-only) and attaches this panel to it. Never starts or restarts anything.">Connect</button><button data-act="bg_attach_default" title="Put http://10.0.0.15:3030 back in the address box">Use default</button><button data-act="bg_status">Status</button><button data-act="bg_probe" title="Looks for a relay on this PC and the LAN (read-only)">Find relays</button><button data-act="bg_reveal" id="bgReveal">Reveal tokens</button></div>
+    <div id="bgSummary" class="bgst"></div>
+    <label>Relay address (found automatically; edit only if it is wrong) <input type="text" data-s="bridge.target" id="bgTarget" placeholder="found automatically (client.json / Find)"></label>
+    <div class="btns"><button class="primary" data-act="bg_attach" id="bgAttachBtn" title="Checks the relay at this address (read-only) and attaches this panel to it. Never starts or restarts anything.">Connect</button><button data-act="bg_probe" title="Looks for a relay on this PC and the LAN (read-only) and fills in the address">Find relay</button></div>
     <div id="bgAttachSt" class="note">not checked</div>
-    <div id="bgClient" class="note"></div>
   </div>
-  <div class="bgbox">
-    <h5>Local relay on this PC</h5>
+  <div id="bgWarn" hidden></div>
+  <h4>Pairing <span class="note">(the Foundry module asks; you approve here)</span></h4>
+  <div id="bgPairCtl"></div>
+  <div id="bgPair"></div>
+  <div id="bgLocalBox" class="bgbox" hidden>
+    <h5>Relay running on this PC</h5>
     <div id="bgLocal" class="note">checking...</div>
     <div class="btns"><button class="danger" data-act="bg_close" id="bgCloseBtn" disabled title="Stops only a bridge relay running on THIS PC (node.exe only). Never touches a relay on another PC.">No local bridge running</button></div>
   </div>
-  <div id="bgWarn" hidden></div>
-  <div id="bgFound"></div>
-  <div id="bgInfo"></div>
-  <h4>Pair devices <span class="note">(the Foundry module asks to pair; you approve it here)</span></h4>
-  <div id="bgPair"></div>
-  <details><summary class="note">Tokens for a relay on another PC (kept in memory only, never saved)</summary><div class="grid">
-    <label>API token <input type="password" id="bgManApi" autocomplete="off"></label>
-    <label>Module token (optional, for the manual path) <input type="password" id="bgManMod" autocomplete="off"></label></div>
-    <div class="note">Tokens are read from foundry-bridge/.env only for a relay on THIS PC; for the attached relay type them here.</div>
-    <div class="btns"><button data-act="bg_tokens">Use these tokens</button></div></details>
-  <div class="note">Relay log (last lines, local relay only)</div><pre id="bgLog"></pre>
-  <details id="bgLaunchBox"><summary class="note">Launch local bridge (secondary: only if this PC should run the relay)</summary>
-    <div class="note">Only use this if this PC should run the relay itself. Do not run it while the Vega relay is up: two relays confuse Claude and the Foundry module.</div>
-    <div class="btns"><button data-act="bg_launch" title="Starts a relay on THIS PC in a visible window; attaches instead if one already runs here. Never restarts.">Launch local bridge</button><button data-act="bg_restart" title="Replaces the relay running on this PC (asks first).">Restart local</button></div>
+  <details id="bgAdv"><summary class="note">Advanced (launch a relay here, tokens, window options, diagnostics)</summary>
+    <h6>Relay on this PC</h6>
+    <div class="note">Only if this PC should run the relay itself. Do not run it while another relay is up: two relays confuse Claude and the Foundry module.</div>
+    <div class="btns"><button data-act="bg_launch" title="Starts a relay on THIS PC in a visible window; attaches instead if one already runs here. Never restarts.">Launch local bridge</button><button data-act="bg_restart" title="Replaces the relay running on this PC (asks first).">Restart local</button><button data-act="bg_status" title="Re-reads the relay's setup info">Refresh info</button></div>
+    <div id="bgLocalAdv" class="note"></div>
+    <div class="btns"><button class="danger" data-act="bg_close" id="bgCloseBtn2" disabled>No local bridge running</button></div>
     <div class="grid">
     <label class="chk"><input type="checkbox" data-s="bridge.hidden"> Hidden mode (no window; a detached background process). Default is a visible relay window.</label>
+    <label class="chk"><input type="checkbox" data-s="bridge.cim"> Start through WMI (escape a host's Job Object)</label>
     <label>Window type <select data-s="bridge.terminal"><option value="auto">auto (Windows Terminal if installed)</option><option value="wt">Windows Terminal</option><option value="conhost">console window, QuickEdit off</option></select></label>
     <label>Node executable (blank = node on PATH) <input type="text" data-s="bridge.node" placeholder="node"></label>
     <label>Env file (blank = foundry-bridge/.env) <input type="text" data-s="bridge.env"></label>
-    <label>State/log folder (blank = foundry-bridge/run) <input type="text" data-s="bridge.state"></label></div></details>
+    <label>State/log folder (blank = foundry-bridge/run) <input type="text" data-s="bridge.state"></label></div>
+    <h6>Tokens</h6>
+    <div class="note">Normally nothing to do: the API token is read from the client.json the tools use. Shown masked.</div>
+    <div class="btns"><button data-act="bg_reveal" id="bgReveal">Reveal tokens</button></div>
+    <div id="bgInfo"></div>
+    <div class="grid">
+    <label>API token (only if client.json cannot be read) <input type="password" id="bgManApi" autocomplete="off"></label>
+    <label>Module token (optional, manual fallback) <input type="password" id="bgManMod" autocomplete="off"></label></div>
+    <div class="btns"><button data-act="bg_tokens">Use these tokens</button></div>
+    <div class="note">Typed tokens are kept in memory only, never saved.</div>
+    <h6>Diagnostics</h6>
+    <label>client.json file or share (blank = automatic) <input type="text" data-s="bridge.clientFile" id="bgClientFile" placeholder="auto: foundry-bridge/client.json, then the relay PC's share"></label>
+    <div id="bgClient" class="note"></div>
+    <div id="bgFound"></div>
+    <div class="note">Relay log (last lines, local relay only)</div><pre id="bgLog"></pre>
+  </details>
   <div id="bgModal" hidden><div class="box"><p id="bgModalMsg"></p><div class="btns"><button class="primary" id="bgModalYes">OK</button><button id="bgModalNo">Cancel</button></div></div></div>
   <!-- /BRIDGE SECTION -->
   <h4>Foundry <span class="tag" id="fConn">not checked</span></h4>

@@ -61,9 +61,9 @@ async function loadModule(g) {
   Object.assign(globalThis, g);
   globalThis.canvas = {};
   const src = fs.readFileSync(path.join(here, 'varrenmoor-bridge', 'scripts', 'bridge.js'), 'utf8') + '\nexport { handle };\n';
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'bridge_test_')), tmp = path.join(dir, 'bridge.mjs');
-  fs.writeFileSync(tmp, src.replace('./pairing.js', './pairing.mjs'));
-  fs.copyFileSync(path.join(here, 'varrenmoor-bridge', 'scripts', 'pairing.js'), path.join(dir, 'pairing.mjs'));
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'bridge_test_')), tmp = path.join(dir, 'bridge.js');
+  fs.cpSync(path.join(here, 'varrenmoor-bridge', 'scripts'), dir, { recursive: true }); fs.writeFileSync(path.join(dir, 'package.json'), '{"type":"module"}');
+  fs.writeFileSync(tmp, src);
   return import(pathToFileURL(tmp).href);
 }
 

@@ -1,6 +1,7 @@
-// Bridge section UI (Foundry tab, top): Attach to existing bridge (default, address remembered) / Close bridge (local relay only, node.exe only) / Launch local bridge (secondary), two-relays warning, client.json check, managed vs attached state, setup values for the GM module,
-// masked tokens with reveal + copy, manual token entry for a relay on another PC (memory only), live module-connected poll, log tail, "two GM tabs" warning,
-// and the Pair devices list (Approve / Deny / Revoke / Rotate). Logic: lib/bridge.js; relay manager: foundry-bridge/bridgectl.mjs.
+// Bridge section UI (Foundry tab, top). Everyday view: status summary (relay reachable, module connected, pairing on/off, this PC's relay URL), Connect / Find relay, pairing on/off + auto-request toggles,
+// pending pairing requests (code, Approve / Deny) and paired devices (Revoke / Rotate); the local-relay guard (Close bridge) only shows when a relay runs on this PC.
+// Everything else lives in the collapsed Advanced block: Launch/Restart local relay, window options, node/env/state, masked tokens with reveal + copy, manual tokens (memory only), client.json diagnostics, relay log.
+// Logic: lib/bridge.js; relay manager: foundry-bridge/bridgectl.mjs.
 // Uses an in-panel modal (no window.confirm/alert: JS dialogs can freeze CEP). Tokens live only in VBCore.bridgeMem (memory).
 (function () {
   "use strict";
@@ -26,24 +27,48 @@
   }
   function when(iso) { if (!iso) return "never"; var d = new Date(iso); return isNaN(d) ? "?" : d.toLocaleDateString() + " " + d.toLocaleTimeString().slice(0, 5); }
 
+  // Status summary: relay reachable, module connected, pairing on/off (+ toggle), auto-request (+ toggle), the relay URL this PC's tools use
+  function paintSummary() {
+    var box = $("bgSummary"); if (!box) return;
+    var info = VB.bridgeMem.info, st = live || (info && info.status) || null, p = VB.bridgeMem.pair, hp = (live && live.pairing) || (info && info.status && info.status.pairing) || null;
+    var a = attachAddr(), where = a.host + ":" + a.port, c = VB.bridgeMem.client, hasTok = !!VB.bridgeApiToken();
+    var pOn = p ? !!p.enabled : (hp ? !!hp.enabled : null), auto = p ? !!p.autoRequest : (hp && hp.autoRequest !== undefined ? !!hp.autoRequest : null), canEnable = p ? p.canEnable !== false : (hp ? hp.canEnable !== false : true);
+    var row = function (k, v) { return '<span class="bgk">' + k + "</span><span>" + v + "</span>"; };
+    var h = "";
+    h += row("Relay", !st ? "not checked yet" : st.running ? '<b class="bgon">reachable</b> at ' + esc(where) + (attachIsLocal() ? " (this PC)" : "") : '<b class="bgoff">not reachable</b> at ' + esc(where));
+    h += row("Foundry module", !st || !st.running ? "-" : st.moduleConnected ? '<b class="bgon">connected</b>' : '<b class="bgoff">not connected</b> (open Foundry as http://&lt;foundry PC&gt;:30000; it pairs by itself)');
+    var tgl;
+    if (!st || !st.running) tgl = "-";
+    else if (pOn === null) tgl = "unknown (older relay: restart it once with the current start.bat)";
+    else if (!canEnable) tgl = '<b class="bgoff">off</b>, and this relay cannot switch it on live: close its window and run start.bat once';
+    else tgl = (pOn ? '<b class="bgon">ON</b>' : '<b class="bgoff">OFF</b>') + ' <button data-bgpairing="' + (pOn ? "off" : "on") + '"' + (hasTok ? "" : " disabled") + ">" + (pOn ? "Turn off" : "Turn on") + "</button>" + (hasTok ? "" : ' <span class="bgk">(needs the API token: see Advanced)</span>');
+    h += row("Pairing", tgl);
+    if (st && st.running && pOn && canEnable) h += row("Auto-request", (auto ? "<b>on</b>" : "<b>off</b>") + ' <button data-bgauto="' + (auto ? "off" : "on") + '"' + (hasTok ? "" : " disabled") + ">" + (auto ? "Turn off" : "Turn on") + '</button> <span class="bgk">a GM browser asks as soon as Foundry loads</span>');
+    var chk = c ? VB.bridgeClientCheck(c.url, attachAddr().text) : null;
+    h += row("This PC's tools use", c ? (c.url ? "<code>" + esc(c.url) + "</code> <span class=\"bgk\">from " + esc(c.source) + "</span>" : '<span class="bgoff">no relay URL found</span>') + (chk && !chk.ok ? ' <b class="bgbad">' + esc(chk.text) + "</b>" : "") : "reading...");
+    box.innerHTML = h;
+  }
+
   function paintPair() {
     var box = $("bgPair"); if (!box) return;
     var p = VB.bridgeMem.pair, info = VB.bridgeMem.info, running = !!(live ? live.running : info && info.status && info.status.running);
     var h = "";
-    if (!running) h = '<div class="note">Pairing needs a running relay.</div>';
-    else if (!VB.bridgeApiToken()) h = '<div class="note">Needs the relay API token. It is read from foundry-bridge/.env on this PC; for a relay on another PC type it under "Tokens for a relay on another PC".</div>';
+    if (!running) h = '<div class="note">Pairing needs a reachable relay.</div>';
+    else if (!VB.bridgeApiToken()) h = '<div class="note">The API token is not known to this PC yet. It is read automatically from client.json (foundry-bridge/client.json, or the file on the relay PC); see Advanced > Diagnostics, or type it under Advanced > Tokens.</div>';
     else if (!p) h = '<div class="note">Reading the pairing list...</div>';
     else {
+      if (!p.enabled) h += '<div class="note">Pairing is switched off, so no device can ask. Turn it on above.</div>';
       h += (p.pending || []).map(function (r) {
         return '<div class="bgpend"><b>Approve this device?</b> ' + esc(r.name) + '<br><span class="bgk">from</span> ' + esc(r.ip) + ' <span class="bgk">origin</span> ' + esc(r.origin || "(none)") +
-          (r.originMismatch ? ' <b class="bgbad">origin does not match what the device claims</b>' : "") + '<br><span class="bgk">confirmation code</span> <b class="bgcode">' + esc(String(r.code).replace(/(\d{3})(\d{3})/, "$1 $2")) + '</b> <span class="bgk">(must match the Foundry screen)</span><br>' +
+          (r.originMismatch ? ' <b class="bgbad">origin does not match what the device claims</b>' : "") + '<br><span class="bgk">confirmation code</span> <b class="bgcode">' + esc(String(r.code).replace(/(\d{3})(\d{3})/, "$1 $2")) + '</b><br><span class="bgk">Approve only if the Foundry screen shows exactly this code; otherwise press Deny.</span><br>' +
           '<select data-bgdays="' + esc(r.id) + '"><option value="30">30 days</option><option value="90" selected>90 days</option><option value="365">1 year</option><option value="0">no expiry</option></select> ' +
           '<button class="primary" data-bgapprove="' + esc(r.id) + '">Approve</button> <button data-bgdeny="' + esc(r.id) + '">Deny</button></div>';
       }).join("");
+      if (p.enabled && !(p.pending || []).length) h += '<div class="note">No request waiting. A GM browser that opens Foundry as http://&lt;foundry PC&gt;:30000 asks by itself (Auto-request), or press "Pair with relay" in the module settings.</div>';
       h += '<div class="note">Paired devices (' + (p.devices || []).length + ')</div>' + ((p.devices || []).map(function (d) {
-        return '<div class="bgrow"><b>' + esc(d.name) + '</b> <span class="bgk">' + esc(d.ip || "") + ' , last seen ' + esc(when(d.lastSeen)) + ', expires ' + esc(d.expiresAt ? when(d.expiresAt) : "never") + (d.rotationPending ? ", new token on next connect" : "") + '</span> ' +
-          '<button data-bgrotate="' + esc(d.id) + '" title="Gives the device a fresh token the next time it connects">Rotate</button> <button data-bgrevoke="' + esc(d.id) + '" title="Disconnects it now and invalidates its token">Revoke</button></div>';
-      }).join("") || '<div class="note">No device is paired yet. In Foundry module settings press "Pair with relay".</div>');
+        return '<div class="bgrow"><b>' + esc(d.name) + '</b> <span class="bgk">' + esc(d.ip || "") + ' , last seen ' + esc(when(d.lastSeen)) + ', expires ' + esc(d.expiresAt ? when(d.expiresAt) : "never") + (d.rotationPending ? ", new secret on next connect" : "") + '</span> ' +
+          '<button data-bgrotate="' + esc(d.id) + '" title="Gives the device a fresh secret the next time it connects">Rotate</button> <button data-bgrevoke="' + esc(d.id) + '" title="Disconnects it now and invalidates its secret">Revoke</button></div>';
+      }).join("") || '<div class="note">No device is paired yet.</div>');
     }
     if (pairMsg) h += '<div class="note">' + esc(pairMsg) + "</div>";
     box.innerHTML = h;
@@ -64,20 +89,17 @@
     var box = $("bgInfo");
     if (!info) { box.innerHTML = '<div class="note">Press Connect (attaches to the relay at the address above; nothing is started or restarted) or Status.</div>'; }
     else {
-      var u = info.urls || {}, ms = info.moduleSettings || {}, sec = { moduleToken: VB.bridgeModuleToken(), apiToken: VB.bridgeApiToken() }, remote = !!(full && full.remote);
-      var tokRow = function (label, key, val) {
-        var shownVal = shown.reveal ? val : VB.bridgeMask(val);
-        return '<div class="bgrow"><span class="bgk">' + label + '</span> <code id="bgtok_' + key + '">' + esc(val ? shownVal : "(none)") + '</code> <button data-bgcopy="' + key + '"' + (val ? "" : " disabled") + ' title="Copy to clipboard">Copy</button></div>';
+      var u = info.urls || {}, remote = !!(full && full.remote);
+      var tokRow = function (label, key, kind) {
+        var src = VB.bridgeTokenSource(kind), val = src.token, shownVal = shown.reveal ? val : VB.bridgeMask(val);
+        return '<div class="bgrow"><span class="bgk">' + label + '</span> <code id="bgtok_' + key + '">' + esc(val ? shownVal : "(none)") + '</code> <button data-bgcopy="' + key + '"' + (val ? "" : " disabled") + ' title="Copy to clipboard">Copy</button>' + (val ? ' <span class="bgk">from ' + esc(src.source) + "</span>" : "") + "</div>";
       };
       box.innerHTML =
         '<div class="bgrow"><span class="bgk">Mode</span> <b>' + esc(mode || (full && full.running ? "" : "stopped")) + "</b> " + esc(info.listenMode || "") + (full && full.running ? " , " + esc(full.host || "127.0.0.1") + ":" + esc(full.port) + ", pid " + esc(full.pid || "?") : "") + "</div>" +
-        '<div class="bgrow"><span class="bgk">Relay URL (LAN)</span> <code>' + esc(u.lan || "(not listening on LAN)") + '</code> <button data-bgcopyurl="' + esc(u.lan || "") + '"' + (u.lan ? "" : " disabled") + ">Copy</button></div>" +
-        (u.localhost ? '<div class="bgrow"><span class="bgk">Relay URL (this PC)</span> <code>' + esc(u.localhost) + '</code> <button data-bgcopyurl="' + esc(u.localhost) + '">Copy</button></div>' : "") +
-        '<div class="bgrow"><span class="bgk">Easiest: pair the module (no token). Manual way, module settings (GM tab):</span></div><ul class="note" style="margin:2px 0 2px 14px;padding:0">' +
-          Object.keys(ms).filter(function (k) { return k !== "Module token"; }).map(function (k) { return "<li>" + esc(k) + ": <b>" + esc(ms[k]) + "</b></li>"; }).join("") + "</ul>" +
-        tokRow("Module token (manual path)" + (remote || !(mem.secrets && mem.secrets.moduleToken) ? " [typed]" : ""), "module", sec.moduleToken) +
-        tokRow("API token (bridge.ps1 / Claude; client.json already has it)" + (remote || !(mem.secrets && mem.secrets.apiToken) ? " [typed]" : ""), "api", sec.apiToken) +
-        '<div class="note">' + esc(info.note || "") + "</div>";
+        (u.lan ? '<div class="bgrow"><span class="bgk">Relay URL (LAN)</span> <code>' + esc(u.lan) + '</code> <button data-bgcopyurl="' + esc(u.lan) + '">Copy</button></div>' : "") +
+        tokRow("Module token (manual fallback)", "module", "module") +
+        tokRow("API token (tools / admin calls)", "api", "api") +
+        '<div class="note">' + (remote ? "This relay runs on another PC: its tokens come from the client.json the tools use, or from what you type here (never from this PC's .env). " : "") + esc(info.note || "") + "</div>";
     }
     var found = mem.found || [];
     $("bgFound").innerHTML = found.length ? found.map(function (x) {
@@ -86,7 +108,7 @@
     var log = lines.slice(-12).join("\n");
     $("bgLog").textContent = log || "(no log yet: the managed relay writes foundry-bridge/run/relay.log)";
     $("bgReveal").textContent = shown.reveal ? "Hide tokens" : "Reveal tokens";
-    paintPair(); paintAttach(); paintLocal(); paintClient();
+    paintSummary(); paintPair(); paintAttach(); paintLocal(); paintClient();
   }
 
   // ---- Attach / Close bridge / client.json blocks ---------------------------------------------------------------------------------------
@@ -102,20 +124,23 @@
     var tg = $("bgTwo"), two = VB.bridgeTwoRelays(!!localLive, !!(live && live.running), attachIsLocal());
     if (tg) { tg.hidden = !two; tg.textContent = two ? "Two relays are up: one on this PC and one at " + where + ". Close the local one (Close bridge below). Only one relay should run." : ""; }
   }
+  // the guard box (Close bridge) is only in view when a relay is detected on THIS PC; otherwise the plain "none running" text sits in Advanced
   function paintLocal() {
-    var el = $("bgLocal"), btn = $("bgCloseBtn"); if (!el || !btn) return;
-    var l = VB.bridgeMem.local, plan = VB.bridgeClosePlan(l);
-    if (!l) el.textContent = "Checking this PC for a bridge relay...";
-    else if (!l.found) el.textContent = "No local bridge running." + ((l.otherListeners || []).length ? " (Something else listens on port " + l.otherListeners.map(function (o) { return o.port + ": pid " + o.pid + " " + (o.imageName || "?"); }).join(", ") + "; it is not a bridge relay and will not be touched.)" : "");
-    else el.textContent = "Found a relay on this PC: pid " + (l.pid || "?") + " (" + (l.imageName || "?") + "), port " + l.port + ", " + (l.how || "") + "; module connected: " + (l.moduleConnected ? "yes" : "no") + "." + (l.isNode ? "" : " This is not node.exe, so it will not be touched.");
-    btn.textContent = plan.label; btn.disabled = !plan.enabled;
+    var box = $("bgLocalBox"), el = $("bgLocal"), adv = $("bgLocalAdv"), b1 = $("bgCloseBtn"), b2 = $("bgCloseBtn2"); if (!el || !b1) return;
+    var l = VB.bridgeMem.local, plan = VB.bridgeClosePlan(l), txt;
+    if (!l) txt = "Checking this PC for a bridge relay...";
+    else if (!l.found) txt = "No local bridge running." + ((l.otherListeners || []).length ? " (Something else listens on port " + l.otherListeners.map(function (o) { return o.port + ": pid " + o.pid + " " + (o.imageName || "?"); }).join(", ") + "; it is not a bridge relay and will not be touched.)" : "");
+    else txt = "Found a relay on this PC: pid " + (l.pid || "?") + " (" + (l.imageName || "?") + "), port " + l.port + ", " + (l.how || "") + "; module connected: " + (l.moduleConnected ? "yes" : "no") + "." + (l.isNode ? "" : " This is not node.exe, so it will not be touched.");
+    el.textContent = txt; if (adv) adv.textContent = l && l.found ? "" : txt;
+    if (box) box.hidden = !(l && l.found);
+    [b1, b2].forEach(function (b) { if (b) { b.textContent = plan.label; b.disabled = !plan.enabled; } });
   }
   function paintClient() {
-    var el = $("bgClient"); if (!el) return; var c = VB.bridgeMem.client;
-    var head = "foundry_push.py gets its relay URL from foundry-bridge/client.json on this PC first, then the \\\\VEGA share (bridge.ps1). ";
+    var el = $("bgClient"); if (!el) return; var c = VB.bridgeMem.client, cs = VB.bridgeMem.clientSecrets;
+    var head = "The Illustrator tools (foundry_push.py via bridge.ps1) get the relay URL and API token from client.json: first foundry-bridge/client.json on this PC, then the file on the relay PC's share (host from the attached address, FOUNDRY_BRIDGE_HOST or foundry-3d/.env), or the file chosen above. ";
     if (!c) { el.textContent = head + "Reading..."; el.className = "note"; return; }
     var chk = VB.bridgeClientCheck(c.url, attachAddr().text);
-    el.textContent = head + "Right now: " + (c.url || "(no URL)") + " from " + c.source + "." + (chk.ok ? "" : " WARNING: " + chk.text);
+    el.textContent = head + "Right now: " + (c.url || "(no URL)") + " from " + c.source + "." + (cs && cs.api ? " API token: found in that file (not shown)." : " No API token found in it.") + (chk.ok ? "" : " WARNING: " + chk.text);
     el.className = "note" + (chk.ok ? "" : " bad");
   }
   function readShare(f) {
@@ -126,7 +151,8 @@
   }
   function loadClient() {
     var env = {}; try { env = process.env || {}; } catch (e) { /* none */ }
-    return VB.bridgeClientInfo({ fs: ctx.fs, env: env, root: ctx.root, readShare: readShare }).then(function (c) { VB.bridgeMem.client = c; paintClient(); }, function () { /* ignore */ });
+    var t = VB.bridgeParseTarget(S().target || "");
+    return VB.bridgeClientInfo({ fs: ctx.fs, env: env, root: ctx.root, readShare: readShare, attachHost: t.host, clientFile: S().clientFile || "" }).then(function (c) { VB.bridgeMem.client = c; paint(); return c; }, function () { return null; });
   }
   // detects a relay on THIS PC (not a job: read-only; runs on load and whenever local health changes)
   function detectLocal() {
@@ -164,7 +190,7 @@
     var finish = function () {
       if (--left > 0) return;
       var h = got.remote, lh = got.local || got.local3030;
-      live = { running: !!h, managed: false, port: a.port, moduleConnected: !!(h && h.moduleConnected), replacedLastMinute: h ? h.replacedLastMinute || 0 : 0, logLines: lines };
+      live = { running: !!h, managed: false, port: a.port, moduleConnected: !!(h && h.moduleConnected), replacedLastMinute: h ? h.replacedLastMinute || 0 : 0, pairing: (h && h.pairing) || null, logLines: lines };
       localLive = lh || null;
       if (lastLocalUp === null || lastLocalUp !== !!lh) { lastLocalUp = !!lh; detectLocal(); }
       if (h && VB.bridgeApiToken() && !pairBusy) { pairBusy = true; VB.bridgePairRefresh().then(function () { pairMsg = ""; }, function (e) { if (/not running/.test(e.message) === false) pairMsg = e.message; }).then(function () { pairBusy = false; paintPair(); }); }
@@ -175,6 +201,12 @@
     healthGet("127.0.0.1", 3030, function (h) { got.local3030 = h; finish(); });
   }
 
+  // fills the address box with the first relay a probe found (this PC first, then the LAN), unless an address is already set (force: replace it)
+  function useFirstFound(force) {
+    var f = (VB.bridgeMem.found || []).filter(function (x) { return x.running; })[0];
+    if (!f || (!force && String(S().target || "").trim())) return false;
+    S().target = f.host + ":" + f.port; if (ctx.save) ctx.save(); if (ctx.syncInputs) ctx.syncInputs(); return true;
+  }
   function pairAct(fn, okMsg) {
     return fn().then(function () { pairMsg = okMsg || ""; return VB.bridgePairRefresh(); }).catch(function (e) { pairMsg = e.message; }).then(paint);
   }
@@ -189,9 +221,9 @@
       pairMsg = st && st.running ? "Attached to " + (st.remote ? "remote relay at " + st.host + ":" + st.port : "the relay on this PC") + "; module " + (st.moduleConnected ? "connected" : "not connected") + ". Nothing was started or restarted." : "No relay answers at " + attachAddr().text + ".";
       paint();
     },
-    bg_attach_default: function () { S().target = VB.BRIDGE_ATTACH_DEFAULT; if (ctx.save) ctx.save(); if (ctx.syncInputs) ctx.syncInputs(); loadClient(); poll(); },
     bg_status: function () { loadClient(); detectLocal(); return ctx.startJob(VB.jobBridgeStatus(ctx.state()), paint); },
-    bg_probe: function () { return ctx.startJob(VB.jobBridgeProbe(ctx.state()), paint); },
+    // Find relay: looks on this PC and the LAN (read-only) and fills in the address of the first relay that answers
+    bg_probe: function () { return ctx.startJob(VB.jobBridgeProbe(ctx.state()), function () { useFirstFound(true); paint(); }); },
     // Close bridge: detects a relay on THIS PC again, asks in the panel, stops only that (node.exe only; never a remote relay).
     bg_close: async function () {
       var l = await VB.bridgeLocalDetect(ctx.state()).catch(function (e) { pairMsg = e.message; return null; });
@@ -219,6 +251,7 @@
     bg_reveal: function () { shown.reveal = !shown.reveal; paint(); },
     bg_tokens: function () {   // manual entries for a relay on another PC; never stored
       VB.bridgeMem.manual = { api: ($("bgManApi").value || "").trim(), module: ($("bgManMod").value || "").trim() };
+      $("bgManApi").value = ""; $("bgManMod").value = "";
       pairMsg = VB.bridgeMem.manual.api ? "Token kept in memory only." : "";
       VB.bridgePairRefresh().catch(function (e) { pairMsg = e.message; }).then(paint);
     }
@@ -227,9 +260,21 @@
     ctx = c;
     Object.keys(A).forEach(function (k) { if (ctx.acts) ctx.acts[k] = A[k]; });
     VB.bridgeRoot = ctx.root;
-    if (!String(S().target || "").trim()) { S().target = VB.BRIDGE_ATTACH_DEFAULT; if (ctx.save) ctx.save(); }   // prefill the attach address (editable, remembered)
+    VB.bridgeAttachNow = function () { return VB.bridgeAttachTarget(ctx.state()); };
     if (ctx.syncInputs) ctx.syncInputs();
-    loadClient();
+    loadClient().then(function () {   // the address is prefilled from client.json (what the tools use), else discovered by a read-only probe; both editable and remembered
+      if (String(S().target || "").trim()) return;
+      var c = VB.bridgeMem.client; if (c && c.url) { S().target = c.url; if (ctx.save) ctx.save(); if (ctx.syncInputs) ctx.syncInputs(); paint(); return; }
+      return ctx.startJob(VB.jobBridgeProbe(ctx.state()), null).then(function () { useFirstFound(false); paint(); });
+    });
+    var cf = $("bgClientFile"); if (cf) cf.addEventListener("change", function () { setTimeout(loadClient, 50); });
+    var sm = $("bgSummary");
+    if (sm) sm.addEventListener("click", function (ev) {
+      var b = ev.target.closest ? ev.target.closest("button") : null; if (!b) return;
+      var po = b.getAttribute("data-bgpairing"), au = b.getAttribute("data-bgauto");
+      if (po) pairAct(function () { return VB.bridgePairConfig({ enabled: po === "on" }); }, po === "on" ? "Pairing is on." : "Pairing is off.");
+      else if (au) pairAct(function () { return VB.bridgePairConfig({ autoRequest: au === "on" }); }, au === "on" ? "Auto-request is on." : "Auto-request is off.");
+    });
     var box = $("bgInfo");
     if (box) box.addEventListener("click", function (ev) {
       var b = ev.target.closest ? ev.target.closest("button") : null; if (!b) return;

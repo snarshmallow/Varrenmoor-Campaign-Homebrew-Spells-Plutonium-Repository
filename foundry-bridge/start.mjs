@@ -8,6 +8,7 @@ import http from 'node:http';
 import { spawn, spawnSync } from 'node:child_process';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { publishClient } from './lib/publish.mjs';
+import { attachPairingConsole } from './lib/pairing-console.mjs';
 
 const root = path.dirname(fileURLToPath(import.meta.url));
 const relayDir = path.join(root, 'relay');
@@ -27,7 +28,7 @@ env.BRIDGE_API_TOKEN ||= rand();
 env.BRIDGE_MODULE_TOKEN ||= rand();
 env.PORT ||= '3030';
 // --local (remembered as TUNNEL=off): no Cloudflare tunnel; the GM browser on this PC and Claude on this PC talk to
-// the relay over the LAN. It listens on all interfaces so a Foundry page opened from http://VEGA:30000 can reach it
+// the relay over the LAN. It listens on all interfaces so a Foundry page opened from http://<foundry-pc>:30000 can reach it
 // at this PC's LAN address (browsers block such a page from opening ws://127.0.0.1).
 if (process.argv.includes('--local')) env.TUNNEL = 'off';
 const local = env.TUNNEL === 'off';
@@ -50,7 +51,11 @@ if (!fs.existsSync(path.join(relayDir, 'node_modules', 'ws'))) {
 process.env.BRIDGE_API_TOKEN = env.BRIDGE_API_TOKEN;
 process.env.BRIDGE_MODULE_TOKEN = env.BRIDGE_MODULE_TOKEN;
 const { createRelay } = await import(pathToFileURL(path.join(relayDir, 'server.js')).href);
-const server = createRelay();
+// Device pairing (encrypted handshake, no tokens to copy): on by default; BRIDGE_PAIRING=off in .env starts it off. Switch it on/off live from the Illustrator panel.
+const pairingFile = path.join(root, 'run', 'paired-devices.json');
+const server = createRelay({ pairingFile, pairingEnabled: (env.BRIDGE_PAIRING || 'on') !== 'off' });
+const clog = (...a) => console.log(...a);
+attachPairingConsole(server.pairing, clog, { interactive: true, onSigint: () => process.emit('SIGINT') });
 await new Promise((res, rej) => { server.once('error', rej); server.listen(PORT, BIND, res); })
   .catch((e) => { console.error(e.code === 'EADDRINUSE' ? `Port ${PORT} is already in use (an old relay still running? close it, or set PORT in .env).` : e); process.exit(1); });
 const health = () => new Promise((res) => {
@@ -124,6 +129,9 @@ B) CLAUDE ENVIRONMENT, cloud sessions only (claude.ai/code > environment setting
    Secret/var FOUNDRY_BRIDGE_URL = ${publicUrl || '(needs tunnel)'}
    Allowed domain               = ${host}
    (Quick-tunnel hostnames change on every restart; update B each time, or use a named tunnel and set PUBLIC_URL in .env.)
+
+PAIRING (no token to copy): ${server.pairing.enabled ? 'ON' : 'OFF (switch it on in the Illustrator panel, Foundry tab > Pairing)'}. Open Foundry from this LAN as http://<foundry-PC>:30000;
+   the module finds this relay by itself and shows a code; approve it in the Illustrator panel or press A here. Keys A = approve, D = deny, L = list.
 
 Keys are saved in ${envFile} (git-ignored). Keep this window open. Ctrl+C to stop.
 ${line}`);

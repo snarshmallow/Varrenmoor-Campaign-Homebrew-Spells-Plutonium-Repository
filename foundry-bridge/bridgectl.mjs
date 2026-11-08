@@ -276,7 +276,7 @@ export function makeCtl({ envFile = path.join(root, '.env'), stateDir, node = pr
         'Relay URL': lanUrl || localhost, 'Module token': secrets ? env.BRIDGE_MODULE_TOKEN || '' : '(masked)', 'Allow writes': 'OFF until you push',
       },
       note: remote ? 'This relay runs on another PC: its tokens are not on this PC. Type them in manually (kept in memory only), or pair the Foundry module (no token needed).'
-        : s.bind === '0.0.0.0' ? 'A GM page served from http://VEGA:30000 cannot open ws://127.0.0.1, so use the LAN URL in the module settings.' : 'Loopback only: the Foundry GM browser must run on this PC and the page must be opened from localhost.',
+        : s.bind === '0.0.0.0' ? 'A GM page served from http://<foundry-pc>:30000 cannot open ws://127.0.0.1, so use the LAN URL in the module settings.' : 'Loopback only: the Foundry GM browser must run on this PC and the page must be opened from localhost.',
       logTail: await logTail(20),
     };
     if (secrets && !remote) out.secrets = { moduleToken: env.BRIDGE_MODULE_TOKEN || '', apiToken: env.BRIDGE_API_TOKEN || '' };

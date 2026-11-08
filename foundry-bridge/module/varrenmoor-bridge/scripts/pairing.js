@@ -1,19 +1,30 @@
-// LAN pairing client for the Varrenmoor Bridge module (0.4.0). Pure functions with injected fetch/sleep so they can be tested outside Foundry
-// (foundry-bridge/module/pairing.test.mjs). Protocol: see foundry-bridge/README.md "Pairing".
-//   discover  GET  http://<host:port>/discover        -> { service, relayId, ... }   (no secrets)
-//   request   POST /pair/request {deviceName,...}      -> { requestId, code, pollSecret }
-//   poll      POST /pair/poll {requestId, pollSecret}  -> { state: pending|approved|denied|expired|delivered|unknown, deviceId?, token? }
-// The relay refuses non-LAN callers. Tokens are only ever sent in POST bodies / the WebSocket hello, never in URLs, and never logged here.
+// LAN pairing client for the Varrenmoor Bridge module (0.5.0). Pure functions with injected fetch/sleep so they can be tested outside Foundry
+// (foundry-bridge/module/pairing.test.mjs). Protocol 2 (encrypted handshake), see foundry-bridge/README.md "Pairing and its threat model":
+//   discover  GET  http://<host:port>/discover            -> { service, protocol, relayId, pairing, autoRequest }   (no secrets)
+//   request   POST /pair/request {commit}                 -> { requestId, pollSecret, relayPk, relayNonce }        (commitment to our key + nonce)
+//   reveal    POST /pair/reveal {requestId, pollSecret, pk, nonce, info(sealed)}                                   (relay can now compute the code)
+//   poll      POST /pair/poll {requestId, pollSecret}     -> { state, deviceId?, sealed? }                         (credential arrives sealed under the handshake key)
+// Both sides show the same 6-digit code, derived from both public keys and both nonces; the human approves only when they match.
+// The relay refuses non-LAN callers. Secrets are only ever sent sealed, or used as an HMAC key, and never logged here. Pure JS crypto (no WebCrypto: an http page has none).
+import * as C from './seccrypto.js';
 
 export const DEFAULT_PORT = 3030;
 const withPort = (h) => (/:\d+$/.test(h) ? h : `${h}:${DEFAULT_PORT}`);
 const hostOf = (s) => { try { return new URL(/^[a-z]+:\/\//i.test(s) ? s : `http://${s}`).host; } catch { return ''; } };
 
-// host[:port] candidates to probe, most specific first (no loopback unless the user typed it: on the Foundry PC it would only find nothing)
-export function candidateHosts({ pairHost = '', relayUrl = '', stored = null } = {}) {
+// Where the relay normally runs: beside Foundry, same host, relay port. Only for plain-http pages (an https page cannot reach ws:// / http:// anyway: mixed content,
+// and that is the Cloudflare/player route where pairing is refused on purpose). Returns "host:port" or null.
+export function deriveRelayHost({ pageHost = '', pageProtocol = 'http:', relayPort = DEFAULT_PORT } = {}) {
+  const h = String(pageHost || '').trim();
+  if (!h || String(pageProtocol).toLowerCase() === 'https:') return null;
+  return `${h}:${Number(relayPort) > 0 ? Number(relayPort) : DEFAULT_PORT}`;
+}
+
+// host[:port] candidates to probe, most specific first: the stored pairing, a typed address, the page's own host (zero config), then a non-loopback relay URL setting.
+export function candidateHosts({ pairHost = '', relayUrl = '', stored = null, pageHost = '', pageProtocol = 'http:', relayPort = DEFAULT_PORT } = {}) {
   const out = [];
   const add = (h) => { h = String(h || '').trim(); if (!h) return; h = withPort(hostOf(h) || h); if (!out.includes(h)) out.push(h); };
-  add(stored && stored.host); add(pairHost);
+  add(stored && stored.host); add(pairHost); add(deriveRelayHost({ pageHost, pageProtocol, relayPort }));
   if (relayUrl && !/^wss?:\/\/(127\.|localhost|\[::1\])/i.test(relayUrl)) add(relayUrl);
   return out;
 }
@@ -30,7 +41,7 @@ export async function probe(hostPort, fetchFn, ms = 1200) {
     const r = await timed(fetchFn, `http://${withPort(hostPort)}/discover`, {}, ms);
     if (!r.ok) return null;
     const j = await r.json();
-    return j && j.service === 'varrenmoor-bridge-relay' && j.pairing ? j : null;
+    return j && j.service === 'varrenmoor-bridge-relay' ? j : null;   // pairing may be off: the caller reads j.pairing and explains
   } catch { return null; }
 }
 
@@ -61,26 +72,57 @@ const post = async (fetchFn, hostPort, p, body, ms = 4000) => {
 
 export const wsUrlFor = (hostPort) => `ws://${withPort(hostPort)}/module`;
 
-// Full flow. hooks: onCode({code, host, expiresAt}), onState(state), cancelled() -> bool. Resolves { ok, deviceId, token, expiresAt, relayId, host } or { ok:false, reason }.
+// Full flow. hooks: onCode({code, host, expiresAt}), onState(state), cancelled() -> bool. Resolves { ok, deviceId, secret, expiresAt, relayId, host } or { ok:false, reason }.
 export async function runPairing({ host, device, fetchFn, sleep = (ms) => new Promise((r) => setTimeout(r, ms)), hooks = {}, pollMs = 1500, timeoutMs = 130000 }) {
-  const rq = await post(fetchFn, host, '/pair/request', device);
+  const kp = C.newKeypair(), nonce = C.randomBytes(16);
+  const rq = await post(fetchFn, host, '/pair/request', { commit: C.commitment(kp.pk, nonce) });
   if (rq.status !== 200) return { ok: false, reason: rq.body.error || `relay answered ${rq.status}` };
-  hooks.onCode && hooks.onCode({ code: rq.body.code, host, expiresAt: rq.body.expiresAt });
+  let relayPk, relayNonce, key;
+  try { relayPk = C.unb64u(rq.body.relayPk); relayNonce = C.unb64u(rq.body.relayNonce); key = C.pairKey(kp.sk, relayPk, kp.pk, relayPk, nonce, relayNonce); }
+  catch { return { ok: false, reason: 'the relay sent an invalid key' }; }
+  const id = rq.body.requestId;
+  const rv = await post(fetchFn, host, '/pair/reveal', { requestId: id, pollSecret: rq.body.pollSecret, pk: C.b64u(kp.pk), nonce: C.b64u(nonce), info: C.sealJson(key, device, 'vb-info|' + id) });
+  if (rv.status !== 200) return { ok: false, reason: rv.body.error || `relay answered ${rv.status}` };
+  // computed from OUR copy of both keys and nonces: a man in the middle who swapped keys makes this differ from the code the relay shows
+  hooks.onCode && hooks.onCode({ code: C.sas(kp.pk, relayPk, nonce, relayNonce), host, expiresAt: rq.body.expiresAt });
   const end = Date.now() + timeoutMs;
   while (Date.now() < end) {
     if (hooks.cancelled && hooks.cancelled()) return { ok: false, reason: 'cancelled' };
     await sleep(pollMs);
     let p;
-    try { p = await post(fetchFn, host, '/pair/poll', { requestId: rq.body.requestId, pollSecret: rq.body.pollSecret }); } catch { continue; }
+    try { p = await post(fetchFn, host, '/pair/poll', { requestId: id, pollSecret: rq.body.pollSecret }); } catch { continue; }
     if (p.status === 429) { await sleep(3000); continue; }
     if (p.status !== 200) return { ok: false, reason: p.body.error || `relay answered ${p.status}` };
     const s = p.body.state;
     hooks.onState && hooks.onState(s);
-    if (s === 'approved') return { ok: true, deviceId: p.body.deviceId, token: p.body.token, expiresAt: p.body.expiresAt || null, relayId: p.body.relayId, host };
+    if (s === 'approved') {
+      const cred = C.openJson(key, p.body.sealed, 'vb-dev|' + id + '|' + p.body.deviceId);
+      if (!cred || !cred.secret) return { ok: false, reason: 'could not decrypt the credential (something other than the relay answered)' };
+      return { ok: true, deviceId: p.body.deviceId, secret: cred.secret, expiresAt: cred.expiresAt || null, relayId: cred.relayId || p.body.relayId, host };
+    }
     if (s === 'denied') return { ok: false, reason: 'denied on the relay' };
     if (s === 'expired' || s === 'unknown' || s === 'delivered') return { ok: false, reason: s === 'expired' ? 'nobody approved it in time' : 'the request is no longer valid' };
   }
   return { ok: false, reason: 'timed out waiting for approval' };
+}
+
+// WebSocket login for a paired device: HMAC challenge-response, the secret never leaves this browser.
+//   const a = deviceAuth(dev); ws.onopen -> send(a.hello()); on 'challenge' -> send(a.answer(m)); on 'welcome' -> a.welcome(m) = { ok, secret?, expiresAt? }
+export function deviceAuth(dev) {
+  const cn = C.b64u(C.randomBytes(16)); let rn = null; const secret = C.unb64u(dev.secret);
+  return {
+    hello: () => ({ type: 'hello', deviceId: dev.deviceId, cn }),
+    answer: (m) => { rn = String(m.rn || ''); return { type: 'auth', mac: C.clientMac(secret, dev.deviceId, cn, rn) }; },
+    welcome: (m) => {
+      if (!rn || m.proof !== C.relayMac(secret, dev.deviceId, cn, rn)) return { ok: false, reason: 'the relay did not prove it knows the device secret' };
+      const out = { ok: true };
+      if (m.rotate && m.rotate.sealed) {
+        const r = C.openJson(C.rotationKey(secret, dev.deviceId, cn, rn), m.rotate.sealed, 'vb-rot|' + dev.deviceId);
+        if (r && r.secret) { out.secret = r.secret; out.expiresAt = r.expiresAt || null; }
+      }
+      return out;
+    },
+  };
 }
 
 // what the relay shows the human next to the code

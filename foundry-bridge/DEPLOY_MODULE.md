@@ -1,3 +1,33 @@
+# Redeploying module 0.5.0 (encrypted pairing, zero-config relay discovery)
+0.5.0 replaces the 0.4.0 pairing (0.4.0 is not compatible: new handshake). **Six files** go to the Foundry host PC. Copy them yourself; nothing is pushed from here.
+
+| From (this repo, `foundry-bridge/module/varrenmoor-bridge/`) | To (on the Foundry host PC, under `<Foundry Data>\modules\varrenmoor-bridge\`) |
+|---|---|
+| `module.json` | `module.json` |
+| `scripts/bridge.js` | `scripts\bridge.js` |
+| `scripts/pairing.js` | `scripts\pairing.js` |
+| `scripts/seccrypto.js` (NEW) | `scripts\seccrypto.js` |
+| `scripts/vendor/noble-bundle.js` (NEW, create the folder `scripts\vendor`) | `scripts\vendor\noble-bundle.js` |
+| `scripts/vendor/NOBLE-LICENSE.txt` (NEW) | `scripts\vendor\NOBLE-LICENSE.txt` |
+
+Simplest: copy the whole `module\varrenmoor-bridge` folder from this repo over `<Foundry Data>\modules\varrenmoor-bridge` (overwrite; keep `relay-url.json` there if it exists). The same six files are in `module/varrenmoor-bridge.zip` (rebuilt). Then Ctrl+F5 in the Foundry GM tab. If you had 0.4.0 installed, nothing else changes (no pairing was completed with it).
+
+## The relay side: ONE restart on the relay PC
+The relay needs the new `server.js`, `pairing.js`, `seccrypto.js`, `adminauth.js` (all in this repo's `foundry-bridge/relay/`) plus `lib/pairing-console.mjs`, `start.mjs`, `daemon.mjs`. A relay that is already running keeps the old code and has **no pairing switch**, so restart it once: on the relay PC close its window and run `start.bat` (the LAN mode `TUNNEL=off` is remembered in `.env`; pairing now starts **on** with Auto-request on). It prints `PAIRING (no token to copy): ON`. After that, pairing can be switched on and off from the Illustrator panel (Foundry tab > Pairing) with no restart.
+
+## Steps
+1. Copy the six module files (above). Ctrl+F5 the GM tab. Check the module version is 0.5.0 (Add-on Modules).
+2. Restart the relay once (above). Update the repo on the relay PC first (git pull / copy) so it has the new relay files.
+3. Open Foundry as `http://<foundry-pc>:30000` (the plain-http LAN address; not an https/Cloudflare address, where pairing is refused on purpose). The module looks for the relay on that same host at port 3030, so there is nothing to type; if the relay is on another PC, type its `host:3030` once in the module setting "Relay address". Pairing starts by itself (setting "Ask for pairing automatically") or press "Pair with relay" in the module settings.
+4. The module shows a 6-digit code. In the Illustrator panel (Foundry tab > Pairing) the same code appears with Approve / Deny, on any PC that can reach the relay (the panel reads the API token from the `client.json` the tools already use; or press A in the relay window). Approve only if the codes match.
+5. The module says "paired" and connects. No token anywhere. Revoke any time in the panel.
+6. Fallback: leave it unpaired and enter Relay URL + Module token as before (the relay URL defaults to the page's own host at port 3030).
+7. Roll back: copy the 0.4.0 `module.json`, `bridge.js`, `pairing.js` back from git history and delete `scripts\seccrypto.js` and `scripts\vendor`.
+
+Security (full threat model in `README.md`, "Pairing (module 0.5.0)"): the device credential and the pairing description are encrypted (X25519 + HKDF + ChaCha20-Poly1305), the 6-digit code is derived from both public keys so a man in the middle shows a different code, later logins use an HMAC challenge-response, and pairing is refused for any proxied/Cloudflare or non-LAN request. Still unencrypted: the rest of the LAN traffic (plain http/ws) unless TLS is added.
+
+---
+
 # Redeploying module 0.4.0 (LAN pairing, no tokens to type)
 0.4.0 adds a new file and changes two. **Three files** go to Vega this time:
 

@@ -13,8 +13,8 @@ const runner = R.createRunner({ root: ROOT, jobsDir: tmp + "/jobs", fs, path, sp
   getPython: () => "python", getPlace: () => "x", getTextures: () => [], setState: (p, v) => VB.setPath(st, p, v), onStale: () => {} });
 const freePort = (p) => new Promise(res => { const s = net.createServer(); s.once("error", () => res(freePort(p + 1))); s.listen(p, "0.0.0.0", () => s.close(() => res(p))); });
 (async () => {
-  check("state defaults", st.bridge && st.bridge.node === "" && st.bridge.cim === false && st.bridge.last === null && st.bridge.hidden === false && st.bridge.terminal === "auto" && st.bridge.target === "http://10.0.0.15:3030" && st.bridge.mode === "attach");
-  check("args: default is ATTACH to the Vega relay", VB.bridgeCtlArgs(st, "status").join(" ") === "foundry-bridge/bridgectl.mjs status --json --target http://10.0.0.15:3030");
+  check("state defaults", st.bridge && st.bridge.node === "" && st.bridge.cim === false && st.bridge.last === null && st.bridge.hidden === false && st.bridge.terminal === "auto" && st.bridge.target === "" && st.bridge.clientFile === "" && st.bridge.mode === "attach");
+  check("args: no address is built in (blank until client.json / Find relay / typed)", VB.bridgeCtlArgs(st, "status").join(" ") === "foundry-bridge/bridgectl.mjs status --json" && VB.BRIDGE_ATTACH_DEFAULT === "");
   st.bridge.mode = "local";   // the older checks below are about the local relay (no attach address)
   st.bridge.env = "C:/t/e.env"; st.bridge.state = "C:/t/run"; st.bridge.cim = true; st.bridge.node = "C:/n/node.exe";
   check("args: env/state/node/cim only for start+restart", VB.bridgeCtlArgs(st, "start").join(" ") === "foundry-bridge/bridgectl.mjs start --json --env C:/t/e.env --state C:/t/run --node C:/n/node.exe --cim" && VB.bridgeCtlArgs(st, "info", ["--secrets"]).indexOf("--cim") < 0);
@@ -30,13 +30,15 @@ const freePort = (p) => new Promise(res => { const s = net.createServer(); s.onc
   check("4002 loop: 3 in last 20 lines", VB.bridgeLoop4002(["a", "b"].concat(l(3))) && !VB.bridgeLoop4002(l(2)) && !VB.bridgeLoop4002(l(3).concat(new Array(20).fill("x"))));
   // attach prefill + persistence (the address is a plain setting, not a secret)
   const fresh = VB.normalize(null);
-  check("attach: prefilled with the Vega relay, attach is the default mode", VB.BRIDGE_ATTACH_DEFAULT === "http://10.0.0.15:3030" && fresh.bridge.target === "http://10.0.0.15:3030" && fresh.bridge.mode === "attach");
+  VB.bridgeMem.client = { url: "http://10.9.9.9:3030", source: "x" };
+  check("attach: the address comes from client.json when nothing is saved; a saved one wins; attach is the default mode", fresh.bridge.mode === "attach" && VB.bridgeAttachTarget(fresh) === "http://10.9.9.9:3030" && VB.bridgeAttachTarget({ bridge: { target: "192.168.1.2:3030" } }) === "192.168.1.2:3030");
+  VB.bridgeMem.client = null;
   const saved = VB.normalize(JSON.parse(JSON.stringify({ bridge: { target: "192.168.1.7:3030" } })));
   check("attach: an edited address survives save/load (normalize keeps it)", saved.bridge.target === "192.168.1.7:3030" && VB.bridgeCtlArgs(saved, "status").join(" ").indexOf("--target 192.168.1.7:3030") > 0);
-  check("attach: a blank saved address falls back to the default", VB.bridgeAttachTarget({ bridge: { target: "  " } }) === "http://10.0.0.15:3030" && VB.bridgeAttachTarget({ bridge: { target: "", mode: "local" } }) === "");
+  check("attach: a blank saved address and no client.json = blank (nothing built in); local mode never has one", VB.bridgeAttachTarget({ bridge: { target: "  " } }) === "" && VB.bridgeAttachTarget({ bridge: { target: "x:1", mode: "local" } }) === "");
   check("local/closelocal never carry --target (only this PC), even with a remote address saved", VB.bridgeCtlArgs(fresh, "local").indexOf("--target") < 0 && VB.bridgeCtlArgs(fresh, "closelocal").indexOf("--target") < 0 && VB.bridgeCtlArgs(fresh, "local").indexOf("local") === 1);
   const ls = VB.bridgeLocalState(fresh);
-  check("launch local uses no attach address and does not change the saved one", ls.bridge.target === "" && VB.bridgeCtlArgs(ls, "start").indexOf("--target") < 0 && fresh.bridge.target === "http://10.0.0.15:3030");
+  check("launch local uses no attach address and does not change the saved one", ls.bridge.target === "" && VB.bridgeCtlArgs(ls, "start").indexOf("--target") < 0 && fresh.bridge.target === "");
   check("tokens are not part of saved bridge settings", Object.keys(VB.bridgeDefaults()).every(k => !/token|secret|api/i.test(k)));
   check("parse target", JSON.stringify(VB.bridgeParseTarget("http://10.0.0.15:3030")) === '{"host":"10.0.0.15","port":3030}' && VB.bridgeParseTarget("vega").port === null && VB.bridgeParseTarget("").host === "");
   // close plan + two-relays warning
@@ -50,9 +52,9 @@ const freePort = (p) => new Promise(res => { const s = net.createServer(); s.onc
   let ci = await VB.bridgeClientInfo({ fs: fakeFs({ "R/foundry-bridge/client.json": JSON.stringify({ url: "http://127.0.0.1:3030", token: "x" }) }), env: {}, root: "R" });
   check("client.json on this PC is used first", ci.url === "http://127.0.0.1:3030" && ci.localFile === true);
   let asked = ""; ci = await VB.bridgeClientInfo({ fs: fakeFs({ "R/foundry-3d/.env": "FOUNDRY_ASSETS_DIR=\\\\HOST2\\share\\x\n" }), env: {}, root: "R", readShare: async (f) => { asked = f; return JSON.stringify({ url: "http://10.0.0.15:3030", token: "t" }); } });
-  check("no local client.json -> the \\\\VEGA-style share (host from foundry-3d/.env), url only", ci.url === "http://10.0.0.15:3030" && asked === "\\\\HOST2\\C\\FoundryVTT resources\\bridge\\client.json" && JSON.stringify(ci).indexOf('"t"') < 0, asked);
+  check("no local client.json -> the relay PC's share (host from foundry-3d/.env), url only", ci.url === "http://10.0.0.15:3030" && asked === "\\\\HOST2\\C\\FoundryVTT resources\\bridge\\client.json" && JSON.stringify(ci).indexOf('"t"') < 0, asked);
   ci = await VB.bridgeClientInfo({ fs: fakeFs({}), env: {}, root: "R", readShare: async () => null });
-  check("nothing found is reported plainly", ci.url === "" && /VEGA/.test(ci.source));
+  check("nothing found is reported plainly (no host is guessed)", ci.url === "" && /none found/.test(ci.source) && !/VEGA/i.test(ci.source));
   check("client check: same relay ok; loopback vs Vega warns with a fix; other host warns", VB.bridgeClientCheck("http://10.0.0.15:3030", "10.0.0.15:3030").ok && !VB.bridgeClientCheck("http://127.0.0.1:3030", "http://10.0.0.15:3030").ok && /old client\.json/.test(VB.bridgeClientCheck("http://127.0.0.1:3030", "http://10.0.0.15:3030").text) && !VB.bridgeClientCheck("http://10.0.0.99:3030", "http://10.0.0.15:3030").ok);
   check("mask hides the token", VB.bridgeMask(MOD).indexOf("throw") < 0 && VB.bridgeMask("") === "");
 
@@ -98,31 +100,72 @@ const freePort = (p) => new Promise(res => { const s = net.createServer(); s.onc
   const keepT = st.bridge.target, keepM = st.bridge.mode; st.bridge.mode = "attach"; st.bridge.target = "10.255.255.1:3030";
   const l2 = await VB.bridgeLocalDetect(st); st.bridge.mode = keepM; st.bridge.target = keepT;
   check("local detect ignores the attach address", l2.found && l2.port === port);
-  // pairing admin through the panel logic: API token from .env (memory), then a typed token
-  const post = (p, body, tok) => VB.bridgeHttp({ method: "POST", host: "127.0.0.1", port: port, path: p, body: body, token: tok });
-  const rq = await post("/pair/request", { deviceName: "Vega GM", userName: "Trent", worldId: "w", hostOrigin: "http://vega:30000" });
-  check("pair: device request accepted", rq.status === 200 && /^\d{3} \d{3}$/.test(rq.body.code));
+  // pairing admin through the panel logic (signed requests, token from .env on this PC, then from client.json, then typed), against the throwaway relay
+  const X = await import(require("url").pathToFileURL(path.join(ROOT, "foundry-bridge/relay/seccrypto.js")).href);   // the device side: node:crypto stand-in for the module
+  const post = (p, body, tok, sign) => VB.bridgeHttp({ method: "POST", host: "127.0.0.1", port: port, path: p, body: body, token: tok, sign: sign });
+  const device = async (name) => {
+    const kp = X.newKeypair(), n = X.randomBytes(16), rq = await post("/pair/request", { commit: X.commitment(kp.pk, n) });
+    if (rq.status !== 200) return { rq };
+    const rpk = X.unb64u(rq.body.relayPk), rn = X.unb64u(rq.body.relayNonce), key = X.pairKey(kp.sk, rpk, kp.pk, rpk, n, rn);
+    const rv = await post("/pair/reveal", { requestId: rq.body.requestId, pollSecret: rq.body.pollSecret, pk: X.b64u(kp.pk), nonce: X.b64u(n), info: X.sealJson(key, { deviceName: name, userName: "Trent", worldId: "w", hostOrigin: "http://foundry-pc:30000" }, "vb-info|" + rq.body.requestId) });
+    return { rq: rq.body, rv, key, code: X.sas(kp.pk, rpk, n, rn), poll: () => post("/pair/poll", { requestId: rq.body.requestId, pollSecret: rq.body.pollSecret }) };
+  };
+  VB.bridgeMem.pair = null;
   let pl = await VB.bridgePairRefresh();
-  check("pair: panel lists the pending request with the same code", pl.pending.length === 1 && pl.pending[0].code === rq.body.code.replace(" ", "") && pl.pending[0].name === "Vega GM");
-  await VB.bridgePairApprove(pl.pending[0].id, 30);
-  const got = await post("/pair/poll", { requestId: rq.body.requestId, pollSecret: rq.body.pollSecret });
-  check("pair: approved, device receives its token once", got.body.state === "approved" && !!got.body.token);
+  check("pair: the panel reads the pairing state (on by default) with a signed request", pl.enabled === true && pl.autoRequest === true && pl.canEnable === true && pl.pending.length === 0);
+  check("pair: an unsigned Bearer call still works for scripts, a wrong signed token is refused with a plain message", (await post("/pair/list", {}, API, false)).status === 200 && (await post("/pair/list", {}, "wrong-token-xxxxxxxxxxxxxxxxxxxxx", true)).status === 401);
+  const dev1 = await device("Foundry GM Trent (Windows browser)");
   pl = await VB.bridgePairRefresh();
-  check("pair: device listed, no token in the list or the panel state", pl.devices.length === 1 && JSON.stringify(pl).indexOf(got.body.token) < 0 && JSON.stringify(st).indexOf(got.body.token) < 0);
+  check("pair: panel lists the pending request with the SAME code the device computed", pl.pending.length === 1 && pl.pending[0].code === dev1.code.replace(" ", "") && pl.pending[0].name === "Foundry GM Trent (Windows browser)");
+  await VB.bridgePairApprove(pl.pending[0].id, 30);
+  const got = await dev1.poll();
+  const cred = X.openJson(dev1.key, got.body.sealed, "vb-dev|" + dev1.rq.requestId + "|" + got.body.deviceId);
+  check("pair: approved; the credential arrives sealed (no plaintext secret in the reply) and opens only with the handshake key", got.body.state === "approved" && !got.body.secret && !got.body.token && !!cred && !!cred.secret && JSON.stringify(got.body).indexOf(cred.secret) < 0);
+  pl = await VB.bridgePairRefresh();
+  check("pair: device listed, no secret in the list or the panel state", pl.devices.length === 1 && JSON.stringify(pl).indexOf(cred.secret) < 0 && JSON.stringify(st).indexOf(cred.secret) < 0);
   await VB.bridgePairRotate(pl.devices[0].id); pl = await VB.bridgePairRefresh();
   check("pair: rotate flags the device", pl.devices[0].rotationPending === true);
   await VB.bridgePairRevoke(pl.devices[0].id); pl = await VB.bridgePairRefresh();
   check("pair: revoke removes it", pl.devices.length === 0);
-  const rq2 = await post("/pair/request", { deviceName: "Spoof" });
-  await VB.bridgePairDeny((await VB.bridgePairRefresh()).pending[0].id);
-  check("pair: deny works", (await post("/pair/poll", { requestId: rq2.body.requestId, pollSecret: rq2.body.pollSecret })).body.state === "denied");
-  const keep = VB.bridgeMem.secrets; VB.bridgeMem.secrets = null; VB.bridgeMem.manual = { api: "wrong-token-xxxxxxxxxxxxxxxxxxxxx", module: "" };
+  // pairing on/off from the panel, no restart
+  let cfg = await VB.bridgePairConfig({ enabled: false });
+  check("pair: toggle OFF from the panel; devices are refused, the panel still reads the state", cfg.enabled === false && (await device("x")).rq.status === 404 && (await VB.bridgePairRefresh()).enabled === false);
+  let dY; cfg = await VB.bridgePairConfig({ enabled: true, autoRequest: false });
+  check("pair: toggle ON (and auto-request off) from the panel; a new device can ask right away", cfg.enabled === true && cfg.autoRequest === false && (dY = await device("y")).rv.status === 200);
+  const devY = (await VB.bridgePairRefresh()).pending[0];
+  await VB.bridgePairDeny(devY.id); await VB.bridgePairConfig({ autoRequest: true });
+  check("pair: deny works (the denied device is told)", (await dY.poll()).body.state === "denied");
+  // token sources: .env (local relay only) -> client.json -> typed; never from .env for a remote relay
+  const keep = VB.bridgeMem.secrets; const keepInfo = VB.bridgeMem.info;
+  check("token source: the local relay's .env", VB.bridgeTokenSource("api").token === API && /\.env/.test(VB.bridgeTokenSource("api").source));
+  VB.bridgeMem.info = Object.assign({}, keepInfo, { status: Object.assign({}, keepInfo.status, { remote: true, host: "10.1.2.3" }) });
+  VB.bridgeMem.secrets = keep;   // stale .env values must be ignored for a remote relay
+  check("token source: a REMOTE relay never uses this PC's .env", VB.bridgeApiToken() === "" && VB.bridgeModuleToken() === "");
+  VB.bridgeMem.clientSecrets = { api: "client-json-api-token-0123456789", module: "client-json-module-token-0123456", url: "http://10.1.2.3:3030", source: "the share" };
+  check("token source: remote relay -> the client.json the tools use (when it names that relay)", VB.bridgeApiToken() === "client-json-api-token-0123456789" && /client\.json/.test(VB.bridgeTokenSource("api").source));
+  VB.bridgeMem.clientSecrets.url = "http://10.9.9.9:3030";
+  check("token source: a client.json for a DIFFERENT relay is not used (no wrong token sent), typed one is", (() => { VB.bridgeAttachNow = () => "10.1.2.3:3030"; const none = VB.bridgeApiToken() === ""; VB.bridgeMem.manual = { api: "typed-token-xxxxxxxxxxxxxxxxxxxx", module: "" }; const typed = VB.bridgeApiToken() === "typed-token-xxxxxxxxxxxxxxxxxxxx" && /typed/.test(VB.bridgeTokenSource("api").source); VB.bridgeMem.manual = { api: "", module: "" }; delete VB.bridgeAttachNow; return none && typed; })());
+  VB.bridgeMem.clientSecrets = null; VB.bridgeMem.info = keepInfo;
+  VB.bridgeMem.secrets = null; VB.bridgeMem.manual = { api: "wrong-token-xxxxxxxxxxxxxxxxxxxxx", module: "" };
   let bad = ""; try { await VB.bridgePairRefresh(); } catch (e) { bad = e.message; }
   check("pair: a wrong typed token is rejected with a plain message", /rejected the API token/.test(bad), bad);
   VB.bridgeMem.manual = { api: API, module: "" };
   check("pair: a typed token works when .env is not available", (await VB.bridgePairRefresh()).pending.length === 0);
   VB.bridgeMem.secrets = keep; VB.bridgeMem.manual = { api: "", module: "" };
-  check("tokens never in panel state or logs after pairing", JSON.stringify(st.bridge).indexOf(API) < 0 && logs.join("\n").indexOf(API) < 0);
+  check("tokens never in panel state or logs after pairing", JSON.stringify(st.bridge).indexOf(API) < 0 && logs.join("\n").indexOf(API) < 0 && JSON.stringify(st.bridge).indexOf(cred.secret) < 0 && logs.join("\n").indexOf(cred.secret) < 0);
+  // client.json: URL and tokens found in the file go to memory only (never the returned info)
+  const withTok = JSON.stringify({ url: "http://10.1.2.3:3030", token: "client-api-token-abcdefghijklmnop", moduleToken: "client-mod-token-abcdefghijklmnop" });
+  const ciT = await VB.bridgeClientInfo({ fs: { readFileSync: (f) => { if (/foundry-bridge\/client\.json$/.test(f)) return withTok; throw new Error("ENOENT"); } }, env: {}, root: "R" });
+  check("client.json: tokens kept in memory, not in the result", ciT.url === "http://10.1.2.3:3030" && JSON.stringify(ciT).indexOf("client-api-token") < 0 && VB.bridgeMem.clientSecrets.api === "client-api-token-abcdefghijklmnop" && VB.bridgeMem.clientSecrets.module === "client-mod-token-abcdefghijklmnop");
+  let asked2 = []; await VB.bridgeClientInfo({ fs: { readFileSync: () => { throw new Error("ENOENT"); } }, env: {}, root: "R", attachHost: "10.1.2.3", readShare: async (f) => { asked2.push(f); return null; } });
+  check("client.json: the share host comes from the attached address (nothing hard-coded); loopback is never a share", asked2.length === 1 && asked2[0] === "\\\\10.1.2.3\\C\\FoundryVTT resources\\bridge\\client.json");
+  asked2 = []; await VB.bridgeClientInfo({ fs: { readFileSync: () => { throw new Error("ENOENT"); } }, env: { FOUNDRY_BRIDGE_HOST: "relay-pc", FOUNDRY_BRIDGE_SHARE: "\\\\{host}\\D$\\bridge\\client.json" }, root: "R", attachHost: "127.0.0.1", readShare: async (f) => { asked2.push(f); return null; } });
+  check("client.json: FOUNDRY_BRIDGE_HOST / FOUNDRY_BRIDGE_SHARE override the guess", asked2.length === 1 && asked2[0] === "\\\\relay-pc\\D$\\bridge\\client.json");
+  const ciF = await VB.bridgeClientInfo({ fs: { readFileSync: (f) => { if (f === "Z:/my/client.json") return withTok; throw new Error("ENOENT"); } }, env: {}, root: "R", clientFile: "Z:/my/client.json" });
+  check("client.json: a file chosen under Advanced wins over the automatic lookup", ciF.url === "http://10.1.2.3:3030" && ciF.source === "Z:/my/client.json");
+  // signing matches the relay's verifier exactly (cross-implementation)
+  const A = await import(require("url").pathToFileURL(path.join(ROOT, "foundry-bridge/relay/adminauth.js")).href);
+  check("signing: the panel's header is byte-identical to the relay's signer for the same inputs", VB.bridgeSign("tok-" + "x".repeat(30), "POST", "/pair/list", "{}", 1700000000000, "nonce1234567") === A.signAdmin({ token: "tok-" + "x".repeat(30), method: "POST", url: "/pair/list", body: "{}", ts: 1700000000000, nonce: "nonce1234567" }));
   r = await runner.run(VB.jobBridgeLaunch(st, { restart: true }));
   check("real: restart ok", r.ok && st.bridge.last.running, r.error);
   st.bridge.mode = "attach"; st.bridge.target = "10.255.255.1:3030";   // a remote address is saved: Close bridge must still only act locally

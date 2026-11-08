@@ -9,6 +9,7 @@ import util from 'node:util';
 import { pathToFileURL } from 'node:url';
 import { root, loadEnv, bindFor, paths, lanIp } from './lib/config.mjs';
 import { publishClient } from './lib/publish.mjs';
+import { attachPairingConsole } from './lib/pairing-console.mjs';
 
 const arg = (n, d) => { const i = process.argv.indexOf(n); return i > 0 && process.argv[i + 1] ? process.argv[i + 1] : d; };
 const envFile = path.resolve(arg('--env', path.join(root, '.env')));
@@ -36,7 +37,8 @@ const BIND = bindFor(env);
 
 const { createRelay } = await import(pathToFileURL(path.join(root, 'relay', 'server.js')).href);
 const pairingOn = (env.BRIDGE_PAIRING || 'on') !== 'off';
-const server = createRelay({ pairingFile: pairingOn ? P.paired : null });
+// pairing: on by default (BRIDGE_PAIRING=off in .env starts it switched off); it can be switched on/off live from the Illustrator panel (admin endpoint /pair/config)
+const server = createRelay({ pairingFile: P.paired, pairingEnabled: pairingOn });
 await new Promise((res, rej) => { server.once('error', rej); server.listen(PORT, BIND, res); })
   .catch((e) => die(e.code === 'EADDRINUSE' ? `port ${PORT} is already in use (another relay running?)` : String(e)));
 
@@ -44,33 +46,11 @@ fs.writeFileSync(P.pid, JSON.stringify({ pid: process.pid, port: PORT, bind: BIN
 const published = publishClient({ publicUrl: '', apiToken: env.BRIDGE_API_TOKEN, dir: env.CLIENT_CONFIG_DIR, fallbackDir: root, localUrl: `http://127.0.0.1:${PORT}` });
 out(new Date().toISOString(), `Varrenmoor bridge relay (managed) pid ${process.pid} listening on ${BIND}:${PORT}${BIND === '0.0.0.0' ? ` (LAN ${lanIp() || 'unknown'})` : ''}; client.json ${published.ok ? 'written' : 'not written (' + published.reason + ')'}`);
 
-// Pairing prompts. The log always gets the facts (never a token); the visible window also gets a loud banner and A / D keys.
+// Pairing prompts. The log always gets the facts (never a secret); the visible window also gets a loud banner and A / D keys.
 const pairing = server.pairing;
 const stamp = () => new Date().toISOString();
-if (pairing.enabled) {
-  pairing.on('request', (r) => {
-    out(stamp(), `PAIRING REQUEST ${r.id}: "${r.name}" from ${r.ip}, origin ${r.origin || '(none)'}, code ${r.code.replace(/(\d{3})(\d{3})/, '$1 $2')}`);
-    if (CONSOLE) out(['', '  ============ APPROVE THIS DEVICE? ============',
-      `   Device : ${r.name}   (user ${r.userName || '?'}, world ${r.worldId || '?'})`,
-      `   From   : ${r.ip}   origin ${r.origin || '(none)'}${r.originMismatch ? '   WARNING: origin does not match what the device claims' : ''}`,
-      `   Code   : ${r.code.replace(/(\d{3})(\d{3})/, '$1 $2')}   (it must be the SAME code shown on the Foundry screen)`,
-      '   Press  A = approve (90 days)   D = deny      (or use the Illustrator panel)', '  ===============================================', ''].join('\n'));
-  });
-  for (const ev of ['approved', 'denied', 'revoked', 'expired']) pairing.on(ev, (x) => out(stamp(), `pairing ${ev}: ${x.name || x.id}`));
-  if (CONSOLE && process.stdin.isTTY) {
-    process.stdin.setRawMode(true); process.stdin.resume();
-    process.stdin.on('data', (b) => {
-      const k = String(b).toLowerCase();
-      if (k === '\u0003') { process.emit('SIGINT'); return; }
-      const first = pairing.list().pending[0];
-      if ((k === 'a' || k === 'd') && !first) { out(stamp(), 'no pairing request is waiting'); return; }
-      if (k === 'a') out(stamp(), pairing.approve(first.id, { days: 90 }).status === 200 ? `approved "${first.name}" (${first.code.replace(/(\d{3})(\d{3})/, '$1 $2')})` : 'approve failed');
-      else if (k === 'd') { pairing.deny(first.id); }
-      else if (k === 'l') { const l = pairing.list(); out(stamp(), `paired devices: ${l.devices.map((d) => d.name).join(', ') || 'none'}; waiting: ${l.pending.length}`); }
-    });
-  }
-}
-out(stamp(), `relay window mode: ${MODE}; pairing ${pairing.enabled ? 'on (paired devices file: ' + P.paired + ')' : 'off'}`);
+attachPairingConsole(pairing, out, { interactive: CONSOLE, onSigint: () => process.emit('SIGINT') });
+out(stamp(), `relay window mode: ${MODE}; pairing ${pairing.enabled ? 'on' : 'OFF (switch on in the Illustrator panel)'} (paired devices file: ${P.paired})`);
 
 let stopping = false;
 const stop = (sig) => {
