@@ -716,6 +716,40 @@ def plan(doc, lib, chunk_ft, budget=None, impostor_beyond_ft=None, lod1_beyond_f
     return out, dropped
 
 
+HERO_TRIS = 8000                 # a species above this at LOD0 is a "hero" model: a handful per scene, not a forest
+WARN_TOTAL_TRIS = 600000         # merged foliage above this in one scene deserves a budget (merge --budget)
+
+
+def lod_sanity(lib, species=None):
+    """Warnings for species whose LOD chain is not monotonic (LOD1 must have fewer triangles than LOD0, LOD2 no more than LOD1) or that are heavy hero models."""
+    out = []
+    for sid in (species if species is not None else sorted(lib.species)):
+        t = [lib.tris(sid, l) for l in (0, 1, 2)]
+        if t[1] >= t[0] and t[0] > 60:
+            out.append(f"{sid}: LOD1 ({t[1]} tris) is not lighter than LOD0 ({t[0]})")
+        if t[2] > t[1] and t[1] > 0:
+            out.append(f"{sid}: LOD2 ({t[2]} tris) is heavier than LOD1 ({t[1]})")
+        if t[0] > HERO_TRIS:
+            out.append(f"{sid}: hero model, {t[0]} tris at LOD0 (LOD1 {t[1]}); keep it to a few per scene or give the merge a --budget / --impostor-beyond-ft")
+    return out
+
+
+def triangle_report(doc_items, lib, lod_of=None, top=6):
+    """Per species instance count and triangles (LOD0 and as placed), share of the total, and the heaviest species. doc_items: iterable of item dicts;
+    lod_of(item) -> lod used for it (default 0)."""
+    per = {}
+    for i in doc_items:
+        lod = lod_of(i) if lod_of else 0
+        r = per.setdefault(i["species"], {"instances": 0, "tris_lod0": lib.tris(i["species"], 0), "tris_placed": 0})
+        r["instances"] += 1
+        r["tris_placed"] += lib.tris(i["species"], lod)
+    total = sum(r["tris_placed"] for r in per.values())
+    for r in per.values():
+        r["share"] = round(r["tris_placed"] / total, 4) if total else 0.0
+    heavy = sorted(per.items(), key=lambda kv: -kv[1]["tris_placed"])[:top]
+    return {"total_tris": int(total), "per_species": dict(sorted(per.items())), "heaviest": [{"species": k, **v} for k, v in heavy]}
+
+
 def _chunk_mesh(lib, its, ground, lod, sink_ft=0.25):
     fr = ground.frame
     parts = []
@@ -820,6 +854,16 @@ def merge_foliage(doc, lib, ground, place, out_dir, chunk_ft=150.0, budget=None,
     after = {"files": len(entries), "tiles": len(entries), "instances": sum(e["instances"] for e in entries), "triangles": int(tris_after), "draw_calls": len(entries),
              "glb_bytes_primary": int(size_primary), "glb_bytes_with_lods": int(size_all), "atlas_bytes": os.path.getsize(os.path.join(out_dir, "models", "textures", fm.ATLAS_MAT + ".png")),
              "dropped_by_budget": len(dropped), "dropped_keep_out": len(blocked_ids)}
+    lod_by_id = {i["id"]: c["lod"] for c in chunks.values() for i in c["items"]}
+    treport = triangle_report([i for c in chunks.values() for i in c["items"] if i["id"] not in set(dropped)], lib, lambda i: lod_by_id.get(i["id"], 0))
+    used = sorted({i["species"] for c in chunks.values() for i in c["items"]})
+    lod_warn = lod_sanity(lib, used)
+    for ent in entries:                                              # chunk LOD files must get lighter with distance
+        t = [l["tris"] for l in sorted(ent["lods"], key=lambda l: l["lod"])]
+        if any(b > a for a, b in zip(t, t[1:])):
+            lod_warn.append(f"{ent['file']}: LOD triangle counts do not decrease ({t})")
+    if after["triangles"] > WARN_TOTAL_TRIS:
+        lod_warn.append(f"merged foliage is {after['triangles']} tris (> {WARN_TOTAL_TRIS}); set a budget or an impostor distance")
     pk = (attach_placements or {})
     fdoc = {"format": ws.PLACEMENTS_FORMAT, "schema_version": "1.0", "place": place, "pack": pk.get("pack", {"dir": ".", "generated": None, "git_commit": None}),
             "frame": pk.get("frame") or {"px_per_ft": fr.px_per_ft, "z_origin_ft": fr.z_origin_ft, "height_ft": fr.height_ft, "width_ft": fr.width_ft, "tile_rotation_deg": 0,
@@ -832,10 +876,12 @@ def merge_foliage(doc, lib, ground, place, out_dir, chunk_ft=150.0, budget=None,
         fdoc = {**pk, "files": sorted(keep + entries, key=lambda e: e["file"]), "merge": {**pk.get("merge", {}), "foliage": fdoc["merge"]}}
     _jdump(os.path.join(out_dir, "placements.json"), fdoc)
     rep = {"place": place, "before": base, "after": after, "chunk_ft": chunk_ft, "chunks": len(entries), "out": out_dir,
-           "keep_out_dropped_ids": blocked_ids, "settings": {"budget": budget, "impostor_beyond_ft": impostor_beyond_ft, "lod1_beyond_ft": lod1_beyond_ft, "compress": compress}}
+           "keep_out_dropped_ids": blocked_ids, "triangle_report": treport, "lod_warnings": lod_warn, "settings": {"budget": budget, "impostor_beyond_ft": impostor_beyond_ft, "lod1_beyond_ft": lod1_beyond_ft, "compress": compress}}
     _jdump(os.path.join(out_dir, "foliage_merge_report.json"), rep)
     log(f"foliage merge: {base['tiles']} tiles / {base['draw_calls']} draw calls / {base['triangles']} tris -> {after['files']} chunk files / {after['draw_calls']} draw calls / "
         f"{after['triangles']} tris ({len(dropped)} thinned), GLB {size_primary // 1024} KB (+LODs {size_all // 1024} KB) -> {out_dir}")
+    for w in lod_warn:
+        log("foliage merge warning: " + w)
     return fdoc, rep
 
 
@@ -923,6 +969,10 @@ def main(argv=None):
         export = (lambda *x: None) if os.environ.get("VB_FOLIAGE_JSON") else export_pack_scatter
         if a.cmd == "scatter":
             params = _jload(a.params)
+            if params.get("climate"):          # "climate": temperate|cold|dry|coastal adds the biome's imported (third-party) species to the mix (FoliageLibrary.climate_mix)
+                base = params.get("mix")
+                params["mix"] = [{"species": sp_, "weight": w_} for sp_, w_ in lib.climate_mix(params["climate"], base=base if isinstance(base, (str, list)) and base else None,
+                                                                                                imported=params.get("imported", True))]
             env = Env.from_place(a.place)
             out = run_scatter(doc, env, lib, params)
             doc.save()

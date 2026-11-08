@@ -568,6 +568,29 @@ class FoliageLibrary:
             self.mixes.update(d.get("mixes", {}))
         self._cache = {}
 
+    def imported_available(self, sid):
+        """True when a species does not need third-party files or they are present (third_party/baileywiki may be removed before a public release)."""
+        gen = (self.species.get(sid) or {}).get("gen") or {}
+        if gen.get("type") != "glb":
+            return True
+        import foliage_import as fi
+        return os.path.exists(os.path.join(fi.IMPORTED, gen["file"]))
+
+    def climate_mix(self, climate, base=None, imported=True):
+        """Species mix [(species, weight)] for a climate: the base mix (a mixes.json name or a list; default the climate's own mix) plus every species whose `biomes` lists
+        the climate, weighted `mix_share` x the base total (hero models are heavy, so the shares are small). Imported (third-party) species are skipped when their files
+        are missing or imported=False. Procedural-only libraries (no `biomes`) return the base mix unchanged."""
+        from_name = {"temperate": "oak_beech_wood", "cold": "spruce_forest", "dry": "pine_heath", "coastal": "pine_heath"}
+        b = base if base is not None else from_name.get(climate, "northern_mixed_forest")
+        mix = [tuple(m) if isinstance(m, (list, tuple)) else (m["species"], m["weight"]) for m in (self.mixes[b] if isinstance(b, str) else b)]
+        tot = sum(w for _, w in mix)
+        have = {s for s, _ in mix}
+        if imported:
+            for sid, sp in self.species.items():
+                if climate in (sp.get("biomes") or []) and sid not in have and self.imported_available(sid):
+                    mix.append((sid, round(tot * float(sp.get("mix_share", 0.04)), 4)))
+        return mix
+
     def get(self, sid):
         if sid not in self.species:
             raise KeyError(f"unknown foliage species {sid!r}")

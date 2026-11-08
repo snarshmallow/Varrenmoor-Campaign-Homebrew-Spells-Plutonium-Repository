@@ -129,6 +129,8 @@
   },
   {
    "id": "bush_bw1",
+   "biomes": ["temperate", "coastal", "dry"],
+   "mix_share": 0.05,
    "name": "Bush (Baileywiki 1)",
    "kind": "shrub",
    "gen": {
@@ -178,6 +180,8 @@
   },
   {
    "id": "bush_bw3",
+   "biomes": ["temperate", "coastal", "dry"],
+   "mix_share": 0.05,
    "name": "Bush (Baileywiki 3)",
    "kind": "shrub",
    "gen": {

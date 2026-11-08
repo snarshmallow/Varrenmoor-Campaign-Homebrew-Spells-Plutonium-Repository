@@ -443,6 +443,8 @@
   },
   {
    "id": "beech_bw",
+   "biomes": ["temperate"],
+   "mix_share": 0.03,
    "name": "Beech (Baileywiki, hero)",
    "kind": "tree",
    "gen": {
@@ -503,6 +505,8 @@
   },
   {
    "id": "ash_bw",
+   "biomes": ["temperate", "coastal"],
+   "mix_share": 0.06,
    "name": "Ash (Baileywiki, hero)",
    "kind": "tree",
    "gen": {
@@ -558,6 +562,8 @@
   },
   {
    "id": "ash_small_bw",
+   "biomes": ["temperate", "coastal"],
+   "mix_share": 0.05,
    "name": "Young ash (Baileywiki)",
    "kind": "tree",
    "gen": {
