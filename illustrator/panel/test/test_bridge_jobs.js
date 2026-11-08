@@ -13,8 +13,9 @@ const runner = R.createRunner({ root: ROOT, jobsDir: tmp + "/jobs", fs, path, sp
   getPython: () => "python", getPlace: () => "x", getTextures: () => [], setState: (p, v) => VB.setPath(st, p, v), onStale: () => {} });
 const freePort = (p) => new Promise(res => { const s = net.createServer(); s.once("error", () => res(freePort(p + 1))); s.listen(p, "0.0.0.0", () => s.close(() => res(p))); });
 (async () => {
-  check("state defaults", st.bridge && st.bridge.node === "" && st.bridge.cim === false && st.bridge.last === null && st.bridge.hidden === false && st.bridge.terminal === "auto" && st.bridge.target === "");
-  check("args: default", VB.bridgeCtlArgs(st, "status").join(" ") === "foundry-bridge/bridgectl.mjs status --json");
+  check("state defaults", st.bridge && st.bridge.node === "" && st.bridge.cim === false && st.bridge.last === null && st.bridge.hidden === false && st.bridge.terminal === "auto" && st.bridge.target === "http://10.0.0.15:3030" && st.bridge.mode === "attach");
+  check("args: default is ATTACH to the Vega relay", VB.bridgeCtlArgs(st, "status").join(" ") === "foundry-bridge/bridgectl.mjs status --json --target http://10.0.0.15:3030");
+  st.bridge.mode = "local";   // the older checks below are about the local relay (no attach address)
   st.bridge.env = "C:/t/e.env"; st.bridge.state = "C:/t/run"; st.bridge.cim = true; st.bridge.node = "C:/n/node.exe";
   check("args: env/state/node/cim only for start+restart", VB.bridgeCtlArgs(st, "start").join(" ") === "foundry-bridge/bridgectl.mjs start --json --env C:/t/e.env --state C:/t/run --node C:/n/node.exe --cim" && VB.bridgeCtlArgs(st, "info", ["--secrets"]).indexOf("--cim") < 0);
   check("launch plan: stopped -> start", VB.bridgeLaunchPlan({ running: false }).action === "start");
@@ -22,11 +23,37 @@ const freePort = (p) => new Promise(res => { const s = net.createServer(); s.onc
   check("launch plan: running -> ATTACH (no restart, no prompt)", lp.action === "attach" && /3030/.test(lp.reason) && /another way/.test(lp.reason), lp.reason);
   check("restart plan asks first; stop plan asks first", VB.bridgeRestartPlan({ running: true, managed: false, port: 3030 }).ask === true && VB.bridgeStopPlan({ running: true, managed: true, port: 3030 }).ask === true && /NOT started from here/.test(VB.bridgeStopPlan({ running: true, managed: false, port: 3030 }).text));
   check("remote relay cannot be restarted or stopped from here", VB.bridgeRestartPlan({ running: true, remote: true, host: "10.0.0.9", port: 3030 }).allowed === false && VB.bridgeStopPlan({ running: true, remote: true, host: "10.0.0.9", port: 3030 }).allowed === false);
-  st.bridge.target = "10.0.0.9:3030"; st.bridge.hidden = true; st.bridge.terminal = "conhost";
+  st.bridge.mode = "attach"; st.bridge.target = "10.0.0.9:3030"; st.bridge.hidden = true; st.bridge.terminal = "conhost";
   check("args: target on every command, hidden/terminal only on start+restart", VB.bridgeCtlArgs(st, "status").indexOf("--target") > 0 && VB.bridgeCtlArgs(st, "status").indexOf("--hidden") < 0 && VB.bridgeCtlArgs(st, "start").indexOf("--hidden") > 0 && VB.bridgeCtlArgs(st, "start").join(" ").indexOf("--terminal conhost") > 0);
-  st.bridge.target = ""; st.bridge.hidden = false; st.bridge.terminal = "auto";
+  st.bridge.mode = "local"; st.bridge.target = ""; st.bridge.hidden = false; st.bridge.terminal = "auto";
   const l = (n) => new Array(n).fill("19:00:00 module socket closed 4002");
   check("4002 loop: 3 in last 20 lines", VB.bridgeLoop4002(["a", "b"].concat(l(3))) && !VB.bridgeLoop4002(l(2)) && !VB.bridgeLoop4002(l(3).concat(new Array(20).fill("x"))));
+  // attach prefill + persistence (the address is a plain setting, not a secret)
+  const fresh = VB.normalize(null);
+  check("attach: prefilled with the Vega relay, attach is the default mode", VB.BRIDGE_ATTACH_DEFAULT === "http://10.0.0.15:3030" && fresh.bridge.target === "http://10.0.0.15:3030" && fresh.bridge.mode === "attach");
+  const saved = VB.normalize(JSON.parse(JSON.stringify({ bridge: { target: "192.168.1.7:3030" } })));
+  check("attach: an edited address survives save/load (normalize keeps it)", saved.bridge.target === "192.168.1.7:3030" && VB.bridgeCtlArgs(saved, "status").join(" ").indexOf("--target 192.168.1.7:3030") > 0);
+  check("attach: a blank saved address falls back to the default", VB.bridgeAttachTarget({ bridge: { target: "  " } }) === "http://10.0.0.15:3030" && VB.bridgeAttachTarget({ bridge: { target: "", mode: "local" } }) === "");
+  check("local/closelocal never carry --target (only this PC), even with a remote address saved", VB.bridgeCtlArgs(fresh, "local").indexOf("--target") < 0 && VB.bridgeCtlArgs(fresh, "closelocal").indexOf("--target") < 0 && VB.bridgeCtlArgs(fresh, "local").indexOf("local") === 1);
+  const ls = VB.bridgeLocalState(fresh);
+  check("launch local uses no attach address and does not change the saved one", ls.bridge.target === "" && VB.bridgeCtlArgs(ls, "start").indexOf("--target") < 0 && fresh.bridge.target === "http://10.0.0.15:3030");
+  check("tokens are not part of saved bridge settings", Object.keys(VB.bridgeDefaults()).every(k => !/token|secret|api/i.test(k)));
+  check("parse target", JSON.stringify(VB.bridgeParseTarget("http://10.0.0.15:3030")) === '{"host":"10.0.0.15","port":3030}' && VB.bridgeParseTarget("vega").port === null && VB.bridgeParseTarget("").host === "");
+  // close plan + two-relays warning
+  check("close plan: nothing running -> disabled 'No local bridge running'", VB.bridgeClosePlan(null).enabled === false && VB.bridgeClosePlan({ found: false }).label === "No local bridge running");
+  const cp = VB.bridgeClosePlan({ found: true, pid: 4242, imageName: "node.exe", isNode: true, port: 8800, how: "managed, hidden (no window)" });
+  check("close plan: node relay -> enabled, modal text names pid/port/how and says only this PC", cp.enabled && /4242/.test(cp.text) && /8800/.test(cp.text) && /hidden/.test(cp.text) && /THIS PC/.test(cp.text));
+  check("close plan: non-node process is never closable", VB.bridgeClosePlan({ found: true, pid: 9, imageName: "notepad.exe", isNode: false, port: 3030, how: "" }).enabled === false);
+  check("two relays: local + remote up warns; local-only / remote-only / attach-to-self do not", VB.bridgeTwoRelays(true, true, false) && !VB.bridgeTwoRelays(true, false, false) && !VB.bridgeTwoRelays(false, true, false) && !VB.bridgeTwoRelays(true, true, true));
+  // client.json (where foundry_push.py gets its relay URL)
+  const fakeFs = (files) => ({ readFileSync: (f) => { if (f in files) return files[f]; throw new Error("ENOENT"); } });
+  let ci = await VB.bridgeClientInfo({ fs: fakeFs({ "R/foundry-bridge/client.json": JSON.stringify({ url: "http://127.0.0.1:3030", token: "x" }) }), env: {}, root: "R" });
+  check("client.json on this PC is used first", ci.url === "http://127.0.0.1:3030" && ci.localFile === true);
+  let asked = ""; ci = await VB.bridgeClientInfo({ fs: fakeFs({ "R/foundry-3d/.env": "FOUNDRY_ASSETS_DIR=\\\\HOST2\\share\\x\n" }), env: {}, root: "R", readShare: async (f) => { asked = f; return JSON.stringify({ url: "http://10.0.0.15:3030", token: "t" }); } });
+  check("no local client.json -> the \\\\VEGA-style share (host from foundry-3d/.env), url only", ci.url === "http://10.0.0.15:3030" && asked === "\\\\HOST2\\C\\FoundryVTT resources\\bridge\\client.json" && JSON.stringify(ci).indexOf('"t"') < 0, asked);
+  ci = await VB.bridgeClientInfo({ fs: fakeFs({}), env: {}, root: "R", readShare: async () => null });
+  check("nothing found is reported plainly", ci.url === "" && /VEGA/.test(ci.source));
+  check("client check: same relay ok; loopback vs Vega warns with a fix; other host warns", VB.bridgeClientCheck("http://10.0.0.15:3030", "10.0.0.15:3030").ok && !VB.bridgeClientCheck("http://127.0.0.1:3030", "http://10.0.0.15:3030").ok && /old client\.json/.test(VB.bridgeClientCheck("http://127.0.0.1:3030", "http://10.0.0.15:3030").text) && !VB.bridgeClientCheck("http://10.0.0.99:3030", "http://10.0.0.15:3030").ok);
   check("mask hides the token", VB.bridgeMask(MOD).indexOf("throw") < 0 && VB.bridgeMask("") === "");
 
   // mock exec: records args, returns canned JSON
@@ -65,6 +92,12 @@ const freePort = (p) => new Promise(res => { const s = net.createServer(); s.onc
   r = await runner.run(VB.jobBridgeProbe(st));
   check("real: probe finds the relay", r.ok && VB.bridgeMem.found.some(x => x.running && x.port === port), r.error);
 
+  // local relay detection and Close bridge (throwaway relay only)
+  const realLocal = await VB.bridgeLocalDetect(st);
+  check("local detect: finds the relay on this PC with pid, node.exe and how it was started", realLocal.found && realLocal.port === port && realLocal.pid === VB.bridgeMem.info.status.pid && realLocal.isNode && /^node(\.exe)?$/i.test(realLocal.imageName) && realLocal.managed && /hidden/.test(realLocal.how), JSON.stringify(realLocal));
+  const keepT = st.bridge.target, keepM = st.bridge.mode; st.bridge.mode = "attach"; st.bridge.target = "10.255.255.1:3030";
+  const l2 = await VB.bridgeLocalDetect(st); st.bridge.mode = keepM; st.bridge.target = keepT;
+  check("local detect ignores the attach address", l2.found && l2.port === port);
   // pairing admin through the panel logic: API token from .env (memory), then a typed token
   const post = (p, body, tok) => VB.bridgeHttp({ method: "POST", host: "127.0.0.1", port: port, path: p, body: body, token: tok });
   const rq = await post("/pair/request", { deviceName: "Vega GM", userName: "Trent", worldId: "w", hostOrigin: "http://vega:30000" });
@@ -92,6 +125,10 @@ const freePort = (p) => new Promise(res => { const s = net.createServer(); s.onc
   check("tokens never in panel state or logs after pairing", JSON.stringify(st.bridge).indexOf(API) < 0 && logs.join("\n").indexOf(API) < 0);
   r = await runner.run(VB.jobBridgeLaunch(st, { restart: true }));
   check("real: restart ok", r.ok && st.bridge.last.running, r.error);
+  st.bridge.mode = "attach"; st.bridge.target = "10.255.255.1:3030";   // a remote address is saved: Close bridge must still only act locally
+  r = await runner.run(VB.jobBridgeClose(st));
+  st.bridge.mode = "local"; st.bridge.target = "";
+  check("close job: stops the local relay (remote address ignored)", r.ok && (await VB.bridgeLocalDetect(st)).found === false && st.bridge.last === st.bridge.last, r.error);
   r = await runner.run(VB.jobBridgeStop(st));
   check("real: stop ok", r.ok && st.bridge.last.running === false, r.error);
   fs.rmSync(TMP, { recursive: true, force: true });

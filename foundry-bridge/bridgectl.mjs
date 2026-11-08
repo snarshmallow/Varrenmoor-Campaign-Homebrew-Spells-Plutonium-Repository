@@ -1,7 +1,8 @@
 // Start / stop / restart / status / probe / info / logs for the Varrenmoor relay: launches it (visible window by default, hidden optional) OR attaches to one
 // that is already running, without restarting it.
-//   node bridgectl.mjs <start|stop|restart|status|probe|info|logs> [--env F] [--state D] [--node EXE] [--lines N] [--json] [--secrets]
+//   node bridgectl.mjs <start|stop|restart|status|local|closelocal|probe|info|logs> [--env F] [--state D] [--node EXE] [--lines N] [--json] [--secrets]
 //        [--target host[:port]|URL]  attach/inspect a relay at that address (default: this PC, port from .env)
+//        local / closelocal: find / stop ONLY a relay on this PC (node.exe only; --target is ignored)
 //        [--hidden]                  no window at all (detached node, no console)         [--terminal auto|wt|conhost]
 //        [--cim]                     (hidden mode) start through WMI to escape a host's Job Object
 // Modes: window (default) = a visible console that does not freeze: Windows Terminal if installed, else a conhost window with QuickEdit OFF
@@ -48,7 +49,19 @@ export function windowArgs({ node, envFile, stateDir, mode }) {
 }
 export function wtArgs(psArgs) { return ['-w', 'new', '--title', WINDOW_TITLE, '--suppressApplicationTitle', 'powershell.exe', ...psArgs]; }
 
-export function makeCtl({ envFile = path.join(root, '.env'), stateDir, node = process.execPath, cim = false, hidden = false, terminal = 'auto', target = '' } = {}) {
+// image name of a pid (Windows tasklist); null when the pid does not exist
+export function imageName(pid) {
+  if (!win) { try { return fs.readFileSync(`/proc/${pid}/comm`, 'utf8').trim(); } catch { return null; } }
+  try {
+    const l = execFileSync('tasklist', ['/FI', `PID eq ${pid}`, '/FO', 'CSV', '/NH'], { encoding: 'utf8', windowsHide: true }).trim().split(/\r?\n/)[0];
+    const m = l.match(/^"([^"]+)","(\d+)"/);
+    return m && Number(m[2]) === Number(pid) ? m[1] : null;
+  } catch { return null; }
+}
+// the only thing this launcher may ever kill is a node process
+export const isNodeName = (n) => /^node(\.exe)?$/i.test(String(n || ''));
+
+export function makeCtl({ envFile = path.join(root, '.env'), stateDir, node = process.execPath, cim = false, hidden = false, terminal = 'auto', target = '', procName = imageName } = {}) {
   envFile = path.resolve(envFile);
   const P = paths(stateDir ? path.resolve(stateDir) : undefined);
   const T = typeof target === 'string' ? parseTarget(target) : target;
@@ -56,10 +69,7 @@ export function makeCtl({ envFile = path.join(root, '.env'), stateDir, node = pr
 
   const readPid = () => { try { return JSON.parse(fs.readFileSync(P.pid, 'utf8')); } catch { return null; } };
   const alive = (pid) => { try { process.kill(pid, 0); return true; } catch (e) { return e.code === 'EPERM'; } };
-  const isNode = (pid) => {
-    if (!win) return alive(pid);
-    try { return /node(\.exe)?/i.test(execFileSync('tasklist', ['/FI', `PID eq ${pid}`, '/FO', 'CSV', '/NH'], { encoding: 'utf8', windowsHide: true })); } catch { return false; }
-  };
+  const isNode = (pid) => isNodeName(procName(pid));
   // GET /health; only a Varrenmoor relay counts (ok:true), so some other web server on the port is not mistaken for one
   const health = (port, host = '127.0.0.1') => new Promise((res) => {
     const req = http.get({ host, port, path: '/health', timeout: 1500 }, (r) => {
@@ -176,6 +186,47 @@ export function makeCtl({ envFile = path.join(root, '.env'), stateDir, node = pr
     return { action: 'started', how, ...(await status()) };
   }
 
+  // Is a relay running on THIS PC? Looks at the PID file, the listening sockets (netstat) and /health on localhost for the configured port, the
+  // port in the PID file, 3030 and any local --target port. Ignores a remote --target completely: this never looks at or touches another PC.
+  async function localStatus() {
+    const rec = readPid(), ports = [];
+    for (const p of [rec?.port, envPort(), 3030, (!remote && T.port) || null]) if (p && !ports.includes(p)) ports.push(p);
+    const hits = [];
+    for (const port of ports) {
+      const h = await health(port);
+      const lp = listenerPid(port);
+      if (h || lp) hits.push({ port, health: h, listenerPid: lp });
+    }
+    const hit = hits.find((x) => x.health) || null;
+    const managed = !!(rec && hit && hit.health.pid === rec.pid);
+    const pid = hit ? (hit.health.pid ?? hit.listenerPid ?? null) : (rec && alive(rec.pid) && isNode(rec.pid) ? rec.pid : null);
+    const name = pid ? procName(pid) : null;
+    const found = !!hit || !!(rec && pid);
+    const how = !found ? null : managed ? (rec.mode === 'hidden' ? 'managed, hidden (no window)' : `managed, ${rec.mode === 'wt' ? 'Windows Terminal window' : 'console window'}`) : 'not started from the panel (start.bat or by hand)';
+    return {
+      found, running: !!hit, port: hit ? hit.port : (rec?.port ?? null), pid, imageName: name, isNode: isNodeName(name), managed, unmanaged: !!hit && !managed,
+      mode: !found ? null : managed ? (rec.mode || 'hidden') : 'unmanaged', how, moduleConnected: !!hit?.health?.moduleConnected, startedAt: hit?.health?.startedAt || rec?.startedAt || null,
+      stalePidFile: !!rec && !(alive(rec.pid) && isNode(rec.pid)), otherListeners: hits.filter((x) => !x.health && x.listenerPid).map((x) => ({ port: x.port, pid: x.listenerPid, imageName: procName(x.listenerPid) })), pidFile: P.pid, checkedPorts: ports,
+    };
+  }
+
+  // Stops ONLY the relay on this PC, and only when the process is node. Never looks at --target, so it can never touch another PC.
+  async function closeLocal() {
+    const s = await localStatus();
+    if (!s.found || !s.pid) {
+      try { if (s.stalePidFile) fs.unlinkSync(P.pid); } catch { /* ok */ }
+      return { action: 'not-running', local: s };
+    }
+    if (!isNodeName(s.imageName)) throw new Error(`pid ${s.pid} on port ${s.port} is ${s.imageName || 'not a known process'}, not node.exe; refusing to kill it`);
+    try { fs.mkdirSync(P.dir, { recursive: true }); fs.writeFileSync(P.stop, String(Date.now())); } catch { /* the window then waits for a key; harmless */ }
+    try { process.kill(s.pid); } catch (e) { if (e.code !== 'ESRCH') throw e; }
+    const end = Date.now() + 8000;
+    while (Date.now() < end && (alive(s.pid) || await health(s.port))) await sleep(150);
+    if (alive(s.pid)) throw new Error(`pid ${s.pid} did not exit`);
+    try { fs.unlinkSync(P.pid); } catch { /* already removed */ }
+    return { action: 'stopped', pid: s.pid, wasManaged: s.managed, local: await localStatus() };
+  }
+
   async function stop() {
     if (remote) throw new Error(`cannot stop a relay on another PC (${T.host})`);
     const s = await status();
@@ -232,7 +283,7 @@ export function makeCtl({ envFile = path.join(root, '.env'), stateDir, node = pr
     return out;
   }
 
-  return { status, probe, start, stop, restart, info, logTail, paths: P };
+  return { status, localStatus, closeLocal, probe, start, stop, restart, info, logTail, paths: P };
 }
 
 // ---- CLI ---------------------------------------------------------------------------------------------------------------
@@ -247,14 +298,17 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
     else if (cmd === 'stop') r = await ctl.stop();
     else if (cmd === 'restart') r = await ctl.restart();
     else if (cmd === 'status') r = await ctl.status();
+    else if (cmd === 'local') r = await ctl.localStatus();
+    else if (cmd === 'closelocal') r = await ctl.closeLocal();
     else if (cmd === 'probe') r = { found: await ctl.probe(a.filter((x, i) => a[i - 1] === '--also')) };
     else if (cmd === 'info') r = await ctl.info({ secrets: a.includes('--secrets') });
     else if (cmd === 'logs') r = { lines: await ctl.logTail(Number(opt('--lines', 40))) };
-    else { console.error('usage: node bridgectl.mjs <start|stop|restart|status|probe|info|logs> [--env F] [--state D] [--node EXE] [--target host[:port]] [--hidden] [--terminal auto|wt|conhost] [--cim] [--json] [--secrets]'); process.exit(2); }
+    else { console.error('usage: node bridgectl.mjs <start|stop|restart|status|local|closelocal|probe|info|logs> [--env F] [--state D] [--node EXE] [--target host[:port]] [--hidden] [--terminal auto|wt|conhost] [--cim] [--json] [--secrets]'); process.exit(2); }
     if (json) console.log(JSON.stringify(r));
     else if (r.lines) console.log(r.lines.join('\n'));
     else if (r.found) console.log(r.found.map((x) => `${x.host}:${x.port} ${x.running ? 'RELAY RUNNING' : 'nothing'}`).join('\n'));
     else if (cmd === 'info') console.log(JSON.stringify(r, null, 2));
+    else if (cmd === 'local' || cmd === 'closelocal') console.log(r.action ? r.action : r.found ? `local relay: pid ${r.pid} (${r.imageName}), port ${r.port}, ${r.how}` : 'No local bridge running');
     else console.log(`${r.action || (r.running ? 'running' : 'not running')}: ${r.running ? `healthy on ${r.host}:${r.port}, pid ${r.pid ?? '?'}, ${r.mode}, module ${r.moduleConnected ? 'connected' : 'not connected'}` : 'relay not running'}`);
   } catch (e) {
     if (json) console.log(JSON.stringify({ error: String(e.message || e) })); else console.error('ERROR:', e.message || e);

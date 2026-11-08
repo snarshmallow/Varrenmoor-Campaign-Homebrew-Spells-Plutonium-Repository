@@ -1,10 +1,10 @@
-// Bridge section UI (Foundry tab): Connect-or-launch / Restart / Stop / Status / Find relays, managed vs attached state, setup values for the GM module,
+// Bridge section UI (Foundry tab, top): Attach to existing bridge (default, address remembered) / Close bridge (local relay only, node.exe only) / Launch local bridge (secondary), two-relays warning, client.json check, managed vs attached state, setup values for the GM module,
 // masked tokens with reveal + copy, manual token entry for a relay on another PC (memory only), live module-connected poll, log tail, "two GM tabs" warning,
 // and the Pair devices list (Approve / Deny / Revoke / Rotate). Logic: lib/bridge.js; relay manager: foundry-bridge/bridgectl.mjs.
 // Uses an in-panel modal (no window.confirm/alert: JS dialogs can freeze CEP). Tokens live only in VBCore.bridgeMem (memory).
 (function () {
   "use strict";
-  var VB = window.VBCore, ctx = null, timer = null, shown = { reveal: false }, live = null, pairMsg = "", pairBusy = false;
+  var VB = window.VBCore, ctx = null, timer = null, shown = { reveal: false }, live = null, localLive = null, lastLocalUp = null, pairMsg = "", pairBusy = false, detectBusy = false;
   var $ = function (id) { return document.getElementById(id); };
   var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
   function S() { return ctx.state().bridge; }
@@ -55,14 +55,14 @@
     var tag = $("bgStatus");
     var mode = full && full.mode ? full.mode : (st && st.running ? (st.managed ? "managed" : "attached (unmanaged)") : "");
     if (!st) { tag.textContent = "not checked"; tag.className = "tag"; }
-    else if (!st.running) { tag.textContent = "relay stopped"; tag.className = "tag"; }
-    else { tag.textContent = (st.moduleConnected ? "module connected" : "relay up, module NOT connected") + " , " + (mode || ""); tag.className = "tag" + (st.moduleConnected ? "" : " stale"); }
+    else if (!st.running) { tag.textContent = "no relay at " + attachAddr().host + ":" + attachAddr().port; tag.className = "tag stale"; }
+    else { tag.textContent = (attachIsLocal() ? "this PC" : "attached " + attachAddr().host + ":" + attachAddr().port) + (st.moduleConnected ? ", module connected" : ", module NOT connected"); tag.className = "tag" + (st.moduleConnected ? "" : " stale"); }
     var lines = (live && live.logLines) || (info && info.logTail) || [];
     var fight = VB.bridgeLoop4002(lines) || (st && st.replacedLastMinute >= 3);
     $("bgWarn").hidden = !fight;
     $("bgWarn").textContent = fight ? "Two GM tabs are open and fighting over the bridge (repeated close code 4002). Close one of the Foundry GM browser tabs. If it keeps happening after that, redeploy the module (foundry-bridge/DEPLOY_MODULE.md)." : "";
     var box = $("bgInfo");
-    if (!info) { box.innerHTML = '<div class="note">Press Connect or launch (attaches to a relay that is already running; starts one if none is), or Status.</div>'; }
+    if (!info) { box.innerHTML = '<div class="note">Press Connect (attaches to the relay at the address above; nothing is started or restarted) or Status.</div>'; }
     else {
       var u = info.urls || {}, ms = info.moduleSettings || {}, sec = { moduleToken: VB.bridgeModuleToken(), apiToken: VB.bridgeApiToken() }, remote = !!(full && full.remote);
       var tokRow = function (label, key, val) {
@@ -86,13 +86,58 @@
     var log = lines.slice(-12).join("\n");
     $("bgLog").textContent = log || "(no log yet: the managed relay writes foundry-bridge/run/relay.log)";
     $("bgReveal").textContent = shown.reveal ? "Hide tokens" : "Reveal tokens";
-    paintPair();
+    paintPair(); paintAttach(); paintLocal(); paintClient();
+  }
+
+  // ---- Attach / Close bridge / client.json blocks ---------------------------------------------------------------------------------------
+  function attachAddr() { var t = VB.bridgeParseTarget(VB.bridgeAttachTarget(ctx.state())); return { host: t.host || "127.0.0.1", port: t.port || 3030, text: VB.bridgeAttachTarget(ctx.state()) }; }
+  function attachIsLocal() { return VB.bridgeIsLoopback(attachAddr().host); }
+  function paintAttach() {
+    var el = $("bgAttachSt"); if (!el) return; var a = attachAddr(), where = a.host + ":" + a.port;
+    if (!live) { el.textContent = "Not checked yet. Press Connect."; el.className = "note"; }
+    else if (live.running) {
+      el.textContent = (attachIsLocal() ? "Attached to the relay on this PC at " : "Attached to remote relay at ") + where + "; module connected: " + (live.moduleConnected ? "yes" : "no (open the Foundry GM tab / pair the module)");
+      el.className = "note " + (live.moduleConnected ? "ok" : "no");
+    } else { el.textContent = "No relay answers at " + where + ". Is the relay running on that PC? (Nothing is started from here.)"; el.className = "note no"; }
+    var tg = $("bgTwo"), two = VB.bridgeTwoRelays(!!localLive, !!(live && live.running), attachIsLocal());
+    if (tg) { tg.hidden = !two; tg.textContent = two ? "Two relays are up: one on this PC and one at " + where + ". Close the local one (Close bridge below). Only one relay should run." : ""; }
+  }
+  function paintLocal() {
+    var el = $("bgLocal"), btn = $("bgCloseBtn"); if (!el || !btn) return;
+    var l = VB.bridgeMem.local, plan = VB.bridgeClosePlan(l);
+    if (!l) el.textContent = "Checking this PC for a bridge relay...";
+    else if (!l.found) el.textContent = "No local bridge running." + ((l.otherListeners || []).length ? " (Something else listens on port " + l.otherListeners.map(function (o) { return o.port + ": pid " + o.pid + " " + (o.imageName || "?"); }).join(", ") + "; it is not a bridge relay and will not be touched.)" : "");
+    else el.textContent = "Found a relay on this PC: pid " + (l.pid || "?") + " (" + (l.imageName || "?") + "), port " + l.port + ", " + (l.how || "") + "; module connected: " + (l.moduleConnected ? "yes" : "no") + "." + (l.isNode ? "" : " This is not node.exe, so it will not be touched.");
+    btn.textContent = plan.label; btn.disabled = !plan.enabled;
+  }
+  function paintClient() {
+    var el = $("bgClient"); if (!el) return; var c = VB.bridgeMem.client;
+    var head = "foundry_push.py gets its relay URL from foundry-bridge/client.json on this PC first, then the \\\\VEGA share (bridge.ps1). ";
+    if (!c) { el.textContent = head + "Reading..."; el.className = "note"; return; }
+    var chk = VB.bridgeClientCheck(c.url, attachAddr().text);
+    el.textContent = head + "Right now: " + (c.url || "(no URL)") + " from " + c.source + "." + (chk.ok ? "" : " WARNING: " + chk.text);
+    el.className = "note" + (chk.ok ? "" : " bad");
+  }
+  function readShare(f) {
+    return new Promise(function (res) {
+      var done = false, t = setTimeout(function () { if (!done) { done = true; res(null); } }, 4000);
+      try { ctx.fs.readFile(f, "utf8", function (e, d) { if (done) return; done = true; clearTimeout(t); res(e ? null : d); }); } catch (e) { clearTimeout(t); res(null); }
+    });
+  }
+  function loadClient() {
+    var env = {}; try { env = process.env || {}; } catch (e) { /* none */ }
+    return VB.bridgeClientInfo({ fs: ctx.fs, env: env, root: ctx.root, readShare: readShare }).then(function (c) { VB.bridgeMem.client = c; paintClient(); }, function () { /* ignore */ });
+  }
+  // detects a relay on THIS PC (not a job: read-only; runs on load and whenever local health changes)
+  function detectLocal() {
+    if (detectBusy) return Promise.resolve(); detectBusy = true;
+    return VB.bridgeLocalDetect(ctx.state()).catch(function (e) { VB.bridgeMem.local = null; pairMsg = e.message; }).then(function () { detectBusy = false; paint(); });
   }
 
   // ---- live poll: health over HTTP + log tail from file, only while the Foundry tab is showing --------------------------------------
   function logPath() { var b = S(); return b.state ? b.state.replace(/\\/g, "/") + "/relay.log" : ctx.root + "/foundry-bridge/run/relay.log"; }
-  function readPort() {
-    var b = S(); if (b.last && b.last.port) return b.last.port;
+  function readPort() {   // port of the relay on THIS PC (from its .env; default 3030)
+    var b = S();
     try { var env = ctx.fs.readFileSync(b.env || ctx.root + "/foundry-bridge/.env", "utf8"), m = env.match(/^\s*PORT\s*=\s*(\d+)/m); if (m) return Number(m[1]); } catch (e) { /* default */ }
     return 3030;
   }
@@ -103,23 +148,31 @@
       return buf.toString("utf8").split(/\r?\n/).filter(Boolean).slice(-n);
     } catch (e) { return []; }
   }
-  function targetHost() { var info = VB.bridgeMem.info, s = info && info.status; return s && s.remote ? s.host : "127.0.0.1"; }
+  function healthGet(host, port, cb) {
+    var done = false, fin = function (h) { if (!done) { done = true; cb(h); } };
+    try {
+      var req = require("http").get({ host: host, port: port, path: "/health", timeout: 1500 }, function (r) {
+        var b = ""; r.on("data", function (c) { b += c; }); r.on("end", function () { try { var j = JSON.parse(b); fin(j && j.ok === true ? j : null); } catch (e) { fin(null); } });
+      });
+      req.on("error", function () { fin(null); }); req.on("timeout", function () { req.destroy(); fin(null); });
+    } catch (e) { fin(null); }
+  }
+  // every 3 s: health of the attached relay (the saved address) and of anything on this PC (read-only); a change on this PC re-runs the local detection
   function poll() {
     var tab = $("tab-foundry"); if (!tab || !tab.classList.contains("on")) return;
-    var port = readPort(), done = false, host = targetHost(), lines = host === "127.0.0.1" ? tailFile(logPath(), 20) : [];
-    var finish = function (h) {
-      if (done) return; done = true;
-      var i = VB.bridgeMem.info && VB.bridgeMem.info.status;
-      live = { running: !!h, managed: !!(h && i && i.managed), port: port, moduleConnected: !!(h && h.moduleConnected), replacedLastMinute: h ? h.replacedLastMinute || 0 : 0, logLines: lines };
+    var a = attachAddr(), lp = readPort(), got = {}, left = 3, lines = tailFile(logPath(), 20);
+    var finish = function () {
+      if (--left > 0) return;
+      var h = got.remote, lh = got.local || got.local3030;
+      live = { running: !!h, managed: false, port: a.port, moduleConnected: !!(h && h.moduleConnected), replacedLastMinute: h ? h.replacedLastMinute || 0 : 0, logLines: lines };
+      localLive = lh || null;
+      if (lastLocalUp === null || lastLocalUp !== !!lh) { lastLocalUp = !!lh; detectLocal(); }
       if (h && VB.bridgeApiToken() && !pairBusy) { pairBusy = true; VB.bridgePairRefresh().then(function () { pairMsg = ""; }, function (e) { if (/not running/.test(e.message) === false) pairMsg = e.message; }).then(function () { pairBusy = false; paintPair(); }); }
       paint();
     };
-    try {
-      var req = require("http").get({ host: host, port: port, path: "/health", timeout: 1500 }, function (r) {
-        var b = ""; r.on("data", function (c) { b += c; }); r.on("end", function () { try { finish(JSON.parse(b)); } catch (e) { finish(null); } });
-      });
-      req.on("error", function () { finish(null); }); req.on("timeout", function () { req.destroy(); finish(null); });
-    } catch (e) { finish(null); }
+    healthGet(a.host, a.port, function (h) { got.remote = h; finish(); });
+    healthGet("127.0.0.1", lp, function (h) { got.local = h; finish(); });
+    healthGet("127.0.0.1", 3030, function (h) { got.local3030 = h; finish(); });
   }
 
   function pairAct(fn, okMsg) {
@@ -127,31 +180,41 @@
   }
 
   var A = {
-    bg_status: function () { return ctx.startJob(VB.jobBridgeStatus(ctx.state()), paint); },
-    bg_probe: function () { return ctx.startJob(VB.jobBridgeProbe(ctx.state()), paint); },
-    // Connect or launch: attach to whatever is running (no restart, no modal); only start a relay when none is.
-    bg_launch: async function () {
+    // Attach is read-only: it checks the relay at the saved address and attaches this panel to it. It never starts, stops or restarts anything.
+    bg_attach: async function () {
       var res = await ctx.startJob(VB.jobBridgeStatus(ctx.state()), null);
-      if (!res || !res.ok) return;
-      var plan = VB.bridgeLaunchPlan(VB.bridgeMem.info && VB.bridgeMem.info.status);
-      if (plan.action === "attach") { pairMsg = plan.reason + " Nothing was restarted."; paint(); return; }
-      await ctx.startJob(VB.jobBridgeLaunch(ctx.state(), { restart: false }), paint);
+      loadClient(); poll();
+      if (!res || !res.ok) { pairMsg = "Could not reach a relay at " + attachAddr().text + "."; paint(); return; }
+      var st = VB.bridgeMem.info && VB.bridgeMem.info.status;
+      pairMsg = st && st.running ? "Attached to " + (st.remote ? "remote relay at " + st.host + ":" + st.port : "the relay on this PC") + "; module " + (st.moduleConnected ? "connected" : "not connected") + ". Nothing was started or restarted." : "No relay answers at " + attachAddr().text + ".";
+      paint();
+    },
+    bg_attach_default: function () { S().target = VB.BRIDGE_ATTACH_DEFAULT; if (ctx.save) ctx.save(); if (ctx.syncInputs) ctx.syncInputs(); loadClient(); poll(); },
+    bg_status: function () { loadClient(); detectLocal(); return ctx.startJob(VB.jobBridgeStatus(ctx.state()), paint); },
+    bg_probe: function () { return ctx.startJob(VB.jobBridgeProbe(ctx.state()), paint); },
+    // Close bridge: detects a relay on THIS PC again, asks in the panel, stops only that (node.exe only; never a remote relay).
+    bg_close: async function () {
+      var l = await VB.bridgeLocalDetect(ctx.state()).catch(function (e) { pairMsg = e.message; return null; });
+      var plan = VB.bridgeClosePlan(l); paint();
+      if (!plan.enabled) { pairMsg = plan.text || "No local bridge running."; paint(); return; }
+      if (!(await modal(plan.text, "Close bridge", "Cancel"))) return;
+      await ctx.startJob(VB.jobBridgeClose(ctx.state()), null);
+      lastLocalUp = null; await detectLocal(); poll();
+    },
+    bg_stop: function () { return A.bg_close(); },
+    // Launch local bridge (secondary): only starts a relay on THIS PC; attaches to a local one that is already running; never restarts.
+    bg_launch: async function () {
+      if (live && live.running && !attachIsLocal() && !(await modal("A relay is already up at " + attachAddr().text + ". Starting a second one on this PC means two relays. Start a local one anyway?", "Start local relay", "Cancel"))) return;
+      await ctx.startJob(VB.jobBridgeLaunch(ctx.state(), { restart: false }), null);
+      lastLocalUp = null; await detectLocal(); poll();
     },
     bg_restart: async function () {
-      var res = await ctx.startJob(VB.jobBridgeStatus(ctx.state()), null);
-      if (!res || !res.ok) return;
-      var plan = VB.bridgeRestartPlan(VB.bridgeMem.info && VB.bridgeMem.info.status);
-      if (!plan.allowed) { pairMsg = plan.text; paint(); return; }
-      if (plan.ask && !(await modal(plan.text, "Restart relay", "Keep it running"))) { paint(); return; }
-      await ctx.startJob(VB.jobBridgeLaunch(ctx.state(), { restart: true }), paint);
-    },
-    bg_stop: async function () {
-      var res = await ctx.startJob(VB.jobBridgeStatus(ctx.state()), null);
-      if (!res || !res.ok) return;
-      var plan = VB.bridgeStopPlan(VB.bridgeMem.info && VB.bridgeMem.info.status);
-      if (!plan.allowed) { pairMsg = plan.text; paint(); return; }
-      if (plan.ask && !(await modal(plan.text, "Stop relay", "Cancel"))) return;
-      await ctx.startJob(VB.jobBridgeStop(ctx.state()), paint);
+      var l = await VB.bridgeLocalDetect(ctx.state()).catch(function () { return null; });
+      if (!l || !l.found) { pairMsg = "No local bridge running, nothing to restart."; paint(); return; }
+      if (!VB.bridgeClosePlan(l).enabled) { pairMsg = VB.bridgeClosePlan(l).text; paint(); return; }
+      if (!(await modal("Restart the relay on THIS PC (pid " + l.pid + ", port " + l.port + ")? The Foundry module reconnects by itself within a few seconds.", "Restart relay", "Keep it running"))) return;
+      await ctx.startJob(VB.jobBridgeLaunch(ctx.state(), { restart: true }), null);
+      lastLocalUp = null; await detectLocal(); poll();
     },
     bg_reveal: function () { shown.reveal = !shown.reveal; paint(); },
     bg_tokens: function () {   // manual entries for a relay on another PC; never stored
@@ -164,6 +227,9 @@
     ctx = c;
     Object.keys(A).forEach(function (k) { if (ctx.acts) ctx.acts[k] = A[k]; });
     VB.bridgeRoot = ctx.root;
+    if (!String(S().target || "").trim()) { S().target = VB.BRIDGE_ATTACH_DEFAULT; if (ctx.save) ctx.save(); }   // prefill the attach address (editable, remembered)
+    if (ctx.syncInputs) ctx.syncInputs();
+    loadClient();
     var box = $("bgInfo");
     if (box) box.addEventListener("click", function (ev) {
       var b = ev.target.closest ? ev.target.closest("button") : null; if (!b) return;
@@ -185,7 +251,7 @@
       else if (rv) modal("Revoke this device? It is disconnected now and must be paired again.", "Revoke", "Cancel").then(function (y) { if (y) pairAct(function () { return VB.bridgePairRevoke(rv); }, "Revoked."); });
       else if (ro) pairAct(function () { return VB.bridgePairRotate(ro); }, "The device gets a new token on its next connect.");
     });
-    timer = setInterval(poll, 3000); poll(); paint();
+    timer = setInterval(poll, 3000); detectLocal(); poll(); paint();
   }
   window.VBBridgeUI = { init: init, paint: paint, actions: A };
 })();

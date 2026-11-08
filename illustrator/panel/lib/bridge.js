@@ -6,7 +6,7 @@
   var VB = root.VBCore || (typeof require !== "undefined" ? require("./core.js") : null);
   if (!VB) return;
   VB.bridgeRoot = VB.bridgeRoot || "";                 // repo root; set by bridge_ui.js (ctx.root) or the test
-  VB.bridgeMem = { info: null, secrets: null, at: 0, manual: { api: "", module: "" }, found: [], pair: null }; // in-memory only
+  VB.bridgeMem = { info: null, secrets: null, at: 0, manual: { api: "", module: "" }, found: [], pair: null, local: null, client: null }; // in-memory only
   // injectable for tests: (nodeExe, args, cwd) -> Promise<{code, out, err}>
   VB.bridgeExec = function (nodeExe, args, cwd) {
     return new Promise(function (resolve) {
@@ -30,7 +30,48 @@
       req.end(data);
     });
   };
-  VB.bridgeDefaults = function () { return { node: "", env: "", state: "", cim: false, hidden: false, terminal: "auto", target: "", last: null }; };
+  // Attach is the primary mode: the relay normally runs on the always-on PC (Vega). target = where to attach (editable, remembered; not a secret).
+  VB.BRIDGE_ATTACH_DEFAULT = "http://10.0.0.15:3030";
+  VB.bridgeDefaults = function () { return { node: "", env: "", state: "", cim: false, hidden: false, terminal: "auto", target: VB.BRIDGE_ATTACH_DEFAULT, mode: "attach", last: null }; };
+  // "http://10.0.0.15:3030" / "10.0.0.15" / "localhost:3030" -> { host, port } (port null when not given); blank -> {host:"",port:null}
+  VB.bridgeParseTarget = function (s) {
+    s = String(s || "").trim(); if (!s) return { host: "", port: null };
+    var m = s.replace(/^[a-z]+:\/\//i, "").split("/")[0].match(/^(\[[^\]]+\]|[^:]+)(?::(\d+))?$/);
+    return m ? { host: m[1].replace(/^\[|\]$/g, ""), port: m[2] ? Number(m[2]) : null } : { host: "", port: null };
+  };
+  VB.bridgeIsLoopback = function (host) { host = String(host || "").toLowerCase(); return !host || host === "localhost" || host === "::1" || /^127\./.test(host); };
+  // the address attach mode talks to: the saved one, else the default; "local" mode (Launch local bridge) has none
+  VB.bridgeAttachTarget = function (st) { var b = (st && st.bridge) || {}; return b.mode === "local" ? "" : (String(b.target || "").trim() || VB.BRIDGE_ATTACH_DEFAULT); };
+  var sameRelay = function (a, b) {
+    var x = VB.bridgeParseTarget(a), y = VB.bridgeParseTarget(b); if (!x.host || !y.host) return false;
+    var lo = function (h) { return VB.bridgeIsLoopback(h) ? "loopback" : h.toLowerCase(); };
+    return lo(x.host) === lo(y.host) && (x.port || 80) === (y.port || 80);
+  };
+  // Where foundry_push.py (via foundry-bridge/bridge.ps1) gets its relay URL, in bridge.ps1's order: env FOUNDRY_BRIDGE_URL, FOUNDRY_BRIDGE_CONFIG, foundry-bridge/client.json,
+  // then \\<host>\C\FoundryVTT resources\bridge\client.json (host from foundry-3d/.env FOUNDRY_ASSETS_DIR, default VEGA). Only the url is read; the token is never kept.
+  // io = { fs, env, root, readShare(path) -> Promise<string|null> } (injectable for tests)
+  VB.bridgeClientInfo = function (io) {
+    var fs = io.fs, env = io.env || {}, root = String(io.root || "").replace(/\\/g, "/");
+    var urlOf = function (txt) { try { var j = JSON.parse(String(txt).replace(/^\uFEFF/, "")); return j && j.url ? String(j.url) : ""; } catch (e) { return ""; } };
+    var readLocal = function (f) { try { return fs.readFileSync(f, "utf8"); } catch (e) { return null; } };
+    if (env.FOUNDRY_BRIDGE_URL && env.FOUNDRY_BRIDGE_TOKEN) return Promise.resolve({ url: env.FOUNDRY_BRIDGE_URL, source: "environment FOUNDRY_BRIDGE_URL", localFile: false });
+    var cfg = env.FOUNDRY_BRIDGE_CONFIG; if (cfg) { var t0 = readLocal(cfg); if (t0 !== null) return Promise.resolve({ url: urlOf(t0), source: cfg, localFile: false }); }
+    var local = root + "/foundry-bridge/client.json", t1 = readLocal(local);
+    if (t1 !== null) return Promise.resolve({ url: urlOf(t1), source: "foundry-bridge/client.json on this PC", localFile: true });
+    var host = "VEGA", e = readLocal(root + "/foundry-3d/.env"), m = e && e.match(/^\s*FOUNDRY_ASSETS_DIR\s*=\s*\\\\([^\\]+)\\/m); if (m) host = m[1];
+    var share = "\\\\" + host + "\\C\\FoundryVTT resources\\bridge\\client.json";
+    return Promise.resolve(io.readShare ? io.readShare(share) : null).then(function (txt) {
+      return txt === null || txt === undefined ? { url: "", source: "none found (no foundry-bridge/client.json here, and " + share + " is unreachable)", localFile: false, share: share }
+        : { url: urlOf(txt), source: share, localFile: false, share: share };
+    });
+  };
+  // compares the URL foundry_push would use with the relay this panel is attached to; { ok, text }
+  VB.bridgeClientCheck = function (clientUrl, attach) {
+    if (!clientUrl) return { ok: false, text: "foundry_push.py has no relay URL to use right now." };
+    if (!attach || sameRelay(clientUrl, attach)) return { ok: true, text: "" };
+    var loop = VB.bridgeIsLoopback(VB.bridgeParseTarget(clientUrl).host) && !VB.bridgeIsLoopback(VB.bridgeParseTarget(attach).host);
+    return { ok: false, text: "foundry_push.py will call " + clientUrl + ", but this panel is attached to " + attach + "." + (loop ? " 127.0.0.1 on this PC is NOT the relay on the other PC (probably an old client.json)." : "") + " Fix: remove or edit foundry-bridge/client.json on this PC, or fix the file on the share." };
+  };
   var baseDefaults = VB.defaults;
   VB.defaults = function () { var o = baseDefaults(); o.bridge = VB.bridgeDefaults(); return o; };
 
@@ -53,12 +94,13 @@
     if (status.remote) return { allowed: false, ask: false, text: "That relay runs on another PC (" + status.host + "); stop it there." };
     return { allowed: true, ask: true, text: "Stop the bridge relay" + (status.managed ? "" : " (it was NOT started from here)") + "? Claude and the Illustrator Foundry tab lose access until it is launched again." };
   };
+  // local / closelocal never get --target: they only ever look at, and stop, a relay on this PC
   VB.bridgeCtlArgs = function (st, cmd, extra) {
-    var b = (st && st.bridge) || {}, a = ["foundry-bridge/bridgectl.mjs", cmd, "--json"];
+    var b = (st && st.bridge) || {}, a = ["foundry-bridge/bridgectl.mjs", cmd, "--json"], tgt = VB.bridgeAttachTarget(st);
     if (b.env) a.push("--env", b.env);
     if (b.state) a.push("--state", b.state);
     if (b.node) a.push("--node", b.node);
-    if (b.target) a.push("--target", b.target);
+    if (tgt && cmd !== "local" && cmd !== "closelocal") a.push("--target", tgt);
     if (b.hidden && (cmd === "start" || cmd === "restart")) a.push("--hidden");
     if (b.cim && (cmd === "start" || cmd === "restart")) a.push("--cim");
     if (b.terminal && b.terminal !== "auto" && (cmd === "start" || cmd === "restart")) a.push("--terminal", b.terminal);
@@ -73,9 +115,23 @@
     return j;
   }
   function ctl(st, cmd, extra) { return VB.bridgeExec(VB.bridgeNode(st), VB.bridgeCtlArgs(st, cmd, extra), VB.bridgeRoot).then(function (r) { return parse(r, "bridge " + cmd); }); }
-  VB.bridgeStatusSummary = function (s) { return { at: new Date().toISOString(), running: !!s.running, managed: !!s.managed, mode: s.mode || null, port: s.port, host: s.host || null, pid: s.pid || null, moduleConnected: !!s.moduleConnected, bind: s.bind, startedAt: s.startedAt || null }; };
+  // state for "Launch local bridge": same settings, but never an attach address
+  VB.bridgeLocalState = function (st) { return { bridge: Object.assign({}, (st && st.bridge) || {}, { mode: "local", target: "" }) }; };
+  // detects a relay on THIS PC (PID file, netstat, /health on localhost); stored in VB.bridgeMem.local
+  VB.bridgeLocalDetect = function (st) { return ctl(st, "local").then(function (r) { VB.bridgeMem.local = r; return r; }); };
+  VB.bridgeLocalClose = function (st) { return ctl(st, "closelocal").then(function (r) { if (r.local) VB.bridgeMem.local = r.local; return r; }); };
+  // wording + enabled state for the Close bridge button
+  VB.bridgeClosePlan = function (l) {
+    if (!l || !l.found) return { enabled: false, label: "No local bridge running", text: "" };
+    var what = "pid " + (l.pid || "?") + " (" + (l.imageName || "unknown process") + ") on port " + l.port + ", " + (l.how || "");
+    if (!l.isNode) return { enabled: false, label: "Cannot close: not node.exe", text: "The process found is " + (l.imageName || "unknown") + ", not node.exe, so it will not be touched." };
+    return { enabled: true, label: "Close bridge", text: "Close the bridge relay running on THIS PC (" + what + ")? Only this PC's relay is stopped; a relay on another PC is not touched." };
+  };
+  // two relays at once: the local one should go
+  VB.bridgeTwoRelays = function (localUp, remoteUp, attachIsLocal) { return !!(localUp && remoteUp && !attachIsLocal); };
+  VB.bridgeStatusSummary =function (s) { return { at: new Date().toISOString(), running: !!s.running, managed: !!s.managed, mode: s.mode || null, port: s.port, host: s.host || null, pid: s.pid || null, moduleConnected: !!s.moduleConnected, bind: s.bind, startedAt: s.startedAt || null }; };
   // keeps the manual token entries across refreshes
-  VB.bridgeRemember = function (info) { var m = VB.bridgeMem.manual || { api: "", module: "" }; VB.bridgeMem = { info: info, secrets: info.secrets || null, at: Date.now(), manual: m, found: VB.bridgeMem.found || [], pair: VB.bridgeMem.pair }; };
+  VB.bridgeRemember = function (info) { var m = VB.bridgeMem.manual || { api: "", module: "" }; VB.bridgeMem = { info: info, secrets: info.secrets || null, at: Date.now(), manual: m, found: VB.bridgeMem.found || [], pair: VB.bridgeMem.pair, local: VB.bridgeMem.local, client: VB.bridgeMem.client }; };
   // the API token pairing admin calls need: the relay's own .env on this PC, else the manual entry
   VB.bridgeApiToken = function () { var s = VB.bridgeMem.secrets; return (s && s.apiToken) || VB.bridgeMem.manual.api || ""; };
   VB.bridgeModuleToken = function () { var s = VB.bridgeMem.secrets; return (s && s.moduleToken) || VB.bridgeMem.manual.module || ""; };
@@ -108,12 +164,17 @@
     return { kind: "bridge_probe", label: "Find relays", params: {}, steps: [{ t: "fn", label: "look for relays", fn: function (run) {
       return ctl(st, "probe").then(function (r) { VB.bridgeMem.found = r.found || []; run.log("bridge: " + VB.bridgeMem.found.filter(function (x) { return x.running; }).length + " relay(s) found"); }); } }] };
   };
-  VB.jobBridgeLaunch = function (st, opts) {
-    var restart = !!(opts && opts.restart);
+  VB.jobBridgeLaunch = function (st0, opts) {
+    var st = VB.bridgeLocalState(st0), restart = !!(opts && opts.restart);   // launching is always about THIS PC
     return { kind: "bridge_launch", label: restart ? "Restart bridge relay" : "Connect or launch bridge relay", params: { restart: restart, bridge: { node: st.bridge.node, cim: st.bridge.cim, hidden: st.bridge.hidden, terminal: st.bridge.terminal, target: st.bridge.target } },
       steps: [{ t: "fn", label: restart ? "restart relay" : "start relay (attaches when one is already running)", fn: function (run) {
         return ctl(st, restart ? "restart" : "start").then(function (r) { run.log("bridge: " + (r.action || "ok") + ", port " + r.port + ", pid " + r.pid + (r.how ? ", " + r.how : "")); });
       } }, infoStep(st)] };
+  };
+  // closes ONLY a relay on this PC (bridgectl closelocal: node.exe only, never a remote relay)
+  VB.jobBridgeClose = function (st) {
+    return { kind: "bridge_close_local", label: "Close local bridge", params: {},
+      steps: [{ t: "fn", label: "close the relay on this PC", fn: function (run) { return VB.bridgeLocalClose(st).then(function (r) { run.log("bridge: local " + (r.action || "ok") + (r.pid ? ", pid " + r.pid : "")); }); } }] };
   };
   VB.jobBridgeStop = function (st) {
     return { kind: "bridge_stop", label: "Stop bridge relay", params: {},
