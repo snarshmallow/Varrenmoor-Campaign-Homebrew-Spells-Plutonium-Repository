@@ -2,6 +2,8 @@
 
   python illustrator/generators/skybox.py generate [--place bridgehollow] [--presets clear_day,overcast,dusk,winter,night] [--viewer X,Y] [--width 2048]
   python illustrator/generators/skybox.py set-flag --scene-uuid Scene.xxx --preset clear_day [--apply]      # dry run unless --apply (writes scene flags via the bridge)
+  python illustrator/generators/skybox.py list [--place bridgehollow]                                       # presets + imported skies with their files (JSON)
+  python illustrator/generators/skybox.py import-scene --scene-uuid Scene.xxx [--place P] [--name imported_x]   # READ-ONLY on Foundry
 
 How it works. The viewer (default: the middle of the place, eye 6 ft above ground) casts one ray per image column through the place's heightmap
 (world/<place>/terrain/heightmap.npy): the running maximum of the elevation angle along each ray is the true horizon, and the first sample whose angle
@@ -291,6 +293,7 @@ def cmd_generate(a):
         man["skyboxes"][name] = {"file": os.path.basename(p), "bytes": os.path.getsize(p), **info}
         print(f"{name}: {p} ({os.path.getsize(p) // 1024} KB), horizon max {info['horizon_max_deg']:.1f} deg", flush=True)
     json.dump(man, open(os.path.join(out_dir, "skybox_manifest.json"), "w"), indent=1)
+    print(json.dumps({"ok": True, "place": a.place, "out_dir": out_dir, "skyboxes": {n: {"file": v["file"], "preview": n + "_preview.png"} for n, v in man["skyboxes"].items()}}))
     return 0
 
 
@@ -308,10 +311,143 @@ def cmd_set_flag(a):
             flags[fp.L3D][k] = json.loads(v)
         except ValueError:
             flags[fp.L3D][k] = v
-    print(json.dumps({"scene": a.scene_uuid, "asset": path, "version": ver, "flags": flags, "applied": bool(a.apply)}))
+    print(json.dumps({"ok": True, "scene": a.scene_uuid, "asset": path, "version": ver, "flags": flags, "applied": bool(a.apply)}))
     if a.apply:
         fp.PsBridge().call("update", uuid=a.scene_uuid, data={"flags": flags})
     return 0
+
+# ---------------------------------------------------------------- list + import from an existing Foundry scene
+# Scene flags (flags["levels-3d-preview"]) that describe the sun/light, copied only when the user asks for "sun / lighting" too.
+LIGHT_FLAG_KEYS = ("sunPosition", "sunTilt", "sunDistance", "timeSync", "sceneTint", "exposure", "ambientLightIntensity", "sunLightIntensity", "sunColor", "fogDensity", "fogColor")
+L3D_KEY = "levels-3d-preview"
+
+
+def skybox_dir(place, world_root=None):
+    return os.path.join(world_root or os.path.join(REPO, "world"), place, "export", "skybox")
+
+
+def safe_name(s):
+    import re
+    return re.sub(r"[^a-z0-9]+", "_", str(s).lower()).strip("_") or "scene"
+
+
+def list_skies(place, world_root=None):
+    d = skybox_dir(place, world_root)
+    names = list(PRESETS)
+    if os.path.isdir(d):
+        for f in sorted(os.listdir(d)):
+            n, ext = os.path.splitext(f)
+            if ext == ".webp" and n not in names:
+                names.append(n)
+    rows = []
+    for n in names:
+        meta = {}
+        mp = os.path.join(d, n + ".json")
+        if os.path.exists(mp):
+            try:
+                with open(mp, encoding="utf-8") as fh:
+                    meta = json.load(fh)
+            except ValueError:
+                meta = {}
+        pv = os.path.join(d, n + "_preview.png")
+        p = PRESETS.get(n)
+        rows.append({"name": n, "builtin": n in PRESETS, "exists": os.path.exists(os.path.join(d, n + ".webp")), "file": os.path.join(d, n + ".webp"),
+                     "preview": pv if os.path.exists(pv) else "", "sun_el": p["sun_el"] if p else None, "source": meta.get("source"),
+                     "lighting_flags": meta.get("lighting_flags") or {}})
+    return d, rows
+
+
+def cmd_list(a):
+    d, rows = list_skies(a.place)
+    print(json.dumps({"ok": True, "place": a.place, "dir": d, "skyboxes": rows}))
+    return 0
+
+
+def sky_flags_from_scene(sc):
+    """-> (exr, skybox, lighting_flags) from a scene document (flags live under levels-3d-preview)."""
+    f = ((sc.get("flags") or {}).get(L3D_KEY)) or {}
+    return f.get("exr") or "", f.get("skybox") or "", {k: f[k] for k in LIGHT_FLAG_KEYS if k in f}
+
+
+def import_scene_sky(sc, scene_uuid, place, name=None, world_root=None, resolver=None):
+    """Copy the sky image of an existing scene into world/<place>/export/skybox/<name>.webp (+ _preview.png and <name>.json holding the source scene and its
+    sun/lighting flags). Writes only inside the place's skybox folder and never touches Foundry. resolver(src, tmp_dir) -> (path or None, how)."""
+    from PIL import Image
+    import shutil
+    exr, cube, light = sky_flags_from_scene(sc)
+    name = safe_name(name or "imported_" + safe_name(sc.get("name") or scene_uuid.split(".")[-1]))
+    if name in PRESETS:
+        raise ValueError(f"{name} is a built-in preset name; pick another")
+    res = {"ok": True, "scene": scene_uuid, "scene_name": sc.get("name"), "name": name, "exr": exr, "skybox": cube, "lighting_flags": light, "image": None, "how": None, "warnings": []}
+    if not exr:
+        extra = f" (it uses a six-image cube: {json.dumps(cube)[:120]})" if cube else ""
+        res.update(ok=False, error=f"scene {sc.get('name')!r} has no equirect sky image in flags.{L3D_KEY}.exr{extra}; nothing to import")
+        return res
+    out_dir = skybox_dir(place, world_root)
+    os.makedirs(out_dir, exist_ok=True)
+    tmp = os.path.join(out_dir, "_import_tmp")
+    got, how = (resolver or (lambda s, d: (None, "no resolver")))(exr, tmp)
+    res["how"] = how
+    if not got:
+        res.update(ok=False, error=f"could not read the sky image {exr!r} ({how}); check FOUNDRY_ASSETS_DIR or the Foundry URL, or pass an image file")
+        return res
+    try:
+        im = Image.open(got).convert("RGB")
+    except Exception as e:  # noqa: BLE001 - exr/hdr or corrupt
+        res.update(ok=False, error=f"{os.path.basename(got)} is not a readable image ({e}); HDR/EXR skies cannot be converted here: export a webp/png")
+        return res
+    if abs(im.width / im.height - 2.0) > 0.05:
+        res["warnings"].append(f"image is {im.width}x{im.height}, not 2:1 equirectangular")
+    im.save(os.path.join(out_dir, name + ".webp"), "WEBP", quality=90, method=4)
+    im.resize((1024, 512), Image.LANCZOS).save(os.path.join(out_dir, name + "_preview.png"), optimize=True)
+    shutil.rmtree(tmp, ignore_errors=True)
+    meta = {"name": name, "source": {"scene_uuid": scene_uuid, "scene_name": sc.get("name"), "exr": exr, "how": how, "size": [im.width, im.height]}, "lighting_flags": light}
+    with open(os.path.join(out_dir, name + ".json"), "w", encoding="utf-8") as fh:
+        json.dump(meta, fh, indent=1)
+    res.update(image=os.path.join(out_dir, name + ".webp"), preview=os.path.join(out_dir, name + "_preview.png"), size=[im.width, im.height])
+    return res
+
+
+def cmd_import_scene(a, bridge=None):
+    """READ-ONLY on Foundry (bridge op "get" only)."""
+    import foundry_push as fp
+    import foundry_import as fi
+    if a.scene_json:
+        sc = json.load(open(a.scene_json, encoding="utf-8-sig"))
+        uuid = a.scene_uuid or sc.get("uuid") or f"Scene.{sc.get('_id', 'x')}"
+    else:
+        if not a.scene_uuid:
+            raise SystemExit("import-scene needs --scene-uuid")
+        try:
+            sc = (bridge or fp.PsBridge()).call("get", uuid=a.scene_uuid)
+        except fp.PushError as e:
+            print(json.dumps({"ok": False, "error": str(e)}))
+            return 1
+        uuid = a.scene_uuid
+
+    def resolver(src, dest):
+        if a.image and os.path.exists(a.image):
+            return a.image, "from --image"
+        try:
+            root = a.assets_dir or fp.assets_dir()
+        except Exception:  # noqa: BLE001
+            root = None
+        log = lambda m: print(m, file=sys.stderr)  # noqa: E731
+        bases = []
+        try:
+            bases.append(fi.foundry_base_url())
+        except Exception:  # noqa: BLE001
+            pass
+        bases.append("http://vega:30000")           # the user's Foundry host (serves Data/assets/... at /assets/...)
+        for base in [b for b in bases if b]:
+            got, how = fi.fetch_asset(src, dest, root, base, log)
+            if got:
+                return got, how
+        return None, "not available (tried " + ", ".join(b for b in bases if b) + ")"
+
+    res = import_scene_sky(sc, uuid, a.place, a.name, resolver=resolver)
+    print(json.dumps(res))
+    return 0 if res.get("ok") else 1
 
 
 def main(argv=None):
@@ -332,8 +468,16 @@ def main(argv=None):
     s.add_argument("--image")
     s.add_argument("--scene-flag", action="append", default=[], metavar="KEY=VALUE", help="extra levels-3d-preview flags, e.g. sunPosition=60")
     s.add_argument("--apply", action="store_true", help="really copy the image and write the scene flag (default: print what would happen)")
+    sp.add_parser("list").add_argument("--place", default="bridgehollow")
+    i = sp.add_parser("import-scene")
+    i.add_argument("--place", default="bridgehollow")
+    i.add_argument("--scene-uuid")
+    i.add_argument("--scene-json", help="a saved scene document instead of reading Foundry (offline / tests)")
+    i.add_argument("--name", help="name of the imported sky (default imported_<scene name>)")
+    i.add_argument("--image", help="use this image file instead of locating the scene's sky image")
+    i.add_argument("--assets-dir")
     a = ap.parse_args(argv)
-    return {"generate": cmd_generate, "set-flag": cmd_set_flag}[a.cmd](a)
+    return {"generate": cmd_generate, "set-flag": cmd_set_flag, "list": cmd_list, "import-scene": cmd_import_scene}[a.cmd](a)
 
 
 if __name__ == "__main__":

@@ -40,8 +40,8 @@
               <Height>720</Height>
             </Size>
             <MinSize>
-              <Width>340</Width>
-              <Height>300</Height>
+              <Width>300</Width>
+              <Height>240</Height>
             </MinSize>
             <MaxSize>
               <Width>4000</Width>

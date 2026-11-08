@@ -57,7 +57,7 @@
   // ------------------------------------------------------------ binding
   function coerce(el) {
     if (el.type === "checkbox") return el.checked;
-    if (el.type === "number") return el.value === "" ? null : Number(el.value);
+    if (el.type === "number" || el.type === "range") return el.value === "" ? null : Number(el.value);
     return el.value;
   }
   // Labels tab: inputs with data-ls edit state.labels.styles[<category>][key]; non-default categories show inherited values
@@ -134,7 +134,7 @@
         VB.setPath(state, p, coerce(el)); save();
         var a = el.getAttribute("data-act-change"); if (a && ev === "change") act(a);
         if (p === "terrain.patch.terrain_type") paintPatchForm();
-        if (p.indexOf("contours.") === 0) $$('[data-s="' + p + '"]').forEach(function (o) { if (o !== el) { if (o.type === "checkbox") o.checked = el.checked; else o.value = el.value; } });
+        if (true) $$('[data-s="' + p + '"]').forEach(function (o) { if (o !== el) { if (o.type === "checkbox") o.checked = el.checked; else o.value = el.value; } });
         if (p === "settings.view" && state.stale) { /* view change: next render uses it */ }
       });
       el.addEventListener("keydown", function (e) {
@@ -327,21 +327,28 @@
         '<div class="hd"><span class="handle" title="Drag to reorder">&#9776;</span><input type="checkbox" data-k="enabled" title="Enabled"' + (p.enabled !== false ? " checked" : "") + '>' +
         '<input type="text" data-k="name" value="' + esc(p.name || p.id) + '"><select data-k="texture" style="width:96px">' + opts + '</select>' +
         '<button data-op="up" title="Earlier (painted first)">&#9650;</button><button data-op="down" title="Later (painted over earlier)">&#9660;</button><button data-op="del" title="Remove">&#10005;</button></div>' +
-        row("Elev min", "elev_min", lo, hi, 1, emin, emin <= lo ? "-inf" : emin) + row("Elev max", "elev_max", lo, hi, 1, emax, emax >= hi ? "inf" : emax) +
-        row("Slope min", "slope_min_deg", 0, 90, 1, p.slope_min_deg || 0, p.slope_min_deg || 0) + row("Slope max", "slope_max_deg", 0, 90, 1, p.slope_max_deg == null ? 90 : p.slope_max_deg, p.slope_max_deg == null ? 90 : p.slope_max_deg) +
-        row("Elev blend", "elev_blend_ft", 0, 200, 5, p.elev_blend_ft == null ? 20 : p.elev_blend_ft, p.elev_blend_ft == null ? 20 : p.elev_blend_ft) +
-        row("Slope blend", "slope_blend_deg", 0, 30, 1, p.slope_blend_deg == null ? 5 : p.slope_blend_deg, p.slope_blend_deg == null ? 5 : p.slope_blend_deg) +
-        row("Opacity", "opacity", 0, 1, 0.05, p.opacity == null ? 1 : p.opacity, p.opacity == null ? 1 : p.opacity) +
-        row("Jitter", "noise_jitter", 0, 1.5, 0.05, p.noise_jitter == null ? 0.5 : p.noise_jitter, p.noise_jitter == null ? 0.5 : p.noise_jitter);
-      function row(lbl, k, a, b, st, v, shown) { return '<div class="sl"><span>' + lbl + '</span><input type="range" data-k="' + k + '" min="' + a + '" max="' + b + '" step="' + st + '" value="' + v + '"><span data-v="' + k + '">' + shown + "</span></div>"; }
+        row("Elev min", "elev_min", lo, hi, 1, emin, emin <= lo ? "open" : "", "ft") + row("Elev max", "elev_max", lo, hi, 1, emax, emax >= hi ? "open" : "", "ft") +
+        row("Slope min", "slope_min_deg", 0, 90, 1, p.slope_min_deg || 0, "", "deg") + row("Slope max", "slope_max_deg", 0, 90, 1, p.slope_max_deg == null ? 90 : p.slope_max_deg, "", "deg") +
+        row("Elev blend", "elev_blend_ft", 0, 200, 5, p.elev_blend_ft == null ? 20 : p.elev_blend_ft, "", "ft") +
+        row("Slope blend", "slope_blend_deg", 0, 30, 1, p.slope_blend_deg == null ? 5 : p.slope_blend_deg, "", "deg") +
+        row("Opacity", "opacity", 0, 1, 0.05, p.opacity == null ? 1 : p.opacity, "", "0-1") +
+        row("Jitter", "noise_jitter", 0, 1.5, 0.05, p.noise_jitter == null ? 0.5 : p.noise_jitter, "", "0-1.5");
+      // slider + number box (both edit the same value) + unit; elevation sliders at the end stops mean "no limit"
+      function row(lbl, k, a, b, st, v, note, unit) { return '<div class="sl"><span>' + lbl + '</span><input type="range" data-k="' + k + '" min="' + a + '" max="' + b + '" step="' + st + '" value="' + v + '"><span class="nb"><input type="number" data-n="' + k + '" min="' + a + '" max="' + b + '" step="' + st + '" value="' + v + '"><span class="un" data-v="' + k + '" title="' + (note ? "at the end stop: no limit" : "") + '">' + unit + (note ? " (open)" : "") + "</span></span></div>"; }
+      function setVal(k, v) {
+        var unit = { elev_min: "ft", elev_max: "ft" }[k];
+        if (k === "elev_min") { p.elev_min = v <= lo ? null : v; el.querySelector('[data-v="elev_min"]').textContent = "ft" + (v <= lo ? " (open)" : ""); }
+        else if (k === "elev_max") { p.elev_max = v >= hi ? null : v; el.querySelector('[data-v="elev_max"]').textContent = "ft" + (v >= hi ? " (open)" : ""); }
+        else p[k] = v;
+        var r = el.querySelector('input[type=range][data-k="' + k + '"]'), n = el.querySelector('input[data-n="' + k + '"]');
+        if (r && Number(r.value) !== v) r.value = v; if (n && Number(n.value) !== v) n.value = v;
+      }
       el.addEventListener("input", function (ev) {
-        var t = ev.target, k = t.getAttribute("data-k"); if (!k) return;
-        if (t.type === "range") {
-          var v = Number(t.value);
-          if (k === "elev_min") { p.elev_min = v <= lo ? null : v; el.querySelector('[data-v="elev_min"]').textContent = v <= lo ? "-inf" : v; }
-          else if (k === "elev_max") { p.elev_max = v >= hi ? null : v; el.querySelector('[data-v="elev_max"]').textContent = v >= hi ? "inf" : v; }
-          else { p[k] = v; el.querySelector('[data-v="' + k + '"]').textContent = v; }
-        } else if (t.type === "checkbox") { p.enabled = t.checked; el.classList.toggle("off", !t.checked); }
+        var t = ev.target, k = t.getAttribute("data-k"), nk = t.getAttribute("data-n");
+        if (nk) { if (t.value === "" || !isFinite(Number(t.value))) return; setVal(nk, Number(t.value)); save(); return; }
+        if (!k) return;
+        if (t.type === "range") setVal(k, Number(t.value));
+        else if (t.type === "checkbox") { p.enabled = t.checked; el.classList.toggle("off", !t.checked); }
         else p[k] = t.value;
         save();
       });
@@ -434,7 +441,7 @@
     $("candTag").className = "tag" + (state.town.candidate ? " stale" : "");
     $("statePath").textContent = d.state;
   }
-  function refreshAll() { paintInputs(); if (window.VBRegionUI) VBRegionUI.paint(); if (window.VBLightUI) VBLightUI.paint(); if (window.VBStylesUI) VBStylesUI.paint(); if (window.VBFoliageUI) VBFoliageUI.paint(); if (window.VBPaddingUI) VBPaddingUI.paint(); if (window.VBBridgesUI) VBBridgesUI.paint(); if (window.VBPlacesUI) VBPlacesUI.paint(); paintTags(); paintStale(); paintPatchForm(); paintRings(); if (typeof fPaint === "function" && state) fPaint(); }
+  function refreshAll() { paintInputs(); if (window.VBRegionUI) VBRegionUI.paint(); if (window.VBLightUI) VBLightUI.paint(); if (window.VBStylesUI) VBStylesUI.paint(); if (window.VBFoliageUI) VBFoliageUI.paint(); if (window.VBPaddingUI) VBPaddingUI.paint(); if (window.VBSkyUI) VBSkyUI.paint(); if (window.VBBridgesUI) VBBridgesUI.paint(); if (window.VBPlacesUI) VBPlacesUI.paint(); paintTags(); paintStale(); paintPatchForm(); paintRings(); if (typeof fPaint === "function" && state) fPaint(); }
 
   function showCrossings() {
     var j = readJson(d.water + "/crossings.json", null), el = $("crossInfo");
@@ -751,6 +758,7 @@
     VBLightUI.init({ state: function () { return state; }, dirs: function () { return d; }, save: save, startJob: startJob, isBusy: function () { return runner.isBusy(); }, syncInputs: paintInputs,
       placeCentre: function () { var p = readJson(d.world + "/place.json", {}), b = p.bounds || {}; return [Math.round((b.width_ft || 0) / 2), Math.round((b.height_ft || 0) / 2)]; } });
     if (window.VBFoliageUI) VBFoliageUI.init({ state: function () { return state; }, dirs: function () { return d; }, save: save, startJob: startJob, syncInputs: paintInputs, readJson: readJson, fs: fs, path: path, root: root, acts: acts }); // foliage tab
+    if (window.VBSkyUI) VBSkyUI.init({ state: function () { return state; }, dirs: function () { return d; }, save: save, startJob: startJob, syncInputs: paintInputs, readJson: readJson, fs: fs, path: path, root: root, acts: acts, refreshAll: refreshAll }); // SKYBOX tab (skybox_ui.js)
     if (window.VBPaddingUI) VBPaddingUI.init({ state: function () { return state; }, dirs: function () { return d; }, save: save, startJob: startJob, syncInputs: paintInputs, readJson: readJson, fs: fs, path: path, root: root, acts: acts }); // padding tab (padding_ui.js)
     if (window.VBBridgesUI) VBBridgesUI.init({ state: function () { return state; }, dirs: function () { return d; }, save: save, startJob: startJob, syncInputs: paintInputs, readJson: readJson, fs: fs, path: path, root: root, acts: acts }); // BRIDGES tab (bridges_ui.js)
     if (window.VBPlacesUI) VBPlacesUI.init({ state: function () { return state; }, dirs: function () { return d; }, save: save, startJob: startJob, syncInputs: paintInputs, readJson: readJson, fs: fs, path: path, root: root, acts: acts, switchPlace: switchPlace, showError: showError }); // PLACES tab (places_ui.js)

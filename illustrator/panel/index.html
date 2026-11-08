@@ -7,9 +7,10 @@
 html,body{margin:0;height:100%}
 body{font:11px/1.35 "Segoe UI",Arial,sans-serif;background:var(--bg);color:var(--fg);display:flex;flex-direction:column}
 #top{padding:4px 6px;background:var(--bg2);border-bottom:1px solid var(--line)}
-#top .row{display:flex;gap:6px;align-items:center;flex-wrap:nowrap;min-height:24px;overflow:hidden}
+#top .row{display:flex;gap:4px 6px;align-items:center;flex-wrap:wrap;min-height:24px}
 #top .row>*{flex:0 0 auto}
-#top .row>#status{flex:1 1 0;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#top .row>#status{flex:1 1 90px;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#top .row select,#top .row input{min-width:0}
 #status{font-weight:600}
 #status.busy{color:var(--warn)}
 #err{color:var(--bad);white-space:pre-wrap;margin-top:2px}
@@ -25,7 +26,7 @@ section.on{display:block}
 h4{margin:8px 0 3px;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--dim);border-bottom:1px solid var(--line)}
 h4:first-child{margin-top:0}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(125px,1fr));gap:3px 8px}
-label{display:flex;flex-direction:column;gap:1px;color:var(--dim)}
+label{display:flex;flex-direction:column;gap:1px;color:var(--dim);min-width:0;overflow-wrap:anywhere}
 label.chk{flex-direction:row;align-items:center;gap:4px;color:var(--fg)}
 input[type=number],input[type=text],select{width:100%;background:var(--bg3);color:var(--fg);border:1px solid var(--line);border-radius:2px;padding:2px 4px;font:inherit;min-width:0}
 input[type=range]{width:100%;margin:0}
@@ -37,7 +38,11 @@ button.primary{background:#2f5b85;border-color:#3d74a8}
 button.danger{background:#6b3631;border-color:#8a463f}
 button:disabled{opacity:.45;cursor:default}
 .btns{display:flex;flex-wrap:wrap;gap:4px;margin:5px 0}
-.note{color:var(--dim);font-size:10px;margin:2px 0}
+.note{color:var(--dim);font-size:10px;margin:2px 0;overflow-wrap:anywhere}
+main{min-width:0}
+[hidden]{display:none!important}
+main img,main canvas,main svg{max-width:100%}
+button{max-width:100%}
 .tag{display:inline-block;padding:0 4px;border-radius:2px;background:var(--bg3);color:var(--dim)}
 .tag.stale{background:#5a4a1f;color:var(--warn)}
 ul.list{list-style:none;margin:2px 0;padding:0;border:1px solid var(--line)}
@@ -49,16 +54,22 @@ ul.list button{padding:0 5px}
 .phase{border:1px solid var(--line);margin:3px 0;padding:3px 4px;background:var(--bg2)}
 .phase.drag{opacity:.5}
 .phase.off{opacity:.55}
-.phase .hd{display:flex;gap:4px;align-items:center}
-.phase .hd input[type=text]{flex:1}
+.phase .hd{display:flex;flex-wrap:wrap;gap:4px;align-items:center}
+.phase .hd input[type=text]{flex:1 1 110px;min-width:90px;width:auto}
+.phase .hd select{flex:0 1 110px;min-width:70px;width:auto}
 .phase .handle{cursor:grab;color:var(--dim);user-select:none}
-.phase .sl{display:grid;grid-template-columns:62px 1fr 52px;gap:4px;align-items:center;margin-top:1px}
-.phase .sl span{color:var(--dim)}
+.sl{display:grid;grid-template-columns:minmax(54px,auto) minmax(60px,1fr) auto;gap:4px 6px;align-items:center;margin-top:1px}
+.sl>span{color:var(--dim)}
+.sl input[type=range]{width:100%;min-width:0}
+.sl .nb{display:inline-flex;align-items:center;gap:3px;color:var(--dim);white-space:nowrap}
+.sl .nb input[type=number]{width:58px;flex:0 0 58px}
+.phase .sl{margin-top:1px}
 #patchPrev{max-width:100%;border:1px solid var(--line);display:none;margin-top:4px}
 #patchInfo,#crossInfo{font-family:Consolas,monospace;font-size:10px;white-space:pre-wrap;color:var(--dim)}
 #log{white-space:pre-wrap;font:10px Consolas,monospace;max-height:110px;overflow:auto;border-top:1px solid var(--line);padding:3px 6px;background:#242424;color:#b8b8b8}
 table{border-collapse:collapse;width:100%;display:block;overflow-x:auto;max-width:100%}
 td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
+#tab-places td,#tab-places th{white-space:nowrap}
 </style></head>
 <body>
 <div id="top">
@@ -78,6 +89,7 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
   <button role="tab" data-tab="labels">Labels</button>
   <button role="tab" data-tab="shading">Shading</button>
   <button role="tab" data-tab="lighting">Lighting</button>
+  <button role="tab" data-tab="skybox">Skybox</button><!-- SKYBOX (skybox_ui.js) -->
   <button role="tab" data-tab="water">Water</button>
   <button role="tab" data-tab="town">Town</button>
   <button role="tab" data-tab="regions">Regions</button>
@@ -392,6 +404,42 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
   <p class="note">Places ART - Shadows (multiply-style dark, set the layer's blend mode to Multiply for the usual look) and ART - Light Glow (set it to Screen or Soft Light) above the fill layers and below LINES. Heights come from <code>presets/building_heights.json</code> (a building's own <code>height_ft</code> wins).</p>
 </section>
 
+<!-- SKYBOX TAB (skybox_ui.js, lib/skybox.js; python generators/skybox.py, foundry_push.py list) -->
+<section id="tab-skybox" role="tabpanel">
+  <style>#skyPreview{max-width:100%;border:1px solid var(--line);margin-top:4px}#skyOut{white-space:pre-wrap;word-break:break-word}</style>
+  <h4>Sky for this place (mountain ring from the real terrain)</h4>
+  <div class="grid">
+    <label>Preset <select id="skyPreset"></select></label>
+    <label>Image width <select data-s="skybox.width"><option value="1024">1024 px (fast)</option><option value="2048">2048 px</option><option value="4096">4096 px (slow, large)</option></select></label>
+  </div>
+  <p class="note" id="skyNote"></p>
+  <div class="sl"><span>Turn sky</span><input type="range" data-s="skybox.yaw" min="-180" max="180" step="5" title="Rotates the picture clockwise as seen from above (use this if the mountains sit in the wrong direction in 3D)"><span class="nb"><input type="number" data-s="skybox.yaw" min="-180" max="180" step="5"><span class="un">deg</span></span></div>
+  <div class="grid">
+    <label>Viewer x,y (ft, blank = map middle) <input type="text" data-s="skybox.viewer" placeholder="e.g. 1200,900"></label>
+    <label class="chk"><input type="checkbox" data-s="skybox.use_lighting_sun"> Sun in the sky follows the Lighting tab</label>
+  </div>
+  <div class="btns"><button class="primary" id="skyRegen" data-act="sky_generate" title="Renders the chosen preset from the place's heightmap into world/&lt;place&gt;/export/skybox">Regenerate</button><button data-act="sky_list" title="Re-read which skies exist">Rescan</button></div>
+  <img id="skyPreview" hidden alt="sky preview (equirectangular 2:1: east in the middle)">
+  <h4>Apply to this place's Foundry scene</h4>
+  <div class="grid">
+    <label>Scene <select id="skyScene"></select></label>
+    <label>or paste uuid <input type="text" data-s="skybox.scene_uuid" placeholder="Scene.xxxxxxxx"></label>
+    <label class="chk" id="skyLightRow" hidden><input type="checkbox" data-s="skybox.apply_lighting"> <span id="skyLightTxt"></span></label>
+    <label class="chk"><input type="checkbox" data-s="skybox.dry_run"> Dry run (shows what would change, writes nothing)</label>
+  </div>
+  <p class="note" id="skyLightNote" hidden></p>
+  <div class="btns"><button data-act="sky_scenes" title="Read-only: lists the scenes in Foundry">Refresh scenes</button><button class="primary" data-act="sky_apply" title="Copies the sky image to the shared assets folder and sets the scene's levels-3d-preview sky flag (and the sun flags if ticked). Only the scene chosen here is changed.">Apply to scene</button></div>
+  <h4>Import a sky from an existing Foundry scene</h4>
+  <div class="grid">
+    <label>Copy from scene <select id="skyImpScene"></select></label>
+    <label>or paste uuid <input type="text" data-s="skybox.import_scene" placeholder="Scene.xxxxxxxx"></label>
+    <label>Save as (blank = imported_&lt;scene name&gt;) <input type="text" data-s="skybox.import_name" placeholder="imported_tavern"></label>
+  </div>
+  <div class="btns"><button data-act="sky_import" title="Read-only on Foundry: reads that scene's sky image and sun/lighting flags and saves them into this place's skybox folder. Nothing in Foundry changes; applying is a separate step above.">Import sky from scene</button></div>
+  <div id="skyOut" class="note"></div>
+  <p class="note">Presets are drawn from this place's heightmap: the mountains on the horizon are the real ones. The picture centre is east. Imported skies are fixed images (they cannot be regenerated) and appear in the Preset list. Foundry is only written by Apply to scene, and only the scene named there.</p>
+</section>
+
 <section id="tab-water" role="tabpanel">
   <h4>Water</h4>
   <div class="grid">
@@ -536,7 +584,7 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
     <label class="chk"><input type="radio" name="regMode" id="regMode_lasso" value="lasso"> Lasso (closed path in Illustrator)</label>
     <div class="btns"><button data-act="reg_capture" title="Selected closed path, or the path on layer REGIONS">Capture lasso</button><span id="regPolyTag" class="tag">none</span></div>
     <label class="chk"><input type="radio" name="regMode" id="regMode_rect" value="rect"> Rectangle (feet)</label>
-    <div class="grid" style="grid-template-columns:repeat(4,1fr)">
+    <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(78px,1fr))">
       <label>x0 <input type="number" data-s="regions.rect.0" step="any"></label><label>y0 <input type="number" data-s="regions.rect.1" step="any"></label>
       <label>x1 <input type="number" data-s="regions.rect.2" step="any"></label><label>y1 <input type="number" data-s="regions.rect.3" step="any"></label></div>
     <label>Name <input type="text" data-s="regions.name" placeholder="e.g. a district name"></label>
@@ -785,6 +833,13 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
     <label>Layers to push <input type="text" data-s="foundry.models.layers" placeholder="all (terrain,buildings,roads,...)"></label>
     <label>LOD <select data-s="foundry.models.lod"><option value="0">0 full</option><option value="1">1</option><option value="2">2</option></select></label>
   </div>
+  <!-- ROAD GRADING block (generators/road_grade.py): used by Export split models -->
+  <h4>Roads (3D)</h4>
+  <div class="sl"><span>Smoothing</span><input type="range" data-s="roads.smooth" min="0" max="1" step="0.05" title="0 = roads follow the raw ground exactly, 1 = fully smoothed along their length"><span class="nb"><input type="number" data-s="roads.smooth" min="0" max="1" step="0.05"></span></div>
+  <div class="sl"><span>Max grade</span><input type="range" data-s="roads.max_grade" min="3" max="30" step="1" title="Steepest slope a road may have along its length; where the ground is steeper the road is raised clear and a warning is listed in the export"><span class="nb"><input type="number" data-s="roads.max_grade" min="3" max="30" step="1"><span class="un">deg</span></span></div>
+  <label class="chk"><input type="checkbox" data-s="roads.skirt"> Skirt (apron down to the ground under roads that stand above it)</label>
+  <label class="chk"><input type="checkbox" data-s="roads.cutfill"> Cut/fill terrain under and beside roads (blends back to natural ground)</label>
+  <p class="note">Roads sit just above the real terrain mesh so the ground never covers them. Smoothing blends the raw ground height with a smoothed profile along the road; roads meet bridges and each other at the same height. Cut/fill is off by default and changes the terrain mesh; warnings and cut/fill amounts are written to placements.json (road_grade). Notes: illustrator/out/road_grade_notes.md.</p>
   <div class="btns">
     <button data-act="wp_export" title="worldpack.py export: terrain, roads, buildings, water ... as a versioned pack in world/&lt;place&gt;/export">Export world pack (3D)</button>
     <button data-act="wp_split" title="One GLB per layer / building plus placements.json">Export split models</button>
@@ -893,6 +948,8 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
 <script src="lighting_ui.js"></script>
 <script src="lib/foliage.js"></script>
 <script src="foliage_ui.js"></script>
+<script src="lib/skybox.js"></script><!-- SKYBOX -->
+<script src="skybox_ui.js"></script><!-- SKYBOX -->
 <script src="lib/padding.js"></script>
 <script src="padding_ui.js"></script>
 <script src="lib/bridges.js"></script><!-- BRIDGES -->
