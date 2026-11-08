@@ -119,7 +119,11 @@ def build_building_detailed(cx, e):
     import worldpack_pbr as pbr
     uvo = wm.uv_offset(e["id"])
 
+    S = e.get("_style")                  # building style preset (building_styles.py): material remap + extra geometry; None = legacy look
+    mm = (S or {}).get("mat_map", {})
+
     def face(mat, pts):                  # world-scale UVs (worldpack_mesh.world_uv): level courses, constant texel density, rails on the floor line
+        mat = mm.get(mat, mat)
         b.face(mat, pts, wm.world_uv(pts, wt if mat == wmat else pbr.tile_ft(mat, wt), uvo, zf))
 
     def rect(i, mat, v, u0, u1, zb, zc):
@@ -172,19 +176,20 @@ def build_building_detailed(cx, e):
                 box(i, "mat_trim", u0 - tw, u1 + tw, -2 * to, 0, za - tw, za, skip=("v1",))
                 pm, zm = (u0 + u1) / 2, (za + zb_) / 2
                 face("mat_glass", [X(i, u0, t / 2, za), X(i, u1, t / 2, za), X(i, u1, t / 2, zb_), X(i, u0, t / 2, zb_)])
-                box(i, "mat_trim", pm - 0.02, pm + 0.02, t / 2 - 0.03, t / 2 + 0.03, za, zb_)
-                box(i, "mat_trim", u0, u1, t / 2 - 0.03, t / 2 + 0.03, zm - 0.02, zm + 0.02)
+                if not (S and S["windows"]["type"] != "plain"):          # styled windows draw their own bars (building_styles_geo.window_extras)
+                    box(i, "mat_trim", pm - 0.02, pm + 0.02, t / 2 - 0.03, t / 2 + 0.03, za, zb_)
+                    box(i, "mat_trim", u0, u1, t / 2 - 0.03, t / 2 + 0.03, zm - 0.02, zm + 0.02)
             else:
                 lw, lh, lt = (u1 - u0) - 0.04, (zb_ - za) - 0.04, LEAF_T_FT * FT
                 lb = Builder()
                 for pts in ([(0, -lt / 2, 0), (lw, -lt / 2, 0), (lw, -lt / 2, lh), (0, -lt / 2, lh)], [(0, lt / 2, 0), (lw, lt / 2, 0), (lw, lt / 2, lh), (0, lt / 2, lh)],
                             [(0, -lt / 2, 0), (0, lt / 2, 0), (0, lt / 2, lh), (0, -lt / 2, lh)], [(lw, -lt / 2, 0), (lw, lt / 2, 0), (lw, lt / 2, lh), (lw, -lt / 2, lh)],
                             [(0, -lt / 2, lh), (lw, -lt / 2, lh), (lw, lt / 2, lh), (0, lt / 2, lh)]):
-                    lb.face("mat_door_wood", pts, [(p[0] / FT / 4, -p[2] / FT / 4) for p in pts])
+                    lb.face(mm.get("mat_door_wood", "mat_door_wood"), pts, [(p[0] / FT / 4, -p[2] / FT / 4) for p in pts])
                 for sgn in (-1, 1):                    # latch plate; same material as the leaf so the door node is ONE mesh/material (3D Canvas door code reads child.material)
                     y = sgn * (lt / 2 + 0.01)
                     hz = lh * 0.45
-                    lb.face("mat_door_wood", [(lw - 0.15, y, hz), (lw - 0.05, y, hz), (lw - 0.05, y, hz + 0.05), (lw - 0.15, y, hz + 0.05)], [(0, 0)] * 4)
+                    lb.face(mm.get("mat_door_wood", "mat_door_wood"), [(lw - 0.15, y, hz), (lw - 0.05, y, hz), (lw - 0.05, y, hz + 0.05), (lw - 0.15, y, hz + 0.05)], [(0, 0)] * 4)
                 M = lb.build()
                 V = M.V
                 Vb = np.stack([V[:, 0] * D[i][0] + V[:, 1] * N[i][0], V[:, 0] * D[i][1] + V[:, 1] * N[i][1], V[:, 2]], 1)
@@ -192,6 +197,9 @@ def build_building_detailed(cx, e):
                 did = h["door"].get("id") or f"{e['id']}_door"
                 door_nodes.append({"id": did, "hinge": (hx, hy, hz), "mesh": Mesh(Vb, M.UV, M.subs),
                                    "extras": {"isDoor": True, "doorId": did, "doorStyle": 1, "doorAnimateAngle": 1.5708, "building": e["id"]}})
+    if S:                       # style geometry: timber frame, plinth, window bars, roof trim, chimney, towers (building_styles_geo.py)
+        import building_styles_geo as bsg
+        bsg.decorate(cx, e, b, S, P, D, N, edge_holes, zf, zt, storeys, lambda i: (lambda u, v, z: X(i, u, v, z)), t, uvo)
     for i in range(n):          # top of the wall ring and the interior floor
         j = (i + 1) % n
         face(wmat, [(P[i][0], P[i][1], zt), (P[j][0], P[j][1], zt), (Q[j][0], Q[j][1], zt), (Q[i][0], Q[i][1], zt)])

@@ -1,0 +1,84 @@
+{
+ "id": "farm_longhouse",
+ "name": "Farm longhouse",
+ "category": "other",
+ "culture": "North German",
+ "description": "Long timber-framed byre-house: brick infill, low eaves, sweeping hip thatch.",
+ "kinds": {
+  "longhouse": 8
+ },
+ "wall": {
+  "system": "halftimber",
+  "material": "brick",
+  "colors": [
+   "#a2503a",
+   "#9b4a36"
+  ],
+  "beam_colors": [
+   "#1e1a17"
+  ],
+  "pattern": [
+   "square"
+  ],
+  "spacing_ft": [
+   3.4,
+   4.2
+  ],
+  "beam_w_ft": [
+   0.4,
+   0.46
+  ],
+  "beam_depth_ft": 0.2
+ },
+ "roof": {
+  "type": "hip",
+  "material": "thatch",
+  "colors": [
+   "#7b6d4c",
+   "#8a7a55"
+  ],
+  "pitch": [
+   0.95,
+   1.15
+  ],
+  "overhang_ft": [
+   1.7,
+   2.1
+  ],
+  "thickness_ft": 0.9,
+  "ridge_cap": true
+ },
+ "windows": {
+  "type": "casement",
+  "cols": [
+   2,
+   2
+  ],
+  "rows": [
+   2,
+   2
+  ]
+ },
+ "door": {
+  "colors": [
+   "#5a3a22",
+   "#3c4a38",
+   "#6a2c24"
+  ]
+ },
+ "tile_scale": 0.6,
+ "preview": "illustrator/out/building_styles/farm_longhouse.png",
+ "plinth": {
+  "material": "stone",
+  "colors": [
+   "#807b72"
+  ],
+  "height_ft": [
+   1.0,
+   1.4
+  ]
+ },
+ "trim_colors": [
+  "#1e1a17"
+ ]
+}

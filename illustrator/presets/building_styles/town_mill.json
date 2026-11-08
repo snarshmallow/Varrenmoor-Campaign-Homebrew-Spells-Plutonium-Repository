@@ -1,0 +1,73 @@
+{
+ "id": "town_mill",
+ "name": "Mill",
+ "category": "town",
+ "culture": "Northern",
+ "description": "Stone-footed clapboard mill house under a steep slate roof.",
+ "kinds": {
+  "mill": 6
+ },
+ "wall": {
+  "system": "corners",
+  "material": "clap",
+  "colors": [
+   "#c9c0a8",
+   "#d6cdb4"
+  ],
+  "beam_colors": [
+   "#2a2018"
+  ],
+  "beam_depth_ft": 0.1
+ },
+ "roof": {
+  "type": "gable",
+  "material": "slate",
+  "colors": [
+   "#5a5a60"
+  ],
+  "pitch": [
+   0.85,
+   1.0
+  ],
+  "overhang_ft": [
+   1.2,
+   1.5
+  ],
+  "barge": true,
+  "fascia_colors": [
+   "#2a2018"
+  ]
+ },
+ "windows": {
+  "type": "casement",
+  "cols": [
+   2,
+   2
+  ],
+  "rows": [
+   2,
+   2
+  ]
+ },
+ "door": {
+  "colors": [
+   "#5a3a22",
+   "#3c4a38",
+   "#6a2c24"
+  ]
+ },
+ "preview": "illustrator/out/building_styles/town_mill.png",
+ "plinth": {
+  "material": "stone",
+  "colors": [
+   "#85807a"
+  ],
+  "height_ft": [
+   3.5,
+   4.5
+  ]
+ },
+ "trim_colors": [
+  "#2a2018"
+ ]
+}

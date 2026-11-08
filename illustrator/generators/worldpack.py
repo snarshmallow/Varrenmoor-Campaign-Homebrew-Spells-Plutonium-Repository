@@ -743,6 +743,8 @@ def export_world(place, out_dir=None, lod=(1, 4), world_root=None, terrain_sourc
                                                  "door_ids": [d.get("id") for d in b.get("doors", [])]},
                   "rooms": b.get("rooms", []), "doors": b.get("doors", []),
                   "derived": ["wall_height_ft", "height_ft", "roof", "wall", "skirt_depth_ft", "obb"]})
+        if b.get("style"):
+            e["style"] = b["style"]                              # building style preset id or "auto" (building_styles.py)
         dr = [d for d in model.get("details", {}).get("doors", []) if d.get("building") == b["id"]]
         if dr:
             e["openings"] = {"doors": [{"id": d["id"], "point": d["point"], "width_ft": d.get("width_ft"), "facing": d.get("facing")} for d in dr],

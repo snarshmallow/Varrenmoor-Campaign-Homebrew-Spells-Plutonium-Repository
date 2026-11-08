@@ -1,0 +1,68 @@
+{
+ "id": "boathouse",
+ "name": "Boat house / bridge house",
+ "category": "other",
+ "culture": "Scandinavian",
+ "description": "Tarred board boat house with a low shingle roof; also suits bridge houses.",
+ "kinds": {
+  "boathouse": 8,
+  "bridgehouse": 8
+ },
+ "wall": {
+  "system": "corners",
+  "material": "board",
+  "colors": [
+   "#3a2f27",
+   "#2c2520",
+   "#6a2c24"
+  ],
+  "beam_colors": [
+   "#e9e2cf",
+   "#2a2018"
+  ],
+  "beam_depth_ft": 0.12
+ },
+ "roof": {
+  "type": "gable",
+  "material": "shingle",
+  "colors": [
+   "#4a3a30"
+  ],
+  "pitch": [
+   0.6,
+   0.75
+  ],
+  "overhang_ft": [
+   1.0,
+   1.3
+  ],
+  "barge": true,
+  "fascia_colors": [
+   "#2a2018"
+  ]
+ },
+ "windows": {
+  "type": "plain"
+ },
+ "door": {
+  "colors": [
+   "#5a3a22",
+   "#3c4a38",
+   "#6a2c24"
+  ]
+ },
+ "preview": "illustrator/out/building_styles/boathouse.png",
+ "plinth": {
+  "material": "stone",
+  "colors": [
+   "#6f6b64"
+  ],
+  "height_ft": [
+   1.2,
+   1.8
+  ]
+ },
+ "trim_colors": [
+  "#e9e2cf"
+ ]
+}

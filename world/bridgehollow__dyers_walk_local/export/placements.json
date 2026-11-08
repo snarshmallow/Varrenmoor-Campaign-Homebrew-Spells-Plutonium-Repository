@@ -4,8 +4,8 @@
  "place": "bridgehollow__dyers_walk_local",
  "pack": {
   "dir": ".",
-  "generated": "2026-11-08T02:44:17+00:00",
-  "git_commit": "a2177b5b5919fc964b0604fac8466529b2f0004b"
+  "generated": "2026-11-08T11:46:33+00:00",
+  "git_commit": "eb9aede551378d819f545731fa38b4059d6f85c0"
  },
  "frame": {
   "px_per_ft": 20.0,
@@ -58,27 +58,27 @@
    "rotation_deg": 0.0,
    "scale": 1.0,
    "size_m": [
-    6.2412,
-    5.8666,
-    4.6909
+    6.3123,
+    5.9377,
+    6.3898
    ],
    "size_ft": [
-    20.476,
-    19.247,
-    15.39
+    20.71,
+    19.481,
+    20.964
    ],
    "tile": {
     "x": 1579.0,
     "y": 419.0,
-    "width": 409.52,
-    "height": 384.94,
-    "depth": 307.8,
+    "width": 414.2,
+    "height": 389.62,
+    "depth": 419.28,
     "elevation_ft": 27.8,
     "rotation": 0
    },
-   "tris": 578,
-   "bytes": 51724,
-   "sha256": "c60d1f31d97489e5e746a45c3826697e368bb21725e753e433b7e3727e0e6d2f",
+   "tris": 1312,
+   "bytes": 122400,
+   "sha256": "0aef0189c988a3853a8fd7e3d8568fe9a8ed7afb011dcc3057a6773312b9f413",
    "lights": [
     {
      "id": "bld_house_041_light_hearth0_1",
@@ -194,27 +194,27 @@
    "rotation_deg": 0.0,
    "scale": 1.0,
    "size_m": [
-    7.2151,
-    7.0638,
-    7.9632
+    6.643,
+    6.4916,
+    9.6183
    ],
    "size_ft": [
-    23.672,
-    23.175,
-    26.126
+    21.794,
+    21.298,
+    31.556
    ],
    "tile": {
     "x": 1258.52,
     "y": 706.44,
-    "width": 473.44,
-    "height": 463.5,
-    "depth": 522.52,
+    "width": 435.88,
+    "height": 425.96,
+    "depth": 631.12,
     "elevation_ft": 27.4,
     "rotation": 0
    },
-   "tris": 1180,
-   "bytes": 102780,
-   "sha256": "2e107238a733fc805ba23beacb79cff4e48fd47c12f6438684195ee816f2c80d",
+   "tris": 1698,
+   "bytes": 138644,
+   "sha256": "f7983a105aa2a7e8a4103f6641e6be63bdaf56f50b638c629e7cc9eba93d08f9",
    "lights": [
     {
      "id": "bld_house_044_win0_1_light",
@@ -351,27 +351,27 @@
    "rotation_deg": 0.0,
    "scale": 1.0,
    "size_m": [
-    6.2321,
-    7.2721,
-    4.4598
+    6.3891,
+    7.4292,
+    5.8808
    ],
    "size_ft": [
-    20.446,
-    23.859,
-    14.632
+    20.962,
+    24.374,
+    19.294
    ],
    "tile": {
     "x": 1921.0,
     "y": 1655.0,
-    "width": 408.92,
-    "height": 477.18,
-    "depth": 292.64,
+    "width": 419.24,
+    "height": 487.48,
+    "depth": 385.88,
     "elevation_ft": 25.2,
     "rotation": 0
    },
-   "tris": 602,
-   "bytes": 53352,
-   "sha256": "e7e90503a13b696a1b5d038eb204a0a28e6633fce2f090c33e4bec9f030f7c6f",
+   "tris": 1368,
+   "bytes": 126984,
+   "sha256": "e8fe65867835e47332ba47b7c3ecc470017af43554310858620d697898b44570",
    "lights": [
     {
      "id": "bld_house_052_light_hearth0_1",
@@ -487,27 +487,27 @@
    "rotation_deg": 0.0,
    "scale": 1.0,
    "size_m": [
-    6.5697,
-    8.5544,
-    7.6526
+    6.859,
+    8.8437,
+    8.1689
    ],
    "size_ft": [
-    21.554,
-    28.066,
-    25.107
+    22.503,
+    29.015,
+    26.801
    ],
    "tile": {
     "x": 2505.0,
     "y": 1736.0,
-    "width": 431.08,
-    "height": 561.32,
-    "depth": 502.14,
+    "width": 450.06,
+    "height": 580.3,
+    "depth": 536.02,
     "elevation_ft": 25.1,
     "rotation": 0
    },
-   "tris": 1500,
-   "bytes": 130104,
-   "sha256": "0f7a7cf70b4642f0425f9f2b256077710f5674c38371d0d793e8759aaf29b00d",
+   "tris": 1914,
+   "bytes": 169564,
+   "sha256": "86fd3033fa6a70f40ac9c2758b280121ad32a88d46b13d43bc382665a1f5115c",
    "lights": [
     {
      "id": "bld_house_053_win0_1_light",
@@ -644,27 +644,27 @@
    "rotation_deg": 0.0,
    "scale": 1.0,
    "size_m": [
-    5.3163,
-    8.2105,
-    5.1484
+    5.9052,
+    8.7994,
+    6.9339
    ],
    "size_ft": [
-    17.442,
-    26.937,
-    16.891
+    19.374,
+    28.87,
+    22.749
    ],
    "tile": {
     "x": 955.0,
     "y": 1948.0,
-    "width": 348.84,
-    "height": 538.74,
-    "depth": 337.82,
+    "width": 387.48,
+    "height": 577.4,
+    "depth": 454.98,
     "elevation_ft": 24.3,
     "rotation": 0
    },
-   "tris": 1110,
-   "bytes": 90164,
-   "sha256": "bffb58ffbd272b26a9f5ae2eb4cfb89b371040f3c7a4c7a06b264a73679ebcf4",
+   "tris": 1290,
+   "bytes": 110244,
+   "sha256": "c074510cfc3900aa378e93528ea7aa6373b105c9a7d10130589781da68aa0084",
    "lights": [
     {
      "id": "bld_house_054_win0_1_light",
@@ -759,27 +759,27 @@
    "rotation_deg": 0.0,
    "scale": 1.0,
    "size_m": [
-    3.6569,
-    4.842,
-    7.456
+    4.1553,
+    5.3404,
+    9.2425
    ],
    "size_ft": [
-    11.998,
-    15.886,
-    24.462
+    13.633,
+    17.521,
+    30.323
    ],
    "tile": {
     "x": 1353.04,
     "y": 2109.84,
-    "width": 239.96,
-    "height": 317.72,
-    "depth": 489.24,
+    "width": 272.66,
+    "height": 350.42,
+    "depth": 606.46,
     "elevation_ft": 24.4,
     "rotation": 0
    },
-   "tris": 468,
-   "bytes": 42480,
-   "sha256": "25baa88ffda37730e1505050d8e12bb602762cee22be91985847ce9c8b1b1c9a",
+   "tris": 1352,
+   "bytes": 127744,
+   "sha256": "66220cf594c4542c1ef2dde65309c0df5831ef131b153717ac58ca48cc73f43f",
    "lights": [
     {
      "id": "bld_house_056_light_hearth0_1",
@@ -853,27 +853,27 @@
    "rotation_deg": 0.0,
    "scale": 1.0,
    "size_m": [
-    6.3387,
-    6.4704,
-    7.7742
+    6.7958,
+    6.9276,
+    8.6563
    ],
    "size_ft": [
-    20.796,
-    21.228,
-    25.506
+    22.296,
+    22.728,
+    28.4
    ],
    "tile": {
     "x": 2218.0,
     "y": 2090.0,
-    "width": 415.92,
-    "height": 424.56,
-    "depth": 510.12,
+    "width": 445.92,
+    "height": 454.56,
+    "depth": 568.0,
     "elevation_ft": 24.3,
     "rotation": 0
    },
-   "tris": 974,
-   "bytes": 91848,
-   "sha256": "19959bf283684051489e91e1611537afffc4890778db3d57a873708471c46dec",
+   "tris": 1458,
+   "bytes": 138712,
+   "sha256": "1b9cca47d69835856e1287b4b79887229720c3fd9ff4bb5fa72ef6e59527eb21",
    "lights": [
     {
      "id": "bld_house_057_win0_1_light",
@@ -968,27 +968,27 @@
    "rotation_deg": 0.0,
    "scale": 1.0,
    "size_m": [
-    9.3078,
-    8.3537,
-    4.9259
+    9.4271,
+    8.473,
+    6.7891
    ],
    "size_ft": [
-    30.537,
-    27.407,
-    16.161
+    30.929,
+    27.799,
+    22.274
    ],
    "tile": {
     "x": 2537.58,
     "y": 2330.28,
-    "width": 610.74,
-    "height": 548.14,
-    "depth": 323.22,
+    "width": 618.58,
+    "height": 555.98,
+    "depth": 445.48,
     "elevation_ft": 23.5,
     "rotation": 0
    },
-   "tris": 1046,
-   "bytes": 86196,
-   "sha256": "70b70bc70ae91316e42a08aa57e9e752a6d64395a30d2a4155a0218ecb14db2d",
+   "tris": 2212,
+   "bytes": 196632,
+   "sha256": "78d6a0a7491d0ad439e2db74085f791278bb85458ab9196769480b7d9ce4324f",
    "lights": [
     {
      "id": "bld_house_062_win0_2_light",
@@ -1083,27 +1083,27 @@
    "rotation_deg": 0.0,
    "scale": 1.0,
    "size_m": [
-    4.6086,
-    5.0704,
-    7.5368
+    4.6198,
+    5.0817,
+    9.2153
    ],
    "size_ft": [
-    15.12,
-    16.635,
-    24.727
+    15.157,
+    16.672,
+    30.234
    ],
    "tile": {
     "x": 1641.0,
     "y": 2564.0,
-    "width": 302.4,
-    "height": 332.7,
-    "depth": 494.54,
+    "width": 303.14,
+    "height": 333.44,
+    "depth": 604.68,
     "elevation_ft": 23.4,
     "rotation": 0
    },
-   "tris": 476,
-   "bytes": 41440,
-   "sha256": "f2b6dc2ed24824974c592f635c4934c5ec82619538054c96c2dd6e0e2c71649a",
+   "tris": 1792,
+   "bytes": 177764,
+   "sha256": "2b7234e90ad2643379f10c4346a86d874290e3ca59fc7f102a867fcd3809fe77",
    "members": [
     {
      "id": "bld_house_063",
@@ -1154,27 +1154,27 @@
    "rotation_deg": 0.0,
    "scale": 1.0,
    "size_m": [
-    10.2437,
-    9.6074,
-    5.4535
+    10.4518,
+    9.8155,
+    5.1654
    ],
    "size_ft": [
-    33.608,
-    31.52,
-    17.892
+    34.291,
+    32.203,
+    16.947
    ],
    "tile": {
     "x": 2812.34,
     "y": 2645.44,
-    "width": 672.16,
-    "height": 630.4,
-    "depth": 357.84,
+    "width": 685.82,
+    "height": 644.06,
+    "depth": 338.94,
     "elevation_ft": 22.4,
     "rotation": 0
    },
-   "tris": 1448,
-   "bytes": 110700,
-   "sha256": "ff4eaaefe61861173c5182cfa0ea0c93520676b9756a4245fc7185630fe05c7c",
+   "tris": 1508,
+   "bytes": 118912,
+   "sha256": "e2d877f8a3680235f52c3a501f2b32adf1a54da451d25ebfccc2974644f15d01",
    "lights": [
     {
      "id": "bld_house_064_light_hearth0_3",
@@ -1332,27 +1332,27 @@
    "rotation_deg": 0.0,
    "scale": 1.0,
    "size_m": [
-    6.2964,
-    8.8235,
-    5.078
+    6.6556,
+    9.1826,
+    6.933
    ],
    "size_ft": [
-    20.657,
-    28.948,
-    16.66
+    21.836,
+    30.127,
+    22.746
    ],
    "tile": {
     "x": 1003.0,
     "y": 2730.0,
-    "width": 413.14,
-    "height": 578.96,
-    "depth": 333.2,
+    "width": 436.72,
+    "height": 602.54,
+    "depth": 454.92,
     "elevation_ft": 23.2,
     "rotation": 0
    },
-   "tris": 1030,
-   "bytes": 84304,
-   "sha256": "6178e6af8706b443953173ba861b7a0bcf788d89e31be200286fe793305094da",
+   "tris": 1716,
+   "bytes": 149772,
+   "sha256": "33e0fea0db63724cfb01ecd23a1622c3898858c06206b5ac69eeffb7aebe8299",
    "lights": [
     {
      "id": "bld_house_065_light_hearth0_2",
@@ -1489,27 +1489,27 @@
    "rotation_deg": 0.0,
    "scale": 1.0,
    "size_m": [
-    5.7822,
-    6.2715,
-    7.5398
+    5.9826,
+    6.4719,
+    9.1772
    ],
    "size_ft": [
-    18.97,
-    20.576,
-    24.737
+    19.628,
+    21.233,
+    30.109
    ],
    "tile": {
     "x": 3468.0,
     "y": 2770.0,
-    "width": 379.4,
-    "height": 411.52,
-    "depth": 494.74,
+    "width": 392.56,
+    "height": 424.66,
+    "depth": 602.18,
     "elevation_ft": 22.8,
     "rotation": 0
    },
-   "tris": 526,
-   "bytes": 44820,
-   "sha256": "521fa95cd21ee4b18a98186811b96e2eef009214902b60e610098910ffd93538",
+   "tris": 2160,
+   "bytes": 216772,
+   "sha256": "41e6d89dedd1d8fad3fc235cc108be90ee0d5eeb3eab47091d785b3a3905aa2c",
    "lights": [
     {
      "id": "bld_house_066_light_hearth0_1",
@@ -1583,27 +1583,27 @@
    "rotation_deg": 0.0,
    "scale": 1.0,
    "size_m": [
-    6.6565,
-    6.6601,
-    8.0065
+    6.811,
+    6.8146,
+    9.8578
    ],
    "size_ft": [
-    21.839,
-    21.851,
-    26.268
+    22.346,
+    22.358,
+    32.342
    ],
    "tile": {
     "x": 3077.64,
     "y": 3103.52,
-    "width": 436.78,
-    "height": 437.02,
-    "depth": 525.36,
+    "width": 446.92,
+    "height": 447.16,
+    "depth": 646.84,
     "elevation_ft": 21.5,
     "rotation": 0
    },
-   "tris": 1076,
-   "bytes": 96272,
-   "sha256": "5d08a4fc95929daa168c588c646838c6b5b1b66f044a66bd46b2657435451c99",
+   "tris": 2904,
+   "bytes": 289232,
+   "sha256": "a54ba2063563f2a0905b99e669a824f4d312c59c8e5fcba6ac7eccf267b563b5",
    "lights": [
     {
      "id": "bld_house_069_win0_1_light",
@@ -1698,27 +1698,27 @@
    "rotation_deg": 0.0,
    "scale": 1.0,
    "size_m": [
-    6.055,
-    6.9331,
-    7.8696
+    6.2823,
+    7.1605,
+    8.8654
    ],
    "size_ft": [
-    19.865,
-    22.746,
-    25.819
+    20.611,
+    23.492,
+    29.086
    ],
    "tile": {
     "x": 2061.0,
     "y": 3198.0,
-    "width": 397.3,
-    "height": 454.92,
-    "depth": 516.38,
+    "width": 412.22,
+    "height": 469.84,
+    "depth": 581.72,
     "elevation_ft": 21.2,
     "rotation": 0
    },
-   "tris": 1134,
-   "bytes": 100208,
-   "sha256": "5d7e3654da3cdf1d14dcd4429cb498216da585f3ab91b0f264a98c7804fc393b",
+   "tris": 1570,
+   "bytes": 141692,
+   "sha256": "0927468e9b0218ef8fa76424c854cb0807db8e4009c7c2df0531c21b2031307b",
    "lights": [
     {
      "id": "bld_house_072_win0_1_light",
@@ -1855,27 +1855,27 @@
    "rotation_deg": 0.0,
    "scale": 1.0,
    "size_m": [
-    8.6337,
-    8.7675,
-    5.1063
+    9.5443,
+    9.6781,
+    7.2817
    ],
    "size_ft": [
-    28.326,
-    28.765,
-    16.753
+    31.313,
+    31.752,
+    23.89
    ],
    "tile": {
     "x": 3519.0,
     "y": 3465.0,
-    "width": 566.52,
-    "height": 575.3,
-    "depth": 335.06,
+    "width": 626.26,
+    "height": 635.04,
+    "depth": 477.8,
     "elevation_ft": 20.4,
     "rotation": 0
    },
-   "tris": 1030,
-   "bytes": 84268,
-   "sha256": "78982d96f254fe70a418123d5b3f59940a368f647c9ed09b56a84a33976ed708",
+   "tris": 1158,
+   "bytes": 98900,
+   "sha256": "c02ec766d6531fc95fdab679b3a7d6393fbb9ae9aac5d89007b3ba95077930e8",
    "lights": [
     {
      "id": "bld_house_078_light_hearth0_2",
@@ -2012,27 +2012,27 @@
    "rotation_deg": 0.0,
    "scale": 1.0,
    "size_m": [
-    7.6759,
-    7.612,
-    4.632
+    8.1383,
+    8.0744,
+    5.5891
    ],
    "size_ft": [
-    25.184,
-    24.974,
-    15.197
+    26.7,
+    26.491,
+    18.337
    ],
    "tile": {
     "x": 3878.44,
     "y": 3717.46,
-    "width": 503.68,
-    "height": 499.48,
-    "depth": 303.94,
+    "width": 534.0,
+    "height": 529.82,
+    "depth": 366.74,
     "elevation_ft": 20.0,
     "rotation": 0
    },
-   "tris": 766,
-   "bytes": 68808,
-   "sha256": "b91ccc256bacf0c19fad3c32d6fb411e02abb21af7f60f6ec5eeb823627ac408",
+   "tris": 1098,
+   "bytes": 103372,
+   "sha256": "8c2d500c2db34c35e6ec10fb254be4fc83a37d7a117684aaabe6b92a3a6c7f91",
    "lights": [
     {
      "id": "bld_house_082_win0_2_light",
@@ -2127,27 +2127,27 @@
    "rotation_deg": 0.0,
    "scale": 1.0,
    "size_m": [
-    6.834,
-    7.1019,
-    5.4264
+    6.9266,
+    7.1946,
+    5.0307
    ],
    "size_ft": [
-    22.421,
-    23.3,
-    17.803
+    22.725,
+    23.604,
+    16.505
    ],
    "tile": {
     "x": 1999.0,
     "y": 3916.0,
-    "width": 448.42,
-    "height": 466.0,
-    "depth": 356.06,
+    "width": 454.5,
+    "height": 472.08,
+    "depth": 330.1,
     "elevation_ft": 18.7,
     "rotation": 0
    },
-   "tris": 1128,
-   "bytes": 85644,
-   "sha256": "cc194155c123b0e4eb8663345ce8986304609db101936184a2481148664b30f0",
+   "tris": 1188,
+   "bytes": 93836,
+   "sha256": "d9cde51ae8cefad952c632f559490bec10b158d0d5ecdce13c1da68af434a365",
    "lights": [
     {
      "id": "bld_house_084_light_hearth0_2",
@@ -2305,27 +2305,27 @@
    "rotation_deg": 0.0,
    "scale": 1.0,
    "size_m": [
-    7.4484,
-    7.5369,
-    4.7598
+    6.8173,
+    6.9058,
+    6.2472
    ],
    "size_ft": [
-    24.437,
-    24.727,
-    15.616
+    22.367,
+    22.657,
+    20.496
    ],
    "tile": {
     "x": 2983.0,
     "y": 4041.0,
-    "width": 488.74,
-    "height": 494.54,
-    "depth": 312.32,
+    "width": 447.34,
+    "height": 453.14,
+    "depth": 409.92,
     "elevation_ft": 18.3,
     "rotation": 0
    },
-   "tris": 856,
-   "bytes": 74288,
-   "sha256": "9831aeea5cee905425dca9dd528eb29c2ff41ac8e81cf5ff1cc6a39aaef4c839",
+   "tris": 1294,
+   "bytes": 117528,
+   "sha256": "ec21f84af04d8006b4ddf7297fa667f43c6d42b325841f419f28c09667bdab94",
    "lights": [
     {
      "id": "bld_house_086_light_hearth0_1",
@@ -2441,27 +2441,27 @@
    "rotation_deg": 0.0,
    "scale": 1.0,
    "size_m": [
-    10.2186,
-    10.3246,
-    5.4943
+    10.3309,
+    10.4369,
+    7.3286
    ],
    "size_ft": [
-    33.526,
-    33.873,
-    18.026
+    33.894,
+    34.242,
+    24.044
    ],
    "tile": {
     "x": 4193.0,
     "y": 4182.0,
-    "width": 670.52,
-    "height": 677.46,
-    "depth": 360.52,
+    "width": 677.88,
+    "height": 684.84,
+    "depth": 480.88,
     "elevation_ft": 18.6,
     "rotation": 0
    },
-   "tris": 1490,
-   "bytes": 108792,
-   "sha256": "1f178712ce965feb71c380fb8240f772434ecfe7c76976822b7f5b03be3e7289",
+   "tris": 3264,
+   "bytes": 275176,
+   "sha256": "6654b32a874e71809b656b59911af694c69606fdebf4fab37c46e835d6bdb99f",
    "lights": [
     {
      "id": "bld_house_087_light_hearth0_2",
@@ -2577,27 +2577,27 @@
    "rotation_deg": 0.0,
    "scale": 1.0,
    "size_m": [
-    6.218,
-    5.704,
-    4.7122
+    6.6741,
+    6.1601,
+    6.7099
    ],
    "size_ft": [
-    20.4,
-    18.714,
-    15.46
+    21.897,
+    20.21,
+    22.014
    ],
    "tile": {
     "x": 3184.0,
     "y": 4497.0,
-    "width": 408.0,
-    "height": 374.28,
-    "depth": 309.2,
+    "width": 437.94,
+    "height": 404.2,
+    "depth": 440.28,
     "elevation_ft": 17.6,
     "rotation": 0
    },
-   "tris": 646,
-   "bytes": 58556,
-   "sha256": "dbd254143cee44029ae22ffaa9451deb450d472a2810102034196d8c199403ee",
+   "tris": 1212,
+   "bytes": 112972,
+   "sha256": "3b78669f8d7b3070b2e293a75d1be9b6c033ca0890f5c74922c6c2e1cea32ac8",
    "lights": [
     {
      "id": "bld_house_089_win0_2_light",
@@ -2692,27 +2692,27 @@
    "rotation_deg": 0.0,
    "scale": 1.0,
    "size_m": [
-    5.8005,
-    5.5089,
-    7.3707
+    6.0152,
+    5.7236,
+    8.9233
    ],
    "size_ft": [
-    19.03,
-    18.074,
-    24.182
+    19.735,
+    18.778,
+    29.276
    ],
    "tile": {
     "x": 4747.68,
     "y": 4629.24,
-    "width": 380.6,
-    "height": 361.48,
-    "depth": 483.64,
+    "width": 394.7,
+    "height": 375.56,
+    "depth": 585.52,
     "elevation_ft": 18.1,
     "rotation": 0
    },
-   "tris": 392,
-   "bytes": 37388,
-   "sha256": "813238af2f94e75da9e6b24379d61cdef16e13da2d639099243f3e56cfc98932",
+   "tris": 2598,
+   "bytes": 254184,
+   "sha256": "0aacf2f6b89c826335d212ae0778bed80158e75382f78690cdfb4e31c80f4c4c",
    "lights": [
     {
      "id": "bld_house_090_light_hearth0_1",
@@ -2786,27 +2786,27 @@
    "rotation_deg": 0.0,
    "scale": 1.0,
    "size_m": [
-    9.0251,
-    9.878,
-    4.8606
+    9.0352,
+    9.8881,
+    6.712
    ],
    "size_ft": [
-    29.61,
-    32.408,
-    15.947
+    29.643,
+    32.441,
+    22.021
    ],
    "tile": {
     "x": 3678.0,
     "y": 4878.0,
-    "width": 592.2,
-    "height": 648.16,
-    "depth": 318.94,
+    "width": 592.86,
+    "height": 648.82,
+    "depth": 440.42,
     "elevation_ft": 16.9,
     "rotation": 0
    },
-   "tris": 1238,
-   "bytes": 103668,
-   "sha256": "b2c84c6c82e46b8bf58707274b8ac8fe9605f6ff06d33109ec41b474dcb420bf",
+   "tris": 2702,
+   "bytes": 241520,
+   "sha256": "3013965e2b29ac2c45f338d96b2bb5acfa6dacfed0a1868a98fb6942245285b2",
    "lights": [
     {
      "id": "bld_house_094_win0_2_light",
@@ -2922,27 +2922,27 @@
    "rotation_deg": 0.0,
    "scale": 1.0,
    "size_m": [
-    7.5485,
-    7.29,
-    4.8805
+    8.1732,
+    7.9147,
+    6.7312
    ],
    "size_ft": [
-    24.765,
-    23.917,
-    16.012
+    26.815,
+    25.967,
+    22.084
    ],
    "tile": {
     "x": 5059.78,
     "y": 5540.7,
-    "width": 495.3,
-    "height": 478.34,
-    "depth": 320.24,
+    "width": 536.3,
+    "height": 519.34,
+    "depth": 441.68,
     "elevation_ft": 15.2,
     "rotation": 0
    },
-   "tris": 816,
-   "bytes": 68788,
-   "sha256": "5fb4912a17a50af780654dc7b1307bd3619d5e1520d1d658d43f6c8fc4cd6555",
+   "tris": 1416,
+   "bytes": 126336,
+   "sha256": "ae1f80e036cc3d1c4757827713a9e3d0e8457b8be65033b35b4c0dccdd9068b4",
    "lights": [
     {
      "id": "bld_house_099_light_hearth0_2",
@@ -3058,27 +3058,27 @@
    "rotation_deg": 0.0,
    "scale": 1.0,
    "size_m": [
-    9.4273,
-    8.6317,
-    5.1642
+    10.5229,
+    9.7273,
+    6.3371
    ],
    "size_ft": [
-    30.929,
-    28.319,
-    16.943
+    34.524,
+    31.914,
+    20.791
    ],
    "tile": {
     "x": 4494.68,
     "y": 6191.5,
-    "width": 618.58,
-    "height": 566.38,
-    "depth": 338.86,
+    "width": 690.48,
+    "height": 638.28,
+    "depth": 415.82,
     "elevation_ft": 14.1,
     "rotation": 0
    },
-   "tris": 1306,
-   "bytes": 98092,
-   "sha256": "9568ef83bb7d72375fcb9d7acd331180eeaa60edf4a023198e67125661f5f1f7",
+   "tris": 1866,
+   "bytes": 150912,
+   "sha256": "21f26700029cd7454677b9d1f580a4d8c122fa047bab977d2d61789f913f6d0a",
    "lights": [
     {
      "id": "bld_house_107_light_hearth0_2",
@@ -3215,27 +3215,27 @@
    "rotation_deg": 0.0,
    "scale": 1.0,
    "size_m": [
-    7.831,
-    8.1955,
-    5.0838
+    8.4397,
+    8.8041,
+    7.182
    ],
    "size_ft": [
-    25.692,
-    26.888,
-    16.679
+    27.689,
+    28.885,
+    23.563
    ],
    "tile": {
     "x": 5686.98,
     "y": 6345.02,
-    "width": 513.84,
-    "height": 537.76,
-    "depth": 333.58,
+    "width": 553.78,
+    "height": 577.7,
+    "depth": 471.26,
     "elevation_ft": 11.1,
     "rotation": 0
    },
-   "tris": 1112,
-   "bytes": 88224,
-   "sha256": "5e61d36dfe3ce9f3834604c7973b0d016440e0c7e5fe7437f525b20a6b5d7518",
+   "tris": 1320,
+   "bytes": 110868,
+   "sha256": "1a008b37cd777c78ae701882b0c45cfa754a3b7207ee24c2fd1b8115566e2603",
    "lights": [
     {
      "id": "bld_house_109_light_hearth0_1",

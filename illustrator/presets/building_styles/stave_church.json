@@ -1,0 +1,82 @@
+{
+ "id": "stave_church",
+ "name": "Stave church",
+ "category": "church",
+ "culture": "Norwegian",
+ "description": "Tarred timber church with stacked shingled roofs, a spire and dragon-head gable finials.",
+ "kinds": {
+  "church": 3,
+  "chapel": 2
+ },
+ "wall": {
+  "system": "corners",
+  "material": "board",
+  "colors": [
+   "#2c2520",
+   "#241e1a"
+  ],
+  "beam_colors": [
+   "#2a2018"
+  ],
+  "beam_depth_ft": 0.14,
+  "corner_ft": 0.5
+ },
+ "roof": {
+  "type": "gable",
+  "material": "shingle",
+  "colors": [
+   "#3f322a",
+   "#4a3a30"
+  ],
+  "pitch": [
+   1.3,
+   1.5
+  ],
+  "overhang_ft": [
+   1.4,
+   1.8
+  ],
+  "barge": true,
+  "fascia_colors": [
+   "#2a2018"
+  ]
+ },
+ "windows": {
+  "type": "casement",
+  "cols": [
+   1,
+   1
+  ],
+  "rows": [
+   1,
+   1
+  ]
+ },
+ "door": {
+  "colors": [
+   "#5a3a22",
+   "#3c4a38",
+   "#6a2c24"
+  ]
+ },
+ "preview": "illustrator/out/building_styles/stave_church.png",
+ "plinth": {
+  "material": "stone",
+  "colors": [
+   "#6f6b64"
+  ],
+  "height_ft": [
+   1.0,
+   1.5
+  ]
+ },
+ "trim_colors": [
+  "#2a2018"
+ ],
+ "special": {
+  "tiers": {
+   "count": 2,
+   "base_ft": 4.0
+  }
+ }
+}

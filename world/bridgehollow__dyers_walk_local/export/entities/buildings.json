@@ -193,6 +193,7 @@
     "openings",
     "layout"
    ],
+   "style": "tudor",
    "openings": {
     "doors": [
      {
@@ -702,6 +703,7 @@
     "openings",
     "layout"
    ],
+   "style": "hanseatic_brick",
    "openings": {
     "doors": [
      {
@@ -1305,6 +1307,7 @@
     "openings",
     "layout"
    ],
+   "style": "tudor",
    "openings": {
     "doors": [
      {
@@ -1797,6 +1800,7 @@
     "openings",
     "layout"
    ],
+   "style": "tarred_timber",
    "openings": {
     "doors": [
      {
@@ -2517,6 +2521,7 @@
     "openings",
     "layout"
    ],
+   "style": "danish_longhouse",
    "openings": {
     "doors": [
      {
@@ -3056,6 +3061,7 @@
     "openings",
     "layout"
    ],
+   "style": "danish_fachwerk",
    "openings": {
     "doors": [
      {
@@ -3487,6 +3493,7 @@
     "openings",
     "layout"
    ],
+   "style": "falu_cottage",
    "openings": {
     "doors": [
      {
@@ -4039,6 +4046,7 @@
     "openings",
     "layout"
    ],
+   "style": "tudor",
    "openings": {
     "doors": [
      {
@@ -4561,6 +4569,7 @@
     "openings",
     "layout"
    ],
+   "style": "tudor",
    "openings": {
     "doors": [
      {
@@ -5017,6 +5026,7 @@
     "openings",
     "layout"
    ],
+   "style": "norse_log",
    "openings": {
     "doors": [
      {
@@ -5798,6 +5808,7 @@
     "openings",
     "layout"
    ],
+   "style": "danish_fachwerk",
    "openings": {
     "doors": [
      {
@@ -6350,6 +6361,7 @@
     "openings",
     "layout"
    ],
+   "style": "tudor",
    "openings": {
     "doors": [
      {
@@ -6798,6 +6810,7 @@
     "openings",
     "layout"
    ],
+   "style": "tudor",
    "openings": {
     "doors": [
      {
@@ -7414,6 +7427,7 @@
     "openings",
     "layout"
    ],
+   "style": "falu_cottage",
    "openings": {
     "doors": [
      {
@@ -8049,6 +8063,7 @@
     "openings",
     "layout"
    ],
+   "style": "danish_longhouse",
    "openings": {
     "doors": [
      {
@@ -8621,6 +8636,7 @@
     "openings",
     "layout"
    ],
+   "style": "falu_cottage",
    "openings": {
     "doors": [
      {
@@ -9105,6 +9121,7 @@
     "openings",
     "layout"
    ],
+   "style": "norse_log",
    "openings": {
     "doors": [
      {
@@ -9726,6 +9743,7 @@
     "openings",
     "layout"
    ],
+   "style": "hanseatic_brick",
    "openings": {
     "doors": [
      {
@@ -10345,6 +10363,7 @@
     "openings",
     "layout"
    ],
+   "style": "tudor",
    "openings": {
     "doors": [
      {
@@ -11078,6 +11097,7 @@
     "openings",
     "layout"
    ],
+   "style": "danish_fachwerk",
    "openings": {
     "doors": [
      {
@@ -11491,6 +11511,7 @@
     "openings",
     "layout"
    ],
+   "style": "tudor",
    "openings": {
     "doors": [
      {
@@ -11875,6 +11896,7 @@
     "openings",
     "layout"
    ],
+   "style": "tudor",
    "openings": {
     "doors": [
      {
@@ -12471,6 +12493,7 @@
     "openings",
     "layout"
    ],
+   "style": "danish_fachwerk",
    "openings": {
     "doors": [
      {
@@ -13003,6 +13026,7 @@
     "openings",
     "layout"
    ],
+   "style": "niedersachsen_halle",
    "openings": {
     "doors": [
      {
@@ -13675,6 +13699,7 @@
     "openings",
     "layout"
    ],
+   "style": "danish_longhouse",
    "openings": {
     "doors": [
      {

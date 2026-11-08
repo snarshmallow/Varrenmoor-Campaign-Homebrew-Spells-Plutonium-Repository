@@ -1,0 +1,78 @@
+{
+ "id": "tarred_timber",
+ "name": "Tarred timber house",
+ "category": "house",
+ "culture": "Scandinavian",
+ "description": "Black-tarred vertical boards with white window frames and a steep wood shingle roof.",
+ "kinds": {
+  "house": 2,
+  "craft": 2,
+  "shed": 2,
+  "boathouse": 4
+ },
+ "wall": {
+  "system": "corners",
+  "material": "board",
+  "colors": [
+   "#2c2520",
+   "#332a24",
+   "#241e1a"
+  ],
+  "beam_colors": [
+   "#2a2018"
+  ],
+  "beam_depth_ft": 0.12
+ },
+ "roof": {
+  "type": "gable",
+  "material": "shingle",
+  "colors": [
+   "#4a3a30",
+   "#3f322a"
+  ],
+  "pitch": [
+   0.8,
+   1.0
+  ],
+  "overhang_ft": [
+   1.2,
+   1.5
+  ],
+  "barge": true,
+  "fascia_colors": [
+   "#2a2018"
+  ]
+ },
+ "windows": {
+  "type": "casement",
+  "cols": [
+   2,
+   2
+  ],
+  "rows": [
+   2,
+   2
+  ]
+ },
+ "door": {
+  "colors": [
+   "#5a3a22",
+   "#3c4a38",
+   "#6a2c24"
+  ]
+ },
+ "preview": "illustrator/out/building_styles/tarred_timber.png",
+ "plinth": {
+  "material": "stone",
+  "colors": [
+   "#78746c"
+  ],
+  "height_ft": [
+   1.0,
+   1.5
+  ]
+ },
+ "trim_colors": [
+  "#e9e2cf"
+ ]
+}

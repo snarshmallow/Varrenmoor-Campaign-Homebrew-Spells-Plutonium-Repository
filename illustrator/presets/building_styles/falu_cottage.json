@@ -1,0 +1,97 @@
+{
+ "id": "falu_cottage",
+ "name": "Swedish falu-red cottage",
+ "category": "house",
+ "culture": "Swedish",
+ "description": "Board-and-batten walls in falu red with white corner boards and window casings, low pitched roof of dark tile, stone footing, small ridge chimney.",
+ "kinds": {
+  "house": 4,
+  "farmhouse": 3,
+  "shed": 1,
+  "craft": 2
+ },
+ "wall": {
+  "system": "corners",
+  "material": "board",
+  "colors": [
+   "#8e2f22",
+   "#9a3a2a",
+   "#7a2a20",
+   "#a8442f"
+  ],
+  "beam_colors": [
+   "#efe9dc"
+  ],
+  "beam_w_ft": [
+   0.4,
+   0.5
+  ],
+  "beam_depth_ft": 0.12,
+  "corner_ft": 0.5
+ },
+ "roof": {
+  "type": "gable",
+  "material": "tile",
+  "colors": [
+   "#3b3330",
+   "#4a403b"
+  ],
+  "pitch": [
+   0.6,
+   0.75
+  ],
+  "overhang_ft": [
+   1.2,
+   1.6
+  ],
+  "barge": true,
+  "fascia_colors": [
+   "#efe9dc"
+  ]
+ },
+ "windows": {
+  "type": "sash",
+  "cols": [
+   2,
+   2
+  ],
+  "rows": [
+   2,
+   3
+  ],
+  "shutter_prob": 0.2,
+  "shutter_colors": [
+   "#efe9dc"
+  ]
+ },
+ "door": {
+  "colors": [
+   "#5a3a22",
+   "#3c4a38",
+   "#6a2c24"
+  ]
+ },
+ "preview": "illustrator/out/building_styles/falu_cottage.png",
+ "plinth": {
+  "material": "stone",
+  "colors": [
+   "#8d887d"
+  ],
+  "height_ft": [
+   1.0,
+   1.4
+  ]
+ },
+ "chimney": {
+  "type": "ridge",
+  "material": "brick",
+  "colors": [
+   "#9a4a38"
+  ],
+  "width_ft": 2.0,
+  "rise_ft": 2.4
+ },
+ "trim_colors": [
+  "#efe9dc"
+ ]
+}

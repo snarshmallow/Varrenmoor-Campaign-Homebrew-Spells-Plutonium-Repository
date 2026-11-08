@@ -1,0 +1,64 @@
+{
+ "id": "town_warehouse",
+ "name": "Warehouse / granary",
+ "category": "town",
+ "culture": "Hanseatic",
+ "description": "Tall plain brick warehouse with small openings, steep tile roof and stepped gables.",
+ "kinds": {
+  "warehouse": 6,
+  "barn": 2
+ },
+ "wall": {
+  "system": "plain",
+  "material": "brick",
+  "colors": [
+   "#9b4a36",
+   "#8d4332",
+   "#a35a45"
+  ],
+  "beam_colors": [
+   "#2a2018"
+  ]
+ },
+ "roof": {
+  "type": "gable",
+  "material": "tile",
+  "colors": [
+   "#6a3a2d",
+   "#5b4a44"
+  ],
+  "pitch": [
+   0.9,
+   1.1
+  ],
+  "overhang_ft": [
+   0.2,
+   0.3
+  ],
+  "stepped_gable": true
+ },
+ "windows": {
+  "type": "plain"
+ },
+ "door": {
+  "colors": [
+   "#5a3a22",
+   "#3c4a38",
+   "#6a2c24"
+  ]
+ },
+ "preview": "illustrator/out/building_styles/town_warehouse.png",
+ "plinth": {
+  "material": "stone",
+  "colors": [
+   "#85807a"
+  ],
+  "height_ft": [
+   1.4,
+   2.0
+  ]
+ },
+ "trim_colors": [
+  "#2a2018"
+ ]
+}

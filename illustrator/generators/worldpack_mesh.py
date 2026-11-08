@@ -488,6 +488,11 @@ def build_parts(pack, step=1, carve=True, conform=True, layers=None, drape_edge_
         if want("buildings"):
             import worldpack_pbr as pbr
             e = pbr.restyle_building(e)
+            if e.get("style"):                                        # building style preset (building_styles.py); no style key = legacy look
+                import building_styles as _bs
+                e = _bs.apply_style(e)
+                if e.get("_style"):
+                    _bs.register_materials(pack.materials, e["_style"])
             if e.get("openings"):
                 import worldpack_detail as wd
                 m, dn = wd.build_building_detailed(cx, e)
@@ -570,7 +575,11 @@ def write_glb(path, nodes, materials, textures="external", tex_root=None, extras
     def material(mid):
         if mid in mat_index:
             return mat_index[mid]
-        r = materials.get(mid, {})
+        r = materials.get(mid)
+        if r is None:                                           # dynamic building-style materials (building_styles.py) need no entry in the pack
+            import building_styles as _bs
+            r = _bs.material_record(mid) if mid.startswith("mat_s_") else None
+        r = r or {}
         col = r.get("mean_color") or "#a0a0a0"
         rgb = [int(col[i:i + 2], 16) / 255 for i in (1, 3, 5)]
         g = {"name": mid, "doubleSided": True, "pbrMetallicRoughness": {"baseColorFactor": [*rgb, 1.0], "metallicFactor": float(r.get("metallic", 0.0)),

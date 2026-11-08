@@ -96,3 +96,16 @@ if focus:
         door.rotation_euler = (0, 0, 0)
         aim(dp + d * 16 + Vector((d.y, -d.x, 0)) * 10 + Vector((0, 0, 2.0)), dp + Vector((0, 0, 1.5)), 26)
         shot("street")
+# --walk fx,fy,tx,ty[,h]: eye-level shot (default eye 1.7 m above the ground) from bbox fractions (fx, fy) looking at (tx, ty) -> <prefix>_walk.png
+if "--walk" in a:
+    v = [float(s) for s in a[a.index("--walk") + 1].split(",")]
+    deps = bpy.context.evaluated_depsgraph_get()
+
+    def ground(x, y):
+        hit = sc.ray_cast(deps, Vector((x, y, hi.z + 50)), Vector((0, 0, -1)))
+        return hit[1].z if hit[0] else lo.z
+    ex_, ey_ = lo.x + (hi.x - lo.x) * v[0], lo.y + (hi.y - lo.y) * v[1]
+    tx_, ty_ = lo.x + (hi.x - lo.x) * v[2], lo.y + (hi.y - lo.y) * v[3]
+    eh = v[4] if len(v) > 4 else 1.7
+    aim(Vector((ex_, ey_, ground(ex_, ey_) + eh)), Vector((tx_, ty_, ground(tx_, ty_) + eh * 0.9 + 2.0)), 20)
+    shot("walk")

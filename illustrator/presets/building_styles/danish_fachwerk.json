@@ -1,0 +1,104 @@
+{
+ "id": "danish_fachwerk",
+ "name": "Danish half-timber (fyrsyl)",
+ "category": "house",
+ "culture": "Danish",
+ "description": "Yellow-ochre or falu-red infill between black beams, thatched or red-tiled, white leaded windows, low stone plinth, small ridge chimney.",
+ "kinds": {
+  "house": 4,
+  "farmhouse": 3,
+  "craft": 2,
+  "inn": 2
+ },
+ "wall": {
+  "system": "halftimber",
+  "material": "plaster",
+  "colors": [
+   "#d9b25a",
+   "#d4a64a",
+   "#9a3b2c",
+   "#a4412f",
+   "#e6dfc9"
+  ],
+  "beam_colors": [
+   "#1b1816",
+   "#201a17"
+  ],
+  "pattern": [
+   "square",
+   "braced",
+   "square"
+  ],
+  "spacing_ft": [
+   3.0,
+   3.8
+  ],
+  "beam_w_ft": [
+   0.36,
+   0.42
+  ],
+  "beam_depth_ft": 0.2
+ },
+ "roof": {
+  "type": "gable",
+  "material": "thatch",
+  "colors": [
+   "#8a7a55",
+   "#7b6d4c",
+   "#948360"
+  ],
+  "pitch": [
+   1.05,
+   1.25
+  ],
+  "overhang_ft": [
+   1.5,
+   1.9
+  ],
+  "thickness_ft": 0.8,
+  "ridge_cap": true
+ },
+ "windows": {
+  "type": "casement",
+  "cols": [
+   2,
+   3
+  ],
+  "rows": [
+   2,
+   3
+  ]
+ },
+ "door": {
+  "colors": [
+   "#5a3a22",
+   "#3c4a38",
+   "#6a2c24"
+  ]
+ },
+ "tile_scale": 0.6,
+ "preview": "illustrator/out/building_styles/danish_fachwerk.png",
+ "plinth": {
+  "material": "stone",
+  "colors": [
+   "#85807a",
+   "#7a766f"
+  ],
+  "height_ft": [
+   1.0,
+   1.5
+  ]
+ },
+ "chimney": {
+  "type": "ridge",
+  "material": "brick",
+  "colors": [
+   "#8d4332"
+  ],
+  "width_ft": 2.2,
+  "rise_ft": 2.6
+ },
+ "trim_colors": [
+  "#efe9dc"
+ ]
+}

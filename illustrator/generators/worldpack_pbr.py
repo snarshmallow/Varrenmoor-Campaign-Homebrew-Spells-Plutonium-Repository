@@ -70,6 +70,11 @@ ROOF_TEXEL_SCALE = 0.65        # existing styles ask for 14 ft per repeat (map l
 
 
 def info(mid):
+    if mid.startswith("mat_s_"):                              # dynamic style materials (building_styles.py)
+        import building_styles as bs
+        d = bs.info(mid)
+        if d:
+            return dict(GENERIC, **d)
     d = dict(GENERIC)
     if mid.startswith("mat_w_") and mid not in CATALOG:
         d.update(CATALOG.get("mat_" + mid[6:], {}))
@@ -78,6 +83,9 @@ def info(mid):
 
 
 def tile_ft(mid, default=8.0):
+    if mid.startswith("mat_s_") and mid not in TILE_FT:
+        d = info(mid)
+        return d.get("tile", default) if d else default
     return TILE_FT.get(mid, default)
 
 
@@ -359,6 +367,9 @@ def base_texture(mid):
     """(albedo float, height 0..1) for a catalogue material, or None when there is neither generator nor preset image."""
     from PIL import Image
     c = info(mid)
+    if c.get("gen") == "style":
+        import building_styles as bs
+        return bs.gen_texture(mid)
     if c.get("gen"):
         return GENERATORS[c["gen"]]()
     src = c.get("src") or mid[4:]

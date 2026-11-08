@@ -1,0 +1,102 @@
+{
+ "id": "town_inn",
+ "name": "Town inn / tavern",
+ "category": "town",
+ "culture": "English / North German",
+ "description": "Large half-timbered inn: braced oak frame on brick, tile roof, big hearth chimney, leaded windows, deep jetty.",
+ "kinds": {
+  "inn": 6,
+  "tavern": 6
+ },
+ "wall": {
+  "system": "halftimber",
+  "material": "plaster",
+  "colors": [
+   "#ddd0a8",
+   "#e0d2aa",
+   "#d6c48c"
+  ],
+  "beam_colors": [
+   "#2a2018",
+   "#33271c",
+   "#231b15"
+  ],
+  "pattern": [
+   "braced",
+   "close"
+  ],
+  "spacing_ft": [
+   3.0,
+   3.5
+  ],
+  "beam_w_ft": [
+   0.4,
+   0.48
+  ],
+  "beam_depth_ft": 0.22,
+  "jetty_ft": 0.6,
+  "jetty_prob": 0.9
+ },
+ "roof": {
+  "type": "gable",
+  "material": "tile",
+  "colors": [
+   "#9c5238",
+   "#8a4a36"
+  ],
+  "pitch": [
+   0.9,
+   1.05
+  ],
+  "overhang_ft": [
+   1.1,
+   1.4
+  ],
+  "ridge_cap": true,
+  "barge": true
+ },
+ "windows": {
+  "type": "leaded",
+  "cols": [
+   3,
+   4
+  ],
+  "rows": [
+   3,
+   3
+  ]
+ },
+ "door": {
+  "colors": [
+   "#5a3a22",
+   "#3c4a38",
+   "#6a2c24"
+  ]
+ },
+ "preview": "illustrator/out/building_styles/town_inn.png",
+ "plinth": {
+  "material": "brick",
+  "colors": [
+   "#9b4a36",
+   "#a65540",
+   "#8d4332",
+   "#a35a45"
+  ],
+  "height_ft": [
+   2.0,
+   2.6
+  ]
+ },
+ "chimney": {
+  "type": "gable",
+  "material": "brick",
+  "colors": [
+   "#92462f"
+  ],
+  "width_ft": 3.2,
+  "rise_ft": 3.4
+ },
+ "trim_colors": [
+  "#2a2018"
+ ]
+}

@@ -1,0 +1,80 @@
+{
+ "id": "norse_log",
+ "name": "Norwegian log house (turf roof)",
+ "category": "house",
+ "culture": "Norwegian",
+ "description": "Round-log walls, low turf roof with a plank barge, tiny windows, tarred or weathered timber.",
+ "kinds": {
+  "house": 2,
+  "farmhouse": 3,
+  "shed": 3,
+  "barn": 2,
+  "stable": 2
+ },
+ "wall": {
+  "system": "log",
+  "material": "log",
+  "colors": [
+   "#6b4a2e",
+   "#5a3e28",
+   "#3b2c20",
+   "#7a5a38"
+  ],
+  "beam_colors": [
+   "#3b2c20"
+  ]
+ },
+ "roof": {
+  "type": "gable",
+  "material": "turf",
+  "colors": [
+   "#5f7a34",
+   "#6b7d3a"
+  ],
+  "pitch": [
+   0.45,
+   0.55
+  ],
+  "overhang_ft": [
+   1.0,
+   1.4
+  ],
+  "thickness_ft": 0.7,
+  "barge": true,
+  "fascia_colors": [
+   "#4a3524"
+  ]
+ },
+ "windows": {
+  "type": "casement",
+  "cols": [
+   2,
+   2
+  ],
+  "rows": [
+   2,
+   2
+  ]
+ },
+ "door": {
+  "colors": [
+   "#5a3a22",
+   "#3c4a38",
+   "#6a2c24"
+  ]
+ },
+ "preview": "illustrator/out/building_styles/norse_log.png",
+ "plinth": {
+  "material": "stone",
+  "colors": [
+   "#78746c"
+  ],
+  "height_ft": [
+   0.8,
+   1.2
+  ]
+ },
+ "trim_colors": [
+  "#2a2018"
+ ]
+}

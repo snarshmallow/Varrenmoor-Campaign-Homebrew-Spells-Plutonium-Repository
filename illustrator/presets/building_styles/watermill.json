@@ -1,0 +1,82 @@
+{
+ "id": "watermill",
+ "name": "Watermill",
+ "category": "other",
+ "culture": "Northern",
+ "description": "Timber-frame mill with a stone base and slate roof (wheel not modelled).",
+ "kinds": {
+  "watermill": 8
+ },
+ "wall": {
+  "system": "halftimber",
+  "material": "plaster",
+  "colors": [
+   "#e2d6b8"
+  ],
+  "beam_colors": [
+   "#2a2018",
+   "#33271c",
+   "#231b15"
+  ],
+  "pattern": [
+   "square"
+  ],
+  "spacing_ft": [
+   3.4,
+   4.0
+  ],
+  "beam_w_ft": [
+   0.4,
+   0.46
+  ],
+  "beam_depth_ft": 0.2
+ },
+ "roof": {
+  "type": "gable",
+  "material": "slate",
+  "colors": [
+   "#55555c"
+  ],
+  "pitch": [
+   0.85,
+   1.0
+  ],
+  "overhang_ft": [
+   1.2,
+   1.5
+  ],
+  "barge": true
+ },
+ "windows": {
+  "type": "casement",
+  "cols": [
+   2,
+   2
+  ],
+  "rows": [
+   2,
+   2
+  ]
+ },
+ "door": {
+  "colors": [
+   "#5a3a22",
+   "#3c4a38",
+   "#6a2c24"
+  ]
+ },
+ "preview": "illustrator/out/building_styles/watermill.png",
+ "plinth": {
+  "material": "stone",
+  "colors": [
+   "#85807a"
+  ],
+  "height_ft": [
+   3.5,
+   4.5
+  ]
+ },
+ "trim_colors": [
+  "#2a2018"
+ ]
+}

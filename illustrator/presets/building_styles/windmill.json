@@ -1,0 +1,66 @@
+{
+ "id": "windmill",
+ "name": "Windmill",
+ "category": "other",
+ "culture": "Danish / Dutch",
+ "description": "Octagonal tapering tower with a conical cap and four lattice sails.",
+ "kinds": {
+  "windmill": 8
+ },
+ "wall": {
+  "system": "plain",
+  "material": "brick",
+  "colors": [
+   "#9b4a36",
+   "#a65540"
+  ],
+  "beam_colors": [
+   "#2a2018"
+  ]
+ },
+ "roof": {
+  "type": "gable",
+  "material": "shingle",
+  "colors": [
+   "#3f322a"
+  ],
+  "pitch": [
+   0.5,
+   0.6
+  ],
+  "overhang_ft": [
+   0.5,
+   0.7
+  ]
+ },
+ "windows": {
+  "type": "plain"
+ },
+ "door": {
+  "colors": [
+   "#5a3a22",
+   "#3c4a38",
+   "#6a2c24"
+  ]
+ },
+ "preview": "illustrator/out/building_styles/windmill.png",
+ "plinth": {
+  "material": "stone",
+  "colors": [
+   "#85807a"
+  ],
+  "height_ft": [
+   2.0,
+   2.6
+  ]
+ },
+ "trim_colors": [
+  "#2a2018"
+ ],
+ "special": {
+  "windmill": {
+   "height_ft": 18.0,
+   "sail_ft": 17.0
+  }
+ }
+}

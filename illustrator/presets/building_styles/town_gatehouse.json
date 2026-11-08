@@ -1,0 +1,68 @@
+{
+ "id": "town_gatehouse",
+ "name": "Gatehouse",
+ "category": "town",
+ "culture": "Northern",
+ "description": "Heavy stone gatehouse under a hip roof.",
+ "kinds": {
+  "gatehouse": 8
+ },
+ "wall": {
+  "system": "plain",
+  "material": "stone",
+  "colors": [
+   "#85807a",
+   "#7f7a70"
+  ],
+  "beam_colors": [
+   "#2a2018"
+  ]
+ },
+ "roof": {
+  "type": "hip",
+  "material": "slate",
+  "colors": [
+   "#4a4a50"
+  ],
+  "pitch": [
+   0.9,
+   1.1
+  ],
+  "overhang_ft": [
+   0.6,
+   0.9
+  ]
+ },
+ "windows": {
+  "type": "casement",
+  "cols": [
+   1,
+   1
+  ],
+  "rows": [
+   2,
+   2
+  ]
+ },
+ "door": {
+  "colors": [
+   "#5a3a22",
+   "#3c4a38",
+   "#6a2c24"
+  ]
+ },
+ "preview": "illustrator/out/building_styles/town_gatehouse.png",
+ "plinth": {
+  "material": "stone",
+  "colors": [
+   "#66625b"
+  ],
+  "height_ft": [
+   2.0,
+   3.0
+  ]
+ },
+ "trim_colors": [
+  "#2a2018"
+ ]
+}
