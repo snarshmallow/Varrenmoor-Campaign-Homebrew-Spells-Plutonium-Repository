@@ -1,6 +1,6 @@
 # Cleanup log: Vega, 2026-11-07
 
-Status: **survey only, nothing deleted yet.** The user hasn't confirmed deletions in the Vega session; candidates are listed below for them to approve.
+Status: survey on 2026-11-07; safe-list cleanup done on 2026-11-08 (see Removed).
 
 ## Free space (before)
 | Drive | Free | Size |
@@ -43,8 +43,17 @@ Largest: `world.new-campaign-2026` 2026-05-11 (82.7 MB); `system.dnd5e` 2025-08-
 - Exact duplicates (hash-checked): `DnD_Session11 (1).mp3` and `DnD_Session13 (1).mp3` (181 MB).
 - Old installers: EpicInstaller (252 MB), r2modman (238 MB), Jackett (161 MB), bedrock-server zips (117 MB), qbittorrent, node 20.10 msi, Voicemeeter, wsl_update, npp (about 0.1 GB).
 
-## Removed
-Nothing yet.
+## Removed (2026-11-08; user approved after coordinator check-in)
+| Size | Item |
+|---|---|
+| 2.6 MB | `%TEMP%\varrenmoor-bridge.log` |
+| 98.3 MB | `%LOCALAPPDATA%\pip\Cache` |
+| 0.17 MB | 3 `__pycache__` folders (foundry-json, foundry-tools, foundry-tools\vtt) |
+| 0 | `%TEMP%` files older than 7 days (excluding `%TEMP%\claude`): none found; everything there is newer |
+
+Total freed: about 0.1 GB.
+
+Held back by the coordinator, until modules 0.3.x are verified in Foundry: the relay-move backup and the module 0.2.0 backup. Downloads were not touched (user decision).
 
 ## Free space (after)
-Unchanged.
+C: 301.3 GB, D: 19.4 GB. Both are slightly lower than the survey because other jobs wrote files in between (git pulls on D:); the cleanup itself freed about 0.1 GB on C:.
