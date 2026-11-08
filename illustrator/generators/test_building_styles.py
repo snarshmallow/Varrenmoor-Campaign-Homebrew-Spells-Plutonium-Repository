@@ -295,6 +295,100 @@ class ArchedOpenings(unittest.TestCase):
         self.assertGreater(m.tri_count, m2.tri_count)                                # the rose adds geometry
 
 
+class RoseWindowIsReal(unittest.TestCase):
+    """The gable rose is an opening in the gable (no wall triangle covers it), glazed, and trefoil / quatrefoil are optional outlines."""
+
+    def _build(self, foil=None):
+        import building_styles_arch as bsa
+        pk = pack()
+        e = bsp.sample_entity(pk, "parish_church", pk.list("buildings")[0])
+        e = bs.apply_style(e)
+        if foil:
+            e["_style"] = dict(e["_style"], special=dict(e["_style"]["special"], rose=dict(e["_style"]["special"]["rose"], foil=foil)))
+        cx = wm.Ctx(pk)
+        m, dn = wd.build_building_detailed(cx, e)
+        R = bsg.Roof(cx, e)
+        return e, m, R, bsa
+
+    def _gable_tris(self, m, R, end, zr_guess=None):
+        V = m.V
+        L = (V[:, 0] - R.cxm) * R.ex[0] + (V[:, 1] - R.cym) * R.ex[1]
+        W = (V[:, 0] - R.cxm) * R.ey[0] + (V[:, 1] - R.cym) * R.ey[1]
+        out = []
+        for mat, F in m.subs.items():
+            if mat == "mat_glass" or "glass" in mat:
+                continue
+            for f in F:
+                if np.all(np.abs(L[f] - end * R.hl) < 1e-4) and (V[f, 2].max() - V[f, 2].min()) > 1e-6:
+                    out.append((mat, np.stack([end * W[f], V[f, 2]], 1)))
+        return out
+
+    @staticmethod
+    def _inside(P, q):
+        sg = lambda a, b, c: (a[0] - c[0]) * (b[1] - c[1]) - (b[0] - c[0]) * (a[1] - c[1])
+        d = [sg(q, P[0], P[1]), sg(q, P[1], P[2]), sg(q, P[2], P[0])]
+        return not (any(x < -1e-9 for x in d) and any(x > 1e-9 for x in d))
+
+    def test_gable_is_cut_and_glass_fills_the_hole(self):
+        for foil in (None, "trefoil", "quatrefoil"):
+            e, m, R, bsa = self._build(foil)
+            spec = e["_style"]["special"]["rose"]
+            zmax = max(float(V_) for V_ in m.V[:, 2])
+            R.zt(zmax - R.rise)
+            zt = R.zt_
+            rp = bsa.rose_params(R, e["_style"], zt, spec)
+            self.assertIsNotNone(rp, foil)
+            end, r, zc, ring, hole = rp
+            tris = self._gable_tris(m, R, end)
+            self.assertTrue(tris, foil)
+            for q in [(0.0, zc), (0.4 * r, zc), (0.0, zc + 0.4 * r), (-0.3 * r, zc - 0.3 * r)]:
+                self.assertFalse(any(self._inside(P, q) for mat, P in tris if abs(P[:, 1].max() - P[:, 1].min()) > 0 and _tri_area(P) > 1e-9), (foil, q))
+            glass = [f for f in m.subs.get("mat_glass", [])]
+            self.assertTrue(glass)
+
+    def _build_no_rose(self):
+        import building_styles_arch as bsa
+        pk = pack()
+        e = bsp.sample_entity(pk, "parish_church", pk.list("buildings")[0])
+        e = bs.apply_style(e)
+        e["_style"] = dict(e["_style"], special={k: v for k, v in e["_style"]["special"].items() if k != "rose"})
+        cx = wm.Ctx(pk)
+        m, dn = wd.build_building_detailed(cx, e)
+        return e, m, bsg.Roof(cx, e), bsa
+
+    def test_cut_area_matches_the_opening(self):
+        import building_styles_arch as bsa
+        e, m, R, _ = self._build("quatrefoil")
+        e0, m0, R0, _ = self._build_no_rose()
+        zmax = float(m.V[:, 2].max())
+        R.zt(zmax - R.rise)
+        spec = e["_style"]["special"]["rose"]
+        end, r, zc, ring, hole = bsa.rose_params(R, e["_style"], R.zt_, spec)
+        R0.zt(float(m0.V[:, 2].max()) - R0.rise)
+        a1 = sum(_tri_area(P) for mat, P in self._gable_tris(m, R, end))
+        a0 = sum(_tri_area(P) for mat, P in self._gable_tris(m0, R0, end))
+        hole_area = 0.5 * abs(sum(hole[k][0] * hole[(k + 1) % len(hole)][1] - hole[(k + 1) % len(hole)][0] * hole[k][1] for k in range(len(hole))))
+        self.assertAlmostEqual(a0 - a1, hole_area, delta=0.02 * hole_area + 1e-4)
+
+    def test_foil_outlines(self):
+        import building_styles_arch as bsa
+        circ = bsa.rose_outline(2.0, None)
+        tre = bsa.rose_outline(2.0, "trefoil")
+        qua = bsa.rose_outline(2.0, "quatrefoil")
+        rr = lambda o: [math.hypot(*p) for p in o]
+        self.assertAlmostEqual(max(rr(circ)), 2.0, places=6)
+        self.assertAlmostEqual(min(rr(circ)), 2.0, places=6)
+        for o in (tre, qua):
+            self.assertLessEqual(max(rr(o)), 2.0 + 1e-6)
+            self.assertGreater(max(rr(o)) - min(rr(o)), 0.2)                           # lobes and notches
+            self.assertGreater(min(rr(o)), 0.5)                                       # one connected opening
+        self.assertEqual(sum(1 for k in range(len(tre)) if rr(tre)[k] > rr(tre)[k - 1] and rr(tre)[k] >= rr(tre)[(k + 1) % len(tre)]), 3)
+
+
+def _tri_area(P):
+    return 0.5 * abs((P[1][0] - P[0][0]) * (P[2][1] - P[0][1]) - (P[2][0] - P[0][0]) * (P[1][1] - P[0][1]))
+
+
 class AssignCli(unittest.TestCase):
     def test_assign_clear_and_filters(self):
         tmp = tempfile.mkdtemp()

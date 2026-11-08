@@ -323,28 +323,169 @@ def shape_doors(edge_holes, D):
     return edge_holes
 
 
-# ------------------------------------------------------------------ rose window on a gable (blind: the gable wall behind it stays)
-def gable_rose(g, R, S, zt, spec):
-    """Round window on a gable: stone ring + glass disc + spokes, proud of the gable face. Placed on the end opposite a tower unless spec.end is given."""
+# ------------------------------------------------------------------ rose window on a gable (a real opening: clip_rose cuts the gable, gable_rose adds ring, reveal, glass, tracery)
+ROSE_N = 24
+FOILS = {"trefoil": 3, "quatrefoil": 4}
+
+
+def rose_outline(r, foil=None, n=ROSE_N):
+    """Opening outline [(u, z)] relative to the centre, radius r. foil None = circle; "trefoil" / "quatrefoil" = k overlapping lobes (union of k circles of radius
+    0.55 r centred 0.45 r out; star-shaped about the centre). A lobe points up (trefoil: up, lower left, lower right)."""
+    k = FOILS.get(foil)
+    if not k:
+        return [(r * math.cos(2 * math.pi * i / n), r * math.sin(2 * math.pi * i / n)) for i in range(n)]
+    nn = max(n, 12 * k)
+    a, d = 0.55 * r, 0.45 * r
+    pts = []
+    for i in range(nn):
+        th = 2 * math.pi * i / nn
+        best = 0.0
+        for j in range(k):
+            phi = math.pi / 2 + 2 * math.pi * j / k
+            dl = th - phi
+            s_ = d * math.sin(dl)
+            if abs(s_) <= a:
+                best = max(best, d * math.cos(dl) + math.sqrt(a * a - s_ * s_))
+        pts.append((best * math.cos(th), best * math.sin(th)))
+    return pts
+
+
+def rose_params(R, S, zt, spec):
+    """(end, r, zc, ring, outline) of the gable rose, or None when the gable is too small. Ring and opening fit inside the gable triangle."""
     end = spec.get("end")
     if end is None:
         tw_ = S["special"].get("tower")
         end = -1 if (tw_ and tw_.get("end", 1) >= 0) else 1
     end = 1 if end >= 0 else -1
-    r = min(spec.get("diameter_ft", 4.5) / 2 * FT, R.rise * 0.34)
-    if r < 0.9 * FT:
-        return
-    zc = zt + R.rise * 0.45
-    mat_s = S.get("trim_mat") or S["wall_mat"]
     ring = 0.5 * FT
+    zc = zt + R.rise * 0.45
+    hw_at = R.hw * (1.0 - (zc - zt) / max(R.rise, 1e-9))
+    d_slant = hw_at * R.rise / math.hypot(R.rise, R.hw)                       # distance from the centre to a slanted gable edge
+    r = min(spec.get("diameter_ft", 4.5) / 2 * FT, R.rise * 0.34, d_slant - ring - 0.25 * FT, (zc - zt) - ring - 0.25 * FT)
+    if r < 0.9 * FT:
+        return None
+    return end, r, zc, ring, rose_outline(r, spec.get("foil"))
+
+
+def _inside_tri(P, pt):
+    def sg(a, b, c):
+        return (a[0] - c[0]) * (b[1] - c[1]) - (b[0] - c[0]) * (a[1] - c[1])
+    d1, d2, d3 = sg(pt, P[0], P[1]), sg(pt, P[1], P[2]), sg(pt, P[2], P[0])
+    return not ((d1 < 0 or d2 < 0 or d3 < 0) and (d1 > 0 or d2 > 0 or d3 > 0))
+
+
+def _ray_tri(o, d, P):
+    """First intersection of the ray o + t d (t > 0) with the triangle boundary (o inside the triangle)."""
+    best = None
+    for k in range(3):
+        a, b = P[k], P[(k + 1) % 3]
+        e = (b[0] - a[0], b[1] - a[1])
+        den = d[0] * e[1] - d[1] * e[0]
+        if abs(den) < 1e-12:
+            continue
+        t = ((a[0] - o[0]) * e[1] - (a[1] - o[1]) * e[0]) / den
+        s_ = ((a[0] - o[0]) * d[1] - (a[1] - o[1]) * d[0]) / den
+        if t > 1e-9 and -1e-9 <= s_ <= 1 + 1e-9 and (best is None or t < best):
+            best = t
+    return (o[0] + d[0] * best, o[1] + d[1] * best)
+
+
+def clip_rose(mesh, R, S):
+    """Cut the circular / foil opening out of the gable triangle (the single-skin roof builder makes a solid triangle): that triangle becomes the annulus between
+    the opening and its outline, same winding, material and UV mapping. Every other triangle is untouched."""
+    import numpy as np
+    spec = (S.get("special") or {}).get("rose")
+    if not spec:
+        return mesh
+    rp = rose_params(R, S, R.zt_, spec)
+    if rp is None:
+        return mesh
+    end, r, zc, ring, hole = rp
+    V = mesh.V
+    L = (V[:, 0] - R.cxm) * R.ex[0] + (V[:, 1] - R.cym) * R.ex[1]
+    W = (V[:, 0] - R.cxm) * R.ey[0] + (V[:, 1] - R.cym) * R.ey[1]
+    target = None
+    for mat, F in mesh.subs.items():
+        for fi, f in enumerate(F):
+            if np.all(np.abs(L[f] - end * R.hl) < 1e-4):
+                P2 = np.stack([end * W[f], V[f, 2]], 1)                         # (u, z), u = end * w as in gable_rose's X()
+                if _inside_tri(P2, (0.0, zc)) and (P2[:, 1].max() - P2[:, 1].min()) > 0.5 * R.rise:
+                    target = (mat, fi, f, P2)
+                    break
+        if target:
+            break
+    if not target:
+        return mesh
+    mat, fi, f, P2 = target
+    cen = (0.0, zc)
+    hole_pts = [(u, zc + z) for u, z in hole]
+    hole_ang = [math.atan2(z - zc, u) for u, z in hole_pts]
+    outer = [(math.atan2(P2[k, 1] - zc, P2[k, 0]), (float(P2[k, 0]), float(P2[k, 1]))) for k in range(3)]
+    for a in hole_ang:
+        outer.append((a, _ray_tri(cen, (math.cos(a), math.sin(a)), P2)))
+    seq = sorted([(a, "i", p) for a, p in zip(hole_ang, hole_pts)] + [(a, "o", p) for a, p in outer], key=lambda t: t[0])
+    cur_i = max(k for k, t in enumerate(seq) if t[1] == "i")                   # close the loop: start from the last vertex of each ring
+    cur_o = max(k for k, t in enumerate(seq) if t[1] == "o")
+    tris = []
+    for k, (a, kind, p) in enumerate(seq):
+        if kind == "i":
+            tris.append((seq[cur_i][2], p, seq[cur_o][2]))
+            cur_i = k
+        else:
+            tris.append((seq[cur_o][2], seq[cur_i][2], p))
+            cur_o = k
+
+    def area2(a, b, c):
+        return (b[0] - a[0]) * (c[1] - a[1]) - (b[1] - a[1]) * (c[0] - a[0])
+    orig_sign = 1.0 if area2(*P2) > 0 else -1.0
+    uv0 = mesh.UV[f]
+    Minv = np.linalg.inv(np.array([[P2[0, 0], P2[1, 0], P2[2, 0]], [P2[0, 1], P2[1, 1], P2[2, 1]], [1.0, 1.0, 1.0]]))
+    newV, newUV, idx = [], [], []
+    base = len(V)
+    for (pa, pb, pc) in tris:
+        ar = area2(pa, pb, pc)
+        if abs(ar) < 1e-12:
+            continue
+        if ar * orig_sign < 0:
+            pb, pc = pc, pb
+        ids = []
+        for (u, z) in (pa, pb, pc):
+            bc = Minv @ np.array([u, z, 1.0])
+            w_ = end * u
+            newV.append((R.cxm + R.ex[0] * end * R.hl + R.ey[0] * w_, R.cym + R.ex[1] * end * R.hl + R.ey[1] * w_, z))
+            newUV.append(tuple(bc @ uv0))
+            ids.append(base + len(newV) - 1)
+        idx.append(tuple(ids))
+    if not idx:
+        return mesh
+    subs = {k: (np.delete(np.asarray(v), fi, axis=0) if k == mat else np.asarray(v)) for k, v in mesh.subs.items()}
+    subs[mat] = np.concatenate([subs[mat], np.array(idx, dtype=subs[mat].dtype)])
+    return wm.Mesh(np.concatenate([V, np.array(newV)]), np.concatenate([mesh.UV, np.array(newUV)]), subs, mesh.smooth)
+
+
+def gable_rose(g, R, S, zt, spec):
+    """Rose / trefoil / quatrefoil window on a gable, a real glazed opening (clip_rose cuts the gable triangle): stone ring with alternating proud voussoirs outside,
+    a stone reveal through the wall, glass set in the reveal, spokes (circle) or bars into the lobes (foils). On the end opposite a tower unless spec.end.
+    spec.foil: None | "trefoil" | "quatrefoil"."""
+    rp = rose_params(R, S, zt, spec)
+    if rp is None:
+        return
+    end, r, zc, ring, hole = rp
+    foil = spec.get("foil") in FOILS
+    mat_s = S.get("trim_mat") or S["wall_mat"]
     proud = 0.22 * FT
+    depth = 0.45 * FT                                                        # wall thickness the reveal runs through
+    gz = -0.14 * FT                                                          # glass plane, inside the reveal
     f = lambda m, pts: g.b.face(m, pts, wm.world_uv(pts, 3.0, g.off, g.zf))
 
     def X(u, v, z):                     # u across the gable, v outward from the gable plane
         return R.P(end * (R.hl + v), end * u, z)
-    n = 20
-    inn = circle(0.0, zc, r, n)
-    out = circle(0.0, zc, r + ring, n)
+    n = len(hole)
+    inn = [(u, zc + z) for u, z in hole]
+    out = []
+    for u, z in inn:
+        k_ = 1 + ring / max(math.hypot(u, z - zc), 1e-9)
+        out.append((u * k_, zc + (z - zc) * k_))
     cen = X(0, proud / 2, zc)
     for k in range(n):
         j = (k + 1) % n
@@ -352,28 +493,31 @@ def gable_rose(g, R, S, zt, spec):
         d = proud if k % 2 == 0 else proud * 1.6
         _away(f, mat_s, [X(ia[0], d, ia[1]), X(ib[0], d, ib[1]), X(ob[0], d, ob[1]), X(oa[0], d, oa[1])], X(0, -1, zc))
         _away(f, mat_s, [X(oa[0], 0.02, oa[1]), X(ob[0], 0.02, ob[1]), X(ob[0], d, ob[1]), X(oa[0], d, oa[1])], cen)
-        _away(f, mat_s, [X(ia[0], 0.02, ia[1]), X(ib[0], 0.02, ib[1]), X(ib[0], d, ib[1]), X(ia[0], d, ia[1])], X(0, -5, zc))
-    pts = [X(u, 0.04, z) for u, z in inn]
+        _oriented(f, mat_s, [X(ia[0], d, ia[1]), X(ib[0], d, ib[1]), X(ib[0], -depth, ib[1]), X(ia[0], -depth, ia[1])], X(0, 0.0, zc))   # reveal, facing the opening
+    pts = [X(u, gz, z) for u, z in inn]
     f("mat_glass", pts)
     f("mat_glass", list(reversed(pts)))
     bm = S.get("bar_mat") or mat_s
-    sp = 0.045 * FT * 1.0
-    for k in range(8):
-        a = math.pi * k / 4 + math.pi / 8
-        a0 = (0.3 * r * math.cos(a), zc + 0.3 * r * math.sin(a))
-        a1 = (r * math.cos(a), zc + r * math.sin(a))
+    bv = gz + 0.045 * FT
+
+    def bar(a0, a1, hw_=0.035):
         dx, dz = a1[0] - a0[0], a1[1] - a0[1]
         L = math.hypot(dx, dz)
-        nx, nz = -dz / L * 0.035, dx / L * 0.035
+        if L < 1e-9:
+            return
+        nx, nz = -dz / L * hw_, dx / L * hw_
         quad = [(a0[0] + nx, a0[1] + nz), (a1[0] + nx, a1[1] + nz), (a1[0] - nx, a1[1] - nz), (a0[0] - nx, a0[1] - nz)]
-        _oriented(f, bm, [X(u, 0.08, z) for u, z in quad], X(0, 5, zc))
-        _oriented(f, bm, [X(u, 0.08 - 0.001, z) for u, z in quad][::-1], X(0, -5, zc))
-    hub = circle(0.0, zc, 0.3 * r, 12)
-    for k in range(len(hub)):
-        a, b = hub[k], hub[(k + 1) % len(hub)]
-        dx, dz = b[0] - a[0], b[1] - a[1]
-        L = math.hypot(dx, dz)
-        nx, nz = -dz / L * 0.035, dx / L * 0.035
-        quad = [(a[0] + nx, a[1] + nz), (b[0] + nx, b[1] + nz), (b[0] - nx, b[1] - nz), (a[0] - nx, a[1] - nz)]
-        _oriented(f, bm, [X(u, 0.08, z) for u, z in quad], X(0, 5, zc))
-        _oriented(f, bm, [X(u, 0.08, z) for u, z in quad][::-1], X(0, -5, zc))
+        _oriented(f, bm, [X(u, bv, z) for u, z in quad], X(0, 5, zc))
+        _oriented(f, bm, [X(u, bv - 0.001, z) for u, z in quad][::-1], X(0, -5, zc))
+    if foil:
+        k = FOILS[spec["foil"]]
+        for j in range(k):                                                   # a bar from the centre into every lobe
+            phi = math.pi / 2 + 2 * math.pi * j / k
+            bar((0.0, zc), (0.85 * r * math.cos(phi), zc + 0.85 * r * math.sin(phi)), 0.05)
+    else:
+        for k in range(8):
+            a = math.pi * k / 4 + math.pi / 8
+            bar((0.3 * r * math.cos(a), zc + 0.3 * r * math.sin(a)), (r * math.cos(a), zc + r * math.sin(a)))
+        hub = circle(0.0, zc, 0.3 * r, 12)
+        for k in range(len(hub)):
+            bar(hub[k], hub[(k + 1) % len(hub)])

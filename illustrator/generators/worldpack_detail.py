@@ -242,6 +242,9 @@ def build_building_detailed(cx, e):
     if S:                                                    # towers rise through the roof: cut the roof sheet away inside their footprint
         import building_styles_geo as bsg
         base = bsg.clip_roof(base, bsg.Roof(cx, e).zt(zt), S)
+        if (S.get("special") or {}).get("rose"):          # a rose / foil window on a gable is a real opening: cut it out of the gable triangle
+            import building_styles_arch as bsa
+            base = bsa.clip_rose(base, bsg.Roof(cx, e).zt(zt), S)
     keep = base.V[:, 2] >= zt - 1e-6
     subs = {}
     for k, F in base.subs.items():
