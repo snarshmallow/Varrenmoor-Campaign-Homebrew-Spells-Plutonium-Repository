@@ -1,0 +1,21 @@
+{
+ "meadow": "#a08a3c",
+ "meadow2": "#b0793a",
+ "forest": "#5a5a2a",
+ "rock": "#7c766d",
+ "rock2": "#5b5750",
+ "soil": "#6e5032",
+ "snow": "#f3f6fa",
+ "treeline_ft": 880,
+ "snowline_ft": 960,
+ "snow_all": false,
+ "forest_cover": 1.0,
+ "tint": "#fff0d8",
+ "shade": 1.0,
+ "haze": "#d8c8b0",
+ "fog_ft": 11000,
+ "fog": true,
+ "sun_light": 0.8,
+ "name": "autumn",
+ "description": "Gold meadows, rust-tinted forest, lower snowline"
+}

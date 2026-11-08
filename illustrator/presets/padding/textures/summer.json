@@ -1,0 +1,21 @@
+{
+ "meadow": "#6f8a46",
+ "meadow2": "#8a9a4e",
+ "forest": "#2f4a2c",
+ "rock": "#7c766d",
+ "rock2": "#5b5750",
+ "soil": "#6a5a40",
+ "snow": "#f3f6fa",
+ "treeline_ft": 910,
+ "snowline_ft": 1000,
+ "snow_all": false,
+ "forest_cover": 1.0,
+ "tint": "#ffffff",
+ "shade": 1.0,
+ "haze": "#c6dcee",
+ "fog_ft": 14000,
+ "fog": true,
+ "sun_light": 0.85,
+ "name": "summer",
+ "description": "Alpine meadow, conifer forest, bare rock, snow above the snowline (matches skybox clear_day)"
+}

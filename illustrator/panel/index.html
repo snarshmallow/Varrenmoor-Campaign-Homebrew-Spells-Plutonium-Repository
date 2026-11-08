@@ -82,6 +82,7 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
   <button role="tab" data-tab="town">Town</button>
   <button role="tab" data-tab="regions">Regions</button>
   <button role="tab" data-tab="foliage">Foliage</button>
+  <button role="tab" data-tab="padding">Padding</button><!-- padding tab (padding_ui.js) -->
   <button role="tab" data-tab="layers">Layers</button>
   <button role="tab" data-tab="foundry">Foundry</button>
 </nav>
@@ -745,6 +746,38 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
   <p class="note">Everything the pipeline creates is flagged, so pushing again updates in place. Existing documents you did not make are only changed after a confirm. Needs Varrenmoor Bridge module 0.3.0 on the Foundry server (foundry-bridge/DEPLOY_MODULE.md). Token: scene = the picked/last pushed one.</p>
   <div id="fOut" class="note" style="white-space:pre-wrap"></div>
 </section>
+
+<!-- PADDING TAB (padding_ui.js, lib/padding.js; python generators/padding_heightmap.py, foundry_push.py push-padding) -->
+<section id="tab-padding" role="tabpanel">
+  <style>#padPreview { max-width: 100%; border: 1px solid #555; margin-top: 4px; } #padOut { white-space: pre-wrap; margin-top: 4px; }</style>
+  <h4>Distant surroundings (table heightmap + apron mesh + ground textures)</h4>
+  <div class="grid">
+    <label>Height preset <select id="padPreset"></select></label>
+    <label>Texture preset <select id="padTexture"></select></label>
+    <label>Blend / apron width (ft) <input type="number" data-s="padding.blend_ft" min="30" step="10" title="Terrain edge to table: the feathered overlap where the apron mesh bridges the exported terrain and the table"></label>
+    <label>Relief fades in over (ft) <input type="number" data-s="padding.taper_ft" min="100" step="50" title="The table must stay flat under the apron; the surroundings' relief rises over this distance beyond it"></label>
+    <label>Height scale (x) <input type="number" data-s="padding.height_scale" min="0" step="0.1" title="Vertical multiplier of the synthetic relief"></label>
+    <label>Seed <input type="number" data-s="padding.seed" step="1"></label>
+    <label>Table plane (ft, blank = auto) <input type="number" data-s="padding.base_ft" step="1" placeholder="auto"></label>
+    <label class="chk"><input type="checkbox" data-s="padding.apron"> Apron mesh (seamless edge)</label>
+  </div>
+  <label>Preset overrides (JSON, e.g. {"ridge_amp_ft": 200, "rise_ft": 40}) <input type="text" data-s="padding.overrides"></label>
+  <div class="btns"><button class="primary" data-act="pad_generate">Generate + preview</button></div>
+  <img id="padPreview" hidden alt="padding preview (hillshade, red = exported terrain tile)">
+  <h4>Foundry scene</h4>
+  <div class="grid">
+    <label>Scene <select id="padScene"></select></label>
+    <label>Scene uuid <input type="text" data-s="padding.scene_uuid" placeholder="Scene.xxxxxxxx"></label>
+    <label>Set scene padding (fraction, blank = keep) <input type="number" data-s="padding.scene_padding" min="0" step="0.05"></label>
+    <label class="chk"><input type="checkbox" data-s="padding.dry_run"> Dry run (no writes)</label>
+  </div>
+  <div class="btns"><button data-act="pad_push_dry">Dry run push</button><button class="primary" data-act="pad_push" title="Uses the Dry run checkbox">Push to Foundry scene</button></div>
+  <h4>Save preset</h4>
+  <div class="grid"><label>Name <input type="text" data-s="padding.save_name" placeholder="my-hills"></label></div>
+  <div class="btns"><button data-act="pad_save" title="Saves the selected preset with the overrides above to illustrator/presets/padding/user/">Save as preset</button></div>
+  <p class="note">The scene needs the 3D model tiles pushed first (Foundry tab). The push publishes a versioned heightmap, table tile and apron GLB, sets tableHeightmap/Scale, tableTex, fog and the level's elevation.bottom, and upserts the apron tile. Formulae and flags: illustrator/out/padding_notes.md.</p>
+  <div id="padOut" class="note"></div>
+</section>
 </main>
 <div id="log" hidden></div>
 <script src="CSInterface.js"></script>
@@ -759,5 +792,7 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
 <script src="lighting_ui.js"></script>
 <script src="lib/foliage.js"></script>
 <script src="foliage_ui.js"></script>
+<script src="lib/padding.js"></script>
+<script src="padding_ui.js"></script>
 <script src="main.js"></script>
 </body></html>

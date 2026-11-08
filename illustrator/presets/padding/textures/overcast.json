@@ -1,0 +1,21 @@
+{
+ "meadow": "#5f7448",
+ "meadow2": "#6f7c52",
+ "forest": "#2c3f2f",
+ "rock": "#6f6f70",
+ "rock2": "#55565a",
+ "soil": "#5a5040",
+ "snow": "#f3f6fa",
+ "treeline_ft": 910,
+ "snowline_ft": 1040,
+ "snow_all": false,
+ "forest_cover": 1.0,
+ "tint": "#dfe4ea",
+ "shade": 1.0,
+ "haze": "#b4bbc2",
+ "fog_ft": 6000,
+ "fog": true,
+ "sun_light": 0.55,
+ "name": "overcast",
+ "description": "Flat grey light, muted greens (matches skybox overcast)"
+}

@@ -1,0 +1,21 @@
+{
+ "meadow": "#dfe6ee",
+ "meadow2": "#cdd8e4",
+ "forest": "#aebcc0",
+ "rock": "#8c8f94",
+ "rock2": "#6c7078",
+ "soil": "#c9d2dc",
+ "snow": "#f3f6fa",
+ "treeline_ft": 910,
+ "snowline_ft": 0,
+ "snow_all": true,
+ "forest_cover": 1.0,
+ "tint": "#eaf0f8",
+ "shade": 1.0,
+ "haze": "#d5dde7",
+ "fog_ft": 5200,
+ "fog": true,
+ "sun_light": 0.7,
+ "name": "winter",
+ "description": "Snow cover everywhere (matches skybox winter)"
+}

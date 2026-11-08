@@ -959,6 +959,12 @@ CMDS = {"status": cmd_status, "places": cmd_places, "list": cmd_list, "export-in
 
 
 def main(argv=None, bridge=None):
+    # --- padding (heightmap + apron + textures): own parser, see padding_heightmap.py
+    _av = sys.argv[1:] if argv is None else list(argv)
+    if _av and _av[0] == "push-padding":
+        import padding_heightmap
+        return padding_heightmap.main(["push"] + _av[1:])
+    # --- end padding
     a = parser().parse_args(argv)
     try:
         res = CMDS[a.cmd](bridge or PsBridge(), a)
