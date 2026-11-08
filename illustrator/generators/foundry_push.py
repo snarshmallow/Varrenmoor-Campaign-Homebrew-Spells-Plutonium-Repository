@@ -728,7 +728,8 @@ def build_model_tiles(doc, scene_calib, a, publish=None):
         sz = e["size_ft"]
         rot0 = e["tile"]["rotation"] + e.get("rotation_deg", 0.0)
         flags = lambda extra: {"levels-3d-preview": {"model3d": path, "autoGround": True, "autoCenter": False, "collision": False, "sight": False, **extra},
-                               FLAG: {"modelFile": e["file"], "sha256": e["sha256"], "layer": e["layer"], "ids": e["ids"][:50],
+                               FLAG: {"modelFile": e["file"], "sha256": e["sha256"], "layer": e["layer"],
+                                      "ids": [("roof:" + i if e["layer"] == "roofs" else i) for i in e["ids"][:50]],      # roofs are NOT the building's source id (scene_audit: one tile per source)
                                       **({"roof": {**e["roof"], "scope": "building" if e["roof"]["mode"] == "per_building" else "scene"}} if e.get("roof") else {})}}
         if e["kind"] == "instances":
             for ins in e["instances"]:
@@ -1288,6 +1289,7 @@ def cmd_roofs(br, a):
     if not a.scene_uuid:
         raise PushError("give --scene-uuid")
     sc = br.call("get", uuid=a.scene_uuid)
+    sc.setdefault("uuid", a.scene_uuid)
     ups = roof_tile_updates(sc, a.roof_state, a.ids.split(",") if a.ids else None)
     if a.dry_run or not ups:
         return {"ok": True, "dry_run": bool(a.dry_run), "roof_tiles": len(ups), "state": a.roof_state}

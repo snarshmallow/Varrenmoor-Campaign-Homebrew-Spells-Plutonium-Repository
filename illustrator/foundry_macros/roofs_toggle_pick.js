@@ -4,9 +4,9 @@
 // Install: python illustrator/generators/foundry_push.py install-roof-macros   (or paste this text into a new Script macro).
 if (!game.user.isGM) return ui.notifications.warn("Only the GM can toggle roofs.");
 const scene = canvas.scene;
-const roofs = scene?.tiles.filter((t) => t.getFlag("varrenmoor", "roof")) ?? [];
+const roofs = scene?.tiles.filter((t) => t.flags?.varrenmoor?.roof) ?? [];
 if (!roofs.length) return ui.notifications.warn("This scene has no roof tiles (push models with --roof-mode per_building or per_scene).");
-const label = (t) => { const b = t.getFlag("varrenmoor", "roof")?.buildings ?? []; return b.length === 1 ? b[0] : `${b.length} roofs (${t.id})`; };
+const label = (t) => { const b = t.flags?.varrenmoor?.roof?.buildings ?? []; return b.length === 1 ? b[0] : `${b.length} roofs (${t.id})`; };
 let targets = canvas.tiles.controlled.map((p) => p.document).filter((d) => roofs.includes(d));
 if (!targets.length && canvas.tokens.controlled.length) {      // tile x,y is the model centre (pack convention)
   const over = (tok, t) => Math.abs(tok.x - t.x) <= Math.abs(t.width) / 2 && Math.abs(tok.y - t.y) <= Math.abs(t.height) / 2;
