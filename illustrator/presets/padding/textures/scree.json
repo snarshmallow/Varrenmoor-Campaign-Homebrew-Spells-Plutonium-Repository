@@ -1,0 +1,22 @@
+{
+ "meadow": "#7d7b5a",
+ "meadow2": "#8c8566",
+ "forest": "#4d4f3a",
+ "rock": "#8d8a84",
+ "rock2": "#5a5852",
+ "soil": "#6f6350",
+ "snow": "#f3f6fa",
+ "treeline_ft": 300,
+ "snowline_ft": 1100,
+ "snow_all": false,
+ "forest_cover": 0.0,
+ "tint": "#ffffff",
+ "shade": 1.0,
+ "haze": "#c4ccd6",
+ "fog_ft": 14000,
+ "fog": true,
+ "sun_light": 0.85,
+ "tile_kind": "scree",
+ "name": "scree",
+ "description": "Angular rock fragments with dark crevices, lichen and boulders"
+}

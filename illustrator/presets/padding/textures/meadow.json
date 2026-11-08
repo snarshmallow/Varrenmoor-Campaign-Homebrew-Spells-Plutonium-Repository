@@ -1,0 +1,22 @@
+{
+ "meadow": "#6e9244",
+ "meadow2": "#9aa650",
+ "forest": "#3c5a2c",
+ "rock": "#8a857a",
+ "rock2": "#625f58",
+ "soil": "#75603c",
+ "snow": "#f3f6fa",
+ "treeline_ft": 1200,
+ "snowline_ft": 1500,
+ "snow_all": false,
+ "forest_cover": 0.12,
+ "tint": "#ffffff",
+ "shade": 1.0,
+ "haze": "#c9dcee",
+ "fog_ft": 14000,
+ "fog": true,
+ "sun_light": 0.85,
+ "tile_kind": "meadow",
+ "name": "meadow",
+ "description": "Open grass meadow with flower speckle and dry patches (close-up ground tile)"
+}

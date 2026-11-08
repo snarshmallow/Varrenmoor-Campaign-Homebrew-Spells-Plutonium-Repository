@@ -1,0 +1,22 @@
+{
+ "meadow": "#7d5a7c",
+ "meadow2": "#8f7a5a",
+ "forest": "#4d4a2e",
+ "rock": "#7a766f",
+ "rock2": "#57544e",
+ "soil": "#3d3024",
+ "snow": "#f3f6fa",
+ "treeline_ft": 200,
+ "snowline_ft": 1500,
+ "snow_all": false,
+ "forest_cover": 0.0,
+ "tint": "#ffffff",
+ "shade": 1.0,
+ "haze": "#bfc3cb",
+ "fog_ft": 10000,
+ "fog": true,
+ "sun_light": 0.65,
+ "tile_kind": "heather",
+ "name": "heather_moor",
+ "description": "Heather hummocks over dark peat, bilberry and bare patches"
+}

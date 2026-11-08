@@ -73,8 +73,113 @@ def to_u8(lin):
     return (np.clip(lin_to_srgb(lin / (1 + 0.04 * lin)), 0, 1) * 255 + 0.5).astype(np.uint8)
 
 
+def _voronoi(n, cells, seed, shape_jitter=0.85):
+    """Periodic Voronoi on an n x n raster: returns (cell id 0..cells^2-1, distance to the nearest point, distance to the second nearest) in cell units."""
+    rng = np.random.RandomState(seed)
+    pts = (np.stack(np.meshgrid(np.arange(cells), np.arange(cells), indexing="ij"), -1) + 0.5 + (rng.rand(cells, cells, 2) - 0.5) * shape_jitter)
+    ys = (np.arange(n, dtype=np.float32) + 0.5) / n * cells
+    cy = np.floor(ys).astype(int)
+    d1 = np.full((n, n), 9.0, np.float32)
+    d2 = np.full((n, n), 9.0, np.float32)
+    cid = np.zeros((n, n), np.int32)
+    for oy in (-1, 0, 1):
+        for ox in (-1, 0, 1):
+            iy = (cy[:, None] + oy) % cells
+            ix = (cy[None, :] + ox) % cells
+            iy, ix = np.broadcast_to(iy, (n, n)), np.broadcast_to(ix, (n, n))
+            py = pts[iy, ix, 0] + (cy[:, None] + oy - iy)
+            px = pts[iy, ix, 1] + (cy[None, :] + ox - ix)
+            d = np.hypot(py - ys[:, None], px - ys[None, :]).astype(np.float32)
+            new1 = d < d1
+            d2 = np.where(new1, d1, np.minimum(d2, d))
+            cid = np.where(new1, iy * cells + ix, cid)
+            d1 = np.where(new1, d, d1)
+    return cid, d1, d2
+
+
+def _mixc(a, b, t):
+    return a[None, None, :] * (1 - t[..., None]) + b[None, None, :] * t[..., None]
+
+
+def _tile_meadow(P, n, seed):
+    g1, g2, soil, rock = (_lin(P[k]) for k in ("meadow", "meadow2", "soil", "rock"))
+    macro = pbr.fbm(n, seed, 2.4, 2)
+    clump = pbr.fbm(n, seed + 1, 1.5, 9)
+    blade = pbr.fbm(n, seed + 2, 0.9, 60)
+    dry = np.clip((pbr.fbm(n, seed + 3, 2.6, 2) - 0.62) * 3.2, 0, 1)
+    col = _mixc(g1, g2, smoothstep01((macro - 0.25) * 2.0))
+    col = col * (0.78 + 0.44 * clump[..., None]) * (0.9 + 0.2 * blade[..., None])
+    col = col * (1 - 0.35 * dry[..., None]) + soil[None, None, :] * 0.35 * dry[..., None]
+    dots = pbr.fbm(n, seed + 4, 0.2, 90)                                          # near white noise -> sparse flower/seed-head speckle
+    fl = np.clip((dots - 0.86) * 12, 0, 1) * (clump > 0.45)
+    flower = np.array([0.8, 0.72, 0.3]) * 0.9
+    col = col * (1 - fl[..., None] * 0.8) + flower[None, None, :] * fl[..., None] * 0.8
+    return col
+
+
+def _tile_forest_floor(P, n, seed):
+    forest, soil, rock, g1 = (_lin(P[k]) for k in ("forest", "soil", "rock", "meadow"))
+    macro = pbr.fbm(n, seed, 2.2, 2)
+    litter = pbr.fbm(n, seed + 1, 1.2, 40)
+    mid = pbr.fbm(n, seed + 2, 1.8, 8)
+    moss = np.clip((pbr.fbm(n, seed + 3, 2.4, 3) - 0.55) * 3.0, 0, 1)
+    col = _mixc(soil * 0.7, soil * 1.15, macro)
+    col = col * (0.7 + 0.6 * litter[..., None]) * (0.85 + 0.3 * mid[..., None])
+    col = col * (1 - moss[..., None] * 0.7) + forest[None, None, :] * 1.5 * (0.7 + 0.5 * mid[..., None]) * moss[..., None] * 0.7
+    dapple = np.clip((pbr.fbm(n, seed + 4, 3.0, 2) - 0.6) * 2.5, 0, 1)          # patches of sun through the canopy
+    col = col * (1 + 0.45 * dapple[..., None] * np.array([1.0, 0.95, 0.7])[None, None, :])
+    twig = np.clip((pbr.fbm(n, seed + 5, 0.3, 120) - 0.93) * 14, 0, 1)
+    col = col * (1 - 0.5 * twig[..., None])
+    return col * 0.85
+
+
+def _tile_scree(P, n, seed):
+    r1, r2, soil = (_lin(P[k]) for k in ("rock", "rock2", "soil"))
+    rng = np.random.RandomState(seed)
+    cid, d1, d2 = _voronoi(n, 70, seed)
+    tone = rng.rand(70 * 70)[cid]
+    tilt = rng.randn(70 * 70, 2)[cid] * 0.35
+    col = _mixc(r2, r1, tone)
+    light = np.clip(0.85 + tilt[..., 0] * 0.5 - tilt[..., 1] * 0.5, 0.45, 1.3)                 # each fragment is a facet with its own tilt
+    edge = np.clip((d2 - d1) * 9.0, 0, 1)                                                      # dark crevices between fragments
+    boulders = _voronoi(n, 11, seed + 9)
+    bt = rng.rand(11 * 11)[boulders[0]]
+    bmask = (bt > 0.8) * np.clip((boulders[2] - boulders[1]) * 6, 0, 1)
+    grain = pbr.fbm(n, seed + 1, 1.0, 50)
+    lichen = np.clip((pbr.fbm(n, seed + 2, 2.4, 4) - 0.6) * 2.5, 0, 1)
+    col = col * light[..., None] * (0.55 + 0.45 * edge[..., None]) * (0.88 + 0.24 * grain[..., None])
+    col = col * (1 - 0.3 * lichen[..., None]) + soil[None, None, :] * 0.3 * lichen[..., None]
+    col = col * (1 - bmask[..., None] * 0.25) * (1 + 0.15 * bmask[..., None])
+    return col
+
+
+def _tile_heather(P, n, seed):
+    heath, grass, bil, peat = (_lin(P[k]) for k in ("meadow", "meadow2", "forest", "soil"))
+    rock = _lin(P["rock"])
+    macro = pbr.fbm(n, seed, 2.4, 2)
+    cl = pbr.fbm(n, seed + 1, 1.5, 14)
+    clump = smoothstep01((cl - 0.42) * 4.0)                                   # rounded heather hummocks
+    fine = pbr.fbm(n, seed + 2, 0.9, 70)
+    col = _mixc(peat, bil, smoothstep01((macro - 0.35) * 2.0) * 0.8)
+    col = col * (1 - clump[..., None]) + _mixc(heath, grass, smoothstep01((pbr.fbm(n, seed + 3, 2.2, 3) - 0.35) * 2.2)) * (0.7 + 0.5 * cl[..., None]) * clump[..., None]
+    col = col * (0.82 + 0.36 * fine[..., None])
+    bare = np.clip((pbr.fbm(n, seed + 4, 2.6, 3) - 0.68) * 4.0, 0, 1)
+    col = col * (1 - 0.55 * bare[..., None]) + rock[None, None, :] * 0.55 * bare[..., None]
+    return col
+
+
+TILE_KINDS = {"meadow": _tile_meadow, "forest_floor": _tile_forest_floor, "scree": _tile_scree, "heather": _tile_heather}
+
+
 def table_tile(P, n=1024, seed=11, ppf_ft_per_px=None):
-    """Seamless (periodic) ground tile: patches of meadow, forest and rock as a mountainside seen from a distance; returns (uint8 RGB, mean sRGB hex)."""
+    """Seamless (periodic) ground tile; returns (uint8 RGB, mean sRGB hex). By default patches of meadow, forest and rock as a mountainside seen from a
+    distance; a preset with `tile_kind` (meadow, forest_floor, scree, heather) gets a close-up ground texture of that kind instead, tinted by its palette."""
+    kind = P.get("tile_kind")
+    if kind in TILE_KINDS:
+        col = TILE_KINDS[kind](P, n, seed) * _lin(P["tint"])[None, None, :] * P.get("shade", 1.0)
+        img = to_u8(col)
+        mean = img.reshape(-1, 3).mean(0)
+        return img, "#%02x%02x%02x" % tuple(int(round(v)) for v in mean)
     m1 = pbr.fbm(n, seed, 2.6, 2)                 # macro patches
     m2 = pbr.fbm(n, seed + 1, 2.2, 3)
     fine = pbr.fbm(n, seed + 2, 1.6, 24)

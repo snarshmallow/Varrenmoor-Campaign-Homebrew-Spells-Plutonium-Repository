@@ -1,0 +1,44 @@
+[
+ {
+  "id": "meadow",
+  "px": 1024,
+  "seam_ratio": 0.989,
+  "edge_max_abs_diff": 23,
+  "mean": "#839a49"
+ },
+ {
+  "id": "forest_floor",
+  "px": 1024,
+  "seam_ratio": 0.983,
+  "edge_max_abs_diff": 13,
+  "mean": "#4d3d28"
+ },
+ {
+  "id": "scree",
+  "px": 1024,
+  "seam_ratio": 1.056,
+  "edge_max_abs_diff": 88,
+  "mean": "#686560"
+ },
+ {
+  "id": "heather_moor",
+  "px": 1024,
+  "seam_ratio": 0.94,
+  "edge_max_abs_diff": 87,
+  "mean": "#5d4a47"
+ },
+ {
+  "id": "summer",
+  "px": 1024,
+  "seam_ratio": 1.462,
+  "edge_max_abs_diff": 104,
+  "mean": "#525f46"
+ },
+ {
+  "id": "autumn",
+  "px": 1024,
+  "seam_ratio": 1.239,
+  "edge_max_abs_diff": 118,
+  "mean": "#746540"
+ }
+]

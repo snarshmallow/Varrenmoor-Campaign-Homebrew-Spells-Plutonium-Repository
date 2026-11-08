@@ -20,7 +20,7 @@ roofs the style's tile x 0.65 (a course is about 0.6 ft instead of 0.9 ft). Test
 | Surface | Materials | Notes |
 |---|---|---|
 | Walls | `mat_plank` (horizontal clapboard), `mat_plaster` (whitewash, staining), `mat_wall_stone` (random-course rubble), `mat_wall_frame` (oak frame, diagonal brace, plaster panel), `mat_wall_batten` (vertical boards + battens) | picked per building by kind and seeded roll (`restyle_building`); winter styles keep `w_plank` |
-| Roofs | shingle, thatch, slate, red tile, timber, winter variants (existing textures, unchanged art) | normal maps from the albedo, roughness 0.5 (slate/tile, with a roughness map) to 0.97 (thatch) |
+| Roofs | shingle, thatch, slate, red tile, timber, winter variants (existing textures, unchanged) | normal maps from the albedo, roughness 0.5 (slate/tile, with a roughness map) to 0.97 (thatch) |
 | Doors, trim | `mat_door_wood` (boards, strap hinges, nails), `mat_trim` (worn paint) | the door leaf is now **one mesh with one material** (see Foundry below) |
 | Glass | `mat_glass`: alpha 0.32, roughness 0.04, metallic 0.25 | blends; reflects the skybox through the environment map |
 | Roads, kerbs | cobble (roughness 0.58 + metallicRoughness map: crevices rougher), `mat_kerb` (stone slab blocks, own material so the kerb is no longer the cobble texture) | |

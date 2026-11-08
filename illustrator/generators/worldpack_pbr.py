@@ -37,6 +37,9 @@ CATALOG = {
     "mat_interior_floor": dict(src="plank", tile=4.0, rough=0.8, n=1.5),
     "mat_kerb": dict(src="stone_slab", tile=4.0, rough=0.72, n=3.0, mr=True),
     "mat_cobble": dict(tile=7.0, rough=0.58, n=4.0, mr=True),
+    "mat_cobble_wet": dict(src="cobble", wet=True, tile=7.0, rough=0.3, n=4.0, mr=True),      # wet variants: darker, glossier, puddles in the low spots
+    "mat_dirt_wet": dict(src="dirt", wet=True, tile=8.0, rough=0.55, n=1.5, mr=True),
+    "mat_gravel_wet": dict(src="gravel", wet=True, tile=6.0, rough=0.5, n=3.0, mr=True),
     "mat_w_cobble": dict(src="w_cobble", tile=7.0, rough=0.5, n=4.0, mr=True),
     "mat_gravel": dict(tile=6.0, rough=0.92, n=3.0),
     "mat_dirt": dict(tile=8.0, rough=0.96, n=1.2),
@@ -222,8 +225,15 @@ def height_from_albedo(rgb):
     return np.clip((lum - lo) / max(hi - lo, 1e-6), 0, 1)
 
 
-def mr_map(height, rough, var=0.25, metal=0.0):
-    r = np.clip(rough + var * (0.5 - height), 0.05, 1.0)
+def mr_map(height, rough, var=0.25, metal=0.0, micro=0.12, wet=False, seed=7):
+    """glTF metallicRoughness: G = roughness. Crevices rougher; `micro` adds a periodic noise term so the roughness is not a copy of the height field
+    (broken-up highlights); wet=True flips it: low spots hold water (smooth), high spots stay damp-rough."""
+    r = rough + var * (0.5 - height)
+    if wet:
+        r = rough - 0.8 * np.clip(0.55 - height, 0, 1) + 0.1 * (height - 0.5)
+    if micro:
+        r = r + micro * (fbm(height.shape[0], seed + int(rough * 100), 1.6, 3, shape=height.shape) - 0.5) * 2
+    r = np.clip(r, 0.05, 1.0)
     out = np.zeros(height.shape + (3,), np.uint8)
     out[..., 0] = 255
     out[..., 1] = to_u8(r * 255)
@@ -363,21 +373,121 @@ def gen_trim(n=256):
 GENERATORS = {"rubble": gen_rubble, "plaster": gen_plaster, "timberframe": gen_timberframe, "batten": gen_batten, "door": gen_door, "trim": gen_trim}
 
 
-def base_texture(mid):
-    """(albedo float, height 0..1) for a catalogue material, or None when there is neither generator nor preset image."""
+# ------------------------------------------------------------------ conditioning (seams, macro blotches, flat normals)
+SEAM_LIMIT = 6.0          # edge step / typical neighbour step above which a texture is cross-faded to tile
+MACRO_FREE = 0.30         # block-mean spread (relative to pixel spread) that is left alone; above it the large blotches are flattened
+
+
+def _lum(a):
+    return a @ np.array([0.3, 0.59, 0.11])
+
+
+def seam_ratio(a):
+    """How visible the tiling seam is: the step across the wrap (last row/column against the first) over a typical interior step, for the worse of
+    columns and rows (about 1.0 = none). The reference is the 90th percentile of the per-line interior steps, so a hard but real edge inside the tile
+    (a shingle course, a plank joint) does not count as a seam."""
+    L = _lum(np.asarray(a, float))
+    out = []
+    for ax in (1, 0):
+        edge = np.abs(np.take(L, 0, ax) - np.take(L, -1, ax)).mean()
+        steps = np.abs(np.diff(L, axis=ax)).mean(axis=1 - ax)             # mean step across each line crossing (n-1 values)
+        ref = np.percentile(steps, 90)
+        out.append(edge / max(ref, 1e-6))
+    return max(out)
+
+
+def macro_ratio(a):
+    """Spread of the 8x8 block means over the spread of the pixels (high = big light/dark blotches: the repeat is easy to spot)."""
+    L = _lum(np.asarray(a, float))
+    n = L.shape[0] // 8
+    b = L[:n * 8, :n * 8].reshape(8, n, 8, n).mean((1, 3))
+    return float(b.std() / max(L.std(), 1e-6))
+
+
+def make_seamless(*arrs):
+    """Cross-fade each array with itself shifted by half a tile (weights 0 at the borders, 1 at the centre): the result is periodic by construction.
+    Arrays (HxW or HxWx3) are treated identically, so albedo and height stay registered."""
+    out = []
+    for a in arrs:
+        h, w = a.shape[:2]
+        wx = np.sin(np.pi * (np.arange(w) + 0.5) / w) ** 2
+        wy = np.sin(np.pi * (np.arange(h) + 0.5) / h) ** 2
+        if a.ndim == 3:
+            wx, wy = wx[None, :, None], wy[:, None, None]
+        else:
+            wx, wy = wx[None, :], wy[:, None]
+        rx = np.roll(a, w // 2, 1)
+        ry = np.roll(a, h // 2, 0)
+        rxy = np.roll(rx, h // 2, 0)
+        m = a * wx * wy + rx * (1 - wx) * wy + ry * wx * (1 - wy) + rxy * (1 - wx) * (1 - wy)
+        mu, sd = a.mean((0, 1)), a.std((0, 1))
+        out.append((m - m.mean((0, 1))) * (sd / np.maximum(m.std((0, 1)), 1e-6)) + mu)      # the fade lowers contrast: put it back
+    return out
+
+
+def flatten_macro(alb, strength):
+    """Divide out a share of the large-scale brightness (periodic blur) so one tile does not read as a blotch that repeats."""
+    L = _lum(alb)
+    low = blur(L, alb.shape[0] / 12.0)
+    ratio = np.clip(L.mean() / np.maximum(low, 1.0), 0.6, 1.6) ** strength
+    return alb * ratio[..., None]
+
+
+def add_detail(alb, h, seed, amount=0.10):
+    """Texel-density boost for low-resolution image textures: 2x bicubic upsample plus periodic fine grain in the albedo (multiplicative) and the height,
+    so the extra texels carry some detail instead of being a blur."""
+    from PIL import Image
+    n = alb.shape[0] * 2
+    up = np.asarray(Image.fromarray(to_u8(alb)).resize((n, n), Image.BICUBIC), float)
+    hu = np.asarray(Image.fromarray(to_u8(h * 255)).resize((n, n), Image.BICUBIC), float) / 255.0
+    g = fbm(n, seed, 1.2, n // 8) - 0.5
+    g2 = fbm(n, seed + 1, 0.8, n // 4) - 0.5
+    return up * (1 + amount * 2 * (0.6 * g + 0.4 * g2))[..., None], np.clip(hu + 0.35 * (0.6 * g + 0.4 * g2), 0, 1)
+
+
+def condition(alb, h, seed=3, fix_seam=True, flatten=True, low_density=False):
+    """Fix what the audit (illustrator/out/textures_notes.md) found: blotchy tiles (large light/dark patches make the repeat obvious), low texel
+    density on image textures, normal maps with no fine detail, and (safety net) a hard tiling seam. Structured generators (timber frame, rubble, boards,
+    clapboard, logs) skip the flattening and the seam fade: their edges are the design. A tile that is already even keeps its look."""
+    alb = np.asarray(alb, float)
+    if fix_seam and seam_ratio(alb) > SEAM_LIMIT:
+        alb, h = make_seamless(alb, h)
+    if low_density:
+        alb, h = add_detail(alb, h, seed)
+    m = macro_ratio(alb)
+    if flatten and m > MACRO_FREE + 0.1:
+        alb = flatten_macro(alb, float(np.clip((m - MACRO_FREE) / 0.6, 0.0, 0.6)))
+    h = np.clip(h + 0.06 * (fbm(0, seed, 1.0, 24, shape=h.shape) - 0.5), 0, 1)        # fine grain so flat areas still catch light in the normal map
+    return alb, h
+
+
+DENSITY_MIN = 32.0        # texels per foot below which an image texture gets the density boost
+
+
+def base_texture(mid, raw=False):
+    """(albedo float, height 0..1) for a catalogue material, or None when there is neither generator nor preset image. raw=True skips conditioning."""
     from PIL import Image
     c = info(mid)
+    image = False
     if c.get("gen") == "style":
         import building_styles as bs
-        return bs.gen_texture(mid)
-    if c.get("gen"):
-        return GENERATORS[c["gen"]]()
-    src = c.get("src") or mid[4:]
-    p = os.path.join(TEXTURE_DIR, src + ".png")
-    if not os.path.exists(p):
-        return None
-    rgb = np.asarray(Image.open(p).convert("RGB"), float)
-    return rgb, height_from_albedo(rgb)
+        alb, h = bs.gen_texture(mid)
+    elif c.get("gen"):
+        alb, h = GENERATORS[c["gen"]]()
+    else:
+        src = c.get("src") or mid[4:]
+        p = os.path.join(TEXTURE_DIR, src + ".png")
+        if not os.path.exists(p):
+            return None
+        rgb = np.asarray(Image.open(p).convert("RGB"), float)
+        alb, h = rgb, height_from_albedo(rgb)
+        image = True
+    if not raw:
+        low = image and alb.shape[0] < 512 and alb.shape[0] / tile_ft(mid, 8.0) < DENSITY_MIN
+        alb, h = condition(alb, h, seed=_h(mid) % 9973, fix_seam=image, flatten=image or c.get("gen") in ("plaster", "style"), low_density=low)
+    if c.get("wet"):
+        alb = alb * np.array([0.66, 0.66, 0.70])                          # wet surfaces are darker (and a touch cooler)
+    return alb, h
 
 
 # ------------------------------------------------------------------ installation
@@ -403,7 +513,7 @@ def write_material_textures(mid, tex_dir, base_dir=None, overwrite_base=True):
         _save(os.path.join(tex_dir, name + "_n.png"), normal_map(h, c["n"]))
         out.append(name + "_n.png")
     if c.get("mr"):
-        _save(os.path.join(tex_dir, name + "_mr.png"), mr_map(h, c["rough"], 0.3, c.get("metal", 0.0)))
+        _save(os.path.join(tex_dir, name + "_mr.png"), mr_map(h, c["rough"], 0.3, c.get("metal", 0.0), wet=bool(c.get("wet"))))
         out.append(name + "_mr.png")
     return out
 
