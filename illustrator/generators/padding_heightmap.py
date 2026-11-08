@@ -414,10 +414,12 @@ class Apron:
 
     DELTA_FT = 0.02
 
-    def __init__(self, place, table, blend_ft, detail_ft=1.5, seed=7, edge_fade_ft=110.0, edge_wide_ft=400.0):
-        """edge_fade_ft: distance over which the narrow features of the tile edge (a carved river channel, a road cut, 5 to 60 ft wide) fade out of the apron; the apron then
+    def __init__(self, place, table, blend_ft, detail_ft=1.5, seed=7, edge_fade_ft=110.0, edge_wide_ft=400.0, relief_ease=0.75):
+        """relief_ease: 0..1 share of the straight ramp mixed into the apron profile (lowers the peak slope of steep aprons, 0 = old quintic).
+        edge_fade_ft: distance over which the narrow features of the tile edge (a carved river channel, a road cut, 5 to 60 ft wide) fade out of the apron; the apron then
         continues from the edge profile smoothed over edge_wide_ft. 0 = old behaviour (the channel is extruded out into the apron as a trench/ladder streak)."""
         self.edge_fade, self.edge_wide = float(edge_fade_ft), float(edge_wide_ft)
+        self.relief_ease = float(relief_ease)
         self.p, self.t, self.L = place, table, float(blend_ft)
         self.detail = detail_ft
         self.nz = Noise(seed + 9, 150.0, 2.2, 3)
@@ -441,15 +443,28 @@ class Apron:
         if not hasattr(self, "_wt"):
             self._wt = {}
             sig = max(self.edge_wide / 2.0 / p.cell, 0.5)
-            for side, (L, fixed, nxv, nyv, horiz) in {"N": (p.W, 0.0, 0.0, -1.0, True), "S": (p.W, p.H, 0.0, 1.0, True),
-                                                      "W": (p.H, 0.0, -1.0, 0.0, False), "E": (p.H, p.W, 1.0, 0.0, False)}.items():
+            tabs = {}
+            for side, (L, fixed, nxv, nyv, horiz) in {"N": (p.W, 0.0, 0.0, -1.0, True), "E": (p.H, p.W, 1.0, 0.0, False), "S": (p.W, p.H, 0.0, 1.0, True),
+                                                      "W": (p.H, 0.0, -1.0, 0.0, False)}.items():
                 u = np.arange(0.0, L + 1e-6, p.cell)
+                if side in ("S", "W"):
+                    u = u[::-1].copy()                           # walk the boundary clockwise (N: west to east, E: north to south, S: east to west, W: south to north)
                 qx_, qy_ = (u, np.full_like(u, fixed)) if horiz else (np.full_like(u, fixed), u)
-                prof = self.edge_profile(qx_, qy_, np.full_like(u, nxv), np.full_like(u, nyv))
-                self._wt[side] = (u, [ndimage.gaussian_filter1d(v, sig, mode="nearest") for v in prof])
+                tabs[side] = (np.sort(u), u, self.edge_profile(qx_, qy_, np.full_like(u, nxv), np.full_like(u, nyv)))
+            # ONE periodic profile around the whole boundary: the smoothing runs across the corners, so the four sides agree there (no fan / wedge at the corners)
+            ring = [np.concatenate([tabs[sd][2][k][:-1] for sd in ("N", "E", "S", "W")]) for k in range(3)]
+            lens = [len(tabs[sd][2][0]) - 1 for sd in ("N", "E", "S", "W")]
+            sm = [ndimage.gaussian_filter1d(v, sig, mode="wrap") for v in ring]
+            o = 0
+            for sd, n in zip(("N", "E", "S", "W"), lens):
+                srt, u, _ = tabs[sd]
+                vals = [np.concatenate([v[o:o + n], v[(o + n) % len(v):(o + n) % len(v) + 1]]) for v in sm]   # the next side's first node closes this side at its far corner
+                order = np.argsort(u)
+                self._wt[sd] = (u[order], [v[order] for v in vals])
+                o += n
         out, wsum = [np.zeros(np.shape(qx)) for _ in range(3)], np.zeros(np.shape(qx))
         d = np.abs(ny) - np.abs(nx)                                   # > 0: north/south side dominates; soft over the corner diagonal so no seam line shows
-        wv = 1.0 / (1.0 + np.exp(-d * 12.0))
+        wv = 1.0 / (1.0 + np.exp(-d * 5.0))
         for side, w, coord in (("N", wv * (ny < 0), qx), ("S", wv * (ny >= 0), qx), ("W", (1 - wv) * (nx < 0), qy), ("E", (1 - wv) * (nx >= 0), qy)):
             u, vals = self._wt[side]
             wsum += w
@@ -489,6 +504,10 @@ class Apron:
         e1 = self.table_target(X, Y)
         t = s / self.L
         z = hermite5(t, e0, g0, k0, e1, self.L)
+        if self.relief_ease > 0:                                      # slope-aware easing: the quintic's mid slope is 1.875 x the mean slope, mix towards the straight ramp (equal at both ends, so seam and table joins keep their slope)
+            tc = np.clip(t, 0, 1)
+            beta = self.relief_ease * smoothstep(tc / 0.15) * smoothstep((1 - tc) / 0.15)
+            z = z + beta * ((e0 + (e1 - e0) * tc) - z)
         z = z + self.detail * self.nz(X, Y) * (4 * np.clip(t, 0, 1) * (1 - np.clip(t, 0, 1))) ** 1.5
         z = np.where(t >= 1, e1, z)
         return np.maximum(z, e1 if np.ndim(e1) else e1)                          # never below the table (+delta)
@@ -562,7 +581,49 @@ def build_apron_mesh(apron, rate=0.06):
     return V, tris, {"rings": len(loops), "offsets": offs, "spacing": spac, "ring_start": base, "ring_len": [len(l[0]) for l in loops]}
 
 
-def vertex_normals(V, tris):
+def grid_vertex_normals(hs, cell):
+    """Smooth (area-weighted) vertex normals of a heightmap grid in the glTF frame (x east, y up, z south), with the diagonals of worldpack_mesh.build_terrain."""
+    hs = np.asarray(hs, float)
+    r, c = hs.shape
+    X = np.zeros((r, c, 3))
+    X[..., 0] = np.arange(c)[None, :] * cell
+    X[..., 1] = hs
+    X[..., 2] = np.arange(r)[:, None] * cell
+    A, B, C, D = X[:-1, :-1], X[:-1, 1:], X[1:, :-1], X[1:, 1:]
+    f1, f2 = np.cross(C - A, B - A), np.cross(C - B, D - B)                   # triangles (a, c, b) and (b, c, d)
+    N = np.zeros_like(X)
+    N[:-1, :-1] += f1; N[1:, :-1] += f1; N[:-1, 1:] += f1
+    N[:-1, 1:] += f2; N[1:, :-1] += f2; N[1:, 1:] += f2
+    return N / np.maximum(np.linalg.norm(N, axis=-1, keepdims=True), 1e-12)
+
+
+def terrain_edge_normals(place, x, y):
+    """Normals of the TERRAIN MESH (worldpack_mesh._smooth_normals on build_terrain) at points (x, y) on the tile boundary: the apron's ring 0 takes them so the shading is
+    continuous across the seam (each side alone would average only its own faces: a lit/dark lip)."""
+    h, c = place.h, place.cell
+    x, y = np.asarray(x, float), np.asarray(y, float)
+    u = np.arange(h.shape[1]) * c
+    v = np.arange(h.shape[0]) * c
+    N = grid_vertex_normals(h[:2], c)[0], grid_vertex_normals(h[-2:], c)[1], grid_vertex_normals(h[:, :2], c)[:, 0], grid_vertex_normals(h[:, -2:], c)[:, 1]
+    out = np.zeros(x.shape + (3,))
+    tol = 1e-6
+    for k, (m, coord, ax) in enumerate(((np.abs(y) < tol, x, u), (np.abs(y - place.H) < tol, x, u), (np.abs(x) < tol, y, v), (np.abs(x - place.W) < tol, y, v))):
+        if m.any():
+            for q in range(3):
+                out[m, q] += np.interp(coord[m], ax, N[k][:, q])
+    n = np.linalg.norm(out, axis=-1, keepdims=True)
+    return out / np.maximum(n, 1e-12)
+
+
+def vertex_normals(V, tris, seam=None):
+    """Area-weighted vertex normals of the apron. seam: optional (indices, normals) overriding those vertices (ring 0 -> the terrain's own edge normals)."""
+    N = _vertex_normals(V, tris)
+    if seam is not None:
+        N[seam[0]] = seam[1]
+    return N
+
+
+def _vertex_normals(V, tris):
     X = np.column_stack([V[:, 0], V[:, 2], V[:, 1]]) * FT_M                         # glTF: x, up, z(south)
     a, b, c = X[tris[:, 0]], X[tris[:, 1]], X[tris[:, 2]]
     fn = np.cross(b - a, c - a)
@@ -573,14 +634,14 @@ def vertex_normals(V, tris):
     return N / np.maximum(n, 1e-12)
 
 
-def write_glb(path, V, tris, uv, image_jpeg, name="padding_apron", extras=None):
+def write_glb(path, V, tris, uv, image_jpeg, name="padding_apron", extras=None, normals=None):
     """One mesh, one material with an embedded JPEG base colour. Vertices V = (x_ft, y_ft, z_ft) in place coordinates; node-local coordinates are
     centred on the bounding box (x, y) with the lowest vertex at 0 (pivot convention of the world pack tiles). Returns the pivot dict."""
     x0, y0, z0 = V.min(0)
     x1, y1, z1 = V.max(0)
     cx, cy = (x0 + x1) / 2, (y0 + y1) / 2
     P = np.column_stack([(V[:, 0] - cx) * FT_M, (V[:, 2] - z0) * FT_M, (V[:, 1] - cy) * FT_M]).astype(np.float32)
-    N = vertex_normals(V, tris).astype(np.float32)
+    N = (vertex_normals(V, tris) if normals is None else normals).astype(np.float32)
     UV = np.asarray(uv, np.float32)
     idx = tris.astype(np.uint32).reshape(-1)
     parts = []
@@ -806,7 +867,10 @@ def write_outputs(res, out_dir):
         open(alb, "wb").write(b.getvalue())
         out["apron_albedo"] = alb
         glb = os.path.join(out_dir, "padding_apron.glb")
-        piv = write_glb(glb, V, tris, uv, b.getvalue(), extras={"id": f"padding_apron_{p.id}", "layer": "padding"})
+        info = res["ring_info"]
+        r0 = np.arange(info["ring_start"][0], info["ring_start"][0] + info["ring_len"][0])
+        nrm = vertex_normals(V, tris, (r0, terrain_edge_normals(p, V[r0, 0], V[r0, 1])))
+        piv = write_glb(glb, V, tris, uv, b.getvalue(), extras={"id": f"padding_apron_{p.id}", "layer": "padding"}, normals=nrm)
         out["apron_glb"] = glb
         m["apron_pivot"] = piv
     pv = os.path.join(out_dir, "padding_preview.png")

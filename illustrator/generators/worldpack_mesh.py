@@ -501,7 +501,7 @@ LOD_CHECK_STEPS = (4,)        # terrain LOD steps (heightmap cells) checked agai
 LAST_BRIDGE_CARVE = []     # report of the last terrain_heights bridge carving
 
 
-def terrain_heights(pack, carve=True, conform=True, road_grade=True, carve_bridges="auto"):
+def terrain_heights(pack, carve=True, conform=True, road_grade=True, carve_bridges="auto", carve_edge_ease_ft=100.0):
     """The terrain heights build_parts builds from (river carve, road grading / bridge conform, building pads) -> (h, runs, grade params).
     Also fills LAST_ROAD_GRADE. foliage.py and anything else that must stand on the FINAL terrain calls this (or final_heights)."""
     h = pack.heights
@@ -519,6 +519,9 @@ def terrain_heights(pack, carve=True, conform=True, road_grade=True, carve_bridg
             if pk:
                 LAST_ROAD_GRADE.setdefault("lod", {})[f"step{lod_step}"] = pk
                 LAST_ROAD_GRADE["warnings"] = list(LAST_ROAD_GRADE.get("warnings", [])) + [
+        if carve_edge_ease_ft:                                         # river bed / valley eased back to bank level over the last N ft before the tile boundary (no cliff, no trench into the apron)
+            import terrain_edge as _te
+            h = _te.ease_carve_at_edge(h, pack.heights, pack.cell_ft, carve_edge_ease_ft)
                     f"terrain LOD step {lod_step}: {len(pk)} road(s) would be cut by the coarse terrain by up to {max(v['max_poke_ft'] for v in pk.values()):.1f} ft "
                     f"({', '.join(sorted(pk)[:4])}); build the LOD tile from worldpack_mesh.lod_terrain_heights() or skip that LOD"]
     elif conform:
@@ -538,9 +541,9 @@ def terrain_heights(pack, carve=True, conform=True, road_grade=True, carve_bridg
     return h, runs, gp
 
 
-def final_heights(pack, carve=True, conform=True, road_grade=True, carve_bridges="auto"):
+def final_heights(pack, carve=True, conform=True, road_grade=True, carve_bridges="auto", carve_edge_ease_ft=100.0):
     """Heights of the terrain mesh exactly as build_parts(pack, ...) builds it (same arguments)."""
-    return terrain_heights(pack, carve, conform, road_grade, carve_bridges)[0]
+    return terrain_heights(pack, carve, conform, road_grade, carve_bridges, carve_edge_ease_ft)[0]
 
 
 def lod_terrain_heights(pack, step=4, carve=True, conform=True, road_grade=True, carve_bridges="auto"):
