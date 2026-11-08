@@ -1,3 +1,28 @@
+# Update 0.5.2 (security fixes from the pairing review; relay restart REQUIRED)
+Module files that changed: **two**, copy them to the Foundry host PC (Vega), keep `relay-url.json` if it exists there:
+
+| From (this repo, `foundry-bridge/module/varrenmoor-bridge/`) | To (`<Foundry Data>\modules\varrenmoor-bridge\`) |
+|---|---|
+| `module.json` (version 0.5.2) | `module.json` |
+| `scripts/bridge.js` | `scripts\bridge.js` |
+
+`scripts/pairing.js`, `seccrypto.js` and `vendor/` are unchanged. `module/varrenmoor-bridge.zip` was rebuilt with all six files for Add-on Modules > Update. Then Ctrl+F5 in the Foundry GM tab and check the module version reads 0.5.2.
+
+**Relay restart: YES.** Copy/pull these files to the relay PC (Arcturus), then close the relay window and start it again (`start.bat --local`, or Illustrator panel > Foundry > Restart):
+`foundry-bridge/relay/server.js`, `relay/pairing.js`, `relay/adminauth.js`, `lib/pairing-console.mjs`, `lib/config.mjs`, `daemon.mjs`, `start.mjs`, `.gitignore`. The panel files `illustrator/panel/bridge_ui.js` and `illustrator/panel/lib/bridge.js` go with the repo on the PC that runs Illustrator (reopen the panel). A new panel works against an old relay, but a NEW relay refuses an approval from an OLD panel (it needs the code), so update the panel and restart the relay together.
+
+What you will notice
+- Approving: the panel shows the code as before; the relay window no longer prints the code. Press A, then type the 6 digits read from the Foundry screen, Enter. A request with a warning (not from a Foundry page on this network) asks for a second confirmation in the panel.
+- Pairing and the panel admin calls are OFF when the relay runs in tunnel mode (`start.bat` without `--local`, or `PUBLIC_URL` in `.env`). A `TUNNEL=off` setup is unaffected.
+- If Foundry is opened under a name that is not a LAN name (for example a dotted public name), pairing refuses its Origin on purpose; add `BRIDGE_ALLOWED_ORIGINS=http://name:port` to `.env` only if it really is your LAN page.
+- The first signed panel call right after a relay restart can say "predates the relay start"; it retries on its own.
+- A paired browser that was revoked while closed is no longer deleted by an unauthenticated "revoked" message: press "Pair with relay" (module settings) to replace it.
+- On Windows the relay now restricts `.env` and the `run` folder to your account (`icacls`, best effort). `BRIDGE_HARDEN_ACL=off` in `.env` skips that.
+
+Roll back: copy the 0.5.1 `module.json` and `bridge.js` from git history, plus the previous relay files.
+
+---
+
 # Update 0.5.1 (one request per browser, no duplicate devices, faster panel)
 Changes `module.json`, `scripts/bridge.js`, `scripts/pairing.js` (module; the other 0.5.0 files are unchanged) and, on the relay PC, `relay/pairing.js` + `relay/server.js` (restart the relay once to load them; the module and panel fixes also work against a 0.5.0 relay). The Pair button reuses the waiting request and its code, a browser keeps one record (re-pairing replaces it), the panel checks for requests every 2 s and flags duplicate devices.
 

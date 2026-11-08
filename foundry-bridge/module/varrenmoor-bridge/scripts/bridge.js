@@ -58,6 +58,8 @@ async function clientId() { let id = game.settings.get(MOD, 'clientId'); if (!id
 const saveDevice = (d) => game.settings.set(MOD, 'deviceAuth', d ? JSON.stringify(d) : '');
 async function forgetDevice() { await saveDevice(null); notify('info', 'unpaired', 'Varrenmoor Bridge: pairing forgotten on this browser (revoke it on the relay too, in the Illustrator panel).', true); connect(); }
 
+// Strings that come from the relay (error text, close reasons) are untrusted: only plain characters, short, before they go into a notification.
+const safeText = (s) => String(s ?? '').replace(/[^A-Za-z0-9 .,:;_()\/-]/g, '').slice(0, 100);
 const escapeHtml = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 let pairingRun = null, codeDialog = null;
 function showCode({ code, host }, state) {
@@ -86,7 +88,7 @@ async function startPairing({ scan = false, silent = false, auto = false } = {})
     const res = await Pair.runPairing({ host: found.host, device: Pair.describeDevice({ user: game.user, world: game.world, location, ua: navigator.userAgent, clientId: await clientId() }), fetchFn: (...a) => fetch(...a),
       hooks: { onCode: (c) => showCode(c, state), cancelled: () => state.cancelled } });
     try { codeDialog?.close({ animate: false }); } catch { /* already closed */ } codeDialog = null;
-    if (!res.ok) { notify('warn', 'pair-fail', `Varrenmoor Bridge pairing: ${res.reason}.`, true); return res; }
+    if (!res.ok) { notify('warn', 'pair-fail', `Varrenmoor Bridge pairing: ${safeText(res.reason)}.`, true); return res; }
     await saveDevice({ host: res.host, relayId: res.relayId, deviceId: res.deviceId, secret: res.secret, expiresAt: res.expiresAt });
     await game.settings.set(MOD, 'enabled', true);
     notify('info', 'paired', 'Varrenmoor Bridge paired with the relay. No token needed from now on.', true);
@@ -100,6 +102,7 @@ let retry = 1000;
 let timer = null;
 let generation = 0;
 let unreachable = 0, lastRelocate = 0;
+let candidateHost = null;  // a relay found by the relocation scan: tried ONCE, and only saved as the new host after it proved it knows the device secret
 let evicted = false;       // true after the relay closed us with 4002 ("replaced"): another GM tab took over, so do NOT auto-reconnect
 const lastNotice = new Map();
 const NOTICE_GAP_MS = 60000;
@@ -135,7 +138,8 @@ async function connect() {
   // manual-token URL: the launcher file, else a relay URL the user typed, else (zero config) the relay beside Foundry: this page's own host at the relay port (plain-http pages only)
   const typed = String(game.settings.get(MOD, 'relayUrl') || '').trim(), typedIsDefault = !typed || /^wss?:\/\/(127\.0\.0\.1|localhost|\[::1\]):3030\/module$/i.test(typed);
   const derived = Pair.deriveRelayHost({ pageHost: globalThis.location?.hostname, pageProtocol: globalThis.location?.protocol, relayPort: relayPort() });
-  const url = dev ? Pair.wsUrlFor(dev.host) : (game.settings.get(MOD, 'autoUrl') && await launcherUrl()) || (typedIsDefault && derived ? Pair.wsUrlFor(derived) : typed);
+  const tryHost = dev ? candidateHost : null; candidateHost = null;
+  const url = dev ? Pair.wsUrlFor(tryHost || dev.host) : (game.settings.get(MOD, 'autoUrl') && await launcherUrl()) || (typedIsDefault && derived ? Pair.wsUrlFor(derived) : typed);
   if (gen !== generation || !url || !(dev || token)) return;
   const ws = new WebSocket(url);
   socket = ws;
@@ -143,21 +147,25 @@ async function connect() {
   const auth = dev ? Pair.deviceAuth(dev) : null;
   ws.onopen = () => ws.send(JSON.stringify(dev ? auth.hello() : { type: 'hello', token }));
   ws.onmessage = async (ev) => {
-    const m = JSON.parse(ev.data);
+    let m; try { m = JSON.parse(ev.data); } catch { return; }
+    if (!m || typeof m !== 'object' || Array.isArray(m)) return;
     if (m.type === 'challenge' && auth) { ws.send(JSON.stringify(auth.answer(m))); return; }
     if (m.type === 'welcome') {
       if (auth) {
         const w = auth.welcome(m);
         if (!w.ok) { evicted = true; try { ws.close(); } catch { /* closed */ } notify('warn', 'proof', 'Varrenmoor Bridge: ' + w.reason + '. Not connecting to it.', true); return; }
         // the relay rotates the device secret near expiry or on request from the panel (sealed under a key only we and the relay derive); keep the new one (the old works for 5 more minutes)
-        if (w.secret) saveDevice({ ...dev, secret: w.secret, expiresAt: w.expiresAt || dev.expiresAt });
+        // a relocated relay is adopted only now: it just proved it knows the device secret
+        if (w.secret || tryHost) saveDevice({ ...dev, ...(tryHost ? { host: tryHost } : {}), ...(w.secret ? { secret: w.secret, expiresAt: w.expiresAt || dev.expiresAt } : {}) });
       }
       retry = 1000; welcomed = true; unreachable = 0;
       // Rate-limited (once per minute): a flapping link must not spam 'connected'.
       notify('info', 'connected', 'Varrenmoor Bridge connected.');
       return;
     }
-    if (!m.id) return;
+    // Nothing is executed until the relay has been welcomed (paired mode: with a valid proof that it knows the device secret). A server that skips that sends ops straight away: drop it.
+    if (!welcomed) { if (m.id) { notify('warn', 'no-welcome', 'Varrenmoor Bridge: the server sent a request before it proved itself. Closing the connection.', false); try { ws.close(); } catch { /* closed */ } } return; }
+    if (!m.id || typeof m.op !== 'string') return;
     try { ws.send(JSON.stringify({ id: m.id, result: await handle(m.op, m.args ?? {}) })); }
     catch (e) { ws.send(JSON.stringify({ id: m.id, error: String(e?.message ?? e) })); }
   };
@@ -172,16 +180,19 @@ async function connect() {
       return;
     }
     // 4005 = the relay does not accept this device any more (revoked, expired, or the relay was reset). Forget it and stop: retrying cannot help.
+    // The pairing is forgotten only when the close came over a relay-authenticated session (revoked while connected). A 4005 before the welcome is not proof of anything (a stranger
+    // at that address can send it), so the credential is kept; the notice tells the GM to press "Pair with relay" (which replaces it) if the relay really is the right one.
     if (dev && ev && ev.code === 4005) {
-      evicted = true; if (readDevice()?.deviceId === dev.deviceId) saveDevice(null); else return;
-      notify('warn', 'revoked', 'Varrenmoor Bridge: the relay no longer accepts this browser (' + (ev.reason || 'revoked or expired') + '). Pair again in the module settings, or enter the module token.', true);
+      evicted = true;
+      if (welcomed) { if (readDevice()?.deviceId === dev.deviceId) saveDevice(null); else return; }
+      notify('warn', 'revoked', 'Varrenmoor Bridge: the relay no longer accepts this browser (' + safeText(ev.reason || 'revoked or expired') + '). ' + (welcomed ? 'Pair again in the module settings, or enter the module token.' : 'If you revoked it, press "Pair with relay" in the module settings (or "Forget pairing" first).'), true);
       return;
     }
     if (ev && ev.code === 4008) retry = 30000;     // locked out for a minute after repeated failures
     // paired, but the relay never answered several times in a row: its LAN address may have changed. Look for the same relay id nearby (opt-in scan, at most once per 10 min).
     if (dev && !welcomed && ++unreachable >= 3 && Date.now() - lastRelocate > 600000) {
       lastRelocate = Date.now();
-      Pair.findRelay({ candidates: [], hostname: location.hostname, scan: true, relayId: dev.relayId }, (...a) => fetch(...a)).then((f) => { if (f && f.host !== dev.host) { saveDevice({ ...dev, host: f.host }); retry = 1000; } }).catch(() => {});
+      Pair.findRelay({ candidates: [], hostname: location.hostname, scan: true, relayId: dev.relayId }, (...a) => fetch(...a)).then((f) => { if (f && f.host !== dev.host) { candidateHost = f.host; retry = 1000; } }).catch(() => {});
     }
     timer = setTimeout(connect, retry); retry = Math.min(retry * 2, 30000);
   };

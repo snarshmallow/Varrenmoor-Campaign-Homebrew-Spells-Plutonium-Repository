@@ -188,15 +188,16 @@
     var tok = VB.bridgeApiToken(); if (!tok) return Promise.reject(new Error("no API token yet: it is read from client.json (the file the tools use) or the relay's .env; otherwise type it under Advanced"));
     var a = relayAddr();
     return VB.bridgeHttp({ method: "POST", host: a.host, port: a.port, path: p, token: tok, sign: true, body: body || {} }).then(function (r) {
-      if (r.status === 401) throw new Error(r.body && /clock/.test(r.body.error || "") ? "the PCs' clocks differ by more than 5 minutes (fix the time on one of them)" : "the relay rejected the API token (wrong token, or the relay is older than 0.5: restart it once with the current start.bat)");
+      if (r.status === 401) throw new Error(r.body && /older than/.test(r.body.error || "") ? "the relay was restarted a moment ago and this signed call predates it; it is retried automatically" : r.body && /clock/.test(r.body.error || "") ? "the PCs' clocks differ by more than 5 minutes (fix the time on one of them)" : "the relay rejected the API token (wrong token, or the relay is older than 0.5: restart it once with the current start.bat)");
       if (r.status === 404 && r.body && r.body.error === "not found") throw new Error("this relay is older than 0.5 and has no pairing admin: close its window and run start.bat once on that PC (nothing else to do)");
-      if (r.status === 403) throw new Error("the relay refuses pairing admin from this address (LAN/loopback only)");
+      if (r.status === 403) throw new Error((r.body && r.body.error) || "the relay refuses pairing admin from this address (LAN/loopback only; off while the relay runs in tunnel mode)");
       if (r.status >= 400) throw new Error((r.body && r.body.error) || "relay answered " + r.status);
       return r.body;
     });
   };
   VB.bridgePairRefresh = function () { return VB.bridgePairCall("/pair/list").then(function (l) { VB.bridgeMem.pair = l; return l; }); };
-  VB.bridgePairApprove = function (id, days) { return VB.bridgePairCall("/pair/approve", { id: id, days: days }); };
+  // code: the confirmation code of the request that was on screen when Approve was pressed; the relay refuses the approval unless it matches THAT request (never "whatever is oldest")
+  VB.bridgePairApprove = function (id, days, code) { return VB.bridgePairCall("/pair/approve", { id: id, days: days, code: String(code == null ? "" : code) }); };
   VB.bridgePairDeny = function (id) { return VB.bridgePairCall("/pair/deny", { id: id }); };
   VB.bridgePairRevoke = function (deviceId) { return VB.bridgePairCall("/pair/revoke", { deviceId: deviceId }); };
   VB.bridgePairRotate = function (deviceId) { return VB.bridgePairCall("/pair/rotate", { deviceId: deviceId }); };

@@ -4,6 +4,7 @@ import os from 'node:os';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
+import { execFileSync } from 'node:child_process';
 
 export const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -47,4 +48,23 @@ export function lanIp() {
 
 export function paths(stateDir = path.join(root, 'run')) {
   return { dir: stateDir, pid: path.join(stateDir, 'relay.pid.json'), log: path.join(stateDir, 'relay.log'), stop: path.join(stateDir, 'relay.stop'), paired: path.join(stateDir, 'paired-devices.json') };
+}
+
+// Windows ignores the 0600 file mode, so secret files inherit the folder's ACL (often readable by every local account). Best effort, never throws:
+// remove inherited rights and grant only the current user. Folders get (OI)(CI) so files the relay creates later (paired-devices.json.tmp -> renamed) are covered too.
+// Not applied to client.json: it is read from other PCs over a share on purpose (see README, "Windows file permissions").
+export function hardenAcl(targets, { exec = execFileSync, platform = process.platform, env = process.env } = {}) {
+  const res = [];
+  if (platform !== 'win32' || env.BRIDGE_HARDEN_ACL === 'off') return res;
+  let user = ''; try { user = (env.USERDOMAIN ? env.USERDOMAIN + String.fromCharCode(92) : '') + os.userInfo().username; } catch { /* unknown */ }
+  if (!user) return res;
+  for (const t of targets) {
+    try {
+      if (!fs.existsSync(t)) { res.push({ target: t, ok: false, reason: 'missing' }); continue; }
+      const isDir = fs.statSync(t).isDirectory();
+      exec('icacls', [t, '/inheritance:r', '/grant:r', isDir ? `${user}:(OI)(CI)F` : `${user}:F`], { windowsHide: true, timeout: 8000, stdio: 'ignore' });
+      res.push({ target: t, ok: true });
+    } catch (e) { res.push({ target: t, ok: false, reason: String((e && e.code) || (e && e.message) || e).slice(0, 80) }); }
+  }
+  return res;
 }

@@ -52,7 +52,7 @@ async function startDevice(t, info = INFO) {
 const finish = async (t, dev, days = 90) => {
   const l = await t.post('/pair/list', {}, { admin: true });
   const p = l.body.pending.find((x) => x.code === dev.code.replace(' ', '')); assert.ok(p, 'the approver sees the same code the device computed');
-  assert.equal((await t.post('/pair/approve', { id: p.id, days }, { admin: true })).status, 200);
+  assert.equal((await t.post('/pair/approve', { id: p.id, days, code: dev.code }, { admin: true })).status, 200);
   const got = await dev.poll(); assert.equal(got.body.state, 'approved');
   const cred = X.openJson(dev.key, got.body.sealed, 'vb-dev|' + dev.rq.requestId + '|' + got.body.deviceId);
   assert.ok(cred && cred.secret, 'device opens the sealed credential');
@@ -165,10 +165,10 @@ test('pairing can be switched on and off at runtime by the admin (no restart), a
     assert.equal((await t.post('/pair/config', { enabled: true })).status, 401, 'needs the admin token');
     const st = await t.post('/pair/config', {}, { signed: true }); assert.deepEqual([st.status, st.body.enabled, st.body.canEnable], [200, false, true], 'signed read of the state');
     assert.equal((await t.post('/pair/config', { enabled: true }, { signed: true })).body.enabled, true);
-    assert.equal((await startDevice(t)).rv.status, 200, 'pairing works right after, no restart');
+    const dv = await startDevice(t); assert.equal(dv.rv.status, 200, 'pairing works right after, no restart');
     // another "origin" (a different PC: browser Origin header and source address) can approve with the admin token
-    t.ref.ip = '10.0.0.99'; const p = (await t.post('/pair/list', {}, { admin: true, headers: { origin: 'http://arcturus:8080' } })).body.pending;
-    assert.equal(p.length, 1); assert.equal((await t.post('/pair/approve', { id: p[0].id }, { signed: true, headers: { origin: 'http://arcturus:8080' } })).status, 200);
+    t.ref.ip = '10.0.0.99'; const p = (await t.post('/pair/list', {}, { admin: true })).body.pending;
+    assert.equal(p.length, 1); assert.equal((await t.post('/pair/approve', { id: p[0].id, code: dv.code }, { signed: true })).status, 200);
     // persisted: a new Pairing on the same file keeps the setting
     assert.equal(new Pairing({ file: t.file, enabled: false }).enabled, true);
     assert.equal((await t.post('/pair/config', { enabled: false, autoRequest: false }, { admin: true })).body.autoRequest, false);
@@ -278,7 +278,7 @@ test('device expiry and secret rotation over the sealed channel (old secret has 
       const kp = X.newKeypair(), n = X.randomBytes(16), r = p.request({ ip, commit: X.commitment(kp.pk, n) });
       const key = X.pairKey(kp.sk, X.unb64u(r.relayPk), kp.pk, X.unb64u(r.relayPk), n, X.unb64u(r.relayNonce));
       p.reveal({ requestId: r.requestId, pollSecret: r.pollSecret, pk: X.b64u(kp.pk), nonce: X.b64u(n), info: X.sealJson(key, { deviceName: 'GM ' + ip }, 'vb-info|' + r.requestId), ip });
-      const a = p.approve(p.list().pending[0].id, { days }), g = p.poll(r.requestId, r.pollSecret, ip);
+      const a = p.approve(p.list().pending[0].id, { days, requireCode: false }), g = p.poll(r.requestId, r.pollSecret, ip);
       const cred = X.openJson(key, g.sealed, 'vb-dev|' + r.requestId + '|' + a.deviceId);
       return { id: a.deviceId, secret: X.unb64u(cred.secret) };
     };

@@ -60,7 +60,7 @@
       if (!p.enabled) h += '<div class="note">Pairing is switched off, so no device can ask. Turn it on above.</div>';
       h += (p.pending || []).map(function (r) {
         return '<div class="bgpend"><b>Approve this device?</b> ' + esc(r.name) + '<br><span class="bgk">from</span> ' + esc(r.ip) + ' <span class="bgk">origin</span> ' + esc(r.origin || "(none)") +
-          (r.originMismatch ? ' <b class="bgbad">origin does not match what the device claims</b>' : "") + '<br><span class="bgk">confirmation code</span> <b class="bgcode">' + esc(String(r.code).replace(/(\d{3})(\d{3})/, "$1 $2")) + '</b><br><span class="bgk">Approve only if the Foundry screen shows exactly this code; otherwise press Deny.</span><br>' +
+          (r.warnings && r.warnings.length ? r.warnings.map(function (w) { return '<br><b class="bgbad">WARNING: ' + esc(w) + '</b>'; }).join("") : (r.originMismatch ? ' <b class="bgbad">origin does not match what the device claims</b>' : "")) + '<br><span class="bgk">confirmation code</span> <b class="bgcode">' + esc(String(r.code).replace(/(\d{3})(\d{3})/, "$1 $2")) + '</b><br><span class="bgk">Approve only if the Foundry screen shows exactly this code; otherwise press Deny.</span><br>' +
           '<select data-bgdays="' + esc(r.id) + '"><option value="30">30 days</option><option value="90" selected>90 days</option><option value="365">1 year</option><option value="0">no expiry</option></select> ' +
           '<button class="primary" data-bgapprove="' + esc(r.id) + '">Approve</button> <button data-bgdeny="' + esc(r.id) + '">Deny</button></div>';
       }).join("");
@@ -295,7 +295,14 @@
     if (pb) pb.addEventListener("click", function (ev) {
       var b = ev.target.closest ? ev.target.closest("button") : null; if (!b) return;
       var ap = b.getAttribute("data-bgapprove"), dn = b.getAttribute("data-bgdeny"), rv = b.getAttribute("data-bgrevoke"), ro = b.getAttribute("data-bgrotate");
-      if (ap) { var sel = pb.querySelector('select[data-bgdays="' + ap + '"]'); pairAct(function () { return VB.bridgePairApprove(ap, Number(sel ? sel.value : 90)); }, "Approved."); }
+      if (ap) {
+        var sel = pb.querySelector('select[data-bgdays="' + ap + '"]'), req = ((VB.bridgeMem.pair && VB.bridgeMem.pair.pending) || []).filter(function (x) { return x.id === ap; })[0];
+        if (!req) { pairMsg = "That request is gone (expired or handled)."; paint(); return; }
+        // the code of THIS request goes with the approval; the relay refuses it if the request on its side is a different one. A request with origin warnings needs a second, explicit confirmation.
+        var go = function () { return pairAct(function () { return VB.bridgePairApprove(ap, Number(sel ? sel.value : 90), req.code); }, "Approved."); };
+        if (req.warnings && req.warnings.length) modal("Warning: " + req.warnings.join("; ") + ". Approve anyway only if the code " + String(req.code).replace(/(\d{3})(\d{3})/, "$1 $2") + " is the one on the Foundry screen.", "Approve anyway", "Cancel").then(function (y) { if (y) go(); });
+        else go();
+      }
       else if (dn) pairAct(function () { return VB.bridgePairDeny(dn); }, "Denied.");
       else if (rv) modal("Revoke this device? It is disconnected now and must be paired again.", "Revoke", "Cancel").then(function (y) { if (y) pairAct(function () { return VB.bridgePairRevoke(rv); }, "Revoked."); });
       else if (ro) pairAct(function () { return VB.bridgePairRotate(ro); }, "The device gets a new token on its next connect.");

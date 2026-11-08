@@ -117,7 +117,7 @@ const freePort = (p) => new Promise(res => { const s = net.createServer(); s.onc
   const dev1 = await device("Foundry GM Trent (Windows browser)");
   pl = await VB.bridgePairRefresh();
   check("pair: panel lists the pending request with the SAME code the device computed", pl.pending.length === 1 && pl.pending[0].code === dev1.code.replace(" ", "") && pl.pending[0].name === "Foundry GM Trent (Windows browser)");
-  await VB.bridgePairApprove(pl.pending[0].id, 30);
+  await VB.bridgePairApprove(pl.pending[0].id, 30, pl.pending[0].code);
   const got = await dev1.poll();
   const cred = X.openJson(dev1.key, got.body.sealed, "vb-dev|" + dev1.rq.requestId + "|" + got.body.deviceId);
   check("pair: approved; the credential arrives sealed (no plaintext secret in the reply) and opens only with the handshake key", got.body.state === "approved" && !got.body.secret && !got.body.token && !!cred && !!cred.secret && JSON.stringify(got.body).indexOf(cred.secret) < 0);

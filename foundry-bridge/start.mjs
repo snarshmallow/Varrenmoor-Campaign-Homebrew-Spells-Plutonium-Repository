@@ -9,6 +9,7 @@ import { spawn, spawnSync } from 'node:child_process';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { publishClient } from './lib/publish.mjs';
 import { attachPairingConsole } from './lib/pairing-console.mjs';
+import { hardenAcl } from './lib/config.mjs';
 
 const root = path.dirname(fileURLToPath(import.meta.url));
 const relayDir = path.join(root, 'relay');
@@ -53,7 +54,13 @@ process.env.BRIDGE_MODULE_TOKEN = env.BRIDGE_MODULE_TOKEN;
 const { createRelay } = await import(pathToFileURL(path.join(relayDir, 'server.js')).href);
 // Device pairing (encrypted handshake, no tokens to copy): on by default; BRIDGE_PAIRING=off in .env starts it off. Switch it on/off live from the Illustrator panel.
 const pairingFile = path.join(root, 'run', 'paired-devices.json');
-const server = createRelay({ pairingFile, pairingEnabled: (env.BRIDGE_PAIRING || 'on') !== 'off' });
+// Without --local this launcher puts a Cloudflare quick tunnel in front of the relay (and PUBLIC_URL means something public points at it): pairing and admin endpoints are then OFF, because a
+// request that came through a tunnel cannot be told apart from a local one reliably. Use --local (TUNNEL=off) for pairing.
+const tunnelMode = !local || !!env.PUBLIC_URL;
+if (tunnelMode) console.log('NOTE: tunnel mode: LAN pairing and the Illustrator panel admin calls are disabled for safety. Run start.bat --local to use pairing.');
+const acl = hardenAcl([envFile, path.join(root, 'run')].filter((x) => fs.existsSync(x) || x === envFile), { env: { ...process.env, BRIDGE_HARDEN_ACL: env.BRIDGE_HARDEN_ACL || process.env.BRIDGE_HARDEN_ACL } });
+if (acl.length) console.log('file permissions:', acl.map((a) => (a.ok ? 'restricted ' : 'not changed (' + a.reason + ') ') + path.basename(a.target)).join(', '));
+const server = createRelay({ pairingFile, pairingEnabled: (env.BRIDGE_PAIRING || 'on') !== 'off', tunnel: tunnelMode });
 const clog = (...a) => console.log(...a);
 attachPairingConsole(server.pairing, clog, { interactive: true, onSigint: () => process.emit('SIGINT') });
 await new Promise((res, rej) => { server.once('error', rej); server.listen(PORT, BIND, res); })
@@ -130,12 +137,16 @@ B) CLAUDE ENVIRONMENT, cloud sessions only (claude.ai/code > environment setting
    Allowed domain               = ${host}
    (Quick-tunnel hostnames change on every restart; update B each time, or use a named tunnel and set PUBLIC_URL in .env.)
 
-PAIRING (no token to copy): ${server.pairing.enabled ? 'ON' : 'OFF (switch it on in the Illustrator panel, Foundry tab > Pairing)'}. Open Foundry from this LAN as http://<foundry-PC>:30000;
+PAIRING (no token to copy): ${tunnelMode ? 'OFF in tunnel mode (run start.bat --local)' : server.pairing.enabled ? 'ON' : 'OFF (switch it on in the Illustrator panel, Foundry tab > Pairing)'}. Open Foundry from this LAN as http://<foundry-PC>:30000;
    the module finds this relay by itself and shows a code; approve it in the Illustrator panel or press A here. Keys A = approve, D = deny, L = list.
 
 Keys are saved in ${envFile} (git-ignored). Keep this window open. Ctrl+C to stop.
 ${line}`);
 
+// a malformed request or frame must not stop the relay: log (no secrets) and carry on
+const scrub = (t) => [env.BRIDGE_API_TOKEN, env.BRIDGE_MODULE_TOKEN].reduce((x, sec) => (sec ? x.split(sec).join('***') : x), String(t));
+process.on('uncaughtException', (e) => console.error('ERROR (relay keeps running):', scrub(e?.stack || e).split(String.fromCharCode(10)).slice(0, 4).join(' | ')));
+process.on('unhandledRejection', (e) => console.error('ERROR (relay keeps running): unhandled rejection:', scrub(e?.stack || e).split(String.fromCharCode(10)).slice(0, 4).join(' | ')));
 const stop = () => { tunnel?.kill(); server.close(); process.exit(0); };
 process.on('SIGINT', stop); process.on('SIGTERM', stop);
 setInterval(async () => console.log(new Date().toLocaleTimeString(), 'health', await health()), 60000).unref?.();

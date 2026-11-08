@@ -23,10 +23,10 @@ async function relay({ auto = null, pairingEnabled, autoRequest } = {}) {
   const server = createRelay({ apiToken: API, moduleToken: MOD, pairingFile: path.join(dir, 'paired.json'), pairingEnabled, autoRequest });
   await new Promise((r) => server.listen(0, '127.0.0.1', r));
   const seen = [];
-  server.pairing.on('request', (r) => { seen.push(r); if (auto === 'approve') setTimeout(() => server.pairing.approve(r.id, { days: 30 }), 50); else if (auto === 'deny') setTimeout(() => server.pairing.deny(r.id), 50); });
+  server.pairing.on('request', (r) => { seen.push(r); if (auto === 'approve') setTimeout(() => server.pairing.approve(r.id, { days: 30, requireCode: false }), 50); else if (auto === 'deny') setTimeout(() => server.pairing.deny(r.id), 50); });
   const port = server.address().port;
   // the approver is "another PC": signed admin calls (no token on the wire)
-  const admin = async (p, body = {}) => { const raw = JSON.stringify(body); const r = await fetch(`http://127.0.0.1:${port}${p}`, { method: 'POST', headers: { 'content-type': 'application/json', origin: 'http://arcturus:8080', 'x-vb-auth': signAdmin({ token: API, method: 'POST', url: p, body: raw }) }, body: raw }); return { status: r.status, body: await r.json() }; };
+  const admin = async (p, body = {}) => { const raw = JSON.stringify(body); const r = await fetch(`http://127.0.0.1:${port}${p}`, { method: 'POST', headers: { 'content-type': 'application/json', 'x-vb-auth': signAdmin({ token: API, method: 'POST', url: p, body: raw }) }, body: raw }); return { status: r.status, body: await r.json() }; };
   return { server, seen, port, logs, admin, host: `127.0.0.1:${port}`, close: async () => { console.log = origLog; server.closeAllConnections?.(); await new Promise((r) => server.close(r)); fs.rmSync(dir, { recursive: true, force: true }); } };
 }
 const f = (...a) => fetch(...a);
@@ -102,7 +102,7 @@ test('bridge.js end to end: zero-config (page host + relay port), auto-request, 
     assert.equal(shown && shown.replace(' ', ''), r.seen[0].code, 'the device dialog shows the code the approver will see');
     // approver on a different PC lists pending requests and approves them with a signed request
     const list = await r.admin('/pair/list'); assert.equal(list.body.pending.length, 1); assert.equal(list.body.pending[0].code, r.seen[0].code);
-    assert.equal((await r.admin('/pair/approve', { id: list.body.pending[0].id, days: 30 })).status, 200);
+    assert.equal((await r.admin('/pair/approve', { id: list.body.pending[0].id, days: 30, code: list.body.pending[0].code })).status, 200);
     for (let i = 0; i < 80 && !store.deviceAuth; i++) await sleep(100);
     const dev = JSON.parse(store.deviceAuth);
     assert.equal(dev.host, r.host); assert.ok(dev.deviceId.startsWith('d_')); assert.ok(dev.secret.length >= 40); assert.equal(store.enabled, true);
@@ -184,7 +184,7 @@ test('bridge.js: auto-request, then a click on "Pair with relay": ONE request, t
     assert.equal(r.seen.length, 1, 'no second request was filed');
     assert.equal(dialogs.length, 1, 'same dialog, not a new one'); assert.equal((renders.at(-1).match(/(\d{3} \d{3})/) || [])[1], code, 'same code shown again');
     const list = await r.admin('/pair/list'); assert.equal(list.body.pending.length, 1); assert.equal(list.body.pending[0].code, code.replace(' ', ''), 'the approver shows the module code');
-    await r.admin('/pair/approve', { id: list.body.pending[0].id, days: 30 });
+    await r.admin('/pair/approve', { id: list.body.pending[0].id, days: 30, code: list.body.pending[0].code });
     for (let i = 0; i < 80 && !store.deviceAuth; i++) await sleep(100);
     assert.ok(JSON.parse(store.deviceAuth).deviceId);
     assert.equal((await r.admin('/pair/list')).body.devices.length, 1, 'one device record');
@@ -192,7 +192,7 @@ test('bridge.js: auto-request, then a click on "Pair with relay": ONE request, t
     // pairing again from the same browser replaces the record instead of adding a second one, and the fresh credential survives
     store.deviceAuth = '';
     const again = modObj.api.pair(); for (let i = 0; i < 60 && (await r.admin('/pair/list')).body.pending.length < 1; i++) await sleep(100);
-    const l2 = await r.admin('/pair/list'); await r.admin('/pair/approve', { id: l2.body.pending[0].id, days: 30 }); await again;
+    const l2 = await r.admin('/pair/list'); await r.admin('/pair/approve', { id: l2.body.pending[0].id, days: 30, code: l2.body.pending[0].code }); await again;
     for (let i = 0; i < 60 && !store.deviceAuth; i++) await sleep(100);
     await sleep(500);
     assert.equal((await r.admin('/pair/list')).body.devices.length, 1, 'still one record after re-pairing'); assert.ok(store.deviceAuth, 'new credential kept');

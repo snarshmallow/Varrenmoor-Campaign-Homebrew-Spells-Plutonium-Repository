@@ -5,7 +5,7 @@
 // Both sides compute the same 6-digit code from both public keys and both nonces (short authentication string); the human approves only if the device screen
 // and the approver (panel / relay window) show the same code. On approval the relay creates a per-device secret and hands it over ONCE, sealed
 // (ChaCha20-Poly1305) under the handshake key, so a passive sniffer never sees it. Afterwards the device authenticates each WebSocket with an HMAC
-// challenge-response keyed by that secret (the secret is never sent again). The relay keeps the device secrets in paired-devices.json (git-ignored, mode 0600).
+// challenge-response keyed by that secret (the secret is never sent again). The relay keeps the device secrets in paired-devices.json (git-ignored; on Windows restricted by icacls, see README).
 // Nothing here ever logs or returns a secret except that one sealed hand-over.
 import fs from 'node:fs';
 import path from 'node:path';
@@ -34,12 +34,38 @@ export function isPrivateIp(addr) {
   return false;
 }
 
+// Host names that are plausibly a machine on the local network: private IP literal, localhost, a single-label name (VEGA) or a typical LAN suffix. Public names are refused.
+export function isLanHostname(h) {
+  h = String(h || '').trim().toLowerCase().replace(/^\[|\]$/g, '');
+  if (!h) return false;
+  if (isPrivateIp(h)) return true;
+  if (/^\d+\.\d+\.\d+\.\d+$/.test(h) || h.includes(':')) return false;     // public/odd IP literal
+  if (h === 'localhost') return true;
+  if (!h.includes('.')) return /^[a-z0-9_-]+$/.test(h);
+  return /\.(local|lan|home|home\.arpa|internal|localdomain)$/.test(h);
+}
+// Host header -> host name without the port (IPv6 brackets removed)
+export function hostOfHeader(v) {
+  const m = String(v || '').trim().match(/^(\[[^\]]+\]|[^:]+)(?::\d+)?$/);
+  return m ? m[1].replace(/^\[|\]$/g, '') : '';
+}
+// Is this browser Origin an acceptable Foundry page? http(s)://<LAN host>:<foundryPort> (default 30000), the relay's own Host name, or an exact entry of `extra`.
+export function isAllowedOrigin(origin, { extra = [], foundryPort = 30000, relayHost = '' } = {}) {
+  let u; try { u = new URL(String(origin)); } catch { return false; }
+  if (u.origin === 'null' || (u.protocol !== 'http:' && u.protocol !== 'https:')) return false;
+  if (extra.includes(u.origin)) return true;
+  const host = u.hostname.replace(/^\[|\]$/g, '').toLowerCase();
+  const port = Number(u.port || (u.protocol === 'https:' ? 443 : 80));
+  if (port !== Number(foundryPort)) return false;
+  return isLanHostname(host) || (!!relayHost && host === String(relayHost).toLowerCase());
+}
+
 export class Pairing extends EventEmitter {
   // file: where paired devices + settings are kept (omit = pairing impossible). enabled / autoRequest: initial state when the file has no saved setting (default on when a file is given).
-  constructor({ file, enabled, autoRequest, now = () => Date.now(), pendingTtlMs = 120000, rotateWithinDays = 14, limits = {} } = {}) {
+  constructor({ file, enabled, autoRequest, now = () => Date.now(), pendingTtlMs = 120000, committedTtlMs = 20000, rotateWithinDays = 14, limits = {}, originCheck = null } = {}) {
     super();
-    this.file = file || null; this.now = now; this.pendingTtlMs = pendingTtlMs; this.rotateWithinMs = rotateWithinDays * 86400000;
-    this.limits = { requestsPerWindow: 5, requestWindowMs: 600000, maxPending: 5, maxPendingPerIp: 2, denyCooldownMs: 60000, pollsPerMin: 90, authFailsPerMin: 10, ...limits };
+    this.file = file || null; this.now = now; this.pendingTtlMs = pendingTtlMs; this.committedTtlMs = committedTtlMs; this.originCheck = originCheck; this.rotateWithinMs = rotateWithinDays * 86400000;
+    this.limits = { requestsPerWindow: 5, requestWindowMs: 600000, maxPending: 5, maxPendingPerIp: 2, maxCommitted: 20, codeAttempts: 3, denyCooldownMs: 60000, pollsPerMin: 90, authFailsPerMin: 10, ...limits };
     this.pending = new Map();      // requestId -> { id, secretHash, ip, origin, commit, rsk, rpk, rn, key, code, info, createdAt, expiresAt, status, sealed?, deviceId? }
     this.hits = new Map();         // "kind|ip" -> [timestamps]
     this.coolUntil = new Map();    // ip -> ms
@@ -69,7 +95,16 @@ export class Pairing extends EventEmitter {
       // protocol-1 devices (hashed bearer token) cannot authenticate with challenge-response: dropped, they pair again
       if (d && Array.isArray(d.devices)) this.data = { version: 2, relayId: d.relayId || this.data.relayId, devices: d.devices.filter((x) => x && x.secret), settings: d.settings && typeof d.settings === 'object' ? d.settings : {} };
     } catch { /* first run or unreadable: start empty */ }
+    this.purgePrev(true);
     this.save(true);
+  }
+
+  // a rotated-out secret is kept for a 5-minute grace period only; afterwards it must not stay on disk
+  purgePrev(quiet = false) {
+    const t = this.now(); let n = 0;
+    for (const d of this.data.devices) if (d.prevSecret && t >= (d.prevUntil || 0)) { delete d.prevSecret; delete d.prevUntil; n++; }
+    if (n && !quiet) this.save(true);
+    return n;
   }
 
   save(force = false) {
@@ -97,6 +132,7 @@ export class Pairing extends EventEmitter {
 
   sweep() {
     const t = this.now();
+    this.purgePrev();
     for (const [id, p] of this.pending) {
       if ((p.status === 'pending' || p.status === 'committed') && t > p.expiresAt) { const was = p.status; p.status = 'expired'; if (was === 'pending') this.emit('expired', this.publicRequest(p)); }
       if (t > p.expiresAt + 5 * 60000) this.pending.delete(id);   // keep finished ones a little so polls can read the outcome
@@ -104,7 +140,11 @@ export class Pairing extends EventEmitter {
   }
 
   publicRequest(p) {
-    return { id: p.id, code: p.code, ip: p.ip, origin: p.origin, name: p.info.deviceName, claimedOrigin: p.info.hostOrigin, originMismatch: !!(p.origin && p.info.hostOrigin && p.origin !== p.info.hostOrigin),
+    const warnings = [];
+    if (p.origin && p.info.hostOrigin && p.origin !== p.info.hostOrigin) warnings.push('the browser origin does not match the origin the device claims');
+    if (!p.origin) warnings.push('no browser Origin header: this request did not come from a Foundry web page');
+    else if (this.originCheck && !this.originCheck(p.origin)) warnings.push('the origin is not a Foundry page on this network (expected http://<Foundry PC>:30000)');
+    return { warnings, id: p.id, code: p.code, ip: p.ip, origin: p.origin, name: p.info.deviceName, claimedOrigin: p.info.hostOrigin, originMismatch: !!(p.origin && p.info.hostOrigin && p.origin !== p.info.hostOrigin),
       worldId: p.info.worldId, userId: p.info.userId, userName: p.info.userName, createdAt: new Date(p.createdAt).toISOString(), expiresAt: new Date(p.expiresAt).toISOString(), status: p.status };
   }
 
@@ -118,11 +158,13 @@ export class Pairing extends EventEmitter {
     if ((this.coolUntil.get(ip) || 0) > t) return { status: 429, error: 'a request from this address was denied a moment ago; wait a minute' };
     if (!this.allow('request', ip, this.limits.requestsPerWindow, this.limits.requestWindowMs)) return { status: 429, error: 'too many pairing requests from this address; try again later' };
     const live = [...this.pending.values()].filter((p) => p.status === 'pending' || p.status === 'committed');
-    if (live.length >= this.limits.maxPending) return { status: 429, error: 'too many pairing requests are already waiting for approval' };
+    // slots a human has to look at (revealed) and half-open handshakes are limited separately, so unrevealed junk cannot block a real pairing
+    if (live.filter((p) => p.status === 'pending').length >= this.limits.maxPending) return { status: 429, error: 'too many pairing requests are already waiting for approval' };
+    if (live.filter((p) => p.status === 'committed').length >= this.limits.maxCommitted) return { status: 429, error: 'too many unfinished pairing handshakes; try again in a moment' };
     if (live.filter((p) => p.ip === ip).length >= this.limits.maxPendingPerIp) return { status: 429, error: 'this address already has pairing requests waiting' };
     const secret = rand(32), id = 'p_' + crypto.randomBytes(6).toString('hex'), kp = X.newKeypair(), rn = X.randomBytes(16);
-    this.pending.set(id, { id, secretHash: sha(secret), ip, origin: clip(origin, 120), createdAt: t, expiresAt: t + this.pendingTtlMs, status: 'committed', commit, rsk: kp.sk, rpk: kp.pk, rn, info: {} });
-    return { status: 200, requestId: id, pollSecret: secret, relayPk: X.b64u(kp.pk), relayNonce: X.b64u(rn), expiresAt: new Date(t + this.pendingTtlMs).toISOString() };
+    this.pending.set(id, { id, secretHash: sha(secret), ip, origin: clip(origin, 120), createdAt: t, expiresAt: t + this.committedTtlMs, status: 'committed', commit, rsk: kp.sk, rpk: kp.pk, rn, info: {} });
+    return { status: 200, requestId: id, pollSecret: secret, relayPk: X.b64u(kp.pk), relayNonce: X.b64u(rn), expiresAt: new Date(t + this.pendingTtlMs).toISOString(), revealWithinMs: this.committedTtlMs };
   }
 
   // step 2: the device reveals its key and nonce (must match the commitment) and sends its description sealed under the handshake key. Only now does the human see it.
@@ -141,15 +183,15 @@ export class Pairing extends EventEmitter {
     p.info = { deviceName: clip(meta.deviceName || 'unnamed device', 60), worldId: clip(meta.worldId, 60), userId: clip(meta.userId, 40), userName: clip(meta.userName, 60), hostOrigin: clip(meta.hostOrigin, 120), clientId: clip(meta.clientId, 40) };
     // one live request per browser: an older waiting request from the same browser id is superseded (its code is no longer valid and drops out of the approver's list)
     if (p.info.clientId) for (const o of this.pending.values()) if (o !== p && o.info.clientId === p.info.clientId && (o.status === 'pending' || o.status === 'committed')) { o.status = 'expired'; delete o.key; }
-    p.status = 'pending'; delete p.rsk;
+    p.status = 'pending'; delete p.rsk; p.expiresAt = this.now() + this.pendingTtlMs; p.badCodes = 0;
     this.emit('request', this.publicRequest(p));
     return { status: 200 };
   }
 
   // the device gave up (dialog cancelled): its request leaves the approver's list at once
-  cancel(requestId, pollSecret) {
+  cancel(requestId, pollSecret, ip) {
     const p = this.pending.get(String(requestId));
-    if (!p || !eq(sha(pollSecret), p.secretHash)) return { status: 200 };
+    if (!p || !eq(sha(pollSecret), p.secretHash) || (ip !== undefined && p.ip !== ip)) return { status: 200 };
     if (p.status === 'pending' || p.status === 'committed') { p.status = 'expired'; delete p.key; }
     return { status: 200 };
   }
@@ -158,7 +200,7 @@ export class Pairing extends EventEmitter {
     if (!this.allow('poll', ip, this.limits.pollsPerMin, 60000)) return { status: 429, error: 'polling too fast' };
     this.sweep();
     const p = this.pending.get(String(requestId));
-    if (!p || !eq(sha(pollSecret), p.secretHash)) return { status: 200, state: 'unknown' };
+    if (!p || !eq(sha(pollSecret), p.secretHash) || p.ip !== ip) return { status: 200, state: 'unknown' };      // bound to the address that made the request
     if (p.status === 'approved' && p.sealed) {
       const out = { status: 200, state: 'approved', deviceId: p.deviceId, sealed: p.sealed, relayId: this.relayId };
       delete p.sealed; delete p.key; p.status = 'delivered';       // hand the secret over exactly once
@@ -177,10 +219,21 @@ export class Pairing extends EventEmitter {
     };
   }
 
-  approve(id, { days = 90 } = {}) {
+  // The approver must TYPE the code shown on the device's screen (code: '123456' or '123 456'); a wrong code is refused, and after `codeAttempts` wrong tries the request is denied.
+  // requireCode:false exists only for unit tests of the data layer.
+  approve(id, { days = 90, code, requireCode = true } = {}) {
     this.sweep();
     const p = this.pending.get(String(id));
     if (!p || p.status !== 'pending') return { status: 404, error: 'no such pending request (expired or already handled)' };
+    if (requireCode) {
+      const typed = String(code ?? '').replace(/\s+/g, '');
+      if (!typed) return { status: 400, error: 'type the 6-digit code shown on the Foundry screen to approve' };
+      if (!eq(typed, p.code)) {
+        p.badCodes = (p.badCodes || 0) + 1;
+        if (p.badCodes >= this.limits.codeAttempts) { this.deny(id); return { status: 403, error: 'wrong code too many times: the request was denied' }; }
+        return { status: 403, error: 'that code does not match this request' };
+      }
+    }
     const secret = X.randomBytes(32), devId = 'd_' + crypto.randomBytes(6).toString('hex'), t = this.now();
     const life = Number(days) > 0 ? Math.min(Number(days), 3650) : 0;
     const expiresAt = life ? new Date(t + life * 86400000).toISOString() : null;
@@ -228,7 +281,7 @@ export class Pairing extends EventEmitter {
     if ((this.hits.get('authfail|' + ip) || []).filter((x) => t - x < 60000).length >= this.limits.authFailsPerMin) return { ok: false, reason: 'rate limited', limited: true };
     const fail = (reason) => { this.allow('authfail', ip, this.limits.authFailsPerMin, 60000); return { ok: false, reason }; };
     const d = this.data.devices.find((x) => x.id === deviceId);
-    if (!d) return fail('unknown device');
+    if (!d) return fail('bad credentials');      // same answer as a wrong secret: device ids cannot be probed
     const main = eq(mac, X.clientMac(X.unb64u(d.secret), d.id, cn, rn));
     const prev = !main && d.prevSecret && t < (d.prevUntil || 0) && eq(mac, X.clientMac(X.unb64u(d.prevSecret), d.id, cn, rn));
     if (!main && !prev) return fail('bad credentials');
