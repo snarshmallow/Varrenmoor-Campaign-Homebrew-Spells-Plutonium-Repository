@@ -414,7 +414,10 @@ class Apron:
 
     DELTA_FT = 0.02
 
-    def __init__(self, place, table, blend_ft, detail_ft=1.5, seed=7):
+    def __init__(self, place, table, blend_ft, detail_ft=1.5, seed=7, edge_fade_ft=110.0, edge_wide_ft=400.0):
+        """edge_fade_ft: distance over which the narrow features of the tile edge (a carved river channel, a road cut, 5 to 60 ft wide) fade out of the apron; the apron then
+        continues from the edge profile smoothed over edge_wide_ft. 0 = old behaviour (the channel is extruded out into the apron as a trench/ladder streak)."""
+        self.edge_fade, self.edge_wide = float(edge_fade_ft), float(edge_wide_ft)
         self.p, self.t, self.L = place, table, float(blend_ft)
         self.detail = detail_ft
         self.nz = Noise(seed + 9, 150.0, 2.2, 3)
@@ -429,6 +432,31 @@ class Apron:
         g0 = -(-3 * f0 + 4 * f1 - f2) / (2 * d)                                   # outward derivative
         k0 = (f0 - 2 * f1 + f2) / (d * d)
         return f0, np.clip(g0, -0.9, 0.9), np.clip(k0, -0.006, 0.006)
+
+    def _wide_profile(self, qx, qy, nx, ny):
+        """Edge profile (height, outward slope, curvature) smoothed along the edge over edge_wide_ft, from 1D tables sampled every cell on each of the four sides
+        (a continuous smoothing: a sparse sample comb would print the channel position as bars)."""
+        from scipy import ndimage
+        p = self.p
+        if not hasattr(self, "_wt"):
+            self._wt = {}
+            sig = max(self.edge_wide / 2.0 / p.cell, 0.5)
+            for side, (L, fixed, nxv, nyv, horiz) in {"N": (p.W, 0.0, 0.0, -1.0, True), "S": (p.W, p.H, 0.0, 1.0, True),
+                                                      "W": (p.H, 0.0, -1.0, 0.0, False), "E": (p.H, p.W, 1.0, 0.0, False)}.items():
+                u = np.arange(0.0, L + 1e-6, p.cell)
+                qx_, qy_ = (u, np.full_like(u, fixed)) if horiz else (np.full_like(u, fixed), u)
+                prof = self.edge_profile(qx_, qy_, np.full_like(u, nxv), np.full_like(u, nyv))
+                self._wt[side] = (u, [ndimage.gaussian_filter1d(v, sig, mode="nearest") for v in prof])
+        out, wsum = [np.zeros(np.shape(qx)) for _ in range(3)], np.zeros(np.shape(qx))
+        d = np.abs(ny) - np.abs(nx)                                   # > 0: north/south side dominates; soft over the corner diagonal so no seam line shows
+        wv = 1.0 / (1.0 + np.exp(-d * 12.0))
+        for side, w, coord in (("N", wv * (ny < 0), qx), ("S", wv * (ny >= 0), qx), ("W", (1 - wv) * (nx < 0), qy), ("E", (1 - wv) * (nx >= 0), qy)):
+            u, vals = self._wt[side]
+            wsum += w
+            for o, v in zip(out, vals):
+                o += w * np.interp(coord, u, v)
+        out = [o / np.maximum(wsum, 1e-9) for o in out]
+        return out
 
     def table_target(self, X, Y):
         return self.t.surface(X, Y) + self.DELTA_FT
@@ -449,6 +477,12 @@ class Apron:
                 a_ += w * v_
             wsum += w
         e0s, g0, k0 = (a_ / wsum for a_ in acc)
+        if self.edge_fade > 0:                                        # fade narrow edge features (river channel, road cut) out over edge_fade ft: continue from the wide-smoothed edge
+            wacc = self._wide_profile(qx, qy, nx, ny)
+            ww = 1.0
+            tt = np.clip(s / self.edge_fade, 0, 1)
+            keep = (1 - (3 * tt * tt - 2 * tt ** 3)) ** 2             # 1 at the seam, 0 from edge_fade on
+            e0s, g0, k0 = (wv / ww + (nv - wv / ww) * keep for wv, nv in zip(wacc, (e0s, g0, k0)))
         res = np.exp(-np.clip(s, 0, None) / 10.0)
         e0 = e0s + (e0x - e0s) * res - p.z_origin
         g0 = g0 + (g0x - g0) * 0.0
@@ -741,7 +775,7 @@ def generate(place_id, preset_name="bowl-ridge", texture="summer", out_dir=None,
         def seamfn(X, Y):
             s, qx, qy, _, _ = place.rect_dist(X, Y)
             return s, qx, qy
-        alb, zmin, zmax = pt.apron_albedo(hfn, bb, (w, h), tp, seed + 5, seamfn, ta, (0, 0, place.W, place.H), blend_ft=blend_ft, far_mean=mean_hex, apron_len=blend_ft)
+        alb, zmin, zmax = pt.apron_albedo(hfn, bb, (w, h), tp, seed + 5, seamfn, ta, (0, 0, place.W, place.H), blend_ft=blend_ft, far_mean=mean_hex, apron_len=blend_ft, table_tile=tile, tile_ft=meta['table_tile_ft'])
         say("apron albedo")
         res.update(apron=ap, V=V, tris=tris, ring_info=info, apron_albedo=alb, apron_bbox=bb)
     res["meta"] = meta

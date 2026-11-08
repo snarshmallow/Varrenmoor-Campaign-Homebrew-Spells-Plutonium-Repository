@@ -620,8 +620,9 @@ class Ground:
     `from_pack` uses the FINAL terrain build_parts builds (river carve, road grading / cut-fill, bridge conform, building pads; worldpack_mesh.final_heights) and
     reads it from the terrain TRIANGLES (road_grade.mesh_height). `keep_out` (shapely, feet) = road beds, bridge decks and building footprints: trees inside it are dropped."""
 
-    def __init__(self, frame, heights, cell_ft, keep_out=None):
+    def __init__(self, frame, heights, cell_ft, keep_out=None, road_lines=None):
         self.frame, self.h, self.cell, self.keep_out = frame, heights, cell_ft, keep_out
+        self.road_lines = road_lines            # [(shapely LineString centreline, half width ft)]: used by clear_canopies (None = rule off)
 
     @classmethod
     def from_pack(cls, pack_dir, road_grade=True, carve=True, conform=True, with_keep_out=True):
@@ -629,7 +630,7 @@ class Ground:
         import worldpack_mesh as wm
         pack = wp.load_pack(pack_dir)
         h = wm.final_heights(pack, carve=carve, conform=conform, road_grade=road_grade)
-        return cls(pack.frame, h, pack.cell_ft, keep_out_geometry(pack) if with_keep_out else None)
+        return cls(pack.frame, h, pack.cell_ft, keep_out_geometry(pack) if with_keep_out else None, road_lines(pack) if with_keep_out else None)
 
     def z(self, x, y):
         import road_grade as rg
@@ -663,6 +664,49 @@ def keep_out_geometry(pack, road_margin_ft=1.5, building_margin_ft=2.0):
         if len(poly) > 2:
             g.append(Polygon([tuple(p) for p in poly]).buffer(building_margin_ft))
     return unary_union(g) if g else Polygon()
+
+
+def road_lines(pack):
+    """[(LineString centreline, half width ft)] of every road (bridge roads included) for the canopy clearance rule."""
+    from shapely.geometry import LineString
+    out = []
+    for r in pack.list("roads"):
+        pts = [tuple(p[:2]) for p in r.get("points", [])]
+        if len(pts) > 1:
+            out.append((LineString(pts), float(r.get("width_ft", 10)) / 2.0))
+    return out
+
+
+def clear_canopies(doc, lib, ground, min_canopy_ft=8.0, overhang=0.3, max_shift_frac=1.5):
+    """Keep wide canopies off the road. A tree whose crown radius R (species crown * scale) is at least `min_canopy_ft` must stand so that its crown overhangs the road bed
+    by at most `overhang` * R: distance(road centreline) >= road half width + R * (1 - overhang). Trees that violate it are shifted straight away from the centreline
+    to that distance when the shift is at most max_shift_frac * R and the new spot is not blocked, else dropped. -> (moved ids, dropped ids). Edits doc.items in place."""
+    if not getattr(ground, "road_lines", None) or min_canopy_ft is None:
+        return [], []
+    from shapely.geometry import Point
+    from shapely.ops import nearest_points
+    moved, dropped = [], []
+    for it in list(doc.items.values()):
+        R = lib.crown_r_ft(it["species"]) * float(it.get("scale", 1.0))
+        if R < min_canopy_ft:
+            continue
+        pt = Point(it["x"], it["y"])
+        for line, hw in ground.road_lines:
+            need = hw + R * (1.0 - overhang)
+            d = line.distance(pt)
+            if d >= need:
+                continue
+            q = nearest_points(line, pt)[0]
+            if d < 1e-6 or need - d > max_shift_frac * R:
+                dropped.append(it["id"]); doc.items.pop(it["id"], None); break
+            ux, uy = (it["x"] - q.x) / d, (it["y"] - q.y) / d
+            nx_, ny_ = it["x"] + ux * (need - d + 0.3), it["y"] + uy * (need - d + 0.3)
+            if bool(ground.blocked([nx_], [ny_])[0]) or any(l2.distance(Point(nx_, ny_)) < h2 + R * (1 - overhang) - 0.5 for l2, h2 in ground.road_lines):
+                dropped.append(it["id"]); doc.items.pop(it["id"], None); break
+            it["x"], it["y"] = round(float(nx_), 2), round(float(ny_), 2)
+            moved.append(it["id"])
+            pt = Point(it["x"], it["y"])
+    return moved, dropped
 
 
 def drop_blocked(doc, ground):
@@ -781,7 +825,7 @@ def baseline_stats(doc, lib, tmp_dir):
 
 
 def merge_foliage(doc, lib, ground, place, out_dir, chunk_ft=150.0, budget=None, impostor_beyond_ft=None, lod1_beyond_ft=None, focus=None, compress="none",
-                  lods=(1, 2), px_per_ft=None, attach_placements=None, log=print, season=None):
+                  lods=(1, 2), px_per_ft=None, attach_placements=None, log=print, season=None, canopy_min_ft=8.0, canopy_overhang=0.3):
     """Write merged foliage chunks into out_dir/models/foliage/ and return (placements doc, report). attach_placements: existing placements.json (dict) whose
     foliage-layer entries are replaced by the chunk entries."""
     import worldpack_mesh as wm
@@ -791,6 +835,9 @@ def merge_foliage(doc, lib, ground, place, out_dir, chunk_ft=150.0, budget=None,
     doc = copy.copy(doc)                                         # keep-out filtering must not touch the saved data
     doc.items = dict(doc.items)
     blocked_ids = drop_blocked(doc, ground)
+    canopy_moved, canopy_dropped = clear_canopies(doc, lib, ground, canopy_min_ft, canopy_overhang)     # wide crowns may not hang over a road bed (canopy_min_ft=None: off)
+    if canopy_moved or canopy_dropped:
+        log(f"foliage merge: canopy clearance moved {len(canopy_moved)} and dropped {len(canopy_dropped)} wide-crowned trees near roads")
     if blocked_ids:
         log(f"foliage merge: {len(blocked_ids)} trees on road beds / bridge decks / building footprints left out")
     os.makedirs(os.path.join(out_dir, "models", "textures"), exist_ok=True)
@@ -876,7 +923,7 @@ def merge_foliage(doc, lib, ground, place, out_dir, chunk_ft=150.0, budget=None,
         fdoc = {**pk, "files": sorted(keep + entries, key=lambda e: e["file"]), "merge": {**pk.get("merge", {}), "foliage": fdoc["merge"]}}
     _jdump(os.path.join(out_dir, "placements.json"), fdoc)
     rep = {"place": place, "before": base, "after": after, "chunk_ft": chunk_ft, "chunks": len(entries), "out": out_dir,
-           "keep_out_dropped_ids": blocked_ids, "triangle_report": treport, "lod_warnings": lod_warn, "settings": {"budget": budget, "impostor_beyond_ft": impostor_beyond_ft, "lod1_beyond_ft": lod1_beyond_ft, "compress": compress}}
+           "keep_out_dropped_ids": blocked_ids, "canopy_moved_ids": canopy_moved, "canopy_dropped_ids": canopy_dropped, "triangle_report": treport, "lod_warnings": lod_warn, "settings": {"budget": budget, "impostor_beyond_ft": impostor_beyond_ft, "lod1_beyond_ft": lod1_beyond_ft, "compress": compress}}
     _jdump(os.path.join(out_dir, "foliage_merge_report.json"), rep)
     log(f"foliage merge: {base['tiles']} tiles / {base['draw_calls']} draw calls / {base['triangles']} tris -> {after['files']} chunk files / {after['draw_calls']} draw calls / "
         f"{after['triangles']} tris ({len(dropped)} thinned), GLB {size_primary // 1024} KB (+LODs {size_all // 1024} KB) -> {out_dir}")

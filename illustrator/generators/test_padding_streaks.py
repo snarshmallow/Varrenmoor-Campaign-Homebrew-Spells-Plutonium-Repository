@@ -85,5 +85,42 @@ class Streaks(unittest.TestCase):
         Image.fromarray(np.concatenate([a, np.full((a.shape[0], 8, 3), 255, np.uint8), b], 1)).save(out)
 
 
+class ChannelFade(unittest.TestCase):
+    """A river channel carved into the tile edge must not be extruded into the apron (north/south 'ladder' streak)."""
+
+    class FakePlace:
+        W = H = 400.0
+        cell = 4.0
+        z_origin = 0.0
+
+        def __init__(self):
+            x = np.arange(0, 401, 4.0)
+            self.h = np.full((101, 101), 30.0)
+            self.h[:, (np.abs(x - 200) < 12)] = 12.5                          # 24 ft wide, 17.5 ft deep channel running off the north and south edge
+
+        def tile_h(self, x, y):
+            import padding_heightmap as ph
+            return ph._bilinear(self.h, self.cell, x, y)
+
+        def rect_dist(self, x, y):
+            import padding_heightmap as ph
+            return ph.Place.rect_dist(self, x, y)
+
+    class Table:
+        def surface(self, X, Y):
+            return np.full(np.shape(X), -4.0)
+
+    def depth_at(self, fade, d):
+        import padding_heightmap as ph
+        ap = ph.Apron(self.FakePlace(), self.Table(), 200.0, detail_ft=0.0, edge_fade_ft=fade)
+        return float(ap.height(np.array([200.0]), np.array([-d]))[0] - ap.height(np.array([300.0]), np.array([-d]))[0])
+
+    def test_channel_fades_out(self):
+        for d in (110, 140, 190):
+            self.assertLess(abs(self.depth_at(110.0, d)), 1.0, d)            # faded: channel and bank line agree
+        self.assertLess(abs(self.depth_at(110.0, 0.0) - (12.5 - 30.0)), 0.5)   # exact at the seam
+        self.assertGreater(abs(self.depth_at(0.0, 60.0)), 2.0)               # without the fade the trench is still there (the old behaviour)
+
+
 if __name__ == "__main__":
     unittest.main()

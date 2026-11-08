@@ -73,6 +73,26 @@ class GroundTests(unittest.TestCase):
         finally:
             shutil.rmtree(tmp, ignore_errors=True)
 
+    def test_canopy_clearance_off_the_road(self):
+        from shapely.geometry import LineString
+        lib = fm.FoliageLibrary()
+        R = lib.crown_r_ft("oak")
+        self.assertGreaterEqual(R, 8.0)
+        g = fo.Ground(self.pk.frame, self.h, CELL, None, [(LineString([(0, 100), (400, 100)]), 5.0)])
+        doc = fo.FoliageDoc("t", path=os.path.join(tempfile.mkdtemp(), "f.json"), data={})
+        for k, (x, y) in enumerate([(50, 100 + 6), (150, 100 + 5 + R * 0.7 + 0.1), (250, 100), (300, 100 + 5 + R + 5)]):
+            doc.items[f"i{k}"] = {"id": f"i{k}", "species": "oak", "x": x, "y": y, "z": 0, "scale": 1.0, "rot": 0.0, "variant": 0, "zone": "z", "src": "generated"}
+        moved, dropped = fo.clear_canopies(doc, lib, g, 8.0, 0.3)
+        self.assertIn("i0", moved)                                         # canopy over the bed: pushed out
+        self.assertEqual(dropped, ["i2"])                                  # trunk on the centreline: too far to shift
+        self.assertNotIn("i3", moved)                                      # already clear
+        for i in doc.items.values():
+            self.assertGreaterEqual(abs(i["y"] - 100), 5.0 + R * 0.7 - 0.01)
+        doc2 = fo.FoliageDoc("t", path=os.path.join(tempfile.mkdtemp(), "f.json"), data={})
+        doc2.items["a"] = {"id": "a", "species": "oak", "x": 10, "y": 106, "z": 0, "scale": 1.0, "rot": 0.0, "variant": 0, "zone": "z", "src": "generated"}
+        self.assertEqual(fo.clear_canopies(doc2, lib, g, None), ([], []))     # rule off
+        self.assertEqual(fo.clear_canopies(doc2, lib, fo.Ground(self.pk.frame, self.h, CELL), 8.0), ([], []))
+
 
 if __name__ == "__main__":
     unittest.main()

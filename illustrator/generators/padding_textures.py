@@ -201,7 +201,7 @@ def _soft_terrain(alb, box, sigma_ft=45.0):
     return np.stack([ndimage.gaussian_filter(a[..., c], sigma_ft * px_per_ft, mode="nearest") for c in range(3)], -1)
 
 
-def apron_albedo(height_fn, bbox, px, P, seed=5, seam=None, terrain_albedo=None, terrain_box=None, blend_ft=80.0, far_mean=None, apron_len=None, streak_fix=True):
+def apron_albedo(height_fn, bbox, px, P, seed=5, seam=None, terrain_albedo=None, terrain_box=None, blend_ft=80.0, far_mean=None, apron_len=None, streak_fix=True, table_tile=None, tile_ft=500.0):
     """Baked colour map of the apron mesh. height_fn(X, Y) -> absolute elevation ft (vectorised); bbox = (x0, y0, x1, y1) ft; px = (w, h).
     seam(X, Y) -> (s, qx, qy): distance to the terrain rectangle and the nearest point on it (for the colour fade). terrain_albedo = RGB uint8 image covering
     terrain_box (x0, y0, x1, y1) ft; near the seam the colour continues the terrain's own colour and fades to the palette over blend_ft.
@@ -260,5 +260,14 @@ def apron_albedo(height_fn, bbox, px, P, seed=5, seam=None, terrain_albedo=None,
         s = seam(X, Y)[0]
         f = smoothstep01((s - 0.45 * apron_len) / (0.55 * apron_len))[..., None]
         fm = _lin(far_mean)[None, None, :] * (0.88 + 0.24 * fine)[..., None]
+        if table_tile is not None:       # real tiled ground detail (the same tile the table uses, same texel density, wrapped on place coordinates) instead of a flat mean-colour wash
+            th_, tw_ = table_tile.shape[:2]
+            ux = (np.mod(X, tile_ft) / tile_ft * tw_).astype(int) % tw_
+            uy = (np.mod(Y, tile_ft) / tile_ft * th_).astype(int) % th_
+            fm = srgb_to_lin(table_tile[uy, ux, :3].astype(np.float32) / 255.0)
+            lum = fm.mean(-1, keepdims=True)
+            rel = lum / max(float(lum.mean()), 1e-6)
+            wd = (smoothstep01(s / 60.0) * (1 - f[..., 0]))[..., None]              # inside the ring: the tile's light/dark ground mottling, not a colour wash (full strength from 60 ft)
+            col = col * (1 + 0.5 * wd * (rel - 1.0))
         col = col * (1 - f) + fm * f
     return to_u8(col), float(Z.min()), float(Z.max())
