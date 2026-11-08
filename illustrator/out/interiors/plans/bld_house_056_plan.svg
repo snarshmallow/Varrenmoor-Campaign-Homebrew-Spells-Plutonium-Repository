@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="651" height="446" viewBox="0 0 651 446">
+<rect width="651" height="446" fill="#f4efe3"/>
+<polygon points="227.8,127.8 75.7,136.2 86.3,370.4 240.2,363.7" fill="#ecdcb6"/>
+<polygon points="72.0,386.0 256.0,378.0 242.0,112.0 60.0,122.0" fill="#2b2622"/>
+<polygon points="227.8,127.8 240.2,363.7 86.3,370.4 75.7,136.2" fill="#e8dcc0"/>
+<polygon points="227.8,127.8 75.7,136.2 86.3,370.4 240.2,363.7" fill="#ecdcb6"/>
+<polygon points="81.6,186.8 141.6,183.6 151.0,363.4 91.1,366.5" fill="#b9a47c" stroke="#2b2622" stroke-width="1.2"/>
+<polyline points="142.2,195.6 82.3,198.7" fill="none" stroke="#7c6a48" stroke-width="1.0" stroke-linecap="butt"/>
+<polyline points="142.8,207.6 82.9,210.7" fill="none" stroke="#7c6a48" stroke-width="1.0" stroke-linecap="butt"/>
+<polyline points="143.5,219.6 83.5,222.7" fill="none" stroke="#7c6a48" stroke-width="1.0" stroke-linecap="butt"/>
+<polyline points="144.1,231.5 84.2,234.7" fill="none" stroke="#7c6a48" stroke-width="1.0" stroke-linecap="butt"/>
+<polyline points="144.7,243.5 84.8,246.7" fill="none" stroke="#7c6a48" stroke-width="1.0" stroke-linecap="butt"/>
+<polyline points="145.3,255.5 85.4,258.7" fill="none" stroke="#7c6a48" stroke-width="1.0" stroke-linecap="butt"/>
+<polyline points="146.0,267.5 86.1,270.6" fill="none" stroke="#7c6a48" stroke-width="1.0" stroke-linecap="butt"/>
+<polyline points="146.6,279.5 86.7,282.6" fill="none" stroke="#7c6a48" stroke-width="1.0" stroke-linecap="butt"/>
+<polyline points="147.2,291.5 87.3,294.6" fill="none" stroke="#7c6a48" stroke-width="1.0" stroke-linecap="butt"/>
+<polyline points="147.9,303.4 87.9,306.6" fill="none" stroke="#7c6a48" stroke-width="1.0" stroke-linecap="butt"/>
+<polyline points="148.5,315.4 88.6,318.6" fill="none" stroke="#7c6a48" stroke-width="1.0" stroke-linecap="butt"/>
+<polyline points="149.1,327.4 89.2,330.6" fill="none" stroke="#7c6a48" stroke-width="1.0" stroke-linecap="butt"/>
+<polyline points="149.8,339.4 89.8,342.5" fill="none" stroke="#7c6a48" stroke-width="1.0" stroke-linecap="butt"/>
+<polyline points="150.4,351.4 90.5,354.5" fill="none" stroke="#7c6a48" stroke-width="1.0" stroke-linecap="butt"/>
+<polyline points="111.6,185.2 121.1,364.9" fill="none" stroke="#2b2622" stroke-width="1.6" stroke-linecap="butt"/>
+<polyline points="121.1,364.9 130.1,346.4" fill="none" stroke="#2b2622" stroke-width="1.6" stroke-linecap="butt"/>
+<polyline points="121.1,364.9 110.1,347.5" fill="none" stroke="#2b2622" stroke-width="1.6" stroke-linecap="butt"/>
+<text x="116.3" y="275.1" font-family="sans-serif" font-size="9.0" fill="#2b2622" text-anchor="middle">UP</text>
+<polygon points="116.8,134.9 206.6,130.0 208.6,165.9 118.8,170.8" fill="#6e6a64" stroke="#2b2622" stroke-width="0.8"/>
+<polygon points="236.5,312.9 238.4,348.9 202.5,350.8 200.6,314.8" fill="#8a6a44" stroke="#2b2622" stroke-width="0.8"/>
+<polygon points="239.3,210.5 243.0,280.4 258.7,279.5 255.0,209.6" fill="#e8dcc0"/>
+<polyline points="247.1,210.0 250.9,280.0" fill="none" stroke="#6b4a2b" stroke-width="3.2" stroke-linecap="butt"/>
+<text x="157.5" y="245.9" font-family="sans-serif" font-size="12.4" fill="#2b2622" text-anchor="middle">Hall</text>
+<text x="157.5" y="269.9" font-family="sans-serif" font-size="9.6" fill="#6b6256" text-anchor="middle">90 sq ft</text>
+<text x="158.0" y="34.0" font-family="sans-serif" font-size="16.0" fill="#2b2622" text-anchor="middle">House 56  -  Ground floor   (generated, not canon; north = up)</text>
+<polygon points="563.8,127.8 411.7,136.2 422.3,370.4 576.2,363.7" fill="#e8dcc0"/>
+<polygon points="477.6,183.6 417.6,186.8 414.0,187.0 422.1,366.8 427.1,366.5 487.0,363.4" fill="#d8cfba" stroke="#8a7c62" stroke-width="1.0"/>
+<polygon points="408.0,386.0 592.0,378.0 578.0,112.0 396.0,122.0" fill="#2b2622"/>
+<polygon points="563.8,127.8 576.2,363.7 422.3,370.4 411.7,136.2" fill="#e8dcc0"/>
+<polygon points="563.8,127.8 411.7,136.2 422.3,370.4 576.2,363.7" fill="#e8dcc0"/>
+<polygon points="417.6,186.8 477.6,183.6 487.0,363.4 427.1,366.5" fill="#b9a47c" stroke="#2b2622" stroke-width="1.2"/>
+<polyline points="478.2,195.6 418.3,198.7" fill="none" stroke="#7c6a48" stroke-width="1.0" stroke-linecap="butt"/>
+<polyline points="478.8,207.6 418.9,210.7" fill="none" stroke="#7c6a48" stroke-width="1.0" stroke-linecap="butt"/>
+<polyline points="479.5,219.6 419.5,222.7" fill="none" stroke="#7c6a48" stroke-width="1.0" stroke-linecap="butt"/>
+<polyline points="480.1,231.5 420.2,234.7" fill="none" stroke="#7c6a48" stroke-width="1.0" stroke-linecap="butt"/>
+<polyline points="480.7,243.5 420.8,246.7" fill="none" stroke="#7c6a48" stroke-width="1.0" stroke-linecap="butt"/>
+<polyline points="481.3,255.5 421.4,258.7" fill="none" stroke="#7c6a48" stroke-width="1.0" stroke-linecap="butt"/>
+<polyline points="482.0,267.5 422.1,270.6" fill="none" stroke="#7c6a48" stroke-width="1.0" stroke-linecap="butt"/>
+<polyline points="482.6,279.5 422.7,282.6" fill="none" stroke="#7c6a48" stroke-width="1.0" stroke-linecap="butt"/>
+<polyline points="483.2,291.5 423.3,294.6" fill="none" stroke="#7c6a48" stroke-width="1.0" stroke-linecap="butt"/>
+<polyline points="483.9,303.4 423.9,306.6" fill="none" stroke="#7c6a48" stroke-width="1.0" stroke-linecap="butt"/>
+<polyline points="484.5,315.4 424.6,318.6" fill="none" stroke="#7c6a48" stroke-width="1.0" stroke-linecap="butt"/>
+<polyline points="485.1,327.4 425.2,330.6" fill="none" stroke="#7c6a48" stroke-width="1.0" stroke-linecap="butt"/>
+<polyline points="485.8,339.4 425.8,342.5" fill="none" stroke="#7c6a48" stroke-width="1.0" stroke-linecap="butt"/>
+<polyline points="486.4,351.4 426.5,354.5" fill="none" stroke="#7c6a48" stroke-width="1.0" stroke-linecap="butt"/>
+<polyline points="447.6,185.2 457.1,364.9" fill="none" stroke="#2b2622" stroke-width="1.6" stroke-linecap="butt"/>
+<text x="452.3" y="275.1" font-family="sans-serif" font-size="9.0" fill="#2b2622" text-anchor="middle">DN</text>
+<text x="493.5" y="245.9" font-family="sans-serif" font-size="12.4" fill="#2b2622" text-anchor="middle">Loft bedroom</text>
+<text x="493.5" y="269.9" font-family="sans-serif" font-size="9.6" fill="#6b6256" text-anchor="middle">90 sq ft</text>
+<text x="494.0" y="34.0" font-family="sans-serif" font-size="16.0" fill="#2b2622" text-anchor="middle">House 56  -  Floor 2   (generated, not canon; north = up)</text>
+<polyline points="20.0,430.0 220.0,430.0" fill="none" stroke="#2b2622" stroke-width="3.0" stroke-linecap="butt"/>
+<text x="120.0" y="424.0" font-family="sans-serif" font-size="11.0" fill="#2b2622" text-anchor="middle">10 ft</text>
+</svg>

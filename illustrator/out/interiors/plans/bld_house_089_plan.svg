@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="475" height="493" viewBox="0 0 475 493">
+<rect width="475" height="493" fill="#f4efe3"/>
+<polygon points="210.5,175.9 79.5,228.3 154.3,414.5 285.1,362.2" fill="#ecdcb6"/>
+<polygon points="285.1,362.2 396.5,317.7 321.7,131.5 210.5,175.9" fill="#dfe3cf"/>
+<polygon points="146.0,434.0 416.0,326.0 330.0,112.0 60.0,220.0" fill="#2b2622"/>
+<polygon points="321.7,131.5 396.5,317.7 154.3,414.5 79.5,228.3" fill="#e8dcc0"/>
+<polygon points="210.5,175.9 79.5,228.3 154.3,414.5 285.1,362.2" fill="#ecdcb6"/>
+<polygon points="285.1,362.2 396.5,317.7 321.7,131.5 210.5,175.9" fill="#dfe3cf"/>
+<polygon points="93.5,223.8 177.0,190.4 190.4,223.8 106.8,257.3" fill="#6e6a64" stroke="#2b2622" stroke-width="0.8"/>
+<polygon points="174.1,261.1 203.8,335.3 185.3,342.8 155.6,268.5" fill="#a98457" stroke="#2b2622" stroke-width="0.8"/>
+<polygon points="269.4,367.4 202.5,394.1 195.9,377.4 262.7,350.7" fill="#7b5a3a" stroke="#2b2622" stroke-width="0.8"/>
+<polygon points="153.1,408.7 139.7,375.3 173.1,361.9 186.5,395.3" fill="#8a6a44" stroke="#2b2622" stroke-width="0.8"/>
+<polygon points="374.7,325.3 319.0,347.6 307.1,317.8 362.9,295.6" fill="#7b5a3a" stroke="#2b2622" stroke-width="0.8"/>
+<polygon points="218.7,173.8 285.6,147.0 292.2,163.7 225.4,190.5" fill="#7b5a3a" stroke="#2b2622" stroke-width="0.8"/>
+<polygon points="206.8,177.4 230.2,235.7 237.6,232.8 214.3,174.5" fill="#3b332c"/>
+<polygon points="252.4,291.4 281.3,363.7 288.8,360.7 259.9,288.5" fill="#3b332c"/>
+<polyline points="233.9,234.2 178.2,256.5" fill="none" stroke="#6b4a2b" stroke-width="2.8" stroke-linecap="butt"/>
+<polyline points="256.2,290.0 246.2,293.0 235.8,294.2 225.3,293.6 215.1,291.2 205.5,287.1 196.8,281.4 189.2,274.2 182.9,265.9 178.2,256.5" fill="none" stroke="#9c8a6a" stroke-width="1.2" stroke-linecap="butt"/>
+<polygon points="123.4,356.5 97.3,291.6 82.6,297.5 108.7,362.4" fill="#e8dcc0"/>
+<polyline points="116.1,359.5 89.9,294.5" fill="none" stroke="#6b4a2b" stroke-width="3.2" stroke-linecap="butt"/>
+<polygon points="354.9,194.0 377.2,249.6 391.1,244.0 368.8,188.4" fill="#7fb4d6" stroke="#2b2622" stroke-width="0.8"/>
+<text x="182.4" y="291.3" font-family="sans-serif" font-size="12.4" fill="#2b2622" text-anchor="middle">Hall</text>
+<text x="182.4" y="315.3" font-family="sans-serif" font-size="9.6" fill="#6b6256" text-anchor="middle">71 sq ft</text>
+<text x="303.4" y="242.8" font-family="sans-serif" font-size="12.4" fill="#2b2622" text-anchor="middle">Bedroom</text>
+<text x="303.4" y="266.8" font-family="sans-serif" font-size="9.6" fill="#6b6256" text-anchor="middle">60 sq ft</text>
+<text x="238.0" y="34.0" font-family="sans-serif" font-size="16.0" fill="#2b2622" text-anchor="middle">House 89  -  Ground floor   (generated, not canon; north = up)</text>
+<polyline points="20.0,477.0 220.0,477.0" fill="none" stroke="#2b2622" stroke-width="3.0" stroke-linecap="butt"/>
+<text x="120.0" y="471.0" font-family="sans-serif" font-size="11.0" fill="#2b2622" text-anchor="middle">10 ft</text>
+</svg>

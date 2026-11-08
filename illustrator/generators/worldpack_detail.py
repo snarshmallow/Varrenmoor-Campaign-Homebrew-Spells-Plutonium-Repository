@@ -10,6 +10,7 @@ import math
 import numpy as np
 
 import worldpack_mesh as wm
+from worldpack_pbr import tile_ft as pbr_tile
 
 FT = wm.FT
 Builder, Mesh = wm.Builder, wm.Mesh
@@ -102,17 +103,24 @@ def build_building_detailed(cx, e):
     if sum(P[i][0] * P[(i + 1) % len(P)][1] - P[(i + 1) % len(P)][0] * P[i][1] for i in range(len(P))) < 0:
         P.reverse()
     n = len(P)
-    wmat, wt = e["wall"]["surface"]["material"], e["wall"]["surface"]["tile_ft"]
+    wmat = e["wall"]["surface"]["material"]
+    wt = pbr_tile(wmat, e["wall"]["surface"]["tile_ft"])
     D, N, Q = wall_geometry(P)
     storeys = max(1, int(e.get("floors", 1)))
     edge_holes = plan_holes(P, door_hits(P, e.get("openings"), cx), storeys, zf)
+    if e.get("layout"):                                      # interior layout owns the window positions (worldpack_interiors)
+        import worldpack_interiors as wi
+        edge_holes = wi.apply_layout_windows(edge_holes, P, e, cx, zf)
     door_nodes = []
 
     def X(i, u, v, z):
         return (P[i][0] + D[i][0] * u + N[i][0] * v, P[i][1] + D[i][1] * u + N[i][1] * v, z)
 
-    def face(mat, pts):
-        b.face(mat, pts, [((p[0] + p[1]) / FT / wt, -p[2] / FT / wt) for p in pts])
+    import worldpack_pbr as pbr
+    uvo = wm.uv_offset(e["id"])
+
+    def face(mat, pts):                  # world-scale UVs (worldpack_mesh.world_uv): level courses, constant texel density, rails on the floor line
+        b.face(mat, pts, wm.world_uv(pts, wt if mat == wmat else pbr.tile_ft(mat, wt), uvo, zf))
 
     def rect(i, mat, v, u0, u1, zb, zc):
         if u1 - u0 > 1e-6 and zc - zb > 1e-6:
@@ -173,10 +181,10 @@ def build_building_detailed(cx, e):
                             [(0, -lt / 2, 0), (0, lt / 2, 0), (0, lt / 2, lh), (0, -lt / 2, lh)], [(lw, -lt / 2, 0), (lw, lt / 2, 0), (lw, lt / 2, lh), (lw, -lt / 2, lh)],
                             [(0, -lt / 2, lh), (lw, -lt / 2, lh), (lw, lt / 2, lh), (0, lt / 2, lh)]):
                     lb.face("mat_door_wood", pts, [(p[0] / FT / 4, -p[2] / FT / 4) for p in pts])
-                for sgn in (-1, 1):
+                for sgn in (-1, 1):                    # latch plate; same material as the leaf so the door node is ONE mesh/material (3D Canvas door code reads child.material)
                     y = sgn * (lt / 2 + 0.01)
                     hz = lh * 0.45
-                    lb.face("mat_iron", [(lw - 0.15, y, hz), (lw - 0.05, y, hz), (lw - 0.05, y, hz + 0.05), (lw - 0.15, y, hz + 0.05)], [(0, 0)] * 4)
+                    lb.face("mat_door_wood", [(lw - 0.15, y, hz), (lw - 0.05, y, hz), (lw - 0.05, y, hz + 0.05), (lw - 0.15, y, hz + 0.05)], [(0, 0)] * 4)
                 M = lb.build()
                 V = M.V
                 Vb = np.stack([V[:, 0] * D[i][0] + V[:, 1] * N[i][0], V[:, 0] * D[i][1] + V[:, 1] * N[i][1], V[:, 2]], 1)
@@ -199,3 +207,7 @@ def build_building_detailed(cx, e):
         if len(sel):
             subs[k] = sel
     return wm.merge_meshes([b.build(), Mesh(base.V, base.UV, subs, False)]), door_nodes
+
+
+import worldpack_interiors as _wi  # noqa: E402  (interior materials join the detail materials)
+DETAIL_MATS.update(_wi.INTERIOR_MATS)
