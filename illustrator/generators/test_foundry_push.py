@@ -66,7 +66,7 @@ class FakeBridge:
 
     @staticmethod
     def emb_kinds():
-        return ("Wall", "Drawing", "Tile", "Token")
+        return ("Wall", "Drawing", "Tile", "Token", "AmbientLight")
 
     @staticmethod
     def _pid(d):
@@ -474,6 +474,46 @@ class Scene3DTests(unittest.TestCase):
         self.assertFalse(r2["ok"])
         self.assertIn("model problem", r2["error"])
         self.assertEqual(n, len(self.br.emb["s0"]["Tile"]))
+
+
+    def _seed_lights(self, n=3):
+        self.br.emb.setdefault("s0", {}).setdefault("AmbientLight", {})
+        for i in range(n):
+            self.br.emb["s0"]["AmbientLight"][f"l{i}"] = {"_id": f"l{i}", "flags": {"varrenmoor": {"pipelineId": f"light:x:{i}"}}}
+        self.br.emb["s0"]["AmbientLight"]["mine"] = {"_id": "mine", "flags": {}}
+
+    def test_with_lights_zero_plan_keeps_existing_lights(self):
+        """A layer set has no lights: --with-lights must fail early, write nothing and keep the scene's lights."""
+        self._seed_lights()
+        before = len(self.br.emb["s0"]["AmbientLight"])
+        r, code = self.go("--set-name", "t", "--with-lights", "--lighting", "bridgehollow", "--lights-placements", self.pl)
+        self.assertFalse(r["ok"], r)
+        self.assertIn("0 lights", r["error"])
+        self.assertEqual(before, len(self.br.emb["s0"]["AmbientLight"]))
+        self.assertNotIn("upsert_many", self.kinds())          # failed before any write
+
+    def test_push_lights_zero_plan_needs_explicit_prune(self):
+        self._seed_lights()
+        r, _ = self.run_cmd(self.br, "push-lights", "--place", self.PLACE, "--scene-uuid", "Scene.s0", "--placements", self.pl, "--lights-placements", self.pl)
+        self.assertFalse(r["ok"], r)
+        self.assertEqual(4, len(self.br.emb["s0"]["AmbientLight"]))
+        r, _ = self.run_cmd(self.br, "push-lights", "--place", self.PLACE, "--scene-uuid", "Scene.s0", "--placements", self.pl, "--lights-placements", self.pl, "--prune-lights")
+        self.assertTrue(r["ok"], r)
+        self.assertEqual(["mine"], list(self.br.emb["s0"]["AmbientLight"]))      # only pipeline-flagged lights were removed
+
+    def test_bad_lighting_name_fails_before_writes(self):
+        r, _ = self.go("--set-name", "t", "--lighting", "no_such_place_zz")
+        self.assertFalse(r["ok"])
+        self.assertIn("lighting", r["error"])
+        self.assertNotIn("upsert_many", self.kinds())
+
+    def test_models_prune_empty_push_keeps_tiles(self):
+        r, _ = self.go("--set-name", "t")
+        n = len(self.br.emb["s0"]["Tile"])
+        self.assertGreater(n, 0)
+        self.br.emb["s0"]["Tile"]["foreign"] = {"_id": "foreign", "flags": {"varrenmoor": {"pipelineId": "model:otherplace:x"}}}
+        r, _ = self.run_cmd(self.br, "push-models", "--place", self.PLACE, "--scene-uuid", "Scene.s0", "--placements", self.pl, "--yes", "--set-name", "t", "--prune")
+        self.assertIn("foreign", self.br.emb["s0"]["Tile"])        # another place's pipeline tile survives --prune
 
     def test_dry_run_writes_nothing(self):
         r, _ = self.go("--set-name", "t", "--dry-run")

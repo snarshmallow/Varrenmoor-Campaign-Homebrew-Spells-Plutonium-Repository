@@ -461,7 +461,7 @@ def cmd_push_scene(br, a):
              "flags": {FLAG: {"worldId": a.place, "calib": calib, **extra}}}
     if a.lighting and sc is None:                       # flat scene: the map image already carries the baked sun shadows; Foundry gets plain global light, no darkness
         import foundry_lighting as flt
-        sdata["environment"] = flt.flat_environment(flt.load_lighting(a.lighting))
+        sdata["environment"] = flt.flat_environment(load_lighting_checked(a.lighting))
     mode = a.scene_mode or "flat"
     if a.scene_mode or sc is None and not a.scene_uuid:     # explicit --scene-mode, or a brand-new scene (default flat); never silently re-flag an existing one
         sdata["flags"].update(scene_mode_flags(mode, a.scene_flag))
@@ -799,7 +799,7 @@ def _tex_flags(a):
     fl = list(a.scene_flag or [])
     if getattr(a, "lighting", None):
         import foundry_lighting as flt
-        fl = [f"{k}={json.dumps(v)}" for k, v in flt.scene_light_flags(flt.load_lighting(a.lighting)).items()] + fl
+        fl = [f"{k}={json.dumps(v)}" for k, v in flt.scene_light_flags(load_lighting_checked(a.lighting)).items()] + fl
     if getattr(a, "table_texture", None):
         fl = ["renderTable=\"matcustom\"", "renderBackground=false", "tableTex=" + json.dumps(a.table_texture)] + fl
     return fl
@@ -906,7 +906,9 @@ def cmd_push_models(br, a):
     bad = verify_models([i["data"]["flags"][L3D]["model3d"] for i in items], root, getattr(a, "serve_url", None) or os.environ.get("FOUNDRY_URL"), getattr(a, "allow_quantized", False))
     if bad:        # never create tiles Foundry cannot load: one failing tile breaks the 3D render loop of the whole scene
         raise PushError(f"{len(bad)} model problem(s), no tiles were written:\n  " + "\n  ".join(bad[:25]))
-    r = br.call("upsert_many", documentName="Tile", parentUuid=uuid, items=items, prefix="model:", prune=bool(a.prune))
+    if a.prune and not items:
+        LOG("WARNING: --prune ignored: this push has 0 tiles, existing model tiles are kept")
+    r = br.call("upsert_many", documentName="Tile", parentUuid=uuid, items=items, prefix=f"model:{place}:", prune=bool(a.prune) and bool(items))
     LOG(f"tiles: {r}")
     result.update(scene_uuid=uuid, tile_ops=r)
     return result
@@ -930,27 +932,78 @@ def build_light_docs(doc, c, only_types=None, animation=None):
     return out
 
 
-def cmd_push_lights(br, a):
+def _count_lights(doc):
+    return len(doc.get("lights", [])) + sum(len(e.get("lights", [])) for e in doc.get("files", []))
+
+
+def light_placements_path(a):
+    """placements.json that carries the lights: --lights-placements, else --placements when it has lights, else the full pack export
+    (a layer set from worldpack_merge has no lights, which once made --with-lights find 0 and wipe the scene's lights)."""
+    if getattr(a, "lights_placements", None):
+        return a.lights_placements
     pp = a.placements or os.path.join(REPO, "world", a.place, "export", "placements.json")
+    try:
+        with open(pp, encoding="utf-8") as f:
+            if _count_lights(json.load(f)):
+                return pp
+    except (OSError, ValueError):
+        return pp
+    full = os.path.join(REPO, "world", a.place, "export", "placements.json")
+    return full if os.path.exists(full) else pp
+
+
+def load_lighting_checked(src):
+    """foundry_lighting.load_lighting with a clear PushError (names the place ids that have a lighting config) instead of a traceback."""
+    import foundry_lighting as fl
+    try:
+        return fl.load_lighting(src)
+    except (OSError, ValueError, KeyError, TypeError) as e:
+        have = sorted(d for d in (os.listdir(os.path.join(REPO, "world")) if os.path.isdir(os.path.join(REPO, "world")) else [])
+                      if os.path.exists(os.path.join(REPO, "world", d, "panel_state.json")))
+        raise PushError(f"lighting {src!r} not usable ({e.__class__.__name__}: {e}); give a place id with world/<id>/panel_state.json (have: {', '.join(have[:12])}) or a lighting JSON file")
+
+
+def plan_lights(br, a, sc=None):
+    """The AmbientLight items a push would write (no bridge writes). Returns (items, calib-context, warnings)."""
+    pp = light_placements_path(a)
     with open(pp, encoding="utf-8") as f:
         doc = json.load(f)
-    if not a.scene_uuid:
-        raise PushError("give --scene-uuid")
-    sc = br.call("get", uuid=a.scene_uuid)
+    if sc is None:
+        sc = br.call("get", uuid=a.scene_uuid)
     calib = (sc.get("flags", {}).get(FLAG, {}) or {}).get("calib") or {}
     c = {"ppf": float(a.px_per_ft or calib.get("ppf") or doc["frame"]["px_per_ft"]), "x0": calib.get("x0", 0.0), "y0": calib.get("y0", 0.0),
          "sceneX": calib.get("sceneX", 0), "sceneY": calib.get("sceneY", 0)}
     items = build_light_docs(doc, c, set(a.layers.split(",")) if a.layers else None, a.light_animation)      # --layers = light types (hearth,window)
+    warns = []
     if a.lighting:                                                                 # the 2D lights of the Illustrator lighting config, same positions
         import foundry_lighting as fl
+        cfg = load_lighting_checked(a.lighting)
         rg = os.path.join(REPO, "world", a.place, "region.json")
         org = (json.load(open(rg, encoding="utf-8")).get("transform", {}).get("origin_ft") if os.path.exists(rg) else None) or [0.0, 0.0]
-        items += fl.point_light_docs(fl.load_lighting(a.lighting), org, c["ppf"], (c["sceneX"], c["sceneY"]), c["x0"], c["y0"], doc["place"])
-    LOG(f"{len(items)} lights")
+        pts = fl.point_light_docs(cfg, org, c["ppf"], (c["sceneX"], c["sceneY"]), c["x0"], c["y0"], doc["place"])
+        if not pts:
+            warns.append(f"lighting {a.lighting!r} has no 2D point lights (sun/ambient only)")
+        items += pts
+    if not _count_lights(doc):
+        warns.append(f"{pp} carries no light entities (a layer set from worldpack_merge has none; pass --lights-placements <full pack placements.json>)")
+    return items, warns, pp
+
+
+def cmd_push_lights(br, a):
+    if not a.scene_uuid:
+        raise PushError("give --scene-uuid")
+    items, warns, pp = plan_lights(br, a)
+    LOG(f"{len(items)} lights from {pp}")
+    for w in warns:
+        LOG("WARNING: " + w)
+    prune = bool(getattr(a, "prune_lights", False))
+    if not items and not prune:
+        raise PushError("the plan has 0 lights, nothing written and the scene's existing lights are kept; " + "; ".join(warns) + "; use --prune-lights to really clear the pipeline lights")
     if a.dry_run:
-        return {"ok": True, "lights": len(items), "sample": items[:1]}
-    r = br.call("upsert_many", documentName="AmbientLight", parentUuid=a.scene_uuid, items=items, prefix="light:", prune=True)
-    return {"ok": True, "scene_uuid": a.scene_uuid, "light_ops": r}
+        return {"ok": True, "lights": len(items), "sample": items[:1], "warnings": warns}
+    # the bridge only ever deletes documents flagged by our pipeline (pipelineId prefix light:); never prune on an empty plan unless explicit
+    r = br.call("upsert_many", documentName="AmbientLight", parentUuid=a.scene_uuid, items=items, prefix="light:", prune=bool(items) or prune)
+    return {"ok": True, "scene_uuid": a.scene_uuid, "light_ops": r, "warnings": warns}
 
 
 # ------------------------------------------------------------------ cli
@@ -985,6 +1038,12 @@ def cmd_push_scene_3d(br, a):
         return {"tiles": r["tiles"], "set": r["set"]}
 
     steps = {}
+    if a.lighting:
+        load_lighting_checked(a.lighting)            # fail before any write when the lighting preset name is wrong
+    if a.with_lights:                                  # fail before any write when there is nothing to push (and never wipe existing lights)
+        items0, warns0, pp0 = plan_lights(br, a)
+        if not items0 and not getattr(a, "prune_lights", False):
+            raise PushError("--with-lights: the plan has 0 lights (" + "; ".join(warns0 or [f"no lights in {pp0}"]) + "); nothing was written. Pass --lights-placements <full pack placements.json> or drop --with-lights")
     if not a.no_padding and not a.dry_run:        # geometry first: padding moves the scene rect (sceneX/Y), and every tile position is computed from it
         import padding_heightmap as ph
         sc0 = br.call("get", uuid=a.scene_uuid)
@@ -1031,7 +1090,7 @@ def cmd_push_scene_3d(br, a):
         flags.update({"exr": path, "skybox": ""})
     if a.lighting:
         import foundry_lighting as flt
-        flags.update(flt.scene_light_flags(flt.load_lighting(a.lighting)))
+        flags.update(flt.scene_light_flags(load_lighting_checked(a.lighting)))
     for o in a.scene_flag or []:
         k, _, v = o.partition("=")
         try:
@@ -1120,7 +1179,9 @@ def parser():
     ap.add_argument("--publish", action="store_true", help="bake-texture: copy the image into the shared assets folder Foundry serves (otherwise only written locally)")
     ap.add_argument("--lighting", help="place id (panel_state.json lighting) or lighting JSON: sun/ambient -> scene flags (push-models), 2D point lights -> AmbientLights (push-lights)")
     ap.add_argument("--light-animation", dest="light_animation", help="push-lights: Foundry light animation type for interior hints (default none; never torch/smoke particles)")
-    ap.add_argument("--prune", action="store_true", help="push-models: delete pipeline model tiles that are not in this push")
+    ap.add_argument("--prune", action="store_true", help="push-models: delete pipeline model tiles (flags.varrenmoor.pipelineId model:<place>:*) that are not in this push; ignored on an empty push")
+    ap.add_argument("--prune-lights", dest="prune_lights", action="store_true", help="push-lights/push-scene-3d: allow clearing the pipeline's lights when the plan has 0 lights (default: refuse, existing lights kept)")
+    ap.add_argument("--lights-placements", dest="lights_placements", help="push-lights/push-scene-3d --with-lights: full pack placements.json that carries the lights (default: --placements if it has lights, else world/<place>/export/placements.json)")
     ap.add_argument("--serve-url", dest="serve_url", help="push-models/push-scene-3d: Foundry base URL (default env FOUNDRY_URL); every model is fetched over HTTP and must answer 200 with the right size")
     ap.add_argument("--allow-quantized", action="store_true", help="push-models: accept KHR_mesh_quantization GLBs (default: rejected, see glb_check.py)")
     ap.add_argument("--foliage-placements", dest="foliage_placements", help="push-scene-3d: placements.json of a foliage merge (optimized/foliage_vNNN)")
