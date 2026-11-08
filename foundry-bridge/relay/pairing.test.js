@@ -277,7 +277,7 @@ test('device expiry and secret rotation over the sealed channel (old secret has 
     const mk = (ip, days) => {
       const kp = X.newKeypair(), n = X.randomBytes(16), r = p.request({ ip, commit: X.commitment(kp.pk, n) });
       const key = X.pairKey(kp.sk, X.unb64u(r.relayPk), kp.pk, X.unb64u(r.relayPk), n, X.unb64u(r.relayNonce));
-      p.reveal({ requestId: r.requestId, pollSecret: r.pollSecret, pk: X.b64u(kp.pk), nonce: X.b64u(n), info: X.sealJson(key, { deviceName: 'GM' }, 'vb-info|' + r.requestId), ip });
+      p.reveal({ requestId: r.requestId, pollSecret: r.pollSecret, pk: X.b64u(kp.pk), nonce: X.b64u(n), info: X.sealJson(key, { deviceName: 'GM ' + ip }, 'vb-info|' + r.requestId), ip });
       const a = p.approve(p.list().pending[0].id, { days }), g = p.poll(r.requestId, r.pollSecret, ip);
       const cred = X.openJson(key, g.sealed, 'vb-dev|' + r.requestId + '|' + a.deviceId);
       return { id: a.deviceId, secret: X.unb64u(cred.secret) };
@@ -306,4 +306,36 @@ test('device expiry and secret rotation over the sealed channel (old secret has 
     // protocol-1 records (hashed token, no secret) are dropped on load
     fs.writeFileSync(file, JSON.stringify({ version: 1, relayId: 'r_old', devices: [{ id: 'd_old', hash: 'x' }] })); assert.equal(new Pairing({ file }).data.devices.length, 0);
   } finally { fs.rmSync(dir, { recursive: true, force: true }); }
+});
+
+test('one live request and one record per browser: a second request supersedes the first, cancel clears it, re-approval replaces the old device (no duplicates)', async () => {
+  const t = await boot({ pairingLimits: { requestsPerWindow: 50, maxPendingPerIp: 50, maxPending: 50 } });
+  try {
+    const info = { ...INFO, clientId: 'browser-1' };
+    const a = await startDevice(t, info), b = await startDevice(t, info);
+    const list = (await t.post('/pair/list', {}, { admin: true })).body.pending;
+    assert.equal(list.length, 1, 'only the newest request from the same browser is listed');
+    assert.equal(list[0].code, b.code.replace(' ', ''), 'the listed code is the live one');
+    assert.notEqual(a.code, b.code); assert.equal((await a.poll()).body.state, 'expired', 'the superseded request is dead');
+    // cancel (dialog closed) removes it at once
+    const c = await startDevice(t, { ...INFO, clientId: 'browser-2' });
+    assert.equal((await t.post('/pair/list', {}, { admin: true })).body.pending.length, 2);
+    await t.post('/pair/cancel', { requestId: c.rq.requestId, pollSecret: c.rq.pollSecret });
+    assert.equal((await t.post('/pair/list', {}, { admin: true })).body.pending.length, 1);
+    // approve browser-1 twice (second pairing of the same browser): one record, newest id
+    const d1 = await finish(t, b);
+    const e = await startDevice(t, info); const d2 = await finish(t, e);
+    const devs = (await t.post('/pair/list', {}, { admin: true })).body.devices;
+    assert.equal(devs.length, 1); assert.equal(devs[0].id, d2.deviceId); assert.equal(devs[0].clientId, 'browser-1');
+    assert.notEqual(d1.deviceId, d2.deviceId);
+    // the replaced credential no longer logs in; the live one does; replacing does not close a live socket with 4005
+    assert.equal(await (await login(t.base, d1)).closed, 4005);
+    const live = await login(t.base, d2); assert.equal(live.first.type, 'welcome');
+    const f = await startDevice(t, info); await finish(t, f);
+    await sleep(150); assert.equal(live.ws.readyState, 1, 'an old live socket is not killed by the replacement');
+    live.ws.close();
+    // older modules without a browser id: same name/user/world/origin also collapses
+    const g = await startDevice(t, INFO); await finish(t, g); const h = await startDevice(t, INFO); await finish(t, h);
+    assert.equal((await t.post('/pair/list', {}, { admin: true })).body.devices.filter((x) => x.name === INFO.deviceName && !x.clientId).length, 1);
+  } finally { await t.close(); }
 });

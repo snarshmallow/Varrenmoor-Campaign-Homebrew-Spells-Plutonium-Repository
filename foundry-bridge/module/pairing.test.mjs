@@ -156,3 +156,45 @@ test('bridge.js on an https (Cloudflare/player) page: no pairing attempt, nothin
     assert.deepEqual(fetched.filter((u) => /discover|pair/.test(String(u))), [], 'no relay probing from an https page');
   } finally { globalThis.fetch = realFetch; }
 });
+
+test('bridge.js: auto-request, then a click on "Pair with relay": ONE request, the SAME code in the module and on the approver, one device record', async () => {
+  const r = await relay();
+  const hooks = {}, notes = [], dialogs = [], renders = [];
+  const store = { enabled: false, autoUrl: false, relayUrl: 'ws://127.0.0.1:3030/module', token: '', pairHost: '', relayPort: r.port, autoPair: true, deviceAuth: '', clientId: '', allowWrites: false };
+  const modObj = { version: 'test' };
+  class TWS extends RealWS {}
+  Object.assign(globalThis, {
+    Hooks: { once: (n, fn) => { hooks[n] = fn; }, on: () => {} },
+    game: { settings: { register() {}, get: (m, k) => store[k], set: async (m, k, v) => { store[k] = v; } }, user: { isGM: true, name: 'Trent', id: 'u1' }, world: { id: 'varrenmoor' }, modules: { get: () => modObj } },
+    ui: { notifications: { info: (m) => notes.push(['info', m]), warn: (m) => notes.push(['warn', m]) } },
+    WebSocket: TWS, location: { hostname: '127.0.0.1', protocol: 'http:', origin: 'http://127.0.0.1:30000' },
+    foundry: { applications: { api: { DialogV2: class { constructor(o) { this.o = o; dialogs.push(o); } render() { renders.push(this.o.content); } close() {} } } } },
+  });
+  Object.defineProperty(globalThis, 'navigator', { value: { userAgent: 'Windows' }, configurable: true });
+  const { dir } = await loadModuleScripts();
+  try {
+    await import(pathToFileURL(path.join(dir, 'bridge.js')).href);
+    await hooks.ready();
+    for (let i = 0; i < 60 && !r.seen.length; i++) await sleep(100);
+    assert.equal(r.seen.length, 1, 'auto-request filed one request');
+    const code = (renders.at(-1).match(/(\d{3} \d{3})/) || [])[1];
+    // the user now clicks "Pair with relay" while the first request is still waiting
+    const res = await modObj.api.pair(); assert.equal(res.reused, true);
+    await sleep(500);
+    assert.equal(r.seen.length, 1, 'no second request was filed');
+    assert.equal(dialogs.length, 1, 'same dialog, not a new one'); assert.equal((renders.at(-1).match(/(\d{3} \d{3})/) || [])[1], code, 'same code shown again');
+    const list = await r.admin('/pair/list'); assert.equal(list.body.pending.length, 1); assert.equal(list.body.pending[0].code, code.replace(' ', ''), 'the approver shows the module code');
+    await r.admin('/pair/approve', { id: list.body.pending[0].id, days: 30 });
+    for (let i = 0; i < 80 && !store.deviceAuth; i++) await sleep(100);
+    assert.ok(JSON.parse(store.deviceAuth).deviceId);
+    assert.equal((await r.admin('/pair/list')).body.devices.length, 1, 'one device record');
+    assert.ok(store.clientId, 'the browser id was stored');
+    // pairing again from the same browser replaces the record instead of adding a second one, and the fresh credential survives
+    store.deviceAuth = '';
+    const again = modObj.api.pair(); for (let i = 0; i < 60 && (await r.admin('/pair/list')).body.pending.length < 1; i++) await sleep(100);
+    const l2 = await r.admin('/pair/list'); await r.admin('/pair/approve', { id: l2.body.pending[0].id, days: 30 }); await again;
+    for (let i = 0; i < 60 && !store.deviceAuth; i++) await sleep(100);
+    await sleep(500);
+    assert.equal((await r.admin('/pair/list')).body.devices.length, 1, 'still one record after re-pairing'); assert.ok(store.deviceAuth, 'new credential kept');
+  } finally { try { for (const d of (await r.admin('/pair/list')).body.devices) await r.admin('/pair/revoke', { deviceId: d.id }); await sleep(200); } catch {} await r.close(); }
+});

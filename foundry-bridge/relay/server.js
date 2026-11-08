@@ -46,7 +46,7 @@ export function createRelay({ apiToken = API_TOKEN, moduleToken = MODULE_TOKEN, 
     try { const j = JSON.parse(raw || '{}'); return { raw, json: j && typeof j === 'object' ? j : null }; } catch { return { raw, json: null }; }
   };
   const ADMIN = new Set(['/pair/list', '/pair/approve', '/pair/deny', '/pair/revoke', '/pair/rotate', '/pair/config']);
-  const DEVICE = new Set(['/pair/request', '/pair/reveal', '/pair/poll']);
+  const DEVICE = new Set(['/pair/request', '/pair/reveal', '/pair/poll', '/pair/cancel']);
   async function pairRoutes(req, res) {
     const url = req.url, ip = peerIp(req) || '';
     const cors = { 'access-control-allow-origin': '*', 'access-control-allow-methods': 'GET, POST, OPTIONS', 'access-control-allow-headers': 'content-type, authorization, x-vb-auth', 'access-control-allow-private-network': 'true', 'access-control-max-age': '600' };
@@ -75,7 +75,8 @@ export function createRelay({ apiToken = API_TOKEN, moduleToken = MODULE_TOKEN, 
     } else if (url === '/pair/reveal') {
       r = pairing.reveal({ requestId: body.requestId, pollSecret: body.pollSecret, pk: body.pk, nonce: body.nonce, info: body.info, ip });
       if (r.status !== 200) log('pairing: reveal refused:', r.error);
-    } else if (url === '/pair/poll') r = pairing.poll(body.requestId, body.pollSecret, ip);
+    } else if (url === '/pair/cancel') r = pairing.cancel(body.requestId, body.pollSecret);
+    else if (url === '/pair/poll') r = pairing.poll(body.requestId, body.pollSecret, ip);
     else if (url === '/pair/list') r = { status: 200, ...pairing.list() };
     else if (url === '/pair/config') { r = (typeof body.enabled === 'boolean' || typeof body.autoRequest === 'boolean') ? pairing.configure(body) : { status: 200, ...pairing.list(), pending: undefined, devices: undefined }; if (r.status === 200 && ('enabled' in body || 'autoRequest' in body)) log(`pairing: ${pairing.enabled ? 'ENABLED' : 'DISABLED'}, auto-request ${pairing.autoRequest ? 'on' : 'off'} (set by ${ip})`); }
     else if (url === '/pair/approve') { r = pairing.approve(body.id, { days: body.days }); if (r.status === 200) log('pairing: approved', r.deviceId); }
@@ -176,7 +177,7 @@ export function createRelay({ apiToken = API_TOKEN, moduleToken = MODULE_TOKEN, 
     });
   });
 
-  pairing.on('revoked', ({ id }) => { if (moduleSocket && moduleDeviceId === id) moduleSocket.close(4005, 'device revoked'); });
+  pairing.on('revoked', ({ id, replaced }) => { if (!replaced && moduleSocket && moduleDeviceId === id) moduleSocket.close(4005, 'device revoked'); });
   server.pairing = pairing;
   server.on('close', () => pairing.flush());
   return server;

@@ -5,7 +5,7 @@
 // Uses an in-panel modal (no window.confirm/alert: JS dialogs can freeze CEP). Tokens live only in VBCore.bridgeMem (memory).
 (function () {
   "use strict";
-  var VB = window.VBCore, ctx = null, timer = null, shown = { reveal: false }, live = null, localLive = null, lastLocalUp = null, pairMsg = "", pairBusy = false, detectBusy = false;
+  var VB = window.VBCore, ctx = null, timer = null, pairTimer = null, shown = { reveal: false }, live = null, localLive = null, lastLocalUp = null, pairMsg = "", pairBusy = false, detectBusy = false;
   var $ = function (id) { return document.getElementById(id); };
   var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
   function S() { return ctx.state().bridge; }
@@ -64,9 +64,13 @@
           '<select data-bgdays="' + esc(r.id) + '"><option value="30">30 days</option><option value="90" selected>90 days</option><option value="365">1 year</option><option value="0">no expiry</option></select> ' +
           '<button class="primary" data-bgapprove="' + esc(r.id) + '">Approve</button> <button data-bgdeny="' + esc(r.id) + '">Deny</button></div>';
       }).join("");
-      if (p.enabled && !(p.pending || []).length) h += '<div class="note">No request waiting. A GM browser that opens Foundry as http://&lt;foundry PC&gt;:30000 asks by itself (Auto-request), or press "Pair with relay" in the module settings.</div>';
-      h += '<div class="note">Paired devices (' + (p.devices || []).length + ')</div>' + ((p.devices || []).map(function (d) {
-        return '<div class="bgrow"><b>' + esc(d.name) + '</b> <span class="bgk">' + esc(d.ip || "") + ' , last seen ' + esc(when(d.lastSeen)) + ', expires ' + esc(d.expiresAt ? when(d.expiresAt) : "never") + (d.rotationPending ? ", new secret on next connect" : "") + '</span> ' +
+      if (p.enabled && !(p.pending || []).length) h += '<div class="note">Waiting for a request... (checked every 2 s). A GM browser that opens Foundry as http://&lt;foundry PC&gt;:30000 asks by itself (Auto-request), or press "Pair with relay" in the module settings.</div>';
+      var devs = p.devices || [], key = function (d) { return d.clientId || (d.name + "|" + (d.origin || "") + "|" + (d.userName || "")); }, cnt = {};
+      devs.forEach(function (d) { cnt[key(d)] = (cnt[key(d)] || 0) + 1; });
+      h += '<div class="note">Paired devices (' + devs.length + ')</div>' + (devs.map(function (d) {
+        var dup = cnt[key(d)] > 1;
+        return '<div class="bgrow"><b>' + esc(d.name) + '</b> <span class="bgk">' + esc(d.userName || "") + " " + esc(d.origin || "") + " " + esc(d.ip || "") + ' , last seen ' + esc(when(d.lastSeen)) + ', expires ' + esc(d.expiresAt ? when(d.expiresAt) : "never") + (d.rotationPending ? ", new secret on next connect" : "") + '</span>' +
+          (dup ? ' <b class="bgbad">same browser listed twice: Revoke the one that was never seen / seen least recently</b>' : "") + ' ' +
           '<button data-bgrotate="' + esc(d.id) + '" title="Gives the device a fresh secret the next time it connects">Rotate</button> <button data-bgrevoke="' + esc(d.id) + '" title="Disconnects it now and invalidates its secret">Revoke</button></div>';
       }).join("") || '<div class="note">No device is paired yet.</div>');
     }
@@ -296,6 +300,11 @@
       else if (rv) modal("Revoke this device? It is disconnected now and must be paired again.", "Revoke", "Cancel").then(function (y) { if (y) pairAct(function () { return VB.bridgePairRevoke(rv); }, "Revoked."); });
       else if (ro) pairAct(function () { return VB.bridgePairRotate(ro); }, "The device gets a new token on its next connect.");
     });
+    pairTimer = setInterval(function () {   // cheap read-only list refresh, so a new request/code shows within ~2 s
+      var tab = $("tab-foundry"); if (!tab || !tab.classList.contains("on") || pairBusy || !VB.bridgeApiToken()) return;
+      var a = attachAddr(); if (!a.host) return;
+      pairBusy = true; VB.bridgePairRefresh().then(function () { pairMsg = ""; }, function (e) { if (/not running/.test(e.message) === false) pairMsg = e.message; }).then(function () { pairBusy = false; paintPair(); paintSummary(); });
+    }, 2000);
     timer = setInterval(poll, 3000); detectLocal(); poll(); paint();
   }
   window.VBBridgeUI = { init: init, paint: paint, actions: A };

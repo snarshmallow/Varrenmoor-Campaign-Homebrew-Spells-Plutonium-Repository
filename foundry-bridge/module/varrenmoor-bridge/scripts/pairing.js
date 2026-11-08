@@ -87,7 +87,7 @@ export async function runPairing({ host, device, fetchFn, sleep = (ms) => new Pr
   hooks.onCode && hooks.onCode({ code: C.sas(kp.pk, relayPk, nonce, relayNonce), host, expiresAt: rq.body.expiresAt });
   const end = Date.now() + timeoutMs;
   while (Date.now() < end) {
-    if (hooks.cancelled && hooks.cancelled()) return { ok: false, reason: 'cancelled' };
+    if (hooks.cancelled && hooks.cancelled()) { post(fetchFn, host, '/pair/cancel', { requestId: id, pollSecret: rq.body.pollSecret }).catch(() => {}); return { ok: false, reason: 'cancelled' }; }
     await sleep(pollMs);
     let p;
     try { p = await post(fetchFn, host, '/pair/poll', { requestId: id, pollSecret: rq.body.pollSecret }); } catch { continue; }
@@ -126,7 +126,7 @@ export function deviceAuth(dev) {
 }
 
 // what the relay shows the human next to the code
-export function describeDevice({ user = {}, world = {}, location = {}, ua = '' } = {}) {
+export function describeDevice({ user = {}, world = {}, location = {}, ua = '', clientId = '' } = {}) {
   const os = /Windows/i.test(ua) ? 'Windows' : /Mac/i.test(ua) ? 'macOS' : /Linux/i.test(ua) ? 'Linux' : 'browser';
-  return { deviceName: `Foundry GM ${user.name || '?'} (${os} browser)`, worldId: world.id || '', userId: user.id || '', userName: user.name || '', hostOrigin: location.origin || '' };
+  return { deviceName: `Foundry GM ${user.name || '?'} (${os} browser)`, worldId: world.id || '', userId: user.id || '', userName: user.name || '', hostOrigin: location.origin || '', clientId: String(clientId || '') };
 }

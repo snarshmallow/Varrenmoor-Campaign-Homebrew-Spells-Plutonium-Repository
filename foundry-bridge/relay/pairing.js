@@ -138,9 +138,19 @@ export class Pairing extends EventEmitter {
     const meta = X.openJson(key, info, 'vb-info|' + p.id);
     if (!meta || typeof meta !== 'object') { p.status = 'failed'; return { status: 400, error: 'could not decrypt the device description' }; }
     p.key = key; p.code = X.sas(pkB, p.rpk, nB, p.rn).replace(' ', '');
-    p.info = { deviceName: clip(meta.deviceName || 'unnamed device', 60), worldId: clip(meta.worldId, 60), userId: clip(meta.userId, 40), userName: clip(meta.userName, 60), hostOrigin: clip(meta.hostOrigin, 120) };
+    p.info = { deviceName: clip(meta.deviceName || 'unnamed device', 60), worldId: clip(meta.worldId, 60), userId: clip(meta.userId, 40), userName: clip(meta.userName, 60), hostOrigin: clip(meta.hostOrigin, 120), clientId: clip(meta.clientId, 40) };
+    // one live request per browser: an older waiting request from the same browser id is superseded (its code is no longer valid and drops out of the approver's list)
+    if (p.info.clientId) for (const o of this.pending.values()) if (o !== p && o.info.clientId === p.info.clientId && (o.status === 'pending' || o.status === 'committed')) { o.status = 'expired'; delete o.key; }
     p.status = 'pending'; delete p.rsk;
     this.emit('request', this.publicRequest(p));
+    return { status: 200 };
+  }
+
+  // the device gave up (dialog cancelled): its request leaves the approver's list at once
+  cancel(requestId, pollSecret) {
+    const p = this.pending.get(String(requestId));
+    if (!p || !eq(sha(pollSecret), p.secretHash)) return { status: 200 };
+    if (p.status === 'pending' || p.status === 'committed') { p.status = 'expired'; delete p.key; }
     return { status: 200 };
   }
 
@@ -163,7 +173,7 @@ export class Pairing extends EventEmitter {
     return {
       relayId: this.relayId, enabled: this.enabled, autoRequest: this.autoRequest, canEnable: this.canEnable,
       pending: [...this.pending.values()].filter((p) => p.status === 'pending').map((p) => this.publicRequest(p)),
-      devices: this.data.devices.map((d) => ({ id: d.id, name: d.name, origin: d.origin, ip: d.ip, worldId: d.worldId, userName: d.userName, createdAt: d.createdAt, lastSeen: d.lastSeen || null, expiresAt: d.expiresAt || null, rotationPending: !!d.rotateRequested })),
+      devices: this.data.devices.map((d) => ({ id: d.id, clientId: d.clientId || '', name: d.name, origin: d.origin, ip: d.ip, worldId: d.worldId, userName: d.userName, createdAt: d.createdAt, lastSeen: d.lastSeen || null, expiresAt: d.expiresAt || null, rotationPending: !!d.rotateRequested })),
     };
   }
 
@@ -174,7 +184,11 @@ export class Pairing extends EventEmitter {
     const secret = X.randomBytes(32), devId = 'd_' + crypto.randomBytes(6).toString('hex'), t = this.now();
     const life = Number(days) > 0 ? Math.min(Number(days), 3650) : 0;
     const expiresAt = life ? new Date(t + life * 86400000).toISOString() : null;
-    this.data.devices.push({ id: devId, name: p.info.deviceName, origin: p.origin || p.info.hostOrigin, ip: p.ip, worldId: p.info.worldId, userId: p.info.userId, userName: p.info.userName,
+    // one record per browser: approving again replaces the earlier record of the same browser (same browser id; for older modules without one: same name, user, world and origin)
+    const same = (d) => (p.info.clientId && d.clientId === p.info.clientId) || (!d.clientId && !p.info.clientId && d.name === p.info.deviceName && d.userId === p.info.userId && d.worldId === p.info.worldId && d.origin === (p.origin || p.info.hostOrigin));
+    const replaced = this.data.devices.filter(same); this.data.devices = this.data.devices.filter((d) => !same(d));
+    for (const d of replaced) this.emit('revoked', { id: d.id, name: d.name, replaced: true });
+    this.data.devices.push({ id: devId, clientId: p.info.clientId || '', name: p.info.deviceName, origin: p.origin || p.info.hostOrigin, ip: p.ip, worldId: p.info.worldId, userId: p.info.userId, userName: p.info.userName,
       createdAt: new Date(t).toISOString(), lastSeen: null, lifetimeDays: life, expiresAt, secret: X.b64u(secret) });
     this.save(true);
     p.sealed = X.sealJson(p.key, { secret: X.b64u(secret), expiresAt, relayId: this.relayId }, 'vb-dev|' + p.id + '|' + devId);

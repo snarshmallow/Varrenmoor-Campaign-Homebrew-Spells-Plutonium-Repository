@@ -1,3 +1,8 @@
+# Update 0.5.1 (one request per browser, no duplicate devices, faster panel)
+Changes `module.json`, `scripts/bridge.js`, `scripts/pairing.js` (module; the other 0.5.0 files are unchanged) and, on the relay PC, `relay/pairing.js` + `relay/server.js` (restart the relay once to load them; the module and panel fixes also work against a 0.5.0 relay). The Pair button reuses the waiting request and its code, a browser keeps one record (re-pairing replaces it), the panel checks for requests every 2 s and flags duplicate devices.
+
+---
+
 # Redeploying module 0.5.0 (encrypted pairing, zero-config relay discovery)
 0.5.0 replaces the 0.4.0 pairing (0.4.0 is not compatible: new handshake). **Six files** go to the Foundry host PC. Copy them yourself; nothing is pushed from here.
 
