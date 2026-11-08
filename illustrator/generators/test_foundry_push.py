@@ -1,4 +1,5 @@
 """Tests for foundry_push.py with an in-memory fake of the bridge (mirrors the module's pipeline ops). Run: python illustrator/generators/test_foundry_push.py"""
+import argparse
 import json
 import os
 import sys
@@ -526,6 +527,17 @@ class Scene3DTests(unittest.TestCase):
         r, _ = self.go("--set-name", "t", "--dry-run")
         self.assertTrue(r["ok"], r)
         self.assertNotIn("update", self.kinds())
+
+
+class FoliageOnlyPruneTests(unittest.TestCase):
+    def test_foliage_only_push_keeps_roof_tiles(self):
+        import foundry_push as fp
+
+        class Br:
+            def call(self, *a, **k):
+                raise AssertionError("a foliage-only push must not even read the scene")
+        items = [{"id": "model:p:foliage_c0", "data": {"flags": {"varrenmoor": {"layer": "foliage"}}}}]
+        self.assertEqual(fp.prune_stale_roofs(Br(), "Scene.x", items, argparse.Namespace()), 0)
 
 
 if __name__ == "__main__":

@@ -879,6 +879,8 @@ def stale_roof_tiles(scene, items):
 def prune_stale_roofs(br, scene_uuid, items, a, place=None):
     if getattr(a, "layers", None) or getattr(a, "ids", None) or not items:          # a partial push never deletes anything
         return 0
+    if all((((i.get("data") or {}).get("flags") or {}).get(FLAG) or {}).get("layer") == "foliage" for i in items):
+        return 0                                                                    # a foliage-only push (push-scene-3d second pass) knows nothing about roofs: it must not delete the roof tiles of the first pass
     sc = br.call("get", uuid=scene_uuid)
     sc.setdefault("uuid", scene_uuid)
     stale = stale_roof_tiles(sc, items)
