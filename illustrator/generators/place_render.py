@@ -44,7 +44,13 @@ def main(argv=None):
     dfl = pj.get("defaults", {})
     imp = pj.get("import") or {}
     underlay = os.path.join(REPO, "world", a.place, imp["underlay"]) if imp.get("underlay") and os.path.exists(os.path.join(REPO, "world", a.place, imp["underlay"])) else None
-    shading = a.shading or ("none" if underlay else dfl.get("shading_preset")) or "alpine_steep_calm"
+    flat_import = False                  # imported scene with no background and no terrain (flat stub heightmap): a plain flat sheet, no all-over shading PNG
+    if imp and not underlay:
+        try:
+            flat_import = json.load(open(os.path.join(REPO, "world", a.place, "terrain", "terrain_meta.json"), encoding="utf-8")).get("pipeline") == "flat_stub"
+        except (OSError, ValueError):
+            flat_import = False
+    shading = a.shading or ("none" if (underlay or flat_import) else dfl.get("shading_preset")) or "alpine_steep_calm"
     style = a.style or dfl.get("fills_style") or "full_map"
     prefix = a.name or f"{a.place}_{a.view}"
     out = os.path.abspath(a.out_dir or os.path.join(REPO, "illustrator", "out", prefix + "_files"))
@@ -88,9 +94,10 @@ def main(argv=None):
         except ValueError:                      # other drive: keep the absolute path
             return p.replace("\\", "/")
     ai = rr.free_path(os.path.join(out, prefix + ".ai"))
+    # imported scene: rasters go beneath GUIDES (the bottom SVG layer) so the 5 ft grid stays visible above the underlay / shading, below lines and labels
     actions = [{"action": "place_svg", "path": rel(svg), "mode": "open"}]
     for L in layers:
-        actions.append({"action": "place_image", "path": rel(L["path"]), "rect": [round(x, 3) for x in L["rect"]], "layer": L["layer"], "below": "LINES", "name": L["name"], "lock": True, "embed": True})
+        actions.append({"action": "place_image", "path": rel(L["path"]), "rect": [round(x, 3) for x in L["rect"]], "layer": L["layer"], "below": ["GUIDES", "LINES"] if imp else "LINES", "name": L["name"], "lock": True, "embed": True})
     actions += [{"action": "save_ai", "path": rel(ai)}, {"action": "export_png", "path": rel(os.path.join(out, prefix + "_ai.png")), "scale": a.png_scale}]
     res = {"ok": True, "place": a.place, "svg": svg, "png": headless, "scale_ft_per_in": v.fpi, "layers": [L["layer"] for L in layers], "ai": ai, "job": {"id": prefix, "actions": actions}}
     if a.job:

@@ -43,7 +43,16 @@
     var s = null;
     var p = VB.dirs(root, place).state;
     try { s = JSON.parse(fs.readFileSync(p, "utf8")); } catch (e) { s = null; }
-    s = VB.normalize(s); s.place = place; return s;
+    s = VB.normalize(s); s.place = place;
+    s.foundry.cache = VB.fresherCache(s.foundry.cache, readJson(globalCachePath(), null));   // lists are global, not per place
+    return s;
+  }
+  function globalCachePath() { return path.join(root, "world", "panel_foundry_cache.json"); }
+  function saveGlobalCache() {
+    try {
+      var c = state && state.foundry && state.foundry.cache;
+      if (c && c.fetched && VB.fresherCache(readJson(globalCachePath(), null), c) === c) fs.writeFileSync(globalCachePath(), JSON.stringify(c));
+    } catch (e) { /* the per-place copy still works */ }
   }
   function saveNow() {
     try {
@@ -595,7 +604,19 @@
     if (!r.ok) { fOut(what + " failed: " + r.error, r.needs_module ? "warn" : "bad"); showError("Foundry: " + r.error); return null; }
     return r;
   }
+  async function fPlanScene() {   // dry run: exports the view (local file only), asks push-scene --dry-run what it would do, prints it; nothing is written to Foundry
+    return fGuard("plan scene (dry run)", async function () {
+      var base = await fExport(null, "view_export.png", false);
+      var args = VB.foundryPushSceneArgs(state, { image: base.png }).concat(["--dry-run"]);
+      var r = await fPy(args);
+      if (r.needs_confirm) { fOut("PLAN: the picked scene was not made by this pipeline; a real push would ask you to confirm adopting it. Nothing written.", "warn"); return r; }
+      if (!r.ok) { fOut("Plan failed: " + r.error, "bad"); showError("Foundry: " + r.error); return null; }
+      fOut(VB.foundryPlanText(r)); return r;
+    });
+  }
   async function fPushScene(withTiles, quiet) {
+    if (!quiet) { try { VB.foundryPushSceneArgs(state, { image: "x" }); } catch (e) { showError("Foundry: " + (e.message || e)); return null; } }   // missing scene / name: say so before asking
+    if (!quiet && !(await fAsk(VB.foundryPushConfirmLines(state, withTiles)))) { fOut("push cancelled: nothing written to Foundry."); return null; }   // in-panel modal, not a browser dialog
     return fGuard(withTiles ? "push scene + tiles" : "push scene", async function () {
       var base = await fExport(null, "view_export.png", false), tile = null;
       if (withTiles) tile = await fExport(VB.foundryTileLayers(state.foundry), "tile_export.png", true);
@@ -620,7 +641,7 @@
         var age = VB.cacheAgeMin(state.foundry.cache);
         fOut("Cannot read Foundry: " + r.error + (age === null ? "" : "\nShowing the cached lists from " + age + " min ago."), "warn"); return;
       }
-      state.foundry.cache = { fetched: r.fetched, lists: r.lists }; save(); fPaint();
+      state.foundry.cache = { fetched: r.fetched, lists: r.lists }; save(); fPaint(); if (window.VBPlacesUI) VBPlacesUI.paint();   // the Places tab scene picker reads the same lists
       fOut("Read " + Object.keys(r.lists).map(function (k) { return r.lists[k].length + " " + k; }).join(", ") + ".");
     });
   }
@@ -651,6 +672,7 @@
     }); },
     f_refresh: fRefresh,
     f_export: function () { return fGuard("export view", async function () { var e = await fExport(null, "view_export.png", false); fOut("Exported " + e.png + " (" + e.info.width_px + "x" + e.info.height_px + " px)."); }); },
+    f_plan_scene: fPlanScene,
     f_push_scene: function () { return fPushScene(false, false); },
     f_push_tiles: function () { return fPushScene(true, false); },
     f_auto: function () { fSetupAuto(); fOut(state.foundry.autoPush ? "Auto-push on save is ON (polls the open document; pushes 6 s after a save)." : "Auto-push off."); },

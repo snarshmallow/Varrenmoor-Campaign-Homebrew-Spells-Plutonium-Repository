@@ -221,7 +221,7 @@ def foundry_base_url():
     return None
 
 
-def import_scene(sc, scene_uuid, place_id=None, include=("walls",), closed_as="buildings", no_image=False, force=False, dry_run=False, root=None, assets_root=None,
+def import_scene(sc, scene_uuid, place_id=None, include=("walls",), closed_as="lines", no_image=False, force=False, dry_run=False, root=None, assets_root=None,
                  base_url=None, log=print):
     """Write world/<id>/ from a scene document (dict as returned by the bridge `get`). Never talks to Foundry."""
     root = root or os.path.join(REPO, "world")
@@ -256,10 +256,10 @@ def import_scene(sc, scene_uuid, place_id=None, include=("walls",), closed_as="b
     levels = [{"id": lv.get("_id"), "name": lv.get("name"), "elevation": lv.get("elevation")} for lv in (sc.get("levels") or [])]
     if len(levels) > 1:
         warnings.append(f"scene has {len(levels)} levels: only the first level's background is used; walls/lights/tokens of all levels are merged")
-    if not background_src(sc) and not tiles and "tiles" not in include:
-        warnings.append("scene has no background image")
+    if not background_src(sc):
+        warnings.append("no background image" + (" (the scene is drawn by tiles / 3D models; nothing to underlay)" if tiles else ""))
     summary = {"place_id": pid, "name": name, "scene_uuid": scene_uuid, "size_ft": [W_ft, H_ft], "px_per_ft": round(c["ppf"], 4), "grid": {"size_px": c["grid_px"], "distance": c["grid_dist"], "units": c["grid_units"]},
-               "walls": len(segs), "wall_polylines": len(lines), "closed_loops": len(loops), "background": background_src(sc), "include": list(include), "dry_run": bool(dry_run),
+               "walls": len(segs), "wall_polylines": len(lines), "closed_loops": len(loops) + sum(1 for ch in lines if ch["closed"]), "rooms_as_buildings": len(loops), "background": background_src(sc), "include": list(include), "dry_run": bool(dry_run),
                "tiles": len(tiles), "regions": len(regions), "levels": len(levels), "scene_3d": s3d, "warnings": warnings}
     if c["warning"]:
         summary["warning"] = c["warning"]
@@ -295,7 +295,7 @@ def import_scene(sc, scene_uuid, place_id=None, include=("walls",), closed_as="b
             underlay = {"error": f"background {src} could not be fetched ({how}); set FOUNDRY_ASSETS_DIR / FOUNDRY_URL or copy it to underlay/background.png"}
     summary["underlay"] = underlay
     # walls -> files
-    wpoly = [{"id": f"fw_{i + 1:03d}", "kind": "door" if ch["door"] else "wall", "points": ch["points"], "closed": False} for i, ch in enumerate(lines)]
+    wpoly = [{"id": f"fw_{i + 1:03d}", "kind": "door" if ch["door"] else "wall", "points": ch["points"] + ([ch["points"][0]] if ch["closed"] else []), "closed": False} for i, ch in enumerate(lines)]
     jsave(os.path.join(pdir, "foundry_walls.json"), {"place": pid, "layer": "WALLS", "units": "ft", "origin": "scene top-left, y down", "walls": wpoly})
     jsave(os.path.join(pdir, "walls.json"), {"place": pid, "walls": [{"id": w["id"], "name": "Foundry wall", "kind": "foundry_wall", "status": "imported",
                                                                        "geometry": {"type": "polyline", "points": w["points"], "width_ft": 1.0}} for w in wpoly], "gates": []})

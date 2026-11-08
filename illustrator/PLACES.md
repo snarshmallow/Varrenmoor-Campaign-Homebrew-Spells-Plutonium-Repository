@@ -35,7 +35,7 @@ button in the Foundry tab), or `python illustrator/generators/foundry_push.py im
 You get `world/<id>/` with:
 - the scale from the scene grid (pixels per foot = grid size / grid distance; metres, km, miles are converted);
 - the background image copied (shared assets folder) or downloaded into `underlay/` as a PNG, to be placed locked below the line art;
-- Foundry walls as lines on a WALLS layer; closed loops of walls become building outlines (choose "stay lines" to keep them as lines);
+- Foundry walls as lines on a WALLS layer; closed loops of walls stay plain wall outlines (choose "label rooms" for labelled `Imported room N` building outlines); lights are yellow dots and tokens blue dots on the locked layer FOUNDRY MARKERS (set `import.light_rings` true in place.json for a dashed bright-radius ring); the 5 ft grid sits above the underlay and below lines/labels; no background and no terrain = flat sheet (no shading PNG);
 - optional lights, tokens and notes as feet coordinates;
 - `links.foundry_scene` = the scene, so later pushes return to it.
 Limits: no terrain (a flat stub is written), no streets or water; walls are only as good as the scene's walls.

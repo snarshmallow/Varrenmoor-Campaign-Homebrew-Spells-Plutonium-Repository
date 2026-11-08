@@ -789,7 +789,7 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
     <label>Scene <select id="plScene"></select></label>
     <label>or uuid <input type="text" data-s="places.import.scene_uuid" placeholder="Scene.xxxxxxxx"></label>
     <label>New place id <input type="text" data-s="places.import.place_id" placeholder="auto from scene name"></label>
-    <label>Closed wall loops <select data-s="places.import.closed_as"><option value="buildings">become building outlines</option><option value="lines">stay lines</option></select></label>
+    <label>Closed wall loops <select data-s="places.import.closed_as"><option value="lines">stay plain wall outlines</option><option value="buildings">label rooms (Imported room N buildings)</option></select></label>
     <label class="chk"><input type="checkbox" data-s="places.import.lights"> lights</label>
     <label class="chk"><input type="checkbox" data-s="places.import.tokens"> tokens</label>
     <label class="chk"><input type="checkbox" data-s="places.import.notes"> notes</label>
@@ -870,7 +870,8 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
   </div>
   <div class="btns">
     <button data-act="f_export">Export view</button>
-    <button class="primary" data-act="f_push_scene">Push scene</button>
+    <button data-act="f_plan_scene" title="Dry run: exports the view and prints grid, size and wall counts. Writes NOTHING to Foundry.">Plan (dry run)</button>
+    <button class="primary" data-act="f_push_scene" title="Writes to Foundry after you confirm in the panel">Push scene</button>
     <button data-act="f_push_tiles" title="Scene plus a transparent overlay tile of the layers above">Push tiles</button>
     <label class="chk"><input type="checkbox" data-s="foundry.autoPush" data-act-change="f_auto"> Auto-push on save</label>
   </div>
@@ -912,7 +913,7 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
   <div class="btns">
     <button data-act="f_browse_image">Browse image</button><button data-act="f_browse_spec">Browse spec</button>
     <button data-act="f_token">Place token on scene</button>
-    <button data-act="f_actor" title="Picked actor + image: update its portrait/token art. No actor picked + spec: create or update the NPC.">Push actor</button>
+    <button data-act="f_actor" title="Picked actor + image: update its portrait/token textures. No actor picked + spec: create or update the NPC.">Push actor</button>
     <button data-act="f_item" title="Picked item: update image/description. Otherwise create from name or spec.">Push item</button>
   </div>
   <p class="note">Everything the pipeline creates is flagged, so pushing again updates in place. Existing documents you did not make are only changed after a confirm. Needs Varrenmoor Bridge module 0.3.0 on the Foundry server (foundry-bridge/DEPLOY_MODULE.md). Token: scene = the picked/last pushed one.</p>

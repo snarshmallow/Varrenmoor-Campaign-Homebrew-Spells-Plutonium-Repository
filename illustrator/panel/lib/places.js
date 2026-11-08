@@ -14,7 +14,7 @@
       tab: "list", template: "", from_text: "", spec_text: "", draft: true, allow_large: false, render_after: true, open_after: false,
       form: { name: "", id: "", culture: "fantasy_generic", population: 600, layout: "organic", recipe: "rolling", sea_side: "south", rivers: 1, lakes: 0, river_meander: "gentle",
         climate: "temperate", season: "summer", central_feature: "market", wall: false, seed: "", width_ft: "", height_ft: "", relief_ft: "" },
-      import: { scene_uuid: "", place_id: "", walls: true, lights: false, tokens: false, notes: false, closed_as: "buildings", dry_run: false },
+      import: { scene_uuid: "", place_id: "", walls: true, lights: false, tokens: false, notes: false, closed_as: "lines", dry_run: false },
       last: null, notes: [], estimate: null
     };
   };
@@ -119,7 +119,7 @@
       steps: [{ t: "fn", label: "check", fn: function () { if (!/^Scene\./.test(uuid)) throw new Error("pick a Foundry scene (or paste its Scene.xxxx uuid) first"); } },
         py(GEN + "foundry_push.py", function () {
           var inc = ["walls", "tiles", "regions"].concat(snap.lights ? ["lights"] : [], snap.tokens ? ["tokens"] : [], snap.notes ? ["notes"] : []);
-          var a = ["import-scene", "--scene-uuid", uuid, "--include", inc.join(","), "--closed-as", snap.closed_as || "buildings"];
+          var a = ["import-scene", "--scene-uuid", uuid, "--include", inc.join(","), "--closed-as", snap.closed_as || "lines"];
           if (String(snap.place_id || "").trim()) a.push("--place-id", VB.PLACE_SLUG(snap.place_id));
           if (dry) a.push("--dry-run");
           return a;

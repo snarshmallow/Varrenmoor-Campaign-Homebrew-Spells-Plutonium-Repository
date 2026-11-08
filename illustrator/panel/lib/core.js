@@ -732,10 +732,37 @@
     if (o.tileImage) a.push("--tile-image", o.tileImage, "--tile-id", "labels");
     return a;
   };
+  // Name of the scene a push goes to: the picked existing scene (name from the cached list), or the new scene's name.
+  VB.foundryPushTarget = function (st) {
+    var f = st.foundry;
+    if (f.target === "existing") {
+      var row = (((f.cache || {}).lists || {}).scenes || []).filter(function (r) { return r.uuid === f.sceneUuid; })[0];
+      return { mode: "existing", name: row ? row.name : (f.sceneUuid || "(no scene picked)"), uuid: f.sceneUuid || "" };
+    }
+    return { mode: "new", name: String(f.sceneName || "").trim() || "(no name)", uuid: "" };
+  };
+  // Lines for the in-panel confirmation before Push scene / Push tiles writes to Foundry.
+  VB.foundryPushConfirmLines = function (st, withTiles) {
+    var t = VB.foundryPushTarget(st);
+    return ["This WRITES to Foundry" + (t.mode === "existing" ? " and changes the existing scene" : " and creates a new scene") + ".",
+      "Scene: " + t.name + (t.uuid ? " (" + t.uuid + ")" : ""),
+      "Place: " + st.place + (withTiles ? "  (scene + overlay tile)" : ""),
+      "Background image, grid" + (st.foundry.walls ? ", walls" : "") + " are replaced. Press 'Plan (dry run)' first to preview without writing.",
+      "Continue?"];
+  };
+  // Plain text of a push-scene --dry-run result (nothing was written).
+  VB.foundryPlanText = function (r) {
+    return "PLAN (dry run, nothing written to Foundry): scene \"" + r.scene_name + "\", " + r.width + "x" + r.height + " px, grid " + r.grid.size + " px = " + r.grid.distance + " ft, " + (r.walls || 0) + " walls, " + (r.drawings || 0) + " drawings.";
+  };
   // age of the cached Foundry lists in minutes (null if never fetched)
   VB.cacheAgeMin = function (cache, now) {
     if (!cache || !cache.fetched) return null;
     return Math.max(0, Math.round(((now || Date.now()) - Date.parse(cache.fetched)) / 60000));
+  };
+  // The Foundry lists (scenes, actors, items) are the same for every place: of two caches keep the one fetched later (a place switched to after an import starts with an empty one).
+  VB.fresherCache = function (a, b) {
+    var ta = a && a.fetched ? Date.parse(a.fetched) : -1, tb = b && b.fetched ? Date.parse(b.fetched) : -1;
+    return tb > ta ? b : (a || { fetched: null, lists: {} });
   };
   VB.pickerRows = function (rows, filter) {
     var q = String(filter || "").toLowerCase();

@@ -230,7 +230,7 @@ def test_import_scene():
     assert fi.background_src(sc) == "nowhere/x.webp"
     root = tempfile.mkdtemp(prefix="vb_imp_")
     try:
-        r = fi.import_scene(sc, "Scene.abc", "mock_hall", ("walls", "lights", "tokens", "notes"), root=root, no_image=True)
+        r = fi.import_scene(sc, "Scene.abc", "mock_hall", ("walls", "lights", "tokens", "notes"), "buildings", root=root, no_image=True)
         d = os.path.join(root, "mock_hall")
         assert r["closed_loops"] == 1 and r["wall_polylines"] == 1 and r["walls"] == 6, r
         pj = json.load(open(os.path.join(d, "place.json"), encoding="utf-8"))
@@ -244,6 +244,12 @@ def test_import_scene():
         assert T_["point"] == [17.5, 17.5], T_
         fw = json.load(open(os.path.join(d, "foundry_walls.json"), encoding="utf-8"))["walls"]
         assert fw[0]["kind"] == "door" and len(fw[0]["points"]) == 3
+        # default (closed_as lines): the loop is a plain wall outline, no 'Imported room' building (no label, no halo, no Key entry)
+        rl = fi.import_scene(sc, "Scene.abc", "mock_hall_lines", ("walls", "lights", "tokens"), root=root, no_image=True)
+        dl = os.path.join(root, "mock_hall_lines")
+        assert rl["rooms_as_buildings"] == 0 and rl["closed_loops"] == 1 and not [f for f in os.listdir(os.path.join(dl, "buildings")) if f.startswith("bld_imp_")], rl
+        fwl = json.load(open(os.path.join(dl, "foundry_walls.json"), encoding="utf-8"))["walls"]
+        assert any(w["points"][0] == w["points"][-1] and len(w["points"]) == 5 for w in fwl), fwl
         try:
             fi.import_scene(sc, "Scene.abc", "mock_hall", root=root, no_image=True)
             raise AssertionError("exists")
@@ -261,6 +267,40 @@ def test_import_scene():
     import foundry_push as fp
     assert fp.place_link("zz_does_not_exist") is None
     print("ok import-scene (mock)")
+
+
+def test_import_markers_render():
+    """Imported lights/tokens are drawn as small circles on the locked layer FOUNDRY MARKERS; closed loops (lines mode) give no building labels."""
+    import subprocess
+    pid = "zz_t_markers"
+    wd = os.path.join(fi.REPO, "world")
+    sc = {"_id": "mk", "name": "Marker Test", "width": 1000, "height": 800, "padding": 0, "grid": {"size": 50, "distance": 5, "units": "ft"}, "background": {"src": None},
+          "walls": [{"c": [100, 100, 400, 100], "door": 0}, {"c": [400, 100, 400, 400], "door": 0}, {"c": [400, 400, 100, 400], "door": 0}, {"c": [100, 400, 100, 100], "door": 0}],
+          "lights": [{"x": 200, "y": 200, "config": {"bright": 20, "dim": 40}}], "tokens": [{"x": 250, "y": 250, "name": "Tok", "width": 1, "height": 1}]}
+    shutil.rmtree(os.path.join(wd, pid), ignore_errors=True)
+    out = os.path.join(tempfile.mkdtemp(prefix="vb_mk_"), "t.svg")
+    try:
+        fi.import_scene(sc, "Scene.mk", pid, ("walls", "lights", "tokens"), root=wd, no_image=True)
+        for rings in (False, True):
+            pj_p = os.path.join(wd, pid, "place.json")
+            pj = json.load(open(pj_p, encoding="utf-8"))
+            pj["import"]["light_rings"] = rings
+            json.dump(pj, open(pj_p, "w", encoding="utf-8"))
+            r = subprocess.run([sys.executable, os.path.join(HERE, "render_world.py"), "--place", pid, "--view", "town", "--out", out], capture_output=True, text=True)
+            assert r.returncode == 0, r.stderr[-800:]
+            svg = open(out, encoding="utf-8").read()
+            assert "FOUNDRY MARKERS" in svg and 'id="fl_x5F_001"' in svg and 'id="ft_x5F_001"' in svg, "markers missing"
+            assert ('id="fl_x5F_001_x5F_ring"' in svg) == rings
+            assert "Imported room" not in svg
+        # headless place_render: a flat import (no background, flat terrain stub) gets NO all-over shading PNG; any image layer would go beneath GUIDES (grid stays visible)
+        r = subprocess.run([sys.executable, os.path.join(HERE, "place_render.py"), "--place", pid, "--no-fills", "--no-contours", "--out-dir", os.path.dirname(out), "--name", "t"], capture_output=True, text=True)
+        assert r.returncode == 0, r.stderr[-800:]
+        res = json.loads(r.stdout.strip().splitlines()[-1])
+        assert res["layers"] == [] and not any(a["action"] == "place_image" for a in res["job"]["actions"]), res["layers"]
+    finally:
+        shutil.rmtree(os.path.join(wd, pid), ignore_errors=True)
+        shutil.rmtree(os.path.dirname(out), ignore_errors=True)
+    print("ok import markers + no room labels (render)")
 
 
 def test_import_scene_tiles_3d():
@@ -299,6 +339,7 @@ def test_import_scene_tiles_3d():
         assert r3["scene_3d"] == {"auto3d": True, "renderTable": "matcustom", "tableTex": "mods/table.webp", "tableColor": "#341f0f", "exr": "assets/sky.webp"}, r3["scene_3d"]
         assert any("2 levels" in w for w in r3["warnings"]) and any("not square" in w for w in r3["warnings"]), r3["warnings"]
         assert r3["background"] is None and r3["size_ft"] == [110.0, 80.0]
+        assert any("no background image" in w for w in r3["warnings"]), r3["warnings"]
         pj = json.load(open(os.path.join(root, "mock_3d", "place.json"), encoding="utf-8"))
         assert pj["import"]["scene_3d"]["tableTex"] == "mods/table.webp" and len(pj["import"]["levels"]) == 2 and pj["import"]["scene_offset_px"] == [600.0, 400.0]
         vs = json.load(open(os.path.join(root, "mock_3d", "view_settings.json"), encoding="utf-8"))
@@ -314,7 +355,7 @@ def test_import_scene_tiles_3d():
 
 def main():
     quick = "--quick" in sys.argv
-    for t in (test_schema_and_validation, test_templates_valid, test_caps, test_from_text, test_terrain_recipes, test_elevation_adapt, test_naming_sets, test_import_scene, test_import_scene_tiles_3d):
+    for t in (test_schema_and_validation, test_templates_valid, test_caps, test_from_text, test_terrain_recipes, test_elevation_adapt, test_naming_sets, test_import_scene, test_import_markers_render, test_import_scene_tiles_3d):
         t()
     if not quick:
         test_bridgehollow_regression()

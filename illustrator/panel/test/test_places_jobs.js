@@ -29,7 +29,7 @@ const spawn = (py, args, o) => {
 const runner = R.createRunner({ root: ROOT, jobsDir: tmp + "/jobs", fs, path, spawn, host: async () => ({ ok: true }), log: m => process.env.VERBOSE && console.log("   " + m),
   getPython: () => "python", getPlace: () => place, getTextures: () => [], setState: (p, v) => VB.setPath(st, p, v), onStale: () => {} });
 (async () => {
-  check("state carries places defaults", st.places && st.places.draft === true && st.places.form.population === 600 && st.places.import.closed_as === "buildings");
+  check("state carries places defaults", st.places && st.places.draft === true && st.places.form.population === 600 && st.places.import.closed_as === "lines");
   st.places.form.name = "Ulf Vik"; st.places.form.culture = "scandinavian"; st.places.form.recipe = "coastal"; st.places.form.sea_side = "east"; st.places.form.population = 260; st.places.form.layout = "linear";
   let spec = VB.placeSpecFromForm(st);
   check("form -> spec", spec.id === "ulf_vik" && spec.culture === "scandinavian" && spec.terrain.recipe === "coastal" && spec.terrain.sea_side === "east" && spec.town.population === 260 && spec.limits.draft === true, JSON.stringify(spec));
@@ -85,5 +85,26 @@ const runner = R.createRunner({ root: ROOT, jobsDir: tmp + "/jobs", fs, path, sp
   check("dry-run flag is snapshotted when the job is built", (calls[0] || []).includes("--dry-run") && (calls[0] || []).join(" ").includes("walls,tiles,regions,lights"), JSON.stringify(calls[0]));
   st.places.import.dry_run = false; job = VB.jobImportScene(st, d);
   check("a real import switches to the new place", job.newPlace === "zz_scene");
+  // import options: closed loops stay plain wall outlines by default; 'label rooms' sends buildings
+  calls.length = 0; job = VB.jobImportScene(st, d); r = await runner.run(job);
+  check("closed loops default to lines", (calls[0] || []).join(" ").includes("--closed-as lines"), JSON.stringify(calls[0]));
+  st.places.import.closed_as = "buildings"; calls.length = 0; job = VB.jobImportScene(st, d); r = await runner.run(job); st.places.import.closed_as = "lines";
+  check("label rooms toggle sends --closed-as buildings", (calls[0] || []).join(" ").includes("--closed-as buildings"));
+  // Foundry lists are global: the fresher cache wins (place switched to after an import starts empty)
+  const old = { fetched: "2026-11-08T10:00:00Z", lists: { scenes: [{ uuid: "Scene.a", name: "A" }] } }, nw = { fetched: "2026-11-08T11:00:00Z", lists: { scenes: [{ uuid: "Scene.b", name: "B" }] } }, none = { fetched: null, lists: {} };
+  check("fresherCache picks the newer", VB.fresherCache(old, nw) === nw && VB.fresherCache(nw, old) === nw && VB.fresherCache(none, old) === old && VB.fresherCache(old, null) === old && VB.fresherCache(null, null).fetched === null);
+  // Push scene: confirmation text names target scene/place and says it writes to Foundry; the plan text states grid/size/walls
+  const st2 = VB.normalize(null); st2.place = "zz_scene"; st2.foundry.target = "existing"; st2.foundry.sceneUuid = "Scene.b"; st2.foundry.cache = nw;
+  const cl = VB.foundryPushConfirmLines(st2, false).join(" | ");
+  check("push confirm names scene, place and Foundry write", /WRITES to Foundry/.test(cl) && /Scene: B \(Scene\.b\)/.test(cl) && /Place: zz_scene/.test(cl) && /Plan \(dry run\)/.test(cl), cl);
+  st2.foundry.target = "new"; st2.foundry.sceneName = " My Map ";
+  check("push confirm for a new scene", /creates a new scene/.test(VB.foundryPushConfirmLines(st2, true).join(" | ")) && /Scene: My Map/.test(VB.foundryPushConfirmLines(st2, true).join(" | ")));
+  const pt = VB.foundryPlanText({ scene_name: "B", width: 3348, height: 3888, grid: { size: 54, distance: 5 }, walls: 100, drawings: 0, dry_run: true });
+  check("plan text has size, grid, walls and says nothing written", /3348x3888 px/.test(pt) && /grid 54 px = 5 ft/.test(pt) && /100 walls/.test(pt) && /nothing written/.test(pt), pt);
+  // main.js wiring (static): Plan button + action, push asks the in-panel modal first, no window.confirm
+  const mj = fs.readFileSync(path.join(__dirname, "../main.js"), "utf8"), ih = fs.readFileSync(path.join(__dirname, "../index.html"), "utf8");
+  check("panel has a Plan (dry run) button wired to f_plan_scene", /data-act="f_plan_scene"/.test(ih) && /f_plan_scene: fPlanScene/.test(mj) && /\.concat\(\["--dry-run"\]\)/.test(mj));
+  check("push scene asks fAsk before fGuard and never window.confirm", mj.indexOf("await fAsk(VB.foundryPushConfirmLines") > 0 && mj.indexOf("await fAsk(VB.foundryPushConfirmLines") < mj.indexOf('fGuard(withTiles ? "push scene + tiles"') && !/window\.confirm|[^.\w]confirm\(/.test(mj));
+  check("refresh repaints the Places picker", /fPaint\(\); if \(window\.VBPlacesUI\) VBPlacesUI\.paint\(\)/.test(mj));
   console.log(ok + " passed, " + fail + " failed"); try { fs.unlinkSync(specFile); } catch (x) { /* ignore */ } process.exit(fail ? 1 : 0);
 })();

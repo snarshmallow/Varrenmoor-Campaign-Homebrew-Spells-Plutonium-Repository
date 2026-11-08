@@ -40,6 +40,7 @@ SPEC = [
     ("NOTES", []),
     ("LABELS", [ld.LAYER_LEGEND, ld.LAYER_MARKERS, lbo.LAYER_ANCHORS, lbo.LAYER_LEADERS, "Labels - Districts", "Labels - Streets", "Labels - Buildings",
                 "Labels - Rooms", ld.LAYER_HIDDEN, ct.LAYER_LABELS, lst.LAYER_BACKING]),
+    ("FOUNDRY MARKERS", []),
     ("ART - Top", []),
     ("ART - Fills", []),
     ("ART - Textures", []),
@@ -84,6 +85,9 @@ def load_place(name, model_dir=None):
     for k_ in ("details", "markers"):        # region children (region_extract.py): generated detail + off-map markers, absent for normal places
         if os.path.exists(os.path.join(root, k_ + ".json")):
             m[k_] = json.load(open(os.path.join(root, k_ + ".json"), encoding="utf-8"))
+    for k_, f_ in (("lights", "foundry_lights.json"), ("tokens", "foundry_tokens.json")):   # imported Foundry scene: lights / tokens, drawn as small markers (layer FOUNDRY MARKERS)
+        if os.path.exists(os.path.join(root, f_)):
+            m.setdefault("foundry_markers", {})[k_] = json.load(open(os.path.join(root, f_), encoding="utf-8")).get(k_, [])
     return m
 
 
@@ -420,7 +424,7 @@ def render(model, view_arg, out_path, topts=None, cfg_over=None, lopts=None, lst
     ls = lambda base: round(base * lf, 1)
 
     lock_leaders = bool((lopts if lopts is not None else cfg.get("label_offset") or {}).get("lock_leaders", True))
-    t = LayerTree(SPEC, pw, ph, css=CSS, locked=["GUIDES", "Grid", "Scale bar", "North arrow", "Bounds"] + ([lbo.LAYER_LEADERS] if lock_leaders else []),
+    t = LayerTree(SPEC, pw, ph, css=CSS, locked=["GUIDES", "Grid", "FOUNDRY MARKERS", "Scale bar", "North arrow", "Bounds"] + ([lbo.LAYER_LEADERS] if lock_leaders else []),
                   hidden=[ld.LAYER_HIDDEN])
 
     lcfg = lst.merge(viewcfg.label_style(place["id"]), *(lstyle if isinstance(lstyle, list) else [lstyle]))
@@ -823,6 +827,21 @@ def render(model, view_arg, out_path, topts=None, cfg_over=None, lopts=None, lst
         print(f"label mask: {n_l} line paths cut under labels")
     for rec in recs:
         lst.emit(t, rec, None if rec.layer in (ct.LAYER_LABELS, ld.LAYER_HIDDEN) else backing)
+
+    # FOUNDRY MARKERS: imported lights (yellow dot, optional dashed bright-radius ring: place.json import.light_rings) and tokens (small blue circle); locked layer
+    fm = model.get("foundry_markers") or {}
+    for L_ in fm.get("lights", []):
+        if not v.inside(tuple(L_["point"])):
+            continue
+        cx_, cy_ = v.px(tuple(L_["point"]))
+        if (place.get("import") or {}).get("light_rings") and L_.get("bright_ft"):
+            t.add("FOUNDRY MARKERS", f'<circle id="{L_["id"]}_ring" cx="{cx_:.2f}" cy="{cy_:.2f}" r="{float(L_["bright_ft"]) * v.k:.2f}" fill="none" stroke="#c9a400" stroke-width="0.5" stroke-dasharray="3 2"/>')
+        t.add("FOUNDRY MARKERS", f'<circle id="{L_["id"]}" cx="{cx_:.2f}" cy="{cy_:.2f}" r="2.6" fill="#ffd400" stroke="#8a6d00" stroke-width="0.6"/>')
+    for T_ in fm.get("tokens", []):
+        if not v.inside(tuple(T_["point"])):
+            continue
+        cx_, cy_ = v.px(tuple(T_["point"]))
+        t.add("FOUNDRY MARKERS", f'<circle id="{T_["id"]}" cx="{cx_:.2f}" cy="{cy_:.2f}" r="2.2" fill="#4a78c8" stroke="#1d3a6e" stroke-width="0.6"/>')
 
     # GUIDES: minor + major grid
     k = v.k
