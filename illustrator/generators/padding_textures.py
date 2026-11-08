@@ -96,10 +96,13 @@ def _soft_terrain(alb, box, sigma_ft=45.0):
     return np.stack([ndimage.gaussian_filter(a[..., c], sigma_ft * px_per_ft, mode="nearest") for c in range(3)], -1)
 
 
-def apron_albedo(height_fn, bbox, px, P, seed=5, seam=None, terrain_albedo=None, terrain_box=None, blend_ft=80.0, far_mean=None, apron_len=None):
+def apron_albedo(height_fn, bbox, px, P, seed=5, seam=None, terrain_albedo=None, terrain_box=None, blend_ft=80.0, far_mean=None, apron_len=None, streak_fix=True):
     """Baked colour map of the apron mesh. height_fn(X, Y) -> absolute elevation ft (vectorised); bbox = (x0, y0, x1, y1) ft; px = (w, h).
     seam(X, Y) -> (s, qx, qy): distance to the terrain rectangle and the nearest point on it (for the colour fade). terrain_albedo = RGB uint8 image covering
-    terrain_box (x0, y0, x1, y1) ft; near the seam the colour continues the terrain's own colour and fades to the palette over blend_ft."""
+    terrain_box (x0, y0, x1, y1) ft; near the seam the colour continues the terrain's own colour and fades to the palette over blend_ft.
+    streak_fix (default on): the terrain colour is continued by projecting the nearest edge texel outward, which smears it into radial streaks, worst on steep apron
+    slopes seen from above. With the fix the lookup uses a blur that widens with the distance from the seam (the colour along the edge averages out), the lookup point is
+    warped along the edge by noise that grows with distance, and steep ground fades to the height/slope palette (computed per pixel, never stretched) sooner."""
     w, h = px
     x0, y0, x1, y1 = bbox
     xs = x0 + (np.arange(w) + 0.5) * (x1 - x0) / w
@@ -124,9 +127,28 @@ def apron_albedo(height_fn, bbox, px, P, seed=5, seam=None, terrain_albedo=None,
         th, tw = terrain_albedo.shape[:2]
         ix = np.clip(((qx - tx0) / (tx1 - tx0) * tw).astype(int), 0, tw - 1)
         iy = np.clip(((qy - ty0) / (ty1 - ty0) * th).astype(int), 0, th - 1)
-        tcol = srgb_to_lin(_soft_terrain(terrain_albedo, terrain_box)[iy, ix, :3])
-        t = np.clip(s / blend_ft, 0, 1)
-        t = (t * t * (3 - 2 * t))[..., None]
+        soft = _soft_terrain(terrain_albedo, terrain_box)
+        if streak_fix:
+            soft2 = _soft_terrain(terrain_albedo, terrain_box, sigma_ft=160.0)
+            sd = np.clip(s / max(blend_ft, 1.0), 0, 1)
+            wide = smoothstep01((sd - 0.05) / 0.5)[..., None]
+            tcol0 = soft[iy, ix, :3] * (1 - wide) + soft2[iy, ix, :3] * wide
+            warp = (pbr.fbm(0, seed + 7, 1.8, 5, shape=(h, w)).astype(np.float32) - 0.5) * 2.0 * np.clip(s, 0, None) * 0.9       # ft, grows with distance
+            nxp, nyp = (-(qy - Y), (qx - X))                                      # tangent to the edge (perpendicular to the lookup ray)
+            ln = np.maximum(np.hypot(nxp, nyp), 1e-6)
+            qx2, qy2 = qx + nxp / ln * warp, qy + nyp / ln * warp
+            ix2 = np.clip(((qx2 - tx0) / (tx1 - tx0) * tw).astype(int), 0, tw - 1)
+            iy2 = np.clip(((qy2 - ty0) / (ty1 - ty0) * th).astype(int), 0, th - 1)
+            tcol1 = soft2[iy2, ix2, :3]
+            tcol = srgb_to_lin(tcol0 * (1 - wide) + (tcol0 * 0.35 + tcol1 * 0.65) * wide)
+            t = np.clip(s / blend_ft, 0, 1)
+            steep = smoothstep01((slope - 18.0) / 24.0) * smoothstep01(s / 12.0)
+            t = np.clip(np.maximum(t, steep * 0.7), 0, 1)
+            t = (t * t * (3 - 2 * t))[..., None]
+        else:
+            tcol = srgb_to_lin(soft[iy, ix, :3])
+            t = np.clip(s / blend_ft, 0, 1)
+            t = (t * t * (3 - 2 * t))[..., None]
         # the terrain colour carries its own value variation; keep the palette's fine grain on top so the extension is not a smear
         col = tcol * (0.92 + 0.16 * fine)[..., None] * (1 - t) + col * t
     if far_mean is not None and seam is not None and apron_len:        # the outer part of the apron fades to the table tile's mean colour (the tiled table cannot follow the height)
