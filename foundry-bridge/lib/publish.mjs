@@ -11,7 +11,7 @@ export function foundryDataPath() {
   } catch { return ''; }
 }
 
-export function publishClient({ publicUrl, apiToken, dir = process.env.CLIENT_CONFIG_DIR || '', fallbackDir = '', localUrl = '' }) {
+export function publishClient({ publicUrl, apiToken, moduleToken = '', dir = process.env.CLIENT_CONFIG_DIR || '', fallbackDir = '', localUrl = '' }) {
   if (!(publicUrl || localUrl) || !apiToken) return { ok: false, reason: 'no public URL or token yet' };
   const usingFallback = !dir && !foundryDataPath();
   // same-PC client: skip the tunnel (its DNS name can lag locally); local mode has no tunnel at all
@@ -22,6 +22,7 @@ export function publishClient({ publicUrl, apiToken, dir = process.env.CLIENT_CO
   if (!base) return { ok: false, reason: 'Foundry dataPath not found (set CLIENT_CONFIG_DIR in .env)' };
   fs.mkdirSync(base, { recursive: true });
   const file = path.join(base, 'client.json');
-  fs.writeFileSync(file, JSON.stringify({ url: publicUrl, token: apiToken, updated: new Date().toISOString() }, null, 2) + '\n');
+  // moduleToken lets a GM browser on another LAN PC copy it (it lives outside Foundry's served Data/ folder)
+  fs.writeFileSync(file, JSON.stringify({ url: publicUrl, token: apiToken, ...(moduleToken && { moduleToken }), updated: new Date().toISOString() }, null, 2) + '\n');
   return { ok: true, file };
 }

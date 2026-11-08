@@ -97,7 +97,7 @@ if (!moduleDir) {
     if (opts.dataPath) moduleDir = path.join(opts.dataPath, 'Data', 'modules', 'varrenmoor-bridge');
   } catch {}
 }
-const published = publishClient({ publicUrl, apiToken: env.BRIDGE_API_TOKEN, dir: env.CLIENT_CONFIG_DIR, fallbackDir: root, localUrl: `http://${lanHost}:${PORT}` });   // LAN address so other PCs (Arcturus) can use the same client.json
+const published = publishClient({ publicUrl, apiToken: env.BRIDGE_API_TOKEN, moduleToken: env.BRIDGE_MODULE_TOKEN, dir: env.CLIENT_CONFIG_DIR, fallbackDir: root, localUrl: `http://${lanHost}:${PORT}` });   // LAN address so other PCs (Arcturus) can use the same client.json
 let wroteUrlFile = false;
 if (moduleDir && fs.existsSync(moduleDir)) {
   fs.writeFileSync(path.join(moduleDir, 'relay-url.json'), JSON.stringify({ url: moduleUrl, updated: new Date().toISOString() }) + '\n');
