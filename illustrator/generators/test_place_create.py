@@ -263,9 +263,58 @@ def test_import_scene():
     print("ok import-scene (mock)")
 
 
+def test_import_scene_tiles_3d():
+    """Mocked 2D battle map (walls, lights, a picture tile, a region) and a mocked 3D scene (levels, tableTex, model tiles, hex grid, odd padding)."""
+    # padding: Foundry rounds UP to whole squares (width 1700 * 0.25 / 100 = 4.25 -> 5 squares; python round() gave 4)
+    assert fi.calibration({"width": 1700, "height": 1100, "padding": 0.25, "grid": {"size": 100, "distance": 5, "units": "ft"}})["sceneX"] == 500
+    assert fi.calibration({"width": 1700, "height": 1100, "padding": 0.25, "grid": {"size": 100, "distance": 5, "units": "ft"}})["sceneY"] == 300
+    assert fi.calibration({"width": 2000, "height": 1000, "padding": 0.25, "grid": {"size": 100}})["sceneX"] == 500      # exact multiple stays
+    battle = {"_id": "b1", "name": "Mock Battle Map", "width": 1000, "height": 800, "padding": 0, "grid": {"type": 1, "size": 50, "distance": 5, "units": "ft"},
+              "background": {"src": "maps/none.webp"},
+              "walls": [{"c": [0, 0, 100, 0], "door": 0}, {"c": [100, 0, 100, 100], "door": 0}],
+              "lights": [{"x": 100, "y": 100, "elevation": 3, "config": {"bright": 10, "dim": 20, "color": "#fff", "alpha": 0.4}}],
+              "tiles": [{"_id": "t1", "x": 100, "y": 200, "width": 200, "height": 100, "rotation": 90, "elevation": 1, "alpha": 0.5, "texture": {"src": "maps/roof.webp"}}],
+              "regions": [{"name": "Trap", "color": "#f00", "behaviors": [{}], "shapes": [{"type": "rectangle", "x": 50, "y": 50, "width": 100, "height": 50},
+                                                                                      {"type": "polygon", "points": [0, 0, 100, 0, 100, 100]}, {"type": "circle", "x": 500, "y": 500, "radius": 100}]}]}
+    d3 = {"_id": "c1", "name": "Mock 3D", "width": 2200, "height": 1600, "padding": 0.25, "grid": {"type": 4, "size": 100, "distance": 5, "units": "ft"},
+          "levels": [{"_id": "L0", "name": "Level", "elevation": {"bottom": 0, "top": 20}, "background": {"src": None}}, {"_id": "L1", "name": "Up", "background": {"src": None}}],
+          "flags": {"levels-3d-preview": {"auto3d": True, "renderTable": "matcustom", "tableTex": "mods/table.webp", "tableColor": "#341f0f", "exr": "assets/sky.webp", "junk": 1}},
+          "tiles": [{"_id": "m1", "x": 1700, "y": 1200, "width": 1937, "height": 1412, "elevation": 0.1, "texture": {"src": "modules/levels-3d-preview/assets/blank.webp"},
+                     "flags": {"levels-3d-preview": {"model3d": "assets/x/room.glb", "depth": 394}}}],
+          "walls": [], "tokens": [{"x": 2400, "y": 500, "name": "Mottle", "width": 1, "height": 1, "elevation": 0.43}]}
+    root = tempfile.mkdtemp(prefix="vb_imp3_")
+    try:
+        r = fi.import_scene(battle, "Scene.b1", "mock_battle", ("walls", "lights", "tiles", "regions"), root=root, no_image=True)
+        assert r["tiles"] == 1 and r["regions"] == 1 and r["scene_3d"] is None and not r["warnings"], r
+        d = os.path.join(root, "mock_battle")
+        T = json.load(open(os.path.join(d, "foundry_tiles.json"), encoding="utf-8"))["tiles"][0]
+        assert T["point"] == [10.0, 20.0] and T["size_ft"] == [20.0, 10.0] and T["rotation"] == 90 and T["src"] == "maps/roof.webp" and not T.get("blank"), T
+        R = json.load(open(os.path.join(d, "foundry_regions.json"), encoding="utf-8"))["regions"][0]
+        assert R["name"] == "Trap" and R["shapes"][0]["point"] == [5.0, 5.0] and R["shapes"][1]["points"][2] == [10.0, 10.0] and R["shapes"][2]["radius_ft"] == [10.0, 10.0], R
+        assert json.load(open(os.path.join(d, "foundry_lights.json"), encoding="utf-8"))["lights"][0]["elevation"] == 3
+        # without tiles/regions in the include list nothing is written for them
+        r1 = fi.import_scene(battle, "Scene.b1", "mock_battle2", ("walls",), root=root, no_image=True)
+        assert r1["tiles"] == 0 and not os.path.exists(os.path.join(root, "mock_battle2", "foundry_tiles.json"))
+        r3 = fi.import_scene(d3, "Scene.c1", "mock_3d", ("walls", "tiles", "tokens"), root=root, no_image=True)
+        assert r3["scene_3d"] == {"auto3d": True, "renderTable": "matcustom", "tableTex": "mods/table.webp", "tableColor": "#341f0f", "exr": "assets/sky.webp"}, r3["scene_3d"]
+        assert any("2 levels" in w for w in r3["warnings"]) and any("not square" in w for w in r3["warnings"]), r3["warnings"]
+        assert r3["background"] is None and r3["size_ft"] == [110.0, 80.0]
+        pj = json.load(open(os.path.join(root, "mock_3d", "place.json"), encoding="utf-8"))
+        assert pj["import"]["scene_3d"]["tableTex"] == "mods/table.webp" and len(pj["import"]["levels"]) == 2 and pj["import"]["scene_offset_px"] == [600.0, 400.0]
+        vs = json.load(open(os.path.join(root, "mock_3d", "view_settings.json"), encoding="utf-8"))
+        assert vs["page_in"] == [12.0, 9.0] and vs["presets"]["town"]["scale_ft_per_in"] == 10 and pj["import"]["native_export_dpi"] == 200.0, (vs["page_in"], pj["import"])   # window = (page - 2*0.5 margin) * 10 = 110 x 80 ft: the scene itself
+        T3 = json.load(open(os.path.join(root, "mock_3d", "foundry_tiles.json"), encoding="utf-8"))["tiles"][0]
+        assert T3["blank"] and T3["model3d"] == "assets/x/room.glb" and T3["depth"] == 394 and T3["point"] == [55.0, 40.0]
+        tk = json.load(open(os.path.join(root, "mock_3d", "foundry_tokens.json"), encoding="utf-8"))["tokens"][0]
+        assert tk["elevation"] == 0.43 and tk["point"] == [92.5, 7.5], tk
+    finally:
+        shutil.rmtree(root, ignore_errors=True)
+    print("ok import-scene tiles / regions / 3D flags / levels / hex warning / padding rounding (mock)")
+
+
 def main():
     quick = "--quick" in sys.argv
-    for t in (test_schema_and_validation, test_templates_valid, test_caps, test_from_text, test_terrain_recipes, test_elevation_adapt, test_naming_sets, test_import_scene):
+    for t in (test_schema_and_validation, test_templates_valid, test_caps, test_from_text, test_terrain_recipes, test_elevation_adapt, test_naming_sets, test_import_scene, test_import_scene_tiles_3d):
         t()
     if not quick:
         test_bridgehollow_regression()

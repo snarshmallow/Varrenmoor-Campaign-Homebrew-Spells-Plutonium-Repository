@@ -77,9 +77,12 @@ const runner = R.createRunner({ root: ROOT, jobsDir: tmp + "/jobs", fs, path, sp
   st.places.import.scene_uuid = "Scene.abc"; st.places.import.place_id = "ZZ Scene"; st.places.import.lights = true; st.places.import.dry_run = true;
   job = VB.jobImportScene(st, d); r = await runner.run(job);
   const ic = calls[0] || [];
-  check("import args: import-scene, uuid, include, closed-as, slug id, dry-run", r.ok && ic[1] === "import-scene" && ic.includes("Scene.abc") && ic.includes("walls,lights") && ic.includes("--closed-as") && ic.includes("zz_scene") && ic.includes("--dry-run"), JSON.stringify(ic));
+  check("import args: import-scene, uuid, include, closed-as, slug id, dry-run", r.ok && ic[1] === "import-scene" && ic.includes("Scene.abc") && ic.includes("walls,tiles,regions,lights") && ic.includes("--closed-as") && ic.includes("zz_scene") && ic.includes("--dry-run"), JSON.stringify(ic));
   check("import result remembered", st.places.last.imported === "zz_scene" && st.places.last.walls === 100 && st.places.last.dry === false /* stub says dry_run false */);
   check("a dry-run import has no place to switch to", job.newPlace === null);
+  // regression: the panel flips dry_run back right after starting the job; the steps (run later) must still get --dry-run
+  st.places.import.dry_run = true; calls.length = 0; job = VB.jobImportScene(st, d); st.places.import.dry_run = false; st.places.import.lights = false; r = await runner.run(job);
+  check("dry-run flag is snapshotted when the job is built", (calls[0] || []).includes("--dry-run") && (calls[0] || []).join(" ").includes("walls,tiles,regions,lights"), JSON.stringify(calls[0]));
   st.places.import.dry_run = false; job = VB.jobImportScene(st, d);
   check("a real import switches to the new place", job.newPlace === "zz_scene");
   console.log(ok + " passed, " + fail + " failed"); try { fs.unlinkSync(specFile); } catch (x) { /* ignore */ } process.exit(fail ? 1 : 0);

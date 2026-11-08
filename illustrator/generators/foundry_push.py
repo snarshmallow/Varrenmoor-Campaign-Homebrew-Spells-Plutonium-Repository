@@ -16,7 +16,7 @@ Every command prints log lines, then ONE final JSON line on stdout ({"ok": true,
   push-item    (--spec item.json | --name N) [--description T] [--image F] [--item-uuid U] [--yes]
   push-models  --placements P (--scene-uuid U | --scene-name N) [--layers L] [--ids I] [--lod 0|1|2] [--px-per-ft F] [--prune] [--dry-run]
                one 3D Canvas tile per model of a world pack (worldpack_split.py), upserted by pipelineId model:<place>:<id>
-  import-scene --scene-uuid U [--place-id ID] [--include walls,lights,tokens,notes] [--no-image] [--closed-as buildings|lines] [--force] [--dry-run] [--scene-json F]
+  import-scene --scene-uuid U [--place-id ID] [--include walls,tiles,regions,lights,tokens,notes] [--no-image] [--closed-as buildings|lines] [--force] [--dry-run] [--scene-json F]
                READ-ONLY on Foundry: create a place from an existing scene (calibration from the grid, background as underlay, walls as WALLS lines / building
                outlines, links.foundry_scene = the scene). See foundry_import.py. push-scene with no --scene-uuid/--scene-name then goes back to that scene.
   delete-scene --scene-uuid U              delete a pipeline-flagged scene (module refuses anything else)
@@ -1129,7 +1129,7 @@ def parser():
     ap.add_argument("--with-lights", dest="with_lights", action="store_true", help="push-scene-3d: also push the interior point lights")
     # import-scene (foundry_import.py) and the place <-> scene link
     ap.add_argument("--place-id", help="import-scene: id of the new place (default: slug of the scene name)")
-    ap.add_argument("--include", help="import-scene: extra data to import: walls (default), lights, tokens, notes (comma list)")
+    ap.add_argument("--include", help="import-scene: data to import: walls, tiles, regions (default) plus lights, tokens, notes (comma list)")
     ap.add_argument("--no-image", action="store_true", help="import-scene: do not fetch the background image")
     ap.add_argument("--closed-as", default="buildings", choices=["buildings", "lines"], help="import-scene: closed wall loops become building outlines (default) or stay lines")
     ap.add_argument("--force", action="store_true", help="import-scene: overwrite an existing world/<id>")

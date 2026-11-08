@@ -61,10 +61,62 @@ def calibration(sc):
     ppf = size / (dist * k)
     W, H = float(sc.get("width") or 0), float(sc.get("height") or 0)
     pad = float(sc.get("padding") or 0)
-    sx = round(W * pad / size) * size if size else 0
-    sy = round(H * pad / size) * size if size else 0
+    # Foundry rounds the padding UP to whole grid squares (same rule as foundry_push.calibrate); python round() was banker's rounding and could be a square off
+    sx = math.ceil(W * pad / size - 1e-9) * size if size else 0
+    sy = math.ceil(H * pad / size - 1e-9) * size if size else 0
+    if g.get("type") not in (None, 0, 1):
+        warn = (warn + "; " if warn else "") + f"grid type {g.get('type')} is not square: imported as a square grid (hex scenes keep their size but not the hex layout)"
     return {"grid_px": size, "grid_dist": dist, "grid_units": unit, "grid_ft": dist * k, "ppf": ppf, "width": W, "height": H, "padding": pad, "sceneX": sx, "sceneY": sy,
             "width_ft": W / ppf, "height_ft": H / ppf, "warning": warn}
+
+
+SCENE3D_KEYS = ("auto3d", "renderTable", "tableTex", "tableColor", "tableHeightmap", "tableHeightmapScale", "exr", "skybox", "renderBackground", "sunPosition", "sunDistance",
+                "ambientLightIntensity", "ambientLightColor", "enableFog", "fogColor", "fogDistance", "exposure", "sceneTint", "timeSync", "maxElevation", "grounding")
+
+
+def scene3d(sc):
+    """The levels-3d-preview scene settings worth keeping (table texture, skybox, sun ...), or None for a plain 2D scene."""
+    f = ((sc.get("flags") or {}).get("levels-3d-preview")) or {}
+    if not f:
+        return None
+    return {k: f[k] for k in SCENE3D_KEYS if k in f}
+
+
+def import_tiles(sc, c):
+    """Tiles as feet rectangles (top-left origin) with the image path and, for 3D tiles, the model path / depth. Not fetched: references only."""
+    out = []
+    for i, t in enumerate(sc.get("tiles") or []):
+        l3 = ((t.get("flags") or {}).get("levels-3d-preview")) or {}
+        x, y = to_ft(c, t.get("x", 0) or 0, t.get("y", 0) or 0)
+        src = (t.get("texture") or {}).get("src")
+        rec = {"id": f"ftile_{i + 1:03d}", "foundry_id": t.get("_id"), "point": [x, y], "size_ft": [round((t.get("width") or 0) / c["ppf"], 2), round((t.get("height") or 0) / c["ppf"], 2)],
+               "rotation": t.get("rotation", 0), "elevation": t.get("elevation", 0), "alpha": t.get("alpha", 1), "hidden": bool(t.get("hidden")), "src": src}
+        if l3.get("model3d"):
+            rec["model3d"] = l3.get("model3d")
+            rec["depth"] = l3.get("depth")
+        if src and "levels-3d-preview/assets/blank" in src:
+            rec["blank"] = True   # carrier tile for a 3D model, no picture of its own
+        out.append(rec)
+    return out
+
+
+def import_regions(sc, c):
+    out = []
+    for i, r in enumerate(sc.get("regions") or []):
+        shapes = []
+        for sh in r.get("shapes") or []:
+            t = sh.get("type")
+            if t == "rectangle":
+                shapes.append({"type": t, "point": to_ft(c, sh.get("x", 0), sh.get("y", 0)), "size_ft": [round((sh.get("width") or 0) / c["ppf"], 2), round((sh.get("height") or 0) / c["ppf"], 2)], "rotation": sh.get("rotation", 0)})
+            elif t in ("circle", "ellipse"):
+                shapes.append({"type": t, "point": to_ft(c, sh.get("x", 0), sh.get("y", 0)), "radius_ft": [round((sh.get("radiusX", sh.get("radius", 0)) or 0) / c["ppf"], 2), round((sh.get("radiusY", sh.get("radius", 0)) or 0) / c["ppf"], 2)]})
+            elif t == "polygon":
+                pts = sh.get("points") or []
+                shapes.append({"type": t, "points": [to_ft(c, pts[k], pts[k + 1]) for k in range(0, len(pts) - 1, 2)]})
+            else:
+                shapes.append({"type": t})
+        out.append({"id": f"freg_{i + 1:03d}", "name": r.get("name"), "color": r.get("color"), "behaviors": len(r.get("behaviors") or []), "shapes": shapes})
+    return out
 
 
 def to_ft(c, x, y):
@@ -197,8 +249,18 @@ def import_scene(sc, scene_uuid, place_id=None, include=("walls",), closed_as="b
             loops.append(ch)
         else:
             lines.append(ch)
+    warnings = [c["warning"]] if c["warning"] else []
+    tiles = import_tiles(sc, c) if "tiles" in include else []
+    regions = import_regions(sc, c) if "regions" in include else []
+    s3d = scene3d(sc)
+    levels = [{"id": lv.get("_id"), "name": lv.get("name"), "elevation": lv.get("elevation")} for lv in (sc.get("levels") or [])]
+    if len(levels) > 1:
+        warnings.append(f"scene has {len(levels)} levels: only the first level's background is used; walls/lights/tokens of all levels are merged")
+    if not background_src(sc) and not tiles and "tiles" not in include:
+        warnings.append("scene has no background image")
     summary = {"place_id": pid, "name": name, "scene_uuid": scene_uuid, "size_ft": [W_ft, H_ft], "px_per_ft": round(c["ppf"], 4), "grid": {"size_px": c["grid_px"], "distance": c["grid_dist"], "units": c["grid_units"]},
-               "walls": len(segs), "wall_polylines": len(lines), "closed_loops": len(loops), "background": background_src(sc), "include": list(include), "dry_run": bool(dry_run)}
+               "walls": len(segs), "wall_polylines": len(lines), "closed_loops": len(loops), "background": background_src(sc), "include": list(include), "dry_run": bool(dry_run),
+               "tiles": len(tiles), "regions": len(regions), "levels": len(levels), "scene_3d": s3d, "warnings": warnings}
     if c["warning"]:
         summary["warning"] = c["warning"]
     if dry_run:
@@ -250,24 +312,32 @@ def import_scene(sc, scene_uuid, place_id=None, include=("walls",), closed_as="b
     inc = set(include)
     if "lights" in inc:
         L = [{"id": f"fl_{i + 1:03d}", "point": to_ft(c, l.get("x", 0), l.get("y", 0)), "bright_ft": round(float((l.get("config") or {}).get("bright") or 0), 1),
-              "dim_ft": round(float((l.get("config") or {}).get("dim") or 0), 1), "color": (l.get("config") or {}).get("color")} for i, l in enumerate(sc.get("lights") or [])]
+              "dim_ft": round(float((l.get("config") or {}).get("dim") or 0), 1), "color": (l.get("config") or {}).get("color"),
+              "elevation": l.get("elevation"), "alpha": (l.get("config") or {}).get("alpha")} for i, l in enumerate(sc.get("lights") or [])]
         jsave(os.path.join(pdir, "foundry_lights.json"), {"place": pid, "lights": L})
         summary["lights"] = len(L)
     if "tokens" in inc:
         T = [{"id": f"ft_{i + 1:03d}", "name": t.get("name"), "point": to_ft(c, (t.get("x", 0) or 0) + (t.get("width", 1) or 1) * c["grid_px"] / 2, (t.get("y", 0) or 0) + (t.get("height", 1) or 1) * c["grid_px"] / 2),
-              "actor_id": t.get("actorId"), "size_squares": [t.get("width", 1), t.get("height", 1)]} for i, t in enumerate(sc.get("tokens") or [])]
+              "actor_id": t.get("actorId"), "elevation": t.get("elevation"), "size_squares": [t.get("width", 1), t.get("height", 1)]} for i, t in enumerate(sc.get("tokens") or [])]
         jsave(os.path.join(pdir, "foundry_tokens.json"), {"place": pid, "tokens": T})
         summary["tokens"] = len(T)
     if "notes" in inc:
         N = [{"id": f"fn_{i + 1:03d}", "point": to_ft(c, n.get("x", 0), n.get("y", 0)), "text": n.get("text"), "entry_id": n.get("entryId")} for i, n in enumerate(sc.get("notes") or [])]
         jsave(os.path.join(pdir, "foundry_notes.json"), {"place": pid, "notes": N})
         summary["notes"] = len(N)
+    if "tiles" in inc:
+        jsave(os.path.join(pdir, "foundry_tiles.json"), {"place": pid, "units": "ft", "origin": "scene top-left, y down", "tiles": tiles})
+    if "regions" in inc:
+        jsave(os.path.join(pdir, "foundry_regions.json"), {"place": pid, "regions": regions})
     # model files
     for sub, key in (("districts", "districts"), ("streets", "streets")):
         jsave(os.path.join(pdir, sub + ".json"), {key: []})
     jsave(os.path.join(pdir, "water.json"), {"place": pid, "water": []})
-    fpi = 100.0 if max(W_ft, H_ft) > 1200 else 40.0 if max(W_ft, H_ft) > 500 else 20.0
-    vs = {"_note": "Written by import-scene.", "units": "ft", "page_in": [17, 11], "margin_in": 0.5, "min_street_width_ft": 10, "default_preset": "town",
+    # Page sized so the town view is EXACTLY the scene rectangle (a later push-scene then reproduces the scene's size, not a bigger window around it)
+    fpi = next((f for f in (1, 2, 2.5, 5, 10, 20, 25, 40, 50, 100, 200, 250, 500, 1000, 2000, 5000) if max(W_ft, H_ft) / f <= 14.0), 10000.0)
+    page_in = [round(W_ft / fpi + 1.0, 4), round(H_ft / fpi + 1.0, 4)]
+    vs = {"_note": "Written by import-scene. page_in is sized so the 'town' view covers exactly the scene; export it at >= grid_px/grid_ft px per foot x scale_ft_per_in dpi "
+                   "(import.native_export_dpi in place.json) to keep the scene's own grid size.", "units": "ft", "page_in": page_in, "margin_in": 0.5, "min_street_width_ft": 10, "default_preset": "town",
           "contour_mask": {"enabled": True, "include": ["buildings", "streets", "plazas"]},
           "presets": {"town": {"scale_ft_per_in": fpi, "grid_ft": c["grid_ft"], "grid_major_every": 5, "focus": "center", "scale_bar_ft": 5 * fpi},
                       "bowl": {"scale_ft_per_in": fpi * 2, "grid_ft": c["grid_ft"] * 2, "grid_major_every": 5, "focus": "center", "scale_bar_ft": 10 * fpi},
@@ -280,8 +350,8 @@ def import_scene(sc, scene_uuid, place_id=None, include=("walls",), closed_as="b
              "view_focus": {"town": [round(W_ft / 2), round(H_ft / 2)]}, "links": {"foundry_scene": scene_uuid, "model3d": None, "ai_layer": None},
              "generated_by": "foundry_import.py", "sea_level_ft": -1000.0, "phase_elevation": "percentile",
              "import": {"scene_uuid": scene_uuid, "scene_name": name, "scene_px": [c["width"], c["height"]], "scene_offset_px": [c["sceneX"], c["sceneY"]], "padding": c["padding"],
-                        "grid": {"size": c["grid_px"], "distance": c["grid_dist"], "units": c["grid_units"]}, "px_per_ft": c["ppf"], "background": src,
-                        "underlay": (underlay or {}).get("png"), "imported": time.strftime("%Y-%m-%dT%H:%M:%S"), "counts": {"walls": len(segs), "tokens": len(sc.get("tokens") or []),
+                        "grid": {"size": c["grid_px"], "distance": c["grid_dist"], "units": c["grid_units"]}, "px_per_ft": c["ppf"], "native_export_dpi": round(c["ppf"] * fpi, 2), "background": src,
+                        "underlay": (underlay or {}).get("png"), "imported": time.strftime("%Y-%m-%dT%H:%M:%S"), "levels": levels, "scene_3d": s3d, "warnings": warnings, "counts": {"tiles": len(tiles), "regions": len(regions), "walls": len(segs), "tokens": len(sc.get("tokens") or []),
                                                                                                                          "lights": len(sc.get("lights") or []), "notes": len(sc.get("notes") or [])}}}
     jsave(os.path.join(pdir, "place.json"), place)
     summary["dir"] = pdir
@@ -306,7 +376,7 @@ def cmd_import_scene(br, a):
             raise fp.PushError("import-scene needs --scene-uuid (pick one with `foundry_push.py list --kinds scenes`)")
         sc = br.call("get", uuid=a.scene_uuid)
         uuid = a.scene_uuid
-    inc = [x for x in (a.include or "walls").split(",") if x]
+    inc = [x for x in (a.include or "walls,tiles,regions").split(",") if x]
     try:
         try:
             assets_root = None if a.no_image else (a.assets_dir or fp.assets_dir())

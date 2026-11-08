@@ -114,18 +114,19 @@
   };
   VB.jobImportScene = function (st, d) {
     var I = st.places.import, uuid = String(I.scene_uuid || "").trim();
-    return { kind: "foundry_import_scene", label: (I.dry_run ? "Check scene import" : "Import Foundry scene as place"), params: { import: I },
+    var dry = !!I.dry_run, snap = { lights: !!I.lights, tokens: !!I.tokens, notes: !!I.notes, closed_as: I.closed_as, place_id: I.place_id };   // snapshot: steps run later, the panel resets I.dry_run right after starting the job
+    return { kind: "foundry_import_scene", label: (dry ? "Check scene import" : "Import Foundry scene as place"), params: { import: I },
       steps: [{ t: "fn", label: "check", fn: function () { if (!/^Scene\./.test(uuid)) throw new Error("pick a Foundry scene (or paste its Scene.xxxx uuid) first"); } },
         py(GEN + "foundry_push.py", function () {
-          var inc = ["walls"].concat(I.lights ? ["lights"] : [], I.tokens ? ["tokens"] : [], I.notes ? ["notes"] : []);
-          var a = ["import-scene", "--scene-uuid", uuid, "--include", inc.join(","), "--closed-as", I.closed_as || "buildings"];
-          if (String(I.place_id || "").trim()) a.push("--place-id", VB.PLACE_SLUG(I.place_id));
-          if (I.dry_run) a.push("--dry-run");
+          var inc = ["walls", "tiles", "regions"].concat(snap.lights ? ["lights"] : [], snap.tokens ? ["tokens"] : [], snap.notes ? ["notes"] : []);
+          var a = ["import-scene", "--scene-uuid", uuid, "--include", inc.join(","), "--closed-as", snap.closed_as || "buildings"];
+          if (String(snap.place_id || "").trim()) a.push("--place-id", VB.PLACE_SLUG(snap.place_id));
+          if (dry) a.push("--dry-run");
           return a;
         }, "foundry_push.py import-scene", { json: "imp" }),
-        { t: "fn", label: "remember", fn: function (run) { var r = run.vars.imp; run.setState("places.last", { imported: r.place_id, scene_uuid: r.scene_uuid, size_ft: r.size_ft, walls: r.walls, closed_loops: r.closed_loops, underlay: r.underlay && (r.underlay.png || r.underlay.error), dry: !!r.dry_run, at: new Date().toISOString() });
-          run.log((r.dry_run ? "would import " : "imported ") + r.place_id + ": " + r.size_ft.join(" x ") + " ft, " + r.walls + " walls, " + r.closed_loops + " closed loops" + (r.underlay ? ", underlay " + (r.underlay.png || r.underlay.error) : "")); } }],
-      newPlace: I.dry_run ? null : (VB.PLACE_SLUG(I.place_id) || null) };
+        { t: "fn", label: "remember", fn: function (run) { var r = run.vars.imp; run.setState("places.last", { imported: r.place_id, scene_uuid: r.scene_uuid, size_ft: r.size_ft, walls: r.walls, closed_loops: r.closed_loops, underlay: r.underlay && (r.underlay.png || r.underlay.error), dry: !!r.dry_run, tiles: r.tiles, regions: r.regions, scene_3d: !!r.scene_3d, warnings: r.warnings, at: new Date().toISOString() });
+          run.log((r.dry_run ? "would import " : "imported ") + r.place_id + ": " + r.size_ft.join(" x ") + " ft, " + r.walls + " walls, " + r.closed_loops + " closed loops, " + (r.tiles || 0) + " tiles" + (r.scene_3d ? ", 3D settings" : "") + (r.underlay ? ", underlay " + (r.underlay.png || r.underlay.error) : "")); } }],
+      newPlace: dry ? null : (VB.PLACE_SLUG(snap.place_id) || null) };
   };
   VB.jobPlaceRender = function (st, id, opts) {
     opts = opts || {};

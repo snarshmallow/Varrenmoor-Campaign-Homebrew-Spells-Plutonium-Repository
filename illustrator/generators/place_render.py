@@ -69,7 +69,7 @@ def main(argv=None):
     if shading != "none":
         png = os.path.join(out, prefix + "_shading.png")
         rr.run("shading.py", ["--place", a.place, "--phases", shading, "--scale-ft-per-in", str(v.fpi), "--dpi", str(dpi), "--out", png, "--hillshade",
-                              "--window", ",".join(f"{x:.2f}" for x in win)])
+                              "--window=" + ",".join(f"{x:.2f}" for x in win)])   # "=" form: a window starting with a negative number is otherwise read as an option
         info = json.load(open(os.path.splitext(png)[0] + ".json"))
         layers.append({"path": png, "rect": rect_of(info["bounds_ft"]), "layer": "ART - Shading", "name": "shading_png"})
     if not a.no_fills:
