@@ -1,6 +1,6 @@
 # Redeploying module 0.3.1 (4002 reconnect-loop fix)
 0.3.1 changes only `scripts/bridge.js` (and the version in `module.json`): a client closed by the relay with code 4002 ("replaced by another GM tab") no longer reconnects, shows one warning, and "connected" notices are rate limited (1 per minute). The relay needs no change for this (a relay restart is only needed to pick up the new `/health` fields, optional).
-1. Copy `foundry-bridge/module/varrenmoor-bridge/module.json` and `scripts/bridge.js` to `<Foundry Data>\modulesarrenmoor-bridge\` and `...\scripts\` on Vega (same two files as below; keep `relay-url.json` if present). The zip `module/varrenmoor-bridge.zip` was rebuilt too, for Add-on Modules > Update.
+1. Copy `foundry-bridge/module/varrenmoor-bridge/module.json` and `scripts/bridge.js` to `<Foundry Data>\modules\varrenmoor-bridge\` and `...\scripts\` on Vega (same two files as below; keep `relay-url.json` if present). The zip `module/varrenmoor-bridge.zip` was rebuilt too, for Add-on Modules > Update.
 2. Close all but one Foundry GM browser tab, then Ctrl+F5 in the remaining GM tab. Check the module version shows 0.3.1 (`bridge.ps1 version`).
 3. Test: open a second GM tab with the module connected. The first tab should show one warning and stay disconnected (the relay log shows a single `closed 4002`, no repeats). F5 in the first tab takes the connection back.
 4. Roll back: copy the 0.3.0 files from git history.
