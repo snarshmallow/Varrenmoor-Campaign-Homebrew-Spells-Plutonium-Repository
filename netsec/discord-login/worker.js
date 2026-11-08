@@ -80,6 +80,11 @@ app.post('/token', async (c) => {
 	}).then(res => res.json())
 
 	if (r === null) return new Response("Bad request.", { status: 400 })
+	// Varrenmoor: surface Discord's own error (e.g. invalid_client = wrong client secret, invalid_grant = bad/used code)
+	if (!r['access_token']) {
+		console.log('discord token exchange failed:', JSON.stringify({ error: r['error'], error_description: r['error_description'], has_secret: !!c.env.DISCORD_CLIENT_SECRET }))
+		return c.json({ error: r['error'] ?? 'token_exchange_failed', error_description: r['error_description'] ?? 'Discord did not return an access token' }, 400)
+	}
 	const userInfo = await fetch('https://discord.com/api/v10/users/@me', {
 		headers: {
 			'Authorization': 'Bearer ' + r['access_token']
