@@ -555,8 +555,9 @@ def lod_terrain_heights(pack, step=4, carve=True, conform=True, road_grade=True,
     return wg.lod_safe_heights(h, pack.cell_ft, runs, step)
 
 
-def build_parts(pack, step=1, carve=True, conform=True, layers=None, drape_edge_ft=40.0, road_grade=True, carve_bridges="auto"):
-    """All meshable entities of a pack as Parts (see module doc), in a stable order. layers: optional set of layer names to keep."""
+def build_parts(pack, step=1, carve=True, conform=True, layers=None, drape_edge_ft=40.0, road_grade=True, carve_bridges="auto", roof_mode="none"):
+    """All meshable entities of a pack as Parts (see module doc), in a stable order. layers: optional set of layer names to keep.
+    roof_mode (worldpack_roofs.py): none = roofs stay in the building mesh; per_building / per_scene = roofs are separate Parts of layer "roofs"."""
     import worldpack_pbr as pbr
     pbr.prepare(pack.materials)
     h, runs, gp = terrain_heights(pack, carve, conform, road_grade, carve_bridges)
@@ -570,6 +571,9 @@ def build_parts(pack, step=1, carve=True, conform=True, layers=None, drape_edge_
                       "members": [e["id"]], "instance": None, "foundry": e.get("foundry", {}), "entity": e, **kw})
     if want("terrain"):
         tid = f"terrain_{pack.place}"
+    import worldpack_roofs as wr
+    roof_mode = wr.check_mode(roof_mode)
+    roof_list = []
         t = {"layer": "terrain", "subtype": "terrain", "district": None, "ring": None, "group": "terrain", "id": tid}
         m = build_terrain(cx, step)
         parts.append({"id": tid, "layer": "terrain", "type": "terrain", "group": "terrain", "tags": t, "mesh": m, "pivot": _pivot(m), "members": [tid], "instance": None,
@@ -615,7 +619,14 @@ def build_parts(pack, step=1, carve=True, conform=True, layers=None, drape_edge_
                     m, dn, extra = wi.add_interior(cx, e, m, dn)
                 add(e, "buildings", m, door_nodes=dn, **extra)
             else:
-                add(e, "buildings", build_building(cx, e))
+                m = build_building(cx, e)
+                extra = {}
+                if roof_mode != "none":
+                    m, extra, rm_ = wr.separate(cx, e, m, extra)
+                    if rm_ is not None:
+                        roof_list.append((e, rm_))
+                add(e, "buildings", m, **extra)
+    parts.extend(wr.make_parts(roof_list, roof_mode))
     for e in pack.list("fences"):
         if want("fences"):
             add(e, "fences", build_fence(cx, e))
@@ -628,6 +639,10 @@ def build_parts(pack, step=1, carve=True, conform=True, layers=None, drape_edge_
     if want("foliage"):
         tmpl = {}
         for e in pack.list("foliage"):
+                if roof_mode != "none":                               # roof becomes its own Part (worldpack_roofs.py)
+                    m, extra, rm_ = wr.separate(cx, e, m, extra)
+                    if rm_ is not None:
+                        roof_list.append((e, rm_))
             x, y, z = e["points"][0]
             hm = e["height_ft"] * FT
             key = (e["species"], round(hm / e["scale"], 3) if e["scale"] else hm)

@@ -16,6 +16,8 @@ Every command prints log lines, then ONE final JSON line on stdout ({"ok": true,
   push-item    (--spec item.json | --name N) [--description T] [--image F] [--item-uuid U] [--yes]
   push-models  --placements P (--scene-uuid U | --scene-name N) [--layers L] [--ids I] [--lod 0|1|2] [--px-per-ft F] [--prune] [--dry-run]
                one 3D Canvas tile per model of a world pack (worldpack_split.py), upserted by pipelineId model:<place>:<id>
+  roofs        --scene-uuid U [--roof-state hide|show|toggle] [--ids bld_a,bld_b]      show/hide the roof tiles (pack built with --roof-mode per_building|per_scene)
+  install-roof-macros                      create the 'Roofs: toggle all' and 'Roofs: toggle selected / at token / pick' macros in the world (foundry_macros/*.js)
   import-scene --scene-uuid U [--place-id ID] [--include walls,tiles,regions,lights,tokens,notes] [--no-image] [--closed-as lines|buildings] [--force] [--dry-run] [--scene-json F]
                READ-ONLY on Foundry: create a place from an existing scene (calibration from the grid, background as underlay, walls as WALLS lines / building
                outlines, links.foundry_scene = the scene). See foundry_import.py. push-scene with no --scene-uuid/--scene-name then goes back to that scene.
@@ -726,7 +728,8 @@ def build_model_tiles(doc, scene_calib, a, publish=None):
         sz = e["size_ft"]
         rot0 = e["tile"]["rotation"] + e.get("rotation_deg", 0.0)
         flags = lambda extra: {"levels-3d-preview": {"model3d": path, "autoGround": True, "autoCenter": False, "collision": False, "sight": False, **extra},
-                               FLAG: {"modelFile": e["file"], "sha256": e["sha256"], "layer": e["layer"], "ids": e["ids"][:50]}}
+                               FLAG: {"modelFile": e["file"], "sha256": e["sha256"], "layer": e["layer"], "ids": e["ids"][:50],
+                                      **({"roof": {**e["roof"], "scope": "building" if e["roof"]["mode"] == "per_building" else "scene"}} if e.get("roof") else {})}}
         if e["kind"] == "instances":
             for ins in e["instances"]:
                 px, py = c["sceneX"] + (ins["pivot_ft"][0] - c["x0"]) * ppf, c["sceneY"] + (ins["pivot_ft"][1] - c["y0"]) * ppf
@@ -740,7 +743,8 @@ def build_model_tiles(doc, scene_calib, a, publish=None):
         sc = e.get("scale", 1.0)
         items.append({"id": e["id"], "data": {
             "x": round(px), "y": round(py), "width": max(4, round(sz[0] * sc * ppf)), "height": max(4, round(sz[1] * sc * ppf)), "elevation": e["pivot"]["rel_z_ft"],
-            "rotation": rot0, "texture": {"src": "modules/levels-3d-preview/assets/blank.webp"}, "flags": flags({"depth": max(2, round(sz[2] * sc * ppf))})}})
+            "rotation": rot0, "texture": {"src": "modules/levels-3d-preview/assets/blank.webp"}, "flags": flags({"depth": max(2, round(sz[2] * sc * ppf))}),
+            **({"hidden": True} if e.get("roof") and getattr(a, "roofs_hidden", False) else {})}})        # roof tiles: flags.varrenmoor.roof, hidden = roof off
     return items
 
 
@@ -857,6 +861,30 @@ def cmd_bake_texture(br, a):
     return doc
 
 
+def stale_roof_tiles(scene, items):
+    """Tiles of `scene` that are roof tiles of the pipeline (flags.varrenmoor.layer == roofs) and are not among the pushed `items` -> [(uuid, pipeline id)]."""
+    keep = {i["id"] for i in items}
+    out = []
+    for t in scene.get("tiles", []):
+        f = (t.get("flags") or {}).get(FLAG) or {}
+        if f.get("layer") == "roofs" and f.get("pipelineId") and f["pipelineId"] not in keep:
+            out.append((t.get("uuid") or f"{scene['uuid']}.Tile.{t.get('_id') or t.get('id')}", f["pipelineId"]))
+    return out
+
+
+def prune_stale_roofs(br, scene_uuid, items, a, place=None):
+    if getattr(a, "layers", None) or getattr(a, "ids", None) or not items:          # a partial push never deletes anything
+        return 0
+    sc = br.call("get", uuid=scene_uuid)
+    sc.setdefault("uuid", scene_uuid)
+    stale = stale_roof_tiles(sc, items)
+    for u, _ in stale:
+        br.call("delete", uuid=u)
+    if stale:
+        LOG(f"removed {len(stale)} stale roof tile(s) of the previous roof mode")
+    return len(stale)
+
+
 def cmd_push_models(br, a):
     pp = a.placements or os.path.join(REPO, "world", a.place, "export", "placements.json")
     with open(pp, encoding="utf-8") as f:
@@ -911,6 +939,8 @@ def cmd_push_models(br, a):
     r = br.call("upsert_many", documentName="Tile", parentUuid=uuid, items=items, prefix=f"model:{place}:", prune=bool(a.prune) and bool(items))
     LOG(f"tiles: {r}")
     result.update(scene_uuid=uuid, tile_ops=r)
+    result["roofs_removed"] = prune_stale_roofs(br, uuid, items, a, place)     # roof mode changes leave stale roof tiles behind: remove only those
+    result["roof_mode"] = doc.get("roof_mode", "none")
     return result
 
 
@@ -1120,7 +1150,7 @@ def cmd_push_scene_3d(br, a):
 
 def parser():
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
-    ap.add_argument("cmd", choices=["status", "places", "list", "export-info", "push-scene", "push-token", "push-actor", "push-item", "push-models", "delete-scene", "link-region", "bake-texture", "push-lights", "import-scene", "push-scene-3d"])
+    ap.add_argument("cmd", choices=["status", "places", "list", "export-info", "push-scene", "push-token", "push-actor", "push-item", "push-models", "delete-scene", "link-region", "bake-texture", "push-lights", "import-scene", "push-scene-3d", "install-roof-macros", "roofs"])
     ap.add_argument("--place", default="bridgehollow")
     ap.add_argument("--view", default="town")
     ap.add_argument("--preset")
@@ -1161,6 +1191,8 @@ def parser():
     ap.add_argument("--size-ft", type=float, default=5.0)
     ap.add_argument("--key")
     ap.add_argument("--hidden", action="store_true")
+    ap.add_argument("--roofs-hidden", dest="roofs_hidden", action="store_true", help="push-models: create the roof tiles hidden (roof mode per_building / per_scene)")
+    ap.add_argument("--roof-state", dest="roof_state", choices=["hide", "show", "toggle"], default="toggle", help="roofs: what to do with the roof tiles of --scene-uuid")
     ap.add_argument("--placements", help="push-models: placements.json (default world/<place>/export/placements.json)")
     ap.add_argument("--layers", help="push-models: only these layers (comma list)")
     ap.add_argument("--ids", help="push-models: only files containing these entity ids")
@@ -1221,9 +1253,54 @@ def place_link(place, uuid=None):
     return (d.get("links") or {}).get("foundry_scene")
 
 
+MACRO_DIR = os.path.join(os.path.dirname(HERE), "foundry_macros")
+ROOF_MACROS = {"roofs_toggle_all": "Roofs: toggle all", "roofs_toggle_pick": "Roofs: toggle selected / at token / pick"}
+
+
+def cmd_install_roof_macros(br, a):
+    """Create (or update in place) the two roof-toggle Script macros in the world: pipeline ids macro:roofs_toggle_all / macro:roofs_toggle_pick.
+    Source: illustrator/foundry_macros/*.js. Drag them from the Macro directory to the hotbar (suggestion: slots 8 and 9). No module change needed."""
+    items = []
+    for key, name in ROOF_MACROS.items():
+        with open(os.path.join(MACRO_DIR, key + ".js"), encoding="utf-8") as f:
+            items.append((f"macro:{key}", {"name": name, "type": "script", "img": "icons/svg/house.svg", "scope": "global", "command": f.read()}))
+    if a.dry_run:
+        return {"ok": True, "dry_run": True, "macros": [i for i, _ in items]}
+    require_module(br)
+    out = [br.call("upsert_by_flag", documentName="Macro", id=i, data=d) for i, d in items]
+    LOG(f"macros: {[o.get('uuid') for o in out]}")
+    return {"ok": True, "macros": [o.get("uuid") for o in out]}
+
+
+def roof_tile_updates(scene, state, ids=None):
+    """Tile updates [(uuid, {"hidden": bool})] for the roof tiles of a scene document: state hide|show|toggle; ids = only roofs of these building ids."""
+    tiles = [t for t in scene.get("tiles", []) if (t.get("flags", {}).get(FLAG) or {}).get("roof")]
+    if ids:
+        tiles = [t for t in tiles if set(ids) & set(t["flags"][FLAG]["roof"].get("buildings", []))]
+    hide = {"hide": True, "show": False}.get(state)
+    if hide is None:                                          # toggle: any visible -> hide all, else show all (same rule as the macros)
+        hide = any(not t.get("hidden") for t in tiles)
+    return [(t.get("uuid") or f"{scene['uuid']}.Tile.{t.get('_id') or t.get('id')}", {"hidden": hide}) for t in tiles]
+
+
+def cmd_roofs(br, a):
+    """roofs --scene-uuid U --roof-state hide|show|toggle [--ids bld_a,bld_b]: the macro's job from the command line (writes tile.hidden of the roof tiles)."""
+    if not a.scene_uuid:
+        raise PushError("give --scene-uuid")
+    sc = br.call("get", uuid=a.scene_uuid)
+    ups = roof_tile_updates(sc, a.roof_state, a.ids.split(",") if a.ids else None)
+    if a.dry_run or not ups:
+        return {"ok": True, "dry_run": bool(a.dry_run), "roof_tiles": len(ups), "state": a.roof_state}
+    require_module(br)
+    for uuid, data in ups:
+        br.call("update", uuid=uuid, data=data)
+    return {"ok": True, "roof_tiles": len(ups), "hidden": ups[0][1]["hidden"]}
+
+
 CMDS = {"status": cmd_status, "places": cmd_places, "list": cmd_list, "export-info": cmd_export_info, "push-scene": cmd_push_scene,
         "push-token": cmd_push_token, "push-actor": cmd_push_actor, "push-item": cmd_push_item, "push-models": cmd_push_models, "delete-scene": cmd_delete_scene,
-        "link-region": cmd_link_region, "bake-texture": cmd_bake_texture, "push-lights": cmd_push_lights, "import-scene": cmd_import_scene, "push-scene-3d": cmd_push_scene_3d}
+        "link-region": cmd_link_region, "bake-texture": cmd_bake_texture, "push-lights": cmd_push_lights, "import-scene": cmd_import_scene, "push-scene-3d": cmd_push_scene_3d,
+        "install-roof-macros": cmd_install_roof_macros, "roofs": cmd_roofs}
 
 
 def main(argv=None, bridge=None):

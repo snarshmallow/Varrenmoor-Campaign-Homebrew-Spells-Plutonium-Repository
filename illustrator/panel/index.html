@@ -904,6 +904,13 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
     <label>Item filter <input type="text" data-s="foundry.filter.items"></label>
     <label>Item <select id="fItem" data-s="foundry.itemUuid"></select></label>
     <label>Image file <input type="text" data-s="foundry.image" placeholder="png / jpg / webp"></label>
+    <label>Roof mode <select id="fRoofMode" data-s="foundry.models.roofMode"><option value="none">None: roofs merged into buildings (cheapest)</option><option value="per_building">Per building: hide each roof separately</option><option value="per_scene">Per scene: one switch for all roofs</option></select></label>
+  </div>
+  <p class="note" id="fRoofNote">Applies to Export world pack / Export split models. None: roofs are part of each building, nothing can be hidden (default, fewest tiles). Per building: every roof is its own tile (about 1 extra tile per building, same triangles), so you can hide one roof to look inside. Per scene: all roofs are ONE tile (one extra tile in total, fewer draw calls): hide or show every roof at once; buildings are exported open at the top. Hiding a roof in Foundry: Install roof macros once, then use the hotbar macros (GM sees a hidden roof as a ghost, players see nothing).</p>
+  <div class="btns">
+    <button data-act="wp_roof_macros" title="Creates the 'Roofs: toggle all' and 'Roofs: toggle selected / at token / pick' macros in the Foundry world (no module update needed)">Install roof macros</button>
+    <button data-act="wp_roofs_hide" title="Hide every roof tile on the picked existing scene">Hide roofs</button>
+    <button data-act="wp_roofs_show" title="Show every roof tile on the picked existing scene">Show roofs</button>
     <label>NPC / item spec (json) <input type="text" data-s="foundry.spec" placeholder="foundry-tools spec"></label>
     <label>Place at (bld_id, str_id or x,y ft) <input type="text" data-s="foundry.at"></label>
     <label>Token size (ft) <input type="number" data-s="foundry.sizeFt" min="1" step="any"></label>

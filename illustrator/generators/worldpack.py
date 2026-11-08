@@ -143,6 +143,16 @@ def _jdump(path, obj):
         f.write("\n")
 
 
+def set_roof_mode(root, mode):
+    """Record the roof mode (none|per_building|per_scene, worldpack_roofs.py) in manifest.foundry.roof_mode. The mode itself is realised by worldpack_split."""
+    mp = os.path.join(root, "manifest.json")
+    if os.path.exists(mp):
+        m = _jload(mp)
+        if m.setdefault("foundry", {}).get("roof_mode") != mode:
+            m["foundry"]["roof_mode"] = mode
+            _jdump(mp, m)
+
+
 def refresh_manifest_files(root):
     """Re-hash manifest.files after something rewrote files inside the pack (worldpack_split): listed files that exist are re-hashed,
     listed files that vanished are dropped, and placements.json + models/**/*.glb are added. Returns (rehashed, added, dropped)."""
@@ -1109,6 +1119,8 @@ def main(argv=None):
     e.add_argument("--z-origin-ft", type=float, help="elevation mapped to Blender Z = 0 (default: terrain minimum floored to 10 ft)")
     e.add_argument("--timestamp", help="pin manifest generated.timestamp (for byte-identical exports)")
     e.add_argument("--no-textures", action="store_true", help="reference repo textures instead of copying them")
+    e.add_argument("--roof-mode", dest="roof_mode", choices=["none", "per_building", "per_scene"], help="record the roof mode in the manifest (split/merge/push-models then use it): none = roofs merged "
+                   "into each building (default), per_building = one toggle-able roof tile per building, per_scene = one merged roof tile (see WORLD_PACK.md)")
     v = sub.add_parser("validate", help="schema + integrity check")
     v.add_argument("--place", default="bridgehollow")
     v.add_argument("--path")
@@ -1121,6 +1133,8 @@ def main(argv=None):
                          phases_path=a.phases, splat_cell_ft=a.splat_cell_ft, albedo_px_per_ft=a.albedo_px_per_ft, foundry_px_per_ft=a.px_per_ft,
                          z_origin_ft=a.z_origin_ft, timestamp=a.timestamp, copy_textures=not a.no_textures)
         out = a.out or os.path.join(a.world_root or os.path.join(REPO, "world"), a.place, "export")
+        if a.roof_mode:
+            set_roof_mode(out, a.roof_mode)
         errs = validate_pack(out)
         print("validate:", "OK" if not errs else f"{len(errs)} problem(s)")
         for x in errs[:20]:

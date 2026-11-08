@@ -360,7 +360,9 @@ This is the busiest tab. Top to bottom:
    | Skirt | Apron down to the ground under raised roads | On |
    | Cut/fill terrain | Reshapes the ground under and beside roads | Off (it changes the terrain mesh; turn on only if roads float badly) |
 
-   Buttons in order: **Export world pack (3D)**, **Export split models**, **Merge/compress**, **Push models**, **Publish (merge + push)**.
+   Buttons in order: **Export world pack (3D)**, **Export split models**, **Merge/compress**, **Push models**, **Publish (merge + push)**. Roof buttons: **Install roof macros** (once per world: creates the macros "Roofs: toggle all" and "Roofs: toggle selected / at token / pick"; drag them to the Foundry hotbar, for example slots 8 and 9), **Hide roofs** and **Show roofs** (every roof tile of the picked existing scene, no macro needed).
+
+   Roofs in Foundry: a roof tile is hidden with its own Hidden setting, so it is saved with the scene and every player sees it at once; you (GM) still see it as a 50% ghost. "Toggle all" works in both roof modes. "Toggle selected / at token / pick" hides the roof tile you selected, else the roof over your selected token, else shows a list of roofs to tick (in Per scene mode it simply toggles the one roof tile). Changing the roof mode: export again, then Push models; roof tiles of the old mode are removed automatically (a push limited to some layers deletes nothing). Towers and chimneys that rise through the roof belong to the roof tile. LOD 1/2 files of merged buildings are not toggled.
 5. **Actors, items, tokens:** filters and pickers, image or spec file (**Browse image**, **Browse spec**), **Place token on scene** (at a building id, street id or x,y feet), **Push actor**, **Push item**. Everything created is flagged, so pushing again updates in place; documents you did not make are only changed after you confirm.
 
 Common mistakes: pushing models to the wrong scene name (a second name makes a second scene); using Push scene for 3D (it is the flat 2D map; Push models is the 3D one: the panel has no 2D/3D mode switch, so check in panel); skipping the re-export after changing buildings or bridges.
@@ -376,6 +378,7 @@ Illustrator panel  ->  relay (on the Foundry PC, port 3030)  <-  Foundry module 
 ```
 
 - The **relay** is a small program (Node.js) on the always-on Foundry PC. It is started with `foundry-bridge\start.bat` (or `bridgectl.mjs start`). Run `start.bat --local` once; the choice is remembered. Allow Node.js on Private networks if Windows Firewall asks.
+   | Roof mode | None: roofs merged into each building (default, cheapest, nothing can be hidden). Per building: every roof is its own tile so you can hide one roof (about one extra tile per building, same triangle count). Per scene: all roofs are one tile (one extra tile, fewer draw calls); hide or show every roof at once; buildings are exported open at the top | None for play, Per scene for a quick look inside, Per building to open single houses. Applies to Export world pack and Export split models, so re-run both after changing it |
 - The **module** (Varrenmoor Bridge, currently 0.5.1) runs inside a **GM browser tab** on Foundry. A GM client must be open: if no GM tab is open nothing can be pushed.
 - Open Foundry as the plain-http LAN address, `http://<foundry-pc>:30000`, **not** an https or Cloudflare address. Pairing is refused on https on purpose.
 - The **panel** (Foundry tab, top block) connects to the relay and lets you pair and revoke devices.

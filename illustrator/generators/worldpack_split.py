@@ -40,9 +40,12 @@ def slug(t):
     return re.sub(r"[^a-z0-9_]+", "_", str(t).lower()).strip("_") or "x"
 
 
-def parse_split(spec=None, preset="default"):
+def parse_split(spec=None, preset="default", roof_mode="none"):
     sp = dict(DEFAULT_SPLIT)
     sp.update(SPLIT_PRESETS[preset])
+    if roof_mode != "none":                                   # roofs are their own layer (worldpack_roofs.py): per building = one tile each, per scene = one merged tile
+        import worldpack_roofs as wr
+        sp["roofs"] = wr.split_granularity(roof_mode)
     for tok in (spec or "").split(","):
         if tok.strip():
             k, v = tok.split("=")
@@ -105,7 +108,8 @@ def _entry(pack, rel, parts, textures, out, tex_mode):
             if p.get("layered_nodes"):                           # building with interior: storeys / roof / props as separate nodes (worldpack_interiors)
                 nodes += [(nm, mm.translated([-pivot[0], -pivot[1], -pivot[2]]), {"id": p["id"], "layer": p["layer"], "group": p["group"], **xx}) for nm, mm, xx in p["layered_nodes"]]
             else:
-                nodes.append((p["id"], m.translated([-pivot[0], -pivot[1], -pivot[2]]), {"id": p["id"], "layer": p["layer"], "group": p["group"]}))
+                rx = {"isRoof": True, "roofMode": p["roof"]["mode"], "roofOf": p["roof"]["buildings"][:200]} if p.get("roof") else {}
+                nodes.append((p["id"], m.translated([-pivot[0], -pivot[1], -pivot[2]]), {"id": p["id"], "layer": p["layer"], "group": p["group"], **rx, **(p.get("extras") or {})}))
         lo, hi = merged.bbox()
         size_m = [float(v) for v in (hi - lo)]
         for p in parts:                                          # movable door leaves: own glTF nodes, origin on the hinge
@@ -130,6 +134,8 @@ def _entry(pack, rel, parts, textures, out, tex_mode):
          "tile": {"x": _px(fr, pf[0], pf[1])[0], "y": _px(fr, pf[0], pf[1])[1], "width": round(size_ft[0] * fr.px_per_ft, 2), "height": round(size_ft[1] * fr.px_per_ft, 2),
                   "depth": round(size_ft[2] * fr.px_per_ft, 2), "elevation_ft": round(pivot[2] / FT, 3), "rotation": pack.manifest["foundry"]["tile_rotation_deg"]},
          "tris": int(sum(m.tri_count for _, m, _ in nodes)), "bytes": os.path.getsize(full), "sha256": _sha(full)}
+    if any(p.get("roof") for p in parts):                         # roof tile(s): the roof-toggle macro finds them through flags.varrenmoor.roof (foundry_push.build_model_tiles)
+        e["roof"] = {"mode": parts[0]["roof"]["mode"], "buildings": [b for p in parts for b in p["roof"]["buildings"]], "chunk": parts[0]["roof"].get("chunk")}
     lts = [dict(lt, foundry_px=_px(fr, lt["point"][0], lt["point"][1])) for p in parts for lt in p.get("interior_lights", [])]
     if lts:                                                      # interior light hints (hearths, window light): Foundry light docs are built from these
         e["lights"] = lts
@@ -142,12 +148,24 @@ def _entry(pack, rel, parts, textures, out, tex_mode):
     return e
 
 
-def split_export(pack_dir, out_dir=None, split=None, textures="external", step=1, carve=True, conform=True, only=None, log=print, road_grade=True):
-    """Write per-model GLBs and placements.json. `only`: ids -> rebuild just the files containing them and keep every other entry."""
+def split_export(pack_dir, out_dir=None, split=None, textures="external", step=1, carve=True, conform=True, only=None, log=print, road_grade=True, roof_mode=None):
+    """Write per-model GLBs and placements.json. `only`: ids -> rebuild just the files containing them and keep every other entry.
+    roof_mode none|per_building|per_scene (worldpack_roofs.py); None = keep the mode of the existing placements.json (reexport) else none."""
+    import worldpack_roofs as wr
     pack = wp.load_pack(pack_dir)
     out = out_dir or pack_dir
-    split = split or dict(DEFAULT_SPLIT)
-    parts = wm.build_parts(pack, step=step, carve=carve, conform=conform, road_grade=road_grade)
+    pp0 = os.path.join(out, "placements.json")
+    if roof_mode is None:
+        roof_mode = (wp._jload(pp0).get("roof_mode") if only and os.path.exists(pp0) else None) or pack.manifest.get("foundry", {}).get("roof_mode") or "none"
+    roof_mode = wr.check_mode(roof_mode)
+    split = dict(split or DEFAULT_SPLIT)
+    if roof_mode != "none":
+        split.setdefault("roofs", wr.split_granularity(roof_mode))
+    else:
+        split.pop("roofs", None)
+    parts = wm.build_parts(pack, step=step, carve=carve, conform=conform, road_grade=road_grade, roof_mode=roof_mode)
+    if roof_mode == "per_scene" and split.get("roofs") == "layer" and sum(1 for p in parts if p["layer"] == "roofs") > 1:
+        split["roofs"] = "group"                                  # chunked per district (too many roof triangles for one tile)
     rg_report = dict(wm.LAST_ROAD_GRADE)
     for w_ in rg_report.get("warnings", []):
         log("road grade warning: " + w_)
@@ -167,9 +185,13 @@ def split_export(pack_dir, out_dir=None, split=None, textures="external", step=1
                 shutil.copyfile(pack.path(r["texture"]), os.path.join(out, "models", "textures", mid + ".png"))
         import worldpack_pbr as pbr
         pbr.install(pack, os.path.join(out, "models", "textures"))         # normal / metallicRoughness maps, new surfaces, detailed terrain albedo
+    if not only:                                                  # a mode change must not leave the old roof files behind
+        shutil.rmtree(os.path.join(out, "models", "roofs"), ignore_errors=True)
+        if os.path.exists(os.path.join(out, "models", "roofs.glb")):
+            os.remove(os.path.join(out, "models", "roofs.glb"))
     for rel, ps in files.items():
         key = f"models/{rel}"
-        if only and not (ids & {p["id"] for p in ps}):
+        if only and not (ids & ({p["id"] for p in ps} | {b for p in ps for b in (p.get("roof") or {}).get("buildings", [])})):
             if key in old:
                 entries[key] = old[key]
                 continue
@@ -179,13 +201,14 @@ def split_export(pack_dir, out_dir=None, split=None, textures="external", step=1
            "frame": {"px_per_ft": pack.frame.px_per_ft, "z_origin_ft": pack.frame.z_origin_ft, "height_ft": pack.frame.height_ft, "width_ft": pack.frame.width_ft,
                      "tile_rotation_deg": pack.manifest["foundry"]["tile_rotation_deg"],
                      "note": "tile.x/y = pivot px at the pack's px_per_ft; push-models rescales to the target scene's calibration"},
-           "split": split, "textures": textures, "files": [entries[k] for k in sorted(entries)]}
+           "split": split, "textures": textures, "roof_mode": roof_mode, "files": [entries[k] for k in sorted(entries)]}
     if rg_report:
         doc["road_grade"] = rg_report                              # settings, stats, warnings (grade limit unmet, road raised at bridges) and cut/fill extents
     elif only and os.path.exists(pp):
         doc["road_grade"] = wp._jload(pp).get("road_grade")
     wp._jdump(pp, doc)
     if os.path.abspath(out) == os.path.abspath(pack_dir):
+        wp.set_roof_mode(pack_dir, roof_mode)
         ch, ad, dr = wp.refresh_manifest_files(pack_dir)           # split rewrote GLBs + placements.json: keep manifest.files hashes valid
         log(f"manifest.files refreshed: {ch} re-hashed, {ad} added, {dr} dropped")
     log(f"split: {len(entries)} model files, {sum(e['tris'] for e in entries.values())} triangles -> {out}")
@@ -259,6 +282,7 @@ def merge_export(pack_dir, preset="layer", out_dir=None, lods=(1, 2), compress="
     fr = pack.frame
     items = []                                              # (entry, node id, abs mesh, tags, district)
     doors = []                                              # (node id, extras, hinge-local mesh, absolute hinge (blender m), entry): never merged
+    roofex = {}                                             # roof node id -> glTF extras (isRoof, roofOf ...); roof files (layer "roofs") are never merged with anything else
     for e in src["files"]:
         nodes, _ = wm.read_glb(os.path.join(pack_dir, e["file"]))
         pv = np.array(e["pivot"]["blender_m"])
@@ -274,12 +298,14 @@ def merge_export(pack_dir, preset="layer", out_dir=None, lods=(1, 2), compress="
                 t = ex.get("_t") or (0.0, 0.0, 0.0)
                 doors.append((nid, {k: v for k, v in ex.items() if k != "_t"}, m, np.array(t) + pv, e))
                 continue
+            if e["layer"] == "roofs":
+                roofex[nid] = {k: v for k, v in ex.items() if k not in ("_t",)}
             tg = (mem.get(nid) or {}).get("tags", {})
             items.append((e, nid, m.translated(pv), e["layer"], tg.get("district")))
     groups, keyof = {}, {}
     for it in items:
         e = it[0]
-        if preset == "individual":
+        if preset == "individual" or it[3] == "roofs":      # roof tiles keep their own file whatever the preset: that is what the toggle hides
             k = e["file"][len("models/"):-4]
         elif preset == "all":
             k = "scene"
@@ -314,8 +340,8 @@ def merge_export(pack_dir, preset="layer", out_dir=None, lods=(1, 2), compress="
         pivot = wm._pivot(merged)
         rel = f"{k}.glb"
         nodes = [(k, merged.translated([-pivot[0], -pivot[1], -pivot[2]]), {"merged": [n for n, *_ in meshes]})]
-        if preset == "individual":
-            nodes = [(n, m.translated([-pivot[0], -pivot[1], -pivot[2]]), {"id": n}) for n, m, _, _ in meshes]
+        if preset == "individual" or its[0][3] == "roofs":
+            nodes = [(n, m.translated([-pivot[0], -pivot[1], -pivot[2]]), {**roofex.get(n, {}), "id": n}) for n, m, _, _ in meshes]
         n_doors_k = 0
         for did, dex, dm_, dabs, _e in doors:                # door leaves stay separate nodes (hinge at node origin, extras kept) in their building's file
             if keyof.get(dex.get("building")) == k:
@@ -347,6 +373,7 @@ def merge_export(pack_dir, preset="layer", out_dir=None, lods=(1, 2), compress="
             "rotation_deg": 0.0, "scale": 1.0, "size_m": [round(v, 4) for v in sz], "size_ft": size_ft,
             "tile": {"x": _px(fr, pf[0], pf[1])[0], "y": _px(fr, pf[0], pf[1])[1], "width": round(size_ft[0] * fr.px_per_ft, 2), "height": round(size_ft[1] * fr.px_per_ft, 2),
                      "depth": round(size_ft[2] * fr.px_per_ft, 2), "elevation_ft": round(pivot[2] / FT, 3), "rotation": src["frame"]["tile_rotation_deg"]},
+            **({"roof": its[0][0]["roof"]} if its[0][3] == "roofs" and its[0][0].get("roof") else {}),
             "doors": n_doors_k, "tris": merged.tri_count, "bytes": os.path.getsize(full), "sha256": _sha(full), "lods": lodinfo,
             "members": [{"id": n, "layer": l, "source_file": e["file"], "offset_m": [round(v, 4) for v in (m.V.mean(0) - np.array(pivot))] if len(m.V) else [0, 0, 0],
                          "pivot_ft": [round(v, 3) for v in fr.from_blender(*(m.V.mean(0) if len(m.V) else pivot))]} for n, m, e, l in meshes]})
@@ -402,6 +429,8 @@ def main(argv=None):
             s.add_argument("--split", help="comma list layer=granularity (layer|group|entity|species|none), e.g. buildings=group,roads=entity")
             s.add_argument("--split-preset", choices=list(SPLIT_PRESETS), default="default")
             s.add_argument("--textures", choices=["external", "embed", "none"], default="external")
+            s.add_argument("--roof-mode", dest="roof_mode", choices=["none", "per_building", "per_scene"], help="roofs: none = merged into each building (default), per_building = one toggle-able roof tile per building, "
+                           "per_scene = one merged roof tile for the whole scene (worldpack_roofs.py); reexport keeps the mode of the existing pack unless given")
             s.add_argument("--step", type=int, default=1, help="terrain mesh step in heightmap cells")
             s.add_argument("--no-carve", action="store_true")
             s.add_argument("--no-conform", action="store_true")
@@ -431,10 +460,11 @@ def main(argv=None):
     a = ap.parse_args(argv)
     pack = a.pack or os.path.join(wp.REPO, "world", a.place, "export")
     if a.cmd == "split":
-        split_export(pack, split=parse_split(a.split, a.split_preset), textures=a.textures, step=a.step, carve=not a.no_carve, conform=not a.no_conform, road_grade=_rg(a))
+        rm = a.roof_mode or wp.load_pack(pack).manifest.get("foundry", {}).get("roof_mode") or "none"       # the mode recorded by `worldpack.py export --roof-mode`
+        split_export(pack, split=parse_split(a.split, a.split_preset, rm), roof_mode=rm, textures=a.textures, step=a.step, carve=not a.no_carve, conform=not a.no_conform, road_grade=_rg(a))
     elif a.cmd == "reexport":
         split_export(pack, split=wp._jload(os.path.join(pack, "placements.json"))["split"] if os.path.exists(os.path.join(pack, "placements.json")) else None,
-                     textures=a.textures, step=a.step, carve=not a.no_carve, conform=not a.no_conform, only=a.id.split(","), road_grade=_rg(a))
+                     textures=a.textures, step=a.step, carve=not a.no_carve, conform=not a.no_conform, only=a.id.split(","), road_grade=_rg(a), roof_mode=a.roof_mode)
     elif a.cmd in ("merge", "publish"):
         doc, rep = merge_export(pack, a.preset, compress=a.compress, remove_hidden=not a.no_hidden_removal)
         if a.foliage:                                                    # foliage.py: merged per-chunk foliage instead of one tile per tree (buildings/doors untouched)
