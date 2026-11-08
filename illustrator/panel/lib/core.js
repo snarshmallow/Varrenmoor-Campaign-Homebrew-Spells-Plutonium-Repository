@@ -105,6 +105,7 @@
       foundry: { target: "new", sceneName: "", sceneUuid: "", dpi: 150, ftPerGrid: null, walls: true, drawRoads: false, drawWater: false,
         tileLayers: "Labels - Districts,Labels - Streets,Labels - Buildings", actorUuid: "", itemUuid: "", spec: "", image: "", at: "", itemName: "", itemDesc: "",
         models: { split: "", preset: "layer", layers: "", lod: 0, compress: "none" }, sizeFt: 5, autoPush: false, filter: { actors: "", items: "" }, cache: { fetched: null, lists: {} }, last: null },
+      roads: { smooth: 0.5, max_grade: 14, skirt: true, cutfill: false },   // ROAD GRADING (generators/road_grade.py), passed to worldpack_split.py split
       stale: { contours: false, shading: false, town: false },
       ui: { tab: "scale" }
     };
@@ -681,7 +682,9 @@
   };
   VB.jobWorldSplit = function (st, d, pack) {
     var m = st.foundry.models, a = ["split", "--place", st.place, "--pack", pack || VB.packDir(d)]; if (m.split) a.push("--split", m.split);
-    return { kind: "worldpack_split", label: "Export split models", params: { split: m.split }, steps: [py(GEN + "worldpack_split.py", a, "split models")] };
+    var rd = st.roads || {}; a.push("--road-smooth", String(isFinite(+rd.smooth) ? Math.min(1, Math.max(0, +rd.smooth)) : 0.5), "--road-max-grade", String(+rd.max_grade > 0 ? Math.min(60, Math.max(1, +rd.max_grade)) : 14));
+    if (rd.skirt === false) a.push("--no-road-skirt"); if (rd.cutfill) a.push("--road-cutfill");
+    return { kind: "worldpack_split", label: "Export split models", params: { split: m.split, roads: rd }, steps: [py(GEN + "worldpack_split.py", a, "split models")] };
   };
   VB.jobWorldMerge = function (st, d, pack) {
     var m = st.foundry.models;

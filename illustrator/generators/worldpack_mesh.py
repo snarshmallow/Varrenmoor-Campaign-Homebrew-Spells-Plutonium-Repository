@@ -14,6 +14,7 @@ import struct
 import numpy as np
 
 import worldpack as wp
+import road_grade as wg
 
 FT = wp.FT_M
 LIFT = {"fields": 0.15, "plazas": 0.20, "roads": 0.25}      # metres above the terrain (no coplanar overlaps)
@@ -221,8 +222,10 @@ def build_terrain(cx, step=1):
     return Mesh(V, UV, {"mat_terrain_albedo": tri}, smooth=True)
 
 
-def _ribbon(b, mat, pts, widths_m, zs, tile_ft, lift=0.0, thick=0.0, miter=2.0):
-    """pts: [(x_m, y_m)] centreline in the Blender frame; zs metres. Optional deck thickness (sides + underside)."""
+def _ribbon(b, mat, pts, widths_m, zs, tile_ft, lift=0.0, thick=0.0, miter=2.0, zls=None, zrs=None, skirt=None):
+    """pts: [(x_m, y_m)] centreline in the Blender frame; zs metres. Optional deck thickness (sides + underside).
+    zls / zrs: per-side surface heights (road grading: the ribbon tilts across to follow the ground). skirt: {ground(x_m, y_m) -> z_m, ...} adds a flared apron
+    from each edge down to the ground so a road standing above the terrain has no gap under it (road_grade.py)."""
     n = len(pts)
     P = np.array(pts, float)
     d = np.diff(P, axis=0)
@@ -245,12 +248,31 @@ def _ribbon(b, mat, pts, widths_m, zs, tile_ft, lift=0.0, thick=0.0, miter=2.0):
     cum = np.concatenate([[0], np.cumsum(ln)]) / FT
     Li, Ri = [], []
     for i in range(n):
-        z = zs[i] + lift
+        zl_ = (zls[i] if zls is not None else zs[i]) + lift
+        zr_ = (zrs[i] if zrs is not None else zs[i]) + lift
         wv = widths_m[i] / FT
-        Li.append(b.vert((L[i, 0], L[i, 1], z), (wv / float(tile_ft or 10), cum[i] / float(tile_ft or 10))))
-        Ri.append(b.vert((R[i, 0], R[i, 1], z), (0.0, cum[i] / float(tile_ft or 10))))
+        Li.append(b.vert((L[i, 0], L[i, 1], zl_), (wv / float(tile_ft or 10), cum[i] / float(tile_ft or 10))))
+        Ri.append(b.vert((R[i, 0], R[i, 1], zr_), (0.0, cum[i] / float(tile_ft or 10))))
     for i in range(n - 1):
         b.quad(mat, Ri[i], Ri[i + 1], Li[i + 1], Li[i])
+    if skirt:
+        tl = float(tile_ft or 10)
+        for side, S, ids, zz in ((1, L, Li, zls if zls is not None else zs), (-1, R, Ri, zrs if zrs is not None else zs)):
+            O = []
+            for i in range(n):
+                ze = zz[i] + lift
+                ge = skirt["ground"](S[i, 0], S[i, 1])
+                drop = max(ze - ge, 0.0)
+                off = min(0.7 * drop + 0.12, 1.8)                         # flares outward as the road stands higher (m), capped
+                ox, oy = S[i, 0] + side * nrm[i, 0] * off, S[i, 1] + side * nrm[i, 1] * off
+                go = skirt["ground"](ox, oy)
+                zo = min(go - skirt.get("sink_m", 0.1), ze - 0.02)
+                O.append(b.vert((ox, oy, zo), (0.0, cum[i] / tl)))
+            for i in range(n - 1):
+                if side == 1:
+                    b.quad(mat, ids[i], ids[i + 1], O[i + 1], O[i])       # outward + down on the left of travel
+                else:
+                    b.quad(mat, ids[i + 1], ids[i], O[i], O[i + 1])
     if thick:
         for i in range(n - 1):
             for side, S in ((1, L), (-1, R)):
@@ -275,6 +297,18 @@ def build_road(cx, e):
     pts = [cx.B(p[0], p[1]) for p in e["points"]]
     zs = [(p[2] - cx.fr.z_origin_ft) * FT for p in e["points"]]
     br = bool(e.get("bridge"))
+    if e.get("_grade"):                                                # ROAD GRADING (road_grade.py): dense draped runs, per-side heights, optional skirt
+        sk = None
+        if e["_grade"].get("skirt"):
+            fr = cx.fr
+            sk = {"ground": lambda xm, ym: (wg.mesh_height(cx.h, cx.pack.cell_ft, np.asarray(xm) / FT, fr.height_ft - np.asarray(ym) / FT) - fr.z_origin_ft) * FT}
+        for run in e["_grade"]["runs"]:
+            z0 = cx.fr.z_origin_ft
+            _ribbon(b, e["surface"]["material"], [cx.B(x, y) for x, y in zip(run.x, run.y)], [e["width_ft"] * FT] * len(run.x), [(v - z0) * FT for v in run.z],
+                    e["surface"]["tile_ft"], 0.0, 0.0, 2.0, [(v - z0) * FT for v in run.zl], [(v - z0) * FT for v in run.zr], sk)
+        if e.get("kerbs"):
+            _add_kerbs(cx, b, e)
+        return b.build()
     if e.get("gaps"):                                                  # BRIDGES: the ribbon is removed under a modelled bridge (bridge_maker.py), ends stay on the road bed
         import bridge_maker as _bm
         for run in _bm.trim_runs(e["points"], e["gaps"]):
@@ -460,14 +494,24 @@ def _pivot(mesh):
     return ((lo[0] + hi[0]) / 2, (lo[1] + hi[1]) / 2, lo[2])
 
 
-def build_parts(pack, step=1, carve=True, conform=True, layers=None, drape_edge_ft=40.0):
+LAST_ROAD_GRADE = {}      # report of the last build_parts road grading (params, stats, warnings, cut/fill), read by worldpack_split
+
+
+def build_parts(pack, step=1, carve=True, conform=True, layers=None, drape_edge_ft=40.0, road_grade=True):
     """All meshable entities of a pack as Parts (see module doc), in a stable order. layers: optional set of layer names to keep."""
     import worldpack_pbr as pbr
     pbr.prepare(pack.materials)
     h = pack.heights
     if carve:
         h = wp.carved_heights(pack)
-    if conform:
+    runs = None
+    LAST_ROAD_GRADE.clear()
+    gp = wg.params(road_grade)
+    if gp["enabled"] and conform and any(not r.get("bridge") for r in pack.list("roads")):
+        # ROAD GRADING (road_grade.py): roads are draped on the terrain mesh with a lift, smoothed, grade-limited; the old centreline conform is replaced
+        h, runs, rep = wg.grade_and_cutfill(pack, h, gp)
+        LAST_ROAD_GRADE.update(rep)
+    elif conform:
         if pack.list("bridges"):                                       # BRIDGES: terrain keeps its shape under the spans
             import bridge_maker as _bm
             h = _bm.conformed_heights(pack, h)
@@ -495,6 +539,11 @@ def build_parts(pack, step=1, carve=True, conform=True, layers=None, drape_edge_
             add(e, "water", build_water(cx, e))
     for e in pack.list("roads"):
         if want("roads"):
+            if runs is not None and e["id"] in runs:
+                e = dict(e, _grade={"runs": runs[e["id"]], "skirt": gp["skirt"]})
+                if not e.get("gaps"):                                  # kerbs follow the graded centreline
+                    r0 = runs[e["id"]][0]
+                    e["points"] = [[float(a), float(b_), float(c) - gp["lift_m"] / FT] for a, b_, c in zip(r0.x, r0.y, r0.z)]   # _add_kerbs adds the road lift itself
             rm = build_road(cx, e)
             if e.get("gaps") and not rm.tri_count:                      # BRIDGES: the whole road is a bridge
                 continue

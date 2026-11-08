@@ -1,0 +1,204 @@
+"""Tests for road grading (python test_road_grade.py): no road vertex under the terrain mesh, grade limit (or warning), skirt reaches ground,
+cut/fill keeps the terrain continuous, bridge ends and junctions blend, and the real Dyers Walk pack has no buried road."""
+import math
+import os
+import sys
+import types
+import unittest
+
+import numpy as np
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import road_grade as rg  # noqa: E402
+import worldpack as wp  # noqa: E402
+import worldpack_mesh as wm  # noqa: E402
+
+CELL, FT = 2.5, wp.FT_M
+ZO = 80.0
+
+
+def terrain(n=160, seed=3):
+    """Rolling ground with a ridge and a gully across the roads, 2.5 ft cells (the pack's terrain resolution)."""
+    rng = np.random.RandomState(seed)
+    Y, X = np.mgrid[0:n, 0:n] * CELL
+    h = 100 + 6 * np.sin(X / 37.0) * np.cos(Y / 29.0) + 0.8 * rng.randn(n, n) + 14 * np.exp(-((X - 200) / 18.0) ** 2) - 12 * np.exp(-((Y - 150) / 12.0) ** 2)
+    return h.astype(np.float32)
+
+
+def road(rid, pts, width=14.0, **kw):
+    r = {"id": rid, "class": "street", "width_ft": width, "points": [list(map(float, p)) for p in pts], "bridge": None,
+         "surface": {"material": "mat_road", "tile_ft": 10}}
+    r.update(kw)
+    return r
+
+
+def synth(h, roads):
+    pk = types.SimpleNamespace(heights=h, cell_ft=CELL, place="synthetic", entities={"roads": roads, "bridges": []})
+    pk.list = lambda t=None: pk.entities.get(t, [])
+    pk.frame = wp.Frame(h.shape[1] * CELL, h.shape[0] * CELL, ZO)
+    return pk
+
+
+def sparse_roads(h):
+    out = []
+    for rid, p0, p1 in (("a", (20, 40), (340, 120)), ("b", (30, 330), (360, 300)), ("c", (200, 20), (210, 380))):
+        n = int(math.dist(p0, p1) // 13) + 1
+        xs, ys = np.linspace(p0[0], p1[0], n), np.linspace(p0[1], p1[1], n)
+        zs = [wp.bilinear(h, CELL, x, y) + 2.0 * math.sin(i) for i, (x, y) in enumerate(zip(xs, ys))]     # authored heights float/bury like the real ones
+        out.append(road(rid, list(zip(xs, ys, zs))))
+    return out
+
+
+def deck_samples(pk, m):
+    T = m.subs["mat_road"]
+    V = m.V[T]
+    nz = np.cross(V[:, 1] - V[:, 0], V[:, 2] - V[:, 0])
+    nz = nz[:, 2] / np.maximum(np.linalg.norm(nz, axis=1), 1e-12)
+    D = V[nz > 0.8]
+    S = np.concatenate([D, D.mean(1, keepdims=True), (D[:, 0:1] + D[:, 1:2]) / 2], 1).reshape(-1, 3)
+    return S[:, 0] / FT, pk.frame.height_ft - S[:, 1] / FT, S[:, 2] / FT + ZO
+
+
+class GradeTests(unittest.TestCase):
+    def setUp(self):
+        self.h = terrain()
+        self.pk = synth(self.h, sparse_roads(self.h))
+
+    def test_stations_never_under_terrain_mesh(self):
+        for smooth in (0.0, 0.5, 1.0):
+            runs, rep = rg.grade_roads(self.pk, self.h, {"smooth": smooth})
+            mn, mx, bad, n = rg.verify(self.h, CELL, runs, 0.0)
+            self.assertEqual(bad, 0, f"smooth {smooth} min depth {mn}")
+
+    def test_deck_mesh_vertices_not_under_terrain(self):
+        """The built ribbon triangles (not just the station heights) against the terrain triangles."""
+        runs, rep = rg.grade_roads(self.pk, self.h, {})
+        cx = wm.Ctx(self.pk)
+        worst = 1e9
+        for r in self.pk.list("roads"):
+            m = wm.build_road(cx, dict(r, _grade={"runs": runs[r["id"]], "skirt": False}))
+            x, y, z = deck_samples(self.pk, m)
+            worst = min(worst, float((z - rg.mesh_height(self.h, CELL, x, y)).min()))
+        self.assertGreaterEqual(worst, -0.01)
+
+    def test_old_sparse_points_do_bury(self):
+        """Why: linear interpolation between the authored 13 ft points goes under the terrain mesh."""
+        pts = np.array(self.pk.list("roads")[0]["points"])
+        s = np.concatenate([[0], np.cumsum(np.hypot(*np.diff(pts[:, :2], axis=0).T))])
+        ss = np.arange(0, s[-1], 1.0)
+        d = np.interp(ss, s, pts[:, 2]) + 0.82 - rg.mesh_height(self.h, CELL, np.interp(ss, s, pts[:, 0]), np.interp(ss, s, pts[:, 1]))
+        self.assertLess(d.min(), 0.0)
+
+    def test_grade_limit(self):
+        for lim in (6.0, 12.0, 20.0):
+            runs, rep = rg.grade_roads(self.pk, self.h, {"max_grade_deg": lim})
+            for rs in runs.values():
+                for r in rs:
+                    g = np.degrees(np.arctan(np.abs(np.diff(r.z)) / np.diff(r.s)))
+                    self.assertLessEqual(g.max(), lim + 0.01, lim)
+            self.assertFalse([w for w in rep["warnings"] if "could not be met" in w])
+
+    def test_steep_ground_warns(self):
+        h = self.h.copy()
+        h[:, 70:] += 60.0          # a cliff across the roads
+        pk = synth(h, self.pk.list("roads"))
+        runs, rep = rg.grade_roads(pk, h, {"max_grade_deg": 10.0})
+        self.assertTrue(any("steeper" in w or "raised" in w for w in rep["warnings"]), rep["warnings"])
+        mn, mx, bad, n = rg.verify(h, CELL, runs, 0.0)
+        self.assertEqual(bad, 0)
+
+    def test_smoothing_reduces_roughness(self):
+        def rough(smooth):
+            runs, _ = rg.grade_roads(self.pk, self.h, {"smooth": smooth, "max_grade_deg": 40, "cross_deg": 45})
+            return sum(float(np.abs(np.diff(r.z, 2)).sum()) for rs in runs.values() for r in rs)
+        self.assertLess(rough(1.0), rough(0.0))
+
+    def test_skirt_reaches_ground(self):
+        runs, rep = rg.grade_roads(self.pk, self.h, {"smooth": 1.0, "cross_deg": 3.0})   # stiff road: stands above the ground in places
+        cx = wm.Ctx(self.pk)
+        r = self.pk.list("roads")[0]
+        m = wm.build_road(cx, dict(r, _grade={"runs": runs[r["id"]], "skirt": True}))
+        m0 = wm.build_road(cx, dict(r, _grade={"runs": runs[r["id"]], "skirt": False}))
+        self.assertGreater(len(m.V), len(m0.V))
+        extra = m.V[len(m0.V):]                                  # the apron's outer vertices (built after the deck's)
+        z = extra[:, 2] / FT + ZO
+        g = rg.mesh_height(self.h, CELL, extra[:, 0] / FT, self.pk.frame.height_ft - extra[:, 1] / FT)
+        self.assertLessEqual(float((z - g).max()), 1e-6)         # every apron foot is at or below ground
+        # and the apron closes a real gap: somewhere the deck edge stands clear of the ground
+        x, y, zd = deck_samples(self.pk, m0)
+        self.assertGreater(float((zd - rg.mesh_height(self.h, CELL, x, y)).max()), 1.0)
+
+    def test_params(self):
+        self.assertTrue(rg.params(True)["skirt"])
+        self.assertFalse(rg.params({"skirt": False})["skirt"])
+        self.assertFalse(rg.params(False)["enabled"])
+        self.assertFalse(rg.params({"cutfill": None})["cutfill"])
+        self.assertEqual(rg.params({"smooth": 5})["smooth"], 1.0)
+
+
+class CutFillTests(unittest.TestCase):
+    def test_terrain_continuous_and_road_bed_set(self):
+        h = terrain()
+        pk = synth(h, sparse_roads(h))
+        h2, runs, rep = rg.grade_and_cutfill(pk, h, {"cutfill": True, "smooth": 1.0})
+        self.assertIn("max_fill_ft", rep["cutfill"])
+        self.assertEqual(h2.shape, h.shape)
+        self.assertTrue(np.isfinite(h2).all())
+        dh = h2.astype(float) - h
+        self.assertGreater(float(np.abs(dh).max()), 0.5)               # something changed
+        # continuity: neighbouring cells never differ by more than the roads' own cut/fill step allows (no cliff at the falloff edge)
+        self.assertLess(float(np.abs(np.diff(dh, axis=1)).max()), 6.0)
+        self.assertLess(float(np.abs(np.diff(dh, axis=0)).max()), 6.0)
+        self.assertLess(float(np.abs(np.diff(h2.astype(float), axis=1) - np.diff(h.astype(float), axis=1)).max()), 6.0)
+        self.assertEqual(float(dh[0, 0]), 0.0)                         # far from every road the terrain is untouched
+        self.assertEqual(float(dh[-1, 0]), 0.0)
+        mn, mx, bad, n = rg.verify(h2, CELL, runs, 0.0)
+        self.assertEqual(bad, 0, mn)
+
+    def test_cutfill_off_by_default(self):
+        self.assertFalse(rg.params({})["cutfill"])
+
+
+class JunctionBridgeTests(unittest.TestCase):
+    def test_t_junction_meets_through_road(self):
+        h = terrain()
+        thru = road("t", [(20, 200, 0), (180, 200, 0), (340, 200, 0)])
+        side = road("s", [(180, 200, 0), (180, 260, 0), (180, 330, 0)])
+        runs, _ = rg.grade_roads(synth(h, [thru, side]), h, {"smooth": 0.5})
+        j = int(np.argmin(np.abs(runs["t"][0].x - 180)))
+        self.assertLess(abs(runs["s"][0].z[0] - runs["t"][0].z[j]), 0.6)
+
+    def test_bridge_gap_ends_blend_to_deck(self):
+        h = terrain()
+        r = road("g", [(20, 100, 120.0), (120, 100, 120.0), (220, 100, 120.0), (320, 100, 120.0)], gaps=[{"bridge": "x", "s0_ft": 110.0, "s1_ft": 190.0}])
+        runs, rep = rg.grade_roads(synth(h, [r]), h, {})
+        self.assertEqual(len(runs["g"]), 2)
+        a, b = runs["g"]
+        self.assertTrue(a.gap_ends[1] and b.gap_ends[0])
+        self.assertAlmostEqual(float(a.x[-1]), 130.0, 3)
+        self.assertAlmostEqual(float(b.x[0]), 210.0, 3)
+        for end in (a.z[-1], b.z[0]):          # the road meets the deck end, or the raise is reported
+            self.assertTrue(abs(end - 120.0) < 0.3 or any("bridge" in w for w in rep["warnings"]), (end, rep["warnings"]))
+
+    def test_bridge_road_untouched_by_grading(self):
+        h = terrain()
+        r = road("deck", [(20, 100, 130.0), (120, 100, 130.0)], bridge={"x": 1})
+        runs, _ = rg.grade_roads(synth(h, [r]), h, {})
+        self.assertNotIn("deck", runs)
+
+
+class RealPackTests(unittest.TestCase):
+    def test_dyers_walk_has_no_buried_road(self):
+        d = os.path.join(wp.REPO, "world", "bridgehollow__dyers_walk_local", "export")
+        if not os.path.exists(os.path.join(d, "manifest.json")):
+            self.skipTest("no Dyers Walk pack")
+        import road_height_audit as ra
+        rows = ra.mesh_audit(wp.load_pack(d), True)
+        self.assertTrue(rows)
+        for r in rows:
+            self.assertEqual(r["buried_pct"], 0.0, r)
+            self.assertGreater(r["min_ft"], 0.0, r)
+
+
+if __name__ == "__main__":
+    unittest.main()

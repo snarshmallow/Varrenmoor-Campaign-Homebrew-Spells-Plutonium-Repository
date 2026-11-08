@@ -142,12 +142,15 @@ def _entry(pack, rel, parts, textures, out, tex_mode):
     return e
 
 
-def split_export(pack_dir, out_dir=None, split=None, textures="external", step=1, carve=True, conform=True, only=None, log=print):
+def split_export(pack_dir, out_dir=None, split=None, textures="external", step=1, carve=True, conform=True, only=None, log=print, road_grade=True):
     """Write per-model GLBs and placements.json. `only`: ids -> rebuild just the files containing them and keep every other entry."""
     pack = wp.load_pack(pack_dir)
     out = out_dir or pack_dir
     split = split or dict(DEFAULT_SPLIT)
-    parts = wm.build_parts(pack, step=step, carve=carve, conform=conform)
+    parts = wm.build_parts(pack, step=step, carve=carve, conform=conform, road_grade=road_grade)
+    rg_report = dict(wm.LAST_ROAD_GRADE)
+    for w_ in rg_report.get("warnings", []):
+        log("road grade warning: " + w_)
     files = assign_files(parts, split)
     old = {}
     pp = os.path.join(out, "placements.json")
@@ -177,6 +180,10 @@ def split_export(pack_dir, out_dir=None, split=None, textures="external", step=1
                      "tile_rotation_deg": pack.manifest["foundry"]["tile_rotation_deg"],
                      "note": "tile.x/y = pivot px at the pack's px_per_ft; push-models rescales to the target scene's calibration"},
            "split": split, "textures": textures, "files": [entries[k] for k in sorted(entries)]}
+    if rg_report:
+        doc["road_grade"] = rg_report                              # settings, stats, warnings (grade limit unmet, road raised at bridges) and cut/fill extents
+    elif only and os.path.exists(pp):
+        doc["road_grade"] = wp._jload(pp).get("road_grade")
     wp._jdump(pp, doc)
     if os.path.abspath(out) == os.path.abspath(pack_dir):
         ch, ad, dr = wp.refresh_manifest_files(pack_dir)           # split rewrote GLBs + placements.json: keep manifest.files hashes valid
@@ -378,6 +385,12 @@ def merge_export(pack_dir, preset="layer", out_dir=None, lods=(1, 2), compress="
     return doc, rep
 
 
+def _rg(a):
+    if a.road_grade == "off":
+        return False
+    return {"smooth": a.road_smooth, "max_grade_deg": a.road_max_grade, "cross_deg": a.road_cross_deg, "skirt": not a.no_road_skirt, "cutfill": a.road_cutfill}
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -392,6 +405,13 @@ def main(argv=None):
             s.add_argument("--step", type=int, default=1, help="terrain mesh step in heightmap cells")
             s.add_argument("--no-carve", action="store_true")
             s.add_argument("--no-conform", action="store_true")
+            g = s.add_argument_group("road grading (road_grade.py)")
+            g.add_argument("--road-grade", choices=["on", "off"], default="on", help="off = old behaviour (roads at the authored heights, terrain pulled to the centreline)")
+            g.add_argument("--road-smooth", type=float, default=0.5, help="0..1: blend of raw ground height and a moving-average longitudinal profile")
+            g.add_argument("--road-max-grade", type=float, default=14.0, help="maximum road grade, degrees")
+            g.add_argument("--road-cross-deg", type=float, default=10.0, help="maximum cross slope of the road surface, degrees")
+            g.add_argument("--no-road-skirt", action="store_true", help="no flared apron under roads standing above the ground")
+            g.add_argument("--road-cutfill", action="store_true", help="cut/fill the terrain under and beside the roads, blended back to natural ground")
         if n == "reexport":
             s.add_argument("--id", required=True, help="entity id(s), comma separated")
         if n in ("merge", "publish"):
@@ -411,10 +431,10 @@ def main(argv=None):
     a = ap.parse_args(argv)
     pack = a.pack or os.path.join(wp.REPO, "world", a.place, "export")
     if a.cmd == "split":
-        split_export(pack, split=parse_split(a.split, a.split_preset), textures=a.textures, step=a.step, carve=not a.no_carve, conform=not a.no_conform)
+        split_export(pack, split=parse_split(a.split, a.split_preset), textures=a.textures, step=a.step, carve=not a.no_carve, conform=not a.no_conform, road_grade=_rg(a))
     elif a.cmd == "reexport":
         split_export(pack, split=wp._jload(os.path.join(pack, "placements.json"))["split"] if os.path.exists(os.path.join(pack, "placements.json")) else None,
-                     textures=a.textures, step=a.step, carve=not a.no_carve, conform=not a.no_conform, only=a.id.split(","))
+                     textures=a.textures, step=a.step, carve=not a.no_carve, conform=not a.no_conform, only=a.id.split(","), road_grade=_rg(a))
     elif a.cmd in ("merge", "publish"):
         doc, rep = merge_export(pack, a.preset, compress=a.compress, remove_hidden=not a.no_hidden_removal)
         if a.foliage:                                                    # foliage.py: merged per-chunk foliage instead of one tile per tree (buildings/doors untouched)
