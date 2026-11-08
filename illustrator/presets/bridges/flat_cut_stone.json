@@ -1,0 +1,38 @@
+{
+ "id": "flat_cut_stone",
+ "name": "Flat cut stone",
+ "family": "flat",
+ "description": "Cut stone slabs (clapper style) on coursed stone piers and abutments, low coped parapet.",
+ "road_classes": [
+  "lane",
+  "alley",
+  "street"
+ ],
+ "params": {
+  "width_ft": 12.0,
+  "parapet_h_ft": 1.6,
+  "parapet_t_ft": 0.8,
+  "coping_t_ft": 0.3,
+  "pier_t_ft": 3.0,
+  "abutment_t_ft": 3.0,
+  "max_span_ft": 14.0,
+  "min_slab_t_ft": 0.9,
+  "slab_w_ft": 6.0,
+  "found_ft": 2.0,
+  "crown_rise_ft": 0.0,
+  "n_arches": null,
+  "clearance_w_ft": 12.0,
+  "clearance_h_ft": 8.0,
+  "freeboard_ft": 3.0,
+  "slab_ratio": 0.11,
+  "max_clear_ft": 24
+ },
+ "materials": {
+  "deck": "mat_kerb",
+  "slab": "mat_kerb",
+  "pier": "mat_wall_stone",
+  "coping": "mat_kerb"
+ },
+ "schema": 1,
+ "thumb": "../../out/bridges/thumbs/flat_cut_stone.png"
+}

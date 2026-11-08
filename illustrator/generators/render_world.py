@@ -79,6 +79,8 @@ def load_place(name, model_dir=None):
          "water": json.load(open(worldio.water_path(name), encoding="utf-8"))["water"], "buildings": []}
     for f in sorted(glob.glob(os.path.join(root, "buildings", "*.json"))):
         m["buildings"].append(json.load(open(f, encoding="utf-8")))
+    if os.path.exists(os.path.join(root, "walls.json")):       # town wall + gates written by place_create.py (walled towns); drawn on the Walls layer
+        m["walls"] = json.load(open(os.path.join(root, "walls.json"), encoding="utf-8"))
     for k_ in ("details", "markers"):        # region children (region_extract.py): generated detail + off-map markers, absent for normal places
         if os.path.exists(os.path.join(root, k_ + ".json")):
             m[k_] = json.load(open(os.path.join(root, k_ + ".json"), encoding="utf-8"))
@@ -452,6 +454,27 @@ def render(model, view_arg, out_path, topts=None, cfg_over=None, lopts=None, lst
         if rings:
             c = ("wall" if e["kind"] == "bridge" else "road") + (" proposed" if e.get("status") == "proposed" else "")
             lines.append(("Roads", e["id"], rings, c, "streets"))
+    try:                                                    # BRIDGES: generated bridge symbols (bridge_maker.py, world/<place>/bridges.json): outline, parapets, piers/arch hatch
+        import bridge_maker as _bm
+        for _bid, _suf, _ring, _cls in _bm.symbols_for_place(place["id"]):
+            _poly = v.clip([tuple(q) for q in _ring])
+            if _poly:
+                lines.append(("Roads", f"{_bid}_{_suf}", [_poly], _cls + " proposed", "streets"))
+    except ImportError:
+        pass
+    wl = model.get("walls") or {}
+    for e in wl.get("walls", []):
+        pts_ = e["geometry"]["points"]
+        if len(pts_) >= 2:
+            rg_ = v.clip(offset_polygon([tuple(p) for p in pts_], float(e["geometry"].get("width_ft", 5))))
+            if rg_:
+                lines.append(("Walls", e["id"], [rg_], "wall proposed", "buildings"))
+    for g_ in wl.get("gates", []):
+        gx_, gy_ = g_["point"]
+        hw_ = float(g_.get("width_ft", 16)) / 2 + 3
+        rg_ = v.clip([(gx_ - hw_, gy_ - 5), (gx_ + hw_, gy_ - 5), (gx_ + hw_, gy_ + 5), (gx_ - hw_, gy_ + 5)])
+        if rg_:
+            lines.append(("Walls", g_["id"], [rg_], "wall", "buildings"))
     for e in model["buildings"]:
         addpoly("Buildings", e["id"], entity_polygon(e), "wall", e.get("status"), "buildings")
         if kind == "building" and e["id"] == ident:

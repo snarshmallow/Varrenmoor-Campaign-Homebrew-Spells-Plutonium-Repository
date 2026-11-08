@@ -769,6 +769,16 @@ function VB_run(json) {
         }
         out.items = items; break;
       }
+      case "focus_items": {   // BRIDGES: select the named items (first found) and zoom the view to them
+        if (app.documents.length === 0) throw new Error("no open document");
+        var fdoc = app.activeDocument, fnames = a.names || [], fit = [], fb = null;
+        for (var fi = 0; fi < fnames.length; fi++) { var fo = VB_findItem(fdoc, fnames[fi]); if (fo) { fit.push(fo); var gb = fo.geometricBounds; fb = fb ? [Math.min(fb[0], gb[0]), Math.max(fb[1], gb[1]), Math.max(fb[2], gb[2]), Math.min(fb[3], gb[3])] : gb.slice(0); } }
+        if (!fit.length) throw new Error("nothing found: " + fnames.join(", "));
+        fdoc.selection = null; for (var fk = 0; fk < fit.length; fk++) { try { fit[fk].selected = true; } catch (e) { /* locked layer */ } }
+        var fv = fdoc.views[0]; fv.centerPoint = [(fb[0] + fb[2]) / 2, (fb[1] + fb[3]) / 2];
+        var fw = Math.max(fb[2] - fb[0], 1), fh = Math.max(fb[1] - fb[3], 1); fv.zoom = Math.max(0.05, Math.min(8, Math.min(900 / fw, 600 / fh) * 0.5));
+        out.found = fit.length; out.bounds = fb; break;
+      }
       case "lock_leaders": {
         // lock / unlock the Leaders layer (lines only; the Leader Anchors layer stays editable so anchors can be dragged)
         if (app.documents.length === 0) throw new Error("no open document");

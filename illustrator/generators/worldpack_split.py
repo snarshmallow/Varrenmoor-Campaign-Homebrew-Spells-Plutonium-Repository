@@ -30,7 +30,7 @@ import worldpack_mesh as wm  # noqa: E402
 FT = wp.FT_M
 PLACEMENTS_FORMAT = "varrenmoor-world-placements"
 DEFAULT_SPLIT = {"terrain": "layer", "water": "layer", "roads": "layer", "plazas": "layer", "fields": "layer", "fences": "layer",
-                 "foliage": "species", "buildings": "entity", "lights": "none"}
+                 "foliage": "species", "buildings": "entity", "bridges": "entity", "lights": "none"}
 SPLIT_PRESETS = {"default": {}, "layers": {k: "layer" for k in DEFAULT_SPLIT if k not in ("lights",)}, "districts": {"buildings": "group", "roads": "group", "foliage": "group"},
                  "individual": {k: "entity" for k in DEFAULT_SPLIT if k not in ("terrain", "lights")}}
 GRANULARITIES = ("layer", "group", "entity", "species", "none")

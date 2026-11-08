@@ -1,0 +1,50 @@
+{
+ "id": "stone_arch",
+ "name": "Stone arch",
+ "family": "arch",
+ "description": "Multi-span semicircular or segmental rubble-stone arch: voussoir rings, cutwater piers, coped parapet, cobble deck.",
+ "road_classes": [
+  "street",
+  "road"
+ ],
+ "params": {
+  "width_ft": 16.0,
+  "rise_ratio": 0.5,
+  "min_rise_ratio": 0.14,
+  "ring_t_ft": 1.4,
+  "ring_proud_ft": 0.3,
+  "voussoir_ft": 1.5,
+  "parapet_h_ft": 3.0,
+  "parapet_t_ft": 1.0,
+  "coping_t_ft": 0.4,
+  "coping_over_ft": 0.25,
+  "pier_t_ft": 3.5,
+  "abutment_t_ft": 3.0,
+  "max_span_ft": 26.0,
+  "min_span_ft": 7.0,
+  "fill_ft": 1.0,
+  "found_ft": 2.0,
+  "ground_clear_ft": 0.8,
+  "crown_rise_ft": 1.5,
+  "station_ft": 4.0,
+  "cutwaters": true,
+  "n_arches": null,
+  "clearance_w_ft": 12.0,
+  "clearance_h_ft": 8.0,
+  "freeboard_ft": 4.0,
+  "springers": true,
+  "ring_alt": false,
+  "max_clear_ft": 90
+ },
+ "materials": {
+  "deck": "road",
+  "wall": "mat_wall_stone",
+  "ring": "mat_kerb",
+  "ring2": "mat_kerb",
+  "springer": "mat_kerb",
+  "soffit": "mat_wall_stone",
+  "coping": "mat_kerb"
+ },
+ "schema": 1,
+ "thumb": "../../out/bridges/thumbs/stone_arch.png"
+}

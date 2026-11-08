@@ -83,6 +83,7 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
   <button role="tab" data-tab="regions">Regions</button>
   <button role="tab" data-tab="foliage">Foliage</button>
   <button role="tab" data-tab="padding">Padding</button><!-- padding tab (padding_ui.js) -->
+  <button role="tab" data-tab="bridges">Bridges</button><!-- BRIDGES tab (bridges_ui.js) -->
   <button role="tab" data-tab="layers">Layers</button>
   <button role="tab" data-tab="foundry">Foundry</button>
 </nav>
@@ -747,6 +748,34 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
   <div id="fOut" class="note" style="white-space:pre-wrap"></div>
 </section>
 
+<!-- BRIDGES TAB (bridges_ui.js, lib/bridges.js; python generators/bridge_maker.py, bridge_preview.py; data world/<place>/bridges.json) -->
+<section id="tab-bridges" role="tabpanel">
+  <style>#brList li.sel { background: var(--bg3); outline: 1px solid var(--line); } #brThumbs img { width: 76px; margin: 2px; border: 2px solid transparent; cursor: pointer; } #brThumbs img.sel { border-color: #8ab4f8; } #brPreview { max-width: 100%; border: 1px solid #555; margin-top: 4px; } #brOut { white-space: pre-wrap; margin-top: 4px; }</style>
+  <h4>Crossings (roads that float over a gully, cross water, or pass over another road)</h4>
+  <div class="grid">
+    <label>Deck above ground, ft <input type="number" data-s="bridges.float_ft" min="1" step="0.5" title="A deck this far above the terrain counts as a bridge"></label>
+    <label>Level difference at a crossing, ft <input type="number" data-s="bridges.level_ft" min="1" step="0.5"></label>
+  </div>
+  <div class="btns"><button data-act="br_detect">Detect</button><button class="primary" data-act="br_autofix" title="Writes world/&lt;place&gt;/bridges.json, trims the road ribbons under the decks and re-exports the pack (hand-tuned bridges are kept)">Auto-fix all crossings</button></div>
+  <ul id="brList" class="list"></ul>
+  <h4>Selected bridge</h4>
+  <label>Preset <select id="brPreset"></select></label>
+  <div id="brThumbs"></div>
+  <div class="grid">
+    <label>Width, ft (blank = road width) <input type="number" data-s="bridges.width_ft" min="3" step="1"></label>
+    <label>Seed <input type="number" data-s="bridges.seed" step="1" placeholder="from id"></label>
+    <label>Clear width below, ft <input type="number" data-s="bridges.clearance_w_ft" min="4" step="1" placeholder="12"></label>
+    <label>Clear height below, ft <input type="number" data-s="bridges.clearance_h_ft" min="3" step="0.5" placeholder="8"></label>
+    <label>Parapet height, ft <input type="number" data-s="bridges.parapet_h_ft" min="0" step="0.25" placeholder="preset"></label>
+    <label>Arches / spans (blank = auto) <input type="number" data-s="bridges.n_arches" min="1" step="1"></label>
+    <label>Arch rise (0.15 flat .. 0.5 round) <input type="number" data-s="bridges.rise_ratio" min="0.12" max="0.5" step="0.02"></label>
+  </div>
+  <div class="btns"><button data-act="br_preview">Preview render</button><button class="primary" data-act="br_apply">Apply to selected</button><button data-act="br_remove">Remove</button><button data-act="br_focus">Zoom to it</button></div>
+  <img id="brPreview" hidden alt="bridge preview (Blender)">
+  <div id="brOut" class="note"></div>
+  <p class="note">The deck keeps the road level at both ends. Openings are sized from the clearance below (water surface + banks + freeboard, or the road/path passing under, default 8 ft x 12 ft); piers and abutments stay outside them, the road ribbon is removed over the span and the terrain under it is left as it is. The map symbol (outline, parapets, piers) appears on the next Render. Needs a Pack export and Split (Foundry tab) to reach the 3D scene. Notes: illustrator/out/bridges_notes.md.</p>
+</section>
+
 <!-- PADDING TAB (padding_ui.js, lib/padding.js; python generators/padding_heightmap.py, foundry_push.py push-padding) -->
 <section id="tab-padding" role="tabpanel">
   <style>#padPreview { max-width: 100%; border: 1px solid #555; margin-top: 4px; } #padOut { white-space: pre-wrap; margin-top: 4px; }</style>
@@ -794,5 +823,7 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
 <script src="foliage_ui.js"></script>
 <script src="lib/padding.js"></script>
 <script src="padding_ui.js"></script>
+<script src="lib/bridges.js"></script><!-- BRIDGES -->
+<script src="bridges_ui.js"></script><!-- BRIDGES -->
 <script src="main.js"></script>
 </body></html>

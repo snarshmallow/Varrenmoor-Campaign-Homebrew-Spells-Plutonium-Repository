@@ -1,0 +1,1074 @@
+"""Bridge maker: detect crossings (floating decks, rivers, roads over roads), build parametric bridges sized to the clearance below, write them
+into the world pack as entities of type `bridges`.
+
+  python illustrator/generators/bridge_maker.py presets
+  python illustrator/generators/bridge_maker.py fix-elevations --place bridgehollow__dyers_walk_local        # repair clipped streets' per-vertex road bed (the floating-road bug)
+  python illustrator/generators/bridge_maker.py detect --place P [--pack DIR] [--float-ft 4] [--level-ft 3] [--out report.json]
+  python illustrator/generators/bridge_maker.py apply  --place P [--pack DIR] [--only id,id] [--preset NAME] [--no-export]   # detect -> world/P/bridges.json -> pack entities
+  python illustrator/generators/bridge_maker.py inject --place P [--pack DIR]                                    # re-apply world/P/bridges.json to a freshly exported pack
+  python illustrator/generators/bridge_maker.py remove --place P --id brg_x_1
+  python illustrator/generators/bridge_maker.py sample --preset stone_arch --span-ft 60 --out out.glb          # a free-standing bridge for the style sheet
+
+Every function prints/returns JSON-able data. Units: feet in files, metres inside the meshes (bridge_geo). See illustrator/out/bridges_notes.md.
+"""
+import argparse
+import datetime
+import glob
+import hashlib
+import json
+import math
+import os
+import sys
+
+import numpy as np
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, HERE)
+REPO = os.path.abspath(os.path.join(HERE, "..", ".."))
+WORLD = os.path.join(REPO, "world")
+PRESETS = os.path.join(HERE, "..", "presets", "bridges")
+FT = 0.3048
+LIFT_M = 0.25                       # same lift as worldpack_mesh.LIFT["roads"]: the deck ends meet the road ribbons exactly
+SCHEMA = 1
+DEFAULTS = {"float_ft": 4.0, "level_ft": 3.0, "min_span_ft": 8.0, "merge_gap_ft": 24.0, "abut_margin_ft": 5.0, "bank_ft": 3.0, "sample_ft": 2.0}
+
+
+def log(m):
+    print(m, file=sys.stderr, flush=True)
+
+
+# ------------------------------------------------------------------ presets
+def list_presets():
+    out = []
+    for f in sorted(glob.glob(os.path.join(PRESETS, "*.json"))):
+        out.append(_jload(f))
+    return out
+
+
+def load_preset(name):
+    p = os.path.join(PRESETS, name + ".json")
+    if not os.path.exists(p):
+        raise KeyError(f"unknown bridge preset {name!r}; have {[x['id'] for x in list_presets()]}")
+    return _jload(p)
+
+
+def validate_preset(pr):
+    errs = []
+    for k in ("id", "family", "params", "materials"):
+        if k not in pr:
+            errs.append(f"{pr.get('id')}: missing {k}")
+    if pr.get("family") not in ("arch", "flat", "timber"):
+        errs.append(f"{pr.get('id')}: family {pr.get('family')}")
+    for k in ("width_ft", "max_span_ft"):
+        if not (pr.get("params", {}).get(k, 0) > 0):
+            errs.append(f"{pr.get('id')}: params.{k} must be > 0")
+    return errs
+
+
+# ------------------------------------------------------------------ road geometry
+def road_arrays(points):
+    P = np.asarray(points, float)
+    s = np.concatenate([[0.0], np.cumsum(np.hypot(*np.diff(P[:, :2], axis=0).T))])
+    return s, P[:, 0], P[:, 1], P[:, 2]
+
+
+def road_at(points, s_ft):
+    s, x, y, z = road_arrays(points)
+    return float(np.interp(s_ft, s, x)), float(np.interp(s_ft, s, y)), float(np.interp(s_ft, s, z))
+
+
+def trim_runs(points, gaps):
+    """Road polyline pieces left after removing the gap intervals [{s0_ft, s1_ft}] (arc length along the road); cut points are interpolated."""
+    s, x, y, z = road_arrays(points)
+    L = s[-1]
+    cuts = sorted((max(0.0, g["s0_ft"]), min(L, g["s1_ft"])) for g in gaps)
+    keep, a = [], 0.0
+    for c0, c1 in cuts:
+        if c0 - a > 0.5:
+            keep.append((a, c0))
+        a = max(a, c1)
+    if L - a > 0.5:
+        keep.append((a, L))
+    runs = []
+    for k0, k1 in keep:
+        ss = [k0] + [v for v in s if k0 < v < k1] + [k1]
+        runs.append([[float(np.interp(v, s, x)), float(np.interp(v, s, y)), float(np.interp(v, s, z))] for v in ss])
+    return runs
+
+
+def conformed_heights(pack, h=None, falloff_ft=10.0):
+    """worldpack.road_conformed_heights with the bridge spans removed: the terrain under a bridge keeps its own shape (gully, river bed)."""
+    import worldpack as wp
+    lines = []
+    for r in pack.list("roads"):
+        if r.get("bridge"):
+            continue
+        runs = trim_runs(r["points"], r["gaps"]) if r.get("gaps") else [r["points"]]
+        for run in runs:
+            if len(run) < 2:
+                continue
+            lines.append((np.array([p[:2] for p in run], float), np.array([p[2] for p in run], float), np.full(len(run), r["width_ft"] / 2)))
+    return wp._conform(pack.heights if h is None else h, pack.cell_ft, lines, falloff_ft, "set")
+
+
+def final_heights(pack):
+    import worldpack as wp
+    h = wp.carved_heights(pack)
+    return conformed_heights(pack, h)
+
+
+# ------------------------------------------------------------------ detection
+def _poly_runs(mask, s, min_len):
+    runs, i, n = [], 0, len(mask)
+    while i < n:
+        if mask[i]:
+            j = i
+            while j + 1 < n and mask[j + 1]:
+                j += 1
+            runs.append([float(s[i]), float(s[j])])
+            i = j + 1
+        else:
+            i += 1
+    return runs
+
+
+def _merge(runs, gap):
+    out = []
+    for a, b in sorted(runs):
+        if out and a - out[-1][1] <= gap:
+            out[-1][1] = max(out[-1][1], b)
+        else:
+            out.append([a, b])
+    return out
+
+
+def detect(pack, float_ft=None, level_ft=None, min_span_ft=None, h_raw=None, classes=None):
+    """Crossings of the pack's roads: floating decks over a depression ('gully'), roads over water ('water'), roads over roads at a different level
+    ('road'), and the pack's existing deck-only bridge roads ('existing'). Returns a list of dicts (see the report fields in bridges_notes.md)."""
+    import worldpack as wp
+    from shapely.geometry import LineString, Point
+    D = dict(DEFAULTS)
+    if float_ft is not None:
+        D["float_ft"] = float_ft
+    if level_ft is not None:
+        D["level_ft"] = level_ft
+    if min_span_ft is not None:
+        D["min_span_ft"] = min_span_ft
+    h = wp.carved_heights(pack) if h_raw is None else h_raw
+    cell = pack.cell_ft
+    roads = [r for r in pack.list("roads")]
+    found = []
+    water = pack.list("water")
+    for r in roads:
+        pts = np.asarray(r["points"], float)
+        s, x, y, z = road_arrays(pts)
+        L = float(s[-1])
+        if L < 4:
+            continue
+        ss = np.arange(0.0, L + 1e-6, D["sample_ft"])
+        if ss[-1] < L - 1e-6:
+            ss = np.append(ss, L)
+        px, py, pz = np.interp(ss, s, x), np.interp(ss, s, y), np.interp(ss, s, z)
+        g = np.array([wp.bilinear(h, cell, a, b) for a, b in zip(px, py)])
+        above = pz - g
+        runs = []
+        if r.get("bridge"):                                    # the pack's deck-only bridge road: the whole road becomes the modelled bridge
+            runs.append(("existing", [0.0, L], {}))
+        # floating deck: runs where the road bed is more than float_ft above the (carved, unconformed) terrain
+        for a, b in ([] if r.get("bridge") else _poly_runs(above > D["float_ft"], ss, 0)):
+            ia, ib = int(np.searchsorted(ss, a)), int(np.searchsorted(ss, b))
+            while ia > 0 and above[ia] > D["float_ft"] * 0.45:
+                ia -= 1
+            while ib < len(ss) - 1 and above[ib] > D["float_ft"] * 0.45:
+                ib += 1
+            runs.append(("gully", [float(ss[ia]), float(ss[ib])], {}))
+        # water
+        ls = LineString(np.c_[px, py])
+        for w in water:
+            from shapely.geometry import Polygon
+            pg = Polygon(w["polygon"]).buffer(0) if w.get("polygon") else None
+            if pg is None or pg.is_empty:
+                continue
+            it = ls.intersection(pg)
+            segs = [it] if it.geom_type == "LineString" else list(getattr(it, "geoms", []))
+            for sg in segs:
+                if sg.geom_type != "LineString" or sg.length < 1.0:
+                    continue
+                a, b = ls.project(Point(sg.coords[0])), ls.project(Point(sg.coords[-1]))
+                a, b = min(a, b), max(a, b)
+                zs = None
+                if w.get("surface_elevations_ft") and w.get("centerline"):
+                    mid = ls.interpolate(0.5 * (a + b))
+                    k = int(np.argmin([math.hypot(c[0] - mid.x, c[1] - mid.y) for c in w["centerline"]]))
+                    zs = w["surface_elevations_ft"][k]
+                elif w.get("level_ft") is not None:
+                    zs = w["level_ft"]
+                runs.append(("water", [a - D["bank_ft"] - D["abut_margin_ft"], b + D["bank_ft"] + D["abut_margin_ft"]],
+                             {"water": w["id"], "wet": [a, b], "surface_ft": zs, "freeboard_ft": None}))
+        # roads over / under roads
+        for o in roads:
+            if o["id"] == r["id"] or o.get("bridge") or r.get("bridge"):
+                continue
+            lo = LineString([p[:2] for p in o["points"]])
+            it = ls.intersection(lo)
+            pts_i = [it] if it.geom_type == "Point" else [q for q in getattr(it, "geoms", []) if q.geom_type == "Point"]
+            for q in pts_i:
+                sa = ls.project(q)
+                sb = lo.project(q)
+                za = float(np.interp(sa, s, z))
+                so, zo = road_arrays(o["points"]), None
+                zb = float(np.interp(sb, so[0], so[3]))
+                wa, wb = r["width_ft"], o["width_ft"]
+                # a junction, not a crossing: the other road ends (or this one does) close to the intersection
+                if min(sa, L - sa) < wa or min(sb, so[0][-1] - sb) < wb:
+                    continue
+                dz = za - zb
+                if abs(dz) <= D["level_ft"]:
+                    continue
+                if dz < 0:
+                    continue                                    # the other road is the upper one; it gets its own entry when it is `r`
+                da = np.array(lo.interpolate(min(sb + 1.0, lo.length)).coords[0]) - np.array(lo.interpolate(max(sb - 1.0, 0.0)).coords[0])
+                db = np.array(ls.interpolate(min(sa + 1.0, L)).coords[0]) - np.array(ls.interpolate(max(sa - 1.0, 0.0)).coords[0])
+                cosang = abs(float(da @ db)) / (np.linalg.norm(da) * np.linalg.norm(db) + 1e-9)
+                ang = math.degrees(math.acos(min(1.0, cosang)))
+                sin_t = max(math.sin(math.radians(ang)), 0.25)
+                cw = max(12.0, wb + 4.0)
+                half = cw / 2 / sin_t + wb / 2 * 0 + D["abut_margin_ft"]
+                runs.append(("road", [sa - half, sa + half], {"under": o["id"], "u_ft": sa, "angle_deg": ang, "under_z_ft": zb, "under_width_ft": wb, "dz_ft": dz}))
+        if not runs:
+            continue
+        # merge overlapping runs of any type into one span per road; remember what is under it
+        runs.sort(key=lambda t: t[1][0])
+        groups = []
+        for t, (a, b), info in runs:
+            a, b = max(0.0, a), min(L, b)
+            if groups and a - groups[-1]["s1"] <= D["merge_gap_ft"]:
+                groups[-1]["s1"] = max(groups[-1]["s1"], b)
+                groups[-1]["items"].append((t, info))
+            else:
+                groups.append({"s0": a, "s1": b, "items": [(t, info)]})
+        for n, gp in enumerate(groups, 1):
+            a, b = gp["s0"], gp["s1"]
+            if b - a < D["min_span_ft"]:
+                mid = 0.5 * (a + b)
+                a, b = max(0.0, mid - D["min_span_ft"] / 2), min(L, mid + D["min_span_ft"] / 2)
+            types = [t for t, _ in gp["items"]]
+            typ = "water" if "water" in types else ("road" if "road" in types else ("existing" if "existing" in types else "gully"))
+            m = (ss >= a) & (ss <= b)
+            found.append(dict(type=typ, road=r["id"], s0_ft=round(a, 2), s1_ft=round(b, 2), span_ft=round(b - a, 2), n=n, road_class=r["class"], width_ft=r["width_ft"],
+                              ring=r.get("ring"), deck_above_ground_ft=round(float(above[m].max()), 2) if m.any() else 0.0,
+                              others=[dict(kind=t, **i) for t, i in gp["items"] if t not in ("gully", "existing")],
+                              clearance_needed=dict(w_ft=12.0, h_ft=8.0)))
+    # stable ordering and ids
+    cnt = {}
+    for c in found:
+        c["span_ft"] = round(c["s1_ft"] - c["s0_ft"], 2)
+        c["id"] = bridge_id(c["road"], cnt.setdefault(c["road"], 0) + 1)
+        cnt[c["road"]] += 1
+        if c["type"] == "water":
+            c["clearance_needed"] = dict(kind="water", freeboard_ft=4.0, note="water surface + banks + freeboard")
+        elif c["type"] == "road":
+            o = c["others"][0]
+            c["clearance_needed"] = dict(w_ft=max(12.0, o["under_width_ft"] + 4.0), h_ft=8.0, projected_w_ft=round(max(12.0, o["under_width_ft"] + 4.0) / max(math.sin(math.radians(o["angle_deg"])), 0.25), 1))
+    return found
+
+
+def bridge_id(road_id, n):
+    return f"brg_{road_id}_{n}"
+
+
+# ------------------------------------------------------------------ preset choice
+def choose_preset(c, road_class=None):
+    cls = (road_class or c.get("road_class") or "street")
+    cls = "street" if cls == "bridge" else cls
+    span = c["span_ft"]
+    ring = str(c.get("ring") or "")
+    if cls in ("path", "footpath"):
+        return "plank_footbridge" if span <= 24 else "wooden_truss"
+    if cls in ("lane", "alley"):
+        if span <= 16:
+            return "flat_cut_stone"
+        return "wooden_truss" if c["type"] == "water" and span > 40 else "stone_arch"
+    if c["type"] == "water" and span <= 14:
+        return "flat_cut_stone"
+    return "brick_arch" if ring in ("authority", "merchant", "market") or int(hashlib.md5(c["id"].encode()).hexdigest(), 16) % 3 == 0 else "stone_arch"
+
+
+# ------------------------------------------------------------------ building the crossing context (spec)
+def _chord(road, s0, s1):
+    x0, y0, z0 = road_at(road["points"], s0)
+    x1, y1, z1 = road_at(road["points"], s1)
+    return (x0, y0, z0), (x1, y1, z1)
+
+
+def make_entity(pack, c, h_final, preset=None, overrides=None, seed=None, provenance=None):
+    """A bridge entity (feet) from one detected crossing: chord, deck ends from the road, ground profile under the deck from the final terrain."""
+    import worldpack as wp
+    road = pack.get(c["road"])
+    pr_name = preset or choose_preset(c)
+    pr = load_preset(pr_name)
+    P = dict(pr["params"])
+    P.update({k: v for k, v in (overrides or {}).items() if v is not None})
+    (x0, y0, z0), (x1, y1, z1) = _chord(road, c["s0_ft"], c["s1_ft"])
+    L = math.hypot(x1 - x0, y1 - y0)
+    d = np.array([x1 - x0, y1 - y0]) / L
+    lf = np.array([d[1], -d[0]])                          # left of travel in the y-down world frame (x east, y south)
+    W = float(overrides["width_ft"]) if overrides and overrides.get("width_ft") is not None else max(float(P["width_ft"]) if road["width_ft"] < 1 else float(road["width_ft"]), 4.0)
+    n = max(8, int(math.ceil(L / 2.0)))
+    us = np.linspace(0.0, L, n + 1)
+    gh, gl = [], []
+    for u in us:
+        vals = [wp.bilinear(h_final, pack.cell_ft, x0 + d[0] * u + lf[0] * v, y0 + d[1] * u + lf[1] * v) for v in np.linspace(-W / 2 - 2.0, W / 2 + 2.0, 7)]
+        gh.append(float(max(vals)))
+        gl.append(float(min(vals)))
+    # deck: the road's own profile along the span (so the ends meet the ribbons), plus the lift the ribbons have
+    s_r, _, _, z_r = road_arrays(road["points"])
+    zr = np.interp(c["s0_ft"] + us * (c["s1_ft"] - c["s0_ft"]) / L, s_r, z_r)
+    deck = [[round(float(u), 3), round(float(z + LIFT_M / FT), 3)] for u, z in zip(us, zr)]
+    others = []
+    for o in c.get("others", []):
+        if o["kind"] == "water":
+            wa, wb = o["wet"]
+            u0, u1 = (wa - c["s0_ft"]) * L / (c["s1_ft"] - c["s0_ft"]), (wb - c["s0_ft"]) * L / (c["s1_ft"] - c["s0_ft"])
+            others.append(dict(kind="water", id=o["water"], u0_ft=round(u0, 2), u1_ft=round(u1, 2), surface_ft=o.get("surface_ft")))
+        elif o["kind"] == "road":
+            u = (o["u_ft"] - c["s0_ft"]) * L / (c["s1_ft"] - c["s0_ft"])
+            others.append(dict(kind="road", id=o["under"], u_ft=round(u, 2), angle_deg=round(o["angle_deg"], 1), z_ft=round(o["under_z_ft"] + LIFT_M / FT, 2), width_ft=o["under_width_ft"]))
+    ent = {
+        "id": c["id"], "name": f"Bridge on {road.get('name', c['road'])}" + (f" ({c['n']})" if c.get("n", 1) > 1 else ""), "kind": "bridge", "status": "proposed",
+        "notes": f"Generated by bridge_maker.py ({c['type']} crossing, {c['span_ft']:.0f} ft).", "links": {"foundry_scene": None, "model3d": None, "ai_layer": None},
+        "source": "bridge_maker", "road": c["road"], "crossing": c["type"], "preset": pr_name,
+        "seed": int(seed if seed is not None else int(hashlib.md5(c["id"].encode()).hexdigest()[:6], 16)),
+        "params": {k: v for k, v in (overrides or {}).items() if v is not None},
+        "span": {"s0_ft": c["s0_ft"], "s1_ft": c["s1_ft"], "length_ft": round(L, 2), "start": [round(x0, 2), round(y0, 2), round(z0, 3)], "end": [round(x1, 2), round(y1, 2), round(z1, 3)],
+                 "width_ft": W, "road_class": c["road_class"], "road_width_ft": road["width_ft"]},
+        "context": {"deck": deck, "ground_hi": [[round(float(u), 3), round(g, 3)] for u, g in zip(us, gh)], "ground_lo": [[round(float(u), 3), round(g, 3)] for u, g in zip(us, gl)],
+                    "others": others, "deck_above_ground_ft": c.get("deck_above_ground_ft"), "deck_material": road["surface"]["material"], "deck_tile_ft": road["surface"].get("tile_ft") or 8.0,
+                    "clearance": c.get("clearance_needed")},
+        "foundry": {"pipelineId": f"world:{pack.place}:{c['id']}"},
+        "provenance": dict(provenance or {}, tool="bridge_maker.py", schema=SCHEMA),
+    }
+    return ent
+
+
+def envelopes_of(ent, params=None):
+    """Clearance envelopes in feet (u from the bridge start): [{u0_ft, u1_ft, z_top_ft, kind}]."""
+    pr = load_preset(ent["preset"])
+    P = dict(pr["params"])
+    P.update(ent.get("params") or {})
+    if params:
+        P.update(params)
+    ctx = ent["context"]
+    L = ent["span"]["length_ft"]
+    deck = Prof(ctx["deck"])
+    gh = Prof(ctx["ground_hi"])
+    env = []
+    for o in ctx["others"]:
+        if o["kind"] == "water":
+            zs = o.get("surface_ft")
+            if zs is None:
+                zs = float(min(g for _, g in ctx["ground_hi"])) + 1.0
+            u0, u1 = max(0.0, o["u0_ft"] - DEFAULTS["bank_ft"]), min(L, o["u1_ft"] + DEFAULTS["bank_ft"])
+            dmin = float(deck(np.linspace(u0, u1, 30)).min())
+            struct = {"arch": 3.0, "flat": 1.2, "timber": 3.0}.get(pr["family"], 3.0)
+            fb = max(0.5, min(P["freeboard_ft"], dmin - zs - struct))        # the deck is what it is: use the freeboard the road level leaves (never less than 0.5 ft)
+            env.append(dict(kind="water", u0_ft=u0, u1_ft=u1, z_top_ft=zs + fb, freeboard_ft=round(fb, 2), wanted_ft=P["freeboard_ft"]))
+        else:
+            cw = P["clearance_w_ft"] if P.get("clearance_w_ft") else 12.0
+            cw = max(cw, o["width_ft"] + 2.0)
+            half = cw / 2 / max(math.sin(math.radians(o["angle_deg"])), 0.25)
+            env.append(dict(kind="road", u0_ft=max(0.0, o["u_ft"] - half), u1_ft=min(L, o["u_ft"] + half), z_top_ft=o["z_ft"] + P["clearance_h_ft"]))
+    if not env:                                               # a gully or a deck over open ground: keep the low middle passable (people, stock, a path)
+        us = np.linspace(0, L, 81)
+        gap = deck(us) - gh(us)
+        need = P["clearance_h_ft"] + 2.0
+        m = gap >= need
+        if m.any():
+            u0, u1 = float(us[m][0]), float(us[m][-1])
+            env.append(dict(kind="gully", u0_ft=u0, u1_ft=u1, z_top_ft=float(gh(np.linspace(u0, u1, 40)).max()) + P["clearance_h_ft"]))
+    return env
+
+
+class Prof:
+    def __init__(self, pts):
+        a = np.asarray(sorted(pts), float)
+        self.u, self.v = a[:, 0], a[:, 1]
+
+    def __call__(self, u):
+        return np.interp(u, self.u, self.v)
+
+
+# ------------------------------------------------------------------ planning
+def _params_m(P):
+    out = {}
+    for k, v in P.items():
+        if k.endswith("_ft") and isinstance(v, (int, float)):
+            out[k[:-3]] = v * FT
+        else:
+            out[k] = v
+    out["voussoir_m"] = P.get("voussoir_ft", 1.5) * FT
+    out["station_m"] = P.get("station_ft", 4.0) * FT
+    out["ring_proud"] = P.get("ring_proud_ft", 0.3) * FT
+    return out
+
+
+def _nudge_supports(cands, envs, half, lo, hi, min_gap):
+    """Support centres that stay out of the envelopes (u metres); a support whose nudged spot is too close to its neighbour is dropped."""
+    out = []
+    for c in cands:
+        for _ in range(4):
+            moved = False
+            for a, b in envs:
+                if a - half < c < b + half:
+                    c = a - half if abs(c - (a - half)) <= abs(b + half - c) else b + half
+                    moved = True
+            if not moved:
+                break
+        out.append(c)
+    out = sorted(set(round(c, 4) for c in out if lo + min_gap <= c <= hi - min_gap))
+    res = []
+    for c in out:
+        if not res or c - res[-1] >= min_gap:
+            res.append(c)
+    return res
+
+
+def make_plan(ent, params=None):
+    """Resolve a bridge entity into a plan (metres): deck profile, supports, arches, materials. Pure function of the entity (deterministic)."""
+    pr = load_preset(ent["preset"])
+    P = dict(pr["params"])
+    P.update({k: v for k, v in (ent.get("params") or {}).items() if v is not None})
+    if params:
+        P.update(params)
+    ctx = ent["context"]
+    Lft = ent["span"]["length_ft"]
+    P["width_ft"] = ent["span"].get("width_ft", P["width_ft"])
+    Pm = _params_m(P)
+    L = Lft * FT
+    W = P["width_ft"] * FT
+    fam = pr["family"]
+    # deck profile (metres, absolute): road profile + humpback for arches
+    deck = Prof(ctx["deck"])
+    ug = np.linspace(0, Lft, max(9, int(Lft / 3)) + 1)
+    hump = P.get("crown_rise_ft", 0.0)
+    hump = min(hump, 0.03 * Lft) if fam == "arch" else 0.0
+    dz = deck(ug) - np.linspace(deck(0.0), deck(Lft), len(ug)) * 0                                  # keep the road's own profile
+    zd = deck(ug) + hump * 4 * (ug / Lft) * (1 - ug / Lft)
+    if fam != "arch":
+        zd = np.linspace(float(deck(0.0)), float(deck(Lft)), len(ug)) if Lft < 120 else deck(ug)
+    dprof = [(float(u * FT), float(z * FT)) for u, z in zip(ug, zd)]
+    D = Prof(dprof)
+    gh = Prof([(u * FT, g * FT) for u, g in ctx["ground_hi"]])
+    gl = Prof([(u * FT, g * FT) for u, g in ctx["ground_lo"]])
+    envs = [dict(u0=max(e["u0_ft"] * FT, 0.35), u1=min(e["u1_ft"] * FT, L - 0.35), z=e["z_top_ft"] * FT, kind=e["kind"]) for e in envelopes_of(ent, params)]   # an abutment is at least 0.35 m thick
+    envs = [e for e in envs if e["u1"] > e["u0"]]
+    M = dict(pr["materials"])
+    if M.get("deck") == "road":
+        M["deck"] = ctx["deck_material"]
+    wide = max([e["u1"] - e["u0"] for e in envs] + [0.0])
+    plan = dict(family=fam, L=L, W=W, deck=dprof, p=Pm, mats=M, seed=int(ent["seed"]), envelopes=envs, ok=True, notes=[], deficit_m=0.0, ground_hi=[(u * FT, g * FT) for u, g in ctx["ground_hi"]],
+                deck_tile_ft=ctx.get("deck_tile_ft", 8.0))
+    if wide > Pm["max_clear"] > 0:                                # an opening wider than the preset can structurally span
+        plan["ok"] = False
+        plan["deficit_m"] = wide - Pm["max_clear"]
+        plan["notes"].append(f"clear opening {wide / FT:.0f} ft is wider than this preset spans ({Pm['max_clear'] / FT:.0f} ft)")
+    found = Pm["found"]
+    ab = Pm.get("abutment_t", 0.9)
+    ev = [(e["u0"], e["u1"]) for e in envs]
+    abL = ab if not envs else min(ab, max(0.35, min(e["u0"] for e in envs) - 0.05))     # short spans: the abutments shrink rather than enter an envelope
+    abR = ab if not envs else min(ab, max(0.35, L - max(e["u1"] for e in envs) - 0.05))
+    uu = np.linspace(0, L, 161)
+    if fam == "arch":
+        pier = Pm["pier_t"]
+        maxs, mins = Pm["max_span"], Pm["min_span"]
+        n_fix = P.get("n_arches")
+        for extra in (0.0, 0.6, 1.2, 1.9, 2.8, 4.0, 5.5):                   # a higher threshold shortens the window (more solid abutment) until the arches fit
+            plan["ok"], plan["notes"], plan["deficit_m"] = (wide <= Pm["max_clear"] or Pm["max_clear"] <= 0), ([] if wide <= Pm["max_clear"] or Pm["max_clear"] <= 0 else plan["notes"]), (plan["deficit_m"] if wide > Pm["max_clear"] > 0 else 0.0)
+            # the usable window: where there is room under the deck for an opening; beyond it the ground runs up to the deck and the abutments are solid
+            need = Pm["ring_t"] + Pm["fill"] + 0.9 + extra
+            room = D(uu) - gh(uu) - need
+            okw = np.where(room >= 0)[0]
+            wa, wb = (float(uu[okw[0]]), float(uu[okw[-1]])) if len(okw) else (abL, L - abR)
+            for e in envs:                                                      # the envelopes must be inside the window
+                wa, wb = min(wa, e["u0"]), max(wb, e["u1"])
+            i0 = max(abL, wa - 0.6)
+            i1 = min(L - abR, wb + 0.6)
+            if i1 - i0 < mins:
+                i0, i1 = abL, L - abR
+            inner = i1 - i0
+            N = int(n_fix) if n_fix else max(1, int(math.ceil((inner + pier) / (maxs + pier))))
+            # envelopes wider than max_span push N down (an arch must clear the whole envelope in one opening)
+            while True:
+                s = (inner - (N - 1) * pier) / N
+                cands = [i0 + k * s + (k - 0.5) * pier for k in range(1, N)]
+                cs = _nudge_supports(cands, ev, pier / 2 + 0.05, i0, i1, mins + pier) if not n_fix else cands
+                if s < mins and N > 1 and not n_fix:
+                    N -= 1
+                    continue
+                break
+            edges = [i0] + [x for c in cs for x in (c - pier / 2, c + pier / 2)] + [i1]
+            solids = [dict(u0=0.0, u1=i0)]
+            arches = []
+            for i in range(0, len(edges) - 1, 2):
+                arches.append(dict(ua=edges[i], ub=edges[i + 1]))
+                if i + 2 < len(edges):
+                    solids.append(dict(u0=edges[i + 1], u1=edges[i + 2]))
+            solids.append(dict(u0=i1, u1=L))
+            t, fill, gclr = Pm["ring_t"], Pm["fill"], Pm["ground_clear"]
+            for a in arches:
+                ua, ub = a["ua"], a["ub"]
+                s_ = ub - ua
+                xs = np.linspace(ua, ub, 61)
+                best = None
+                rho = P["rise_ratio"]
+                while rho >= P["min_rise_ratio"] - 1e-9:
+                    rise = rho * s_
+                    uc, R = 0.5 * (ua + ub), (s_ * s_ / 4 + rise * rise) / (2 * rise)
+                    hin = np.sqrt(np.maximum(R * R - (xs - uc) ** 2, 0)) - (R - rise)
+                    hex_ = np.sqrt(np.maximum((R + t) ** 2 - (xs - uc) ** 2, 0)) - (R - rise)
+                    req = (gh(xs) + gclr) - hin
+                    for e in envs:
+                        m = (xs >= e["u0"] - 1e-9) & (xs <= e["u1"] + 1e-9)
+                        if m.any():
+                            req = np.maximum(req, np.where(m, e["z"] - hin, -1e9))
+                    zs = float(req.max())
+                    fits = bool(np.all(zs + hex_ + fill <= D(xs)))
+                    if fits:
+                        best = (rho, zs, True)
+                        break
+                    rho -= 0.04
+                if best is None:
+                    rho = P["min_rise_ratio"]
+                    rise = rho * s_
+                    uc, R = 0.5 * (ua + ub), (s_ * s_ / 4 + rise * rise) / (2 * rise)
+                    hex_ = np.sqrt(np.maximum((R + t) ** 2 - (xs - uc) ** 2, 0)) - (R - rise)
+                    zs = float(np.min(D(xs) - fill - hex_))
+                    best = (rho, zs, False)
+                    plan["ok"] = False
+                    plan["deficit_m"] = max(plan["deficit_m"], float(req.max() - zs))
+                    plan["notes"].append(f"arch {ua / FT:.1f}-{ub / FT:.1f} ft: not enough height under the deck for the required clearance; raise the deck or lower what is below")
+                a["rise"], a["zs"] = best[0] * s_, best[1]
+            for k, sd in enumerate(solids):
+                lo = float(gl(np.linspace(sd["u0"], sd["u1"], 7)).min())
+                sd["base"] = min(lo - found, min(a["zs"] for a in arches) - 0.6)
+                if k in (0, len(solids) - 1):                                   # end blocks follow the rising ground
+                    sd["bprof"] = [(float(u), float(gl(u)) - found) for u in np.linspace(sd["u0"], sd["u1"], 9)]
+            if plan["ok"]:
+                break
+        plan["solids"], plan["arches"] = solids, arches
+    elif fam == "flat":
+        pier = Pm["pier_t"]
+        maxs = Pm["max_span"]
+        N = max(1, int(math.ceil((L - 2 * ab * 0 ) / maxs)))
+        cands = [L * k / N for k in range(1, N)]
+        cs = _nudge_supports(cands, ev, pier / 2 + 0.1, abL + 0.5, L - abR - 0.5, 2.5)
+        sup = [dict(u0=0.0, u1=abL)] + [dict(u0=c - pier / 2, u1=c + pier / 2) for c in cs] + [dict(u0=L - abR, u1=L)]
+        spans = [0.5 * (sup[i + 1]["u0"] + sup[i + 1]["u1"]) - 0.5 * (sup[i]["u0"] + sup[i]["u1"]) for i in range(len(sup) - 1)]
+        t = max(Pm["min_slab_t"], max(spans) * Pm["slab_ratio"] if "slab_ratio" in Pm else 0.3)
+        t = float(min(t, 1.1))
+        # clearance: the slab underside must clear every envelope; thinner (down to 0.25 m) if that is what it takes
+        need_t = t
+        for e in envs:
+            m = (uu >= e["u0"]) & (uu <= e["u1"])
+            if m.any():
+                room = float(np.min(D(uu[m]) - e["z"]))
+                need_t = min(need_t, room)
+        if need_t < t:
+            if need_t < 0.22:
+                plan["ok"] = False
+                plan["deficit_m"] = 0.22 - need_t
+                plan["notes"].append("flat slab: deck is less than 0.22 m above the required clearance; raise the deck or lower what is below")
+                t = 0.22
+            else:
+                t = need_t
+        plan["slab_t"] = t
+        for sd in sup:
+            lo = float(gl(np.linspace(sd["u0"], sd["u1"], 7)).min())
+            sd["base"] = lo - found
+        plan["supports"] = sup
+        Pm["slab_w_m"] = P["slab_w_ft"] * FT
+        plan["p"] = Pm
+    else:                                                      # timber: bents carry stringers, truss sides or rails
+        maxs = Pm["max_span"]
+        Pm["stringer_every"] = P["stringer_every_ft"] * FT
+        Pm["plank_w"], Pm["plank_gap"], Pm["plank_t"] = P["plank_w_ft"] * FT, P["plank_gap_ft"] * FT, P["plank_t_ft"] * FT
+        Pm["post_every"], Pm["rail_h"], Pm["kingpost_max_m"] = P["post_every_ft"] * FT, P["rail_h_ft"] * FT, P["kingpost_max_ft"] * FT
+        Pm["truss_depth_ratio"], Pm["side"] = P["truss_depth_ratio"], P["side"]
+        N = max(1, int(math.ceil(L / maxs)))
+        cands = [L * k / N for k in range(1, N)]
+        cs = _nudge_supports(cands, ev, 0.9, 1.5, L - 1.5, 3.0)
+        us_ = [0.0] + cs + [L]
+        sup = [dict(u=u, kind="abut" if i in (0, len(us_) - 1) else "bent", base=float(gl(np.array([u]))[0]) - found) for i, u in enumerate(us_)]
+        plan["supports"] = sup
+        plan["p"] = Pm
+        # clearance of stringers / cap beams
+        worst = 1e9
+        for i in range(len(us_) - 1):
+            ls = us_[i + 1] - us_[i]
+            r = float(np.clip(0.10 + 0.0045 * ls, 0.11, 0.30))
+            for e in envs:
+                lo_, hi_ = max(e["u0"], us_[i]), min(e["u1"], us_[i + 1])
+                if hi_ > lo_:
+                    x = np.linspace(lo_, hi_, 20)
+                    worst = min(worst, float(np.min(D(x) - Pm["plank_t"] - 2 * r - 0.03 - e["z"])))
+        if worst < 0:
+            plan["ok"] = False
+            plan["deficit_m"] = -worst
+            plan["notes"].append(f"timber: stringers are {-worst:.2f} m too low for the clearance below")
+    if fam == "flat":
+        plan["p"]["slab_w_m"] = P["slab_w_ft"] * FT
+    return plan
+
+
+# ------------------------------------------------------------------ meshes
+def build_local(ent, params=None):
+    """(Mesh in the local frame, plan). Local frame: x = u along the span, y = v left, z absolute metres (feet * 0.3048)."""
+    import bridge_geo as bg
+    plan = make_plan(ent, params)
+    g_tiles = None
+    mesh = bg.build(plan)
+    return mesh, plan
+
+
+def to_blender(mesh, ent, frame):
+    """Local mesh -> pack Blender frame (metres, x east, y north, z from z_origin)."""
+    import worldpack_mesh as wm
+    sx, sy, _ = ent["span"]["start"]
+    ex, ey, _ = ent["span"]["end"]
+    d = np.array([ex - sx, -(ey - sy)], float)
+    d /= np.linalg.norm(d)
+    lf = np.array([-d[1], d[0]])
+    V = mesh.V
+    X = sx * FT + V[:, 0] * d[0] + V[:, 1] * lf[0]
+    Y = (frame.height_ft - sy) * FT + V[:, 0] * d[1] + V[:, 1] * lf[1]
+    Z = V[:, 2] - frame.z_origin_ft * FT
+    N = None
+    return wm.Mesh(np.stack([X, Y, Z], 1), mesh.UV, mesh.subs, mesh.smooth)
+
+
+def heading_deg(ent):
+    sx, sy, _ = ent["span"]["start"]
+    ex, ey, _ = ent["span"]["end"]
+    return round(math.degrees(math.atan2(-(ey - sy), ex - sx)), 3)
+
+
+def check_clearance(mesh, plan, eps=0.04):
+    """Count mesh sample points (vertices, edge midpoints, centroids) inside any clearance envelope (above the highest ground, below its z_top)."""
+    V = mesh.V
+    pts = [V]
+    for F in mesh.subs.values():
+        a, b, c = V[F[:, 0]], V[F[:, 1]], V[F[:, 2]]
+        pts += [(a + b + c) / 3, (a + b) / 2, (b + c) / 2, (a + c) / 2]
+    Pt = np.concatenate(pts)
+    gh = Prof(plan["ground_hi"])
+    bad = 0
+    for e in plan["envelopes"]:
+        m = (Pt[:, 0] > e["u0"] + eps) & (Pt[:, 0] < e["u1"] - eps) & (Pt[:, 2] < e["z"] - eps) & (Pt[:, 2] > gh(Pt[:, 0]) + eps)
+        bad += int(m.sum())
+    return bad
+
+
+# ------------------------------------------------------------------ pack integration
+def add_bridge_parts(pack, cx, parts, add, want=True):
+    """Hook for worldpack_mesh.build_parts: one Part per bridge entity (layer 'bridges')."""
+    import worldpack_mesh as wm
+    for e in pack.list("bridges"):
+        m, plan = build_local(e)
+        mesh = to_blender(m, e, cx.fr)
+        for mid in plan["mats"].values():
+            if mid not in pack.materials:
+                try:
+                    import building_styles as bs
+                    r = bs.material_record(mid) if mid.startswith("mat_s_") else None
+                except Exception:
+                    r = None
+                if r:
+                    pack.materials[mid] = r
+        add(e, "bridges", mesh)
+    return parts
+
+
+def bridge_gaps(bridges):
+    """{road id: [{bridge, s0_ft, s1_ft}]}"""
+    out = {}
+    for b in bridges:
+        out.setdefault(b["road"], []).append({"bridge": b["id"], "s0_ft": b["span"]["s0_ft"], "s1_ft": b["span"]["s1_ft"]})
+    return out
+
+
+def _read(p):
+    with open(p, "rb") as f:
+        return f.read()
+
+
+def _jload(p):
+    with open(p, encoding="utf-8") as f:
+        return json.load(f)
+
+
+def _jdump(p, o):
+    with open(p, "w", encoding="utf-8") as f:
+        json.dump(o, f, indent=1, ensure_ascii=False)
+        f.write("\n")
+
+
+def bridges_path(place, world_root=None):
+    return os.path.join(world_root or WORLD, place, "bridges.json")
+
+
+def load_bridges(place, world_root=None):
+    p = bridges_path(place, world_root)
+    return _jload(p) if os.path.exists(p) else {"place": place, "schema": SCHEMA, "bridges": [], "removed": []}
+
+
+def inject(pack_dir, place, world_root=None, doc=None):
+    """Write the bridges of world/<place>/bridges.json into an exported pack: entities/bridges.json, manifest entry, road gaps."""
+    doc = doc or load_bridges(place, world_root)
+    removed = set(doc.get("removed") or [])
+    bridges = [b for b in doc.get("bridges", []) if b["id"] not in removed]
+    ent_dir = os.path.join(pack_dir, "entities")
+    mp = os.path.join(pack_dir, "manifest.json")
+    man = _jload(mp)
+    roads_p = os.path.join(ent_dir, "roads.json")
+    roads = _jload(roads_p)
+    gaps = bridge_gaps(bridges)
+    for r in roads["items"]:
+        r.pop("gaps", None)
+        if r["id"] in gaps:
+            r["gaps"] = gaps[r["id"]]
+            r.setdefault("derived", [])
+            if "bridge_gaps" not in r["derived"]:
+                r["derived"].append("bridge_gaps")
+    _jdump(roads_p, roads)
+    fn = os.path.join(ent_dir, "bridges.json")
+    items = []
+    for b in bridges:
+        b = dict(b)
+        b["tags"] = {"layer": "bridges", "subtype": b.get("preset", "bridge"), "district": None, "ring": None, "group": "bridges", "id": b["id"]}
+        items.append(b)
+    _jdump(fn, {"format": roads.get("format"), "schema_version": roads.get("schema_version"), "type": "bridges", "units": roads.get("units", "feet"), "items": items})
+    rel = "entities/bridges.json"
+    man.setdefault("entities", {})["bridges"] = {"file": rel, "count": len(bridges), "sha256": hashlib.sha256(_read(fn)).hexdigest()}
+    man.setdefault("files", {})[rel] = "pending"
+    _jdump(mp, man)
+    import worldpack as wp
+    wp.refresh_manifest_files(pack_dir)                                 # roads.json changed (gaps) and bridges.json is new: re-hash
+    return {"bridges": len(bridges), "roads_with_gaps": sorted(gaps)}
+
+
+def apply(place, pack_dir=None, only=None, preset=None, overrides=None, export=True, world_root=None, float_ft=None, level_ft=None, merge=True, seed=None):
+    """detect -> bridges.json (provenance) -> re-export the pack -> inject. `merge` keeps manual entries already in bridges.json (same id wins from the file
+    unless `only` lists it)."""
+    import worldpack as wp
+    root = world_root or WORLD
+    pack_dir = pack_dir or os.path.join(root, place, "export")
+    if export:
+        wp.export_world(place, pack_dir) if world_root is None else wp.export_world(place, pack_dir, world_root=world_root)
+    pack = wp.load_pack(pack_dir)
+    old = load_bridges(place, root)
+    # detection must see the roads without earlier gaps
+    for r in pack.list("roads"):
+        r.pop("gaps", None)
+    found = detect(pack, float_ft=float_ft, level_ft=level_ft)
+    if only:
+        found = [c for c in found if c["id"] in only]
+    keep = {b["id"]: b for b in old.get("bridges", []) if merge and b.get("locked") and (not only or b["id"] not in only)}   # `locked`: set by the panel's Apply-to-selected (hand-tuned)
+    new = []
+    # first pass with the planned gaps so the ground under each span is the final terrain
+    tmp = {}
+    for c in found:
+        tmp.setdefault(c["road"], []).append({"s0_ft": c["s0_ft"], "s1_ft": c["s1_ft"]})
+    for r in pack.list("roads"):
+        if r["id"] in tmp:
+            r["gaps"] = tmp[r["id"]]
+    h_final = final_heights(pack)
+    now = datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds")
+    for c in found:
+        if c["id"] in keep:
+            continue
+        prov = {"generated_at": now, "crossing": {k: c[k] for k in ("type", "span_ft", "deck_above_ground_ft")}}
+        ent = None
+        order = [preset] if preset else [choose_preset(c)] + [n for n in ("stone_arch", "brick_arch", "flat_cut_stone", "wooden_truss", "plank_footbridge") if n != choose_preset(c)]
+        best = None
+        for k, name in enumerate(order):                               # the first preset whose plan meets the clearance wins; otherwise the one that misses least
+            cand = make_entity(pack, c, h_final, preset=name, overrides=overrides, seed=seed, provenance=dict(prov))
+            pl = make_plan(cand)
+            if pl["ok"]:
+                if k:
+                    cand["provenance"]["fallback_from"] = order[0]
+                best = cand
+                break
+            cand["provenance"]["clearance_deficit_m"] = round(pl["deficit_m"], 2)
+            cand["provenance"]["warnings"] = pl["notes"]
+            if best is None or pl["deficit_m"] < best["provenance"]["clearance_deficit_m"] - 1e-6:
+                best = cand
+        ent = best
+        notes = str(pack.get(c["road"]).get("notes") or "").lower()
+        for word, fams in (("stone", ("stone_arch", "flat_cut_stone")), ("brick", ("brick_arch",)), ("wood", ("wooden_truss", "plank_footbridge")), ("timber", ("wooden_truss", "plank_footbridge"))):
+            if word in notes and ent["preset"] not in fams and not preset:
+                ent["provenance"].setdefault("warnings", []).append(f"canon notes mention a {word} bridge but the clearance only fits {ent['preset']}; use --preset to override (the deck level is canon)")
+                break
+        if only or overrides or preset or seed is not None:
+            ent["locked"] = True
+        new.append(ent)
+    bridges = list(keep.values()) + new
+    bridges.sort(key=lambda b: b["id"])
+    doc = {"place": place, "schema": SCHEMA, "generated_by": "bridge_maker.py", "generated_at": now, "status": "proposed",
+           "notes": "Generated bridges; canon street data is untouched. Delete an entry (or list its id in `removed`) to drop it.", "thresholds": {k: v for k, v in DEFAULTS.items()},
+           "removed": old.get("removed", []), "bridges": bridges}
+    _jdump(bridges_path(place, root), doc)
+    res = inject(pack_dir, place, root, doc)
+    res.update(found=len(found), new=[b["id"] for b in new], report=found)
+    return res
+
+
+def remove(place, bid, world_root=None):
+    doc = load_bridges(place, world_root)
+    doc["bridges"] = [b for b in doc.get("bridges", []) if b["id"] != bid]
+    if bid not in doc.setdefault("removed", []):
+        doc["removed"].append(bid)
+    _jdump(bridges_path(place, world_root), doc)
+    return doc
+
+
+
+
+def entity_for(place, bid, pack_dir=None, preset=None, overrides=None, world_root=None):
+    """The entity for crossing/bridge `bid` with the given preset/overrides applied, without writing anything (preview). Uses world/<place>/bridges.json
+    when the bridge exists there, otherwise detects it in the pack."""
+    import worldpack as wp
+    root = world_root or WORLD
+    doc = load_bridges(place, root)
+    ent = next((copy_deep(b) for b in doc.get("bridges", []) if b["id"] == bid), None)
+    if ent is None:
+        pack = wp.load_pack(pack_dir or os.path.join(root, place, "export"))
+        for r in pack.list("roads"):
+            r.pop("gaps", None)
+        c = next((c for c in detect(pack) if c["id"] == bid), None)
+        if c is None:
+            raise KeyError(f"no crossing or bridge {bid!r} in {place}")
+        tmp = {}
+        for q in detect(pack):
+            tmp.setdefault(q["road"], []).append({"s0_ft": q["s0_ft"], "s1_ft": q["s1_ft"]})
+        for r in pack.list("roads"):
+            if r["id"] in tmp:
+                r["gaps"] = tmp[r["id"]]
+        ent = make_entity(pack, c, final_heights(pack), preset=preset or choose_preset(c), overrides=overrides)
+    if preset:
+        ent["preset"] = preset
+    if overrides:
+        ent["params"] = dict(ent.get("params") or {}, **{k: v for k, v in overrides.items() if v is not None})
+        if overrides.get("width_ft") is not None:
+            ent["span"]["width_ft"] = float(overrides["width_ft"])
+    return ent
+
+
+def copy_deep(o):
+    return json.loads(json.dumps(o))
+
+# ------------------------------------------------------------------ 2D map symbol
+def symbol_rings(ent):
+    """The bridge as closed outlines in place feet (x east, y south), for the SVG map: [(suffix, ring, css class)]. Double parapet lines, pier/arch
+    rectangles across the deck, plank hatch for timber bridges."""
+    plan = make_plan(ent)
+    sx, sy, _ = ent["span"]["start"]
+    ex, ey, _ = ent["span"]["end"]
+    L = math.hypot(ex - sx, ey - sy)
+    d = np.array([ex - sx, ey - sy]) / L
+    lf = np.array([d[1], -d[0]])
+
+    def rect(u0, u1, v0, v1):
+        return [[round(sx + d[0] * u / FT + lf[0] * v / FT, 2), round(sy + d[1] * u / FT + lf[1] * v / FT, 2)] for u, v in ((u0, v0), (u1, v0), (u1, v1), (u0, v1))]
+    W = plan["W"]
+    out = [("outline", rect(0, plan["L"], -W / 2, W / 2), "wall")]
+    pt = plan["p"].get("parapet_t", 0.0)
+    if plan["family"] in ("arch", "flat") and pt > 0:
+        out.append(("inner", rect(0, plan["L"], -(W / 2 - pt), W / 2 - pt), "road"))
+    if plan["family"] == "arch":
+        for k, sd in enumerate(plan["solids"][1:-1], 1):
+            out.append((f"pier{k}", rect(sd["u0"], sd["u1"], -W / 2, W / 2), "wall"))
+        for k, a in enumerate(plan["arches"], 1):                                  # springing lines of every opening (hatch)
+            out.append((f"arch{k}a", rect(a["ua"] - 0.05, a["ua"] + 0.05, -W / 2, W / 2), "road"))
+            out.append((f"arch{k}b", rect(a["ub"] - 0.05, a["ub"] + 0.05, -W / 2, W / 2), "road"))
+    elif plan["family"] == "flat":
+        for k, sd in enumerate(plan["supports"][1:-1], 1):
+            out.append((f"pier{k}", rect(sd["u0"], sd["u1"], -W / 2, W / 2), "wall"))
+    else:
+        for k, sd in enumerate(plan["supports"][1:-1], 1):
+            out.append((f"bent{k}", rect(sd["u"] - 0.25, sd["u"] + 0.25, -W / 2, W / 2), "wall"))
+        step = 1.8
+        n = int(plan["L"] / step)
+        for k in range(1, n):
+            out.append((f"plank{k}", rect(k * plan["L"] / n - 0.03, k * plan["L"] / n + 0.03, -W / 2, W / 2), "road"))
+    return out
+
+
+def symbols_for_place(place, world_root=None):
+    """[(entity id, suffix, ring, class)] for every bridge in world/<place>/bridges.json (not removed). Empty when there is none."""
+    p = bridges_path(place, world_root)
+    if not os.path.exists(p):
+        return []
+    doc = _jload(p)
+    removed = set(doc.get("removed") or [])
+    res = []
+    for b in doc.get("bridges", []):
+        if b["id"] in removed:
+            continue
+        try:
+            for suf, ring, cls in symbol_rings(b):
+                res.append((b["id"], suf, ring, cls))
+        except Exception as e:                                  # a bad entry must not break the map
+            log(f"bridge symbol {b.get('id')}: {e}")
+    return res
+
+# ------------------------------------------------------------------ street elevation repair (the floating-road bug)
+def fix_elevations(place, world_root=None):
+    """Child places extracted before region_extract.clip_vertex_values existed carry the parent's per-vertex elevations on clipped streets. Re-sample
+    them from the parent street (matched by id, shifted by the region origin) so len(elevations_ft) == len(points) and the bed follows the road."""
+    from shapely.geometry import LineString, Point
+    root = world_root or WORLD
+    pdir = os.path.join(root, place)
+    sp = os.path.join(pdir, "streets.json")
+    doc = _jload(sp)
+    rg = os.path.join(pdir, "region.json")
+    fixed = []
+    parent_doc = org = None
+    if os.path.exists(rg):
+        reg = _jload(rg)
+        pp = os.path.join(root, reg["parent"], "streets.json")
+        if os.path.exists(pp):
+            parent_doc = {s["id"]: s for s in _jload(pp)["streets"]}
+            org = reg["transform"]["origin_ft"]
+    for s in doc["streets"]:
+        pts = s["geometry"]["points"]
+        el = s.get("elevations_ft")
+        if not el or len(el) == len(pts):
+            continue
+        pid = (s.get("region") or {}).get("parent_id") or s["id"].split("__")[0]
+        if parent_doc and pid in parent_doc and len(parent_doc[pid].get("elevations_ft") or []) == len(parent_doc[pid]["geometry"]["points"]):
+            ppts = parent_doc[pid]["geometry"]["points"]
+            pel = parent_doc[pid]["elevations_ft"]
+        else:                                                  # no parent to ask: the samples are uniform along the unclipped line, so spread them over the points
+            ppts = pts
+            pel = None
+        if pel is not None:
+            P = np.asarray(ppts, float)
+            d = np.concatenate([[0.0], np.cumsum(np.hypot(*np.diff(P, axis=0).T))])
+            line = LineString(ppts)
+            new = np.interp([line.project(Point(q[0] + org[0], q[1] + org[1])) for q in pts], d, pel)
+        else:
+            P = np.asarray(pts, float)
+            d = np.concatenate([[0.0], np.cumsum(np.hypot(*np.diff(P, axis=0).T))])
+            new = np.interp(d / max(d[-1], 1e-9), np.linspace(0, 1, len(el)), el)
+        s["elevations_ft"] = [round(float(v), 1) for v in new]
+        s["elevation_ft"] = round(float(np.mean(new)), 1)
+        fixed.append(s["id"])
+    if fixed:
+        _jdump(sp, doc)
+    return fixed
+
+
+# ------------------------------------------------------------------ free-standing sample (style sheet, tests)
+def sample_entity(preset, span_ft=60.0, drop_ft=14.0, water=True, width_ft=None, seed=7, road_class="street", name="sample"):
+    """A synthetic crossing: a straight deck over a V-shaped valley, a stream (or a road) in the bottom. Pure data, no pack needed."""
+    pr = load_preset(preset)
+    W = width_ft or pr["params"]["width_ft"]
+    n = max(9, int(span_ft / 2) + 1)
+    us = np.linspace(0, span_ft, n)
+    wet = min(span_ft * 0.3, 18.0)
+    c = span_ft / 2
+    deck_z = 100.0 + LIFT_M / FT
+    ground = (deck_z - LIFT_M / FT - drop_ft) + np.array([min(drop_ft, max(0.0, abs(u - c) - wet / 2) * 0.9) for u in us])
+    others = []
+    if water:
+        others.append(dict(kind="water", id="stream", u0_ft=c - wet / 2, u1_ft=c + wet / 2, surface_ft=float(deck_z - LIFT_M / FT - drop_ft + 0.8)))
+    else:
+        others.append(dict(kind="road", id="lane", u_ft=c, angle_deg=90.0, z_ft=float(deck_z - LIFT_M / FT - drop_ft + 0.3), width_ft=10.0))
+    ent = {"id": f"brg_{name}_1", "kind": "bridge", "preset": preset, "seed": seed, "params": {}, "road": "sample", "crossing": "water" if water else "road",
+           "span": {"s0_ft": 0.0, "s1_ft": span_ft, "length_ft": span_ft, "start": [0.0, 0.0, deck_z], "end": [span_ft, 0.0, deck_z], "width_ft": W, "road_class": road_class, "road_width_ft": W},
+           "context": {"deck": [[float(u), deck_z] for u in us], "ground_hi": [[float(u), float(v)] for u, v in zip(us, ground)], "ground_lo": [[float(u), float(v) - 0.3] for u, v in zip(us, ground)],
+                       "others": others, "deck_material": "mat_cobble", "deck_tile_ft": 7.0}}
+    return ent
+
+
+def mesh_stats(ent):
+    m, plan = build_local(ent)
+    return dict(tris=m.tri_count, verts=len(m.V), materials=sorted(m.subs), ok=plan["ok"], notes=plan["notes"], clearance_violations=check_clearance(m, plan))
+
+
+# ------------------------------------------------------------------ CLI
+def _pack(a):
+    import worldpack as wp
+    return wp.load_pack(a.pack or os.path.join(WORLD, a.place, "export"))
+
+
+def _overrides(pairs):
+    ov = {}
+    for kv in pairs or []:
+        k, v = kv.split("=", 1)
+        try:
+            ov[k] = json.loads(v)
+        except ValueError:
+            ov[k] = v
+    return ov
+
+
+def main(argv=None):
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    sub = ap.add_subparsers(dest="cmd", required=True)
+    sub.add_parser("presets")
+    for name in ("detect", "apply", "inject", "remove", "fix-elevations"):
+        s = sub.add_parser(name)
+        s.add_argument("--place", required=True)
+        s.add_argument("--pack")
+        s.add_argument("--out")
+        s.add_argument("--float-ft", type=float)
+        s.add_argument("--level-ft", type=float)
+        s.add_argument("--only")
+        s.add_argument("--preset")
+        s.add_argument("--set", action="append", default=[], help="key=value parameter override (width_ft, clearance_h_ft, parapet_h_ft, n_arches, rise_ratio...)")
+        s.add_argument("--no-export", action="store_true")
+        s.add_argument("--id")
+        s.add_argument("--seed", type=int)
+    en = sub.add_parser("entity")
+    en.add_argument("--place", required=True)
+    en.add_argument("--pack")
+    en.add_argument("--id", required=True)
+    en.add_argument("--preset")
+    en.add_argument("--set", action="append", default=[])
+    en.add_argument("--out")
+    sm = sub.add_parser("sample")
+    sm.add_argument("--preset", required=True)
+    sm.add_argument("--span-ft", type=float, default=60.0)
+    sm.add_argument("--drop-ft", type=float, default=14.0)
+    sm.add_argument("--road", action="store_true", help="a road passes under instead of a stream")
+    a = ap.parse_args(argv)
+    if a.cmd == "presets":
+        print(json.dumps([{k: p[k] for k in ("id", "name", "family", "description")} for p in list_presets()], indent=1))
+    elif a.cmd == "fix-elevations":
+        print(json.dumps({"fixed": fix_elevations(a.place)}))
+    elif a.cmd == "detect":
+        res = detect(_pack(a), a.float_ft, a.level_ft)
+        if a.out:
+            _jdump(a.out, res)
+        print(json.dumps({"ok": True, "crossings": res}))
+    elif a.cmd == "entity":
+        ent = entity_for(a.place, a.id, a.pack, a.preset, _overrides(a.set))
+        if a.out:
+            _jdump(a.out, ent)
+        print(json.dumps({"ok": True, "entity": {k: ent[k] for k in ("id", "preset", "crossing", "span", "params")}, "stats": mesh_stats(ent)}))
+    elif a.cmd == "apply":
+        ov = _overrides(a.set)
+        res = apply(a.place, a.pack, set(a.only.split(",")) if a.only else None, a.preset, ov or None, export=not a.no_export, float_ft=a.float_ft, level_ft=a.level_ft, seed=a.seed)
+        print(json.dumps({"ok": True, **res}))
+    elif a.cmd == "inject":
+        print(json.dumps({"ok": True, **inject(a.pack or os.path.join(WORLD, a.place, "export"), a.place)}))
+    elif a.cmd == "remove":
+        remove(a.place, a.id)
+        print(json.dumps({"ok": True, "removed": a.id}))
+    elif a.cmd == "sample":
+        print(json.dumps({"ok": True, **mesh_stats(sample_entity(a.preset, a.span_ft, a.drop_ft, not a.road))}))
+
+
+if __name__ == "__main__":
+    main()

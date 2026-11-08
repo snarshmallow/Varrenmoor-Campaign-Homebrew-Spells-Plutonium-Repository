@@ -1,0 +1,36 @@
+{
+ "id": "plank_footbridge",
+ "name": "Plank footbridge",
+ "family": "timber",
+ "description": "Two or three log stringers, plank deck, post-and-rail sides; trestle bents for longer spans.",
+ "road_classes": [
+  "path",
+  "footpath"
+ ],
+ "params": {
+  "width_ft": 5.0,
+  "side": "rail",
+  "plank_t_ft": 0.2,
+  "plank_w_ft": 0.75,
+  "plank_gap_ft": 0.05,
+  "stringer_every_ft": 2.5,
+  "max_span_ft": 18.0,
+  "found_ft": 1.5,
+  "crown_rise_ft": 0.0,
+  "truss_depth_ratio": 0.14,
+  "kingpost_max_ft": 40.0,
+  "post_every_ft": 5.0,
+  "rail_h_ft": 3.0,
+  "n_arches": null,
+  "clearance_w_ft": 8.0,
+  "clearance_h_ft": 8.0,
+  "freeboard_ft": 2.0,
+  "max_clear_ft": 24
+ },
+ "materials": {
+  "deck": "mat_s_tint_plank_9a7650",
+  "log": "mat_s_log_6b5238"
+ },
+ "schema": 1,
+ "thumb": "../../out/bridges/thumbs/plank_footbridge.png"
+}

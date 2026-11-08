@@ -275,6 +275,14 @@ def build_road(cx, e):
     pts = [cx.B(p[0], p[1]) for p in e["points"]]
     zs = [(p[2] - cx.fr.z_origin_ft) * FT for p in e["points"]]
     br = bool(e.get("bridge"))
+    if e.get("gaps"):                                                  # BRIDGES: the ribbon is removed under a modelled bridge (bridge_maker.py), ends stay on the road bed
+        import bridge_maker as _bm
+        for run in _bm.trim_runs(e["points"], e["gaps"]):
+            if len(run) < 2:
+                continue
+            _ribbon(b, e["surface"]["material"], [cx.B(p[0], p[1]) for p in run], [e["width_ft"] * FT] * len(run), [(p[2] - cx.fr.z_origin_ft) * FT for p in run],
+                    e["surface"]["tile_ft"], LIFT["roads"], 0.0)
+        return b.build()
     _ribbon(b, e["surface"]["material"], pts, [e["width_ft"] * FT] * len(pts), zs, e["surface"]["tile_ft"], 0.0 if br else LIFT["roads"],
             BRIDGE_THICK_M if br else 0.0)
     if e.get("kerbs"):
@@ -460,7 +468,11 @@ def build_parts(pack, step=1, carve=True, conform=True, layers=None, drape_edge_
     if carve:
         h = wp.carved_heights(pack)
     if conform:
-        h = wp.road_conformed_heights(pack, h)
+        if pack.list("bridges"):                                       # BRIDGES: terrain keeps its shape under the spans
+            import bridge_maker as _bm
+            h = _bm.conformed_heights(pack, h)
+        else:
+            h = wp.road_conformed_heights(pack, h)
     if any(b.get("layout") for b in pack.list("buildings")):          # interiors: level pads so the terrain stays below the floor plates
         import worldpack_interiors as wi
         h = wi.pad_buildings(pack, h)
@@ -483,7 +495,13 @@ def build_parts(pack, step=1, carve=True, conform=True, layers=None, drape_edge_
             add(e, "water", build_water(cx, e))
     for e in pack.list("roads"):
         if want("roads"):
-            add(e, "roads", build_road(cx, e))
+            rm = build_road(cx, e)
+            if e.get("gaps") and not rm.tri_count:                      # BRIDGES: the whole road is a bridge
+                continue
+            add(e, "roads", rm)
+    if want("bridges") and pack.list("bridges"):                       # BRIDGES: modelled bridges (bridge_maker.py), one Part each
+        import bridge_maker as _bm
+        _bm.add_bridge_parts(pack, cx, parts, add)
     for e in pack.list("plazas"):
         if want("plazas"):
             add(e, "plazas", build_drape(cx, e, LIFT["plazas"], drape_edge_ft))

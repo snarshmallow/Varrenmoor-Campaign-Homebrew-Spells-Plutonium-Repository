@@ -47,6 +47,15 @@ DETAIL_KINDS = ("doors", "roofs", "chimneys", "lots", "fences", "kerbs", "trees"
 LOG = lambda m: print(m, flush=True)  # noqa: E731
 
 
+def clip_vertex_values(pts, vals, cp):
+    """Per-vertex values (road bed elevations) of the polyline `pts`, interpolated by arc length at the vertices `cp` of a clipped piece of it."""
+    P = np.asarray(pts, float)
+    d = np.concatenate([[0.0], np.cumsum(np.hypot(*np.diff(P, axis=0).T))])
+    line = LineString(pts)
+    s = [line.project(Point(q)) for q in cp]
+    return [round(float(v), 1) for v in np.interp(s, d, np.asarray(vals, float))]
+
+
 def slug(s):
     return re.sub(r"[^a-z0-9]+", "_", str(s).lower()).strip("_") or "region"
 
@@ -215,6 +224,9 @@ def clip_model(model, region, work, opts):
             e = tag(s, clipped=bool(cont["start"] or cont["end"]), continues_off_map=cont)
             e["id"] = cid
             e["geometry"] = {**s["geometry"], "points": cp}
+            if s.get("elevations_ft") and len(s["elevations_ft"]) == len(pts):      # per-vertex road bed: re-sample for the clipped vertices (bug: copied unclipped, so z no longer matched the points)
+                e["elevations_ft"] = clip_vertex_values(pts, s["elevations_ft"], cp)
+                e["elevation_ft"] = round(float(np.mean(e["elevations_ft"])), 1)
             e["region"]["part"] = n + 1
             out["streets"].append(e)
             idmap.setdefault(s["id"], []).append(cid)

@@ -1,0 +1,19 @@
+{
+ "place": "bridgehollow__dyers_walk_local",
+ "schema": 1,
+ "generated_by": "bridge_maker.py",
+ "generated_at": "2026-11-08T12:47:56+00:00",
+ "status": "proposed",
+ "notes": "Generated bridges; canon street data is untouched. Delete an entry (or list its id in `removed`) to drop it.",
+ "thresholds": {
+  "float_ft": 4.0,
+  "level_ft": 3.0,
+  "min_span_ft": 8.0,
+  "merge_gap_ft": 24.0,
+  "abut_margin_ft": 5.0,
+  "bank_ft": 3.0,
+  "sample_ft": 2.0
+ },
+ "removed": [],
+ "bridges": []
+}

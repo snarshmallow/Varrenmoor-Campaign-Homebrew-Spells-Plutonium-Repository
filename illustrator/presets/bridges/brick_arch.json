@@ -1,0 +1,50 @@
+{
+ "id": "brick_arch",
+ "name": "Brick arch",
+ "family": "arch",
+ "description": "Red brick segmental arches with stone springers and coping, brick parapet.",
+ "road_classes": [
+  "street",
+  "road"
+ ],
+ "params": {
+  "width_ft": 16.0,
+  "rise_ratio": 0.32,
+  "min_rise_ratio": 0.12,
+  "ring_t_ft": 1.1,
+  "ring_proud_ft": 0.22,
+  "voussoir_ft": 0.9,
+  "parapet_h_ft": 3.0,
+  "parapet_t_ft": 1.1,
+  "coping_t_ft": 0.4,
+  "coping_over_ft": 0.25,
+  "pier_t_ft": 3.5,
+  "abutment_t_ft": 3.0,
+  "max_span_ft": 26.0,
+  "min_span_ft": 7.0,
+  "fill_ft": 1.0,
+  "found_ft": 2.0,
+  "ground_clear_ft": 0.8,
+  "crown_rise_ft": 1.0,
+  "station_ft": 4.0,
+  "cutwaters": false,
+  "n_arches": null,
+  "clearance_w_ft": 12.0,
+  "clearance_h_ft": 8.0,
+  "freeboard_ft": 4.0,
+  "springers": true,
+  "ring_alt": true,
+  "max_clear_ft": 70
+ },
+ "materials": {
+  "deck": "road",
+  "wall": "mat_s_brick_a5533a",
+  "ring": "mat_s_brick_8e3f2d",
+  "ring2": "mat_s_brick_b0613f",
+  "springer": "mat_kerb",
+  "soffit": "mat_s_brick_8e3f2d",
+  "coping": "mat_kerb"
+ },
+ "schema": 1,
+ "thumb": "../../out/bridges/thumbs/brick_arch.png"
+}

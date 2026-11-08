@@ -1,0 +1,38 @@
+{
+ "id": "wooden_truss",
+ "name": "Wooden truss (rough-hewn log)",
+ "family": "timber",
+ "description": "Log stringers and plank deck on timber bents, king-post or X-braced log truss sides.",
+ "road_classes": [
+  "path",
+  "footpath",
+  "lane",
+  "alley"
+ ],
+ "params": {
+  "width_ft": 11.0,
+  "side": "truss",
+  "plank_t_ft": 0.28,
+  "plank_w_ft": 0.85,
+  "plank_gap_ft": 0.06,
+  "stringer_every_ft": 3.0,
+  "max_span_ft": 60.0,
+  "found_ft": 2.0,
+  "crown_rise_ft": 0.0,
+  "truss_depth_ratio": 0.14,
+  "kingpost_max_ft": 40.0,
+  "post_every_ft": 6.0,
+  "rail_h_ft": 3.4,
+  "n_arches": null,
+  "clearance_w_ft": 12.0,
+  "clearance_h_ft": 8.0,
+  "freeboard_ft": 3.0,
+  "max_clear_ft": 120
+ },
+ "materials": {
+  "deck": "mat_s_tint_plank_8a6a44",
+  "log": "mat_s_log_6b5238"
+ },
+ "schema": 1,
+ "thumb": "../../out/bridges/thumbs/wooden_truss.png"
+}
