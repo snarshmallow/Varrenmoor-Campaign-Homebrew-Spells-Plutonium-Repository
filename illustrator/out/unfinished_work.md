@@ -84,3 +84,21 @@ FAILED / not fixed (repro) -- STATUS (offline-tested, fixed 2026-11-08; each sti
 
 UNTESTED
 * Real Push scene / push-models apply (not allowed), HTTP background download, Regions extract flow, bridges, interior doors (sections A.3, A.5, A.6 still open).
+
+## Live verification 2 (2026-11-08, head 16b479e, ZZ Dyers Walk 3D Test + ZZ Bridge Test only)
+Flow: `worldpack.py export` -> `worldpack_split.py split` -> `merge --preset layer --compress none` (layer_v007) -> foliage merged from `out/foliage/dyers_foliage.json` with the new pack ground (foliage_v003, 19 trees dropped as on road beds/footprints: hedges, yard trees) -> `push-scene-3d` (geometry, models, foliage, padding, lights, flags, verify: no problems) with `//VEGA/C/FoundryVTT resources/Data/assets/varrenmoor-3d`. Bridge scratch: export, `bridge_maker.py inject`, split, merge layer_v004, `push-scene-3d --skybox-preset clear_day --prune`. Screenshots `out/foundry_screens/verify2_*.jpg`. View restored to Ossuary Exchange Market, interface unhidden.
+
+VERIFIED (looked at the screenshots)
+* Roads sit on the terrain (no floating/buried stretch visible in overhead and oblique), no tree standing on a road or plaza; foliage on graded ground.
+* Apron colour: no radial colour streaks from the terrain edge in the Dyers overhead (verify2_dyers_overhead.jpg); the new `meadow` padding texture (verify2_dyers_overhead_meadow.jpg) is lighter and finer-grained, less contrasty than summer; table tile and apron blend.
+* Mountains present in the oblique; skybox flag `exr` set (clear_day_v002) after the padding push and read back by verify. Sky itself was only checked via the flag (all shots look downward).
+* Bridge scene: all 8 bridges load, decks meet the road ribbons, rope bridge, covered bridges with piers, arch bridges look right; terrain carving left no visible hole or poke-through (verify2_bridge_overhead.jpg, verify2_bridge_oblique.jpg).
+
+PROBLEMS
+* `push-scene-3d --with-lights` with `--lighting bridgehollow` pushed "0 lights" and DELETED the 72 existing lights (lights come from the pack placements, which the layer set does not carry). Re-created with `push-lights --lighting bridgehollow` (72 created). Open bug: --with-lights must not prune when it found 0 lights.
+* Remaining apron streaks: horizontal smears on the west and east apron/table of Dyers Walk, and the carved river channel of the bridge scratch is extruded into a streaked "ladder" on the north and south apron. These are the steep heightmap slopes stretching the texture (not the albedo seam fix) and a channel running off the terrain edge; not radial from the seam any more.
+* A tree canopy overhangs the road at the north end of Dyers (top-left, canopy only, trunk is off the road).
+
+STILL UNTESTED
+* Church rose window / trefoil / gatehouse arch and town walls (no place with those was pushed; Brinkburg walls inject on a scratch copy not tried), parallel-road blending (no warning appeared in the Dyers export, so no live case), heather_moor/forest_floor/scree presets (only meadow looked at), sky from a low camera, door files.
+* The scratch scene padding is now `meadow` on Dyers (was summer); harmless.
