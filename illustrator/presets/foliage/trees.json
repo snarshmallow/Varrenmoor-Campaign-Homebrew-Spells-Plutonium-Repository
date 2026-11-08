@@ -9,10 +9,12 @@
    "kind": "tree",
    "gen": {
     "type": "broadconifer",
+    "habit": "pine",
     "trunk": 0.55,
-    "blobs": 3,
-    "rings": 4,
-    "seg": 6
+    "trunk_r": 0.015,
+    "limbs": 9,
+    "cards": 16,
+    "card_len": 1.5
    },
    "height_ft": [
     45,
@@ -21,7 +23,7 @@
    "crown_ratio": 0.17,
    "tiles": {
     "leaf": "needle",
-    "bark": "bark"
+    "bark": "bark_dark"
    },
    "symbol": {
     "style": "conifer",
@@ -40,8 +42,8 @@
    "variants": 2,
    "priority": 2,
    "tris": [
-    120,
-    44,
+    698,
+    256,
     4
    ]
   },
@@ -51,8 +53,8 @@
    "kind": "tree",
    "gen": {
     "type": "conifer",
-    "tiers": 6,
-    "seg": 7
+    "tiers": 10,
+    "per": 8
    },
    "height_ft": [
     55,
@@ -80,8 +82,8 @@
    "variants": 2,
    "priority": 2,
    "tris": [
-    52,
-    25,
+    368,
+    74,
     4
    ]
   },
@@ -91,8 +93,8 @@
    "kind": "tree",
    "gen": {
     "type": "conifer",
-    "tiers": 7,
-    "seg": 6
+    "tiers": 11,
+    "per": 7
    },
    "height_ft": [
     55,
@@ -120,8 +122,8 @@
    "variants": 2,
    "priority": 2,
    "tris": [
-    52,
-    26,
+    348,
+    74,
     4
    ]
   },
@@ -131,11 +133,15 @@
    "kind": "tree",
    "gen": {
     "type": "broad",
-    "trunk": 0.45,
-    "blobs": 2,
-    "rings": 4,
-    "seg": 7,
-    "cards": 4
+    "habit": "oval",
+    "trunk": 0.42,
+    "trunk_r": 0.013,
+    "limbs": 6,
+    "cards": 44,
+    "card_len": 0.6,
+    "droop": 0.3,
+    "rho_lo": 0.4,
+    "rho_hi": 0.9
    },
    "height_ft": [
     35,
@@ -163,8 +169,8 @@
    "variants": 2,
    "priority": 2,
    "tris": [
-    104,
-    32,
+    560,
+    176,
     4
    ]
   },
@@ -174,11 +180,14 @@
    "kind": "tree",
    "gen": {
     "type": "broad",
-    "trunk": 0.38,
-    "blobs": 4,
-    "rings": 4,
-    "seg": 7,
-    "cards": 5
+    "habit": "round",
+    "trunk": 0.36,
+    "trunk_r": 0.024,
+    "limbs": 7,
+    "cards": 62,
+    "card_len": 0.55,
+    "rho_lo": 0.35,
+    "rho_hi": 0.85
    },
    "height_ft": [
     45,
@@ -187,7 +196,7 @@
    "crown_ratio": 0.34,
    "tiles": {
     "leaf": "leaf_oak",
-    "bark": "bark"
+    "bark": "bark_dark"
    },
    "symbol": {
     "style": "broad",
@@ -206,8 +215,8 @@
    "variants": 2,
    "priority": 2,
    "tris": [
-    190,
-    52,
+    680,
+    196,
     4
    ]
   },
@@ -217,11 +226,14 @@
    "kind": "tree",
    "gen": {
     "type": "broad",
-    "trunk": 0.4,
-    "blobs": 3,
-    "rings": 4,
-    "seg": 7,
-    "cards": 4
+    "habit": "oval",
+    "trunk": 0.38,
+    "trunk_r": 0.02,
+    "limbs": 7,
+    "cards": 60,
+    "card_len": 0.5,
+    "rho_lo": 0.4,
+    "rho_hi": 0.85
    },
    "height_ft": [
     55,
@@ -230,7 +242,7 @@
    "crown_ratio": 0.27,
    "tiles": {
     "leaf": "leaf_beech",
-    "bark": "bark_birch"
+    "bark": "bark"
    },
    "symbol": {
     "style": "broad",
@@ -249,8 +261,8 @@
    "variants": 2,
    "priority": 2,
    "tris": [
-    146,
-    52,
+    672,
+    194,
     4
    ]
   },
@@ -260,11 +272,12 @@
    "kind": "tree",
    "gen": {
     "type": "broad",
-    "trunk": 0.4,
-    "blobs": 2,
-    "rings": 4,
-    "seg": 6,
-    "cards": 3
+    "habit": "round",
+    "trunk": 0.38,
+    "trunk_r": 0.017,
+    "limbs": 5,
+    "cards": 42,
+    "card_len": 0.55
    },
    "height_ft": [
     35,
@@ -292,8 +305,8 @@
    "variants": 2,
    "priority": 2,
    "tris": [
-    90,
-    28,
+    504,
+    156,
     4
    ]
   },
@@ -303,11 +316,11 @@
    "kind": "tree",
    "gen": {
     "type": "willow",
-    "trunk": 0.3,
-    "blobs": 2,
-    "rings": 4,
-    "seg": 7,
-    "cards": 8
+    "trunk": 0.28,
+    "trunk_r": 0.03,
+    "limbs": 6,
+    "cards": 34,
+    "card_len": 0.5
    },
    "height_ft": [
     30,
@@ -335,8 +348,8 @@
    "variants": 2,
    "priority": 2,
    "tris": [
-    112,
-    32,
+    476,
+    166,
     4
    ]
   },
@@ -346,11 +359,12 @@
    "kind": "tree",
    "gen": {
     "type": "broad",
-    "trunk": 0.42,
-    "blobs": 2,
-    "rings": 4,
-    "seg": 6,
-    "cards": 3
+    "habit": "round",
+    "trunk": 0.4,
+    "trunk_r": 0.02,
+    "limbs": 4,
+    "cards": 30,
+    "card_len": 0.6
    },
    "height_ft": [
     18,
@@ -378,8 +392,222 @@
    "variants": 2,
    "priority": 1,
    "tris": [
-    90,
-    28,
+    408,
+    142,
+    4
+   ]
+  },
+  {
+   "id": "maple",
+   "name": "Field maple",
+   "kind": "tree",
+   "gen": {
+    "type": "broad",
+    "habit": "round",
+    "trunk": 0.34,
+    "trunk_r": 0.02,
+    "limbs": 6,
+    "cards": 52,
+    "card_len": 0.55
+   },
+   "height_ft": [
+    35,
+    55
+   ],
+   "crown_ratio": 0.3,
+   "tiles": {
+    "leaf": "leaf_maple",
+    "bark": "bark_dark"
+   },
+   "symbol": {
+    "style": "broadleaf",
+    "color": "#5f8a3c"
+   },
+   "spacing_ft": 14,
+   "density_per_ha": 70,
+   "slope_max_deg": 32,
+   "elev_ft": null,
+   "moisture": {
+    "min": 0.2,
+    "max": 0.9
+   },
+   "clearance_building_ft": null,
+   "clearance_road_ft": null,
+   "variants": 2,
+   "priority": 2,
+   "tris": [
+    592,
+    186,
+    4
+   ]
+  },
+  {
+   "id": "beech_bw",
+   "name": "Beech (Baileywiki, hero)",
+   "kind": "tree",
+   "gen": {
+    "type": "glb",
+    "file": "frontier-europeanbeech-xl-02.npz",
+    "parts": [
+     {
+      "mat": 0,
+      "tile": "bw_leaf_a",
+      "kind": "leaf",
+      "uv": "direct"
+     },
+     {
+      "mat": 1,
+      "tile": "bw_bark_beech",
+      "kind": "bark",
+      "uv": "wrap"
+     },
+     {
+      "mat": 2,
+      "tile": "bw_bark_beech",
+      "kind": "skip"
+     }
+    ],
+    "lod1_keep": 0.4
+   },
+   "height_ft": [
+    60,
+    80
+   ],
+   "crown_ratio": 0.44,
+   "tiles": {
+    "leaf": "bw_leaf_a",
+    "bark": "bw_bark_beech"
+   },
+   "symbol": {
+    "style": "broadleaf",
+    "color": "#5a8040"
+   },
+   "spacing_ft": 34,
+   "density_per_ha": 8,
+   "slope_max_deg": 32,
+   "elev_ft": null,
+   "moisture": {
+    "min": 0.2,
+    "max": 0.9
+   },
+   "clearance_building_ft": null,
+   "clearance_road_ft": null,
+   "variants": 1,
+   "priority": 1,
+   "source": "Baileywiki 3D models (Foundry data baileywiki-content), imported for private use; see out/foliage_notes.md",
+   "tris": [
+    30641,
+    9008,
+    4
+   ]
+  },
+  {
+   "id": "ash_bw",
+   "name": "Ash (Baileywiki, hero)",
+   "kind": "tree",
+   "gen": {
+    "type": "glb",
+    "file": "ancient-ash-tree-01.npz",
+    "parts": [
+     {
+      "mat": 0,
+      "tile": "bw_bark_ash",
+      "kind": "bark",
+      "uv": "wrap"
+     },
+     {
+      "mat": 1,
+      "tile": "bw_leaf_ash_a",
+      "kind": "leaf",
+      "uv": "direct"
+     }
+    ],
+    "lod1_keep": 0.4
+   },
+   "height_ft": [
+    24,
+    32
+   ],
+   "crown_ratio": 0.4,
+   "tiles": {
+    "leaf": "bw_leaf_ash_a",
+    "bark": "bw_bark_ash"
+   },
+   "symbol": {
+    "style": "broadleaf",
+    "color": "#5a8040"
+   },
+   "spacing_ft": 20,
+   "density_per_ha": 20,
+   "slope_max_deg": 32,
+   "elev_ft": null,
+   "moisture": {
+    "min": 0.2,
+    "max": 0.9
+   },
+   "clearance_building_ft": null,
+   "clearance_road_ft": null,
+   "variants": 1,
+   "priority": 1,
+   "source": "Baileywiki 3D models (Foundry data baileywiki-content), imported for private use; see out/foliage_notes.md",
+   "tris": [
+    9286,
+    1948,
+    4
+   ]
+  },
+  {
+   "id": "ash_small_bw",
+   "name": "Young ash (Baileywiki)",
+   "kind": "tree",
+   "gen": {
+    "type": "glb",
+    "file": "ancient-ash-tree-03.npz",
+    "parts": [
+     {
+      "mat": 0,
+      "tile": "bw_bark_ash",
+      "kind": "bark",
+      "uv": "wrap"
+     },
+     {
+      "mat": 1,
+      "tile": "bw_leaf_ash_a",
+      "kind": "leaf",
+      "uv": "direct"
+     }
+    ],
+    "lod1_keep": 0.4
+   },
+   "height_ft": [
+    9,
+    13
+   ],
+   "crown_ratio": 0.45,
+   "tiles": {
+    "leaf": "bw_leaf_ash_a",
+    "bark": "bw_bark_ash"
+   },
+   "symbol": {
+    "style": "broadleaf",
+    "color": "#5a8040"
+   },
+   "spacing_ft": 9,
+   "density_per_ha": 60,
+   "slope_max_deg": 32,
+   "elev_ft": null,
+   "moisture": {
+    "min": 0.2,
+    "max": 0.9
+   },
+   "clearance_building_ft": null,
+   "clearance_road_ft": null,
+   "variants": 1,
+   "priority": 2,
+   "source": "Baileywiki 3D models (Foundry data baileywiki-content), imported for private use; see out/foliage_notes.md",
+   "tris": [
+    540,
+    159,
     4
    ]
   }

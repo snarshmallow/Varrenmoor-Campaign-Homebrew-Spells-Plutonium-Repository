@@ -9,10 +9,9 @@
    "kind": "shrub",
    "gen": {
     "type": "shrub",
-    "blobs": 2,
-    "rings": 3,
-    "seg": 6,
-    "aspect": 0.5
+    "cards": 28,
+    "card_len": 0.9,
+    "up": 0.7
    },
    "height_ft": [
     3,
@@ -40,8 +39,8 @@
    "variants": 2,
    "priority": 1,
    "tris": [
-    48,
-    16,
+    104,
+    66,
     4
    ]
   },
@@ -51,10 +50,9 @@
    "kind": "shrub",
    "gen": {
     "type": "shrub",
-    "blobs": 3,
-    "rings": 3,
-    "seg": 6,
-    "aspect": 0.7
+    "cards": 36,
+    "card_len": 1.0,
+    "up": 0.15
    },
    "height_ft": [
     3,
@@ -82,8 +80,8 @@
    "variants": 2,
    "priority": 1,
    "tris": [
-    72,
-    32,
+    120,
+    74,
     4
    ]
   },
@@ -93,11 +91,10 @@
    "kind": "hedge",
    "gen": {
     "type": "shrub",
-    "blobs": 2,
-    "rings": 3,
-    "seg": 6,
-    "aspect": 0.9,
-    "long": 2.4
+    "cards": 56,
+    "long": 2.4,
+    "card_len": 1.0,
+    "up": 0.1
    },
    "height_ft": [
     4,
@@ -125,8 +122,106 @@
    "variants": 1,
    "priority": 1,
    "tris": [
-    48,
-    16,
+    160,
+    96,
+    4
+   ]
+  },
+  {
+   "id": "bush_bw1",
+   "name": "Bush (Baileywiki 1)",
+   "kind": "shrub",
+   "gen": {
+    "type": "glb",
+    "file": "ancient-bush-01.npz",
+    "parts": [
+     {
+      "mat": 0,
+      "tile": "bw_bush",
+      "kind": "leaf",
+      "uv": "direct"
+     }
+    ],
+    "lod1_keep": 0.4
+   },
+   "height_ft": [
+    2.5,
+    3.5
+   ],
+   "crown_ratio": 1.6,
+   "tiles": {
+    "leaf": "bw_bush",
+    "bark": "bark"
+   },
+   "symbol": {
+    "style": "shrub",
+    "color": "#5a8040"
+   },
+   "spacing_ft": 5,
+   "density_per_ha": 150,
+   "slope_max_deg": 32,
+   "elev_ft": null,
+   "moisture": {
+    "min": 0.2,
+    "max": 0.9
+   },
+   "clearance_building_ft": null,
+   "clearance_road_ft": null,
+   "variants": 1,
+   "priority": 2,
+   "source": "Baileywiki 3D models (Foundry data baileywiki-content), imported for private use; see out/foliage_notes.md",
+   "tris": [
+    650,
+    258,
+    4
+   ]
+  },
+  {
+   "id": "bush_bw3",
+   "name": "Bush (Baileywiki 3)",
+   "kind": "shrub",
+   "gen": {
+    "type": "glb",
+    "file": "ancient-bush-03.npz",
+    "parts": [
+     {
+      "mat": 0,
+      "tile": "bw_bush",
+      "kind": "leaf",
+      "uv": "direct"
+     }
+    ],
+    "lod1_keep": 0.4
+   },
+   "height_ft": [
+    1.8,
+    2.6
+   ],
+   "crown_ratio": 1.2,
+   "tiles": {
+    "leaf": "bw_bush",
+    "bark": "bark"
+   },
+   "symbol": {
+    "style": "shrub",
+    "color": "#5a8040"
+   },
+   "spacing_ft": 4,
+   "density_per_ha": 150,
+   "slope_max_deg": 32,
+   "elev_ft": null,
+   "moisture": {
+    "min": 0.2,
+    "max": 0.9
+   },
+   "clearance_building_ft": null,
+   "clearance_road_ft": null,
+   "variants": 1,
+   "priority": 2,
+   "source": "Baileywiki 3D models (Foundry data baileywiki-content), imported for private use; see out/foliage_notes.md",
+   "tris": [
+    115,
+    49,
     4
    ]
   }

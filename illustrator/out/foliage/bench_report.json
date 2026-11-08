@@ -4,67 +4,67 @@
    "files": 50,
    "tiles": 50,
    "instances": 3145,
-   "triangles": 197870,
+   "triangles": 1120918,
    "draw_calls": 50,
-   "glb_bytes_primary": 7428932,
-   "glb_bytes_with_lods": 11263044,
-   "atlas_bytes": 190644,
+   "glb_bytes_primary": 74084436,
+   "glb_bytes_with_lods": 96729044,
+   "atlas_bytes": 2891583,
    "dropped_by_budget": 0
   },
   "chunks": 50,
-  "secs": 1.5
+  "secs": 3.8
  },
  "before": {
   "files": 7,
   "tiles": 3145,
-  "triangles": 197870,
-  "draw_calls": 5168,
-  "glb_bytes": 25812,
+  "triangles": 1120918,
+  "draw_calls": 5314,
+  "glb_bytes": 139768,
   "atlas_bytes": 0
  },
  "budget": {
   "after": {
-   "files": 50,
-   "tiles": 50,
-   "instances": 1348,
-   "triangles": 119964,
-   "draw_calls": 50,
-   "glb_bytes_primary": 4400864,
-   "glb_bytes_with_lods": 6740796,
-   "atlas_bytes": 190644,
-   "dropped_by_budget": 1797
+   "files": 49,
+   "tiles": 49,
+   "instances": 223,
+   "triangles": 119768,
+   "draw_calls": 49,
+   "glb_bytes_primary": 8027312,
+   "glb_bytes_with_lods": 10567784,
+   "atlas_bytes": 2891583,
+   "dropped_by_budget": 2922
   },
-  "chunks": 50,
-  "secs": 1.3
+  "chunks": 49,
+  "secs": 2.6
  },
  "impostor": {
   "after": {
    "files": 50,
    "tiles": 50,
    "instances": 3145,
-   "triangles": 95706,
+   "triangles": 490790,
    "draw_calls": 50,
-   "glb_bytes_primary": 3851620,
-   "glb_bytes_with_lods": 11263044,
-   "atlas_bytes": 190644,
+   "glb_bytes_primary": 31480556,
+   "glb_bytes_with_lods": 96729044,
+   "atlas_bytes": 2891583,
    "dropped_by_budget": 0
   },
   "chunks": 50,
-  "secs": 1.5
+  "secs": 3.6
  },
  "quant": {
   "after": {
    "files": 50,
    "tiles": 50,
    "instances": 3145,
-   "triangles": 197870,
+   "triangles": 1120918,
    "draw_calls": 50,
-   "glb_bytes_primary": 3767540,
-   "glb_bytes_with_lods": 5790232,
-   "atlas_bytes": 190644,
+   "glb_bytes_primary": 40729024,
+   "glb_bytes_with_lods": 53176288,
+   "atlas_bytes": 2891583,
    "dropped_by_budget": 0
   },
   "chunks": 50,
-  "secs": 10.7
+  "secs": 14.1
  }
 }

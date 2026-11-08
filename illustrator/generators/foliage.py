@@ -706,14 +706,14 @@ def baseline_stats(doc, lib, tmp_dir):
 
 
 def merge_foliage(doc, lib, ground, place, out_dir, chunk_ft=150.0, budget=None, impostor_beyond_ft=None, lod1_beyond_ft=None, focus=None, compress="none",
-                  lods=(1, 2), px_per_ft=None, attach_placements=None, log=print):
+                  lods=(1, 2), px_per_ft=None, attach_placements=None, log=print, season=None):
     """Write merged foliage chunks into out_dir/models/foliage/ and return (placements doc, report). attach_placements: existing placements.json (dict) whose
     foliage-layer entries are replaced by the chunk entries."""
     import worldpack_mesh as wm
     import worldpack_split as ws
     fr = ground.frame
     os.makedirs(os.path.join(out_dir, "models", "textures"), exist_ok=True)
-    fm.write_atlas(os.path.join(out_dir, "models", "textures", fm.ATLAS_MAT + ".png"))
+    fm.write_atlas(os.path.join(out_dir, "models", "textures", fm.ATLAS_MAT + ".png"), season=season or os.environ.get("VB_FOLIAGE_SEASON", "summer"))
     chunks, dropped = plan(doc, lib, chunk_ft, budget, impostor_beyond_ft, lod1_beyond_ft, focus)
     base = baseline_stats(doc, lib, os.path.join(out_dir, "_baseline_tmp"))
     shutil.rmtree(os.path.join(out_dir, "_baseline_tmp"), ignore_errors=True)
@@ -836,6 +836,7 @@ def main(argv=None):
     ap.add_argument("--scene-uuid")
     ap.add_argument("--scene-name")
     ap.add_argument("--lod", type=int, default=0)
+    ap.add_argument("--season", choices=["summer", "autumn", "winter"], default=None, help="leaf colour of the atlas (default summer; env VB_FOLIAGE_SEASON)")
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--yes", action="store_true")
     ap.add_argument("--terrain-source")
@@ -844,6 +845,8 @@ def main(argv=None):
     ap.add_argument("--grid-major")
     ap.add_argument("--grid-full-page", action="store_true")
     a = ap.parse_args(argv)
+    if a.season:
+        os.environ["VB_FOLIAGE_SEASON"] = a.season
     lib = _lib()
     if a.terrain_source or a.water_source:
         import worldio
@@ -856,7 +859,7 @@ def main(argv=None):
     elif a.cmd == "presets-sync":                                  # store the triangle counts in the preset files (the panel reads them without python)
         out = {"updated": fm.sync_preset_tris()}
     elif a.cmd == "atlas":
-        out = {"atlas": fm.write_atlas(a.out or os.path.join(REPO, "illustrator", "out", "foliage", "fol_atlas.png"))}
+        out = {"atlas": fm.write_atlas(a.out or os.path.join(REPO, "illustrator", "out", "foliage", "fol_atlas.png"), season=a.season or "summer")}
     else:
         doc = FoliageDoc(a.place, os.environ.get("VB_FOLIAGE_JSON") or None)          # VB_FOLIAGE_JSON: tests / scratch runs never touch world/
         export = (lambda *x: None) if os.environ.get("VB_FOLIAGE_JSON") else export_pack_scatter

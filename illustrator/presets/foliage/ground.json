@@ -10,7 +10,8 @@
    "gen": {
     "type": "cards",
     "cards": 5,
-    "w": 0.5
+    "w": 0.45,
+    "pitch": 0.12
    },
    "height_ft": [
     4,
@@ -39,7 +40,7 @@
    "priority": 0,
    "shore": true,
    "tris": [
-    10,
+    20,
     4,
     0
    ]
@@ -50,9 +51,11 @@
    "kind": "ground",
    "gen": {
     "type": "cards",
-    "cards": 4,
-    "w": 0.9,
-    "droop": true
+    "cards": 7,
+    "w": 0.8,
+    "pitch": 0.7,
+    "droop": true,
+    "drooping": 0.35
    },
    "height_ft": [
     1.5,
@@ -80,8 +83,8 @@
    "variants": 2,
    "priority": 0,
    "tris": [
-    8,
-    4,
+    28,
+    6,
     0
    ]
   },
@@ -91,8 +94,9 @@
    "kind": "ground",
    "gen": {
     "type": "cards",
-    "cards": 4,
-    "w": 0.55
+    "cards": 5,
+    "w": 0.7,
+    "pitch": 0.25
    },
    "height_ft": [
     1,
@@ -120,7 +124,7 @@
    "variants": 2,
    "priority": 0,
    "tris": [
-    8,
+    20,
     4,
     0
    ]
@@ -131,8 +135,9 @@
    "kind": "ground",
    "gen": {
     "type": "cards",
-    "cards": 3,
-    "w": 0.5
+    "cards": 4,
+    "w": 0.5,
+    "pitch": 0.12
    },
    "height_ft": [
     1,
@@ -160,7 +165,7 @@
    "variants": 2,
    "priority": 0,
    "tris": [
-    6,
+    16,
     4,
     0
    ]
@@ -248,8 +253,8 @@
    "kind": "rock",
    "gen": {
     "type": "rock",
-    "rings": 3,
-    "seg": 6
+    "rings": 4,
+    "seg": 8
    },
    "height_ft": [
     2,
@@ -277,9 +282,9 @@
    "variants": 2,
    "priority": 0,
    "tris": [
-    24,
-    16,
-    4
+    48,
+    48,
+    0
    ]
   },
   {
@@ -288,8 +293,8 @@
    "kind": "rock",
    "gen": {
     "type": "rock",
-    "rings": 3,
-    "seg": 5
+    "rings": 4,
+    "seg": 8
    },
    "height_ft": [
     0.7,
@@ -317,9 +322,52 @@
    "variants": 2,
    "priority": 0,
    "tris": [
-    20,
-    16,
-    4
+    48,
+    48,
+    0
+   ]
+  },
+  {
+   "id": "ivy",
+   "name": "Ivy / ground creeper",
+   "kind": "ground",
+   "gen": {
+    "type": "cards",
+    "cards": 8,
+    "w": 1.0,
+    "pitch": 1.0,
+    "droop": true,
+    "drooping": 0.2
+   },
+   "height_ft": [
+    1.2,
+    2.4
+   ],
+   "crown_ratio": 0.6,
+   "tiles": {
+    "leaf": "ivy",
+    "bark": "bark"
+   },
+   "symbol": {
+    "style": "grass",
+    "color": "#3c6a3a"
+   },
+   "spacing_ft": 4,
+   "density_per_ha": 300,
+   "slope_max_deg": 50,
+   "elev_ft": null,
+   "moisture": {
+    "min": 0.2,
+    "max": 1.0
+   },
+   "clearance_building_ft": null,
+   "clearance_road_ft": null,
+   "variants": 2,
+   "priority": 1,
+   "tris": [
+    32,
+    8,
+    0
    ]
   }
  ]

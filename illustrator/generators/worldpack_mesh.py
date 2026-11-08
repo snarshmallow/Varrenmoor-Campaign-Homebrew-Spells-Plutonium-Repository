@@ -23,7 +23,10 @@ WALL_CAP_DROP_M = 0.02
 
 # ------------------------------------------------------------------ mesh container
 class Mesh:
-    def __init__(self, V, UV, subs, smooth=False):
+    def __init__(self, V, UV, subs, smooth=False, N=None, C=None):
+        # N: optional explicit per-vertex normals (z-up frame, foliage crowns use spherical normals); C: optional per-vertex RGBA 0..1 (COLOR_0, AO / tint)
+        self.N = None if N is None else np.asarray(N, float).reshape(-1, 3)
+        self.C = None if C is None else np.asarray(C, float).reshape(-1, 4)
         self.V = np.asarray(V, float).reshape(-1, 3)
         self.UV = np.asarray(UV, float).reshape(-1, 2)
         self.subs = {k: np.asarray(v, np.int64).reshape(-1, 3) for k, v in subs.items() if len(v)}
@@ -37,13 +40,16 @@ class Mesh:
         return self.V.min(0), self.V.max(0)
 
     def translated(self, d):
-        return Mesh(self.V + np.asarray(d, float), self.UV, self.subs, self.smooth)
+        return Mesh(self.V + np.asarray(d, float), self.UV, self.subs, self.smooth, self.N, self.C)
 
     def transformed(self, scale=1.0, rot_deg=0.0, offset=(0, 0, 0)):
         c, s = math.cos(math.radians(rot_deg)), math.sin(math.radians(rot_deg))
         V = self.V * scale
         V = np.stack([V[:, 0] * c - V[:, 1] * s, V[:, 0] * s + V[:, 1] * c, V[:, 2]], 1)
-        return Mesh(V + np.asarray(offset, float), self.UV, self.subs, self.smooth)
+        N = None
+        if self.N is not None:
+            N = np.stack([self.N[:, 0] * c - self.N[:, 1] * s, self.N[:, 0] * s + self.N[:, 1] * c, self.N[:, 2]], 1)
+        return Mesh(V + np.asarray(offset, float), self.UV, self.subs, self.smooth, N, self.C)
 
 
 def merge_meshes(meshes):
@@ -634,16 +640,26 @@ def write_glb(path, nodes, materials, textures="external", tex_root=None, extras
         pos_acc = accessor(V.tobytes(), 5126, "VEC3", len(V), 34962, ([V.min(0).tolist(), V.max(0).tolist()] if len(V) else None))
         uv_acc = accessor(m.UV.astype("<f4").tobytes(), 5126, "VEC2", len(m.UV), 34962)
         nrm_acc = None
-        if m.smooth and m.subs:
+        col_acc = None
+        if getattr(m, "N", None) is not None and m.subs:
+            N = np.stack([m.N[:, 0], m.N[:, 2], -m.N[:, 1]], 1).astype("<f4")
+            nrm_acc = accessor(N.tobytes(), 5126, "VEC3", len(N), 34962)
+        elif m.smooth and m.subs:
             allf = np.concatenate(list(m.subs.values()))
             N = _smooth_normals(m.V, allf)
             N = np.stack([N[:, 0], N[:, 2], -N[:, 1]], 1).astype("<f4")
             nrm_acc = accessor(N.tobytes(), 5126, "VEC3", len(N), 34962)
+        if getattr(m, "C", None) is not None and m.subs:
+            cb = np.clip(np.round(m.C * 255), 0, 255).astype("u1")
+            col_acc = accessor(cb.tobytes(), 5121, "VEC4", len(cb), 34962)
+            acc[col_acc]["normalized"] = True
         for mid in sorted(m.subs):
             F = m.subs[mid].astype("<u4")
             at = {"POSITION": pos_acc, "TEXCOORD_0": uv_acc}
             if nrm_acc is not None:
                 at["NORMAL"] = nrm_acc
+            if col_acc is not None:
+                at["COLOR_0"] = col_acc
             prims.append({"attributes": at, "indices": accessor(F.reshape(-1).tobytes(), 5125, "SCALAR", F.size, 34963), "material": material(mid)})
         gmeshes.append({"name": name, "primitives": prims})
         ex = dict(ex or {})

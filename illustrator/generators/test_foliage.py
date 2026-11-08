@@ -92,7 +92,25 @@ exp = json.load(open(pp))["instances"]
 check("pack scatter keeps ids", [e["id"] for e in exp] == sorted(d2.items))
 check("library has the northern set", {"scots_pine", "spruce", "birch", "oak", "beech", "alder", "willow", "rowan", "juniper", "bush", "hedge", "reeds", "fern", "grass", "flowers", "stump", "log", "boulder"} <= set(lib.species))
 check("LOD triangles decrease", all(lib.tris(s, 0) >= lib.tris(s, 1) >= lib.tris(s, 2) for s in lib.species))
-check("LOD0 under 220 tris", all(lib.tris(s, 0) <= 220 for s in lib.species), {s: lib.tris(s, 0) for s in lib.species if lib.tris(s, 0) > 220})
+HERO = {"beech_bw", "ash_bw"}                      # imported Baileywiki hero trees are allowed to be heavy (low density)
+check("v2 LOD0 budget: procedural <= 800 tris, imported heroes <= 32k", all(lib.tris(s, 0) <= (32000 if s in HERO else 800) for s in lib.species),
+      {s: lib.tris(s, 0) for s in lib.species if lib.tris(s, 0) > 800})
+check("v2 LOD1 about half or less of LOD0 for crowns", all(lib.tris(s, 1) <= lib.tris(s, 0) * 0.8 for s in ("oak", "spruce", "birch", "willow", "scots_pine", "beech_bw")))
+_big = [s for s in lib.species if lib.species[s]["kind"] in ("tree", "shrub", "hedge")]
+check("crowns carry normals + vertex colour", all(lib.mesh(s).N is not None and lib.mesh(s).C is not None and lib.mesh(s).N.shape == lib.mesh(s).V.shape for s in _big))
+check("crown cards use alpha-cut leaf tiles only (no BLEND)", all(t in fm.TILES for s in lib.species.values() for t in s["tiles"].values()))
+_ao = lib.mesh("oak").C[:, :3].mean(1)
+check("baked AO varies across the crown", float(_ao.max() - _ao.min()) > 0.3, float(_ao.max() - _ao.min()))
+import tempfile as _tf
+_a = os.path.join(_tf.mkdtemp(), "a.png")
+from PIL import Image as _I
+_ims = {}
+for _se in ("summer", "autumn", "winter"):
+    fm.write_atlas(_a, season=_se)
+    _im = _I.open(_a)
+    _ims[_se] = _im.size, float(__import__("numpy").asarray(_im)[:, :, 3].mean())
+check("atlas 2048x1536, three seasons differ (winter has fewer opaque texels)", _ims["summer"][0] == (2048, 1536) and _ims["winter"][1] < _ims["summer"][1] - 3, _ims)
+check("imported species load (beech/ash/bush) and stand on the ground", all(abs(lib.mesh(s).V[:, 2].min()) < 0.6 for s in ("beech_bw", "ash_bw", "bush_bw1")))
 
 fr = wp.Frame(600, 400, 90.0, 20.0)
 ground = fo.Ground(fr, H, cell)
