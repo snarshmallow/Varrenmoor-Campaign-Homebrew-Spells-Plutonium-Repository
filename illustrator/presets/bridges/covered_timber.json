@@ -12,7 +12,7 @@
   "width_ft": 15.0,
   "support": "piles",
   "roof": "shingle",
-  "flower_boxes": true,
+  "flower_boxes": false,
   "wall_h_ft": 3.9,
   "post_h_ft": 9.4,
   "roof_rise_ratio": 0.42,
