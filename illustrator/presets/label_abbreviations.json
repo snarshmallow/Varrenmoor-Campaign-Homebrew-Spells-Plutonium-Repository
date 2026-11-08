@@ -23,5 +23,10 @@
  "North": "N.",
  "South": "S.",
  "East": "E.",
- "West": "W."
+ "West": "W.",
+ "Strasse": "Str.",
+ "Harbour": "Hbr.",
+ "Courthouse": "Crthse.",
+ "Guildhall": "Gldhl.",
+ "Highway": "Hwy."
 }

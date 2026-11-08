@@ -556,15 +556,16 @@
         py(GEN + "water.py", a, "water add-lake")
       ].concat(VB.waterRedraw(st, d)), setStale: ["contours", "shading", "town"] };
   };
-  // regenerate the Bridgehollow river meander (spec -> terrain -> water.json); town is re-run separately from the Town tab
+  // regenerate the river meander (spec -> terrain -> water.json); town is re-run separately from the Town tab.
+  // Bridgehollow keeps its own script; every other place goes through place_create.py regen (same flags).
   VB.jobRiverMeander = function (st, d) {
-    var g = st.water.rivergen, a = ["world/gen_bridgehollow.py", "--terrain", "--no-town", "--meander", g.preset || "gentle"];
+    var g = st.water.rivergen, a = (st.place === "bridgehollow" ? ["world/gen_bridgehollow.py"] : [GEN + "place_create.py", "regen", "--place", st.place]).concat(["--terrain", "--no-town", "--meander", g.preset || "gentle"]);
     [["amplitude_ft", "--meander-amplitude"], ["wavelength_ft", "--meander-wavelength"], ["width_var", "--width-var"], ["seed", "--meander-seed"]].forEach(function (k) {
       if (g[k[0]] !== "" && g[k[0]] != null) a.push(k[1], String(g[k[0]]));
     });
     if (g.bars === false) a.push("--no-bars");
     return { kind: "water_river_meander", label: "Regenerate river meander", params: { rivergen: g },
-      steps: [py(a[0], a.slice(1), "gen_bridgehollow river + terrain")].concat(VB.waterRedraw(st, d)), setStale: ["contours", "shading", "town"] };
+      steps: [py(a[0], a.slice(1), "river meander + terrain")].concat(VB.waterRedraw(st, d)), setStale: ["contours", "shading", "town"] };
   };
   VB.jobWaterCarve = function (st, d) {
     return { kind: "water_carve", label: "Carve rivers into heightmap", params: { bank_ft: st.water.bank_ft },

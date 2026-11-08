@@ -1,4 +1,4 @@
-"""Procedural Bridgehollow skyboxes for Foundry 3D Canvas (equirectangular 2:1 images), with the mountain ring taken from the real terrain.
+"""Procedural skyboxes for Foundry 3D Canvas (equirectangular 2:1 images), with the mountain ring taken from the real terrain.
 
   python illustrator/generators/skybox.py generate [--place bridgehollow] [--presets clear_day,overcast,dusk,winter,night] [--viewer X,Y] [--width 2048]
   python illustrator/generators/skybox.py set-flag --scene-uuid Scene.xxx --preset clear_day [--apply]      # dry run unless --apply (writes scene flags via the bridge)
@@ -128,6 +128,9 @@ def render(place, preset, viewer=None, W=2048, yaw_deg=0.0, seed=7, world_root=N
         h, cell = load_heights(place, world_root)
     ny, nx = h.shape
     size_x, size_y = (nx - 1) * cell, (ny - 1) * cell
+    import place_stats
+    ad = place_stats.place_adapt(place, h, 0.0, world_root)         # percentile-based snow / tree lines for places other than Bridgehollow
+    rm = (lambda v: place_stats.remap(v, ad)) if ad else (lambda v: v)
     vx, vy = viewer or (size_x / 2, size_y / 2)
     Hh = W // 2
     mc = march_columns(h, cell, vx, vy, W, yaw_deg)
@@ -187,11 +190,15 @@ def render(place, preset, viewer=None, W=2048, yaw_deg=0.0, seed=7, world_root=N
             ccol = ccol * 0.5
         sky = sky * (1 - dens[..., None] * 0.92) + ccol * dens[..., None] * 0.92
     # ---- far ranges beyond the map rim (three layers, ridged noise)
-    rim = np.maximum(mc["M"][:, -1], math.radians(4.0))
+    # place.json "skybox": {"rim_min_deg": 4 (floor of the far horizon; 0 = open sea / plain), "far_scale": 1 (0 = no far ranges)}; default = closed bowl
+    sk = place_stats.place_json(place, world_root).get("skybox", {})
+    far_scale = float(sk.get("far_scale", 1.0))
+    rim = np.maximum(mc["M"][:, -1], math.radians(float(sk.get("rim_min_deg", 4.0))))
     far = np.zeros((Hh, W, 3))
     farmask = np.zeros((Hh, W))
     layers = [(0.085, 2.0, 0.30, 5), (0.150, 4.0, 0.50, 11), (0.235, 7.0, 0.68, 23)]       # (extra angle rad, 2nd amplitude deg, haze, seed) near -> far
-    for li, (extra, _, hz, sd) in enumerate(reversed(layers)):
+    for li, (extra, _, hz, sd) in enumerate(reversed(layers) if far_scale > 0 else []):
+        extra = extra * far_scale
         prof = rim + extra * (0.30 + 0.70 * ridged_1d(W, seed + sd)) + math.radians(0.8) * li
         mask = el[:, None] < prof[None, :]
         depth = np.clip((prof[None, :] - el[:, None]) / max(extra * 0.9, 1e-3), 0, 1)       # 0 at the ridge line, 1 deep inside
@@ -224,14 +231,14 @@ def render(place, preset, viewer=None, W=2048, yaw_deg=0.0, seed=7, world_root=N
     jit = pbr.fbm(0, seed + 9, 1.6, 40, shape=(Hh, W))[rows]
     jit2 = pbr.fbm(0, seed + 10, 2.2, 8, shape=(Hh, W))[rows]
     elev = Z + (jit - 0.5) * 18
-    treeline = 910 - slope * 3.0 + (jit2 - 0.5) * 80
+    treeline = rm(910) - slope * 3.0 + (jit2 - 0.5) * 80
     meadow, conifer, rock, rock2, snowc = cs("#6f8a46"), cs("#2f4a2c"), cs("#7c766d"), cs("#5b5750"), cs("#f3f6fa")
     forest = np.clip((treeline - elev) / 120.0, 0, 1) * np.clip((44 - slope) / 14.0, 0, 1)
-    low = np.clip((760 - elev) / 220.0, 0, 1) * np.clip((22 - slope) / 14.0, 0, 1)
+    low = np.clip((rm(760) - elev) / 220.0, 0, 1) * np.clip((22 - slope) / 14.0, 0, 1)
     col = rock[None, None, :] * (1 - jit2[..., None] * 0.5) + rock2[None, None, :] * (jit2[..., None] * 0.5)
     col = np.where(True, col, col)
     col = col * (1 - forest[..., None]) + (conifer * (0.7 + 0.6 * jit[..., None]) * (1 - 0.25 * low[..., None]) + meadow * low[..., None] * 0.5) * forest[..., None]
-    snowline = P["snow_ft"] - slope * 4.0 + (jit2 - 0.5) * 70
+    snowline = rm(P["snow_ft"]) - slope * 4.0 + (jit2 - 0.5) * 70
     snow = np.clip((elev - snowline) / 45.0, 0, 1) * np.clip((62 - slope) / 14.0, 0, 1)
     if P["snow_all"]:
         snow = np.clip(0.55 + (1 - np.clip(slope / 55.0, 0, 1)) * 0.5 + (jit2 - 0.5) * 0.35, 0, 1) * (slope < 70)

@@ -1,0 +1,143 @@
+{
+ "id": "danish_german",
+ "label": "Danish / North German",
+ "description": "Hanseatic and Danish names: Strasse/Gade, Markt.",
+ "town_names": {
+  "prefix": [
+   "Nord",
+   "Ost",
+   "Lang",
+   "Rud",
+   "Hel",
+   "Hol",
+   "Brink",
+   "Stege",
+   "Born",
+   "Lund",
+   "Sonder",
+   "Kirke"
+  ],
+  "suffix": [
+   "holm",
+   "borg",
+   "stedt",
+   "by",
+   "lev",
+   "kobing",
+   "husen",
+   "hagen",
+   "sund",
+   "burg"
+  ]
+ },
+ "river_names": [
+  "Die Trave",
+  "Aaen",
+  "The Stor Aa",
+  "Warnow",
+  "Kongeaaen"
+ ],
+ "entry_roads": [
+  "Handelsstrasse",
+  "Kongevej",
+  "Hellweg",
+  "Kaufmannsweg"
+ ],
+ "streets": {
+  "civic": [
+   "Rathausstrasse",
+   "Gerichtsgade",
+   "Marktstrasse",
+   "Kirkegade",
+   "Burgstrasse",
+   "Ratsgasse"
+  ],
+  "residential": [
+   "Bakkegade",
+   "Fiskergade",
+   "Schmiedestrasse",
+   "Gerbergasse",
+   "Schuhmachergasse",
+   "Reepschlagerstrasse",
+   "Brauergasse",
+   "Webergade",
+   "Kramergasse",
+   "Mollegade",
+   "Havnegade",
+   "Boettcherstrasse",
+   "Faergegade",
+   "Tuchmachergasse",
+   "Kuhstrasse",
+   "Skibsgade"
+  ],
+  "farm": [
+   "Wiesenweg",
+   "Ackerweg",
+   "Koppelweg",
+   "Hofweg",
+   "Marschweg",
+   "Kornweg",
+   "Heideweg",
+   "Schafsweg",
+   "Obstgarten",
+   "Mergelkuhle"
+  ]
+ },
+ "district_notes": {
+  "civic": "Rathaus, court and the merchants' halls around the Markt.",
+  "residential": "Gabled burgher houses, shops and workshops.",
+  "farm": "Fields, marsh meadows and farmsteads beyond the houses."
+ },
+ "buildings": {
+  "hall": {
+   "id": "bld_town_hall",
+   "name": "Rathaus",
+   "notes": "Town hall: council chamber and archive."
+  },
+  "court": {
+   "id": "bld_court",
+   "name": "Court House",
+   "notes": "The burgomaster's court sits here."
+  },
+  "tax": {
+   "id": "bld_toll_house",
+   "name": "Toll Office",
+   "notes": "Weighs and taxes goods at the gate."
+  },
+  "lockup": {
+   "id": "bld_lockup",
+   "name": "Gaol",
+   "notes": "Cells behind the Rathaus."
+  },
+  "inn": {
+   "id": "bld_inn",
+   "name": "Zum Anker Inn",
+   "notes": "Inn on {road} by the Markt."
+  },
+  "stables": {
+   "id": "bld_stables",
+   "name": "Livery Stables",
+   "notes": "Stables beside the inn."
+  },
+  "meeting": {
+   "id": "bld_meeting_hall",
+   "name": "Guild Hall",
+   "notes": "Meeting place of the guilds."
+  },
+  "smithy": {
+   "id": "bld_smithy",
+   "name": "Smithy",
+   "notes": "Forge near the water."
+  },
+  "gate": {
+   "id": "bld_gate_watch",
+   "name": "Gate Watch",
+   "notes": "Guards {road} at the town gate."
+  },
+  "mill": {
+   "id": "bld_mill",
+   "name": "Water Mill",
+   "notes": "Corn mill on the river."
+  }
+ }
+}

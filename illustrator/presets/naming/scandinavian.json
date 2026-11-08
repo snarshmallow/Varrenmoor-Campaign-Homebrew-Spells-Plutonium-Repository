@@ -1,0 +1,143 @@
+{
+ "id": "scandinavian",
+ "label": "Scandinavian",
+ "description": "Norse-flavoured names (Old Norse/Swedish/Norwegian feel): gata, vegen, vik.",
+ "town_names": {
+  "prefix": [
+   "Ulf",
+   "Sol",
+   "Bjorn",
+   "Skar",
+   "Vik",
+   "Fjord",
+   "Hav",
+   "Stein",
+   "Eid",
+   "Nes",
+   "Troll",
+   "Ask"
+  ],
+  "suffix": [
+   "vik",
+   "stad",
+   "nes",
+   "holm",
+   "by",
+   "fjord",
+   "vag",
+   "dal",
+   "heim",
+   "sund"
+  ]
+ },
+ "river_names": [
+  "Elva",
+  "The Aa",
+  "Storelva",
+  "Svartaa",
+  "Laksa"
+ ],
+ "entry_roads": [
+  "Kongevegen",
+  "Strandvegen",
+  "Handelsvegen",
+  "Gamlevegen"
+ ],
+ "streets": {
+  "civic": [
+   "Tingsgata",
+   "Radhusgata",
+   "Lagmannsgata",
+   "Kongsgata",
+   "Storgata",
+   "Rettargata"
+  ],
+  "residential": [
+   "Smedgata",
+   "Fiskargata",
+   "Bryggegata",
+   "Kjopmannsgata",
+   "Reipslagargata",
+   "Kirkegata",
+   "Naustgata",
+   "Garvergata",
+   "Baatbyggjargata",
+   "Vevargata",
+   "Kvernvegen",
+   "Bakargata",
+   "Sjogata",
+   "Skomakargata",
+   "Torggata",
+   "Vaagsgata"
+  ],
+  "farm": [
+   "Beitevegen",
+   "Enga",
+   "Gardsvegen",
+   "Setervegen",
+   "Havrevegen",
+   "Slattevegen",
+   "Aakervegen",
+   "Heivegen",
+   "Sauevegen",
+   "Bjorkestien"
+  ]
+ },
+ "district_notes": {
+  "civic": "Thing-hall, harbour office and the chief's steading around the square.",
+  "residential": "Houses, boat sheds and workshops near the water and the road.",
+  "farm": "Home fields, sheep pasture and farmsteads beyond the houses."
+ },
+ "buildings": {
+  "hall": {
+   "id": "bld_town_hall",
+   "name": "Thing Hall",
+   "notes": "Where the free householders meet and the law is spoken."
+  },
+  "court": {
+   "id": "bld_court",
+   "name": "Law Speaker's House",
+   "notes": "Home of the law speaker; cases are heard in the yard."
+  },
+  "tax": {
+   "id": "bld_toll_house",
+   "name": "Harbour Dues House",
+   "notes": "Weighs and taxes goods landed or carried in."
+  },
+  "lockup": {
+   "id": "bld_lockup",
+   "name": "Fetter House",
+   "notes": "A stout cell beside the thing hall."
+  },
+  "inn": {
+   "id": "bld_inn",
+   "name": "The Drakkar Inn",
+   "notes": "Alehouse on {road} by the market."
+  },
+  "stables": {
+   "id": "bld_stables",
+   "name": "Horse Stalls",
+   "notes": "Stalls beside the alehouse."
+  },
+  "meeting": {
+   "id": "bld_meeting_hall",
+   "name": "Guild House",
+   "notes": "Meeting place of boat-owners and traders."
+  },
+  "smithy": {
+   "id": "bld_smithy",
+   "name": "Smithy",
+   "notes": "Forge near water, away from the thatch."
+  },
+  "gate": {
+   "id": "bld_gate_watch",
+   "name": "Watch Post",
+   "notes": "Looks over travellers on {road}."
+  },
+  "mill": {
+   "id": "bld_mill",
+   "name": "Quern Mill",
+   "notes": "Water mill on the river bank."
+  }
+ }
+}

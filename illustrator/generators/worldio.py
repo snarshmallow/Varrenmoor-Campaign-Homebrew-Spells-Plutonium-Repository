@@ -17,7 +17,11 @@ panel_state.json terrain.source, then auto. Water: env VB_WATER_SOURCE (world|wo
 import json
 import os
 
+import sys
+
 import numpy as np
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.abspath(os.path.join(HERE, "..", ".."))
@@ -110,6 +114,10 @@ def load_terrain(place, source=None, root=None):
         meta["size_ft"] = [(h.shape[1] - 1) * c, (h.shape[0] - 1) * c]
     meta["source"] = used
     meta["source_file"] = path
+    import place_stats
+    ad = place_stats.place_adapt(place, h, meta.get("sea_level_ft", 0.0), os.path.dirname(world_dir(place, root)))
+    if ad:
+        meta["elev_adapt"] = ad       # shading.render rescales the presets' elevation bands onto this place's relief (place.json phase_elevation)
     return h, meta
 
 

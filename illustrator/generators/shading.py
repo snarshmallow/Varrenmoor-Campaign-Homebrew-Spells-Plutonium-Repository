@@ -235,6 +235,9 @@ def render(h, meta, phases, ppf, base_dir=".", hill=None, seed=None, base_color=
     """window = (x0, y0, x1, y1) feet: render only that part (region children: the page window, not the whole padded frame)."""
     cell = meta["cell_ft"]
     W_ft, H_ft = meta["size_ft"]
+    if meta.get("elev_adapt"):         # place.json phase_elevation = percentile: map the preset's elevation bands onto this place's relief
+        import place_stats
+        phases = place_stats.adapt_phases(phases, meta["elev_adapt"])
     ox, oy = 0.0, 0.0
     if window:
         ox, oy, W_ft, H_ft = float(window[0]), float(window[1]), float(window[2] - window[0]), float(window[3] - window[1])

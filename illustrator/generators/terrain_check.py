@@ -81,10 +81,11 @@ def metrics(h, meta, water_json=None):
     gy, gx = np.gradient(h.astype(float), cell)
     s = np.hypot(gx, gy)
     out = {"elev_min": float(h.min()), "elev_max": float(h.max()), "relief": float(h.max() - h.min())}
-    basin = (yy > 450) & (yy < 1250) & (xx > 750) & (xx < 1650)
+    Wf, Hf = float(meta["size_ft"][0]), float(meta["size_ft"][1])         # central window (the old numbers were Bridgehollow's bowl: 750-1650 x 450-1250 of 2400x1500)
+    basin = (yy > (450.0 / 1500.0) * Hf) & (yy < (1250.0 / 1500.0) * Hf) & (xx > (750.0 / 2400.0) * Wf) & (xx < (1650.0 / 2400.0) * Wf)
     out["basin_elev_p5_p50_p95"] = [float(np.percentile(h[basin], q)) for q in (5, 50, 95)]
     out["basin_relief_ft"] = out["basin_elev_p5_p50_p95"][2] - out["basin_elev_p5_p50_p95"][0]
-    rise = np.hypot(xx - 1200, yy - 700) < 250
+    rise = np.hypot(xx - Wf / 2, yy - (700.0 / 1500.0) * Hf) < 250
     if water_json and os.path.exists(water_json):
         w = json.load(open(water_json, encoding="utf-8"))["water"][0]["centerline"]
         c = np.array(w)

@@ -1,0 +1,25 @@
+{
+ "_note": "Fort-town in a mountain pass: walled, a keep by the square, a stream down the pass, cold climate.",
+ "name": "Karhold",
+ "culture": "fantasy_generic",
+ "seed": 8803,
+ "terrain": {
+  "recipe": "pass",
+  "relief_ft": 380,
+  "ruggedness": 0.8,
+  "rivers": 1,
+  "river_width_ft": 30,
+  "river_meander": "gentle"
+ },
+ "town": {
+  "population": 520,
+  "layout": "walled",
+  "central_feature": "castle",
+  "wall": true,
+  "gates": 2,
+  "entry_side": "west"
+ },
+ "climate": "cold",
+ "season": "autumn",
+ "id": "mountain_pass_fort_town"
+}

@@ -1,0 +1,21 @@
+{
+ "_note": "Farming hamlet: a few dozen people on flat land along one lane, a brook, a green. Tiny and quick to generate.",
+ "name": "Nether Ash",
+ "culture": "english",
+ "seed": 615,
+ "terrain": {
+  "recipe": "flat",
+  "rivers": 1,
+  "river_width_ft": 18,
+  "river_meander": "lazy"
+ },
+ "town": {
+  "population": 90,
+  "layout": "linear",
+  "central_feature": "green",
+  "farmland": true
+ },
+ "climate": "temperate",
+ "season": "summer",
+ "id": "farming_hamlet"
+}

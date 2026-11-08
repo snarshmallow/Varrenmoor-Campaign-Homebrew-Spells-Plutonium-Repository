@@ -17,7 +17,8 @@ natural block (all keys optional, defaults shown):
   smooth {enabled true, ...}  terrain_smooth.finish(): slope-adaptive along-contour smoothing + cliff noise (keys in terrain_smooth.DEFAULTS)
   hydraulic {iterations 28, K 0.06, m 0.5, Kc 1.4, deposit 0.55, max_incise_ft 38, diffusion 0.08}
   thermal {iterations 140, talus_low 0.68, talus_high 1.15, rate 0.5, jitter 0.22}   angle of repose 34 deg at the foot
-  hills_south {y_start 1150, amp_ft 26, scale_ft 300}  rounded rolling foothills at the south
+  hills_south {y_start 1150, amp_ft 26, scale_ft 300}  rounded rolling foothills at the south (these numbers are the legacy defaults; with defaults_version 2 the default is amp 0 = none)
+  defaults_version 1|2  2: neutral defaults (no hidden southern foothills); new places written by place_create.py use 2
   basin {amp_ft 3.2, scale_ft 260, mounds 16, mound_ft [1.5,5], bowl_ft 7, fan {x,y,radius_ft,height_ft,spread_deg}}
   keep_clear [[x,y,radius_ft],...]  areas that keep gentle relief (authority rise)
   river_bed true          valleys flagged "river": true get a monotone (never climbing) bed enforced at the end
@@ -390,6 +391,8 @@ def _defaults(nz):
              hills_south=dict(y_start=1150.0, amp_ft=26.0, scale_ft=300.0),
              basin=dict(amp_ft=3.2, scale_ft=260.0, mounds=16, mound_ft=[1.5, 5.0], bowl_ft=7.0, fan=None),
              keep_clear=[], river_bed=True, final_smooth_cells=0.8, smooth=dict())
+    if int(nz.get("defaults_version", 1)) >= 2:
+        d["hills_south"] = dict(y_start=0.0, amp_ft=0.0, scale_ft=300.0)    # v1 defaults add Bridgehollow's southern foothills (y>1150, 26 ft) to every natural spec; v2 = off unless the spec asks
     for k, v in nz.items():
         if isinstance(v, dict) and isinstance(d.get(k), dict):
             d[k].update(v)
@@ -719,7 +722,9 @@ def enforce_river(h, X, Y, base, v, rng, nat, cell):
     dd = np.maximum(d - 0.5 * core, 0.0)
     tgt = bedg + bank * np.minimum(dd, reach) + np.maximum(bank, outer) * np.maximum(dd - reach, 0.0)   # no cliffs: slope only increases
     k = 3.0
-    hn = -k * np.log(np.exp(-h / k) + np.exp(-np.minimum(tgt, h + 200) / k))        # cut only, no levees
+    t2 = np.minimum(tgt, h + 200)
+    m2 = np.minimum(h, t2)                                           # log-sum-exp shifted by the minimum: exp(-h/k) alone underflows above ~2200 ft
+    hn = m2 - k * np.log(np.exp(-(h - m2) / k) + np.exp(-(t2 - m2) / k))        # cut only, no levees
     wc = 1.0 - sstep((d - 0.35 * core) / (0.4 * core + 6.0))
     out = hn * (1 - wc) + bedg * wc                                   # exact bed in the channel core
     # the cut (<= 0) is smoothed away from the channel so the carve never leaves a crease or step in the walls

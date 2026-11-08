@@ -1,0 +1,23 @@
+{
+ "_note": "River market town: English, rolling country, a wide lazy river, market place and parish church, organic streets.",
+ "name": "Wexford Cross",
+ "id": "wexford_cross",
+ "culture": "english",
+ "seed": 2207,
+ "terrain": {
+  "recipe": "rolling",
+  "relief_ft": 45,
+  "rivers": 1,
+  "river_width_ft": 85,
+  "river_meander": "lazy",
+  "lakes": 0
+ },
+ "town": {
+  "population": 1400,
+  "layout": "organic",
+  "central_feature": "temple",
+  "gates": 3
+ },
+ "climate": "temperate",
+ "season": "summer"
+}

@@ -17,7 +17,7 @@ FALLBACK = {
     "label_offset": {"enabled": True, "style": "elbow", "stroke_width": 0.8, "margin_pct": 10, "max_offset_pt": 90, "dot": True, "color": "#ffffff",
                      "casing": True, "casing_color": "#1a1a1a", "casing_width": 1.7},
     "presets": {
-        "town": {"scale_ft_per_in": 100, "grid_ft": 100, "grid_major_every": 5, "focus": [1200, 750]},
+        "town": {"scale_ft_per_in": 100, "grid_ft": 100, "grid_major_every": 5, "focus": "center"},
         "bowl": {"scale_ft_per_in": 200, "grid_ft": 100, "grid_major_every": 5, "focus": "center"},
         "street": {"scale_ft_per_in": 20, "grid_ft": 20, "grid_major_every": 5, "focus": "entity"},
         "room": {"scale_ft_per_in": 5, "grid_ft": 5, "grid_major_every": 5, "focus": "entity"},

@@ -1,0 +1,117 @@
+{
+ "id": "bridgehollow_legacy",
+ "label": "Bridgehollow (legacy)",
+ "description": "The names the town generator used before naming sets existed. Applied automatically to places whose id starts with 'bridgehollow' and have no naming_set, so the committed Bridgehollow data regenerates byte-identical. New places use another set.",
+ "town_names": {
+  "prefix": [
+   "Bridge",
+   "Hollow"
+  ],
+  "suffix": [
+   "hollow"
+  ]
+ },
+ "river_names": [
+  "The river (name not canon)"
+ ],
+ "entry_roads": [
+  "Pilgrim Road"
+ ],
+ "streets": {
+  "civic": [
+   "Court Row",
+   "Warden Street",
+   "Ledger Street",
+   "Gavel Lane",
+   "Seal Street",
+   "Charter Row"
+  ],
+  "residential": [
+   "Cartwright Lane",
+   "Tanners Row",
+   "Cooper Row",
+   "Weavers Walk",
+   "Brook Lane",
+   "Hollow Way",
+   "Chandler Row",
+   "Cobbler Row",
+   "Baker Lane",
+   "Thatchers Way",
+   "Wheelwright Lane",
+   "Dyers Walk",
+   "Rope Walk",
+   "Fuller Lane",
+   "Potters Row",
+   "Hay Lane"
+  ],
+  "farm": [
+   "Pasture Lane",
+   "Hedge Lane",
+   "Orchard Way",
+   "Furlong Lane",
+   "Barley Lane",
+   "Fallow Way",
+   "Gleaners Path",
+   "Drover Lane",
+   "Meadow Way",
+   "Sheepwalk"
+  ]
+ },
+ "district_notes": {
+  "civic": "Wardens, court, tax office and lockup on the low rise.",
+  "residential": "Commoners' homes and trades around the centre.",
+  "farm": "Fields and farmsteads feathering out toward the hills."
+ },
+ "buildings": {
+  "hall": {
+   "id": "bld_warden_hall",
+   "name": "Warden's Hall",
+   "notes": "Seat of the wardens, on the low rise. Layout proposed."
+  },
+  "court": {
+   "id": "bld_magistrate_court",
+   "name": "Magistrate's Court",
+   "notes": "Faces the court square."
+  },
+  "tax": {
+   "id": "bld_tax_office",
+   "name": "Tax and Permit Office",
+   "notes": "Tolls, permits and levies, first stop on the road into the centre."
+  },
+  "lockup": {
+   "id": "bld_lockup",
+   "name": "Lockup",
+   "notes": "Cells, kept beside the warden's hall."
+  },
+  "inn": {
+   "id": "bld_inn",
+   "name": "Inn",
+   "notes": "Inn on {road} by the market."
+  },
+  "stables": {
+   "id": "bld_stables",
+   "name": "Stables",
+   "notes": "Stables beside the inn."
+  },
+  "meeting": {
+   "id": "bld_meeting_hall",
+   "name": "Meeting Hall",
+   "notes": "Plain hall for town meetings; no religious use."
+  },
+  "smithy": {
+   "id": "bld_smithy",
+   "name": "Smithy",
+   "notes": "Forge near water, away from the thatched core."
+  },
+  "gate": {
+   "id": "bld_gate_watch",
+   "name": "Gate Watch Post",
+   "notes": "Checks travellers entering on {road}."
+  },
+  "mill": {
+   "id": "bld_mill",
+   "name": "Mill",
+   "notes": "Water mill on the river bank (mill-race site; slope limit relaxed 1.6x for the bank)."
+  }
+ }
+}

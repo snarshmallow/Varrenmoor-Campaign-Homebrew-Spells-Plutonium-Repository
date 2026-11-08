@@ -1,0 +1,142 @@
+{
+ "id": "english",
+ "label": "English",
+ "description": "Plain English market-town names: Street, Lane, Row.",
+ "town_names": {
+  "prefix": [
+   "Wex",
+   "Ash",
+   "Brom",
+   "Chip",
+   "Hay",
+   "Kings",
+   "Marl",
+   "Nether",
+   "Stan",
+   "Thorn",
+   "Wood",
+   "Over"
+  ],
+  "suffix": [
+   "ford",
+   "bury",
+   "ton",
+   "ham",
+   "worth",
+   "cester",
+   "wick",
+   "bourne",
+   "by",
+   "cott"
+  ]
+ },
+ "river_names": [
+  "The Avon",
+  "The Wey",
+  "The Leen",
+  "The Brent"
+ ],
+ "entry_roads": [
+  "The Great Road",
+  "London Road",
+  "Market Road",
+  "Kings Highway"
+ ],
+ "streets": {
+  "civic": [
+   "Court Street",
+   "Church Row",
+   "Guildhall Lane",
+   "Sessions Row",
+   "Crown Street",
+   "Bailey Lane"
+  ],
+  "residential": [
+   "Tanners Row",
+   "Weavers Lane",
+   "Butcher Row",
+   "Cooper Lane",
+   "Fleet Street",
+   "Brook Lane",
+   "Dyers Lane",
+   "Candlewick Row",
+   "Cobbler Row",
+   "Baker Street",
+   "Wheelwright Lane",
+   "Mill Lane",
+   "Rope Walk",
+   "Fuller Lane",
+   "Potters Row",
+   "Hay Lane"
+  ],
+  "farm": [
+   "Pasture Lane",
+   "Hedge Lane",
+   "Orchard Way",
+   "Furlong Lane",
+   "Barley Lane",
+   "Fallow Way",
+   "Drovers Lane",
+   "Meadow Way",
+   "Sheepwalk",
+   "Common Lane"
+  ]
+ },
+ "district_notes": {
+  "civic": "Guildhall, court and the market cross.",
+  "residential": "Timber-framed houses, shops and workshops along the lanes.",
+  "farm": "Open fields, commons and farms around the town."
+ },
+ "buildings": {
+  "hall": {
+   "id": "bld_town_hall",
+   "name": "Guildhall",
+   "notes": "Council chamber and records of the borough."
+  },
+  "court": {
+   "id": "bld_court",
+   "name": "Sessions House",
+   "notes": "Magistrates sit here at quarter days."
+  },
+  "tax": {
+   "id": "bld_toll_house",
+   "name": "Toll House",
+   "notes": "Tolls for the market and bridge."
+  },
+  "lockup": {
+   "id": "bld_lockup",
+   "name": "Roundhouse",
+   "notes": "Cells for the night watch."
+  },
+  "inn": {
+   "id": "bld_inn",
+   "name": "The Black Swan",
+   "notes": "Coaching inn on {road} by the market cross."
+  },
+  "stables": {
+   "id": "bld_stables",
+   "name": "Coaching Stables",
+   "notes": "Stables beside the inn."
+  },
+  "meeting": {
+   "id": "bld_meeting_hall",
+   "name": "Market Hall",
+   "notes": "Plain hall for markets and meetings."
+  },
+  "smithy": {
+   "id": "bld_smithy",
+   "name": "Smithy",
+   "notes": "Forge near water."
+  },
+  "gate": {
+   "id": "bld_gate_watch",
+   "name": "Watch House",
+   "notes": "Checks travellers on {road}."
+  },
+  "mill": {
+   "id": "bld_mill",
+   "name": "Mill",
+   "notes": "Corn mill on the river."
+  }
+ }
+}

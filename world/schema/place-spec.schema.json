@@ -1,0 +1,332 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "https://varrenmoor.local/schema/place-spec.schema.json",
+ "title": "varrenmoor place spec v1",
+ "description": "Input of illustrator/generators/place_create.py. Everything but `name` or `id` is optional; omitted fields take the defaults printed by `place_create.py prompt-help`.",
+ "type": "object",
+ "additionalProperties": false,
+ "properties": {
+  "$schema": {
+   "type": "string"
+  },
+  "_note": {
+   "type": "string"
+  },
+  "id": {
+   "type": "string",
+   "pattern": "^[a-z0-9][a-z0-9_]{1,40}$",
+   "description": "folder name world/<id>/ (lower case, digits, underscore). Default: slug of name."
+  },
+  "name": {
+   "type": "string",
+   "description": "display name. Default: generated from the culture's name parts and the seed."
+  },
+  "seed": {
+   "type": "integer",
+   "description": "same spec + seed = same place. Default: derived from the id."
+  },
+  "culture": {
+   "enum": [
+    "fantasy_generic",
+    "scandinavian",
+    "danish_german",
+    "english"
+   ],
+   "description": "naming set (streets, buildings, districts) from presets/naming/*.json, and default building styles"
+  },
+  "size_ft": {
+   "type": "array",
+   "items": {
+    "type": "number",
+    "minimum": 800,
+    "maximum": 12000
+   },
+   "minItems": 2,
+   "maxItems": 2,
+   "description": "[width, height] of the place in feet. Default: from the population (about 2200 x 1400 for 600 people)."
+  },
+  "cell_ft": {
+   "type": "number",
+   "minimum": 4,
+   "maximum": 40,
+   "description": "heightmap cell size, default 10"
+  },
+  "terrain": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "recipe": {
+     "enum": [
+      "flat",
+      "rolling",
+      "hills",
+      "valley",
+      "bowl",
+      "coastal",
+      "island",
+      "pass",
+      "fjord",
+      "mountain"
+     ]
+    },
+    "relief_ft": {
+     "type": "number",
+     "minimum": 0,
+     "maximum": 3000,
+     "description": "height of ridges / hills above the base plane"
+    },
+    "ruggedness": {
+     "type": "number",
+     "minimum": 0,
+     "maximum": 1
+    },
+    "base_elevation_ft": {
+     "type": "number",
+     "description": "elevation of the base plane at the map centre (default per recipe)"
+    },
+    "sea_level_ft": {
+     "type": "number",
+     "description": "datum; ground below it is water (default 0)"
+    },
+    "sea_side": {
+     "enum": [
+      "north",
+      "south",
+      "east",
+      "west"
+     ],
+     "description": "which map edge is the sea (coastal / fjord)"
+    },
+    "rivers": {
+     "type": "integer",
+     "minimum": 0,
+     "maximum": 3,
+     "description": "number of rivers (the first is the main one)"
+    },
+    "river_meander": {
+     "enum": [
+      "straight",
+      "gentle",
+      "lazy"
+     ]
+    },
+    "river_width_ft": {
+     "type": "number",
+     "minimum": 8,
+     "maximum": 300
+    },
+    "river_meander_params": {
+     "type": "object",
+     "description": "explicit meander numbers: amplitude_ft, wavelength_ft, seed, width_var, bars (see river_meander.py)"
+    },
+    "lakes": {
+     "type": "integer",
+     "minimum": 0,
+     "maximum": 4
+    },
+    "cell_ft": {
+     "type": "number",
+     "minimum": 4,
+     "maximum": 40
+    }
+   }
+  },
+  "town": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "population": {
+     "type": "integer",
+     "minimum": 20,
+     "maximum": 12000
+    },
+    "layout": {
+     "enum": [
+      "organic",
+      "radial",
+      "grid",
+      "linear",
+      "walled"
+     ],
+     "description": "street pattern: organic (default), radial, grid, linear (along the main road), walled (compact rings + wall and gates)"
+    },
+    "districts": {
+     "description": "'auto' or a list of 1-4 {name?, kind: civic|residential} from the centre outward; a farmland ring is always added last",
+     "oneOf": [
+      {
+       "const": "auto"
+      },
+      {
+       "type": "array",
+       "minItems": 1,
+       "maxItems": 4,
+       "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+         "name": {
+          "type": "string"
+         },
+         "kind": {
+          "enum": [
+           "civic",
+           "residential"
+          ]
+         }
+        }
+       }
+      }
+     ]
+    },
+    "centre": {
+     "description": "'auto' (best flat ground) or [x, y] feet",
+     "oneOf": [
+      {
+       "const": "auto"
+      },
+      {
+       "type": "array",
+       "items": {
+        "type": "number"
+       },
+       "minItems": 2,
+       "maxItems": 2
+      }
+     ]
+    },
+    "entry_side": {
+     "enum": [
+      "auto",
+      "north",
+      "south",
+      "east",
+      "west"
+     ],
+     "description": "which map edge the main road comes in from (auto = from the recipe)"
+    },
+    "central_feature": {
+     "enum": [
+      "market",
+      "green",
+      "temple",
+      "castle",
+      "none"
+     ],
+     "description": "market square (default), village green, temple / church beside the square, castle keep, or nothing"
+    },
+    "wall": {
+     "type": "boolean",
+     "description": "town wall round the built-up districts with gates where roads cross (implied by layout walled)"
+    },
+    "gates": {
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 6
+    },
+    "extra_civic": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string"
+       },
+       "size": {
+        "type": "array",
+        "items": {
+         "type": "number"
+        },
+        "minItems": 2,
+        "maxItems": 2
+       },
+       "floors": {
+        "type": "integer"
+       },
+       "notes": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "name"
+      ]
+     }
+    },
+    "farmland": {
+     "type": "boolean",
+     "description": "farm fringe round the town (default true)"
+    }
+   }
+  },
+  "styles": {
+   "description": "'auto' (from the culture) or {building kind: [style preset ids]} (presets/building_styles)",
+   "oneOf": [
+    {
+     "const": "auto"
+    },
+    {
+     "type": "object",
+     "additionalProperties": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     }
+    }
+   ]
+  },
+  "climate": {
+   "enum": [
+    "temperate",
+    "cold",
+    "dry",
+    "coastal"
+   ]
+  },
+  "season": {
+   "enum": [
+    "summer",
+    "autumn",
+    "winter"
+   ]
+  },
+  "foliage": {
+   "type": "object",
+   "properties": {
+    "mix": {
+     "type": "string"
+    },
+    "density": {
+     "type": "number"
+    }
+   },
+   "additionalProperties": false
+  },
+  "limits": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "max_buildings": {
+     "type": "integer"
+    },
+    "max_area_ft2": {
+     "type": "number"
+    },
+    "max_place_ft": {
+     "type": "number"
+    },
+    "allow_large": {
+     "type": "boolean",
+     "description": "lift the caps (a very big town can take minutes and a lot of memory)"
+    },
+    "draft": {
+     "type": "boolean",
+     "description": "draft quality: coarse terrain, civic buildings only (no houses): seconds instead of a minute"
+    }
+   }
+  },
+  "foundry": {
+   "type": "object",
+   "description": "links.foundry_scene etc. when the place came from a Foundry scene (import-scene)"
+  }
+ }
+}

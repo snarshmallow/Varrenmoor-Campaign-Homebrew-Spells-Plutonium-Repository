@@ -1,0 +1,23 @@
+{
+ "_note": "Coastal fishing village: Norse-flavoured, strung along a shore road, a small stream, a green by the harbour.",
+ "name": "Ulfvik",
+ "culture": "scandinavian",
+ "seed": 4121,
+ "terrain": {
+  "recipe": "coastal",
+  "sea_side": "east",
+  "relief_ft": 80,
+  "rivers": 1,
+  "river_width_ft": 22,
+  "river_meander": "gentle"
+ },
+ "town": {
+  "population": 260,
+  "layout": "linear",
+  "central_feature": "green",
+  "farmland": true
+ },
+ "climate": "coastal",
+ "season": "summer",
+ "id": "coastal_fishing_village"
+}

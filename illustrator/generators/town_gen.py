@@ -28,6 +28,7 @@ import json
 import math
 import os
 import random
+import re
 import sys
 
 import numpy as np
@@ -46,7 +47,8 @@ import viewcfg  # noqa: E402
 REPO = os.path.abspath(os.path.join(HERE, "..", ".."))
 
 DEFAULTS = {
-    "place": "bridgehollow", "seed": 1, "detail": 2, "view_preset": "town",
+    "place": None, "seed": 1, "detail": 2, "view_preset": "town",
+    "naming_set": None,         # presets/naming/<id>.json: street / building / district-note names (None: bridgehollow_legacy for places called bridgehollow*, else fantasy_generic)
     "area_ft": None,
     "area_mode": "manual",      # manual (area_ft as drawn) | auto (terrain-fitted, town_area.py) | snap (area_ft settled onto the terrain)
     "area_auto": {},            # town_area.DEFAULTS overrides (slope_limit, river_buffer_ft, smoothing_ft, min_width_ft, noise_ft, target_area_ft2...)
@@ -55,15 +57,15 @@ DEFAULTS = {
                "max_field_slope": 0.13, "hard_slope": 0.30, "water_margin_ft": 14.0, "bank_margin_ft": 8.0,
                "below_datum_is_water": True, "dry_basin_polys": [], "flood_ft": 60.0, "min_street_width_ft": 10.0,
                "bank_fill_ft": 45.0, "max_cut_fill_ft": 3.0},
-    "entry": {"point": None, "via": [], "name": "Pilgrim Road", "id": "pilgrim_road", "width_ft": 30.0,
+    "entry": {"point": None, "via": [], "name": None, "id": "main_road", "width_ft": 30.0,
               "bridge_width_ft": 26.0, "bridge_cost_per_ft": 6.0,
               "grade_weight": 0.8, "grade_exp": 2.0},
     "ring_spec": {
-        "centre": [1200, 750], "aspect": [1.0, 1.0], "noise": 0.12, "noise_period_ft": 320, "feather_ft": 90,
+        "centre": None, "aspect": [1.0, 1.0], "noise": 0.12, "noise_period_ft": 320, "feather_ft": 90,
         "rings": [
-            {"id": "authority", "name": "Authority Ward", "kind": "civic", "r_max": 170, "street_width": 24,
+            {"id": "core", "name": "Civic Quarter", "kind": "civic", "r_max": 170, "street_width": 24,
              "dsep": [80, 95], "lot_area": [2600, 6000], "build_prob": 0.95},
-            {"id": "commoner", "name": "Commoners' Ring", "kind": "residential", "r_max": 480, "street_width": 18,
+            {"id": "town", "name": "Town", "kind": "residential", "r_max": 480, "street_width": 18,
              "dsep": [85, 100], "lot_area": [1000, 2300], "build_prob": 0.85},
             {"id": "farm", "name": "Farmland", "kind": "farm", "r_max": 1e9, "street_width": 13,
              "dsep": [210, 300], "lot_area": [28000, 85000], "build_prob": 0.30},
@@ -81,6 +83,23 @@ DEFAULTS = {
              "max_house_ft": [90, 90], "backland_ft": 0.0, "backland_min_area_ft2": 400, "shed_detail": 3, "shed_min_area_ft2": 1500, "shed_prob": 0.4},
     "named": {},
 }
+
+
+NAMING_DIR = os.path.join(REPO, "illustrator", "presets", "naming")
+
+
+def load_naming(params):
+    """Naming set for streets, named buildings and district notes (presets/naming/*.json). `naming` in the params may override single
+    keys (deep merge), e.g. {"buildings": {"inn": {"name": "The Salted Cod"}}}."""
+    nid = params.get("naming_set")
+    if not nid:
+        nid = "bridgehollow_legacy" if str(params.get("place") or "").startswith("bridgehollow") else "fantasy_generic"
+    path = os.path.join(NAMING_DIR, nid + ".json")
+    if not os.path.exists(path):
+        raise SystemExit(f"unknown naming_set {nid!r}; have {sorted(f[:-5] for f in os.listdir(NAMING_DIR) if f.endswith('.json'))}")
+    with open(path, encoding="utf-8") as f:
+        base = json.load(f)
+    return deep_merge(base, params.get("naming") or {})
 
 
 def deep_merge(a, b):
@@ -236,6 +255,11 @@ class TownGen:
         self.ny, self.nx = h.shape
         self.sea = float(meta.get("sea_level_ft", params.get("sea_level_ft", 0.0)))
         self.W, self.H = meta["size_ft"]
+        if not params["ring_spec"].get("centre"):                      # no hard-coded centre: the middle of the place unless the params say otherwise
+            params["ring_spec"]["centre"] = [round(self.W / 2.0), round(self.H / 2.0)]
+        self.naming = load_naming(params)
+        if not params["entry"].get("name"):
+            params["entry"]["name"] = self.naming.get("entry_roads", ["Main Road"])[0]
         import worldio
         self.water = load_water(place_dir, worldio.water_path(params["place"]))
         self.area_info = {"mode": "manual"}
@@ -1212,43 +1236,68 @@ class TownGen:
         def elev(l):
             return self.height(*l["c"])
 
-        # warden's hall: biggest-lot class near the centre, highest ground
+        NB, road = self.naming["buildings"], self.P["entry"]["name"]
+        skip = set(N.get("skip") or [])
+
+        def nb(key):
+            d = NB[key]
+            return d["id"], d["name"], d.get("notes", "").replace("{road}", road)
+
+        # town hall: biggest-lot class near the centre, highest ground
         s = N.get("warden_hall", {"size": [60, 50]})
-        lot, e = place("hall", "bld_warden_hall", "Warden's Hall", "civic", s["size"],
-                       free(s["size"][0] * s["size"][1] * 0.75),
-                       lambda l: dist_c(l) - elev(l) * 0.6, "Seat of the wardens, on the low rise. Layout proposed.", 2)
-        hall_c = lot["c"] if lot else (cx, cy)
+        lot, hall_c = None, (cx, cy)
+        if "hall" not in skip:
+            i_, n_, t_ = nb("hall")
+            lot, e = place("hall", i_, n_, "civic", s["size"],
+                           free(s["size"][0] * s["size"][1] * 0.75),
+                           lambda l: dist_c(l) - elev(l) * 0.6, t_, 2)
+            hall_c = lot["c"] if lot else (cx, cy)
         s = N.get("magistrate_court", {"size": [62, 48]})
         cp = [p for p in pz if p["id"] == N.get("court_plaza", "sqr_court")]
         pc = cp[0]["poly"] if cp else Point(cx, cy)
-        place("court", "bld_magistrate_court", "Magistrate's Court", "civic", s["size"],
-              free(s["size"][0] * s["size"][1] * 0.75, ["civic", "residential"]),
-              lambda l: Point(l["c"]).distance(pc) + 0.2 * math.hypot(l["c"][0] - hall_c[0], l["c"][1] - hall_c[1]),
-              "Faces the court square.", 2)
+        if "court" not in skip:
+            i_, n_, t_ = nb("court")
+            place("court", i_, n_, "civic", s["size"],
+                  free(s["size"][0] * s["size"][1] * 0.75, ["civic", "residential"]),
+                  lambda l: Point(l["c"]).distance(pc) + 0.2 * math.hypot(l["c"][0] - hall_c[0], l["c"][1] - hall_c[1]),
+                  t_, 2)
         s = N.get("tax_office", {"size": [50, 40]})
         bp = bridge_pts[0] if bridge_pts else (cx, cy)
-        place("tax", "bld_tax_office", "Tax and Permit Office", "civic", s["size"],
-              free(s["size"][0] * s["size"][1] * 0.75),
-              lambda l: Point(l["c"]).distance(main_u) + 0.3 * math.hypot(l["c"][0] - bp[0], l["c"][1] - bp[1]),
-              "Tolls, permits and levies, first stop on the road into the centre.")
+        if "tax" not in skip:
+            i_, n_, t_ = nb("tax")
+            place("tax", i_, n_, "civic", s["size"],
+                  free(s["size"][0] * s["size"][1] * 0.75),
+                  lambda l: Point(l["c"]).distance(main_u) + 0.3 * math.hypot(l["c"][0] - bp[0], l["c"][1] - bp[1]),
+                  t_)
         s = N.get("lockup", {"size": [36, 30]})
-        place("lockup", "bld_lockup", "Lockup", "civic", s["size"], free(s["size"][0] * s["size"][1] * 0.75),
-              lambda l: math.hypot(l["c"][0] - hall_c[0], l["c"][1] - hall_c[1]), "Cells, kept beside the warden's hall.")
+        if "lockup" not in skip:
+            i_, n_, t_ = nb("lockup")
+            place("lockup", i_, n_, "civic", s["size"], free(s["size"][0] * s["size"][1] * 0.75),
+                  lambda l: math.hypot(l["c"][0] - hall_c[0], l["c"][1] - hall_c[1]), t_)
         mk = [p for p in pz if p["id"] == N.get("market_plaza", "sqr_market")]
         mpoly = mk[0]["poly"] if mk else Point(cx, cy)
         s = N.get("inn", {"size": [62, 34]})
-        lot, e = place("inn", "bld_inn", "Inn", "inn", s["size"], free(s["size"][0] * s["size"][1] * 0.8, ["residential", "civic"]),
-                       lambda l: Point(l["c"]).distance(mpoly) + 1.5 * Point(l["c"]).distance(main_u), "Inn on Pilgrim Road by the market.", 2)
-        if lot:
+        lot = None
+        if "inn" not in skip:
+            i_, n_, t_ = nb("inn")
+            lot, e = place("inn", i_, n_, "inn", s["size"], free(s["size"][0] * s["size"][1] * 0.8, ["residential", "civic"]),
+                           lambda l: Point(l["c"]).distance(mpoly) + 1.5 * Point(l["c"]).distance(main_u), t_, 2)
+        if lot and "stables" not in skip:
             s = N.get("stables", {"size": [54, 24]})
-            place("stables", "bld_stables", "Stables", "stable", s["size"], free(s["size"][0] * s["size"][1] * 0.75),
-                  lambda l: math.hypot(l["c"][0] - lot["c"][0], l["c"][1] - lot["c"][1]), "Stables beside the inn.")
+            i_, n_, t_ = nb("stables")
+            place("stables", i_, n_, "stable", s["size"], free(s["size"][0] * s["size"][1] * 0.75),
+                  lambda l: math.hypot(l["c"][0] - lot["c"][0], l["c"][1] - lot["c"][1]), t_)
         s = N.get("meeting_hall", {"size": [60, 44]})
-        place("meeting", "bld_meeting_hall", "Meeting Hall", "civic", s["size"], free(s["size"][0] * s["size"][1] * 0.75, ["residential", "civic"]),
-              lambda l: Point(l["c"]).distance(mpoly) + 0.1 * dist_c(l), "Plain hall for town meetings; no religious use.")
+        if "meeting" not in skip:
+            i_, n_, t_ = nb("meeting")
+            place("meeting", i_, n_, "civic", s["size"], free(s["size"][0] * s["size"][1] * 0.75, ["residential", "civic"]),
+                  lambda l: Point(l["c"]).distance(mpoly) + 0.1 * dist_c(l), t_)
         s = N.get("smithy", {"size": [40, 30]})
-        place("smithy", "bld_smithy", "Smithy", "craft", s["size"], free(s["size"][0] * s["size"][1] * 0.75, ["residential"]),
-              lambda l: abs(dist_c(l) - 300) * 0.5 + abs(self.dwater_at(*l["c"]) - 60), "Forge near water, away from the thatched core.")
+        if "smithy" not in skip:
+            i_, n_, t_ = nb("smithy")
+            ring_ft = float(s.get("ring_ft", 300))
+            place("smithy", i_, n_, "craft", s["size"], free(s["size"][0] * s["size"][1] * 0.75, ["residential"]),
+                  lambda l: abs(dist_c(l) - ring_ft) * 0.5 + abs(self.dwater_at(*l["c"]) - 60), t_)
         for j, x in enumerate(N.get("extra_civic", [])):                  # more civic buildings round the hall: [{id,name,size,floors,notes,near}]
             sz = x.get("size", [44, 34])
             place("civic_%d" % j, x["id"], x["name"], "civic", sz, free(sz[0] * sz[1] * 0.75, ["civic", "residential"]),
@@ -1257,7 +1306,7 @@ class TownGen:
         # gate watch: beside the main road near the entry
         ent = Point(self.P["entry"]["point"])
         g0 = self.main_lines_road[0] if self.main_lines_road else None
-        if g0 is not None:
+        if g0 is not None and "gate" not in skip:
             for dd in (70, 90, 120, 160):
                 q = g0.interpolate(dd)
                 q2 = g0.interpolate(dd + 5)
@@ -1270,12 +1319,13 @@ class TownGen:
                                     for a, b in ((-1, -1), (1, -1), (1, 1), (-1, 1))])
                     if rect.intersects(self.street_union) or self.water.polygon.distance(rect) < 10:
                         continue
-                    if self.add_building("bld_gate_watch", "Gate Watch Post", "civic", rect, "Checks travellers entering on Pilgrim Road.") is not None:
+                    if self.add_building(*nb("gate")[:2], "civic", rect, nb("gate")[2]) is not None:
                         self.named_ids["gate"] = (None, None)
                         break
                 if "gate" in self.named_ids:
                     break
-        self.place_mill()
+        if "mill" not in skip and self.water.rivers:
+            self.place_mill()
 
     def place_mill(self):
         N = self.P["named"].get("mill", {"size": [44, 32]})
@@ -1313,8 +1363,9 @@ class TownGen:
             return
         t = self.terrain_ok(best[1], self.L["max_build_slope"], self.L["max_build_relief_ft"] * 1.4)
         pts = [[r1(x), r1(y)] for x, y in list(best[1].exterior.coords)[:-1]]
-        e = {"id": "bld_mill", "name": "Mill", "kind": "craft", "status": "proposed",
-             "geometry": {"type": "polygon", "points": pts}, "notes": "Water mill on the river bank (mill-race site; slope limit relaxed 1.6x for the bank).",
+        mid_, mname_, mnote_ = self.naming["buildings"]["mill"]["id"], self.naming["buildings"]["mill"]["name"], self.naming["buildings"]["mill"].get("notes", "")
+        e = {"id": mid_, "name": mname_, "kind": "craft", "status": "proposed",
+             "geometry": {"type": "polygon", "points": pts}, "notes": mnote_,
              "links": self.links(), "floors": 2, "rooms": [], "doors": [], "elevation_ft": t["elev"],
              "site_slope": t["site_slope"], "site_relief_ft": t["relief"]}
         self.buildings.append({"e": e, "poly": best[1]})
@@ -1445,12 +1496,7 @@ class TownGen:
 
     # ------------------------------------------------------------ outputs
     def street_name(self, ring, fam, idx):
-        bank = {"civic": ["Court Row", "Warden Street", "Ledger Street", "Gavel Lane", "Seal Street", "Charter Row"],
-                "residential": ["Cartwright Lane", "Tanners Row", "Cooper Row", "Weavers Walk", "Brook Lane", "Hollow Way",
-                                "Chandler Row", "Cobbler Row", "Baker Lane", "Thatchers Way", "Wheelwright Lane", "Dyers Walk",
-                                "Rope Walk", "Fuller Lane", "Potters Row", "Hay Lane"],
-                "farm": ["Pasture Lane", "Hedge Lane", "Orchard Way", "Furlong Lane", "Barley Lane", "Fallow Way",
-                         "Gleaners Path", "Drover Lane", "Meadow Way", "Sheepwalk"]}[ring]
+        bank = self.naming["streets"][ring]
         k = 0
         while True:
             nm = bank[(idx + k) % len(bank)] + ("" if (idx + k) < len(bank) else f" {(idx + k) // len(bank) + 1}")
@@ -1523,7 +1569,8 @@ class TownGen:
             idn = f"str_{E['id']}_{k + 1}" if not br else f"str_{E['id']}_bridge" if sum(1 for q, _ in self.main_parts if q == "bridge") == 1 else f"str_{E['id']}_bridge_{k + 1}"
             nm = E["name"] + (" (bridge)" if br else "")
             if br:
-                nm = "Pilgrim Bridge" if E["id"] == "pilgrim_road" else nm
+                m_ = re.match(r"^(.*?)\s+(Road|Street|Way|Highway|Lane)$", E["name"])
+                nm = E.get("bridge_name") or ((m_.group(1) + " Bridge") if m_ else nm)
             e = {"id": idn, "name": nm, "kind": "bridge" if br else "road", "status": "proposed",
                  "geometry": {"type": "polyline", "points": pts, "width_ft": E["bridge_width_ft"] if br else E["width_ft"]},
                  "notes": "Main road in from the entry." if not br else "The one stone bridge over the river.",
@@ -1594,7 +1641,7 @@ class TownGen:
             ls = gen.lines(r["r_max"])
             polys = [Polygon(a).buffer(0) for a in ls if len(a) > 8 and np.allclose(a[0], a[-1])]
             polys = [p for p in polys if p.contains(Point(cx, cy))]
-            regions[r["id"]] = max(polys, key=lambda p: p.area).intersection(self.area) if polys else Polygon()
+            regions[r["id"]] = max(polys, key=lambda p: p.area).intersection(self.area) if polys else self.area    # no closed contour: the ring reaches past the area, so it is the whole area
         prev = None
         names = {r["id"]: r for r in rs["rings"]}
         for i, r in enumerate(rs["rings"]):
@@ -1613,9 +1660,7 @@ class TownGen:
                 pts = [[r1(x), r1(y)] for x, y in list(pg.exterior.coords)[:-1]]
                 out.append({"id": f"dis_{r['id']}" + ("" if k == 0 else f"_{k + 1}"), "name": r["name"], "kind": "district",
                             "status": "proposed", "geometry": {"type": "polygon", "points": pts},
-                            "notes": {"civic": "Wardens, court, tax office and lockup on the low rise.",
-                                      "residential": "Commoners' homes and trades around the centre.",
-                                      "farm": "Fields and farmsteads feathering out toward the hills."}[r["kind"]],
+                            "notes": self.naming["district_notes"][r["kind"]],
                             "links": self.links(), "ring": r["id"], "label_point": self._label_pt(pg, self._ring_label_target(i, r)) if k == 0 else self._label_pt(pg),
                             "elevation_ft": r1(self.height(*pg.representative_point().coords[0]))})
         for p in self.plazas:

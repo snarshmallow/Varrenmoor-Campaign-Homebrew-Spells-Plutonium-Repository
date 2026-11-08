@@ -16,6 +16,9 @@ Every command prints log lines, then ONE final JSON line on stdout ({"ok": true,
   push-item    (--spec item.json | --name N) [--description T] [--image F] [--item-uuid U] [--yes]
   push-models  --placements P (--scene-uuid U | --scene-name N) [--layers L] [--ids I] [--lod 0|1|2] [--px-per-ft F] [--prune] [--dry-run]
                one 3D Canvas tile per model of a world pack (worldpack_split.py), upserted by pipelineId model:<place>:<id>
+  import-scene --scene-uuid U [--place-id ID] [--include walls,lights,tokens,notes] [--no-image] [--closed-as buildings|lines] [--force] [--dry-run] [--scene-json F]
+               READ-ONLY on Foundry: create a place from an existing scene (calibration from the grid, background as underlay, walls as WALLS lines / building
+               outlines, links.foundry_scene = the scene). See foundry_import.py. push-scene with no --scene-uuid/--scene-name then goes back to that scene.
   delete-scene --scene-uuid U              delete a pipeline-flagged scene (module refuses anything else)
   link-region  --place CHILD (--parent-scene-uuid U | --parent-scene-name N) [--child-scene-uuid U] [--apply]
                region children (region_extract.py): outline Drawing of the region on the parent scene (pipelineId draw:region:<child>), flagged with the
@@ -392,6 +395,11 @@ def region_flags(place):
 
 def cmd_push_scene(br, a):
     from PIL import Image
+    if not a.scene_uuid and not a.scene_name:                 # a place imported from (or pushed with --link to) a scene goes back to that scene by default
+        lk = place_link(a.place)
+        if lk:
+            a.scene_uuid = lk
+            LOG(f"no scene given: using the scene linked to the place ({lk})")
     model, v, cfg = load_view(a.place, a.view, a.preset, a.scale, a.grid, a.page, a.major)
     img = Image.open(a.image)
     img.load()
@@ -478,6 +486,9 @@ def cmd_push_scene(br, a):
         result["tile_ops"] = r
     result["scene_uuid"] = uuid
     LOG(f"scene {'created' if result.get('created') else 'updated'}: {uuid}")
+    if getattr(a, "link", False):
+        place_link(a.place, uuid)
+        result["linked"] = True
     return result
 
 
@@ -890,7 +901,7 @@ def cmd_push_lights(br, a):
 # ------------------------------------------------------------------ cli
 def parser():
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
-    ap.add_argument("cmd", choices=["status", "places", "list", "export-info", "push-scene", "push-token", "push-actor", "push-item", "push-models", "delete-scene", "link-region", "bake-texture", "push-lights"])
+    ap.add_argument("cmd", choices=["status", "places", "list", "export-info", "push-scene", "push-token", "push-actor", "push-item", "push-models", "delete-scene", "link-region", "bake-texture", "push-lights", "import-scene"])
     ap.add_argument("--place", default="bridgehollow")
     ap.add_argument("--view", default="town")
     ap.add_argument("--preset")
@@ -950,12 +961,40 @@ def parser():
     ap.add_argument("--lighting", help="place id (panel_state.json lighting) or lighting JSON: sun/ambient -> scene flags (push-models), 2D point lights -> AmbientLights (push-lights)")
     ap.add_argument("--light-animation", dest="light_animation", help="push-lights: Foundry light animation type for interior hints (default none; never torch/smoke particles)")
     ap.add_argument("--prune", action="store_true", help="push-models: delete pipeline model tiles that are not in this push")
+    # import-scene (foundry_import.py) and the place <-> scene link
+    ap.add_argument("--place-id", help="import-scene: id of the new place (default: slug of the scene name)")
+    ap.add_argument("--include", help="import-scene: extra data to import: walls (default), lights, tokens, notes (comma list)")
+    ap.add_argument("--no-image", action="store_true", help="import-scene: do not fetch the background image")
+    ap.add_argument("--closed-as", default="buildings", choices=["buildings", "lines"], help="import-scene: closed wall loops become building outlines (default) or stay lines")
+    ap.add_argument("--force", action="store_true", help="import-scene: overwrite an existing world/<id>")
+    ap.add_argument("--scene-json", help="import-scene: read the scene document from this JSON file instead of the bridge (offline / tests)")
+    ap.add_argument("--link", action="store_true", help="push-scene: after a successful push store the scene uuid in place.json links.foundry_scene (later pushes default to it)")
     return ap
+
+
+def cmd_import_scene(br, a):
+    import foundry_import
+    return foundry_import.cmd_import_scene(br, a)
+
+
+def place_link(place, uuid=None):
+    """links.foundry_scene of world/<place>/place.json; with `uuid` set it (create the key when missing). None when unset or unreadable."""
+    p = os.path.join(REPO, "world", place, "place.json")
+    try:
+        d = json.load(open(p, encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+    if uuid:
+        d.setdefault("links", {})["foundry_scene"] = uuid
+        with open(p, "w", encoding="utf-8") as f:
+            json.dump(d, f, indent=1, ensure_ascii=False)
+            f.write("\n")
+    return (d.get("links") or {}).get("foundry_scene")
 
 
 CMDS = {"status": cmd_status, "places": cmd_places, "list": cmd_list, "export-info": cmd_export_info, "push-scene": cmd_push_scene,
         "push-token": cmd_push_token, "push-actor": cmd_push_actor, "push-item": cmd_push_item, "push-models": cmd_push_models, "delete-scene": cmd_delete_scene,
-        "link-region": cmd_link_region, "bake-texture": cmd_bake_texture, "push-lights": cmd_push_lights}
+        "link-region": cmd_link_region, "bake-texture": cmd_bake_texture, "push-lights": cmd_push_lights, "import-scene": cmd_import_scene}
 
 
 def main(argv=None, bridge=None):

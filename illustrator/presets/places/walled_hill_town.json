@@ -1,0 +1,22 @@
+{
+ "_note": "Walled hill town: German/Danish names, hills round a lake, church on the square, a wall with three gates.",
+ "name": "Brinkburg",
+ "culture": "danish_german",
+ "seed": 3319,
+ "terrain": {
+  "recipe": "hills",
+  "relief_ft": 150,
+  "rivers": 0,
+  "lakes": 1
+ },
+ "town": {
+  "population": 1000,
+  "layout": "walled",
+  "central_feature": "temple",
+  "wall": true,
+  "gates": 3
+ },
+ "climate": "temperate",
+ "season": "summer",
+ "id": "walled_hill_town"
+}

@@ -1,0 +1,143 @@
+{
+ "id": "fantasy_generic",
+ "label": "Generic fantasy",
+ "description": "Plain, neutral medieval-fantasy names.",
+ "town_names": {
+  "prefix": [
+   "Oak",
+   "Stone",
+   "Ash",
+   "Raven",
+   "Mill",
+   "Fair",
+   "Grey",
+   "Elder",
+   "Hawk",
+   "Thorn",
+   "Silver",
+   "Wolf"
+  ],
+  "suffix": [
+   "ford",
+   "ton",
+   "bridge",
+   "haven",
+   "wick",
+   "stead",
+   "field",
+   "brook",
+   "moor",
+   "gate"
+  ]
+ },
+ "river_names": [
+  "The river",
+  "Silverwater",
+  "The Brandle",
+  "The Weir",
+  "The Ellen"
+ ],
+ "entry_roads": [
+  "King's Road",
+  "The High Road",
+  "Market Road",
+  "Old Road"
+ ],
+ "streets": {
+  "civic": [
+   "Court Street",
+   "Hall Row",
+   "Charter Lane",
+   "Crown Street",
+   "Council Way",
+   "Banner Row"
+  ],
+  "residential": [
+   "Tanners Lane",
+   "Weavers Row",
+   "Bakers Lane",
+   "Cooper Street",
+   "Smith Street",
+   "Brook Lane",
+   "Candle Row",
+   "Mason Row",
+   "Cobblers Lane",
+   "Fuller Street",
+   "Potters Lane",
+   "Carters Way",
+   "Hay Lane",
+   "Chapel Lane",
+   "Well Lane",
+   "Rope Walk"
+  ],
+  "farm": [
+   "Pasture Lane",
+   "Hedge Lane",
+   "Orchard Way",
+   "Furlong Lane",
+   "Barley Lane",
+   "Fallow Way",
+   "Drover Lane",
+   "Meadow Way",
+   "Sheep Walk",
+   "Gleaners Path"
+  ]
+ },
+ "district_notes": {
+  "civic": "Town hall, courts and offices around the central square.",
+  "residential": "Homes, shops and workshops around the centre.",
+  "farm": "Fields, orchards and farmsteads on the edge of town."
+ },
+ "buildings": {
+  "hall": {
+   "id": "bld_town_hall",
+   "name": "Town Hall",
+   "notes": "Seat of the town council."
+  },
+  "court": {
+   "id": "bld_court",
+   "name": "Courthouse",
+   "notes": "Hears disputes and sets fines."
+  },
+  "tax": {
+   "id": "bld_toll_house",
+   "name": "Toll House",
+   "notes": "Tolls and market dues, first stop on the road in."
+  },
+  "lockup": {
+   "id": "bld_lockup",
+   "name": "Lockup",
+   "notes": "Cells beside the town hall."
+  },
+  "inn": {
+   "id": "bld_inn",
+   "name": "The Crossed Keys Inn",
+   "notes": "Inn on {road} near the market."
+  },
+  "stables": {
+   "id": "bld_stables",
+   "name": "Stables",
+   "notes": "Stables beside the inn."
+  },
+  "meeting": {
+   "id": "bld_meeting_hall",
+   "name": "Guildhall",
+   "notes": "Meeting place of the trades."
+  },
+  "smithy": {
+   "id": "bld_smithy",
+   "name": "Smithy",
+   "notes": "Forge near water, clear of the thatch."
+  },
+  "gate": {
+   "id": "bld_gate_watch",
+   "name": "Gate Watch Post",
+   "notes": "Checks travellers on {road}."
+  },
+  "mill": {
+   "id": "bld_mill",
+   "name": "Mill",
+   "notes": "Water mill on the river bank."
+  }
+ }
+}

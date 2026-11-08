@@ -84,6 +84,7 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
   <button role="tab" data-tab="foliage">Foliage</button>
   <button role="tab" data-tab="padding">Padding</button><!-- padding tab (padding_ui.js) -->
   <button role="tab" data-tab="bridges">Bridges</button><!-- BRIDGES tab (bridges_ui.js) -->
+  <button role="tab" data-tab="places">Places</button><!-- PLACES tab (places_ui.js) -->
   <button role="tab" data-tab="layers">Layers</button>
   <button role="tab" data-tab="foundry">Foundry</button>
 </nav>
@@ -412,7 +413,7 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
     <button data-act="water_carve">Carve rivers</button>
     <button data-act="water_crossings">Bridges report</button>
   </div>
-  <h4>River meander (Bridgehollow)</h4>
+  <h4>River meander</h4>
   <div class="grid">
     <label>Preset <select data-s="water.rivergen.preset"><option>straight</option><option selected>gentle</option><option>lazy</option></select></label>
     <label>Amplitude (ft, blank = preset) <input type="number" data-s="water.rivergen.amplitude_ft" min="0" step="any"></label>
@@ -470,7 +471,7 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
     <label>Margin (ft) <input type="number" data-s="town.fit_margin_ft" min="0" step="10"></label>
   </div>
   <div class="btns"><button data-act="town_fit" title="Chooses the next nice scale and the page centre so the built-up area fills the page; stored in view_settings.json for this preset. Then press Redraw all GEN layers.">Fit scale and centre</button></div>
-  <p class="note">The outline is drawn on layers TOWN AREA (editable closed path) and TOWN AREA RINGS (authority/commoner guides). Edit it with the Direct Selection tool, press Capture lasso, then Generate. A lasso you draw yourself is used as drawn.</p>
+  <p class="note">The outline is drawn on layers TOWN AREA (editable closed path) and TOWN AREA RINGS (ring-zone guides). Edit it with the Direct Selection tool, press Capture lasso, then Generate. A lasso you draw yourself is used as drawn.</p>
   <div class="grid">
     <label>Seed <input type="number" data-s="town.seed" step="1"></label>
     <label>Detail (1-3) <input type="number" data-s="town.detail" min="1" max="3" step="1"></label>
@@ -538,7 +539,7 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
     <div class="grid" style="grid-template-columns:repeat(4,1fr)">
       <label>x0 <input type="number" data-s="regions.rect.0" step="any"></label><label>y0 <input type="number" data-s="regions.rect.1" step="any"></label>
       <label>x1 <input type="number" data-s="regions.rect.2" step="any"></label><label>y1 <input type="number" data-s="regions.rect.3" step="any"></label></div>
-    <label>Name <input type="text" data-s="regions.name" placeholder="e.g. Authority Ward"></label>
+    <label>Name <input type="text" data-s="regions.name" placeholder="e.g. a district name"></label>
     <label>Margin / feather (ft) <input type="number" data-s="regions.margin_ft" min="0" step="5"></label>
   </div>
   <div class="btns"><button data-act="reg_preview" title="Draws the region as an editable closed path on layer REGIONS of the open parent document">Preview extent</button></div>
@@ -686,14 +687,80 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
   <div class="btns"><button data-act="clear_stale">Clear stale marks</button><button data-act="open_done">Open job log folder</button></div>
 </section>
 
+<!-- PLACES TAB (places_ui.js, lib/places.js; python generators/place_create.py, place_render.py, foundry_push.py import-scene) -->
+<section id="tab-places" role="tabpanel">
+  <style>#plList tr.sel{background:var(--bg3)}#plList tr{cursor:pointer}.note.err{color:#e08080}.note.warn{color:#d8b060}</style>
+  <h4>Places</h4>
+  <table><thead><tr><th>id</th><th>name</th><th>kind</th><th>size</th><th>made by</th><th>Foundry</th></tr></thead><tbody id="plList"></tbody></table>
+  <div class="note" id="plSel"></div>
+  <div class="btns"><button data-act="pl_switch">Switch to selected</button><button data-act="pl_render" title="Headless PNG preview (no Illustrator): line art, shading, fills">Preview selected</button><button data-act="pl_open_ai" title="Writes an Illustrator job: opens the map as a new document (small places only)">Open selected in Illustrator</button><button data-act="pl_refresh">Refresh</button></div>
+  <img id="plPreview" hidden alt="place preview" style="max-width:100%">
+  <h4>New place</h4>
+  <div class="grid">
+    <label>Template <select id="plTemplate"></select></label>
+    <div class="btns"><button data-act="pl_load_template">Load template into form</button></div>
+  </div>
+  <label>Or describe it in plain words <input type="text" data-s="places.from_text" placeholder="walled coastal town of 800 people with a big river, Danish style, hilly"></label>
+  <div class="btns"><button data-act="pl_from_text" title="Keyword parser: fills the form below. For nuance, ask Claude to write the spec from illustrator/PLACES.md">Fill form from words</button></div>
+  <pre id="plNotes" class="note"></pre>
+  <div class="grid" id="plForm">
+    <label>Name <input type="text" data-s="places.form.name" placeholder="e.g. Ulfvik"></label>
+    <label>Id (folder) <input type="text" data-s="places.form.id" placeholder="auto from name"></label>
+    <label>Culture <select data-s="places.form.culture"><option value="fantasy_generic">Generic fantasy</option><option value="scandinavian">Scandinavian</option><option value="danish_german">Danish / North German</option><option value="english">English</option></select></label>
+    <label>Population <input type="number" data-s="places.form.population" min="20" max="12000" step="10"></label>
+    <label>Layout <select data-s="places.form.layout"><option>organic</option><option>radial</option><option>grid</option><option>linear</option><option>walled</option></select></label>
+    <label>Centre feature <select data-s="places.form.central_feature"><option>market</option><option>green</option><option>temple</option><option>castle</option><option>none</option></select></label>
+    <label>Terrain <select data-s="places.form.recipe"><option>flat</option><option>rolling</option><option>hills</option><option>valley</option><option>bowl</option><option>coastal</option><option>island</option><option>pass</option><option>fjord</option><option>mountain</option></select></label>
+    <label>Sea on (coastal, fjord) <select data-s="places.form.sea_side"><option>south</option><option>north</option><option>east</option><option>west</option></select></label>
+    <label>Rivers <input type="number" data-s="places.form.rivers" min="0" max="3" step="1"></label>
+    <label>River bends <select data-s="places.form.river_meander"><option>straight</option><option>gentle</option><option>lazy</option></select></label>
+    <label>Lakes <input type="number" data-s="places.form.lakes" min="0" max="4" step="1"></label>
+    <label>Relief (ft, blank = recipe) <input type="number" data-s="places.form.relief_ft" min="0" step="10"></label>
+    <label>Climate <select data-s="places.form.climate"><option>temperate</option><option>cold</option><option>dry</option><option>coastal</option></select></label>
+    <label>Season <select data-s="places.form.season"><option>summer</option><option>autumn</option><option>winter</option></select></label>
+    <label>Width (ft, blank = auto) <input type="number" data-s="places.form.width_ft" min="800" max="12000" step="100"></label>
+    <label>Height (ft) <input type="number" data-s="places.form.height_ft" min="800" max="12000" step="100"></label>
+    <label>Seed (blank = from id) <input type="number" data-s="places.form.seed" step="1"></label>
+    <label class="chk"><input type="checkbox" data-s="places.form.wall"> Town wall and gates</label>
+  </div>
+  <div class="grid">
+    <label class="chk"><input type="checkbox" data-s="places.draft"> Draft quality (coarse terrain, civic buildings only: fast, safe to open)</label>
+    <label class="chk"><input type="checkbox" data-s="places.allow_large"> Allow large (lifts the size caps; can take minutes and a lot of memory)</label>
+    <label class="chk"><input type="checkbox" data-s="places.render_after"> Render a preview PNG after generating</label>
+    <label class="chk"><input type="checkbox" data-s="places.open_after"> Also write the Illustrator job (opens the map as a new document)</label>
+  </div>
+  <div class="note" id="plEstimate"></div>
+  <div class="btns"><button data-act="pl_validate">Validate</button><button class="primary" data-act="pl_generate">Generate place</button><button data-act="pl_regenerate" title="Overwrites world/&lt;id&gt; (hand edits there are lost)">Regenerate (overwrite)</button></div>
+  <details><summary>Paste a spec (from Claude or a file)</summary>
+    <textarea data-s="places.spec_text" rows="8" style="width:100%" placeholder='{"name": "Ulfvik", "culture": "scandinavian", "terrain": {"recipe": "coastal", "sea_side": "east"}, "town": {"population": 260}}'></textarea>
+    <div class="btns"><button data-act="pl_use_pasted">Load into form</button><button data-act="pl_clear_pasted">Clear (use the form)</button></div>
+    <div class="note">While this box has text, Validate and Generate use it instead of the form.</div>
+  </details>
+  <h4>Import a Foundry scene as a place (read-only on Foundry)</h4>
+  <div class="grid">
+    <label>Scene <select id="plScene"></select></label>
+    <label>or uuid <input type="text" data-s="places.import.scene_uuid" placeholder="Scene.xxxxxxxx"></label>
+    <label>New place id <input type="text" data-s="places.import.place_id" placeholder="auto from scene name"></label>
+    <label>Closed wall loops <select data-s="places.import.closed_as"><option value="buildings">become building outlines</option><option value="lines">stay lines</option></select></label>
+    <label class="chk"><input type="checkbox" data-s="places.import.lights"> lights</label>
+    <label class="chk"><input type="checkbox" data-s="places.import.tokens"> tokens</label>
+    <label class="chk"><input type="checkbox" data-s="places.import.notes"> notes</label>
+  </div>
+  <div class="btns"><button data-act="pl_import_check">Check (dry run)</button><button class="primary" data-act="pl_import_scene">Import scene as place</button></div>
+  <pre id="plOut" class="note" style="white-space:pre-wrap"></pre>
+  <p class="note">Generated places land in world/&lt;id&gt; and work with every other tab. Walls, gates and lakes follow the spec; a town wall is drawn in the map but not exported to the 3D pack. See illustrator/PLACES.md.</p>
+</section>
+<!-- /PLACES TAB -->
+
 <section id="tab-foundry" role="tabpanel">
   <h4>Foundry <span class="tag" id="fConn">not checked</span></h4>
   <div class="grid">
     <label>Place <select id="fPlace"></select></label>
     <label>Target <select data-s="foundry.target"><option value="new">New scene (create)</option><option value="existing">Existing scene</option></select></label>
-    <label>New scene name <input type="text" data-s="foundry.sceneName" placeholder="Bridgehollow overview"></label>
+    <label>New scene name <input type="text" data-s="foundry.sceneName" placeholder="e.g. Town overview"></label>
     <label>Existing scene <select id="fScene" data-s="foundry.sceneUuid"></select></label>
   </div>
+  <div class="btns"><button data-act="pl_import_from_foundry_tab" title="Create a new place from the existing scene picked above (read-only on Foundry; see the Places tab)">Import scene as place</button><!-- PLACES --></div>
   <div class="btns"><button data-act="f_status">Check connection</button><button data-act="f_refresh" title="Read scenes, actors, items, journals from Foundry">Refresh from Foundry</button><span id="fCache" class="tag"></span></div>
   <h4>Scene (view -> background, grid, walls)</h4>
   <div class="grid">
@@ -825,5 +892,7 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
 <script src="padding_ui.js"></script>
 <script src="lib/bridges.js"></script><!-- BRIDGES -->
 <script src="bridges_ui.js"></script><!-- BRIDGES -->
+<script src="lib/places.js"></script><!-- PLACES -->
+<script src="places_ui.js"></script><!-- PLACES -->
 <script src="main.js"></script>
 </body></html>
