@@ -616,6 +616,12 @@ def build_parts(pack, step=1, carve=True, conform=True, layers=None, drape_edge_
     for e in pack.list("fences"):
         if want("fences"):
             add(e, "fences", build_fence(cx, e))
+    if want("walls") and pack.list("walls"):                            # TOWN WALLS (worldpack_walls.py): curtain wall segments, towers, gate lintels on the final terrain
+        import worldpack_walls as _ww
+        for e in pack.list("walls"):
+            fn = {"town_wall": _ww.build_wall, "wall_tower": _ww.build_tower, "gate_lintel": _ww.build_lintel}.get(e.get("kind"))
+            if fn:
+                add(e, "walls", fn(cx, e))
     if want("foliage"):
         tmpl = {}
         for e in pack.list("foliage"):
