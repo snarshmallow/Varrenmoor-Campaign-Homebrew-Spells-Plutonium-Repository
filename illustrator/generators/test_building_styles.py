@@ -184,6 +184,77 @@ class Geometry(unittest.TestCase):
         self.assertNotEqual(m1.tri_count, m2.tri_count)
 
 
+class ArchedOpenings(unittest.TestCase):
+    def test_curves(self):
+        import building_styles_arch as bsa
+        c = bsa.curve(0.0, 2.0, 1.0, "round_arch")
+        self.assertAlmostEqual(c[0][1], 1.0)
+        self.assertAlmostEqual(max(z for _, z in c), 2.0, places=6)               # semicircle: rise = w/2
+        p = bsa.curve(0.0, 2.0, 0.0, "pointed")
+        self.assertAlmostEqual(max(z for _, z in p), math.sqrt(3), places=6)      # equilateral arch: rise = 0.866 w
+        self.assertAlmostEqual(p[len(p) // 2][0], 1.0, places=6)                  # apex on the axis
+        self.assertAlmostEqual(p[0][0], 0.0)
+        self.assertAlmostEqual(p[-1][0], 2.0)
+        o = bsa.curve(0.0, 2.0, 0.0, "pointed", 0.4)
+        self.assertAlmostEqual(o[0][0], -0.4, places=6)                           # the surround starts exactly beside the jamb
+
+    def test_church_windows_and_doors_are_arched(self):
+        import building_styles_arch as bsa
+        for pid, wshape, dshape in (("parish_church", ("pointed", "triple_lancet"), "pointed"), ("chapel", ("round_arch",), "pointed"), ("stave_church", ("round_arch",), "round_arch"),
+                                    ("town_gatehouse", ("rect",), "round_arch"), ("town_guildhall", ("rect",), "round_arch")):
+            e, m, dn = build(pid)
+            W, D = e["_style"]["windows"], e["_style"]["door"]
+            self.assertIn(W["shape"], wshape, pid)
+            self.assertEqual(D["shape"], dshape, pid)
+            self.assertEqual(len(dn), 1, pid)
+            self.assertIn("mat_glass", m.subs, pid)
+            self.assertEqual(len(dn[0]["mesh"].subs), 1, pid)                       # the door node stays one material
+
+    def test_shape_holes_stay_inside_old_span_and_storey(self):
+        import building_styles_arch as bsa
+        zf = 0.0
+        base = [[{"u0": 2.0, "u1": 2.0 + 3 * FT, "z0": 3.5 * FT, "z1": 7.0 * FT, "kind": "window"}, {"u0": 9.0, "u1": 9.0 + 3 * FT, "z0": 13.5 * FT, "z1": 17.0 * FT, "kind": "window"},
+                 {"u0": 5.0, "u1": 5.0 + 3.5 * FT, "z0": 0.0, "z1": 7 * FT, "kind": "door"}]]
+        for shape in ("pointed", "round_arch", "triple_lancet"):
+            W = {"shape": shape, "width_ft": 1.9, "triple_width_ft": 4.8, "height_ft": 7.0, "sill_ft": 2.5}
+            out = bsa.shape_holes([[dict(h) for h in base[0]]], W, zf)[0]
+            wins = [h for h in out if h["kind"] == "window"]
+            self.assertGreaterEqual(len(wins), 2)
+            for h in wins:
+                self.assertIn(h["shape"], ("pointed", "round_arch"))
+                self.assertGreater(h["zs"], h["z0"])                                 # a straight part below the springing line
+                storey = int((h["z0"] / FT + 0.01) // 10)
+                self.assertLess(h["z1"] / FT, storey * 10 + 9.5)                     # stays under the storey line (interiors keep their floors)
+                self.assertTrue(any(abs((h["u0"] + h["u1"]) / 2 - (b["u0"] + b["u1"]) / 2) < 3 * FT for b in base[0] if b["kind"] == "window"))
+            spans = sorted((h["u0"], h["u1"]) for h in wins if h["z0"] < 10 * FT)
+            for a, b in zip(spans, spans[1:]):
+                self.assertLessEqual(a[1], b[0] + 1e-9)                              # no overlap between neighbouring lancets
+            self.assertTrue(all(h["u0"] > 2.0 - 1.5 * FT and h["u1"] < 9.0 + 4.5 * FT for h in wins))
+            self.assertEqual([h for h in out if h["kind"] == "door"][0]["z0"], 0.0)  # the door hole is untouched
+
+    def test_interiors_layout_windows_get_arches_and_keep_partition_gap(self):
+        import building_styles_arch as bsa
+        holes = [[{"u0": 4.0, "u1": 4.0 + 3.0 * FT, "z0": 2.0 * FT, "z1": 5.0 * FT, "kind": "window"}]]
+        out = bsa.shape_holes(holes, {"shape": "pointed", "width_ft": 1.9, "height_ft": 7.0, "sill_ft": 9.0}, 0.0, has_layout=True)[0]
+        self.assertAlmostEqual(out[0]["z0"], 2.0 * FT)                               # layout sill is kept (sill_ft only applies to derived windows)
+        self.assertLessEqual(out[0]["u1"] - out[0]["u0"], 3.0 * FT + 1e-9)            # never wider than the span the layout reserved
+
+    def test_rose_window_and_arched_door_leaf(self):
+        import building_styles_arch as bsa
+        e, m, dn = build("parish_church")
+        self.assertEqual(e["_style"]["special"]["rose"]["diameter_ft"], 4.6)
+        o = bsa.leaf_outline(3.0, 7.0, "pointed")
+        zs = [z for _, z in o]
+        self.assertAlmostEqual(max(zs), 7.0, places=6)
+        self.assertEqual(o[0], (0, 0))
+        area2 = sum(o[k][0] * o[(k + 1) % len(o)][1] - o[(k + 1) % len(o)][0] * o[k][1] for k in range(len(o)))
+        self.assertGreater(area2, 0)                                                # counter-clockwise outline
+        e2 = dict(e)
+        e2["_style"] = dict(e["_style"], special={k: v for k, v in e["_style"]["special"].items() if k != "rose"})
+        m2, _ = wd.build_building_detailed(wm.Ctx(pack()), e2)
+        self.assertGreater(m.tri_count, m2.tri_count)                                # the rose adds geometry
+
+
 class AssignCli(unittest.TestCase):
     def test_assign_clear_and_filters(self):
         tmp = tempfile.mkdtemp()

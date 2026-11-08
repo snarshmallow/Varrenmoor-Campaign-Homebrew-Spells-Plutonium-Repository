@@ -11,6 +11,7 @@ from mathutils import Vector
 
 a = sys.argv[sys.argv.index("--") + 1:]
 gdir, out, ids = a[0], a[1], [s for s in a[2].split(",") if s]
+VIEW = os.environ.get("STYLE_VIEW", "")      # "" = standard 3/4 view; "front" = straight at the door wall (close), "threeq_close" = closer 3/4
 W, H = (int(a[3]), int(a[4])) if len(a) >= 5 else (900, 680)
 
 
@@ -68,11 +69,17 @@ for bid in ids:
     go.data.materials.append(mat)
     size = ((hi.x - lo.x) ** 2 + (hi.y - lo.y) ** 2 + (hi.z - lo.z) ** 2) ** 0.5 * 0.85
     loc = Vector((ctr.x + size * 0.85, ctr.y - size * 1.45, lo.z + (hi.z - lo.z) * 0.5 + size * 0.25))
+    if VIEW == "front":
+        loc = Vector((ctr.x, ctr.y - size * 1.0, lo.z + (hi.z - lo.z) * 0.22))
+    elif VIEW == "gable":            # from the -x end (the end opposite a west tower), slightly raised
+        loc = Vector((ctr.x - size * 0.95, ctr.y - size * 0.25, lo.z + (hi.z - lo.z) * 0.3))
+    elif VIEW == "threeq_close":
+        loc = Vector((ctr.x + size * 0.55, ctr.y - size * 0.8, lo.z + (hi.z - lo.z) * 0.3))
     cam.location = loc
     cam.data.lens = 34
     cam.data.clip_end = 5000
-    tgt = Vector((ctr.x, ctr.y, lo.z + (hi.z - lo.z) * 0.42))
+    tgt = Vector((ctr.x, ctr.y, lo.z + (hi.z - lo.z) * (0.3 if VIEW else 0.42)))
     cam.rotation_euler = (tgt - loc).to_track_quat("-Z", "Y").to_euler()
-    sc.render.filepath = os.path.join(out, bid + ".png")
+    sc.render.filepath = os.path.join(out, bid + (("_" + VIEW) if VIEW else "") + ".png")
     bpy.ops.render.render(write_still=True)
     print("rendered", bid, flush=True)

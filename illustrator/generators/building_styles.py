@@ -125,8 +125,10 @@ def resolve(style_id, bid, kind=None, district=None):
     # windows / door
     S["windows"] = {"type": wi.get("type", "plain"), "cols": int(round(_rng(wi.get("cols", [2, 2]), k, "wc"))), "rows": int(round(_rng(wi.get("rows", [2, 2]), k, "wr"))),
                     "shutters": _u(k, "shut") < wi.get("shutter_prob", 0.0), "shutter_color": _pick(wi.get("shutter_colors"), k, "shutc"),
-                    "frame_color": _pick(wi.get("frame_colors"), k, "framec"), "bar_color": wi.get("bar_color", "#2b2b2d"), "hood": bool(wi.get("hood", False))}
-    S["door"] = {"color": _pick(dr.get("colors"), k, "doorc"), "surround": bool(dr.get("surround", True))}
+                    "frame_color": _pick(wi.get("frame_colors"), k, "framec"), "bar_color": wi.get("bar_color", "#2b2b2d"), "hood": bool(wi.get("hood", False)),
+                    "shape": _pick(wi.get("shape"), k, "wshape") if isinstance(wi.get("shape"), list) else wi.get("shape", "rect"),
+                    "width_ft": _rng(wi.get("width_ft", 1.9), k, "ww"), "height_ft": _rng(wi.get("height_ft", 6.5), k, "wh"), "sill_ft": wi.get("sill_ft"), "triple_width_ft": wi.get("triple_width_ft", 4.8)}
+    S["door"] = {"color": _pick(dr.get("colors"), k, "doorc"), "surround": bool(dr.get("surround", True)), "shape": dr.get("shape", "rect")}
     if ch.get("type", "none") != "none" and _u(k, "chim") < ch.get("prob", 1.0):
         S["chimney"] = {"type": ch["type"], "material": ch.get("material", "brick"), "color": _pick(ch.get("colors"), k, "chimc"), "width_ft": ch.get("width_ft", 2.4),
                         "rise_ft": ch.get("rise_ft", 3.0), "end": 1 if _u(k, "chend") < 0.5 else -1}

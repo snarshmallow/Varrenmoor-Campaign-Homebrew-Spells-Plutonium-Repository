@@ -111,6 +111,10 @@ def build_building_detailed(cx, e):
     if e.get("layout"):                                      # interior layout owns the window positions (worldpack_interiors)
         import worldpack_interiors as wi
         edge_holes = wi.apply_layout_windows(edge_holes, P, e, cx, zf)
+    import building_styles_arch as bsa
+    if e.get("_style"):                                      # arched / pointed windows and doors (building_styles_arch.py); the hole list stays the single source
+        edge_holes = bsa.shape_holes(edge_holes, e["_style"]["windows"], zf, bool(e.get("layout")))
+        edge_holes = bsa.shape_doors(edge_holes, e["_style"]["door"])
     door_nodes = []
 
     def X(i, u, v, z):
@@ -125,6 +129,9 @@ def build_building_detailed(cx, e):
     def face(mat, pts):                  # world-scale UVs (worldpack_mesh.world_uv): level courses, constant texel density, rails on the floor line
         mat = mm.get(mat, mat)
         b.face(mat, pts, wm.world_uv(pts, wt if mat == wmat else pbr.tile_ft(mat, wt), uvo, zf))
+
+    def X_i(i):
+        return lambda u, v, z: X(i, u, v, z)
 
     def rect(i, mat, v, u0, u1, zb, zc):
         if u1 - u0 > 1e-6 and zc - zb > 1e-6:
@@ -160,18 +167,31 @@ def build_building_detailed(cx, e):
                 rect(i, mat, v, u0, u1, z, zt)
                 cur = u1
             rect(i, mat, v, cur, hi_u, zb, zt)
+            for h in holes:
+                if h.get("shape"):
+                    bsa.infill(face, X_i(i), h, v, mat, -1.0 if v == 0.0 else t + 1.0)
         tw, to = TRIM_W_FT * FT, TRIM_OUT_FT * FT
         for h in holes:
             u0, u1, za, zb_ = h["u0"], h["u1"], h["z0"], h["z1"]
-            if h["kind"] == "window":
-                face("mat_plaster", [X(i, u0, 0, za), X(i, u1, 0, za), X(i, u1, t, za), X(i, u0, t, za)])
-            face("mat_plaster", [X(i, u0, 0, zb_), X(i, u1, 0, zb_), X(i, u1, t, zb_), X(i, u0, t, zb_)])
-            face("mat_plaster", [X(i, u0, 0, za), X(i, u0, t, za), X(i, u0, t, zb_), X(i, u0, 0, zb_)])
-            face("mat_plaster", [X(i, u1, 0, za), X(i, u1, t, za), X(i, u1, t, zb_), X(i, u1, 0, zb_)])
-            # trim frame stands proud of the wall (its wall-side face is omitted: no coplanar overlap)
-            box(i, "mat_trim", u0 - tw, u0, -to, 0, za, zb_ + tw, skip=("v1",))
-            box(i, "mat_trim", u1, u1 + tw, -to, 0, za, zb_ + tw, skip=("v1",))
-            box(i, "mat_trim", u0, u1, -to, 0, zb_, zb_ + tw, skip=("v1",))
+            if h.get("shape"):                   # arched / round opening: curved reveal + stone surround; the leaf and glass follow the outline
+                bsa.reveals(face, X_i(i), h, t)
+                bsa.surround(face, lambda m, a, b, c, d_, e_, f_, skip=(): box(i, m, a, b, c, d_, e_, f_, skip), X_i(i), h, tw, to)
+                if h["kind"] == "window":
+                    if h["shape"] != "rose":
+                        face("mat_plaster", [X(i, u0, 0, za), X(i, u1, 0, za), X(i, u1, t, za), X(i, u0, t, za)])
+                        box(i, "mat_trim", u0 - tw, u1 + tw, -2 * to, 0, za - tw, za, skip=("v1",))
+                    bsa.glass(face, X_i(i), h, t)
+                    continue
+            if not h.get("shape"):
+                if h["kind"] == "window":
+                    face("mat_plaster", [X(i, u0, 0, za), X(i, u1, 0, za), X(i, u1, t, za), X(i, u0, t, za)])
+                face("mat_plaster", [X(i, u0, 0, zb_), X(i, u1, 0, zb_), X(i, u1, t, zb_), X(i, u0, t, zb_)])
+                face("mat_plaster", [X(i, u0, 0, za), X(i, u0, t, za), X(i, u0, t, zb_), X(i, u0, 0, zb_)])
+                face("mat_plaster", [X(i, u1, 0, za), X(i, u1, t, za), X(i, u1, t, zb_), X(i, u1, 0, zb_)])
+                # trim frame stands proud of the wall (its wall-side face is omitted: no coplanar overlap)
+                box(i, "mat_trim", u0 - tw, u0, -to, 0, za, zb_ + tw, skip=("v1",))
+                box(i, "mat_trim", u1, u1 + tw, -to, 0, za, zb_ + tw, skip=("v1",))
+                box(i, "mat_trim", u0, u1, -to, 0, zb_, zb_ + tw, skip=("v1",))
             if h["kind"] == "window":
                 box(i, "mat_trim", u0 - tw, u1 + tw, -2 * to, 0, za - tw, za, skip=("v1",))
                 pm, zm = (u0 + u1) / 2, (za + zb_) / 2
@@ -182,14 +202,25 @@ def build_building_detailed(cx, e):
             else:
                 lw, lh, lt = (u1 - u0) - 0.04, (zb_ - za) - 0.04, LEAF_T_FT * FT
                 lb = Builder()
-                for pts in ([(0, -lt / 2, 0), (lw, -lt / 2, 0), (lw, -lt / 2, lh), (0, -lt / 2, lh)], [(0, lt / 2, 0), (lw, lt / 2, 0), (lw, lt / 2, lh), (0, lt / 2, lh)],
-                            [(0, -lt / 2, 0), (0, lt / 2, 0), (0, lt / 2, lh), (0, -lt / 2, lh)], [(lw, -lt / 2, 0), (lw, lt / 2, 0), (lw, lt / 2, lh), (lw, -lt / 2, lh)],
-                            [(0, -lt / 2, lh), (lw, -lt / 2, lh), (lw, lt / 2, lh), (0, lt / 2, lh)]):
-                    lb.face(mm.get("mat_door_wood", "mat_door_wood"), pts, [(p[0] / FT / 4, -p[2] / FT / 4) for p in pts])
+                dm = mm.get("mat_door_wood", "mat_door_wood")
+                if h.get("shape") in ("round_arch", "pointed"):       # plank door shaped to the arch (convex outline, two faces + edge strips)
+                    ol = bsa.leaf_outline(lw, lh, h["shape"])
+                    for sgn in (-1, 1):
+                        pts = [(x, sgn * lt / 2, z) for x, z in ol]
+                        lb.face(dm, pts if sgn < 0 else pts[::-1], [(p[0] / FT / 4, -p[2] / FT / 4) for p in pts])
+                    for k in range(len(ol)):
+                        (xa, za_), (xb, zb2) = ol[k], ol[(k + 1) % len(ol)]
+                        pts = [(xa, lt / 2, za_), (xb, lt / 2, zb2), (xb, -lt / 2, zb2), (xa, -lt / 2, za_)]
+                        lb.face(dm, pts, [(p[0] / FT / 4, -p[2] / FT / 4) for p in pts])
+                else:
+                    for pts in ([(0, -lt / 2, 0), (lw, -lt / 2, 0), (lw, -lt / 2, lh), (0, -lt / 2, lh)], [(0, lt / 2, 0), (lw, lt / 2, 0), (lw, lt / 2, lh), (0, lt / 2, lh)],
+                                [(0, -lt / 2, 0), (0, lt / 2, 0), (0, lt / 2, lh), (0, -lt / 2, lh)], [(lw, -lt / 2, 0), (lw, lt / 2, 0), (lw, lt / 2, lh), (lw, -lt / 2, lh)],
+                                [(0, -lt / 2, lh), (lw, -lt / 2, lh), (lw, lt / 2, lh), (0, lt / 2, lh)]):
+                        lb.face(dm, pts, [(p[0] / FT / 4, -p[2] / FT / 4) for p in pts])
                 for sgn in (-1, 1):                    # latch plate; same material as the leaf so the door node is ONE mesh/material (3D Canvas door code reads child.material)
                     y = sgn * (lt / 2 + 0.01)
                     hz = lh * 0.45
-                    lb.face(mm.get("mat_door_wood", "mat_door_wood"), [(lw - 0.15, y, hz), (lw - 0.05, y, hz), (lw - 0.05, y, hz + 0.05), (lw - 0.15, y, hz + 0.05)], [(0, 0)] * 4)
+                    lb.face(dm, [(lw - 0.15, y, hz), (lw - 0.05, y, hz), (lw - 0.05, y, hz + 0.05), (lw - 0.15, y, hz + 0.05)], [(0, 0)] * 4)
                 M = lb.build()
                 V = M.V
                 Vb = np.stack([V[:, 0] * D[i][0] + V[:, 1] * N[i][0], V[:, 0] * D[i][1] + V[:, 1] * N[i][1], V[:, 2]], 1)

@@ -46,14 +46,24 @@
   "rows": [
    3,
    3
-  ]
+  ],
+  "shape": [
+   "pointed",
+   "pointed",
+   "triple_lancet"
+  ],
+  "width_ft": 1.9,
+  "triple_width_ft": 4.8,
+  "height_ft": 7.0,
+  "sill_ft": 2.5
  },
  "door": {
   "colors": [
    "#5a3a22",
    "#3c4a38",
    "#6a2c24"
-  ]
+  ],
+  "shape": "pointed"
  },
  "preview": "illustrator/out/building_styles/parish_church.png",
  "plinth": {
@@ -75,6 +85,9 @@
    "size_ft": 10.0,
    "height_ft": 22.0,
    "spire_ft": 24.0
+  },
+  "rose": {
+   "diameter_ft": 4.6
   }
  }
 }

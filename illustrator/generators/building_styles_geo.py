@@ -11,6 +11,7 @@ import math
 import numpy as np
 
 import worldpack_mesh as wm
+import building_styles_arch as bsa
 
 FT = wm.FT
 BEAM_TILE = 3.0
@@ -540,9 +541,11 @@ def decorate(cx, e, g_builder, S, P, D, N, edge_holes, zf, zt, floors, X_of, t_w
         holes = edge_holes[i]
         plinth(g, i, X, L, holes, P, D, zf, z0, S)
         wall_frame(g, i, X, L, holes, P, D, zf, zt, floors, S, z0)
-        if S["windows"]["type"] != "plain" or S["windows"]["shutters"]:
-            for h in holes:
-                if h["kind"] == "window":
+        for h in holes:
+            if h["kind"] == "window":
+                if h.get("shape"):                           # arched / round window: tracery bars follow the outline (building_styles_arch.py)
+                    bsa.tracery(g, X, h, t_wall, S["bar_mat"])
+                elif S["windows"]["type"] != "plain" or S["windows"]["shutters"]:
                     window_extras(g, i, X, h, t_wall, S)
     R = Roof(cx, e).zt(zt)
     if S["roof"].get("ridge_cap") and not S.get("cap_mat"):
@@ -552,5 +555,7 @@ def decorate(cx, e, g_builder, S, P, D, N, edge_holes, zf, zt, floors, X_of, t_w
     stepped_gable(g, R, e, S, zt)
     gable_timber(g, R, e, S, zt)
     tower(g, R, e, S, zt, z0)
+    if S["special"].get("rose"):
+        bsa.gable_rose(g, R, S, zt, S["special"]["rose"])
     tiers(g, R, e, S, zt, z0)
     windmill(g, R, e, S, zt, z0)

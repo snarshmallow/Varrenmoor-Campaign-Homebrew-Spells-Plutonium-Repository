@@ -37,7 +37,18 @@ Tests: `node illustrator/panel/test/test_styles_jobs.js` (14 checks on a temp co
 
 ## 6. Limits / honest notes
 * Jetty is faux (projecting bressummer + joist ends, wall plane unchanged). Gable timber is built at the obb end plane; a skewed (non-rectangular) footprint will not line up exactly, as before with gable triangles.
-* Window and door sizes still come from `worldpack_detail` (3 x 3.5 ft windows every ~8 ft, 3.5 x 7 ft doors): church windows are not tall lancets, the gatehouse has no archway, the watermill has no wheel, the windmill sails are flat slat panels. Dormers, porches, shop signs, open boat-house doors are not modelled.
+* Window positions still come from `worldpack_detail` (every ~8 ft, 3.5 x 7 ft doors); styles can now reshape them (section 7). The gatehouse has only a round-arched pedestrian door, no carriage archway; the watermill has no wheel, the windmill sails are flat slat panels. Dormers, porches, shop signs, open boat-house doors are not modelled.
 * Colour is per preset palette; Blender previews use the Standard view transform, Foundry's lighting will read the same colours slightly differently.
 * Thatch/tile/slate roof textures are the older images, only tinted (strands look soft at 2 m).
 * Stone plinth/stone walls use the rubble texture at 7 ft per repeat (blocks about 1 x 2 ft).
+
+## 7. Arched openings (building_styles_arch.py)
+Preset schema additions (all optional, default = the old rectangular look):
+* `windows.shape`: `rect` | `round_arch` (semicircle) | `pointed` (equilateral two-centred gothic lancet) | `rose` (circle in the wall) | `triple_lancet` (three pointed lights, centre one taller, stone piers between). A list picks per building like the other fields.
+  `windows.width_ft` (1.9), `height_ft` (6.5, total with the arch), `sill_ft` (derived windows only; interior layout windows keep their sill), `triple_width_ft` (4.8).
+* `door.shape`: `rect` | `round_arch` | `pointed`: arched hole, plank leaf cut to the arch (still ONE material per door node, hinge unchanged), stone surround.
+* `special.rose`: `{diameter_ft, end}`: round window on a gable (default the end opposite a tower): stone ring with alternating proud voussoirs, glass, 8 spokes + hub ring.
+Geometry: the wall still cuts the bounding rectangle of the hole; the spandrels (corners) are filled on both wall faces, so the opening seen from outside IS the arch; curved soffit and jambs inside, stone jambs + voussoir ring outside, arched glass pane, tracery (mullion, saddle bars, inner arch ring). Windows stay `kind: window` holes (material `mat_glass`) so the split exporter and interiors see the same hole list; windows only narrow inside the span they had (partitions still clear), and stay under the storey line.
+Applied: `parish_church` (pointed / triple lancets, pointed door, rose in the gable opposite the tower), `chapel` (round-arched windows, pointed door), `stave_church` (small round-arched windows, round portal), `town_gatehouse` and `town_guildhall` (round-arched door).
+Images: `building_styles/churches.png`, `sheet.png`. Tests: `ArchedOpenings` in test_building_styles.py (16 tests in all).
+Limits: the gable rose is blind (a ring and glass disc proud of the gable face; the gable triangle is not cut); a rose window in a wall hole (`windows.shape: rose`) works but no preset uses it; no trefoil; the door surround is the style's trim colour (stone on churches); doors keep the width from the region detail pass (3.5 ft); the Dyers Walk pack uses no church style, so it was not regenerated.
