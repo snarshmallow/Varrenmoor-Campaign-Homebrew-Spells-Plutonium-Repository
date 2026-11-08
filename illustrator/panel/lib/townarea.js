@@ -1,7 +1,7 @@
 // Town area ("auto lasso") panel pieces: params, jobs. Loaded after core.js; extends window.VBCore without touching it.
 (function (root) {
   "use strict";
-  var VB = root.VBCore || (typeof module !== "undefined" && module.exports ? module.exports : null);
+  var VB = root.VBCore || (typeof require !== "undefined" ? require("./core.js") : null);
   if (!VB) return;
   var GEN = "illustrator/generators/";
   var AREA_LAYERS = ["TOWN AREA", "TOWN AREA RINGS"];
@@ -21,6 +21,8 @@
     t.aa = Object.assign({}, d, t.aa || {});
     Object.keys(d).forEach(function (k) { if (a[k] != null) t.aa[k] = a[k]; });
     if (a.target_area_ft2 === null) t.aa.target_area_ft2 = 0;
+    if (!t.fit) t.fit = "buildings";
+    if (t.fit_margin_ft == null) t.fit_margin_ft = 40;
     return t;
   };
 

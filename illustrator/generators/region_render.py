@@ -127,7 +127,7 @@ def main(argv=None):
     actions = [{"action": "place_svg", "path": rel(svg), "mode": "open"}]
     for L in layers:
         actions.append({"action": "place_image", "path": rel(L["path"]), "rect": [round(x, 3) for x in L["rect"]], "layer": L["layer"], "below": "LINES",
-                        "name": L["name"], "lock": True})
+                        "name": L["name"], "lock": True, "embed": True})
     actions += [{"action": "save_ai", "path": rel(ai)}, {"action": "export_png", "path": rel(png_out), "scale": a.png_scale}]
     jid = a.job_id or prefix
     res = {"ok": True, "child": child, "svg": svg, "scale_ft_per_in": v.fpi, "page_in": list(v.page), "window_ft": win, "fill_dpi": dpi,

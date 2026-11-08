@@ -301,6 +301,22 @@ function VB_font(family, bold, italic) {
   }
   VB_fontCache[key] = best; return best;
 }
+// Text frame called `name` anywhere (inside the callout groups Illustrator makes on SVG import too). The halo copies lose their names on import,
+// so for "<id>_halo" an unnamed text frame with the same contents whose centre is nearest the label wins.
+function VB_textNamed(doc, name, c) {
+  var tfs = doc.textFrames, best = null, i;
+  for (i = 0; i < tfs.length; i++) if (String(tfs[i].name) === name) return tfs[i];
+  if (!c) return null;
+  var base = VB_textNamed(doc, c.id, null); if (!base) return null;
+  var bb = base.geometricBounds, cx = (bb[0] + bb[2]) / 2, cy = (bb[1] + bb[3]) / 2, bd = 1e9;
+  for (i = 0; i < tfs.length; i++) {
+    var t = tfs[i]; if (t === base || String(t.name) !== "") continue;
+    try { if (t.contents !== base.contents) continue; } catch (e) { continue; }
+    var g = t.geometricBounds, d = Math.abs((g[0] + g[2]) / 2 - cx) + Math.abs((g[1] + g[3]) / 2 - cy);
+    if (d < bd && d < 20) { bd = d; best = t; }
+  }
+  return best;
+}
 function VB_applyCurved(doc, svgPath) {
   var res = { made: 0, skipped: 0, ids: [] };
   var jf = new File(String(svgPath) + ".curved.json");
@@ -308,9 +324,9 @@ function VB_applyCurved(doc, svgPath) {
   jf.encoding = "UTF-8"; jf.open("r"); var txt = jf.read(); jf.close();
   var data = eval("(" + txt + ")"), items = data.items || [];
   for (var i = 0; i < items.length; i++) {
-    var c = items[i], fb = VB_findItem(doc, c.id);
+    var c = items[i], fb = VB_textNamed(doc, c.id, null);
     if (!fb || !c.points || c.points.length < 2) { res.skipped++; continue; }
-    var undo = [], lyr = fb.layer, hb = VB_findItem(doc, c.id + "_halo");
+    var undo = [], lyr = fb.layer, hb = VB_textNamed(doc, c.id + "_halo", c);
     try {
       VB_unlockChain(lyr, undo);
       var hl = null;
@@ -512,7 +528,7 @@ function VB_run(json) {
           pim.width = w2; pim.height = h2;
           pim.position = [ab[0] + a.rect[0], ab[1] - a.rect[1]];
         } catch (pe) { try { pim.remove(); } catch (e) {} throw pe; }
-        if (a.embed) {
+        if (a.embed !== false) {   // embed by default: a linked PNG makes Illustrator ask "Update now?" on every reopen
           try { if (pf.length > 300 * 1024 * 1024) out.warn = "embedding a very large image (" + Math.round(pf.length / 1048576) + " MB); consider a lower dpi or 'Link instead of embed'"; } catch (e) {}
           pim.embed(); out.embedded = true;
         }
