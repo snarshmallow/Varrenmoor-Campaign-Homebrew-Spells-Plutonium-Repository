@@ -616,24 +616,65 @@ def _next_version_dir(base, name):
 
 
 class Ground:
-    """Frame + heights used to ground the instances in the pack (so trees sit on the mesh the pack exports)."""
+    """Frame + heights used to ground the instances in the pack (so trees sit on the mesh the pack exports).
+    `from_pack` uses the FINAL terrain build_parts builds (river carve, road grading / cut-fill, bridge conform, building pads; worldpack_mesh.final_heights) and
+    reads it from the terrain TRIANGLES (road_grade.mesh_height). `keep_out` (shapely, feet) = road beds, bridge decks and building footprints: trees inside it are dropped."""
 
-    def __init__(self, frame, heights, cell_ft):
-        self.frame, self.h, self.cell = frame, heights, cell_ft
+    def __init__(self, frame, heights, cell_ft, keep_out=None):
+        self.frame, self.h, self.cell, self.keep_out = frame, heights, cell_ft, keep_out
 
     @classmethod
-    def from_pack(cls, pack_dir):
+    def from_pack(cls, pack_dir, road_grade=True, carve=True, conform=True, with_keep_out=True):
         import worldpack as wp
+        import worldpack_mesh as wm
         pack = wp.load_pack(pack_dir)
-        h = pack.heights
-        try:
-            h = wp.road_conformed_heights(pack, wp.carved_heights(pack))
-        except Exception:
-            pass
-        return cls(pack.frame, h, pack.cell_ft)
+        h = wm.final_heights(pack, carve=carve, conform=conform, road_grade=road_grade)
+        return cls(pack.frame, h, pack.cell_ft, keep_out_geometry(pack) if with_keep_out else None)
 
     def z(self, x, y):
-        return _bilin(self.h, self.cell, x, y)
+        import road_grade as rg
+        return rg.mesh_height(self.h, self.cell, np.asarray(x, float), np.asarray(y, float))
+
+    def blocked(self, x, y):
+        if self.keep_out is None or self.keep_out.is_empty:
+            return np.zeros(np.shape(x), bool)
+        import shapely
+        return shapely.contains_xy(self.keep_out, np.asarray(x, float), np.asarray(y, float))
+
+
+def keep_out_geometry(pack, road_margin_ft=1.5, building_margin_ft=2.0):
+    """Shapely geometry (feet) trees must stay out of: every road ribbon (half width + margin; bridge roads too), every bridge deck rectangle, every building footprint."""
+    from shapely.geometry import LineString, Polygon
+    from shapely.ops import unary_union
+    g = []
+    for r in pack.list("roads"):
+        pts = [tuple(p[:2]) for p in r.get("points", [])]
+        if len(pts) > 1:
+            g.append(LineString(pts).buffer(float(r.get("width_ft", 10)) / 2.0 + road_margin_ft, cap_style=2))
+    for b in pack.list("bridges"):
+        sp = b.get("span") or {}
+        if sp.get("start") and sp.get("end"):
+            g.append(LineString([tuple(sp["start"][:2]), tuple(sp["end"][:2])]).buffer(float(sp.get("width_ft", 6)) / 2.0 + road_margin_ft, cap_style=2))
+    for b in pack.list("buildings"):
+        try:
+            poly = pack.polygon(b["id"])
+        except Exception:
+            continue
+        if len(poly) > 2:
+            g.append(Polygon([tuple(p) for p in poly]).buffer(building_margin_ft))
+    return unary_union(g) if g else Polygon()
+
+
+def drop_blocked(doc, ground):
+    """Remove items standing on road beds / bridge decks / building footprints (hand-placed ones too: they are in the way of the model). -> list of dropped ids."""
+    its = list(doc.items.values())
+    if not its or ground.keep_out is None:
+        return []
+    m = ground.blocked([i["x"] for i in its], [i["y"] for i in its])
+    gone = [i["id"] for i, k in zip(its, m) if k]
+    for i in gone:
+        doc.items.pop(i, None)
+    return gone
 
 
 def plan(doc, lib, chunk_ft, budget=None, impostor_beyond_ft=None, lod1_beyond_ft=None, focus=None):
@@ -712,6 +753,12 @@ def merge_foliage(doc, lib, ground, place, out_dir, chunk_ft=150.0, budget=None,
     import worldpack_mesh as wm
     import worldpack_split as ws
     fr = ground.frame
+    import copy
+    doc = copy.copy(doc)                                         # keep-out filtering must not touch the saved data
+    doc.items = dict(doc.items)
+    blocked_ids = drop_blocked(doc, ground)
+    if blocked_ids:
+        log(f"foliage merge: {len(blocked_ids)} trees on road beds / bridge decks / building footprints left out")
     os.makedirs(os.path.join(out_dir, "models", "textures"), exist_ok=True)
     fm.write_atlas(os.path.join(out_dir, "models", "textures", fm.ATLAS_MAT + ".png"), season=season or os.environ.get("VB_FOLIAGE_SEASON", "summer"))
     chunks, dropped = plan(doc, lib, chunk_ft, budget, impostor_beyond_ft, lod1_beyond_ft, focus)
@@ -772,7 +819,7 @@ def merge_foliage(doc, lib, ground, place, out_dir, chunk_ft=150.0, budget=None,
     size_primary = sum(e["bytes"] for e in entries)
     after = {"files": len(entries), "tiles": len(entries), "instances": sum(e["instances"] for e in entries), "triangles": int(tris_after), "draw_calls": len(entries),
              "glb_bytes_primary": int(size_primary), "glb_bytes_with_lods": int(size_all), "atlas_bytes": os.path.getsize(os.path.join(out_dir, "models", "textures", fm.ATLAS_MAT + ".png")),
-             "dropped_by_budget": len(dropped)}
+             "dropped_by_budget": len(dropped), "dropped_keep_out": len(blocked_ids)}
     pk = (attach_placements or {})
     fdoc = {"format": ws.PLACEMENTS_FORMAT, "schema_version": "1.0", "place": place, "pack": pk.get("pack", {"dir": ".", "generated": None, "git_commit": None}),
             "frame": pk.get("frame") or {"px_per_ft": fr.px_per_ft, "z_origin_ft": fr.z_origin_ft, "height_ft": fr.height_ft, "width_ft": fr.width_ft, "tile_rotation_deg": 0,
@@ -785,7 +832,7 @@ def merge_foliage(doc, lib, ground, place, out_dir, chunk_ft=150.0, budget=None,
         fdoc = {**pk, "files": sorted(keep + entries, key=lambda e: e["file"]), "merge": {**pk.get("merge", {}), "foliage": fdoc["merge"]}}
     _jdump(os.path.join(out_dir, "placements.json"), fdoc)
     rep = {"place": place, "before": base, "after": after, "chunk_ft": chunk_ft, "chunks": len(entries), "out": out_dir,
-           "settings": {"budget": budget, "impostor_beyond_ft": impostor_beyond_ft, "lod1_beyond_ft": lod1_beyond_ft, "compress": compress}}
+           "keep_out_dropped_ids": blocked_ids, "settings": {"budget": budget, "impostor_beyond_ft": impostor_beyond_ft, "lod1_beyond_ft": lod1_beyond_ft, "compress": compress}}
     _jdump(os.path.join(out_dir, "foliage_merge_report.json"), rep)
     log(f"foliage merge: {base['tiles']} tiles / {base['draw_calls']} draw calls / {base['triangles']} tris -> {after['files']} chunk files / {after['draw_calls']} draw calls / "
         f"{after['triangles']} tris ({len(dropped)} thinned), GLB {size_primary // 1024} KB (+LODs {size_all // 1024} KB) -> {out_dir}")

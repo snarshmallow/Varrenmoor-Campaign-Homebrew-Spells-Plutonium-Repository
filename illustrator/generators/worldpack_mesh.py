@@ -497,10 +497,12 @@ def _pivot(mesh):
 LAST_ROAD_GRADE = {}      # report of the last build_parts road grading (params, stats, warnings, cut/fill), read by worldpack_split
 
 
-def build_parts(pack, step=1, carve=True, conform=True, layers=None, drape_edge_ft=40.0, road_grade=True):
-    """All meshable entities of a pack as Parts (see module doc), in a stable order. layers: optional set of layer names to keep."""
-    import worldpack_pbr as pbr
-    pbr.prepare(pack.materials)
+LAST_BRIDGE_CARVE = []     # report of the last terrain_heights bridge carving
+
+
+def terrain_heights(pack, carve=True, conform=True, road_grade=True, carve_bridges="auto"):
+    """The terrain heights build_parts builds from (river carve, road grading / bridge conform, building pads) -> (h, runs, grade params).
+    Also fills LAST_ROAD_GRADE. foliage.py and anything else that must stand on the FINAL terrain calls this (or final_heights)."""
     h = pack.heights
     if carve:
         h = wp.carved_heights(pack)
@@ -520,6 +522,24 @@ def build_parts(pack, step=1, carve=True, conform=True, layers=None, drape_edge_
     if any(b.get("layout") for b in pack.list("buildings")):          # interiors: level pads so the terrain stays below the floor plates
         import worldpack_interiors as wi
         h = wi.pad_buildings(pack, h)
+    LAST_BRIDGE_CARVE.clear()
+    if pack.list("bridges") and carve_bridges not in (False, "off"):
+        import bridge_maker as _bm                                     # TERRAIN CARVING under bridges: clear the ground through the span where the deck clearance check fails
+        h, rep_b = _bm.carve_under_bridges(pack, h, carve_bridges)
+        LAST_BRIDGE_CARVE.extend(rep_b)
+    return h, runs, gp
+
+
+def final_heights(pack, carve=True, conform=True, road_grade=True, carve_bridges="auto"):
+    """Heights of the terrain mesh exactly as build_parts(pack, ...) builds it (same arguments)."""
+    return terrain_heights(pack, carve, conform, road_grade, carve_bridges)[0]
+
+
+def build_parts(pack, step=1, carve=True, conform=True, layers=None, drape_edge_ft=40.0, road_grade=True, carve_bridges="auto"):
+    """All meshable entities of a pack as Parts (see module doc), in a stable order. layers: optional set of layer names to keep."""
+    import worldpack_pbr as pbr
+    pbr.prepare(pack.materials)
+    h, runs, gp = terrain_heights(pack, carve, conform, road_grade, carve_bridges)
     cx = Ctx(pack, h)
     want = lambda l: layers is None or l in layers
     parts = []
