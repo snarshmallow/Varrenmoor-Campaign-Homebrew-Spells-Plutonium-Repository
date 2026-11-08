@@ -81,6 +81,7 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
   <button role="tab" data-tab="water">Water</button>
   <button role="tab" data-tab="town">Town</button>
   <button role="tab" data-tab="regions">Regions</button>
+  <button role="tab" data-tab="foliage">Foliage</button>
   <button role="tab" data-tab="layers">Layers</button>
   <button role="tab" data-tab="foundry">Foundry</button>
 </nav>
@@ -596,6 +597,77 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
   <p class="note">Walls come from building edges, the grid is the target scale's grid, the scene id is scene:&lt;child&gt;:&lt;name&gt; and it carries flags with the parent place and the region polygon.</p>
 </section>
 
+<!-- FOLIAGE TAB (foliage_ui.js, lib/foliage.js; python generators/foliage.py) -->
+<section id="tab-foliage" role="tabpanel">
+  <style>
+    #folMix { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 8px; }
+    #folMix .folsp { display: flex; flex-direction: row; align-items: center; gap: 4px; }
+    #folMix .folsp .g { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    #folMix .folsp input { width: 44px; }
+    #folMix .sw { width: 10px; height: 10px; border-radius: 5px; border: 1px solid #000; flex: 0 0 10px; }
+    #folPreview { max-width: 100%; border: 1px solid #555; margin-top: 4px; }
+  </style>
+  <h4>Species mix (weights; 0 = off)</h4>
+  <div class="grid"><label>Mix preset <select id="folMixPreset"></select></label></div>
+  <div id="folMix"></div>
+  <h4>Scatter rules</h4>
+  <div class="grid">
+    <label>Pattern <select id="folPattern" data-s="foliage.pattern"></select></label>
+    <label>Zone id <input type="text" data-s="foliage.zone" title="Regenerating a zone replaces only its generated trees; hand-placed ones stay"></label>
+    <label>Density (per hectare, all species) <input type="number" data-s="foliage.density_per_ha" min="0" step="10"></label>
+    <label>Size variation (0-1) <input type="number" data-s="foliage.size_var" min="0" max="1" step="0.1"></label>
+    <label>Random seed <input type="number" data-s="foliage.seed" step="1"></label>
+    <label>Max slope (deg) <input type="number" data-s="foliage.slope_max_deg" min="0" max="85" step="1"></label>
+    <label>Elevation min (ft) <input type="number" data-s="foliage.elev_min_ft" step="5" placeholder="any"></label>
+    <label>Elevation max (ft) <input type="number" data-s="foliage.elev_max_ft" step="5" placeholder="any"></label>
+    <label>Moisture bias (-1..1) <input type="number" data-s="foliage.moisture_bias" min="-1" max="1" step="0.1" title="Moisture = nearness to water and hollows. Positive favours wet species, negative dry ones"></label>
+    <label>Cluster radius (ft) <input type="number" data-s="foliage.cluster_radius_ft" min="5" step="5"></label>
+    <label>Trees per cluster <input type="number" data-s="foliage.cluster_size" min="2" step="1"></label>
+    <label>Edge falloff (ft) <input type="number" data-s="foliage.edge_ft" min="5" step="5"></label>
+    <label>Orchard row spacing (ft) <input type="number" data-s="foliage.row_spacing_ft" min="0" step="1" placeholder="auto"></label>
+    <label>Orchard row angle (deg) <input type="number" data-s="foliage.row_angle_deg" step="5"></label>
+    <label>Line spacing (ft) <input type="number" data-s="foliage.line_spacing_ft" min="0" step="1" placeholder="species"></label>
+    <label class="chk"><input type="checkbox" data-s="foliage.avoid_buildings"> Avoid buildings</label>
+    <label class="chk"><input type="checkbox" data-s="foliage.avoid_roads"> Avoid roads</label>
+    <label class="chk"><input type="checkbox" data-s="foliage.avoid_water"> Avoid water (reeds like the shore)</label>
+    <label class="chk"><input type="checkbox" data-s="foliage.draw"> Draw 2D symbols after scatter</label>
+  </div>
+  <h4>Area</h4>
+  <div class="grid">
+    <label>Scatter in <select data-s="foliage.target"><option value="lasso">Captured area (lasso / drawn polygon)</option><option value="town">Town tab area</option><option value="district">District</option><option value="place">Whole place</option></select></label>
+    <label>District <select id="folDistrict" data-s="foliage.district"></select></label>
+  </div>
+  <div class="btns" id="folAreaLasso"><button data-act="fol_capture_area" title="Select a closed path in Illustrator first">Capture area</button><button data-act="fol_use_town">Use Town area</button><span class="tag" id="folPolyTag">none</span></div>
+  <div class="btns" id="folAreaPath" hidden><button data-act="fol_capture_path" title="Select an open path (hedge row, tree line) first">Capture path</button><span class="tag" id="folPathTag">none</span></div>
+  <p class="note" id="folEst"></p>
+  <div class="btns">
+    <button class="primary" data-act="fol_scatter">Scatter</button>
+    <button data-act="fol_clear" title="Removes generated trees inside the area (hand-placed stay unless ticked)">Clear area</button>
+    <label class="chk"><input type="checkbox" data-s="foliage.clear_hand"> also hand-placed</label>
+  </div>
+  <h4>Single tree</h4>
+  <div class="grid"><label>Species <select id="folSingle" data-s="foliage.single_species"></select></label></div>
+  <div class="btns"><button data-act="fol_add" title="Select a point (or a path: its centre is used) in Illustrator first">Add at selection</button></div>
+  <h4>Counts and preview</h4>
+  <div class="btns"><button data-act="fol_stats">Counts</button><button data-act="fol_preview">Preview render</button><button data-act="fol_draw">Redraw 2D symbols</button></div>
+  <pre class="note" id="folStats" style="white-space:pre-wrap"></pre>
+  <img id="folPreview" hidden alt="foliage preview">
+  <h4>Merge for performance (Foundry 3D Canvas)</h4>
+  <p class="note">Merges every spatial chunk into ONE mesh with ONE material (texture atlas, alpha cut): draw calls drop from about two per tree to one per chunk. Writes optimized/foliage_vNNN with LOD and impostor files; buildings and doors are never touched.</p>
+  <div class="grid">
+    <label>Preset <select id="folMergePreset"></select></label>
+    <label>Chunk size (ft) <input type="number" data-s="foliage.merge.chunk_ft" min="50" step="25"></label>
+    <label>Triangle budget (0 = none) <input type="number" data-s="foliage.merge.budget" min="0" step="5000" title="Thins lowest-priority instances (ground cover first, hand-placed last) until the total fits"></label>
+    <label>Impostors beyond (ft, 0 = off) <input type="number" data-s="foliage.merge.impostor_beyond_ft" min="0" step="50" title="Chunks farther than this from the centre use crossed billboard quads"></label>
+    <label>Low LOD beyond (ft, 0 = off) <input type="number" data-s="foliage.merge.lod1_beyond_ft" min="0" step="50"></label>
+    <label>Compression <select data-s="foliage.merge.compress"><option value="none">none (safest)</option><option value="quant">quantized (gltfpack, no meshopt)</option><option value="meshopt">meshopt (may not load)</option></select></label>
+    <label>Foundry scene uuid <input type="text" data-s="foliage.merge.scene_uuid" placeholder="Scene.xxxxxxxxxxxxxxxx"></label>
+  </div>
+  <div class="btns"><button class="primary" data-act="fol_merge">Merge</button><button data-act="fol_publish_dry">Publish (dry run)</button><button data-act="fol_publish">Publish to Foundry</button></div>
+  <pre class="note" id="folReport" style="white-space:pre-wrap"></pre>
+  <p class="note">Data: world/&lt;place&gt;/foliage.json (stable ids fol_&lt;zone&gt;_nnnn, feet). 2D symbols go to the DETAILS - Foliage layer; the 3D pack reads the same ids from scatter/foliage.json.</p>
+</section>
+
 <section id="tab-layers" role="tabpanel">
   <h4>Layers</h4>
   <div class="btns">
@@ -683,5 +755,7 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
 <script src="regions_ui.js"></script>
 <script src="lib/lighting.js"></script>
 <script src="lighting_ui.js"></script>
+<script src="lib/foliage.js"></script>
+<script src="foliage_ui.js"></script>
 <script src="main.js"></script>
 </body></html>

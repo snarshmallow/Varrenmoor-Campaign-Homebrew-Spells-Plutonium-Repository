@@ -1,0 +1,70 @@
+{
+ "plain": {
+  "after": {
+   "files": 50,
+   "tiles": 50,
+   "instances": 3145,
+   "triangles": 197870,
+   "draw_calls": 50,
+   "glb_bytes_primary": 7428932,
+   "glb_bytes_with_lods": 11263044,
+   "atlas_bytes": 190644,
+   "dropped_by_budget": 0
+  },
+  "chunks": 50,
+  "secs": 1.5
+ },
+ "before": {
+  "files": 7,
+  "tiles": 3145,
+  "triangles": 197870,
+  "draw_calls": 5168,
+  "glb_bytes": 25812,
+  "atlas_bytes": 0
+ },
+ "budget": {
+  "after": {
+   "files": 50,
+   "tiles": 50,
+   "instances": 1348,
+   "triangles": 119964,
+   "draw_calls": 50,
+   "glb_bytes_primary": 4400864,
+   "glb_bytes_with_lods": 6740796,
+   "atlas_bytes": 190644,
+   "dropped_by_budget": 1797
+  },
+  "chunks": 50,
+  "secs": 1.3
+ },
+ "impostor": {
+  "after": {
+   "files": 50,
+   "tiles": 50,
+   "instances": 3145,
+   "triangles": 95706,
+   "draw_calls": 50,
+   "glb_bytes_primary": 3851620,
+   "glb_bytes_with_lods": 11263044,
+   "atlas_bytes": 190644,
+   "dropped_by_budget": 0
+  },
+  "chunks": 50,
+  "secs": 1.5
+ },
+ "quant": {
+  "after": {
+   "files": 50,
+   "tiles": 50,
+   "instances": 3145,
+   "triangles": 197870,
+   "draw_calls": 50,
+   "glb_bytes_primary": 3767540,
+   "glb_bytes_with_lods": 5790232,
+   "atlas_bytes": 190644,
+   "dropped_by_budget": 0
+  },
+  "chunks": 50,
+  "secs": 10.7
+ }
+}

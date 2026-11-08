@@ -1,0 +1,326 @@
+{
+ "format": "varrenmoor-foliage-species",
+ "version": 1,
+ "group": "ground",
+ "species": [
+  {
+   "id": "reeds",
+   "name": "Reeds",
+   "kind": "ground",
+   "gen": {
+    "type": "cards",
+    "cards": 5,
+    "w": 0.5
+   },
+   "height_ft": [
+    4,
+    6.5
+   ],
+   "crown_ratio": 0.12,
+   "tiles": {
+    "leaf": "reed",
+    "bark": "bark"
+   },
+   "symbol": {
+    "style": "reed",
+    "color": "#8a9a4a"
+   },
+   "spacing_ft": 3,
+   "density_per_ha": 400,
+   "slope_max_deg": 35,
+   "elev_ft": null,
+   "moisture": {
+    "min": 0.55,
+    "max": 1.0
+   },
+   "clearance_building_ft": null,
+   "clearance_road_ft": null,
+   "variants": 2,
+   "priority": 0,
+   "shore": true,
+   "tris": [
+    10,
+    4,
+    0
+   ]
+  },
+  {
+   "id": "fern",
+   "name": "Bracken fern",
+   "kind": "ground",
+   "gen": {
+    "type": "cards",
+    "cards": 4,
+    "w": 0.9,
+    "droop": true
+   },
+   "height_ft": [
+    1.5,
+    3
+   ],
+   "crown_ratio": 0.45,
+   "tiles": {
+    "leaf": "fern",
+    "bark": "bark"
+   },
+   "symbol": {
+    "style": "fern",
+    "color": "#4a8a3a"
+   },
+   "spacing_ft": 3,
+   "density_per_ha": 500,
+   "slope_max_deg": 35,
+   "elev_ft": null,
+   "moisture": {
+    "min": 0.1,
+    "max": 0.9
+   },
+   "clearance_building_ft": null,
+   "clearance_road_ft": null,
+   "variants": 2,
+   "priority": 0,
+   "tris": [
+    8,
+    4,
+    0
+   ]
+  },
+  {
+   "id": "grass",
+   "name": "Grass tuft",
+   "kind": "ground",
+   "gen": {
+    "type": "cards",
+    "cards": 4,
+    "w": 0.55
+   },
+   "height_ft": [
+    1,
+    1.6
+   ],
+   "crown_ratio": 0.3,
+   "tiles": {
+    "leaf": "grass",
+    "bark": "bark"
+   },
+   "symbol": {
+    "style": "grass",
+    "color": "#6a9a3a"
+   },
+   "spacing_ft": 2.5,
+   "density_per_ha": 900,
+   "slope_max_deg": 35,
+   "elev_ft": null,
+   "moisture": {
+    "min": 0.0,
+    "max": 1.0
+   },
+   "clearance_building_ft": null,
+   "clearance_road_ft": null,
+   "variants": 2,
+   "priority": 0,
+   "tris": [
+    8,
+    4,
+    0
+   ]
+  },
+  {
+   "id": "flowers",
+   "name": "Wildflowers",
+   "kind": "ground",
+   "gen": {
+    "type": "cards",
+    "cards": 3,
+    "w": 0.5
+   },
+   "height_ft": [
+    1,
+    2
+   ],
+   "crown_ratio": 0.25,
+   "tiles": {
+    "leaf": "flower",
+    "bark": "bark"
+   },
+   "symbol": {
+    "style": "flower",
+    "color": "#c0509a"
+   },
+   "spacing_ft": 3,
+   "density_per_ha": 400,
+   "slope_max_deg": 35,
+   "elev_ft": null,
+   "moisture": {
+    "min": 0.0,
+    "max": 1.0
+   },
+   "clearance_building_ft": null,
+   "clearance_road_ft": null,
+   "variants": 2,
+   "priority": 0,
+   "tris": [
+    6,
+    4,
+    0
+   ]
+  },
+  {
+   "id": "stump",
+   "name": "Tree stump",
+   "kind": "prop",
+   "gen": {
+    "type": "stump"
+   },
+   "height_ft": [
+    1.2,
+    2.5
+   ],
+   "crown_ratio": 0.5,
+   "tiles": {
+    "leaf": "bark",
+    "bark": "bark"
+   },
+   "symbol": {
+    "style": "stump",
+    "color": "#6b4a2a"
+   },
+   "spacing_ft": 4,
+   "density_per_ha": 6,
+   "slope_max_deg": 35,
+   "elev_ft": null,
+   "moisture": {
+    "min": 0.0,
+    "max": 1.0
+   },
+   "clearance_building_ft": null,
+   "clearance_road_ft": null,
+   "variants": 1,
+   "priority": 0,
+   "tris": [
+    21,
+    21,
+    0
+   ]
+  },
+  {
+   "id": "log",
+   "name": "Fallen log",
+   "kind": "prop",
+   "gen": {
+    "type": "log"
+   },
+   "height_ft": [
+    1.0,
+    1.5
+   ],
+   "crown_ratio": 3.0,
+   "tiles": {
+    "leaf": "bark",
+    "bark": "bark"
+   },
+   "symbol": {
+    "style": "log",
+    "color": "#6b4a2a"
+   },
+   "spacing_ft": 8,
+   "density_per_ha": 6,
+   "slope_max_deg": 35,
+   "elev_ft": null,
+   "moisture": {
+    "min": 0.0,
+    "max": 1.0
+   },
+   "clearance_building_ft": null,
+   "clearance_road_ft": null,
+   "variants": 1,
+   "priority": 0,
+   "length_ft": 9,
+   "tris": [
+    24,
+    24,
+    0
+   ]
+  },
+  {
+   "id": "boulder",
+   "name": "Boulder",
+   "kind": "rock",
+   "gen": {
+    "type": "rock",
+    "rings": 3,
+    "seg": 6
+   },
+   "height_ft": [
+    2,
+    5
+   ],
+   "crown_ratio": 0.9,
+   "tiles": {
+    "leaf": "rock",
+    "bark": "rock"
+   },
+   "symbol": {
+    "style": "rock",
+    "color": "#8a8a84"
+   },
+   "spacing_ft": 8,
+   "density_per_ha": 8,
+   "slope_max_deg": 35,
+   "elev_ft": null,
+   "moisture": {
+    "min": 0.0,
+    "max": 1.0
+   },
+   "clearance_building_ft": null,
+   "clearance_road_ft": null,
+   "variants": 2,
+   "priority": 0,
+   "tris": [
+    24,
+    16,
+    4
+   ]
+  },
+  {
+   "id": "rock_small",
+   "name": "Small rocks",
+   "kind": "rock",
+   "gen": {
+    "type": "rock",
+    "rings": 3,
+    "seg": 5
+   },
+   "height_ft": [
+    0.7,
+    1.4
+   ],
+   "crown_ratio": 0.9,
+   "tiles": {
+    "leaf": "rock",
+    "bark": "rock"
+   },
+   "symbol": {
+    "style": "rock",
+    "color": "#9a9a92"
+   },
+   "spacing_ft": 3,
+   "density_per_ha": 60,
+   "slope_max_deg": 35,
+   "elev_ft": null,
+   "moisture": {
+    "min": 0.0,
+    "max": 1.0
+   },
+   "clearance_building_ft": null,
+   "clearance_road_ft": null,
+   "variants": 2,
+   "priority": 0,
+   "tris": [
+    20,
+    16,
+    4
+   ]
+  }
+ ]
+}

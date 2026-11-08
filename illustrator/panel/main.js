@@ -434,7 +434,7 @@
     $("candTag").className = "tag" + (state.town.candidate ? " stale" : "");
     $("statePath").textContent = d.state;
   }
-  function refreshAll() { paintInputs(); if (window.VBRegionUI) VBRegionUI.paint(); if (window.VBLightUI) VBLightUI.paint(); paintTags(); paintStale(); paintPatchForm(); paintRings(); if (typeof fPaint === "function" && state) fPaint(); }
+  function refreshAll() { paintInputs(); if (window.VBRegionUI) VBRegionUI.paint(); if (window.VBLightUI) VBLightUI.paint(); if (window.VBFoliageUI) VBFoliageUI.paint(); paintTags(); paintStale(); paintPatchForm(); paintRings(); if (typeof fPaint === "function" && state) fPaint(); }
 
   function showCrossings() {
     var j = readJson(d.water + "/crossings.json", null), el = $("crossInfo");
@@ -744,6 +744,7 @@
     await switchPlace(cur);
     VBLightUI.init({ state: function () { return state; }, dirs: function () { return d; }, save: save, startJob: startJob, isBusy: function () { return runner.isBusy(); }, syncInputs: paintInputs,
       placeCentre: function () { var p = readJson(d.world + "/place.json", {}), b = p.bounds || {}; return [Math.round((b.width_ft || 2400) / 2), Math.round((b.height_ft || 1500) / 2)]; } });
+    if (window.VBFoliageUI) VBFoliageUI.init({ state: function () { return state; }, dirs: function () { return d; }, save: save, startJob: startJob, syncInputs: paintInputs, readJson: readJson, fs: fs, path: path, root: root, acts: acts }); // foliage tab
     sel.addEventListener("change", function () { try { fs.writeFileSync(path.join(root, "world", "panel_last_place.json"), JSON.stringify({ place: sel.value })); } catch (e) { /* ignore */ } });
     $("fPlace").addEventListener("change", function () { sel.value = $("fPlace").value; switchPlace($("fPlace").value); try { fs.writeFileSync(path.join(root, "world", "panel_last_place.json"), JSON.stringify({ place: sel.value })); } catch (e) { /* ignore */ } });
     ["foundry.filter.actors", "foundry.filter.items"].forEach(function (k) { var el = document.querySelector('[data-s="' + k + '"]'); if (el) el.addEventListener("input", fPaint); });

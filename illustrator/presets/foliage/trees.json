@@ -1,0 +1,387 @@
+{
+ "format": "varrenmoor-foliage-species",
+ "version": 1,
+ "group": "trees",
+ "species": [
+  {
+   "id": "scots_pine",
+   "name": "Scots pine",
+   "kind": "tree",
+   "gen": {
+    "type": "broadconifer",
+    "trunk": 0.55,
+    "blobs": 3,
+    "rings": 4,
+    "seg": 6
+   },
+   "height_ft": [
+    45,
+    80
+   ],
+   "crown_ratio": 0.17,
+   "tiles": {
+    "leaf": "needle",
+    "bark": "bark"
+   },
+   "symbol": {
+    "style": "conifer",
+    "color": "#3f6b3a"
+   },
+   "spacing_ft": 13,
+   "density_per_ha": 120,
+   "slope_max_deg": 38,
+   "elev_ft": null,
+   "moisture": {
+    "min": 0,
+    "max": 0.55
+   },
+   "clearance_building_ft": null,
+   "clearance_road_ft": null,
+   "variants": 2,
+   "priority": 2,
+   "tris": [
+    120,
+    44,
+    4
+   ]
+  },
+  {
+   "id": "spruce",
+   "name": "Norway spruce",
+   "kind": "tree",
+   "gen": {
+    "type": "conifer",
+    "tiers": 6,
+    "seg": 7
+   },
+   "height_ft": [
+    55,
+    95
+   ],
+   "crown_ratio": 0.18,
+   "tiles": {
+    "leaf": "needle_dark",
+    "bark": "bark"
+   },
+   "symbol": {
+    "style": "conifer",
+    "color": "#2e5a3a"
+   },
+   "spacing_ft": 9,
+   "density_per_ha": 260,
+   "slope_max_deg": 40,
+   "elev_ft": null,
+   "moisture": {
+    "min": 0,
+    "max": 0.8
+   },
+   "clearance_building_ft": null,
+   "clearance_road_ft": null,
+   "variants": 2,
+   "priority": 2,
+   "tris": [
+    52,
+    25,
+    4
+   ]
+  },
+  {
+   "id": "fir",
+   "name": "Silver fir",
+   "kind": "tree",
+   "gen": {
+    "type": "conifer",
+    "tiers": 7,
+    "seg": 6
+   },
+   "height_ft": [
+    55,
+    90
+   ],
+   "crown_ratio": 0.16,
+   "tiles": {
+    "leaf": "needle_dark",
+    "bark": "bark"
+   },
+   "symbol": {
+    "style": "conifer",
+    "color": "#34603e"
+   },
+   "spacing_ft": 10,
+   "density_per_ha": 200,
+   "slope_max_deg": 40,
+   "elev_ft": null,
+   "moisture": {
+    "min": 0.0,
+    "max": 1.0
+   },
+   "clearance_building_ft": null,
+   "clearance_road_ft": null,
+   "variants": 2,
+   "priority": 2,
+   "tris": [
+    52,
+    26,
+    4
+   ]
+  },
+  {
+   "id": "birch",
+   "name": "Silver birch",
+   "kind": "tree",
+   "gen": {
+    "type": "broad",
+    "trunk": 0.45,
+    "blobs": 2,
+    "rings": 4,
+    "seg": 7,
+    "cards": 4
+   },
+   "height_ft": [
+    35,
+    55
+   ],
+   "crown_ratio": 0.2,
+   "tiles": {
+    "leaf": "leaf_birch",
+    "bark": "bark_birch"
+   },
+   "symbol": {
+    "style": "broad",
+    "color": "#6b9a45"
+   },
+   "spacing_ft": 10,
+   "density_per_ha": 160,
+   "slope_max_deg": 35,
+   "elev_ft": null,
+   "moisture": {
+    "min": 0.0,
+    "max": 1.0
+   },
+   "clearance_building_ft": null,
+   "clearance_road_ft": null,
+   "variants": 2,
+   "priority": 2,
+   "tris": [
+    104,
+    32,
+    4
+   ]
+  },
+  {
+   "id": "oak",
+   "name": "English oak",
+   "kind": "tree",
+   "gen": {
+    "type": "broad",
+    "trunk": 0.38,
+    "blobs": 4,
+    "rings": 4,
+    "seg": 7,
+    "cards": 5
+   },
+   "height_ft": [
+    45,
+    70
+   ],
+   "crown_ratio": 0.34,
+   "tiles": {
+    "leaf": "leaf_oak",
+    "bark": "bark"
+   },
+   "symbol": {
+    "style": "broad",
+    "color": "#527f35"
+   },
+   "spacing_ft": 24,
+   "density_per_ha": 40,
+   "slope_max_deg": 28,
+   "elev_ft": null,
+   "moisture": {
+    "min": 0,
+    "max": 0.7
+   },
+   "clearance_building_ft": null,
+   "clearance_road_ft": null,
+   "variants": 2,
+   "priority": 2,
+   "tris": [
+    190,
+    52,
+    4
+   ]
+  },
+  {
+   "id": "beech",
+   "name": "European beech",
+   "kind": "tree",
+   "gen": {
+    "type": "broad",
+    "trunk": 0.4,
+    "blobs": 3,
+    "rings": 4,
+    "seg": 7,
+    "cards": 4
+   },
+   "height_ft": [
+    55,
+    80
+   ],
+   "crown_ratio": 0.27,
+   "tiles": {
+    "leaf": "leaf_beech",
+    "bark": "bark_birch"
+   },
+   "symbol": {
+    "style": "broad",
+    "color": "#4f7a3a"
+   },
+   "spacing_ft": 18,
+   "density_per_ha": 70,
+   "slope_max_deg": 30,
+   "elev_ft": null,
+   "moisture": {
+    "min": 0.0,
+    "max": 1.0
+   },
+   "clearance_building_ft": null,
+   "clearance_road_ft": null,
+   "variants": 2,
+   "priority": 2,
+   "tris": [
+    146,
+    52,
+    4
+   ]
+  },
+  {
+   "id": "alder",
+   "name": "Black alder",
+   "kind": "tree",
+   "gen": {
+    "type": "broad",
+    "trunk": 0.4,
+    "blobs": 2,
+    "rings": 4,
+    "seg": 6,
+    "cards": 3
+   },
+   "height_ft": [
+    35,
+    55
+   ],
+   "crown_ratio": 0.26,
+   "tiles": {
+    "leaf": "leaf_oak",
+    "bark": "bark"
+   },
+   "symbol": {
+    "style": "broad",
+    "color": "#3f6e3c"
+   },
+   "spacing_ft": 12,
+   "density_per_ha": 110,
+   "slope_max_deg": 35,
+   "elev_ft": null,
+   "moisture": {
+    "min": 0.3,
+    "max": 1.0
+   },
+   "clearance_building_ft": null,
+   "clearance_road_ft": null,
+   "variants": 2,
+   "priority": 2,
+   "tris": [
+    90,
+    28,
+    4
+   ]
+  },
+  {
+   "id": "willow",
+   "name": "Crack willow",
+   "kind": "tree",
+   "gen": {
+    "type": "willow",
+    "trunk": 0.3,
+    "blobs": 2,
+    "rings": 4,
+    "seg": 7,
+    "cards": 8
+   },
+   "height_ft": [
+    30,
+    48
+   ],
+   "crown_ratio": 0.38,
+   "tiles": {
+    "leaf": "leaf_willow",
+    "bark": "bark"
+   },
+   "symbol": {
+    "style": "broad",
+    "color": "#7aa04e"
+   },
+   "spacing_ft": 20,
+   "density_per_ha": 45,
+   "slope_max_deg": 35,
+   "elev_ft": null,
+   "moisture": {
+    "min": 0.45,
+    "max": 1.0
+   },
+   "clearance_building_ft": null,
+   "clearance_road_ft": null,
+   "variants": 2,
+   "priority": 2,
+   "tris": [
+    112,
+    32,
+    4
+   ]
+  },
+  {
+   "id": "rowan",
+   "name": "Rowan",
+   "kind": "tree",
+   "gen": {
+    "type": "broad",
+    "trunk": 0.42,
+    "blobs": 2,
+    "rings": 4,
+    "seg": 6,
+    "cards": 3
+   },
+   "height_ft": [
+    18,
+    30
+   ],
+   "crown_ratio": 0.3,
+   "tiles": {
+    "leaf": "leaf_rowan",
+    "bark": "bark_birch"
+   },
+   "symbol": {
+    "style": "broad",
+    "color": "#74964a"
+   },
+   "spacing_ft": 12,
+   "density_per_ha": 60,
+   "slope_max_deg": 35,
+   "elev_ft": null,
+   "moisture": {
+    "min": 0.0,
+    "max": 1.0
+   },
+   "clearance_building_ft": null,
+   "clearance_road_ft": null,
+   "variants": 2,
+   "priority": 1,
+   "tris": [
+    90,
+    28,
+    4
+   ]
+  }
+ ]
+}

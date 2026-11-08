@@ -1,0 +1,134 @@
+{
+ "format": "varrenmoor-foliage-species",
+ "version": 1,
+ "group": "shrubs",
+ "species": [
+  {
+   "id": "juniper",
+   "name": "Common juniper",
+   "kind": "shrub",
+   "gen": {
+    "type": "shrub",
+    "blobs": 2,
+    "rings": 3,
+    "seg": 6,
+    "aspect": 0.5
+   },
+   "height_ft": [
+    3,
+    9
+   ],
+   "crown_ratio": 0.4,
+   "tiles": {
+    "leaf": "juniper",
+    "bark": "bark"
+   },
+   "symbol": {
+    "style": "shrub",
+    "color": "#4d7058"
+   },
+   "spacing_ft": 6,
+   "density_per_ha": 120,
+   "slope_max_deg": 40,
+   "elev_ft": null,
+   "moisture": {
+    "min": 0,
+    "max": 0.6
+   },
+   "clearance_building_ft": null,
+   "clearance_road_ft": null,
+   "variants": 2,
+   "priority": 1,
+   "tris": [
+    48,
+    16,
+    4
+   ]
+  },
+  {
+   "id": "bush",
+   "name": "Hazel and bramble bush",
+   "kind": "shrub",
+   "gen": {
+    "type": "shrub",
+    "blobs": 3,
+    "rings": 3,
+    "seg": 6,
+    "aspect": 0.7
+   },
+   "height_ft": [
+    3,
+    6
+   ],
+   "crown_ratio": 0.55,
+   "tiles": {
+    "leaf": "bush",
+    "bark": "bark"
+   },
+   "symbol": {
+    "style": "shrub",
+    "color": "#5e8a40"
+   },
+   "spacing_ft": 5,
+   "density_per_ha": 220,
+   "slope_max_deg": 35,
+   "elev_ft": null,
+   "moisture": {
+    "min": 0.0,
+    "max": 1.0
+   },
+   "clearance_building_ft": null,
+   "clearance_road_ft": null,
+   "variants": 2,
+   "priority": 1,
+   "tris": [
+    72,
+    32,
+    4
+   ]
+  },
+  {
+   "id": "hedge",
+   "name": "Hawthorn hedge",
+   "kind": "hedge",
+   "gen": {
+    "type": "shrub",
+    "blobs": 2,
+    "rings": 3,
+    "seg": 6,
+    "aspect": 0.9,
+    "long": 2.4
+   },
+   "height_ft": [
+    4,
+    6
+   ],
+   "crown_ratio": 0.45,
+   "tiles": {
+    "leaf": "bush",
+    "bark": "bark"
+   },
+   "symbol": {
+    "style": "hedge",
+    "color": "#4f7a3a"
+   },
+   "spacing_ft": 5,
+   "density_per_ha": 0,
+   "slope_max_deg": 35,
+   "elev_ft": null,
+   "moisture": {
+    "min": 0.0,
+    "max": 1.0
+   },
+   "clearance_building_ft": null,
+   "clearance_road_ft": null,
+   "variants": 1,
+   "priority": 1,
+   "tris": [
+    48,
+    16,
+    4
+   ]
+  }
+ ]
+}

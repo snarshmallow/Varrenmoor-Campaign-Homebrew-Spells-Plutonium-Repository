@@ -384,6 +384,10 @@ def main(argv=None):
             s.add_argument("--preset", choices=["all", "layer", "district", "individual"], default="layer")
             s.add_argument("--compress", choices=["none", "quant", "meshopt", "meshopt-fallback"], default="none")
             s.add_argument("--no-hidden-removal", action="store_true")
+            s.add_argument("--foliage", action="store_true", help="replace the per-tree foliage tiles with merged foliage chunks from world/<place>/foliage.json (foliage.py)")
+            s.add_argument("--foliage-chunk-ft", type=float, default=150.0)
+            s.add_argument("--foliage-budget", type=int)
+            s.add_argument("--foliage-impostor-ft", type=float)
         if n == "publish":
             s.add_argument("--scene-uuid")
             s.add_argument("--scene-name")
@@ -399,6 +403,9 @@ def main(argv=None):
                      textures=a.textures, step=a.step, carve=not a.no_carve, conform=not a.no_conform, only=a.id.split(","))
     elif a.cmd in ("merge", "publish"):
         doc, rep = merge_export(pack, a.preset, compress=a.compress, remove_hidden=not a.no_hidden_removal)
+        if a.foliage:                                                    # foliage.py: merged per-chunk foliage instead of one tile per tree (buildings/doors untouched)
+            import foliage
+            foliage.attach_to_optimized(a.place, pack, rep["out"], a.foliage_chunk_ft, a.foliage_budget, a.foliage_impostor_ft, None, "none" if a.compress == "none" else "quant")
         if a.cmd == "publish":
             import foundry_push
             args = ["push-models", "--place", a.place, "--placements", os.path.join(rep["out"], "placements.json"), "--lod", str(a.lod)]
