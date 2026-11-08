@@ -53,14 +53,21 @@ Scene-level 3D defaults / "scene defaults": a new scene copies **no** 3D flags u
 
 Existing scenes are only re-flagged when `--scene-mode` is passed explicitly, so hand tuning is never overwritten silently.
 
-## 6. To test live (priority order)
-1. Does a Drawing (road polygon) show in 3D view of `ZZ Tile Rotation Inspect` (it has 7 text drawings)? Which labels are visible?
-2. Rotation: with the four L markers, which rotation puts RED (north) toward screen-up in the 3D top-down view and in the 2D map? Update `foundry-3d/README.md`/manifest accordingly.
-3. Create a scene via `push-scene` (flat) and read `flags.levels-3d-preview` back: confirm `auto3d false` sticks and no world/default template turns 3D on.
-4. Background plane vs terrain GLB: toggle `renderBackground` on a scene with terrain.glb at elevation 0 to see z-fighting; try terrain `autoGround false`.
-5. A full-map image as `tableTex`: is it tiled or stretched over the padded table, and is the scale equal to scene size?
-6. Wall rendering of auto-generated building walls in 3D (set `showSceneWalls false` if ugly or if buildings are GLB tiles).
-7. Do compressed GLBs (quant, meshopt) load (see WORLD_PACK.md check).
+## 6. Live test results (2026-11-07, Foundry 14.360, 3D Canvas 9.0.29) and what is still open
+
+Test scenes (all ours, `ZZ ...`): 3D `Scene.sFd94FxO1JX8dlJg` "ZZ Dyers Walk 3D Test", flat `Scene.1drJ8PFJ4p5aBctd` "ZZ Dyers Walk 2D Test", flat `Scene.l3yIfUMh55JFEqQm` "ZZ Commoners Ring 2D Test". Details and screenshots: `illustrator/out/foundry_live_test_notes.md`, `illustrator/out/foundry_screens/`.
+
+VERIFIED live:
+1. Model tiles load: 28 split GLBs (terrain, roads, plazas, 25 houses with interiors, 62k triangles) with PBR textures, positions and scale match the 2D map; tile rotation 0 is correct for the pack (north up in the top-down view, same layout as the 2D PNG). The old "rotation 180" memory note applies to the older Blender-exported tavern models, not to world-pack GLBs.
+2. Skybox (`exr` flag, equirect webp): shown as background and as lighting; azimuth is correct with `--yaw 0` (low horizon to the south, mountains west, as computed from the heightmap). Note `push-models --scene-mode 3d` resets `exr` to the template value: re-run `skybox.py set-flag` after it.
+3. Doors: all 25 exterior and the interior door nodes are detected by `setUpDoors` (single material `mat_door_wood`, extras isDoor/doorId/doorStyle 1). The extra `doorAnimateAngle` is read as RADIANS (a value of 90 spun the leaf); the generators now write 1.5708. Opening is driven by the tile flag `modelDoors.<doorId>.ds = 1` (also set by clicking the door); with +1.5708 the leaf swings inward about its hinge. Interior doors use the same sign (checked as rotation only, not looked at individually).
+4. `tableTex` is TILED (repeats at about one texture per few grid squares), not stretched over the table: a baked full-map image does not work as `tableTex`. Put the map on the terrain texture (pack does) or on a flat tile. The 3D scene uses the module's black tone texture.
+5. Lights: AmbientLight documents are created from the interior hints (72) and render. Torch/smoke/fire particles are NOT used any more (house rule): `push-lights` creates plain point lights, `enableParticle` false, animation none unless `--light-animation`.
+6. Sun/ambient match the Illustrator lighting config (section 8). Cast shadows only render when the client setting `shadowQuality` is above 0 (it was 0 in this GM browser; set to 2 only for one screenshot, then restored).
+7. Flat scene (`push-scene --scene-mode flat`, `--upscale 3` for a 72 dpi export so a 5 ft grid reaches 50 px): shows the PNG at the right scale, 3D off, walls created, environment darkness 0.
+8. Drawing/ background-plane/wall questions of the earlier list are not answered here (no Drawings were pushed; walls only on the flat scenes).
+
+STILL OPEN: optimised GLBs (gltfpack quant, `-ke` keeps extras) were not loaded in Foundry: gltfpack moves the mesh into a child node of the hinge node, so `isDoor` is on the parent and 3D Canvas (which looks at `child.isMesh && userData.isDoor`) probably will not animate the door: use the unoptimised split GLBs for buildings with doors. Interior door swing sign vs room side; table colour (`tableColor` had no visible effect with the black tone texture); cast-shadow look at quality 2 was only briefly checked; second-UV/detail maps untested; no point light elevation check against the floor.
 
 ## 7. Bake the finished 2D map into the 3D ground texture (no live push)
 
@@ -72,3 +79,12 @@ Drawings, labels and fills are not rendered by 3D Canvas, so the finished map is
 3. Apply it with a later push: `push-models ... --table-texture assets/varrenmoor-3d/art/<place>/maps/ground_v001.webp` (same as `--scene-flag renderTable="matcustom" --scene-flag tableTex=...`).
 
 Open (TEST live): whether 3D Canvas tiles or stretches `tableTex` over the padded table, and at what scale. The table is sized to the scene padding, so the bake records the footprint in feet; if the table is bigger than the map the texture will have to be placed on a flat ground tile at that footprint instead (a plane tile at elevation 0 under the terrain GLB would z-fight, keep it 0.05 ft below). Roads/water as real geometry stay in the world pack GLBs; this bake carries the paper look only.
+
+## 8. Lighting: Illustrator config -> Foundry (`generators/foundry_lighting.py`)
+
+Source: `world/<place>/panel_state.json` "lighting" (or a lighting JSON): sun azimuth (compass bearing OF the sun, 225 = SW), altitude (30), colour (#fff1d0), intensity, ambient 0.35, point lights {x,y,radius,height,color,intensity}.
+* 3D scene flags (`push-models --lighting bridgehollow`, new scene or with `--scene-mode 3d`): `sunPosition` (hour, found by inverting the module's time->angle table; 225/30 -> 15.34), `sunTilt` (0.564), `sunDistance 10`, `timeSync off` (so darkness/world time does not move the sun), `sceneTint` = sun colour, `exposure` = sun intensity, `ambientLightIntensity` = ambient. Derivation and the rig model are in the module docstring; `test_foundry_lighting.py` round-trips the vectors. Verified live: the module's sunlight world position is exactly (-0.61, 0.5, 0.61) x 10 for 225/30.
+* Skybox: `skybox.py generate --lighting bridgehollow` puts the sun disc at the same bearing/altitude (sun_az = bearing - 90 from east, sun_el = altitude).
+* Point lights: `push-lights --lighting bridgehollow` creates the 2D lights at the same positions (config frame minus the child's `origin_ft`), radius -> dim, 0.4 x radius -> bright, plain, no particles. The bridgehollow config currently has no point lights, so only the interior hints (hearth/window) exist.
+* Flat scenes: the 2D map already carries baked shadows and glow, so the scene gets `environment.darknessLevel 0` and global light on (`--lighting`); no sun in Foundry.
+Look check: SW-facing walls lit, NE roof slopes darker; with ambient 0.35 the whites (plaster) are close to clipping under ACES: lower `exposure` or the ambient flag if too bright.

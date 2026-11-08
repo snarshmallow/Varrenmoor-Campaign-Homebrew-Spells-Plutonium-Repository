@@ -122,8 +122,8 @@ def ridged_1d(W, seed, octaves=5, base_freq=3):
     return out / max(out.max(), 1e-9)
 
 
-def render(place, preset, viewer=None, W=2048, yaw_deg=0.0, seed=7, world_root=None, h=None, cell=None):
-    P = PRESETS[preset]
+def render(place, preset, viewer=None, W=2048, yaw_deg=0.0, seed=7, world_root=None, h=None, cell=None, sun=None):
+    P = dict(PRESETS[preset], **(sun or {}))
     if h is None:
         h, cell = load_heights(place, world_root)
     ny, nx = h.shape
@@ -274,7 +274,12 @@ def cmd_generate(a):
     out_dir = a.out or os.path.join(REPO, "world", a.place, "export", "skybox")
     man = {"place": a.place, "format": "equirect 2:1", "width": a.width, "convention": "image centre = east, u clockwise from above; flag levels-3d-preview.exr", "skyboxes": {}}
     for name in a.presets.split(","):
-        img, info = render(a.place, name, viewer, a.width, a.yaw, h=h, cell=cell)
+        sun = None
+        if a.lighting:                                              # sun from the Illustrator lighting config (same sun as the 2D shadows and the 3D scene)
+            import foundry_lighting as fl
+            s = fl.load_lighting(a.lighting)["sun"]
+            sun = fl.sun_for_skybox(float(s["azimuth"]), float(s["altitude"]))
+        img, info = render(a.place, name, viewer, a.width, a.yaw, h=h, cell=cell, sun=sun)
         p = save(img, out_dir, name)
         man["skyboxes"][name] = {"file": os.path.basename(p), "bytes": os.path.getsize(p), **info}
         print(f"{name}: {p} ({os.path.getsize(p) // 1024} KB), horizon max {info['horizon_max_deg']:.1f} deg", flush=True)
@@ -311,6 +316,7 @@ def main(argv=None):
     g.add_argument("--viewer", help="X,Y feet in the place's frame (default: middle of the map)")
     g.add_argument("--width", type=int, default=2048)
     g.add_argument("--yaw", type=float, default=0.0)
+    g.add_argument("--lighting", help="place id or lighting JSON: use its sun azimuth/altitude for the sun in the sky")
     g.add_argument("--out")
     s = sp.add_parser("set-flag")
     s.add_argument("--place", default="bridgehollow")

@@ -4,8 +4,8 @@
  "place": "bridgehollow__dyers_walk_local",
  "pack": {
   "dir": ".",
-  "generated": "2026-11-08T02:20:32+00:00",
-  "git_commit": "52c5d19c885eba64916038808a94527c1c5f6a5b"
+  "generated": "2026-11-08T02:44:17+00:00",
+  "git_commit": "a2177b5b5919fc964b0604fac8466529b2f0004b"
  },
  "frame": {
   "px_per_ft": 20.0,
@@ -77,8 +77,8 @@
     "rotation": 0
    },
    "tris": 578,
-   "bytes": 51716,
-   "sha256": "9d20369714f6a7065329eceae7fc8b5b90ebb266de566e6fccaf34e24a4dd43b",
+   "bytes": 51724,
+   "sha256": "c60d1f31d97489e5e746a45c3826697e368bb21725e753e433b7e3727e0e6d2f",
    "lights": [
     {
      "id": "bld_house_041_light_hearth0_1",
@@ -213,8 +213,8 @@
     "rotation": 0
    },
    "tris": 1180,
-   "bytes": 102768,
-   "sha256": "fe88d6ef4debb6b7a3466a78dcf8633eb047d8eb28589c092a24c24717855c68",
+   "bytes": 102780,
+   "sha256": "2e107238a733fc805ba23beacb79cff4e48fd47c12f6438684195ee816f2c80d",
    "lights": [
     {
      "id": "bld_house_044_win0_1_light",
@@ -370,8 +370,8 @@
     "rotation": 0
    },
    "tris": 602,
-   "bytes": 53344,
-   "sha256": "23ce37ffac41b271e46dbd7a1ac5fa9defe48c5496ed408177985a600ab1e2a2",
+   "bytes": 53352,
+   "sha256": "e7e90503a13b696a1b5d038eb204a0a28e6633fce2f090c33e4bec9f030f7c6f",
    "lights": [
     {
      "id": "bld_house_052_light_hearth0_1",
@@ -506,8 +506,8 @@
     "rotation": 0
    },
    "tris": 1500,
-   "bytes": 130092,
-   "sha256": "934ef55e38172860ab5dbc52048093b0720201ec0a6c979de51dd0b8f03fd496",
+   "bytes": 130104,
+   "sha256": "0f7a7cf70b4642f0425f9f2b256077710f5674c38371d0d793e8759aaf29b00d",
    "lights": [
     {
      "id": "bld_house_053_win0_1_light",
@@ -663,8 +663,8 @@
     "rotation": 0
    },
    "tris": 1110,
-   "bytes": 90152,
-   "sha256": "5ba74168422a52167e4d595d5e3a921c5f62bace00e63bd3a735e225c38a3ed8",
+   "bytes": 90164,
+   "sha256": "bffb58ffbd272b26a9f5ae2eb4cfb89b371040f3c7a4c7a06b264a73679ebcf4",
    "lights": [
     {
      "id": "bld_house_054_win0_1_light",
@@ -778,8 +778,8 @@
     "rotation": 0
    },
    "tris": 468,
-   "bytes": 42476,
-   "sha256": "280af71080be2a0ceabf33561b7e91eed9cb16c64446e5892a4271075fa0c9a6",
+   "bytes": 42480,
+   "sha256": "25baa88ffda37730e1505050d8e12bb602762cee22be91985847ce9c8b1b1c9a",
    "lights": [
     {
      "id": "bld_house_056_light_hearth0_1",
@@ -872,8 +872,8 @@
     "rotation": 0
    },
    "tris": 974,
-   "bytes": 91836,
-   "sha256": "85e6b3b74343a758ca3d13cb0941183cc23e62aded425a220a5915f5d5ff2916",
+   "bytes": 91848,
+   "sha256": "19959bf283684051489e91e1611537afffc4890778db3d57a873708471c46dec",
    "lights": [
     {
      "id": "bld_house_057_win0_1_light",
@@ -987,8 +987,8 @@
     "rotation": 0
    },
    "tris": 1046,
-   "bytes": 86184,
-   "sha256": "52dcca379eb87ecd944517ae2a6ac8ca90915233ee836f77490190a209927000",
+   "bytes": 86196,
+   "sha256": "70b70bc70ae91316e42a08aa57e9e752a6d64395a30d2a4155a0218ecb14db2d",
    "lights": [
     {
      "id": "bld_house_062_win0_2_light",
@@ -1102,8 +1102,8 @@
     "rotation": 0
    },
    "tris": 476,
-   "bytes": 41436,
-   "sha256": "18dd0d978799ef7aaa56c824e3defbd2071f785b74367c1a115ba5e6c29ebf7f",
+   "bytes": 41440,
+   "sha256": "f2b6dc2ed24824974c592f635c4934c5ec82619538054c96c2dd6e0e2c71649a",
    "members": [
     {
      "id": "bld_house_063",
@@ -1173,8 +1173,8 @@
     "rotation": 0
    },
    "tris": 1448,
-   "bytes": 110680,
-   "sha256": "16d4a011e7374f194ca60dea3d15c210cae3af19b9ea62a1dd3dfd070229d776",
+   "bytes": 110700,
+   "sha256": "ff4eaaefe61861173c5182cfa0ea0c93520676b9756a4245fc7185630fe05c7c",
    "lights": [
     {
      "id": "bld_house_064_light_hearth0_3",
@@ -1351,8 +1351,8 @@
     "rotation": 0
    },
    "tris": 1030,
-   "bytes": 84292,
-   "sha256": "8596bc142494768b074588f725e3f9a7822cdf4ea742169670111c0d97756aa8",
+   "bytes": 84304,
+   "sha256": "6178e6af8706b443953173ba861b7a0bcf788d89e31be200286fe793305094da",
    "lights": [
     {
      "id": "bld_house_065_light_hearth0_2",
@@ -1508,8 +1508,8 @@
     "rotation": 0
    },
    "tris": 526,
-   "bytes": 44816,
-   "sha256": "352f88382bace6d7cba3e92ddd3bd946f1205ae1490dda0faa726368113a83c5",
+   "bytes": 44820,
+   "sha256": "521fa95cd21ee4b18a98186811b96e2eef009214902b60e610098910ffd93538",
    "lights": [
     {
      "id": "bld_house_066_light_hearth0_1",
@@ -1602,8 +1602,8 @@
     "rotation": 0
    },
    "tris": 1076,
-   "bytes": 96260,
-   "sha256": "65e93d52b3aad61ffdc4071ce95cc5435b16807779ff4da6634a52728af029ef",
+   "bytes": 96272,
+   "sha256": "5d08a4fc95929daa168c588c646838c6b5b1b66f044a66bd46b2657435451c99",
    "lights": [
     {
      "id": "bld_house_069_win0_1_light",
@@ -1717,8 +1717,8 @@
     "rotation": 0
    },
    "tris": 1134,
-   "bytes": 100196,
-   "sha256": "5ec463d90a1cebdea553667e49a044d4d0a61a5e836608a9a9d55e0522e7011d",
+   "bytes": 100208,
+   "sha256": "5d7e3654da3cdf1d14dcd4429cb498216da585f3ab91b0f264a98c7804fc393b",
    "lights": [
     {
      "id": "bld_house_072_win0_1_light",
@@ -1874,8 +1874,8 @@
     "rotation": 0
    },
    "tris": 1030,
-   "bytes": 84256,
-   "sha256": "64a71f62fca116f5ad69f8e683cc06ff15cdc8e97dae6bd97f348ca60a069544",
+   "bytes": 84268,
+   "sha256": "78982d96f254fe70a418123d5b3f59940a368f647c9ed09b56a84a33976ed708",
    "lights": [
     {
      "id": "bld_house_078_light_hearth0_2",
@@ -2031,8 +2031,8 @@
     "rotation": 0
    },
    "tris": 766,
-   "bytes": 68800,
-   "sha256": "1c068493adcd12a480af9b368d9b6f23822742af032908296eb4b3774c058fbd",
+   "bytes": 68808,
+   "sha256": "b91ccc256bacf0c19fad3c32d6fb411e02abb21af7f60f6ec5eeb823627ac408",
    "lights": [
     {
      "id": "bld_house_082_win0_2_light",
@@ -2146,8 +2146,8 @@
     "rotation": 0
    },
    "tris": 1128,
-   "bytes": 85632,
-   "sha256": "64fb5550e8a4532e88c3ea4796712aebbe971593b4d83673a5ebe868ac951ec7",
+   "bytes": 85644,
+   "sha256": "cc194155c123b0e4eb8663345ce8986304609db101936184a2481148664b30f0",
    "lights": [
     {
      "id": "bld_house_084_light_hearth0_2",
@@ -2324,8 +2324,8 @@
     "rotation": 0
    },
    "tris": 856,
-   "bytes": 74280,
-   "sha256": "5d43a4109098c6d0ba82f1bd5b6d817e7d6ec3b1e4aef3e2e2c4c2e45ef77c34",
+   "bytes": 74288,
+   "sha256": "9831aeea5cee905425dca9dd528eb29c2ff41ac8e81cf5ff1cc6a39aaef4c839",
    "lights": [
     {
      "id": "bld_house_086_light_hearth0_1",
@@ -2460,8 +2460,8 @@
     "rotation": 0
    },
    "tris": 1490,
-   "bytes": 108772,
-   "sha256": "416b0b94c37172954a076b1ec8ad70da715d7faca00e996d5343ac290345c6a0",
+   "bytes": 108792,
+   "sha256": "1f178712ce965feb71c380fb8240f772434ecfe7c76976822b7f5b03be3e7289",
    "lights": [
     {
      "id": "bld_house_087_light_hearth0_2",
@@ -2596,8 +2596,8 @@
     "rotation": 0
    },
    "tris": 646,
-   "bytes": 58548,
-   "sha256": "efca154c6fe19789ae768a7a4d49d0adcbcf50bf5e634d0860926fd627e3caef",
+   "bytes": 58556,
+   "sha256": "dbd254143cee44029ae22ffaa9451deb450d472a2810102034196d8c199403ee",
    "lights": [
     {
      "id": "bld_house_089_win0_2_light",
@@ -2711,8 +2711,8 @@
     "rotation": 0
    },
    "tris": 392,
-   "bytes": 37384,
-   "sha256": "f7e964e2f07019f4990d1ec2b7452df3c6c364826977b83628c7b4eb10e34c73",
+   "bytes": 37388,
+   "sha256": "813238af2f94e75da9e6b24379d61cdef16e13da2d639099243f3e56cfc98932",
    "lights": [
     {
      "id": "bld_house_090_light_hearth0_1",
@@ -2805,8 +2805,8 @@
     "rotation": 0
    },
    "tris": 1238,
-   "bytes": 103656,
-   "sha256": "04eed724de61d9ba2faa7061b9b2c1704933c46ac7583ecfab2ea2c18cc992de",
+   "bytes": 103668,
+   "sha256": "b2c84c6c82e46b8bf58707274b8ac8fe9605f6ff06d33109ec41b474dcb420bf",
    "lights": [
     {
      "id": "bld_house_094_win0_2_light",
@@ -2941,8 +2941,8 @@
     "rotation": 0
    },
    "tris": 816,
-   "bytes": 68780,
-   "sha256": "1e97c5a1e8cfc842890d74292881af7cdb66e9400ccf8f2395be00b75fff0348",
+   "bytes": 68788,
+   "sha256": "5fb4912a17a50af780654dc7b1307bd3619d5e1520d1d658d43f6c8fc4cd6555",
    "lights": [
     {
      "id": "bld_house_099_light_hearth0_2",
@@ -3077,8 +3077,8 @@
     "rotation": 0
    },
    "tris": 1306,
-   "bytes": 98080,
-   "sha256": "0dcc1cc35cfdfc94f0fae2765e6cd780dee1d5e81c699c40c5eb25ff56a9e6f4",
+   "bytes": 98092,
+   "sha256": "9568ef83bb7d72375fcb9d7acd331180eeaa60edf4a023198e67125661f5f1f7",
    "lights": [
     {
      "id": "bld_house_107_light_hearth0_2",
@@ -3234,8 +3234,8 @@
     "rotation": 0
    },
    "tris": 1112,
-   "bytes": 88212,
-   "sha256": "483fab982b80f99ee8288611a50a21eecf9578f58bac4ebde0f9d9c669c890a1",
+   "bytes": 88224,
+   "sha256": "5e61d36dfe3ce9f3834604c7973b0d016440e0c7e5fe7437f525b20a6b5d7518",
    "lights": [
     {
      "id": "bld_house_109_light_hearth0_1",

@@ -191,7 +191,7 @@ def build_building_detailed(cx, e):
                 hx, hy, hz = X(i, u0 + 0.02, t / 2, za + 0.02)
                 did = h["door"].get("id") or f"{e['id']}_door"
                 door_nodes.append({"id": did, "hinge": (hx, hy, hz), "mesh": Mesh(Vb, M.UV, M.subs),
-                                   "extras": {"isDoor": True, "doorId": did, "doorStyle": 1, "doorAnimateAngle": 90, "building": e["id"]}})
+                                   "extras": {"isDoor": True, "doorId": did, "doorStyle": 1, "doorAnimateAngle": 1.5708, "building": e["id"]}})
     for i in range(n):          # top of the wall ring and the interior floor
         j = (i + 1) % n
         face(wmat, [(P[i][0], P[i][1], zt), (P[j][0], P[j][1], zt), (Q[j][0], Q[j][1], zt), (Q[i][0], Q[i][1], zt)])

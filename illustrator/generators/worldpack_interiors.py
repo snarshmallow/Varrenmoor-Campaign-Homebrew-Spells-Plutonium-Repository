@@ -12,7 +12,7 @@ glTF nodes per building (names; extras carry `tags`, `storey`, `building`):
   <id>_int_f<s>        floor (s=0) or slab+ceiling+joists below it, partitions, stairs of storey s    tags [interior]  storey s
   <id>_roof            roof, gables, top ceiling plate + beams                 tags [building, roof]
   <id>_props_f<s>      furniture of storey s (hide with tag `prop`)            tags [interior, prop]    storey s
-  <id>_idoor_f<s>_<n>  interior door leaves, origin on the hinge               isDoor, doorStyle 1, doorAnimateAngle 90
+  <id>_idoor_f<s>_<n>  interior door leaves, origin on the hinge               isDoor, doorStyle 1, doorAnimateAngle 1.5708 (RADIANS, read raw by 3D Canvas)
 Toggle `_roof`, then `_shell_f<n>` / `_int_f<n>` / `_props_f<n>` from the top storey down for a cutaway.
 """
 import math
@@ -354,7 +354,7 @@ def add_interior(cx, e, mesh, door_nodes):
             Vb = np.stack([V[:, 0] * d[0] + V[:, 1] * nrm[0], V[:, 0] * d[1] + V[:, 1] * nrm[1], V[:, 2]], 1)
             hx, hy, hz = X(u0 + 0.02, 0.0, z0 + 0.02)
             new_doors.append({"id": dd["id"], "hinge": (hx, hy, hz), "mesh": Mesh(Vb, leaf.UV, leaf.subs),
-                              "extras": {"isDoor": True, "doorId": dd["id"], "doorStyle": 1, "doorAnimateAngle": 90, "building": e["id"], "interior": True, "storey": s,
+                              "extras": {"isDoor": True, "doorId": dd["id"], "doorStyle": 1, "doorAnimateAngle": 1.5708, "building": e["id"], "interior": True, "storey": s,
                                          "tags": ["interior", "door"]}})
     # stairs
     for st in lay["stairs"]:

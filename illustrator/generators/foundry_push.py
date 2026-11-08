@@ -190,7 +190,7 @@ def load_view(place, view="town", preset=None, scale=None, grid=None, page=None,
     return model, v, cfg
 
 
-def calibrate(v, cfg, img_size, max_px=8192, ft_per_grid=None, padding=0.0):
+def calibrate(v, cfg, img_size, max_px=8192, ft_per_grid=None, padding=0.0, upscale=1.0):
     """Exported page PNG -> scene. Returns calib dict (crop box in source px, target size, ppf = scene px per ft, grid)."""
     pw, ph = cfg["page_in"]
     m = cfg.get("margin_in", 0.5)
@@ -198,7 +198,7 @@ def calibrate(v, cfg, img_size, max_px=8192, ft_per_grid=None, padding=0.0):
     if abs(img_size[1] - ph * D) > 3:
         raise PushError(f"image {img_size[0]}x{img_size[1]} does not match the page {pw}x{ph} in; export the whole artboard (export_view)")
     fpi = cfg["scale_ft_per_in"]
-    native = D / fpi                                           # source px per foot
+    native = D / fpi * float(upscale or 1.0)                   # scene px per foot before the max_px limit (upscale > 1 resamples a low-dpi export up so a 5 ft grid reaches Foundry's 50 px minimum)
     grid_ft = float(ft_per_grid or cfg["grid_ft"])
     f = min(1.0, max_px / (max(v.wf, v.hf) * native))
     gp = int(round(native * f * grid_ft))
@@ -396,7 +396,7 @@ def cmd_push_scene(br, a):
     img = Image.open(a.image)
     img.load()
     img = img.convert("RGB") if img.mode not in ("RGB", "RGBA") else img
-    c = calibrate(v, cfg, img.size, a.max_px, a.ft_per_grid, a.padding)
+    c = calibrate(v, cfg, img.size, a.max_px, a.ft_per_grid, a.padding, a.upscale)
     LOG(f"view window {v.wf:g} x {v.hf:g} ft -> scene {c['width']}x{c['height']}px, grid {c['grid_px']}px = {c['grid_ft']:g} ft, {c['ppf']:.3f} px/ft")
     walls = build_walls(model, c) if a.walls else []
     drawings = build_drawings(model, c, [k for k in (a.drawings or "").split(",") if k]) if a.drawings else []
@@ -449,6 +449,9 @@ def cmd_push_scene(br, a):
     sdata = {"name": name, "width": c["width"], "height": c["height"], "padding": c["padding"], "navigation": False,
              "grid": {"type": 1, "size": c["grid_px"], "distance": c["grid_ft"], "units": "ft"},
              "flags": {FLAG: {"worldId": a.place, "calib": calib, **extra}}}
+    if a.lighting and sc is None:                       # flat scene: the map image already carries the baked sun shadows; Foundry gets plain global light, no darkness
+        import foundry_lighting as flt
+        sdata["environment"] = flt.flat_environment(flt.load_lighting(a.lighting))
     mode = a.scene_mode or "flat"
     if a.scene_mode or sc is None and not a.scene_uuid:     # explicit --scene-mode, or a brand-new scene (default flat); never silently re-flag an existing one
         sdata["flags"].update(scene_mode_flags(mode, a.scene_flag))
@@ -731,6 +734,9 @@ def build_model_tiles(doc, scene_calib, a, publish=None):
 def _tex_flags(a):
     """--scene-flag list plus the baked ground texture (--table-texture): renderTable matcustom + tableTex, renderBackground off."""
     fl = list(a.scene_flag or [])
+    if getattr(a, "lighting", None):
+        import foundry_lighting as flt
+        fl = [f"{k}={json.dumps(v)}" for k, v in flt.scene_light_flags(flt.load_lighting(a.lighting)).items()] + fl
     if getattr(a, "table_texture", None):
         fl = ["renderTable=\"matcustom\"", "renderBackground=false", "tableTex=" + json.dumps(a.table_texture)] + fl
     return fl
@@ -840,21 +846,20 @@ def cmd_push_models(br, a):
     return result
 
 
-def build_light_docs(doc, c, only_types=None):
+def build_light_docs(doc, c, only_types=None, animation=None):
     """placements.json "lights" (interior hints from worldpack_interiors) -> AmbientLight Tile-style items for upsert_many.
     dim/bright are in ft (the scenes use a 5 ft grid with distance in ft); elevation relative to the pack z origin."""
     ppf, place, z0 = c["ppf"], doc["place"], doc["frame"]["z_origin_ft"]
     out = []
-    for lt in doc.get("lights", []):
+    for lt in list(doc.get("lights", [])) + [x for e in doc.get("files", []) for x in e.get("lights", [])]:     # per-file entries (worldpack_split) or a top-level list
         if only_types and lt["type"] not in only_types:
             continue
         px, py = c["sceneX"] + (lt["point"][0] - c["x0"]) * ppf, c["sceneY"] + (lt["point"][1] - c["y0"]) * ppf
-        fire = lt.get("animation") == "torch"
-        l3d = {"enableParticle": True, "ParticleType": "torch", "ParticleEmitterSizeMultiplier": 0.05} if fire else {}
+        l3d = {"enableParticle": False}      # never torch/smoke/fire particle presets (house rule); plain point light, optional --light-animation
         out.append({"id": f"light:{place}:{lt['id']}", "data": {
             "x": round(px), "y": round(py), "elevation": round(lt.get("z_abs_ft", z0 + lt.get("z_ft", 5.0)) - z0, 2), "rotation": 0, "walls": False, "vision": False,
             "config": {"dim": lt.get("dim_ft", 10), "bright": lt.get("bright_ft", 4), "color": lt.get("color", "#ffffff"), "alpha": min(0.9, max(0.1, lt.get("intensity", 0.5))),
-                       "luminosity": 0.5, "animation": {"type": "torch" if fire else None, "speed": 3, "intensity": 3}},
+                       "luminosity": 0.5, "animation": {"type": animation or None, "speed": 2, "intensity": 2}},
             "flags": {"levels-3d-preview": l3d, FLAG: {"lightId": lt["id"], "building": lt.get("building"), "type": lt["type"]}}}})
     return out
 
@@ -869,7 +874,12 @@ def cmd_push_lights(br, a):
     calib = (sc.get("flags", {}).get(FLAG, {}) or {}).get("calib") or {}
     c = {"ppf": float(a.px_per_ft or calib.get("ppf") or doc["frame"]["px_per_ft"]), "x0": calib.get("x0", 0.0), "y0": calib.get("y0", 0.0),
          "sceneX": calib.get("sceneX", 0), "sceneY": calib.get("sceneY", 0)}
-    items = build_light_docs(doc, c, set(a.layers.split(",")) if a.layers else None)      # --layers = light types (hearth,window)
+    items = build_light_docs(doc, c, set(a.layers.split(",")) if a.layers else None, a.light_animation)      # --layers = light types (hearth,window)
+    if a.lighting:                                                                 # the 2D lights of the Illustrator lighting config, same positions
+        import foundry_lighting as fl
+        rg = os.path.join(REPO, "world", a.place, "region.json")
+        org = (json.load(open(rg, encoding="utf-8")).get("transform", {}).get("origin_ft") if os.path.exists(rg) else None) or [0.0, 0.0]
+        items += fl.point_light_docs(fl.load_lighting(a.lighting), org, c["ppf"], (c["sceneX"], c["sceneY"]), c["x0"], c["y0"], doc["place"])
     LOG(f"{len(items)} lights")
     if a.dry_run:
         return {"ok": True, "lights": len(items), "sample": items[:1]}
@@ -900,6 +910,7 @@ def parser():
     ap.add_argument("--token")
     ap.add_argument("--max-px", type=int, default=8192)
     ap.add_argument("--ft-per-grid", type=float)
+    ap.add_argument("--upscale", type=float, default=1.0, help="push-scene: resample the image up by this factor (low-dpi exports)")
     ap.add_argument("--padding", type=float, default=0.0)
     ap.add_argument("--walls", dest="walls", action="store_true", default=True)
     ap.add_argument("--no-walls", dest="walls", action="store_false")
@@ -936,6 +947,8 @@ def parser():
     ap.add_argument("--out-dir", dest="out_dir", help="bake-texture: where the baked image and bake.json go (default world/<place>/export/baked)")
     ap.add_argument("--table-texture-path", dest="table_texture_path", help="bake-texture: tableTex value to record (default: the asset path)")
     ap.add_argument("--publish", action="store_true", help="bake-texture: copy the image into the shared assets folder Foundry serves (otherwise only written locally)")
+    ap.add_argument("--lighting", help="place id (panel_state.json lighting) or lighting JSON: sun/ambient -> scene flags (push-models), 2D point lights -> AmbientLights (push-lights)")
+    ap.add_argument("--light-animation", dest="light_animation", help="push-lights: Foundry light animation type for interior hints (default none; never torch/smoke particles)")
     ap.add_argument("--prune", action="store_true", help="push-models: delete pipeline model tiles that are not in this push")
     return ap
 

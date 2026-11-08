@@ -1,0 +1,39 @@
+{
+ "ok": true,
+ "place": "bridgehollow__dyers_walk_local",
+ "image": "\\\\VEGA\\varrenmoor-3d\\art\\bridgehollow__dyers_walk_local\\maps\\ground_v001.webp",
+ "foundry_path": "assets/varrenmoor-3d/art/bridgehollow__dyers_walk_local/maps/ground_v001.webp",
+ "version": 1,
+ "size_px": [
+  1116,
+  1296
+ ],
+ "px_per_ft": 3.6,
+ "footprint_ft": [
+  0.7,
+  4.7,
+  310.7,
+  364.7
+ ],
+ "size_ft": [
+  310.0,
+  360.0
+ ],
+ "published": true,
+ "scene_flags": {
+  "levels-3d-preview": {
+   "renderBackground": false,
+   "renderTable": "matcustom",
+   "tableTex": "assets/varrenmoor-3d/art/bridgehollow__dyers_walk_local/maps/ground_v001.webp"
+  }
+ },
+ "scene_flag_args": [
+  "--scene-flag=renderBackground=false",
+  "--scene-flag=renderTable=\"matcustom\"",
+  "--scene-flag=tableTex=\"assets/varrenmoor-3d/art/bridgehollow__dyers_walk_local/maps/ground_v001.webp\""
+ ],
+ "notes": [
+  "No live push was made. tableTex is shown tiled/stretched by 3D Canvas over the padded table: check scale in the scene [TEST], see FOUNDRY_3D_CANVAS_NOTES.md section 7.",
+  "Keep the terrain GLB at the same footprint or leave it out; do not also enable renderBackground (z-fighting)."
+ ]
+}
