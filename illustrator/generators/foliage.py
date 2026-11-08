@@ -792,6 +792,17 @@ def merge_foliage(doc, lib, ground, place, out_dir, chunk_ft=150.0, budget=None,
     return fdoc, rep
 
 
+def validate_chunks(out_dir, allow_quantized=False):
+    """glb_check problems of every GLB under out_dir/models (empty list = loadable by 3D Canvas)."""
+    import glb_check
+    bad = []
+    for root, _, files in os.walk(os.path.join(out_dir, "models")):
+        for f in files:
+            if f.lower().endswith(".glb"):
+                bad += glb_check.validate_glb(os.path.join(root, f), allow_quantized)
+    return bad
+
+
 def attach_to_optimized(place, pack_dir, out_dir, chunk_ft=150.0, budget=None, impostor_beyond_ft=None, lod1_beyond_ft=None, compress="none", log=print):
     """worldpack_split merge/publish --foliage: replace the foliage-layer entries of out_dir/placements.json (one tile per tree) with merged chunk entries from
     world/<place>/foliage.json. Buildings, doors and every other entry are left exactly as they are."""
@@ -910,6 +921,10 @@ def main(argv=None):
             ground = Ground.from_pack(pack)
             od = a.out_dir or _next_version_dir(os.path.join(pack, "optimized"), "foliage")
             fdoc, rep = merge_foliage(doc, lib, ground, a.place, od, a.chunk_ft, a.budget, a.impostor_beyond_ft, a.lod1_beyond_ft, None, a.compress)
+            if a.compress != "none" and validate_chunks(od):      # 3D Canvas cannot load these: fall back to plain (unquantized) GLBs, same chunks
+                print("foliage: compressed chunks fail the 3D Canvas load check, re-merging uncompressed", file=sys.stderr)
+                fdoc, rep = merge_foliage(doc, lib, ground, a.place, od, a.chunk_ft, a.budget, a.impostor_beyond_ft, a.lod1_beyond_ft, None, "none")
+                rep["compress_fallback"] = "none"
             out = rep
             if a.cmd == "publish":
                 import foundry_push

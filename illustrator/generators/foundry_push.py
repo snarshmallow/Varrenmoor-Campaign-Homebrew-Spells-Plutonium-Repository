@@ -742,6 +742,56 @@ def build_model_tiles(doc, scene_calib, a, publish=None):
     return items
 
 
+ASSET_PREFIX = "assets/varrenmoor-3d/"
+
+
+def local_asset_path(foundry_path, root):
+    """Foundry path assets/varrenmoor-3d/<rest> -> <assets root>/<rest> (None for paths outside our share)."""
+    if not foundry_path or not foundry_path.startswith(ASSET_PREFIX):
+        return None
+    return os.path.join(root, *foundry_path[len(ASSET_PREFIX):].split("/"))
+
+
+def http_status(url, timeout=30):
+    """(status, size) of a GET, (None, reason) on a connection problem."""
+    import urllib.request
+    import urllib.error
+    try:
+        with urllib.request.urlopen(url, timeout=timeout) as r:
+            return r.status, len(r.read())
+    except urllib.error.HTTPError as e:
+        return e.code, 0
+    except Exception as e:      # noqa: BLE001 - report, do not crash a push over a probe
+        return None, str(e)
+
+
+def verify_models(paths, root, serve_url=None, allow_quantized=False, getter=None):
+    """Every model path must exist in the shared assets folder (where Foundry serves it from), be a GLB 3D Canvas can load (glb_check) and, with serve_url
+    (e.g. http://10.0.0.15:30000), answer HTTP 200 with the same size. Returns a list of problem strings (empty = fine)."""
+    import glb_check
+    getter = getter or http_status
+    bad, seen = [], set()
+    for p in paths:
+        if not p or p in seen:
+            continue
+        seen.add(p)
+        lp = local_asset_path(p, root)
+        if lp is None:
+            continue                                   # a module/world asset path we do not manage (baileywiki etc.)
+        if not os.path.isfile(lp):
+            bad.append(f"{p}: not found in the assets folder {root} (Foundry would log 'File format not supported or missing')")
+            continue
+        if p.lower().endswith((".glb", ".gltf")):
+            bad += glb_check.validate_glb(lp, allow_quantized)
+        if serve_url:
+            st, size = getter(serve_url.rstrip("/") + "/" + p)
+            if st != 200:
+                bad.append(f"{p}: HTTP {st} from {serve_url} ({size if st is None else 'not served'})")
+            elif size != os.path.getsize(lp):
+                bad.append(f"{p}: served {size} bytes, file is {os.path.getsize(lp)}")
+    return bad
+
+
 def _tex_flags(a):
     """--scene-flag list plus the baked ground texture (--table-texture): renderTable matcustom + tableTex, renderBackground off."""
     fl = list(a.scene_flag or [])
@@ -851,6 +901,9 @@ def cmd_push_models(br, a):
     if a.scene_mode and not result.get("scene_mode"):        # explicit mode on an existing scene: merge only the mode keys
         br.call("update", uuid=uuid, data={"flags": scene_mode_flags(a.scene_mode, _tex_flags(a))})
         result["scene_mode"] = a.scene_mode
+    bad = verify_models([i["data"]["flags"][L3D]["model3d"] for i in items], root, getattr(a, "serve_url", None) or os.environ.get("FOUNDRY_URL"), getattr(a, "allow_quantized", False))
+    if bad:        # never create tiles Foundry cannot load: one failing tile breaks the 3D render loop of the whole scene
+        raise PushError(f"{len(bad)} model problem(s), no tiles were written:\n  " + "\n  ".join(bad[:25]))
     r = br.call("upsert_many", documentName="Tile", parentUuid=uuid, items=items, prefix="model:", prune=bool(a.prune))
     LOG(f"tiles: {r}")
     result.update(scene_uuid=uuid, tile_ops=r)
@@ -899,9 +952,108 @@ def cmd_push_lights(br, a):
 
 
 # ------------------------------------------------------------------ cli
+def _scene_padding_arg(padding_args, default=0.25):
+    for i, x in enumerate(padding_args or []):
+        if x == "--scene-padding" and i + 1 < len(padding_args):
+            return float(padding_args[i + 1])
+        if x.startswith("--scene-padding="):
+            return float(x.split("=", 1)[1])
+    return default
+
+
+SCENE_3D_ORDER = ["geometry", "models", "foliage", "padding", "lights", "flags", "verify"]     # skybox + lighting flags last: nothing after them may overwrite them
+PADDING_PUSH = None          # tests replace this; default calls padding_heightmap.main(["push", ...])
+
+
+def cmd_push_scene_3d(br, a):
+    """One idempotent push of a whole 3D test scene: terrain/buildings -> foliage -> padding -> lights -> skybox + sun/ambient/tint flags (last) -> verification
+    (files exist and load, scene flags read back). Re-running changes nothing that is byte-identical (versioned assets, id-keyed upserts)."""
+    if not a.scene_uuid:
+        raise PushError("give --scene-uuid")
+    done, root = [], a.assets_dir or assets_dir()
+    base = argparse.Namespace(**vars(a))
+
+    def models(placements):
+        b = argparse.Namespace(**vars(base))
+        b.placements, b.prune, b.cmd, b.scene_mode, b.lighting, b.set_name = placements, False, "push-models", None, None, None
+        b.assets_dir = root
+        r = cmd_push_models(br, b)
+        if not r.get("ok"):
+            raise PushError(f"push-models failed: {r}")
+        return {"tiles": r["tiles"], "set": r["set"]}
+
+    steps = {}
+    if not a.no_padding and not a.dry_run:        # geometry first: padding moves the scene rect (sceneX/Y), and every tile position is computed from it
+        import padding_heightmap as ph
+        sc0 = br.call("get", uuid=a.scene_uuid)
+        pad = _scene_padding_arg(a.padding_args)
+        gpx = (sc0.get("grid") or {}).get("size") or 100
+        _, _, sx, sy = ph.canvas_dims(sc0["width"], sc0["height"], pad, gpx)
+        br.call("update", uuid=a.scene_uuid, data={"padding": pad, "flags": {FLAG: {"calib": {"sceneX": sx, "sceneY": sy}}}})
+        steps["geometry"] = {"padding": pad, "sceneX": sx, "sceneY": sy}
+        done.append("geometry")
+    steps["models"] = models(a.placements or os.path.join(REPO, "world", a.place, "export", "placements.json"))
+    done.append("models")
+    if a.foliage_placements:
+        steps["foliage"] = models(a.foliage_placements)
+        done.append("foliage")
+    if not a.no_padding:
+        args = ["push", "--place", a.place, "--scene-uuid", a.scene_uuid, "--assets-dir", root] + list(a.padding_args or [])
+        if not any(x.startswith("--scene-padding") for x in args):      # the surroundings are generated for a padded scene; with padding 0 the heightmap table would cover the town
+            args += ["--scene-padding", str(_scene_padding_arg(a.padding_args))]
+        if a.dry_run:
+            args.append("--dry-run")
+        import padding_heightmap
+        rc = (PADDING_PUSH or padding_heightmap.main)(args)
+        if rc not in (0, None):
+            raise PushError(f"padding push failed ({rc})")
+        steps["padding"] = {"args": args}
+        done.append("padding")
+    if a.with_lights:
+        b = argparse.Namespace(**vars(base))
+        b.cmd, b.layers, b.px_per_ft = "push-lights", None, None
+        steps["lights"] = cmd_push_lights(br, b)
+        done.append("lights")
+    flags = {}
+    if not a.no_skybox:
+        src = os.path.join(REPO, "world", a.place, "export", "skybox", f"{a.skybox_preset}.webp")
+        if not os.path.exists(src):
+            raise PushError(f"{src} not found; run skybox.py generate first")
+        _, path = publish_file(src, f"art/{a.place}/skybox", a.skybox_preset, root, dry=bool(a.dry_run))
+        flags.update({"exr": path, "skybox": ""})
+    if a.lighting:
+        import foundry_lighting as flt
+        flags.update(flt.scene_light_flags(flt.load_lighting(a.lighting)))
+    for o in a.scene_flag or []:
+        k, _, v = o.partition("=")
+        try:
+            flags[k] = json.loads(v)
+        except ValueError:
+            flags[k] = v
+    if flags and not a.dry_run:
+        br.call("update", uuid=a.scene_uuid, data={"flags": {L3D: flags}})
+    steps["flags"] = flags
+    done.append("flags")
+    problems = []
+    if not a.dry_run:
+        sc = br.call("get", uuid=a.scene_uuid)
+        f3 = (sc.get("flags", {}) or {}).get(L3D, {}) or {}
+        for k, v in flags.items():
+            if f3.get(k) != v:
+                problems.append(f"scene flag {k} is {f3.get(k)!r}, expected {v!r}")
+        paths = [((t.get("flags", {}) or {}).get(L3D, {}) or {}).get("model3d") for t in sc.get("tiles", [])]
+        problems += verify_models(paths + ([f3.get("exr")] if f3.get("exr") else []), root, a.serve_url or os.environ.get("FOUNDRY_URL"), a.allow_quantized)
+    steps["verify"] = {"problems": problems}
+    done.append("verify")
+    res = {"ok": not problems, "order": done, "scene_uuid": a.scene_uuid, "steps": steps, "problems": problems}
+    if problems:
+        res["error"] = "; ".join(problems[:5])
+    return res
+
+
 def parser():
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
-    ap.add_argument("cmd", choices=["status", "places", "list", "export-info", "push-scene", "push-token", "push-actor", "push-item", "push-models", "delete-scene", "link-region", "bake-texture", "push-lights", "import-scene"])
+    ap.add_argument("cmd", choices=["status", "places", "list", "export-info", "push-scene", "push-token", "push-actor", "push-item", "push-models", "delete-scene", "link-region", "bake-texture", "push-lights", "import-scene", "push-scene-3d"])
     ap.add_argument("--place", default="bridgehollow")
     ap.add_argument("--view", default="town")
     ap.add_argument("--preset")
@@ -961,6 +1113,14 @@ def parser():
     ap.add_argument("--lighting", help="place id (panel_state.json lighting) or lighting JSON: sun/ambient -> scene flags (push-models), 2D point lights -> AmbientLights (push-lights)")
     ap.add_argument("--light-animation", dest="light_animation", help="push-lights: Foundry light animation type for interior hints (default none; never torch/smoke particles)")
     ap.add_argument("--prune", action="store_true", help="push-models: delete pipeline model tiles that are not in this push")
+    ap.add_argument("--serve-url", dest="serve_url", help="push-models/push-scene-3d: Foundry base URL (default env FOUNDRY_URL); every model is fetched over HTTP and must answer 200 with the right size")
+    ap.add_argument("--allow-quantized", action="store_true", help="push-models: accept KHR_mesh_quantization GLBs (default: rejected, see glb_check.py)")
+    ap.add_argument("--foliage-placements", dest="foliage_placements", help="push-scene-3d: placements.json of a foliage merge (optimized/foliage_vNNN)")
+    ap.add_argument("--skybox-preset", dest="skybox_preset", default="clear_day", help="push-scene-3d: world/<place>/export/skybox/<preset>.webp")
+    ap.add_argument("--no-skybox", action="store_true")
+    ap.add_argument("--no-padding", action="store_true", help="push-scene-3d: skip the padding apron / table heightmap step")
+    ap.add_argument("--padding-arg", dest="padding_args", action="append", default=[], help="push-scene-3d: extra argument for padding_heightmap push (repeatable, use --padding-arg=--preset --padding-arg=bowl-ridge)")
+    ap.add_argument("--with-lights", dest="with_lights", action="store_true", help="push-scene-3d: also push the interior point lights")
     # import-scene (foundry_import.py) and the place <-> scene link
     ap.add_argument("--place-id", help="import-scene: id of the new place (default: slug of the scene name)")
     ap.add_argument("--include", help="import-scene: extra data to import: walls (default), lights, tokens, notes (comma list)")
@@ -994,7 +1154,7 @@ def place_link(place, uuid=None):
 
 CMDS = {"status": cmd_status, "places": cmd_places, "list": cmd_list, "export-info": cmd_export_info, "push-scene": cmd_push_scene,
         "push-token": cmd_push_token, "push-actor": cmd_push_actor, "push-item": cmd_push_item, "push-models": cmd_push_models, "delete-scene": cmd_delete_scene,
-        "link-region": cmd_link_region, "bake-texture": cmd_bake_texture, "push-lights": cmd_push_lights, "import-scene": cmd_import_scene}
+        "link-region": cmd_link_region, "bake-texture": cmd_bake_texture, "push-lights": cmd_push_lights, "import-scene": cmd_import_scene, "push-scene-3d": cmd_push_scene_3d}
 
 
 def main(argv=None, bridge=None):

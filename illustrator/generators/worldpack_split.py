@@ -405,7 +405,11 @@ def main(argv=None):
         doc, rep = merge_export(pack, a.preset, compress=a.compress, remove_hidden=not a.no_hidden_removal)
         if a.foliage:                                                    # foliage.py: merged per-chunk foliage instead of one tile per tree (buildings/doors untouched)
             import foliage
-            foliage.attach_to_optimized(a.place, pack, rep["out"], a.foliage_chunk_ft, a.foliage_budget, a.foliage_impostor_ft, None, "none" if a.compress == "none" else "quant")
+            comp = "none" if a.compress == "none" else "quant"
+            foliage.attach_to_optimized(a.place, pack, rep["out"], a.foliage_chunk_ft, a.foliage_budget, a.foliage_impostor_ft, None, comp)
+            if comp != "none" and foliage.validate_chunks(rep["out"]):     # 3D Canvas cannot load quantized chunks: fall back to plain GLBs
+                print("foliage: quantized chunks fail the 3D Canvas load check, re-merging uncompressed")
+                foliage.attach_to_optimized(a.place, pack, rep["out"], a.foliage_chunk_ft, a.foliage_budget, a.foliage_impostor_ft, None, "none")
         if a.cmd == "publish":
             import foundry_push
             args = ["push-models", "--place", a.place, "--placements", os.path.join(rep["out"], "placements.json"), "--lod", str(a.lod)]

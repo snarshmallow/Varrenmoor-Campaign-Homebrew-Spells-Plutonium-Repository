@@ -332,5 +332,154 @@ class PushTests(unittest.TestCase):
         self.assertEqual((f["tableTex"], f["renderTable"], f["renderBackground"]), ("assets/x/g_v001.webp", "matcustom", False))
 
 
+def make_glb(path, positions=True, extensions_required=(), extensions_used=(), accessor_count=3, truncate=False):
+    """Smallest GLB with one triangle (3 floats x 3 vertices) for the glb_check tests."""
+    import struct
+    bin_ = struct.pack("<9f", 0, 0, 0, 1, 0, 0, 0, 1, 0)
+    prim = {"attributes": {"POSITION": 0} if positions else {}}
+    j = {"asset": {"version": "2.0"}, "buffers": [{"byteLength": len(bin_)}], "bufferViews": [{"buffer": 0, "byteLength": len(bin_)}],
+         "accessors": [{"bufferView": 0, "componentType": 5126, "count": accessor_count, "type": "VEC3"}], "meshes": [{"primitives": [prim]}]}
+    if extensions_required:
+        j["extensionsRequired"] = list(extensions_required)
+    if extensions_used or extensions_required:
+        j["extensionsUsed"] = list(set(extensions_used) | set(extensions_required))
+    js = json.dumps(j).encode()
+    js += b" " * ((4 - len(js) % 4) % 4)
+    body = struct.pack("<II", len(js), 0x4E4F534A) + js + struct.pack("<II", len(bin_), 0x004E4942) + bin_
+    data = struct.pack("<4sII", b"glTF", 2, 12 + len(body)) + body
+    with open(path, "wb") as f:
+        f.write(data[: len(data) - 20] if truncate else data)
+    return path
+
+
+class GlbCheckTests(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.mkdtemp()
+
+    def p(self, n):
+        return os.path.join(self.tmp, n)
+
+    def test_plain_ok(self):
+        import glb_check
+        self.assertEqual(glb_check.validate_glb(make_glb(self.p("a.glb"))), [])
+
+    def test_rejects_what_3d_canvas_cannot_load(self):
+        import glb_check
+        self.assertTrue(glb_check.validate_glb(make_glb(self.p("q.glb"), extensions_required=["KHR_mesh_quantization"])))
+        self.assertEqual(glb_check.validate_glb(make_glb(self.p("q2.glb"), extensions_required=["KHR_mesh_quantization"]), allow_quantized=True), [])
+        self.assertTrue(glb_check.validate_glb(make_glb(self.p("m.glb"), extensions_required=["EXT_meshopt_compression"])))
+        self.assertTrue(glb_check.validate_glb(make_glb(self.p("n.glb"), positions=False)))
+        self.assertTrue(glb_check.validate_glb(make_glb(self.p("z.glb"), accessor_count=0)))
+        self.assertTrue(glb_check.validate_glb(make_glb(self.p("t.glb"), truncate=True)))
+        with open(self.p("junk.glb"), "wb") as f:
+            f.write(b"not a glb at all, but long enough to read a header")
+        self.assertTrue(glb_check.validate_glb(self.p("junk.glb")))
+        self.assertTrue(glb_check.validate_glb(self.p("missing.glb")))
+
+    def test_verify_models_missing_unserved_and_ok(self):
+        root = self.tmp
+        d = os.path.join(root, "art", "p", "models", "s")
+        os.makedirs(d)
+        make_glb(os.path.join(d, "a_v001.glb"))
+        good = "assets/varrenmoor-3d/art/p/models/s/a_v001.glb"
+        gone = "assets/varrenmoor-3d/art/p/models/foliage_v002/c0_0_v001.glb"      # the 2026-11-08 failure: tile path with no file behind it
+        self.assertEqual(fp.verify_models([good, "baileywiki-content/x.glb"], root), [])
+        bad = fp.verify_models([good, gone], root)
+        self.assertEqual(len(bad), 1)
+        self.assertIn("not found", bad[0])
+        size = os.path.getsize(os.path.join(d, "a_v001.glb"))
+        self.assertEqual(fp.verify_models([good], root, "http://x", getter=lambda u: (200, size)), [])
+        self.assertIn("HTTP 404", fp.verify_models([good], root, "http://x", getter=lambda u: (404, 0))[0])
+        self.assertIn("bytes", fp.verify_models([good], root, "http://x", getter=lambda u: (200, size + 1))[0])
+
+
+class Scene3DTests(unittest.TestCase):
+    """push-scene-3d: order of the steps, idempotence, refusal to create tiles for unloadable models."""
+    PLACE = "bridgehollow__dyers_walk_local"
+
+    def setUp(self):
+        self.tmp = tempfile.mkdtemp()
+        self.assets = os.path.join(self.tmp, "assets")
+        import tile_rotation_inspect as tri
+        tri.build()
+        self.pl = os.path.join(tri.OUT, "placements.json")
+        self.events = []
+        self.br = FakeBridge()
+        outer = self
+        orig_call = self.br.call
+
+        def call(op, **a):
+            outer.events.append(("bridge", op))
+            return orig_call(op, **a)
+        self.br.call = call
+        fp.PADDING_PUSH = lambda args: (outer.events.append(("padding", tuple(args))), 0)[1]
+
+    def tearDown(self):
+        fp.PADDING_PUSH = None
+
+    run_cmd = PushTests.run_cmd
+
+    def go(self, *extra):
+        return self.run_cmd(self.br, "push-scene-3d", "--place", self.PLACE, "--scene-uuid", "Scene.s0", "--placements", self.pl, "--yes", *extra)
+
+    def kinds(self):
+        return [e[0] if e[0] == "padding" else e[1] for e in self.events]
+
+    def test_order_flags_last_and_idempotent(self):
+        r, code = self.go("--set-name", "t", "--scene-flag", "sunPosition=15.5")
+        self.assertTrue(r["ok"], r)
+        self.assertEqual(r["order"], ["geometry", "models", "padding", "flags", "verify"])
+        self.assertEqual(r["steps"]["geometry"], {"padding": 0.25, "sceneX": 100, "sceneY": 100})   # 100 px scene, 100 px grid: padding rounds up to one square
+        k = self.kinds()
+        self.assertLess(k.index("upsert_many"), k.index("padding"))                          # models before padding
+        last_update = len(k) - 1 - k[::-1].index("update")
+        self.assertLess(k.index("padding"), last_update)                                       # skybox / lighting flags after padding
+        self.assertNotIn("upsert_many", k[last_update:])                                       # nothing that could overwrite them afterwards
+        f = self.br.docs["Scene"]["s0"]["flags"]["levels-3d-preview"]
+        self.assertTrue(f["exr"].startswith("assets/varrenmoor-3d/art/%s/skybox/clear_day_v" % self.PLACE))
+        self.assertEqual((f["skybox"], f["sunPosition"]), ("", 15.5))
+        tiles1 = sorted(t["_id"] for t in self.br.emb["s0"]["Tile"].values())
+        r2, _ = self.go("--set-name", "t", "--scene-flag", "sunPosition=15.5")
+        self.assertTrue(r2["ok"], r2)
+        self.assertEqual(tiles1, sorted(t["_id"] for t in self.br.emb["s0"]["Tile"].values()))      # no duplicates
+        self.assertEqual(self.br.docs["Scene"]["s0"]["flags"]["levels-3d-preview"]["exr"], f["exr"])  # same skybox version reused
+
+    def test_skybox_survives_a_flag_resetting_step(self):
+        """A step that resets exr (what push-models --scene-mode 3d does) is undone by the final flag write."""
+        fp.PADDING_PUSH = lambda args: (self.br.op_update("Scene.s0", {"flags": {"levels-3d-preview": {"exr": "assets/ossuary-exchange-skybox3.webp"}}}), 0)[1]
+        r, _ = self.go("--set-name", "t")
+        self.assertTrue(r["ok"], r)
+        self.assertIn("clear_day", self.br.docs["Scene"]["s0"]["flags"]["levels-3d-preview"]["exr"])
+
+    def test_unservable_model_fails_the_push(self):
+        r, code = self.go("--set-name", "t", "--serve-url", "http://127.0.0.1:9")     # nothing answers there: reported, not a crash
+        self.assertFalse(r["ok"])
+        self.assertNotEqual(code, 0)
+
+    def test_invalid_glb_creates_no_tiles(self):
+        import glob
+        r, _ = self.go("--set-name", "t")
+        self.assertTrue(r["ok"], r)
+        for g in glob.glob(os.path.join(self.assets, "art", "*", "models", "t", "**", "*.glb"), recursive=True):
+            with open(g, "wb") as f:
+                f.write(b"glTF-but-truncated")
+        n = len(self.br.emb["s0"]["Tile"])
+        # a changed source makes publish_glb write new versions (the broken ones are only reused when byte-identical), so break the source instead
+        import json as _j
+        src = _j.load(open(self.pl, encoding="utf-8"))
+        base = os.path.dirname(self.pl)
+        with open(os.path.join(base, src["files"][0]["file"]), "wb") as f:
+            f.write(b"glTF-but-truncated")
+        r2, code = self.go("--set-name", "t")
+        self.assertFalse(r2["ok"])
+        self.assertIn("model problem", r2["error"])
+        self.assertEqual(n, len(self.br.emb["s0"]["Tile"]))
+
+    def test_dry_run_writes_nothing(self):
+        r, _ = self.go("--set-name", "t", "--dry-run")
+        self.assertTrue(r["ok"], r)
+        self.assertNotIn("update", self.kinds())
+
+
 if __name__ == "__main__":
     unittest.main()
