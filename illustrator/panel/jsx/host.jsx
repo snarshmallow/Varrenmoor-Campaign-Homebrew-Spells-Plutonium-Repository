@@ -1,4 +1,5 @@
 // ExtendScript host. VB_run(jsonString) -> JSON string {ok, ...}
+function VB_inArr(a, v) { for (var i = 0; i < a.length; i++) if (a[i] === v) return true; return false; }
 function VB_str(v) {
   if (v === null || v === undefined) return "null";
   var t = typeof v;
@@ -382,7 +383,7 @@ function VB_run(json) {
           fams[tf.family].push(tf.name);
         }
         out.families = []; out.missing = [];
-        for (var k in fams) if (fams.hasOwnProperty(k) && (!want || want.indexOf(k) >= 0)) out.families.push({ family: k, fonts: fams[k] });
+        for (var k in fams) if (fams.hasOwnProperty(k) && (!want || VB_inArr(want, k))) out.families.push({ family: k, fonts: fams[k] });
         if (want) for (var wi = 0; wi < want.length; wi++) if (!fams[want[wi]]) out.missing.push(want[wi]);
         break;
       }
@@ -461,7 +462,9 @@ function VB_run(json) {
             if (a.mapping && a.mapping[kp.name]) cand.push(a.mapping[kp.name]);
             var base = kpath ? kpath.replace(/^.*[\\\/]/, "") : "";
             var fl = a.folders || [];
-            for (var fi2 = 0; fi2 < fl.length && base; fi2++) cand.push(fl[fi2] + "/" + base);
+            // a missing link often reports no path: fall back to the item's name with common image extensions
+            var bases = base ? [base] : [kp.name + ".png", kp.name + ".jpg", kp.name + ".jpeg", kp.name + ".tif", kp.name + ".psd"];
+            for (var fi2 = 0; fi2 < fl.length; fi2++) for (var bi2 = 0; bi2 < bases.length; bi2++) cand.push(fl[fi2] + "/" + bases[bi2]);
             var nf2 = null;
             for (var ci2 = 0; ci2 < cand.length; ci2++) { var cf = new File(cand[ci2]); if (cf.exists) { nf2 = cf; break; } }
             if (nf2) {
@@ -475,7 +478,7 @@ function VB_run(json) {
           miss.push(kinfo);
         }
         out.total = total; out.missing = miss; out.relinked = fixed;
-        if (miss.length) out.warn = miss.length + " linked image(s) missing: " + miss.map(function (m) { return m.name + " (" + m.layer + ")"; }).join(", ");
+        if (miss.length) { var mnames = []; for (var mi2 = 0; mi2 < miss.length; mi2++) mnames.push(miss[mi2].name + " (" + miss[mi2].layer + ")"); out.warn = miss.length + " linked image(s) missing: " + mnames.join(", "); }
         break;
       }
       case "embed_all": {

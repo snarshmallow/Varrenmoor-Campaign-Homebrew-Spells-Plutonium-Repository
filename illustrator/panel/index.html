@@ -41,7 +41,7 @@ button:disabled{opacity:.45;cursor:default}
 .tag{display:inline-block;padding:0 4px;border-radius:2px;background:var(--bg3);color:var(--dim)}
 .tag.stale{background:#5a4a1f;color:var(--warn)}
 ul.list{list-style:none;margin:2px 0;padding:0;border:1px solid var(--line)}
-ul.list li{display:flex;gap:4px;align-items:center;padding:2px 4px;border-bottom:1px solid var(--line);cursor:pointer}
+ul.list li{display:flex;flex-wrap:wrap;gap:4px;align-items:center;padding:2px 4px;border-bottom:1px solid var(--line);cursor:pointer}
 ul.list li:last-child{border-bottom:0}
 ul.list li.sel{background:#34475a}
 ul.list li span.g{flex:1}
@@ -57,7 +57,7 @@ ul.list button{padding:0 5px}
 #patchPrev{max-width:100%;border:1px solid var(--line);display:none;margin-top:4px}
 #patchInfo,#crossInfo{font-family:Consolas,monospace;font-size:10px;white-space:pre-wrap;color:var(--dim)}
 #log{white-space:pre-wrap;font:10px Consolas,monospace;max-height:110px;overflow:auto;border-top:1px solid var(--line);padding:3px 6px;background:#242424;color:#b8b8b8}
-table{border-collapse:collapse;width:100%}
+table{border-collapse:collapse;width:100%;display:block;overflow-x:auto;max-width:100%}
 td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
 </style></head>
 <body>
