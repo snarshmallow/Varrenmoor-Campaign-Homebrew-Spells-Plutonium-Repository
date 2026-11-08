@@ -153,6 +153,22 @@ def _win(s, s0, blend_ft):
     return np.where(np.abs(s - s0) >= Lb, 0.0, 0.5 * (1 + np.cos(np.pi * np.clip(np.abs(s - s0) / Lb, 0, 1))))
 
 
+PARALLEL_MIN_STATIONS = 4        # a shared stretch of at least ~10 ft (4 stations of 2.5 ft) is "parallel", not a junction
+
+
+def _blend_stretch(z, s, idx, delta, blend_ft):
+    """Add `delta` (one value per station in idx, interpolated between them) along the stretch and fade it to zero over blend_ft beyond both ends (cosine)."""
+    idx = np.asarray(idx)
+    o = np.argsort(s[idx])
+    ss, dd = s[idx][o], np.asarray(delta, float)[o]
+    c = np.interp(s, ss, dd)
+    lo, hi = ss[0], ss[-1]
+    Lb = max(min(blend_ft, s[-1] * 0.9), 1e-6)
+    d_out = np.where(s < lo, lo - s, np.where(s > hi, s - hi, 0.0))
+    w = np.where(d_out >= Lb, 0.0, 0.5 * (1 + np.cos(np.pi * np.clip(d_out / Lb, 0, 1))))
+    return z + c * w
+
+
 def _blend_at(z, s, s0, target, blend_ft, end=None):
     """Add (target - z at s0) with a cosine falloff of blend_ft either side of arc length s0 (one-sided when s0 is a run end)."""
     return z + (target - float(np.interp(s0, s, z))) * _win(s, s0, blend_ft)
@@ -194,6 +210,8 @@ def grade_roads(pack, h, p=None):
     bridge_pts = [np.asarray(r["points"], float) for r in roads if r.get("bridge") and r.get("points")]
     tol = 4.0
     jpairs = []
+    stats_par = [0]
+    stretches = []                                                      # (road a, stations of a, road b, matching stations of b): parallel runs
     pins = []                                                           # (work index, station index, target z, one-sided end or None)
     for wi, w in enumerate(work):
         for end in (0, 1):
@@ -211,11 +229,26 @@ def grade_roads(pack, h, p=None):
         for bi in range(ai + 1, len(work)):
             A, Bw = work[ai], work[bi]
             thr = max(tol, A["hw"][0], Bw["hw"][0])
+            thr_box = max(thr, A["hw"][0] + Bw["hw"][0] + 2.0)
             a0, a1, a2, a3, _ = boxes[ai]
             b0, b1, b2, b3, _ = boxes[bi]
-            if a1 + thr < b0 or b1 + thr < a0 or a3 + thr < b2 or b3 + thr < a2:
+            if a1 + thr_box < b0 or b1 + thr_box < a0 or a3 + thr_box < b2 or b3 + thr_box < a2:
                 continue
             D = np.hypot(A["x"][:, None] - Bw["x"][None, :], A["y"][:, None] - Bw["y"][None, :])
+            thr_p = A["hw"][0] + Bw["hw"][0] + 2.0                                  # beds touching or overlapping
+            nearp = np.nonzero(D.min(1) < thr_p)[0]
+            if len(nearp) >= PARALLEL_MIN_STATIONS:
+                for gp_ in np.split(nearp, np.nonzero(np.diff(nearp) > 3)[0] + 1):
+                    if len(gp_) < PARALLEL_MIN_STATIONS:
+                        continue
+                    ibs = np.argmin(D[gp_], axis=1)
+                    ta = np.stack([np.gradient(A["x"])[gp_], np.gradient(A["y"])[gp_]], 1)
+                    tb = np.stack([np.gradient(Bw["x"])[ibs], np.gradient(Bw["y"])[ibs]], 1)
+                    cosang = np.abs((ta * tb).sum(1) / np.maximum(np.hypot(*ta.T) * np.hypot(*tb.T), 1e-9))
+                    if cosang.mean() > 0.9 and len(np.unique(ibs)) >= PARALLEL_MIN_STATIONS:     # roughly parallel (within ~25 deg), not a crossing
+                        stretches.append((ai, gp_.copy(), bi, ibs.copy()))
+                        length = float(A["s"][gp_[-1]] - A["s"][gp_[0]])
+                        warns.append(f"{A['id']} and {Bw['id']} run side by side for {length:.0f} ft (beds touch): heights blended along the whole stretch")
             near = np.nonzero(D.min(1) < thr)[0]
             if not len(near):
                 continue
@@ -238,8 +271,18 @@ def grade_roads(pack, h, p=None):
     for wi, e, tgt, end in pins:
         w = work[wi]
         w["prof"] = _blend_at(w["prof"], w["s"], w["s"][e], tgt, P["blend_ft"], end)
+    for ai, ga, bi, ibs in stretches:
+        A, Bw = work[ai], work[bi]
+        m = 0.5 * (A["prof"][ga] + Bw["prof"][ibs])
+        A["prof"] = _blend_stretch(A["prof"], A["s"], ga, m - A["prof"][ga], P["blend_ft"])
+        ub = np.unique(ibs)
+        mb = np.array([m[ibs == u].mean() for u in ub])
+        Bw["prof"] = _blend_stretch(Bw["prof"], Bw["s"], ub, mb - Bw["prof"][ub], P["blend_ft"])
+        for k in range(0, len(ga), 4):                                  # the later "both rise to the higher" pass checks the stretch every ~10 ft
+            jpairs.append((ai, int(ga[k]), bi, int(ibs[k])))
+        stats_par[0] += 1
     # ---- pass 2: cross slope, no-burial, grade
-    stats = {"roads": 0, "stations": 0, "max_raise_ft": 0.0, "max_float_ft": 0.0, "grade_limited_ft": 0.0}
+    stats = {"roads": 0, "stations": 0, "max_raise_ft": 0.0, "max_float_ft": 0.0, "grade_limited_ft": 0.0, "parallel_stretches": 0}
 
     def finish(w):
         s, x, y, nrm, hw = w["s"], w["x"], w["y"], w["nrm"], w["hw"]
@@ -280,6 +323,7 @@ def grade_roads(pack, h, p=None):
             break
         for w in work:
             finish(w)
+    stats["parallel_stretches"] = stats_par[0]
     for w in work:
         s, x, y, hw, delta, z, zpre = w["s"], w["x"], w["y"], w["hw"], w["delta"], w["z"], w["zpre"]
         gc = w["gc"]
@@ -380,3 +424,67 @@ def grade_and_cutfill(pack, h, p=None):
         runs, rep2 = grade_roads(pack, h2, dict(P, cutfill=False, smooth=0.0))
         rep["warnings"] += ["cut/fill: roads were re-draped onto the modified terrain where road beds overlap"] + rep2["warnings"]
     return h2, runs, rep
+
+
+# ------------------------------------------------------------------ coarse terrain LODs vs roads
+def lod_pokes(h, cell, runs, step, tol_ft=0.05, lat=LATERAL):
+    """How far the coarse terrain mesh (every `step`-th heightmap vertex, the LOD terrain tile) stands ABOVE each road ribbon: per road
+    {stations, poking, max_poke_ft}. The full-resolution mesh is fine by construction (grading); a coarse mesh interpolates over the cut/valley the road sits in."""
+    hl = np.ascontiguousarray(h[::step, ::step])
+    # keep the last row / column like build_terrain (it appends them); only matters at the map edge, ignore: mesh_height clamps to the grid
+    out = {}
+    for rid, rs in runs.items():
+        st = pk = 0
+        mxp = 0.0
+        for r in rs:
+            nrm = _normals(r.x, r.y)
+            delta = (r.zl - r.zr) / 2
+            G = _ground_cross(hl, cell * step, r.x, r.y, nrm, r.hw, lat)
+            D = G - (r.z[:, None] + delta[:, None] * np.asarray(lat)[None, :])
+            st += D.size
+            pk += int((D > tol_ft).sum())
+            mxp = max(mxp, float(D.max()))
+        out[rid] = {"stations": st, "poking": pk, "max_poke_ft": round(max(mxp, 0.0), 2)}
+    return out
+
+
+def lod_safe_heights(h, cell, runs, step, clearance_ft=0.3, iters=8, lat=LATERAL):
+    """Heights h with the vertices of the `step` terrain LOD lowered where its triangles would cut through a road ribbon (only those vertices; at most
+    `iters` passes). The full-resolution vertices that are not LOD vertices keep their values, so build the LOD tile from this array with step `step`.
+    Returns (h2, report {lowered_vertices, max_lowered_ft, remaining_pokes})."""
+    h2 = h.astype(np.float64).copy()
+    ny, nx = h2.shape
+    lowered = np.zeros(h2.shape, bool)
+    maxl = 0.0
+    for _ in range(iters):
+        hl = np.ascontiguousarray(h2[::step, ::step])
+        cl = cell * step
+        any_bad = False
+        for rid, rs in runs.items():
+            for r in rs:
+                nrm = _normals(r.x, r.y)
+                delta = (r.zl - r.zr) / 2
+                for u in lat:
+                    x = r.x + nrm[:, 0] * r.hw * u
+                    y = r.y + nrm[:, 1] * r.hw * u
+                    g = mesh_height(hl, cl, x, y)
+                    need = g - (r.z + delta * u - clearance_ft)
+                    bad = np.nonzero(need > 0)[0]
+                    if not len(bad):
+                        continue
+                    any_bad = True
+                    for i in bad:
+                        fx, fy = min(max(x[i] / cl, 0), hl.shape[1] - 1), min(max(y[i] / cl, 0), hl.shape[0] - 1)
+                        j0, i0 = min(int(fx), hl.shape[1] - 2), min(int(fy), hl.shape[0] - 2)
+                        for di in (0, 1):
+                            for dj in (0, 1):
+                                a, b = (i0 + di) * step, (j0 + dj) * step
+                                if a < ny and b < nx:
+                                    new = h2[a, b] - need[i]
+                                    maxl = max(maxl, h2[a, b] - new)
+                                    h2[a, b] = new
+                                    lowered[a, b] = True
+        if not any_bad:
+            break
+    rem = sum(v["poking"] for v in lod_pokes(h2, cell, runs, step, tol_ft=0.0).values())
+    return h2.astype(h.dtype), {"lowered_vertices": int(lowered.sum()), "max_lowered_ft": round(float(maxl), 2), "remaining_pokes": int(rem)}

@@ -497,6 +497,7 @@ def _pivot(mesh):
 LAST_ROAD_GRADE = {}      # report of the last build_parts road grading (params, stats, warnings, cut/fill), read by worldpack_split
 
 
+LOD_CHECK_STEPS = (4,)        # terrain LOD steps (heightmap cells) checked against the road ribbons
 LAST_BRIDGE_CARVE = []     # report of the last terrain_heights bridge carving
 
 
@@ -513,6 +514,13 @@ def terrain_heights(pack, carve=True, conform=True, road_grade=True, carve_bridg
         # ROAD GRADING (road_grade.py): roads are draped on the terrain mesh with a lift, smoothed, grade-limited; the old centreline conform is replaced
         h, runs, rep = wg.grade_and_cutfill(pack, h, gp)
         LAST_ROAD_GRADE.update(rep)
+        for lod_step in LOD_CHECK_STEPS:                                # coarse terrain LODs: report roads the LOD mesh would cut through at distance
+            pk = {k: v for k, v in wg.lod_pokes(h, pack.cell_ft, runs, lod_step).items() if v["max_poke_ft"] > 0.5}
+            if pk:
+                LAST_ROAD_GRADE.setdefault("lod", {})[f"step{lod_step}"] = pk
+                LAST_ROAD_GRADE["warnings"] = list(LAST_ROAD_GRADE.get("warnings", [])) + [
+                    f"terrain LOD step {lod_step}: {len(pk)} road(s) would be cut by the coarse terrain by up to {max(v['max_poke_ft'] for v in pk.values()):.1f} ft "
+                    f"({', '.join(sorted(pk)[:4])}); build the LOD tile from worldpack_mesh.lod_terrain_heights() or skip that LOD"]
     elif conform:
         if pack.list("bridges"):                                       # BRIDGES: terrain keeps its shape under the spans
             import bridge_maker as _bm
@@ -533,6 +541,15 @@ def terrain_heights(pack, carve=True, conform=True, road_grade=True, carve_bridg
 def final_heights(pack, carve=True, conform=True, road_grade=True, carve_bridges="auto"):
     """Heights of the terrain mesh exactly as build_parts(pack, ...) builds it (same arguments)."""
     return terrain_heights(pack, carve, conform, road_grade, carve_bridges)[0]
+
+
+def lod_terrain_heights(pack, step=4, carve=True, conform=True, road_grade=True, carve_bridges="auto"):
+    """Heights for building the `step` terrain LOD tile (build_terrain(Ctx(pack, h), step)): the final terrain with the LOD vertices that would cut through a
+    road ribbon lowered. Do NOT use it for the full-resolution tile. -> (h, report)"""
+    h, runs, gp = terrain_heights(pack, carve, conform, road_grade, carve_bridges)
+    if not runs:
+        return h, {"lowered_vertices": 0, "max_lowered_ft": 0.0, "remaining_pokes": 0}
+    return wg.lod_safe_heights(h, pack.cell_ft, runs, step)
 
 
 def build_parts(pack, step=1, carve=True, conform=True, layers=None, drape_edge_ft=40.0, road_grade=True, carve_bridges="auto"):

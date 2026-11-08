@@ -187,6 +187,65 @@ class JunctionBridgeTests(unittest.TestCase):
         self.assertNotIn("deck", runs)
 
 
+class ParallelAndLodTests(unittest.TestCase):
+    def test_parallel_roads_blend_along_the_shared_stretch(self):
+        h = terrain()
+        y0 = 120.0
+        ra = road("pa", [(20, y0, 0), (180, y0, 0), (340, y0, 0)], width=10.0)
+        rb = road("pb", [(20, y0 + 9, 0), (180, y0 + 9, 0), (340, y0 + 9, 0)], width=10.0)     # 9 ft apart: a long shared stretch
+        pk = synth(h, [ra, rb])
+        runs, rep = rg.grade_roads(pk, h, {"smooth": 0.5})
+        a, b = runs["pa"][0], runs["pb"][0]
+        self.assertGreaterEqual(rep["stats"]["parallel_stretches"], 1)
+        self.assertTrue(any("side by side" in w for w in rep["warnings"]), rep["warnings"])
+        xs = np.linspace(60, 300, 40)
+        za, zb = np.interp(xs, a.x, a.z), np.interp(xs, b.x, b.z)
+        # the old behaviour pinned one point: elsewhere the two roads 9 ft apart could differ by the ground's cross slope; blended they stay together
+        old = []
+        import road_grade as rgm
+        P0 = rgm.PARALLEL_MIN_STATIONS
+        try:
+            rgm.PARALLEL_MIN_STATIONS = 10 ** 6
+            r0, _ = rg.grade_roads(pk, h, {"smooth": 0.5})
+        finally:
+            rgm.PARALLEL_MIN_STATIONS = P0
+        zo = np.abs(np.interp(xs, r0["pa"][0].x, r0["pa"][0].z) - np.interp(xs, r0["pb"][0].x, r0["pb"][0].z))
+        self.assertLessEqual(float(np.abs(za - zb).max()), float(zo.max()) + 1e-6)
+        mn, mx, bad, n = rg.verify(h, CELL, runs, 0.0)
+        self.assertEqual(bad, 0)                                       # blending only raised or kept roads above the ground
+
+    def test_lod_pokes_found_and_fixed(self):
+        h = terrain()
+        r = road("g", [(20, 150, 0), (340, 150, 0)], width=12.0)         # runs along the gully (y = 150): a coarse mesh cannot follow it
+        pk = synth(h, [r])
+        runs, rep = rg.grade_roads(pk, h, {"smooth": 0.0})
+        mn, mx, bad, n = rg.verify(h, CELL, runs, 0.0)
+        self.assertEqual(bad, 0)
+        before = rg.lod_pokes(h, CELL, runs, 4)
+        self.assertGreater(before["g"]["max_poke_ft"], 0.05)
+        h2, info = rg.lod_safe_heights(h, CELL, runs, 4)
+        after = rg.lod_pokes(h2, CELL, runs, 4, tol_ft=0.0)
+        self.assertEqual(after["g"]["poking"], 0, (before, after, info))
+        self.assertGreater(info["lowered_vertices"], 0)
+        self.assertTrue(bool((h2 <= h + 1e-6).all()))
+        changed = np.argwhere(h2 != h)
+        self.assertTrue(bool(((changed % 4) == 0).all()))               # only LOD vertices were touched
+
+    def test_lod_report_in_build_terrain_heights(self):
+        h = terrain()
+        pk = synth(h, [road("g", [(20, 150, 0), (340, 150, 0)], width=12.0)])
+        pk.entities["buildings"] = []
+        old = wm.LOD_CHECK_STEPS
+        try:
+            wm.LOD_CHECK_STEPS = (8,)
+            wm.terrain_heights(pk, carve=False, conform=True, road_grade=True)
+        finally:
+            wm.LOD_CHECK_STEPS = old
+        rep = wm.LAST_ROAD_GRADE
+        self.assertIn("lod", rep)
+        self.assertTrue(any("terrain LOD step 8" in w for w in rep["warnings"]))
+
+
 class RealPackTests(unittest.TestCase):
     def test_dyers_walk_has_no_buried_road(self):
         d = os.path.join(wp.REPO, "world", "bridgehollow__dyers_walk_local", "export")
