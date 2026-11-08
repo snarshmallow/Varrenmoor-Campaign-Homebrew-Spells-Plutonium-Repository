@@ -527,7 +527,7 @@ def terrain_heights(pack, carve=True, conform=True, road_grade=True, carve_bridg
             h = _bm.conformed_heights(pack, h)
         else:
             h = wp.road_conformed_heights(pack, h)
-    if any(b.get("layout") for b in pack.list("buildings")):          # interiors: level pads so the terrain stays below the floor plates
+    if pack.list("buildings"):                                         # level pads + door aprons so no ground rises through walls, roofs or door sills (building_ground.py)
         import worldpack_interiors as wi
         h = wi.pad_buildings(pack, h)
     LAST_BRIDGE_CARVE.clear()

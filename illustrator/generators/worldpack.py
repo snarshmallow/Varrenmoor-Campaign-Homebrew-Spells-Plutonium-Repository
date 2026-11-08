@@ -731,8 +731,10 @@ def export_world(place, out_dir=None, lod=(1, 4), world_root=None, terrain_sourc
         rtex = fr.pick(tc, rng(b["id"]))
         wtex, wtile = WALLS.get(kind, WALLS["default"])
         floor_z = float(b.get("elevation_ft", bilinear(h, cell, cx, cy)))
+        import building_ground as bg
+        floor_z, skirt_ft, _g = bg.resolve(poly, [d for d in model.get("details", {}).get("doors", []) if d.get("building") == b["id"]], floor_z, h, cell)   # base from the footprint ground (building_ground.py)
         e.update({"polygon": [[r3(p[0]), r3(p[1])] for p in poly], "area_ft2": r3(polygon_area(poly)), "floors": floors,
-                  "base_elevation_ft": r3(floor_z), "skirt_depth_ft": r3(float(b.get("site_relief_ft", 0.0)) + 1.0),
+                  "base_elevation_ft": r3(floor_z), "skirt_depth_ft": r3(max(float(b.get("site_relief_ft", 0.0)) + 1.0, skirt_ft)),
                   "wall_height_ft": r3(wall_h), "height_ft": r3(wall_h + ridge_h),
                   "obb": {"center": [r3(cx), r3(cy)], "angle_deg": r3(ang), "length_ft": r3(L), "width_ft": r3(Wd)},
                   "roof": {"type": rtype, "pitch": pitch, "ridge_axis_deg": r3(ang), "ridge_height_ft": r3(ridge_h), "overhang_ft": 1.0,

@@ -446,32 +446,6 @@ def _stair(g, st, I, z_lo, z_hi):
 
 
 def pad_buildings(pack, h):
-    """Cut the terrain down to each interior building's floor level inside its footprint (so the terrain never pokes through the floor plate), blending out over
-    a few cells. Cut only (never fills), vertices within 1.5 cells of the footprint are fully levelled. Returns a new heightmap."""
-    from shapely.geometry import Point, Polygon
-    out = None
-    cell = float(pack.cell_ft)
-    ny, nx = h.shape
-    for e in pack.list("buildings"):
-        if not e.get("layout"):
-            continue
-        pg = Polygon(e["polygon"])
-        x0, y0, x1, y1 = pg.bounds
-        d1 = 4.0 * cell
-        j0, j1 = max(0, int((x0 - d1) / cell)), min(nx - 1, int((x1 + d1) / cell) + 1)
-        i0, i1 = max(0, int((y0 - d1) / cell)), min(ny - 1, int((y1 + d1) / cell) + 1)
-        if out is None:
-            out = np.array(h, copy=True)
-        fl = float(e["base_elevation_ft"]) - 0.1
-        for i in range(i0, i1 + 1):
-            for j in range(j0, j1 + 1):
-                d = pg.distance(Point(j * cell, i * cell))
-                dfull = 1.5 * cell
-                if d > d1:
-                    continue
-                t = 0.0 if d <= dfull else (d - dfull) / (d1 - dfull)
-                t = t * t * (3 - 2 * t)
-                tgt = fl * (1 - t) + out[i, j] * t
-                if tgt < out[i, j]:
-                    out[i, j] = tgt
-    return h if out is None else out
+    """Level pads under every building (interiors or not) and an apron in front of each door: cut only, blended out over a few cells (building_ground.py)."""
+    import building_ground as bg
+    return bg.pad_heights(pack, h)
