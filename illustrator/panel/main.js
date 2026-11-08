@@ -495,6 +495,7 @@
     water_capture_lake: function () { return startJob(VB.jobCapture(state, d, { what: "lake polygon", layer: "WATER DRAW", closed: true, store: "water.lake_polygon", srcName: "water.lake_src" })); },
     water_add_lake: function () { return startJob(VB.jobWaterLake(state, d)); },
     town_capture: function () { return startJob(VB.jobCapture(state, d, { what: "town lasso", layer: "TOWN AREA", closed: true, store: "town.area", srcName: "town.area_src" })); },
+    town_fit: function () { return startJob(VB.jobTownFit(state, d)); },
     town_area_auto: function () { return startJob(VB.jobTownArea(state, d, "auto")); },
     town_area_snap: function () { return startJob(VB.jobTownArea(state, d, "snap")); },
     town_load_params: function () { state.town.area = []; loadFiles("town"); refreshAll(); },

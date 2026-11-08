@@ -457,9 +457,16 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
     <label>Edge wobble (ft) <input type="number" data-s="town.aa.noise_ft" min="0" step="2"></label>
     <label>Target area (ft2, 0 = all) <input type="number" data-s="town.aa.target_area_ft2" min="0" step="50000"></label>
     <label>Area seed <input type="number" data-s="town.aa.seed" step="1"></label>
+    <label title="Multiplies the target area and relaxes the slope limit (up to 0.28) so the town can climb the bowl sides; the buildable ground still bounds it">Area scale (1 = default, 2 = twice) <input type="number" data-s="town.aa.area_scale" min="0.5" max="6" step="0.1"></label>
   </div>
   <div class="btns"><button data-act="town_area_auto" title="Compute the lasso from slope, water and flood level; draws it on layer TOWN AREA">Auto lasso from terrain</button>
     <button data-act="town_area_snap" title="Settle the captured/loaded lasso onto the buildable terrain">Smooth/snap my lasso</button></div>
+  <h4>Frame the page</h4>
+  <div class="grid">
+    <label>Fit page to <select data-s="town.fit"><option value="buildings">buildings + streets</option><option value="area">town lasso</option><option value="all">whole place</option></select></label>
+    <label>Margin (ft) <input type="number" data-s="town.fit_margin_ft" min="0" step="10"></label>
+  </div>
+  <div class="btns"><button data-act="town_fit" title="Chooses the next nice scale and the page centre so the built-up area fills the page; stored in view_settings.json for this preset. Then press Redraw all GEN layers.">Fit scale and centre</button></div>
   <p class="note">The outline is drawn on layers TOWN AREA (editable closed path) and TOWN AREA RINGS (authority/commoner guides). Edit it with the Direct Selection tool, press Capture lasso, then Generate. A lasso you draw yourself is used as drawn.</p>
   <div class="grid">
     <label>Seed <input type="number" data-s="town.seed" step="1"></label>

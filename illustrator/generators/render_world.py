@@ -867,6 +867,13 @@ def render(model, view_arg, out_path, topts=None, cfg_over=None, lopts=None, lst
 
     os.makedirs(os.path.dirname(out_path), exist_ok=True)
     t.write(out_path)
+    cj = out_path + ".curved.json"
+    if lst.CURVED["mode"] == "host" and lst.CURVED["items"]:
+        with open(cj, "w", encoding="utf-8") as f_:
+            json.dump({"svg": os.path.basename(out_path), "items": lst.CURVED["items"]}, f_)
+        print(f"curved labels: {len(lst.CURVED['items'])} street/river names on a path -> {cj}")
+    elif os.path.exists(cj):
+        os.remove(cj)
     print("wrote", out_path)
 
 
@@ -922,6 +929,8 @@ if __name__ == "__main__":
     ap.add_argument("--water-source", choices=["world", "working"])
     ap.add_argument("--fit", choices=["buildings", "area", "all"], help="frame the page on the built-up area: scale (next nice value) and centre follow the bounds of the buildings+streets, "
                     "the town_params area lasso, or the whole place (an explicit --scale is kept)")
+    ap.add_argument("--curved-text", choices=["host", "svg"], default="host", help="street/river names on a curve: host = straight fallback in the SVG + <svg>.curved.json for host.jsx "
+                    "(real type on a path in Illustrator, no import dialog); svg = <textPath> in the SVG (Illustrator flattens it and shows a dialog)")
     ap.add_argument("--fit-margin", type=float, default=0.0, help="extra feet around the --fit bounds")
     ap.add_argument("--details", help="region details to DRAW: auto (default; no lots at <=20 ft/in) | all | none | comma list of doors,roofs,chimneys,lots,fences,kerbs,trees")
     ap.add_argument("--model-dir", help="read the town model from this folder instead of world/<place> (candidate)")
@@ -954,6 +963,7 @@ if __name__ == "__main__":
     if a.no_declutter:
         dcli.append({"enabled": False})
     dopts = ld.merge(viewcfg.declutter(a.place), pre.get("declutter"), *dcli)
+    lst.curved_begin(a.curved_text)
     model_ = load_place(a.place, a.model_dir)
     model_["_details_draw"] = a.details
     render(model_, a.view, out, topts,

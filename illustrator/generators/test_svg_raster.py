@@ -89,6 +89,40 @@ class T(unittest.TestCase):
         self.assertEqual(rw._nice_fit(103), 120)
         self.assertEqual(rw._nice_fit(96), 100)
 
+    def test_curved_host_mode_straight_fallback_and_sidecar_items(self):
+        import label_style as lst
+        import lib_svg
+        st = lst.Style()
+        rec = lst.Rec("str_x_label", "Labels - Streets", ["Bend Lane"], 100, 100, 50, 10, 0.0, 8.0, st, path="M10.00,90.00 L50.00,80.00 L90.00,90.00")
+        for mode in ("host", "svg"):
+            lst.curved_begin(mode)
+            tree = lib_svg.LayerTree([("Labels - Streets", [])], 3, 3)
+            lst.emit(tree, rec)
+            out = os.path.join(tempfile.mkdtemp(), "t.svg")
+            tree.write(out)
+            svg = open(out, encoding="utf-8").read()
+            if mode == "host":
+                self.assertNotIn("textPath", svg)                               # Illustrator would flatten it and show a dialog
+                self.assertIn("Bend Lane", svg)                                 # straight fallback is there
+                self.assertEqual(len(lst.CURVED["items"]), 1)
+                it = lst.CURVED["items"][0]
+                self.assertEqual((it["id"], len(it["points"]), it["text"]), ("str_x_label", 3, "Bend Lane"))
+            else:
+                self.assertIn("textPath", svg)
+                self.assertEqual(lst.CURVED["items"], [])
+        lst.curved_begin("host")
+
+    def test_panelio_fit(self):
+        import panelio
+        a = types.SimpleNamespace(place="bridgehollow", what="buildings", preset="town", view="town", page="17x11", fit_margin=0.0)
+        r = panelio.cmd_fit(a)
+        self.assertGreater(r["scale_ft_per_in"], 0)
+        self.assertEqual(len(r["focus_ft"]), 2)
+        b = r["bounds_ft"]
+        self.assertAlmostEqual(r["focus_ft"][0], (b[0] + b[2]) / 2, delta=0.2)
+        a.what = "all"
+        self.assertGreaterEqual(panelio.cmd_fit(a)["scale_ft_per_in"], r["scale_ft_per_in"])
+
 
 if __name__ == "__main__":
     unittest.main()

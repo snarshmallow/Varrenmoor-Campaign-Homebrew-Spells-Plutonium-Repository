@@ -280,6 +280,74 @@ function VB_findItem(container, name) {
   }
   return null;
 }
+// ---- curved labels: real type on a path -------------------------------------------------------------------------------------------
+// Illustrator flattens SVG <textPath> on import (and blocks on a dialog), so render_world writes <svg>.curved.json and leaves a straight
+// fallback label per entry. Here each fallback (and its halo copy) is replaced by path type that follows the street / river centreline.
+// Entry: {id, layer, text, points[[x,y] page pt], size, font, bold, italic, small_caps, color, letter_spacing, halo{color,width,opacity}|null}.
+var VB_fontCache = {};
+function VB_font(family, bold, italic) {
+  var key = family + "|" + bold + "|" + italic;
+  if (VB_fontCache.hasOwnProperty(key)) return VB_fontCache[key];
+  var best = null, bs = -1;
+  for (var i = 0; i < app.textFonts.length; i++) {
+    var f = app.textFonts[i];
+    if (String(f.family).toLowerCase() !== String(family).toLowerCase()) continue;
+    var nm = String(f.name), st = String(f.style), sc = 0;
+    var isB = /bold|black|heavy/i.test(st + nm), isI = /italic|oblique/i.test(st + nm);
+    if (isB === !!bold) sc += 2; if (isI === !!italic) sc += 2;
+    if (/regular|roman|book|normal/i.test(st)) sc += 1;
+    if (/cond|narrow|light|thin|semi|medium|extra|ultra/i.test(st + nm)) sc -= 1;
+    if (sc > bs) { bs = sc; best = f; }
+  }
+  VB_fontCache[key] = best; return best;
+}
+function VB_applyCurved(doc, svgPath) {
+  var res = { made: 0, skipped: 0, ids: [] };
+  var jf = new File(String(svgPath) + ".curved.json");
+  if (!jf.exists) return res;
+  jf.encoding = "UTF-8"; jf.open("r"); var txt = jf.read(); jf.close();
+  var data = eval("(" + txt + ")"), items = data.items || [];
+  for (var i = 0; i < items.length; i++) {
+    var c = items[i], fb = VB_findItem(doc, c.id);
+    if (!fb || !c.points || c.points.length < 2) { res.skipped++; continue; }
+    var undo = [], lyr = fb.layer, hb = VB_findItem(doc, c.id + "_halo");
+    try {
+      VB_unlockChain(lyr, undo);
+      var hl = null;
+      if (hb) { hl = hb.layer; VB_unlockChain(hl, undo); }
+      var pts = [];
+      for (var k = 0; k < c.points.length; k++) pts.push(VB_doc(c.points[k], doc));
+      var fnt = VB_font(c.font, c.bold, c.italic);
+      var body = c.small_caps ? String(c.text).toUpperCase() : String(c.text);
+      var mk = function (layer, name, fill, stroke, sw, op) {
+        var pp = layer.pathItems.add(); pp.setEntirePath(pts); pp.filled = false; pp.stroked = false; pp.name = name + "_tp";
+        var tf = layer.textFrames.pathText(pp); tf.contents = body; tf.name = name;
+        var ca = tf.textRange.characterAttributes;
+        ca.size = c.size; if (fnt) ca.textFont = fnt;
+        if (c.letter_spacing) ca.tracking = Math.round(c.letter_spacing / c.size * 1000);
+        var col = VB_rgbOf(fill); ca.fillColor = VB_rgb(col);
+        if (stroke) { ca.strokeColor = VB_rgb(VB_rgbOf(stroke)); ca.strokeWeight = sw; } else { ca.strokeColor = new NoColor(); }
+        tf.textRange.paragraphAttributes.justification = Justification.CENTER;
+        try { tf.opacity = op; } catch (e) {}
+        return tf;
+      };
+      // z-order: halo first (below), then the label; each goes where the fallback of that kind was
+      if (c.halo && hb) { var h2 = mk(hl, c.id + "_halo", c.halo.color, c.halo.color, c.halo.width, (c.halo.opacity || 1) * 100); h2.move(hb, ElementPlacement.PLACEBEFORE); }
+      var t2 = mk(lyr, c.id, c.color, null, 0, 100); t2.move(fb, ElementPlacement.PLACEBEFORE);
+      if (hb) { try { hb.remove(); } catch (e) {} }
+      fb.remove();
+      res.made++; res.ids.push(c.id);
+    } catch (e) { res.skipped++; res.error = String(e); }
+    for (var u = 0; u < undo.length; u++) { try { undo[u].locked = true; } catch (e) {} }
+  }
+  return res;
+}
+// app.open with alerts off ("Text on Path will be Flattened", missing fonts ...): a modal dialog blocks the whole ExtendScript queue.
+function VB_openQuiet(f) {
+  var old = app.userInteractionLevel;
+  try { app.userInteractionLevel = UserInteractionLevel.DONTDISPLAYALERTS; } catch (e) {}
+  try { return app.open(f); } finally { try { app.userInteractionLevel = old; } catch (e) {} }
+}
 function VB_run(json) {
   try {
     var a = eval("(" + json + ")");
@@ -304,8 +372,8 @@ function VB_run(json) {
         var f = new File(a.path);
         if (!f.exists) throw new Error("file not found: " + a.path);
         var target = app.documents.length ? app.activeDocument : null;
-        var svg = app.open(f);  // SVG <g id> groups become layers
-        if (!target || a.mode === "open") { out.mode = "opened"; break; }
+        var svg = VB_openQuiet(f);  // SVG <g id> groups become layers; import warnings must not open a modal dialog (it hangs the job queue)
+        if (!target || a.mode === "open") { out.mode = "opened"; out.curved = VB_applyCurved(svg, f.fsName); break; }
         var n = 0;
         for (var li = svg.layers.length - 1; li >= 0; li--) {
           var sl = svg.layers[li], tl = VB_layer(target, sl.name);
@@ -315,7 +383,7 @@ function VB_run(json) {
         }
         svg.close(SaveOptions.DONOTSAVECHANGES);
         app.activeDocument = target;
-        out.items = n; break;
+        out.items = n; out.curved = VB_applyCurved(target, f.fsName); break;
       }
       case "replace_layer": {
         // Clear and redraw only the named GEN layers from an SVG; ART layers are never touched.
@@ -327,7 +395,7 @@ function VB_run(json) {
         var rf = new File(a.path);
         if (!rf.exists) throw new Error("file not found: " + a.path);
         var tdoc = app.activeDocument;
-        var rsvg = app.open(rf);
+        var rsvg = VB_openQuiet(rf);
         var replaced = [], missing = [], moved = 0;
         for (var ri = 0; ri < names.length; ri++) {
           var sl2 = VB_find(rsvg, names[ri]);
@@ -350,6 +418,7 @@ function VB_run(json) {
         }
         rsvg.close(SaveOptions.DONOTSAVECHANGES);
         app.activeDocument = tdoc;
+        out.curved = VB_applyCurved(tdoc, rf.fsName);
         out.replaced = replaced; out.missing = missing; out.items = moved;
         if (missing.length && a.strict !== false) out.ok = false, out.error = "layers not in SVG: " + missing.join(", ");
         break;
@@ -433,11 +502,16 @@ function VB_run(json) {
         for (var oi2 = old2.length - 1; oi2 >= 0; oi2--) {
           if (old2[oi2].name === iname) { try { old2[oi2].locked = false; } catch (e) {} old2[oi2].remove(); }
         }
+        // Illustrator places into the ACTIVE layer: if that is a locked layer (e.g. the previous glow layer) setting .file fails with
+        // "Target layer cannot be modified", so make the target active first, and never leave an empty placed item behind on failure.
+        try { pd.activeLayer = pl; } catch (e) {}
         var pim = pl.placedItems.add();
-        pim.file = pf; pim.name = iname;
         var w2 = a.rect[2] - a.rect[0], h2 = a.rect[3] - a.rect[1];
-        pim.width = w2; pim.height = h2;
-        pim.position = [ab[0] + a.rect[0], ab[1] - a.rect[1]];
+        try {
+          pim.file = pf; pim.name = iname;
+          pim.width = w2; pim.height = h2;
+          pim.position = [ab[0] + a.rect[0], ab[1] - a.rect[1]];
+        } catch (pe) { try { pim.remove(); } catch (e) {} throw pe; }
         if (a.embed) {
           try { if (pf.length > 300 * 1024 * 1024) out.warn = "embedding a very large image (" + Math.round(pf.length / 1048576) + " MB); consider a lower dpi or 'Link instead of embed'"; } catch (e) {}
           pim.embed(); out.embedded = true;

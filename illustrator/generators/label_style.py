@@ -23,7 +23,7 @@ import json
 import math
 import os
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, replace as dc_replace
 from xml.sax.saxutils import escape
 
 from shapely import affinity
@@ -551,11 +551,35 @@ def _text_el(rec, id_, style, with_class=True):
     return head + spans + "</text>"
 
 
+# Curved (text-on-path) labels. Illustrator flattens SVG <textPath> on import AND shows a blocking dialog ("Text on Path will be Flattened"),
+# so by default (host mode) the SVG carries a straight fallback label and the curved ones are listed in <svg>.curved.json; host.jsx
+# (place_svg / replace_layer) then swaps each fallback for real area-less path type. Mode "svg" keeps <textPath> in the SVG (browsers, tests).
+CURVED = {"mode": "host", "items": []}
+
+
+def curved_begin(mode="host"):
+    CURVED["mode"] = mode if mode in ("svg", "host") else "host"
+    CURVED["items"] = []
+
+
+def curved_item(rec):
+    st = rec.st
+    pts = []
+    for m in re.finditer(r"(-?[\d.]+),(-?[\d.]+)", rec.path):
+        pts.append([float(m.group(1)), float(m.group(2))])
+    return {"id": rec.id, "layer": rec.layer, "text": " ".join(rec.lines), "points": pts, "size": rec.size, "font": st.font, "bold": bool(st.bold),
+            "italic": bool(st.italic), "small_caps": bool(st.small_caps), "color": text_color(st), "letter_spacing": st.letter_spacing or 0,
+            "halo": ({"color": st.halo_color, "width": st.halo_width * 2, "opacity": st.halo_opacity} if st.mode == "halo" and st.halo_width > 0 else None)}
+
+
 def emit(tree, rec, backing_layer=None):
     """Add one label to the tree. Backing (halo copy / box) goes to `backing_layer` when given, else just under the text in
     the label's own layer."""
     st = rec.st
     bl = backing_layer or rec.layer
+    if rec.path and CURVED["mode"] == "host":
+        CURVED["items"].append(curved_item(rec))
+        rec = dc_replace(rec, path="")                    # straight fallback in the SVG; the host job replaces it with type on a path
     if rec.path:
         tree.add(rec.layer, f'<path id="{rec.id}_tp" class="textpath" d="{rec.path}" fill="none" stroke="none"/>')
     if st.mode == "halo" and st.halo_width > 0:

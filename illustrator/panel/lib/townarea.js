@@ -9,10 +9,10 @@
 
   // defaults mirror town_area.DEFAULTS
   VB.areaDefaults = function () {
-    return { slope_limit: 0.15, river_buffer_ft: 14, smoothing_ft: 55, min_width_ft: 150, noise_ft: 22, target_area_ft2: 0, seed: 1103 };
+    return { slope_limit: 0.15, river_buffer_ft: 14, smoothing_ft: 55, min_width_ft: 150, noise_ft: 22, target_area_ft2: 0, area_scale: 1, seed: 1103 };
   };
   var baseDefaults = VB.defaults;
-  VB.defaults = function () { var s = baseDefaults(); s.town.aa = VB.areaDefaults(); return s; };
+  VB.defaults = function () { var s = baseDefaults(); s.town.aa = VB.areaDefaults(); s.town.fit = "buildings"; s.town.fit_margin_ft = 40; return s; };
 
   var baseFrom = VB.townFromParams;
   VB.townFromParams = function (p, t) {
@@ -28,7 +28,7 @@
   var baseMerge = VB.mergeTownParams;
   VB.areaParams = function (t) {
     var o = {}, a = t.aa || VB.areaDefaults();
-    ["slope_limit", "river_buffer_ft", "smoothing_ft", "min_width_ft", "noise_ft", "seed"].forEach(function (k) { if (a[k] !== "" && a[k] != null) o[k] = +a[k]; });
+    ["slope_limit", "river_buffer_ft", "smoothing_ft", "min_width_ft", "noise_ft", "area_scale", "seed"].forEach(function (k) { if (a[k] !== "" && a[k] != null) o[k] = +a[k]; });
     o.target_area_ft2 = +a.target_area_ft2 > 0 ? +a.target_area_ft2 : null;
     return o;
   };
@@ -37,6 +37,30 @@
     p.area_auto = Object.assign({}, p.area_auto || {}, VB.areaParams(t));
     p.area_mode = "manual";
     return p;
+  };
+
+  // Frame the page on the buildings | the town lasso | the whole place: picks the next nice scale, writes scale/grid/focus into the preset of
+  // view_settings.json (so every generator, the lighting/fills/Foundry push included, uses the same frame) and the panel scale fields.
+  VB.jobTownFit = function (st, d) {
+    var t = st.town, what = ["buildings", "area", "all"].indexOf(t.fit) >= 0 ? t.fit : "buildings", sc = st.scale;
+    var args = ["fit", "--place", st.place, "--view", st.settings.view || "town", "--preset", sc.preset, "--page", sc.page_w_in + "x" + sc.page_h_in, "--what", what,
+      "--fit-margin", String(+t.fit_margin_ft || 0)];
+    return {
+      kind: "town_fit", label: "Fit page to " + what,
+      params: { fit: what, margin: t.fit_margin_ft },
+      steps: [
+        VB.steps.py(GEN + "panelio.py", args, "panelio fit", { json: "fit" }),
+        { t: "fn", label: "store frame", fn: function (run) {
+          var f = run.vars.fit; if (!f || !f.scale_ft_per_in) throw new Error("fit returned no scale");
+          var p = d.world + "/view_settings.json", raw = run.readJson(p, {});
+          raw.presets = raw.presets || {}; var pr = raw.presets[sc.preset] = Object.assign({}, raw.presets[sc.preset] || {});
+          pr.scale_ft_per_in = f.scale_ft_per_in; pr.grid_ft = f.grid_ft; pr.focus = f.focus_ft; delete pr.scale_bar_ft;
+          run.writeJson(p, raw);
+          run.setState("scale.scale_ft_per_in", f.scale_ft_per_in); run.setState("scale.grid_ft", f.grid_ft);
+          run.log("framed on " + what + ": 1 in = " + f.scale_ft_per_in + " ft, centre " + f.focus_ft.join(", ") + " (press Redraw all GEN layers to draw it)"); } }
+      ],
+      setStale: ["contours", "shading", "town"]
+    };
   };
 
   // mode: "auto" (generate from terrain) | "snap" (settle the captured lasso onto the terrain)

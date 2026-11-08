@@ -329,7 +329,13 @@ def merged(params):
     P.update({k: v for k, v in (params or {}).items() if k in DEFAULTS and (v is not None or k in ("target_area_ft2", "centre"))})
     sc = float(P.get("area_scale") or 1.0)
     if sc > 1.0:       # a bigger town also has to climb the valley sides: relax the buildable slope with the scale (capped well below the gorge limit)
-        P["slope_limit"] = min(P["slope_limit"] * sc, 0.28)
+        P["slope_limit"] = min(P["slope_limit"] * sc, 0.28 + 0.12 * min(sc - 1.0, 1.0))
+        # the flat floor of the Bridgehollow bowl is ~15 acres (662k ft2) whatever the target: past that only the gorge test stops the lasso.
+        # Scale 2 lets it reach slopes up to 0.5 with no gorge buffer (~1.3M ft2, 30 acres); explicit hard_slope / gorge_buffer values win.
+        if (params or {}).get("hard_slope") is None:
+            P["hard_slope"] = min(P["hard_slope"] + 0.2 * (sc - 1.0), 0.6)
+        if (params or {}).get("gorge_buffer_ft") is None:
+            P["gorge_buffer_ft"] = max(P["gorge_buffer_ft"] * (2.0 - sc), 0.0)
     return P
 
 

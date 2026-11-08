@@ -51,6 +51,26 @@ def cmd_view(a):
             "title": title}
 
 
+def cmd_fit(a):
+    """Framing for the page: {scale_ft_per_in, grid_ft, focus_ft, bounds_ft} that makes --what (buildings|area|all) fill the page.
+    The panel stores scale/grid/focus in view_settings.json (preset) so every generator uses the same frame."""
+    import render_world as rw
+    import viewcfg
+    what = a.what or "buildings"
+    model = rw.load_place(a.place)
+    cfg = viewcfg.load(a.place, a.preset or a.view, page=a.page)
+    fb = rw.fit_bounds(model, what)
+    pw, ph = cfg["page_in"]
+    m = cfg.get("margin_in", 0.5)
+    pad = float(a.fit_margin or 0.0)
+    fw, fh = fb[2] - fb[0] + 2 * pad, fb[3] - fb[1] + 2 * pad
+    need = max(fw / max(pw - 2 * m, 1e-6), fh / max(ph - 2 * m, 1e-6)) * 1.04
+    fpi = rw._nice_fit(need)
+    return {"what": what, "bounds_ft": [round(x, 1) for x in fb], "scale_ft_per_in": fpi, "grid_ft": max(viewcfg._nice(fpi), 5),
+            "focus_ft": [round((fb[0] + fb[2]) / 2.0, 1), round((fb[1] + fb[3]) / 2.0, 1)], "page_in": [pw, ph],
+            "area_ft2": round(fw * fh)}
+
+
 def cmd_accept(a):
     cand = a.candidate or default_candidate(a.place)
     dst = os.path.join(REPO, "world", a.place)
@@ -90,7 +110,7 @@ def cmd_reject(a):
 
 def main(argv=None):
     ap = argparse.ArgumentParser()
-    ap.add_argument("cmd", choices=["textures", "view", "town-accept", "town-reject", "status"])
+    ap.add_argument("cmd", choices=["textures", "view", "fit", "town-accept", "town-reject", "status"])
     ap.add_argument("--place", default="bridgehollow")
     ap.add_argument("--view", default="town")
     ap.add_argument("--preset")
@@ -99,8 +119,10 @@ def main(argv=None):
     ap.add_argument("--major", type=int)
     ap.add_argument("--page")
     ap.add_argument("--candidate")
+    ap.add_argument("--what", choices=["buildings", "area", "all"])
+    ap.add_argument("--fit-margin", type=float, default=0.0)
     a = ap.parse_args(argv)
-    f = {"textures": cmd_textures, "view": cmd_view, "town-accept": cmd_accept, "town-reject": cmd_reject,
+    f = {"textures": cmd_textures, "view": cmd_view, "fit": cmd_fit, "town-accept": cmd_accept, "town-reject": cmd_reject,
          "status": lambda a: worldio.status(a.place)}[a.cmd]
     print(json.dumps(f(a)))
     return 0
