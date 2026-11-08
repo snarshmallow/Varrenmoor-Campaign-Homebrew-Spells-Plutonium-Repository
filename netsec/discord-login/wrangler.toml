@@ -1,0 +1,11 @@
+name = "varrenmoor-discord-oidc"
+main = "worker.js"
+compatibility_date = "2022-12-24"
+workers_dev = false
+routes = [
+  { pattern = "discord-auth.varrenmoor.com", custom_domain = true }
+]
+
+kv_namespaces = [
+  { binding = "KV", id = "de1da4eb2d534428a7e77c398ae29c3d" }
+]

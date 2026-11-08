@@ -1,0 +1,8 @@
+{
+    "clientId": "1538145703463755877",
+    "clientSecret": "",
+    "redirectURL": "https://dubcity.cloudflareaccess.com/cdn-cgi/access/callback",
+    "serversToCheckRolesFor": [
+        "866777784982175745"
+    ]
+}
