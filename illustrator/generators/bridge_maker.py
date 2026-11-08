@@ -7,6 +7,7 @@ into the world pack as entities of type `bridges`.
   python illustrator/generators/bridge_maker.py apply  --place P [--pack DIR] [--only id,id] [--preset NAME] [--no-export]   # detect -> world/P/bridges.json -> pack entities
   python illustrator/generators/bridge_maker.py inject --place P [--pack DIR]                                    # re-apply world/P/bridges.json to a freshly exported pack
   python illustrator/generators/bridge_maker.py remove --place P --id brg_x_1
+  python illustrator/generators/bridge_maker.py audit --place P [--out audit.json]                               # every foot / the deck of the saved bridges vs the terrain TRIANGLES
   python illustrator/generators/bridge_maker.py sample --preset stone_arch --span-ft 60 --out out.glb          # a free-standing bridge for the style sheet
 
 Every function prints/returns JSON-able data. Units: feet in files, metres inside the meshes (bridge_geo). See illustrator/out/bridges_notes.md.
@@ -112,10 +113,12 @@ def conformed_heights(pack, h=None, falloff_ft=10.0):
     return wp._conform(pack.heights if h is None else h, pack.cell_ft, lines, falloff_ft, "set")
 
 
-def final_heights(pack):
+def final_heights(pack, graded=True):
+    """The terrain the bridges are planned against = what worldpack_mesh.build_parts builds. With road grading on (the default) the roads are draped on the
+    carved terrain and the terrain is NOT conformed to them, so the carved heights are the truth; `graded=False` is the old conformed terrain (road grading off)."""
     import worldpack as wp
     h = wp.carved_heights(pack)
-    return conformed_heights(pack, h)
+    return h if graded else conformed_heights(pack, h)
 
 
 # ------------------------------------------------------------------ detection
@@ -676,7 +679,9 @@ def _timber_bits(P, Pm):
 
 
 def _plan_log(plan, P, Pm, D, gl, envs, L, W, found):
-    """Raw logs side by side: diameters/lengths/heights from the seed; bank rocks under both ends."""
+    """Raw logs side by side: diameters/lengths/heights from the seed; bank rocks under both ends. A log is at most `max_log` long (26 ft); a longer crossing
+    gets log TRESTLES (lashed A-frame legs standing in the water / on the ground, feet below the bed, a cap log across) and every lane is several logs laid
+    end to end, joints on the trestle caps."""
     rng = np.random.RandomState(plan["seed"] + 101)
     d0, var = Pm["log_d"], float(P.get("log_d_var", 0.35))
     ds = []
@@ -690,11 +695,48 @@ def _plan_log(plan, P, Pm, D, gl, envs, L, W, found):
         logs.append(dict(v=float(v), r=float(dd / 2), off=-0.04 if k == tall else float(rng.uniform(0.0, 0.16)),
                          a=-float(Pm["bear_min"] + rng.uniform(0, Pm["bear_var"])), b=float(L + Pm["bear_min"] + rng.uniform(0, Pm["bear_var"])),
                          taper=float(rng.uniform(0.86, 1.0)), tip0=bool(rng.rand() < 0.4), tip1=bool(rng.rand() < 0.4)))
+    # how many bays? (logs never longer than max_log)
+    lmax = Pm.get("max_log", 26.0 * FT)
+    bA, bB = max(-l["a"] for l in logs), max(l["b"] - L for l in logs)
+    cap_end, cap_mid = lmax - 0.1 - bA, lmax - 0.1
+    cap_end_b = lmax - 0.1 - bB
+    N = 1
+    if L + bA + bB > lmax:
+        N = 2
+        while cap_end + cap_end_b + (N - 2) * cap_mid < L and N < 8:
+            N += 1
+    cs = []
+    if N > 1:
+        w_ = [cap_end] + [cap_mid] * (N - 2) + [cap_end_b]
+        sc = L / sum(w_)
+        pos = np.cumsum([x * sc for x in w_])[:-1]
+        ev_dry = [(e["u0"], e["u1"]) for e in envs if e["kind"] != "water"]      # a trestle may stand in the water, not in a road / path below
+        cs = _nudge_supports([float(x) for x in pos], ev_dry, 0.9, 0.0, L, 1.0)
+        edges = [0.0] + cs + [L]
+        bays = [edges[i + 1] - edges[i] for i in range(len(edges) - 1)]
+        bad = len(cs) != N - 1 or bays[0] + bA > lmax + 1e-6 or bays[-1] + bB > lmax + 1e-6 or any(x > lmax - 0.05 for x in bays[1:-1])
+        if bad:
+            plan["ok"] = False
+            plan["deficit_m"] = max(plan["deficit_m"], 0.5)
+            plan["notes"].append("log bridge: a trestle would have to stand in the clearance below (road / path); no arrangement of logs <= %.0f ft fits" % (lmax / FT))
+    plan["trestle_u"] = cs
+    for lg in logs:                                                  # segments: end to end, joints on the trestle caps (+-6 cm so both logs rest on the cap)
+        a_, segs = lg["a"], []
+        for c in cs:
+            j = c + float(rng.uniform(-0.06, 0.06))
+            segs.append((a_, j - 0.03))
+            a_ = j + 0.03
+        segs.append((a_, lg["b"]))
+        lg["segs"] = segs
     plan["logs"] = logs
+    plan["log_max_m"] = max(b_ - a_ for lg in logs for a_, b_ in lg["segs"])
+    plan["wade"] = []
     if L > Pm["max_span"]:
         plan["ok"] = False
         plan["deficit_m"] = max(plan["deficit_m"], L - Pm["max_span"])
-        plan["notes"].append(f"log bridge: {L / FT:.0f} ft is longer than a log can span ({Pm['max_span'] / FT:.0f} ft)")
+        plan["notes"].append(f"log bridge: {L / FT:.0f} ft is longer than a log trestle bridge can span ({Pm['max_span'] / FT:.0f} ft)")
+    elif N > 1:
+        plan["notes"].append(f"log bridge: {len(cs) + 1} bays on {len(cs)} log trestle(s), longest log {plan['log_max_m'] / FT:.1f} ft (limit {lmax / FT:.0f} ft)")
     worst = 1e9
     for e in envs:
         x = np.linspace(e["u0"], e["u1"], 20)
@@ -704,6 +746,27 @@ def _plan_log(plan, P, Pm, D, gl, envs, L, W, found):
         plan["ok"] = False
         plan["deficit_m"] = max(plan["deficit_m"], -worst)
         plan["notes"].append(f"log bridge: the logs hang {-worst:.2f} m into the clearance below")
+    # trestles: cap log under the lowest log underside; four lashed legs (two bents), cross brace; feet below the lowest ground under each leg
+    slope = (float(D(L)) - float(D(0.0))) / L
+    z0 = float(D(0.0))
+    capr = 0.16
+    trest = []
+    for c in cs:
+        under = min(z0 + slope * c - lg["off"] - 2 * lg["r"] for lg in logs)
+        zc = under - capr - 0.02                                      # cap centre line; the logs' lowest underside sits 2 cm over its top
+        legs = []
+        for sd in (-1, 1):
+            v = sd * (W / 2 - 0.3)
+            hgt = zc - float(gl(np.linspace(c - 1.2, c + 1.2, 9)).min())
+            sp = float(np.clip(0.14 * hgt, 0.35, 1.3))
+            for sg in (-1, 1):
+                ul = c + sg * sp
+                base = float(gl(np.linspace(ul - 0.6, ul + 0.6, 7)).min()) - found
+                legs.append(dict(u=ul, v=v, base=base, u_top=c + sg * 0.12, top=zc - 0.05))
+        trest.append(dict(u=c, zc=zc, capr=capr, legs=legs, chocks=[
+            dict(v=lg["v"], z0=zc + capr * 0.9, z1=z0 + slope * c - lg["off"] - 2 * lg["r"]) for lg in logs]))
+        plan["wade"].append((c - 1.5, c + 1.5))
+    plan["trestles"] = trest
     rocks = []
     rr = Pm["rock_r"]
     for end, u in ((0, -0.35), (1, L + 0.35)):
@@ -726,7 +789,9 @@ def _plan_covered(plan, P, Pm, D, gl, envs, ev, L, W, found):
     plan["roof_mat"] = plan["mats"].get("roof_tile") if str(P.get("roof", "shingle")) == "tile" else plan["mats"].get("roof")
     N = max(1, int(math.ceil(L / Pm["max_span"])))
     half = (Pm["pier_t"] / 2 + 0.15) if piers else 1.7
-    cs = _nudge_supports([L * k / N for k in range(1, N)], ev, half, 1.5, L - 1.5, 3.0)
+    ev_dry = [(e["u0"], e["u1"]) for e in envs if e["kind"] != "water"]        # bents / piers may stand IN the river (that is what they are for), never in a road / path below
+    cs = _nudge_supports([L * k / N for k in range(1, N)], ev_dry, half, 1.5, L - 1.5, 3.0)
+    plan["wade"] = [(c - half - 0.3, c + half + 0.3) for c in cs]
     us_ = [0.0] + cs + [L]
     sup = []
     for i, u in enumerate(us_):
@@ -755,29 +820,51 @@ def sag_shape(t, k=2.2):
 
 
 def _plan_rope(plan, P, Pm, D, gh, gl, envs, L, W, found):
-    """Sagging deck between the end levels. The sag is clamped so the underside (plank + a hanging plank) keeps `min_clear` above the highest ground and
-    the water / road clearance envelopes everywhere."""
+    """Sagging deck between two raised anchors. The sag wanted is `sag_ratio` x span (8-12 %); to let it hang that far and still clear the ground / water /
+    road envelopes the whole rope line is RAISED by `raise` (the anchor towers at both ends get taller and a ramp climbs from the road to the deck end).
+    The raise is the smallest that works, capped at `raise_max_ft`; only when even that is not enough is the sag clamped (reported in plan.notes)."""
     _timber_bits(P, Pm)
     Pm["rail_h"], Pm["post_h"] = P["rail_h_ft"] * FT, P["post_h_ft"] * FT
     t = np.linspace(0.02, 0.98, 97)
     uu_ = t * L
     lin = D(uu_)
-    drop = Pm["plank_t"] + 0.35                                    # plank + a plank hanging down at one side
     f = np.maximum(sag_shape(t), 1e-3)
     wgt = np.clip((0.5 - np.abs(t - 0.5) - 0.06) / 0.2, 0.0, 1.0)  # comfort clearance fades in away from the banks (the ground rises to the deck there)
     soft = gh(uu_) + 0.1 + (Pm["min_clear"] - 0.1) * wgt
     for e in envs:
         m = (uu_ >= e["u0"]) & (uu_ <= e["u1"])
         soft = np.where(m, np.maximum(soft, e["z"]), soft)
-    allowed = float(np.min((lin - (Pm["plank_t"] + 0.35 * wgt) - soft) / f))
+
+    def allowed_at(R):
+        return float(np.min((lin + R - (Pm["plank_t"] + 0.35 * wgt) - soft) / f))
     wanted = max(P["sag_ratio"] * L, 0.6)
+    rmax = float(P.get("raise_max_ft", 8.0)) * FT
+    allowed0 = allowed_at(0.0)
+    R = 0.0
+    if allowed0 < wanted:
+        if allowed_at(rmax) < wanted:
+            R = rmax
+        else:
+            lo_, hi_ = 0.0, rmax
+            for _ in range(40):
+                mid_ = 0.5 * (lo_ + hi_)
+                lo_, hi_ = (mid_, hi_) if allowed_at(mid_) < wanted else (lo_, mid_)
+            R = hi_
+        R = min(rmax, math.ceil(R / 0.1) * 0.1)                      # tidy 0.1 m steps
+    allowed = allowed_at(R)
     sag = float(np.clip(allowed, 0.0, wanted))
-    plan["rope"] = dict(sag_m=sag, wanted_m=wanted, allowed_m=allowed, clamped=allowed < wanted)
-    if allowed < wanted:
-        plan["notes"].append(f"rope sag clamped to {sag / FT:.1f} ft (wanted {wanted / FT:.1f} ft) to stay {Pm['min_clear'] / FT:.1f} ft above the ground/water")
+    plan["rope"] = dict(sag_m=sag, wanted_m=wanted, allowed_m=allowed, clamped=allowed < wanted - 1e-9, raise_m=R, raise_max_m=rmax)
+    if R > 1e-6:
+        plan["notes"].append(f"rope bridge: anchors raised {R / FT:.1f} ft above the road so the deck can sag {sag / FT:.1f} ft and still clear the ground/water")
+    if allowed < wanted - 1e-9:
+        plan["notes"].append(f"rope sag clamped to {sag / FT:.1f} ft (wanted {wanted / FT:.1f} ft) to stay {Pm['min_clear'] / FT:.1f} ft above the ground/water, even with the maximum {rmax / FT:.0f} ft raise")
     uf = np.array([u for u, _ in plan["deck"]])
-    zf = np.array([z for _, z in plan["deck"]]) - sag * sag_shape(uf / L)
+    zf = np.array([z for _, z in plan["deck"]]) + R - sag * sag_shape(uf / L)
     plan["deck"] = [(float(u), float(z)) for u, z in zip(uf, zf)]
+    if R > 1e-6:                                                   # a ramp from the road up to the raised deck end (steeper than a road: a log stair-ramp)
+        l0, l1 = plan.get("lift_ends") or (0.0, 0.0)
+        plan["lift_ends"] = (l0 + R, l1 + R)
+    plan["ramp_slope"] = float(P.get("rope_ramp_slope", 0.22))
     D2 = Prof(plan["deck"])
     hard = gh(uu_) + 0.1                                           # the real obstacles (no comfort margin): ground + 0.1 m, envelopes
     for e in envs:
@@ -788,14 +875,17 @@ def _plan_rope(plan, P, Pm, D, gh, gl, envs, L, W, found):
         plan["ok"] = False
         plan["deficit_m"] = max(plan["deficit_m"], miss)
         plan["notes"].append(f"rope bridge: the deck cannot clear the ground/clearance below even without sag (short by {miss:.2f} m)")
-    posts = []
+    posts, backs = [], []
     for end, u in ((0, -0.9), (1, L + 0.9)):
         win = (-0.9, 0.9) if end == 0 else (L - 0.9, L + 0.9)
         base = float(gl(np.linspace(win[0], win[1], 7)).min()) - found
-        zt = float(D2(0.0 if end == 0 else L)) + Pm["rail_h"] + 0.7
+        zt = float(D2(0.0 if end == 0 else L)) + Pm["rail_h"] + 1.0     # tall anchor posts: the ropes tie in near the top
         for sd in (-1, 1):
             posts.append(dict(u=u, v=sd * (W / 2 + 0.3), base=base, top=zt, end=end))
-    plan["posts"] = posts
+            ub = u + (-1.0 if end == 0 else 1.0) * (0.35 * (zt - base) + 0.6)    # a raking back-leg (A-frame) behind each post, footed below the ground
+            baseb = float(gl(np.linspace(min(L, max(0.0, ub)) - 0.6, min(L, max(0.0, ub)) + 0.6, 7)).min()) - found
+            backs.append(dict(u=ub, v=sd * (W / 2 + 0.3), base=baseb, u_top=u, top=zt - 0.3, end=end))
+    plan["posts"], plan["backs"] = posts, backs
 
 
 def plan_feet(plan, gl):
@@ -814,9 +904,14 @@ def plan_feet(plan, gl):
     elif fam == "log":
         for r in plan["rocks"]:
             feet.append(dict(kind="rock", u=r["u"], z=r["base"]))
+        for tr in plan.get("trestles", []):
+            for lgx in tr["legs"]:
+                feet.append(dict(kind="trestle", u=lgx["u"], z=lgx["base"]))
     elif fam == "rope":
         for r in plan["posts"]:
             feet.append(dict(kind="anchor_post", u=r["u"], z=r["base"]))
+        for r in plan.get("backs", []):
+            feet.append(dict(kind="anchor_back", u=r["u"], z=r["base"]))
     else:
         for sd in plan["supports"]:
             feet.append(dict(kind=sd["kind"], u=sd["u"], z=sd["base"]))
@@ -867,8 +962,42 @@ def check_clearance(mesh, plan, eps=0.04):
     bad = 0
     for e in plan["envelopes"]:
         m = (Pt[:, 0] > e["u0"] + eps) & (Pt[:, 0] < e["u1"] - eps) & (Pt[:, 2] < e["z"] - eps) & (Pt[:, 2] > gh(Pt[:, 0]) + eps)
+        if e["kind"] == "water":                       # piers / bents / trestles may stand IN the water (only there); the beams between them must still clear it
+            for w0, w1 in plan.get("wade", []):
+                m &= ~((Pt[:, 0] >= w0) & (Pt[:, 0] <= w1))
         bad += int(m.sum())
     return bad
+
+
+def audit_mesh(ent, h, cell, plan=None):
+    """Final-MESH check of one bridge against the terrain TRIANGLES (road_grade.mesh_height, the same triangulation as build_terrain; `h` = the heights the
+    mesh is built from, see final_heights): every foot (min terrain over the foot's footprint, +-0.3 ft in u, across the deck width +-1 ft) and the deck (top minus the
+    HIGHEST terrain across the deck width, everywhere along the span and in the first/last 8 ft). Feet: margin_ft = ground - foot bottom (want >= 1.5);
+    deck: clear_ft = deck top - terrain (want >= 0.3; the planner keeps 0.5 on the raster). Returns {feet: [...], min_foot_margin_ft, deck_clear_min_ft, deck_clear_ends_ft}."""
+    import road_grade as rg
+    plan = plan or make_plan(ent)
+    sx, sy, _ = ent["span"]["start"]
+    ex, ey, _ = ent["span"]["end"]
+    L = math.hypot(ex - sx, ey - sy)
+    d = np.array([ex - sx, ey - sy]) / L
+    lf = np.array([d[1], -d[0]])
+    W = plan["W"] / FT
+
+    def at(u, v):
+        return rg.mesh_height(h, cell, sx + d[0] * u + lf[0] * v, sy + d[1] * u + lf[1] * v)
+    vs = np.linspace(-W / 2 - 1.0, W / 2 + 1.0, 7)
+    feet = []
+    for ft in plan["feet"]:
+        u = min(max(ft["u"] / FT, -4.0), L + 4.0)
+        g = min(float(at(uu, vv)) for uu in (u - 0.3, u, u + 0.3) for vv in vs)
+        feet.append(dict(kind=ft["kind"], u_ft=round(ft["u"] / FT, 2), bottom_ft=round(ft["z"] / FT, 2), ground_ft=round(g, 2), margin_ft=round(g - ft["z"] / FT, 2)))
+    D = Prof([(u / FT, z / FT) for u, z in plan["deck"]])
+    us = np.linspace(0.0, L, int(L / 1.0) + 1)
+    vd = np.linspace(-W / 2, W / 2, 7)
+    clear = np.array([float(D(u)) - max(float(at(u, v)) for v in vd) for u in us])
+    ends = (us <= 8.0) | (us >= L - 8.0)
+    return dict(feet=feet, min_foot_margin_ft=min([f["margin_ft"] for f in feet] or [99.0]), deck_clear_min_ft=round(float(clear.min()), 2),
+                deck_clear_ends_ft=round(float(clear[ends].min()), 2) if ends.any() else None)
 
 
 # ------------------------------------------------------------------ pack integration
@@ -1236,6 +1365,10 @@ def main(argv=None):
         s.add_argument("--no-export", action="store_true")
         s.add_argument("--id")
         s.add_argument("--seed", type=int)
+    au = sub.add_parser("audit")
+    au.add_argument("--place", required=True)
+    au.add_argument("--pack")
+    au.add_argument("--out")
     en = sub.add_parser("entity")
     en.add_argument("--place", required=True)
     en.add_argument("--pack")
@@ -1258,6 +1391,20 @@ def main(argv=None):
         if a.out:
             _jdump(a.out, res)
         print(json.dumps({"ok": True, "crossings": res}))
+    elif a.cmd == "audit":
+        import worldpack as wp
+        pack = _pack(a)
+        for r in pack.list("roads"):
+            r.pop("gaps", None)
+        h = final_heights(pack)
+        res = []
+        for e in load_bridges(a.place)["bridges"]:
+            au_ = audit_mesh(e, h, pack.cell_ft)
+            res.append(dict(id=e["id"], preset=e["preset"], min_foot_margin_ft=au_["min_foot_margin_ft"], deck_clear_min_ft=au_["deck_clear_min_ft"], deck_clear_ends_ft=au_["deck_clear_ends_ft"],
+                            feet=au_["feet"]))
+        if a.out:
+            _jdump(a.out, res)
+        print(json.dumps({"ok": True, "bridges": [{k: v for k, v in r.items() if k != "feet"} for r in res]}, indent=1))
     elif a.cmd == "entity":
         ent = entity_for(a.place, a.id, a.pack, a.preset, _overrides(a.set))
         if a.out:

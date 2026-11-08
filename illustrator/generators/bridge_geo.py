@@ -498,7 +498,7 @@ def _finish(g, plan):
     for lift, u_end, sg in ((l0, 0.0, -1), (l1, L, 1)):
         if lift < 0.03 or not mat:
             continue
-        r = lift / 0.10
+        r = lift / float(plan.get("ramp_slope") or 0.10)
         z1 = float(d(u_end))
         z0, uf = z1 - lift, u_end + sg * r
         g.poly(mat, [(u_end, -hw, z1), (u_end, hw, z1), (uf, hw, z0), (uf, -hw, z0)], (0, 0, 1), uvmode="road")
@@ -531,13 +531,40 @@ def build_log(plan):
     for lg in plan["logs"]:
         r, v = lg["r"], lg["v"]
         zc = lambda u, lg=lg, r=r: z0 + slope * u - lg["off"] - r
-        r0, r1 = (r, r * lg["taper"]) if rng.rand() < 0.5 else (r * lg["taper"], r)
-        g.log(M["log"], (lg["a"], v, zc(lg["a"])), (lg["b"], v, zc(lg["b"])), r0, r1, n=8, rng=rng, jit=0.09)
-        for tip, end, sg, rr in ((lg["tip0"], lg["a"], -1, r0), (lg["tip1"], lg["b"], 1, r1)):    # a broken, splintered end
-            if tip:
-                g.log(M["log"], (end, v, zc(end)), (end + sg * 0.22, v + rng.uniform(-0.04, 0.04), zc(end) + rng.uniform(-0.05, 0.03)), rr * 0.97, rr * 0.5, n=6, rng=rng, jit=0.18)
+        segs = lg.get("segs") or [(lg["a"], lg["b"])]
+        for si, (sa, sb) in enumerate(segs):
+            r0, r1 = (r, r * lg["taper"]) if rng.rand() < 0.5 else (r * lg["taper"], r)
+            g.log(M["log"], (sa, v, zc(sa)), (sb, v, zc(sb)), r0, r1, n=8, rng=rng, jit=0.09)
+            for tip, end, sg, rr, ok in ((lg["tip0"], sa, -1, r0, si == 0), (lg["tip1"], sb, 1, r1, si == len(segs) - 1)):    # a broken, splintered end (outer ends only)
+                if tip and ok:
+                    g.log(M["log"], (end, v, zc(end)), (end + sg * 0.22, v + rng.uniform(-0.04, 0.04), zc(end) + rng.uniform(-0.05, 0.03)), rr * 0.97, rr * 0.5, n=6, rng=rng, jit=0.18)
     for rk in plan["rocks"]:
         g.log(M["rock"], (rk["u"] + rng.uniform(-0.05, 0.05), rk["v"], rk["base"]), (rk["u"], rk["v"], rk["top"]), rk["r"], rk["r"] * 0.78, n=7, rng=rng, jit=0.28, phase=rng.uniform(0, 1))
+    rope = M.get("rope") or M["log"]
+    for tr in plan.get("trestles", []):                              # rough lashed trestle: two bents of splayed legs, a cap log across, chocks under every log, a diagonal brace
+        c, zc, capr = tr["u"], tr["zc"], tr["capr"]
+        W2 = plan["W"] / 2
+        g.log(M["log"], (c, -W2 - 0.18, zc), (c, W2 + 0.18, zc), capr, capr, n=7, rng=rng, jit=0.07)
+        for lgx in tr["legs"]:
+            g.log(M["log"], (lgx["u_top"], lgx["v"], lgx["top"]), (lgx["u"], lgx["v"], lgx["base"]), 0.12, 0.15, n=7, rng=rng, jit=0.09)
+        for sd_ in (-1, 1):                                          # a horizontal tie between the two legs of a bent (lashed), at a third of the height
+            lgs = [q for q in tr["legs"] if q["v"] * sd_ > 0]
+            zt_ = lgs[0]["top"] - 0.42 * (lgs[0]["top"] - lgs[0]["base"])
+            fr = 0.42
+            ua = lgs[0]["u_top"] + fr * (lgs[0]["u"] - lgs[0]["u_top"])
+            ub = lgs[1]["u_top"] + fr * (lgs[1]["u"] - lgs[1]["u_top"])
+            g.log(M["log"], (ua, lgs[0]["v"] + sd_ * 0.17, zt_), (ub, lgs[0]["v"] + sd_ * 0.17, zt_), 0.07, 0.07, n=5, rng=rng, jit=0.1)
+        lo_, hi_ = [q for q in tr["legs"] if q["v"] < 0], [q for q in tr["legs"] if q["v"] > 0]
+        fa, fb = 0.2, 0.75                                           # diagonal brace across the two bents (outside the leg planes)
+        pa = (lo_[0]["u_top"] + fa * (lo_[0]["u"] - lo_[0]["u_top"]), lo_[0]["v"] - 0.17, lo_[0]["top"] - fa * (lo_[0]["top"] - lo_[0]["base"]))
+        pb = (hi_[0]["u_top"] + fb * (hi_[0]["u"] - hi_[0]["u_top"]), hi_[0]["v"] + 0.17, hi_[0]["top"] - fb * (hi_[0]["top"] - hi_[0]["base"]))
+        g.log(M["log"], pa, pb, 0.06, 0.06, n=5, rng=rng, jit=0.1)
+        for ck in tr["chocks"]:
+            h_ = ck["z1"] - ck["z0"]
+            if h_ > 0.05:
+                g.log(M["log"], (c, ck["v"], ck["z0"]), (c, ck["v"], ck["z1"] - 0.005), 0.07, 0.08, n=5, rng=rng, jit=0.1)
+        for lgx in tr["legs"]:                                       # lashing where the leg meets the cap (rope-coloured bands)
+            g.log(rope, (lgx["u_top"], lgx["v"], lgx["top"] - 0.05), (lgx["u_top"], lgx["v"], lgx["top"] - 0.2), 0.17, 0.17, n=6, rng=rng, jit=0.08, caps=False)
     return _finish(g, plan)
 
 
@@ -680,8 +707,19 @@ def build_rope(plan):
     decay = float(P.get("decay", 0.18))
     deck_m, tim, rope = M["deck"], M["log"], M["rope"]
     hp = hw - 0.05
+    # sway: the whole deck wanders sideways a little (zero at both anchors, an S-curve between them)
+    amp = float(np.clip(0.012 * L, 0.05, 0.45)) * float(P.get("sway", 1.0))
+    ph = rng.uniform(0, 2 * math.pi)
+    vo = lambda u: amp * (math.sin(2 * math.pi * u / L + 0.4 * math.sin(ph)) * math.sin(math.pi * u / L)) if L > 0 else 0.0
+    nest = max(8, int(L / (pw + gap)))
+    forced = {}                                                    # a few planks are always gone / broken, wherever the dice fall
+    if decay > 0:
+        for kk, kind in zip(rng.choice(np.arange(4, max(5, nest - 4)), size=min(4, max(1, nest - 8)), replace=False), ("missing", "broken", "missing", "broken")):
+            forced[int(kk)] = kind
+    k_pl = -1
     u, prev_gone = 0.0, False
     while u < L - 0.02:
+        k_pl += 1
         w = pw * rng.uniform(0.7, 1.3)
         a, b = u, u + w
         if b > L - 0.3 * pw:
@@ -689,18 +727,24 @@ def build_rope(plan):
         u = b + gap * rng.uniform(0.2, 3.5)                                     # uneven spacing
         edge = a < 2 * pw or b > L - 2 * pw
         r = rng.rand()
+        fk = forced.get(k_pl)
+        if fk == "missing":
+            r = 0.0
+        elif fk == "broken":
+            r = decay * 0.6
         za, zb = float(d(a)) + rng.uniform(-0.01, 0.01), float(d(b)) + rng.uniform(-0.01, 0.01)
+        vc = vo(0.5 * (a + b))
         down = lambda q: [(x, y, z - pt) for x, y, z in q]
-        if edge or r >= decay:
-            q = [(a, -hp, za), (b, -hp, zb), (b, hp, zb), (a, hp, za)]
+        if edge or (r >= decay and not fk):
+            q = [(a, vc - hp, za), (b, vc - hp, zb), (b, vc + hp, zb), (a, vc + hp, za)]
             _hexa(g, deck_m, q, down(q))
             prev_gone = False
-        elif r < decay * 0.45 and not prev_gone:
+        elif r < decay * 0.45 and (not prev_gone or fk == "missing"):
             prev_gone = True                                                     # missing
-        elif r < decay * 0.8:                                                    # broken: a stub from one side with a slanted splintered end
+        elif r < decay * 0.8 or fk:                                              # broken: a stub from one side with a slanted splintered end
             sd = int(rng.choice([-1, 1]))
             fr = rng.uniform(0.25, 0.55)
-            v0, v1 = (-hp, -hp + fr * W) if sd < 0 else (hp - fr * W, hp)
+            v0, v1 = (vc - hp, vc - hp + fr * W) if sd < 0 else (vc + hp - fr * W, vc + hp)
             sk = rng.uniform(0.1, 0.45) * (b - a)
             if sd < 0:
                 q = [(a, v0, za), (b, v0, zb), (b - sk, v1, zb), (a, v1, za)]
@@ -711,8 +755,8 @@ def build_rope(plan):
         else:                                                                    # hanging by one side rope
             sd = int(rng.choice([-1, 1]))
             th_ = math.radians(rng.uniform(50, 85))
-            wd = W * rng.uniform(0.45, 0.8)
-            ve = sd * hp
+            wd = min(W * rng.uniform(0.45, 0.8), 0.35 / max(math.sin(th_), 0.2))      # the drop stays <= 0.35 m (what _plan_rope reserves under the deck)
+            ve = vc + sd * hp
             vf, zdrop = ve - sd * wd * math.cos(th_), wd * math.sin(th_)
             q = [(a, ve, za), (b, ve, zb), (b, vf, zb - zdrop), (a, vf, za - zdrop)]
             ny, nz = sd * math.sin(th_), math.cos(th_)
@@ -727,9 +771,9 @@ def build_rope(plan):
         tear = int(rng.randint(2, max(3, n - 2))) if (rng.rand() < 0.45 and n > 6) else -1
         for i in range(n):
             ua, ub = us[i], us[i + 1]
-            g.log(rope, (ua, v, float(d(ua)) - 0.03), (ub, v, float(d(ub)) - 0.03), 0.04, 0.04, n=4, rng=rng, jit=0.2, caps=False)
+            g.log(rope, (ua, v + vo(ua), float(d(ua)) - 0.03), (ub, v + vo(ub), float(d(ub)) - 0.03), 0.04, 0.04, n=4, rng=rng, jit=0.2, caps=False)
             if i != tear:
-                g.log(rope, (ua, v, float(d(ua)) + rail), (ub, v, float(d(ub)) + rail), 0.035, 0.035, n=4, rng=rng, jit=0.2, caps=False)
+                g.log(rope, (ua, v + vo(ua), float(d(ua)) + rail), (ub, v + vo(ub), float(d(ub)) + rail), 0.035, 0.035, n=4, rng=rng, jit=0.2, caps=False)
         nv = max(2, int(L / 0.5))
         for i in range(1, nv):
             uv = min(max(L * i / nv + rng.uniform(-0.08, 0.08), 0.1), L - 0.1)
@@ -739,12 +783,14 @@ def build_rope(plan):
                 continue                                                         # rotted away
             if r < decay * 1.2 or (tear >= 0 and abs(uv - us[tear]) < 0.9):
                 zlo = zhi - rail * rng.uniform(0.3, 0.7)                         # snapped: hangs from the hand rope
-            g.log(rope, (uv, v, zlo), (uv, v + rng.uniform(-0.02, 0.02), zhi), 0.022, 0.022, n=4, rng=rng, jit=0.2, caps=False)
-    # anchor posts and the ropes that tie to them
+            g.log(rope, (uv, v + vo(uv), zlo), (uv, v + vo(uv) + rng.uniform(-0.02, 0.02), zhi), 0.022, 0.022, n=4, rng=rng, jit=0.2, caps=False)
+    # anchor posts (tall), raking back-legs and the ropes that tie to them
     by_end = {0: [], 1: []}
     for ps in plan["posts"]:
-        g.log(tim, (ps["u"], ps["v"], ps["base"]), (ps["u"], ps["v"], ps["top"]), 0.13, 0.12, n=7, rng=rng, jit=0.07)
+        g.log(tim, (ps["u"], ps["v"], ps["base"]), (ps["u"], ps["v"], ps["top"]), 0.14, 0.12, n=7, rng=rng, jit=0.07)
         by_end[ps["end"]].append(ps)
+    for bk in plan.get("backs", []):
+        g.log(tim, (bk["u"], bk["v"], bk["base"]), (bk["u_top"], bk["v"], bk["top"]), 0.1, 0.09, n=6, rng=rng, jit=0.08)
     for end, pl in by_end.items():
         ue = 0.0 if end == 0 else L
         for ps in pl:
