@@ -148,7 +148,7 @@
       "linear",
       "walled"
      ],
-     "description": "street pattern: organic (default), radial, grid, linear (along the main road), walled (compact rings + wall and gates)"
+     "description": "street pattern: organic (default), radial (market town: spokes + ring lanes, town_layouts.py), grid, linear (linear / river village: high street, back lanes, cross lanes, river lane, town_layouts.py), walled (compact rings + wall and gates)"
     },
     "districts": {
      "description": "'auto' or a list of 1-4 {name?, kind: civic|residential} from the centre outward; a farmland ring is always added last",

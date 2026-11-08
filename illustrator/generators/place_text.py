@@ -7,8 +7,10 @@ the spec JSON from `place_create.py prompt-help` instead.
 Vocabulary (case-insensitive, whole words):
   population   "800 people / souls / inhabitants / residents / folk", "population 800", "of 800", or a size word: hamlet 90, village 300, small town 450,
                town 900, large town 1800, big town 1800, city 4500, "tiny" x0.5, "small" x0.7, "big|large" x1.6, "huge" x2.2 (applied to the base word)
-  layout       walled|fortified|fortress -> walled; grid|gridded|planned|chessboard -> grid; radial|circular|round|concentric -> radial;
-               linear|ribbon|strung out|along the road|one street|main street -> linear; otherwise organic
+  layout       walled|fortified|fortress -> walled; grid|gridded|planned|chessboard -> grid; radial|circular|concentric|round|market town|market square|crossroads|spokes
+               -> radial (market-town template: square, spokes, ring lanes); linear|ribbon|strung out|along the road|one street|main street|river village|along the river|
+               roadside -> linear (linear / river-village template); otherwise organic
+  numbers      "1.2k people", "two thousand people", "five hundred souls", "pop 800", "population of 800", thousands separators
   terrain      island | fjord | coastal/coast/seaside/harbour/port/fishing/sea/bay | mountain pass/pass/gap/col | mountain(s)/alpine | bowl/hollow/basin/
                ringed by hills | valley/dale/glen | hills/hilly/downs/uplands | rolling/gentle/farmland | flat/plain/marsh/fen/lowland
   sea side     "north|south|east|west coast/shore" (default south)
@@ -33,7 +35,11 @@ TERR = [("island", r"island|isle"), ("fjord", r"fjord|fjordland"), ("pass", r"mo
         ("mountain", r"mountain|mountains|alpine|highland"), ("bowl", r"\bbowl\b|hollow|basin|ringed by hills|surrounded by hills|encircled"),
         ("valley", r"valley|\bdale\b|\bglen\b"), ("hills", r"\bhills\b|hilly|downs|uplands|\bfells?\b"),
         ("rolling", r"rolling|farmland|farming|pasture"), ("flat", r"\bflat\b|plain|marsh|\bfen\b|lowland|polder")]
-SIZE_WORDS = [(r"large town|big town", 1800), (r"small town", 450), (r"\bcity\b|metropolis", 4500), (r"\btown\b", 900), (r"\bvillage\b", 300), (r"\bhamlet\b", 90), (r"\bmarket town\b", 1000)]
+SIZE_WORDS = [(r"large town|big town", 1800), (r"small town", 450), (r"\bcity\b|metropolis", 4500), (r"\bmarket town\b|market-town|\bborough\b", 1000), (r"\btown\b", 900),
+              (r"\bvillage\b", 300), (r"\bhamlet\b", 90)]
+NUM_WORDS = {"twenty": 20, "thirty": 30, "forty": 40, "fifty": 50, "sixty": 60, "seventy": 70, "eighty": 80, "ninety": 90, "one hundred": 100, "a hundred": 100, "two hundred": 200,
+             "three hundred": 300, "four hundred": 400, "five hundred": 500, "six hundred": 600, "seven hundred": 700, "eight hundred": 800, "nine hundred": 900, "a thousand": 1000,
+             "one thousand": 1000, "two thousand": 2000, "three thousand": 3000, "four thousand": 4000, "five thousand": 5000}
 
 
 def parse(text):
@@ -108,9 +114,16 @@ def parse(text):
     m = re.search(r"(\d[\d,\.]*)\s*(?:people|souls|inhabitants|residents|folk|citizens|villagers|townsfolk|population)", t)
     m2 = re.search(r"population(?: of)?\s*(\d[\d,\.]*)", t)
     m3 = re.search(r"\bof\s+(\d[\d,]*)\b", t)
-    for mm in (m, m2, m3):
+    mk = re.search(r"(\d+(?:\.\d+)?)\s*k\b", t)                                                                  # "1.2k people"
+    mw = re.search(r"\b(" + "|".join(sorted(NUM_WORDS, key=len, reverse=True)) + r")\s+(?:people|souls|inhabitants|residents|folk|citizens|villagers|townsfolk)", t)
+    for mm in (m, m2, mw, mk, m3):
         if mm:
-            pop = int(float(mm.group(1).replace(",", "")))
+            if mm is mk:
+                pop = int(float(mm.group(1)) * 1000)
+            elif mm is mw:
+                pop = NUM_WORDS[mm.group(1)]
+            else:
+                pop = int(float(mm.group(1).replace(",", "")))
             used.append(mm.group(0).strip())
             break
     if pop is None:
@@ -136,7 +149,9 @@ def parse(text):
     # layout
     lay = "organic"
     for l, pat in (("walled", r"walled|fortified|fortress town|palisade|stockade"), ("grid", r"\bgrid|gridded|planned|chessboard|bastide"),
-                   ("radial", r"radial|circular|concentric|\bround town"), ("linear", r"linear|ribbon|strung out|along the road|one street|main street|street village")):
+                   ("radial", r"radial|circular|concentric|\bround town|market town|market-town|market square|crossroads|hub and spoke|spokes"),
+                   ("linear", r"linear|ribbon|strung out|along the road|one street|main street|street village|river village|riverside village|along the river|strung along|"
+                              r"on both banks|either side of the river|riverside hamlet|roadside")):
         if has(pat):
             lay = l
             break
@@ -151,6 +166,8 @@ def parse(text):
         spec["town"]["central_feature"] = "castle"
     elif has(r"\bgreen\b|\bcommon\b"):
         spec["town"]["central_feature"] = "green"
+    elif has(r"market town|market-town|market square|\bmarket\b|crossroads"):
+        spec["town"]["central_feature"] = "market"
     # climate / season
     if has(r"\bcold\b|snowy|northern|arctic|frozen|tundra"):
         spec["climate"] = "cold"

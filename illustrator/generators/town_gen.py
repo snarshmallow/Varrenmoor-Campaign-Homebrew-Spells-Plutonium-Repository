@@ -1131,7 +1131,13 @@ class TownGen:
         P = self.P
         self.build_main_road()
         self.build_field()
-        lines = self.trace_streams()
+        tmpl = (P.get("streets") or {}).get("template")
+        if tmpl:                                       # a distinct layout template (town_layouts.py) instead of the tensor-field tracer
+            import town_layouts as tl
+            lines = tl.generate(tmpl, self)
+            self.log(f"layout template {tmpl}: {len(lines)} street lines")
+        else:
+            lines = self.trace_streams()
         geoms = self.assemble_streets(lines)
         plazas = self.make_plazas(geoms)
         # cut streets by plazas (streets end at the square edge)

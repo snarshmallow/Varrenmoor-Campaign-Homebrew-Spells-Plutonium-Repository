@@ -82,7 +82,7 @@ SPEC_SCHEMA = {
             "type": "object", "additionalProperties": False,
             "properties": {
                 "population": {"type": "integer", "minimum": 20, "maximum": 12000},
-                "layout": {"enum": list(LAYOUTS), "description": "street pattern: organic (default), radial, grid, linear (along the main road), walled (compact rings + wall and gates)"},
+                "layout": {"enum": list(LAYOUTS), "description": "street pattern: organic (default), radial (market town: spokes + ring lanes, town_layouts.py), grid, linear (linear / river village: high street, back lanes, cross lanes, river lane, town_layouts.py), walled (compact rings + wall and gates)"},
                 "districts": {"description": "'auto' or a list of 1-4 {name?, kind: civic|residential} from the centre outward; a farmland ring is always added last",
                               "oneOf": [{"const": "auto"}, {"type": "array", "minItems": 1, "maxItems": 4,
                                                            "items": {"type": "object", "additionalProperties": False, "properties": {"name": {"type": "string"}, "kind": {"enum": ["civic", "residential"]}}}}]},
@@ -358,9 +358,9 @@ def _ring_set(s, nm):
 
 LAYOUT_STREETS = {
     "organic": {"streets": {}, "noise": 0.2, "aspect": [0.85, 0.95]},
-    "radial": {"streets": {"ring_weight": 1.5, "grid_weight": 0.2, "contour_weight": 2.0}, "noise": 0.08, "aspect": [1.0, 1.0]},
+    "radial": {"streets": {"template": "radial_market", "ring_weight": 1.5, "grid_weight": 0.2, "contour_weight": 2.0}, "noise": 0.08, "aspect": [1.0, 1.0]},   # town_layouts.radial_market: market square, spokes, ring lanes
     "grid": {"streets": {"grid_weight": 2.6, "ring_weight": 0.15, "noise_angle_deg": 6, "seed_jitter": 0.1, "contour_weight": 1.2, "chaikin": 0}, "noise": 0.03, "aspect": [1.0, 1.0]},
-    "linear": {"streets": {"road_weight": 4.0, "road_decay_ft": 520, "ring_weight": 0.2, "grid_weight": 1.3}, "noise": 0.12, "aspect": "along_road"},
+    "linear": {"streets": {"template": "linear_river", "road_weight": 4.0, "road_decay_ft": 520, "ring_weight": 0.2, "grid_weight": 1.3}, "noise": 0.12, "aspect": "along_road"},
     "walled": {"streets": {"ring_weight": 1.0, "grid_weight": 0.8}, "noise": 0.06, "aspect": [1.0, 1.0]},
 }
 
