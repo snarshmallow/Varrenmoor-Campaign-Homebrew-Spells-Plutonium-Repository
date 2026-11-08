@@ -1017,6 +1017,12 @@ def cmd_push_scene_3d(br, a):
     flags = {}
     if not a.no_skybox:
         src = os.path.join(REPO, "world", a.place, "export", "skybox", f"{a.skybox_preset}.webp")
+        if not os.path.exists(src) and not a.dry_run:       # a new place has no sky yet: generate it from its own terrain (skybox.py generate), then continue
+            LOG(f"no skybox for {a.place}: generating {a.skybox_preset}")
+            cmd = [sys.executable, os.path.join(os.path.dirname(os.path.abspath(__file__)), "skybox.py"), "generate", "--place", a.place, "--presets", a.skybox_preset]
+            if a.lighting:
+                cmd += ["--lighting", a.lighting]
+            subprocess.run(cmd, check=False, capture_output=True)
         if not os.path.exists(src):
             raise PushError(f"{src} not found; run skybox.py generate first")
         _, path = publish_file(src, f"art/{a.place}/skybox", a.skybox_preset, root, dry=bool(a.dry_run))

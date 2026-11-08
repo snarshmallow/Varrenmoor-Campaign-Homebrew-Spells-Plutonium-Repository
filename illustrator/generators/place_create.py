@@ -580,6 +580,7 @@ def create(spec_in, out_root=None, force=False, no_town=False, draft=None, dry_r
         cell = max(cell, 15.0)
     if (W / cell) * (H / cell) > 900 * 900:
         cell = math.ceil(math.sqrt(W * H / (900 * 900)))
+    cell = snap_cell(W, H, cell)
     tcfg["cell_ft"] = cell
     say(1, N, "terrain recipe " + tcfg["recipe"])
     tspec, info = PT.build_terrain_spec(tcfg, W, H, seed)
@@ -663,6 +664,18 @@ def create(spec_in, out_root=None, force=False, no_town=False, draft=None, dry_r
 
 
 # ------------------------------------------------------------------ prompt help, templates
+def snap_cell(W, H, cell):
+    """Heightmap cell that divides both sides exactly ((n-1)*cell == size: the world pack validator requires it). Nearest to `cell` within 30%, else unchanged."""
+    best = None
+    c = 4.0
+    while c <= 40.0:
+        if abs(c - cell) <= 0.3 * cell and abs(W / c - round(W / c)) < 1e-9 and abs(H / c - round(H / c)) < 1e-9:
+            if best is None or abs(c - cell) < abs(best - cell):
+                best = c
+        c += 0.5
+    return best if best is not None else cell
+
+
 def templates():
     out = {}
     if os.path.isdir(PLACE_PRESETS):

@@ -467,6 +467,7 @@ class TownGen:
                     merged[-1] = (merged[-1][0], b)
                 else:
                     merged.append((a, b))
+            merged = [(a, b) for a, b in merged if LineString(self._sub(line, a, b)).intersects(self.water.river_polygon)]   # only a real wet crossing needs a bridge: a road that merely brushes the bank margin stays a road
             pos = 0.0
             for a, b in merged:
                 if a - pos > 5:

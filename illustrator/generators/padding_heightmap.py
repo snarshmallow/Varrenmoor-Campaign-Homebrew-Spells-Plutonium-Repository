@@ -741,7 +741,7 @@ def generate(place_id, preset_name="bowl-ridge", texture="summer", out_dir=None,
         def seamfn(X, Y):
             s, qx, qy, _, _ = place.rect_dist(X, Y)
             return s, qx, qy
-        alb, zmin, zmax = pt.apron_albedo(hfn, bb, (w, h), tp, seed + 5, seamfn, ta, (0, 0, place.W, place.H), far_mean=mean_hex, apron_len=blend_ft)
+        alb, zmin, zmax = pt.apron_albedo(hfn, bb, (w, h), tp, seed + 5, seamfn, ta, (0, 0, place.W, place.H), blend_ft=blend_ft, far_mean=mean_hex, apron_len=blend_ft)
         say("apron albedo")
         res.update(apron=ap, V=V, tris=tris, ring_info=info, apron_albedo=alb, apron_bbox=bb)
     res["meta"] = meta

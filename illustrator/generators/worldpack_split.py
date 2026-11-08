@@ -309,10 +309,12 @@ def merge_export(pack_dir, preset="layer", out_dir=None, lods=(1, 2), compress="
         nodes = [(k, merged.translated([-pivot[0], -pivot[1], -pivot[2]]), {"merged": [n for n, *_ in meshes]})]
         if preset == "individual":
             nodes = [(n, m.translated([-pivot[0], -pivot[1], -pivot[2]]), {"id": n}) for n, m, _, _ in meshes]
+        n_doors_k = 0
         for did, dex, dm_, dabs, _e in doors:                # door leaves stay separate nodes (hinge at node origin, extras kept) in their building's file
             if keyof.get(dex.get("building")) == k:
                 nodes.append((did, dm_, {**dex, "_t": tuple(dabs - np.array(pivot))}))
                 n_doors += 1
+                n_doors_k += 1
         full = os.path.join(out, "models", rel)
         depth = rel.count("/")
         wm.write_glb(full, nodes, pack.materials, textures=src.get("textures", "external"), tex_root=tex_out, tex_prefix="../" * depth + "textures/")
@@ -338,7 +340,7 @@ def merge_export(pack_dir, preset="layer", out_dir=None, lods=(1, 2), compress="
             "rotation_deg": 0.0, "scale": 1.0, "size_m": [round(v, 4) for v in sz], "size_ft": size_ft,
             "tile": {"x": _px(fr, pf[0], pf[1])[0], "y": _px(fr, pf[0], pf[1])[1], "width": round(size_ft[0] * fr.px_per_ft, 2), "height": round(size_ft[1] * fr.px_per_ft, 2),
                      "depth": round(size_ft[2] * fr.px_per_ft, 2), "elevation_ft": round(pivot[2] / FT, 3), "rotation": src["frame"]["tile_rotation_deg"]},
-            "tris": merged.tri_count, "bytes": os.path.getsize(full), "sha256": _sha(full), "lods": lodinfo,
+            "doors": n_doors_k, "tris": merged.tri_count, "bytes": os.path.getsize(full), "sha256": _sha(full), "lods": lodinfo,
             "members": [{"id": n, "layer": l, "source_file": e["file"], "offset_m": [round(v, 4) for v in (m.V.mean(0) - np.array(pivot))] if len(m.V) else [0, 0, 0],
                          "pivot_ft": [round(v, 3) for v in fr.from_blender(*(m.V.mean(0) if len(m.V) else pivot))]} for n, m, e, l in meshes]})
     if compress != "none":
@@ -347,9 +349,21 @@ def merge_export(pack_dir, preset="layer", out_dir=None, lods=(1, 2), compress="
             log("compress: gltfpack is not installed; skipping (recommendation: npm i -g gltfpack, or use gltf-transform). Files are uncompressed.")
         else:
             for e in entries:
-                p = os.path.join(out, e["file"])
-                subprocess.run([exe, "-i", p, "-o", p + ".tmp.glb"] + GLTFPACK_FLAGS[compress], check=True, capture_output=True)    # gltfpack picks the format from the extension
-                os.replace(p + ".tmp.glb", p)
+                if e.get("doors"):                      # gltfpack moves a door mesh into a child of its hinge node, so `isDoor` ends up on the parent and 3D Canvas
+                    e["compression"] = "none (has doors)"      # (child.isMesh && userData.isDoor) no longer finds a door: files with doors stay uncompressed
+                    continue
+                p = os.path.normpath(os.path.join(out, e["file"]))      # normalised: mixed / and \ separators upset gltfpack.cmd on Windows
+                tmp = p + ".tmp.glb"
+                for attempt in range(3):                # the npm gltfpack sometimes dies on exit (libuv assertion, 0xC0000409) after writing a good file: retry, else accept a valid output
+                    r = subprocess.run([exe, "-i", p, "-o", tmp] + GLTFPACK_FLAGS[compress], capture_output=True)    # gltfpack picks the format from the extension
+                    if r.returncode == 0:
+                        break
+                    if os.path.exists(tmp) and os.path.getsize(tmp) > 20 and open(tmp, "rb").read(4) == b"glTF" and attempt == 2:
+                        log(f"compress: gltfpack exited {r.returncode} on {e['file']} but wrote a valid file; using it")
+                        break
+                else:
+                    raise RuntimeError(f"gltfpack failed on {e['file']} ({r.returncode}): {r.stderr[-300:].decode(errors='replace')}")
+                os.replace(tmp, p)
                 e["bytes"], e["sha256"], e["compression"] = os.path.getsize(p), _sha(p), compress
     doc = {**{k: v for k, v in src.items() if k != "files"}, "merge": {"preset": preset, "source": os.path.join(pack_dir, "placements.json"), "lods": list(lods), "compress": compress,
                                                                     "hidden_faces_removed": removed},

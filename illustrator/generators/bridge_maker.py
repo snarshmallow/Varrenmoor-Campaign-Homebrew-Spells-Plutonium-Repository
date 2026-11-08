@@ -999,7 +999,10 @@ def mesh_stats(ent):
 # ------------------------------------------------------------------ CLI
 def _pack(a):
     import worldpack as wp
-    return wp.load_pack(a.pack or os.path.join(WORLD, a.place, "export"))
+    path = a.pack or os.path.join(WORLD, a.place, "export")
+    if not os.path.exists(os.path.join(path, "manifest.json")):
+        sys.exit(f"bridge_maker: {a.place} has no exported world pack ({path}). Export the 3D pack first (worldpack.py export --place {a.place}, or the Export tab), then detect.")
+    return wp.load_pack(path)
 
 
 def _overrides(pairs):

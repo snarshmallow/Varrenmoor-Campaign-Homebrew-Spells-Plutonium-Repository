@@ -686,7 +686,12 @@
   async function switchPlace(place) {
     if (state) saveNow();
     d = VB.dirs(root, place); state = loadState(place);
-    var sel = $("place"); sel.value = place;
+    var sel = $("place");
+    ["place", "fPlace"].forEach(function (id) {          // a place created after startup (Places tab) is not in the selects yet: add it, else value stays ""
+      var el = $(id); if (!el || !place) return;
+      if (!Array.prototype.some.call(el.options, function (o) { return o.value === place; }) && (id === "place" || el.options.length)) { var o = document.createElement("option"); o.value = place; o.textContent = place; el.appendChild(o); }
+    });
+    sel.value = place; if ($("fPlace") && $("fPlace").options.length) $("fPlace").value = place;
     loadFiles(); fillPresetList(); fillSelects(); paintInputs(); renderPhases(); refreshAll(); showTab(state.ui.tab || "scale"); refreshPatches(); showCrossings();
   }
 
