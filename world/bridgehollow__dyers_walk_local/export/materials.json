@@ -312,6 +312,104 @@
    "foundry": {
     "pipelineId": "mat:bridgehollow__dyers_walk_local:iron"
    }
+  },
+  {
+   "id": "mat_furn_wood",
+   "name": "furn_wood",
+   "kind": "flat",
+   "texture": null,
+   "source": null,
+   "sha256": null,
+   "mean_color": "#7b5a3a",
+   "roughness": 0.85,
+   "metallic": 0.0,
+   "foundry": {
+    "pipelineId": "mat:bridgehollow__dyers_walk_local:furn_wood"
+   }
+  },
+  {
+   "id": "mat_fabric",
+   "name": "fabric",
+   "kind": "flat",
+   "texture": null,
+   "source": null,
+   "sha256": null,
+   "mean_color": "#8a3b3b",
+   "roughness": 0.95,
+   "metallic": 0.0,
+   "foundry": {
+    "pipelineId": "mat:bridgehollow__dyers_walk_local:fabric"
+   }
+  },
+  {
+   "id": "mat_straw",
+   "name": "straw",
+   "kind": "flat",
+   "texture": null,
+   "source": null,
+   "sha256": null,
+   "mean_color": "#c9b36a",
+   "roughness": 1.0,
+   "metallic": 0.0,
+   "foundry": {
+    "pipelineId": "mat:bridgehollow__dyers_walk_local:straw"
+   }
+  },
+  {
+   "id": "mat_hearth_stone",
+   "name": "hearth_stone",
+   "kind": "flat",
+   "texture": null,
+   "source": null,
+   "sha256": null,
+   "mean_color": "#6e6a64",
+   "roughness": 0.95,
+   "metallic": 0.0,
+   "foundry": {
+    "pipelineId": "mat:bridgehollow__dyers_walk_local:hearth_stone"
+   }
+  },
+  {
+   "id": "mat_ember",
+   "name": "ember",
+   "kind": "flat",
+   "texture": null,
+   "source": null,
+   "sha256": null,
+   "mean_color": "#e0701c",
+   "roughness": 0.7,
+   "metallic": 0.0,
+   "foundry": {
+    "pipelineId": "mat:bridgehollow__dyers_walk_local:ember"
+   }
+  },
+  {
+   "id": "mat_joist",
+   "name": "joist",
+   "kind": "flat",
+   "texture": null,
+   "source": null,
+   "sha256": null,
+   "mean_color": "#5b4129",
+   "roughness": 0.9,
+   "metallic": 0.0,
+   "foundry": {
+    "pipelineId": "mat:bridgehollow__dyers_walk_local:joist"
+   }
+  },
+  {
+   "id": "mat_ceiling",
+   "name": "ceiling",
+   "kind": "flat",
+   "texture": null,
+   "source": null,
+   "sha256": null,
+   "mean_color": "#bfae8e",
+   "roughness": 0.95,
+   "metallic": 0.0,
+   "foundry": {
+    "pipelineId": "mat:bridgehollow__dyers_walk_local:ceiling"
+   }
   }
  ],
  "note": "texture paths are relative to the pack; 'source' is the repo path they were copied from"

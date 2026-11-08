@@ -31,8 +31,87 @@
   "ai_layer": null
  },
  "floors": 2,
- "rooms": [],
- "doors": [],
+ "rooms": [
+  {
+   "id": "bld_house_090_r0_1",
+   "name": "Hall",
+   "floor": 0,
+   "polygon": [
+    [
+     244.444,
+     230.85
+    ],
+    [
+     239.951,
+     224.943
+    ],
+    [
+     230.347,
+     232.058
+    ],
+    [
+     234.757,
+     238.049
+    ]
+   ],
+   "area_ft2": 89.234,
+   "use": "hall",
+   "doors": [
+    "bld_house_090_door1"
+   ],
+   "entry": true,
+   "stair": true
+  },
+  {
+   "id": "bld_house_090_r1_1",
+   "name": "Loft bedroom",
+   "floor": 1,
+   "polygon": [
+    [
+     244.444,
+     230.85
+    ],
+    [
+     239.951,
+     224.943
+    ],
+    [
+     230.347,
+     232.058
+    ],
+    [
+     234.757,
+     238.049
+    ]
+   ],
+   "area_ft2": 89.234,
+   "use": "none",
+   "doors": [],
+   "entry": false,
+   "stair": true
+  }
+ ],
+ "doors": [
+  {
+   "id": "bld_house_090_door1",
+   "kind": "exterior",
+   "floor": 0,
+   "point": [
+    240.05,
+    235.05
+   ],
+   "width_ft": 3.5,
+   "height_ft": 7.0,
+   "rooms": [
+    "bld_house_090_r0_1",
+    null
+   ],
+   "facing": [
+    0.596,
+    0.803
+   ]
+  }
+ ],
  "elevation_ft": 649.6,
  "site_slope": 0.053,
  "site_relief_ft": 0.5,
@@ -42,5 +121,123 @@
   "edge": false,
   "inside_frac": 1.0,
   "in_region_frac": 0.0
+ },
+ "layout": {
+  "version": 1,
+  "generated": true,
+  "canon": false,
+  "seed": 109666051282042,
+  "kind": "house",
+  "floors": 2,
+  "storey_ft": 10.0,
+  "slab_ft": 0.6,
+  "exterior_wall_ft": 0.75,
+  "partition_ft": 0.4,
+  "entry_room": "bld_house_090_r0_1",
+  "walls": [],
+  "stairs": [
+   {
+    "id": "bld_house_090_stair0",
+    "from_floor": 0,
+    "to_floor": 1,
+    "polygon": [
+     [
+      237.894,
+      226.761
+     ],
+     [
+      239.683,
+      229.169
+     ],
+     [
+      232.459,
+      234.537
+     ],
+     [
+      230.67,
+      232.129
+     ]
+    ],
+    "hole": [
+     [
+      239.683,
+      229.169
+     ],
+     [
+      237.894,
+      226.761
+     ],
+     [
+      237.753,
+      226.572
+     ],
+     [
+      230.521,
+      231.929
+     ],
+     [
+      230.67,
+      232.129
+     ],
+     [
+      232.459,
+      234.537
+     ]
+    ],
+    "start": [
+     231.565,
+     233.333
+    ],
+    "end": [
+     238.788,
+     227.965
+    ],
+    "run_ft": 9.0,
+    "width_ft": 3.0,
+    "risers": 16,
+    "rise_ft": 10.0,
+    "room_lower": "bld_house_090_r0_1",
+    "room_upper": "bld_house_090_r1_1",
+    "type": "straight"
+   }
+  ],
+  "windows": [],
+  "fixtures": [
+   {
+    "id": "bld_house_090_fx0_1_1",
+    "type": "hearth",
+    "floor": 0,
+    "room": "bld_house_090_r0_1",
+    "point": [
+     241.558,
+     228.625
+    ],
+    "size_ft": [
+     4.5,
+     1.8,
+     3.2
+    ],
+    "angle_deg": 52.745,
+    "material": "mat_hearth_stone"
+   }
+  ],
+  "lights": [
+   {
+    "id": "bld_house_090_light_hearth0_1",
+    "type": "hearth",
+    "floor": 0,
+    "room": "bld_house_090_r0_1",
+    "point": [
+     241.558,
+     228.625
+    ],
+    "z_ft": 2.0,
+    "color": "#ff9a3c",
+    "bright_ft": 8,
+    "dim_ft": 18,
+    "intensity": 0.8,
+    "animation": "torch"
+   }
+  ]
  }
 }

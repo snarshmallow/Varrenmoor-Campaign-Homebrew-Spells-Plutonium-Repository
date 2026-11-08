@@ -840,10 +840,47 @@ def cmd_push_models(br, a):
     return result
 
 
+def build_light_docs(doc, c, only_types=None):
+    """placements.json "lights" (interior hints from worldpack_interiors) -> AmbientLight Tile-style items for upsert_many.
+    dim/bright are in ft (the scenes use a 5 ft grid with distance in ft); elevation relative to the pack z origin."""
+    ppf, place, z0 = c["ppf"], doc["place"], doc["frame"]["z_origin_ft"]
+    out = []
+    for lt in doc.get("lights", []):
+        if only_types and lt["type"] not in only_types:
+            continue
+        px, py = c["sceneX"] + (lt["point"][0] - c["x0"]) * ppf, c["sceneY"] + (lt["point"][1] - c["y0"]) * ppf
+        fire = lt.get("animation") == "torch"
+        l3d = {"enableParticle": True, "ParticleType": "torch", "ParticleEmitterSizeMultiplier": 0.05} if fire else {}
+        out.append({"id": f"light:{place}:{lt['id']}", "data": {
+            "x": round(px), "y": round(py), "elevation": round(lt.get("z_abs_ft", z0 + lt.get("z_ft", 5.0)) - z0, 2), "rotation": 0, "walls": False, "vision": False,
+            "config": {"dim": lt.get("dim_ft", 10), "bright": lt.get("bright_ft", 4), "color": lt.get("color", "#ffffff"), "alpha": min(0.9, max(0.1, lt.get("intensity", 0.5))),
+                       "luminosity": 0.5, "animation": {"type": "torch" if fire else None, "speed": 3, "intensity": 3}},
+            "flags": {"levels-3d-preview": l3d, FLAG: {"lightId": lt["id"], "building": lt.get("building"), "type": lt["type"]}}}})
+    return out
+
+
+def cmd_push_lights(br, a):
+    pp = a.placements or os.path.join(REPO, "world", a.place, "export", "placements.json")
+    with open(pp, encoding="utf-8") as f:
+        doc = json.load(f)
+    if not a.scene_uuid:
+        raise PushError("give --scene-uuid")
+    sc = br.call("get", uuid=a.scene_uuid)
+    calib = (sc.get("flags", {}).get(FLAG, {}) or {}).get("calib") or {}
+    c = {"ppf": float(a.px_per_ft or calib.get("ppf") or doc["frame"]["px_per_ft"]), "x0": calib.get("x0", 0.0), "y0": calib.get("y0", 0.0),
+         "sceneX": calib.get("sceneX", 0), "sceneY": calib.get("sceneY", 0)}
+    items = build_light_docs(doc, c, set(a.layers.split(",")) if a.layers else None)      # --layers = light types (hearth,window)
+    LOG(f"{len(items)} lights")
+    if a.dry_run:
+        return {"ok": True, "lights": len(items), "sample": items[:1]}
+    r = br.call("upsert_many", documentName="AmbientLight", parentUuid=a.scene_uuid, items=items, prefix="light:", prune=True)
+    return {"ok": True, "scene_uuid": a.scene_uuid, "light_ops": r}
+
+
 # ------------------------------------------------------------------ cli
 def parser():
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
-    ap.add_argument("cmd", choices=["status", "places", "list", "export-info", "push-scene", "push-token", "push-actor", "push-item", "push-models", "delete-scene", "link-region", "bake-texture"])
+    ap.add_argument("cmd", choices=["status", "places", "list", "export-info", "push-scene", "push-token", "push-actor", "push-item", "push-models", "delete-scene", "link-region", "bake-texture", "push-lights"])
     ap.add_argument("--place", default="bridgehollow")
     ap.add_argument("--view", default="town")
     ap.add_argument("--preset")
@@ -905,7 +942,7 @@ def parser():
 
 CMDS = {"status": cmd_status, "places": cmd_places, "list": cmd_list, "export-info": cmd_export_info, "push-scene": cmd_push_scene,
         "push-token": cmd_push_token, "push-actor": cmd_push_actor, "push-item": cmd_push_item, "push-models": cmd_push_models, "delete-scene": cmd_delete_scene,
-        "link-region": cmd_link_region, "bake-texture": cmd_bake_texture}
+        "link-region": cmd_link_region, "bake-texture": cmd_bake_texture, "push-lights": cmd_push_lights}
 
 
 def main(argv=None, bridge=None):

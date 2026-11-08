@@ -1,0 +1,20 @@
+{
+ "place": "bridgehollow",
+ "format": "equirect 2:1",
+ "width": 2048,
+ "convention": "image centre = east, u clockwise from above; flag levels-3d-preview.exr",
+ "skyboxes": {
+  "clear_day": {
+   "file": "clear_day.webp",
+   "bytes": 69074,
+   "viewer": [
+    883.0,
+    891.0
+   ],
+   "eye_ft": 6.0,
+   "horizon_max_deg": 21.92766674266501,
+   "horizon_mean_deg": 10.469487926031238,
+   "yaw_deg": 0.0
+  }
+ }
+}

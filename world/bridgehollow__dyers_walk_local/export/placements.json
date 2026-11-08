@@ -4,8 +4,8 @@
  "place": "bridgehollow__dyers_walk_local",
  "pack": {
   "dir": ".",
-  "generated": "2026-11-07T21:18:22+00:00",
-  "git_commit": "48a17e12cd95917f20e6f1e5abc3fb5fe928e11b"
+  "generated": "2026-11-08T02:20:32+00:00",
+  "git_commit": "52c5d19c885eba64916038808a94527c1c5f6a5b"
  },
  "frame": {
   "px_per_ft": 20.0,
@@ -76,9 +76,74 @@
     "elevation_ft": 27.8,
     "rotation": 0
    },
-   "tris": 264,
-   "bytes": 19072,
-   "sha256": "2866073648e8f480dd401f43b89e732d7869e2e90fd188c4f3c79e3e5ebf25cd",
+   "tris": 578,
+   "bytes": 51716,
+   "sha256": "9d20369714f6a7065329eceae7fc8b5b90ebb266de566e6fccaf34e24a4dd43b",
+   "lights": [
+    {
+     "id": "bld_house_041_light_hearth0_1",
+     "type": "hearth",
+     "floor": 0,
+     "room": "bld_house_041_r0_1",
+     "point": [
+      79.325,
+      25.407
+     ],
+     "z_ft": 2.0,
+     "color": "#ff9a3c",
+     "bright_ft": 8,
+     "dim_ft": 18,
+     "intensity": 0.8,
+     "animation": "torch",
+     "z_abs_ft": 662.0,
+     "foundry_px": [
+      1586.5,
+      508.14
+     ]
+    },
+    {
+     "id": "bld_house_041_win0_2_light",
+     "type": "window",
+     "floor": 0,
+     "room": "bld_house_041_r0_1",
+     "point": [
+      82.8,
+      19.407
+     ],
+     "z_ft": 5.25,
+     "color": "#dfeaff",
+     "bright_ft": 3,
+     "dim_ft": 10,
+     "intensity": 0.3,
+     "animation": "none",
+     "z_abs_ft": 665.25,
+     "foundry_px": [
+      1656.0,
+      388.14
+     ]
+    },
+    {
+     "id": "bld_house_041_win0_1_light",
+     "type": "window",
+     "floor": 0,
+     "room": "bld_house_041_r0_2",
+     "point": [
+      75.1,
+      22.493
+     ],
+     "z_ft": 5.25,
+     "color": "#dfeaff",
+     "bright_ft": 3,
+     "dim_ft": 10,
+     "intensity": 0.3,
+     "animation": "none",
+     "z_abs_ft": 665.25,
+     "foundry_px": [
+      1502.0,
+      449.86
+     ]
+    }
+   ],
    "members": [
     {
      "id": "bld_house_041",
@@ -147,9 +212,95 @@
     "elevation_ft": 27.4,
     "rotation": 0
    },
-   "tris": 584,
-   "bytes": 35720,
-   "sha256": "728ed052ccd3355db9bc8328a3e0ad172c7a76c0104e21b181c96280347a0237",
+   "tris": 1180,
+   "bytes": 102768,
+   "sha256": "fe88d6ef4debb6b7a3466a78dcf8633eb047d8eb28589c092a24c24717855c68",
+   "lights": [
+    {
+     "id": "bld_house_044_win0_1_light",
+     "type": "window",
+     "floor": 0,
+     "room": "bld_house_044_r0_1",
+     "point": [
+      64.511,
+      31.152
+     ],
+     "z_ft": 5.25,
+     "color": "#dfeaff",
+     "bright_ft": 3,
+     "dim_ft": 10,
+     "intensity": 0.3,
+     "animation": "none",
+     "z_abs_ft": 665.05,
+     "foundry_px": [
+      1290.22,
+      623.04
+     ]
+    },
+    {
+     "id": "bld_house_044_win0_2_light",
+     "type": "window",
+     "floor": 0,
+     "room": "bld_house_044_r0_2",
+     "point": [
+      67.77,
+      39.462
+     ],
+     "z_ft": 5.25,
+     "color": "#dfeaff",
+     "bright_ft": 3,
+     "dim_ft": 10,
+     "intensity": 0.3,
+     "animation": "none",
+     "z_abs_ft": 665.05,
+     "foundry_px": [
+      1355.4,
+      789.24
+     ]
+    },
+    {
+     "id": "bld_house_044_win1_1_light",
+     "type": "window",
+     "floor": 1,
+     "room": "bld_house_044_r1_1",
+     "point": [
+      64.511,
+      31.152
+     ],
+     "z_ft": 15.25,
+     "color": "#dfeaff",
+     "bright_ft": 3,
+     "dim_ft": 10,
+     "intensity": 0.3,
+     "animation": "none",
+     "z_abs_ft": 675.05,
+     "foundry_px": [
+      1290.22,
+      623.04
+     ]
+    },
+    {
+     "id": "bld_house_044_win1_2_light",
+     "type": "window",
+     "floor": 1,
+     "room": "bld_house_044_r1_2",
+     "point": [
+      67.77,
+      39.462
+     ],
+     "z_ft": 15.25,
+     "color": "#dfeaff",
+     "bright_ft": 3,
+     "dim_ft": 10,
+     "intensity": 0.3,
+     "animation": "none",
+     "z_abs_ft": 675.05,
+     "foundry_px": [
+      1355.4,
+      789.24
+     ]
+    }
+   ],
    "members": [
     {
      "id": "bld_house_044",
@@ -218,9 +369,74 @@
     "elevation_ft": 25.2,
     "rotation": 0
    },
-   "tris": 264,
-   "bytes": 19068,
-   "sha256": "34314a44d864f9f0e23417f82e7063c16cf3d381bcd7bb1c89c3d925804cdf3b",
+   "tris": 602,
+   "bytes": 53344,
+   "sha256": "23ce37ffac41b271e46dbd7a1ac5fa9defe48c5496ed408177985a600ab1e2a2",
+   "lights": [
+    {
+     "id": "bld_house_052_light_hearth0_1",
+     "type": "hearth",
+     "floor": 0,
+     "room": "bld_house_052_r0_1",
+     "point": [
+      92.748,
+      75.541
+     ],
+     "z_ft": 2.0,
+     "color": "#ff9a3c",
+     "bright_ft": 8,
+     "dim_ft": 18,
+     "intensity": 0.8,
+     "animation": "torch",
+     "z_abs_ft": 659.1,
+     "foundry_px": [
+      1854.96,
+      1510.82
+     ]
+    },
+    {
+     "id": "bld_house_052_win0_1_light",
+     "type": "window",
+     "floor": 0,
+     "room": "bld_house_052_r0_1",
+     "point": [
+      96.151,
+      77.976
+     ],
+     "z_ft": 5.25,
+     "color": "#dfeaff",
+     "bright_ft": 3,
+     "dim_ft": 10,
+     "intensity": 0.3,
+     "animation": "none",
+     "z_abs_ft": 662.35,
+     "foundry_px": [
+      1923.02,
+      1559.52
+     ]
+    },
+    {
+     "id": "bld_house_052_win0_2_light",
+     "type": "window",
+     "floor": 0,
+     "room": "bld_house_052_r0_2",
+     "point": [
+      100.325,
+      84.892
+     ],
+     "z_ft": 5.25,
+     "color": "#dfeaff",
+     "bright_ft": 3,
+     "dim_ft": 10,
+     "intensity": 0.3,
+     "animation": "none",
+     "z_abs_ft": 662.35,
+     "foundry_px": [
+      2006.5,
+      1697.84
+     ]
+    }
+   ],
    "members": [
     {
      "id": "bld_house_052",
@@ -289,9 +505,95 @@
     "elevation_ft": 25.1,
     "rotation": 0
    },
-   "tris": 748,
-   "bytes": 44248,
-   "sha256": "15071ae40ff71adad465fc71839e4eb430ac5bb56f1509e610ac079be6d2f0b3",
+   "tris": 1500,
+   "bytes": 130092,
+   "sha256": "934ef55e38172860ab5dbc52048093b0720201ec0a6c979de51dd0b8f03fd496",
+   "lights": [
+    {
+     "id": "bld_house_053_win0_1_light",
+     "type": "window",
+     "floor": 0,
+     "room": "bld_house_053_r0_1",
+     "point": [
+      124.651,
+      92.679
+     ],
+     "z_ft": 5.25,
+     "color": "#dfeaff",
+     "bright_ft": 3,
+     "dim_ft": 10,
+     "intensity": 0.3,
+     "animation": "none",
+     "z_abs_ft": 662.45,
+     "foundry_px": [
+      2493.02,
+      1853.58
+     ]
+    },
+    {
+     "id": "bld_house_053_win0_2_light",
+     "type": "window",
+     "floor": 0,
+     "room": "bld_house_053_r0_2",
+     "point": [
+      120.381,
+      83.441
+     ],
+     "z_ft": 5.25,
+     "color": "#dfeaff",
+     "bright_ft": 3,
+     "dim_ft": 10,
+     "intensity": 0.3,
+     "animation": "none",
+     "z_abs_ft": 662.45,
+     "foundry_px": [
+      2407.62,
+      1668.82
+     ]
+    },
+    {
+     "id": "bld_house_053_win1_1_light",
+     "type": "window",
+     "floor": 1,
+     "room": "bld_house_053_r1_1",
+     "point": [
+      124.651,
+      92.679
+     ],
+     "z_ft": 15.25,
+     "color": "#dfeaff",
+     "bright_ft": 3,
+     "dim_ft": 10,
+     "intensity": 0.3,
+     "animation": "none",
+     "z_abs_ft": 672.45,
+     "foundry_px": [
+      2493.02,
+      1853.58
+     ]
+    },
+    {
+     "id": "bld_house_053_win1_2_light",
+     "type": "window",
+     "floor": 1,
+     "room": "bld_house_053_r1_2",
+     "point": [
+      120.381,
+      83.441
+     ],
+     "z_ft": 15.25,
+     "color": "#dfeaff",
+     "bright_ft": 3,
+     "dim_ft": 10,
+     "intensity": 0.3,
+     "animation": "none",
+     "z_abs_ft": 672.45,
+     "foundry_px": [
+      2407.62,
+      1668.82
+     ]
+    }
+   ],
    "members": [
     {
      "id": "bld_house_053",
@@ -360,9 +662,53 @@
     "elevation_ft": 24.3,
     "rotation": 0
    },
-   "tris": 522,
-   "bytes": 32492,
-   "sha256": "8376b2ce807d1ea985cd6e149da29725db8021eef051c8a3b0707a41fd35e809",
+   "tris": 1110,
+   "bytes": 90152,
+   "sha256": "5ba74168422a52167e4d595d5e3a921c5f62bace00e63bd3a735e225c38a3ed8",
+   "lights": [
+    {
+     "id": "bld_house_054_win0_1_light",
+     "type": "window",
+     "floor": 0,
+     "room": "bld_house_054_r0_1",
+     "point": [
+      52.963,
+      92.057
+     ],
+     "z_ft": 5.25,
+     "color": "#dfeaff",
+     "bright_ft": 3,
+     "dim_ft": 10,
+     "intensity": 0.3,
+     "animation": "none",
+     "z_abs_ft": 662.35,
+     "foundry_px": [
+      1059.26,
+      1841.14
+     ]
+    },
+    {
+     "id": "bld_house_054_win0_2_light",
+     "type": "window",
+     "floor": 0,
+     "room": "bld_house_054_r0_3",
+     "point": [
+      52.042,
+      104.955
+     ],
+     "z_ft": 5.25,
+     "color": "#dfeaff",
+     "bright_ft": 3,
+     "dim_ft": 10,
+     "intensity": 0.3,
+     "animation": "none",
+     "z_abs_ft": 662.35,
+     "foundry_px": [
+      1040.84,
+      2099.1
+     ]
+    }
+   ],
    "members": [
     {
      "id": "bld_house_054",
@@ -431,9 +777,32 @@
     "elevation_ft": 24.4,
     "rotation": 0
    },
-   "tris": 256,
-   "bytes": 18656,
-   "sha256": "6938d8827816443dbde12b53de7aedd488aeb94063aa56d51a9958f6c8c035b7",
+   "tris": 468,
+   "bytes": 42476,
+   "sha256": "280af71080be2a0ceabf33561b7e91eed9cb16c64446e5892a4271075fa0c9a6",
+   "lights": [
+    {
+     "id": "bld_house_056_light_hearth0_1",
+     "type": "hearth",
+     "floor": 0,
+     "room": "bld_house_056_r0_1",
+     "point": [
+      67.935,
+      100.52
+     ],
+     "z_ft": 2.0,
+     "color": "#ff9a3c",
+     "bright_ft": 8,
+     "dim_ft": 18,
+     "intensity": 0.8,
+     "animation": "torch",
+     "z_abs_ft": 658.1,
+     "foundry_px": [
+      1358.7,
+      2010.4
+     ]
+    }
+   ],
    "members": [
     {
      "id": "bld_house_056",
@@ -502,9 +871,53 @@
     "elevation_ft": 24.3,
     "rotation": 0
    },
-   "tris": 584,
-   "bytes": 35720,
-   "sha256": "f2d72f8ea325fb0d7b84cb5db366603cc4e22d3a6834af9317b29cde50b52d0e",
+   "tris": 974,
+   "bytes": 91836,
+   "sha256": "85e6b3b74343a758ca3d13cb0941183cc23e62aded425a220a5915f5d5ff2916",
+   "lights": [
+    {
+     "id": "bld_house_057_win0_1_light",
+     "type": "window",
+     "floor": 0,
+     "room": "bld_house_057_r0_1",
+     "point": [
+      107.932,
+      100.464
+     ],
+     "z_ft": 5.25,
+     "color": "#dfeaff",
+     "bright_ft": 3,
+     "dim_ft": 10,
+     "intensity": 0.3,
+     "animation": "none",
+     "z_abs_ft": 661.45,
+     "foundry_px": [
+      2158.64,
+      2009.28
+     ]
+    },
+    {
+     "id": "bld_house_057_win1_1_light",
+     "type": "window",
+     "floor": 1,
+     "room": "bld_house_057_r1_1",
+     "point": [
+      107.932,
+      100.464
+     ],
+     "z_ft": 15.25,
+     "color": "#dfeaff",
+     "bright_ft": 3,
+     "dim_ft": 10,
+     "intensity": 0.3,
+     "animation": "none",
+     "z_abs_ft": 671.45,
+     "foundry_px": [
+      2158.64,
+      2009.28
+     ]
+    }
+   ],
    "members": [
     {
      "id": "bld_house_057",
@@ -573,9 +986,53 @@
     "elevation_ft": 23.5,
     "rotation": 0
    },
-   "tris": 522,
-   "bytes": 32492,
-   "sha256": "7b026396e5f6b3bd6694d19e73fc86c8bbc0e317f9e2dcc33971760acb422cfb",
+   "tris": 1046,
+   "bytes": 86184,
+   "sha256": "52dcca379eb87ecd944517ae2a6ac8ca90915233ee836f77490190a209927000",
+   "lights": [
+    {
+     "id": "bld_house_062_win0_2_light",
+     "type": "window",
+     "floor": 0,
+     "room": "bld_house_062_r0_1",
+     "point": [
+      130.122,
+      108.929
+     ],
+     "z_ft": 5.25,
+     "color": "#dfeaff",
+     "bright_ft": 3,
+     "dim_ft": 10,
+     "intensity": 0.3,
+     "animation": "none",
+     "z_abs_ft": 661.05,
+     "foundry_px": [
+      2602.44,
+      2178.58
+     ]
+    },
+    {
+     "id": "bld_house_062_win0_1_light",
+     "type": "window",
+     "floor": 0,
+     "room": "bld_house_062_r0_3",
+     "point": [
+      119.459,
+      116.211
+     ],
+     "z_ft": 5.25,
+     "color": "#dfeaff",
+     "bright_ft": 3,
+     "dim_ft": 10,
+     "intensity": 0.3,
+     "animation": "none",
+     "z_abs_ft": 661.05,
+     "foundry_px": [
+      2389.18,
+      2324.22
+     ]
+    }
+   ],
    "members": [
     {
      "id": "bld_house_062",
@@ -644,9 +1101,9 @@
     "elevation_ft": 23.4,
     "rotation": 0
    },
-   "tris": 256,
-   "bytes": 18656,
-   "sha256": "82e2233017290a753d4ec36bec006544b8e96985a7cc32f17e234879561feaa7",
+   "tris": 476,
+   "bytes": 41436,
+   "sha256": "18dd0d978799ef7aaa56c824e3defbd2071f785b74367c1a115ba5e6c29ebf7f",
    "members": [
     {
      "id": "bld_house_063",
@@ -715,9 +1172,116 @@
     "elevation_ft": 22.4,
     "rotation": 0
    },
-   "tris": 522,
-   "bytes": 32508,
-   "sha256": "0542e4fbc47eb4413496123b823085f895704d371379868600c0269c13117fa5",
+   "tris": 1448,
+   "bytes": 110680,
+   "sha256": "16d4a011e7374f194ca60dea3d15c210cae3af19b9ea62a1dd3dfd070229d776",
+   "lights": [
+    {
+     "id": "bld_house_064_light_hearth0_3",
+     "type": "hearth",
+     "floor": 0,
+     "room": "bld_house_064_r0_3",
+     "point": [
+      134.575,
+      142.796
+     ],
+     "z_ft": 2.0,
+     "color": "#ff9a3c",
+     "bright_ft": 8,
+     "dim_ft": 18,
+     "intensity": 0.8,
+     "animation": "torch",
+     "z_abs_ft": 657.0,
+     "foundry_px": [
+      2691.5,
+      2855.92
+     ]
+    },
+    {
+     "id": "bld_house_064_win0_3_light",
+     "type": "window",
+     "floor": 0,
+     "room": "bld_house_064_r0_1",
+     "point": [
+      150.833,
+      128.39
+     ],
+     "z_ft": 5.25,
+     "color": "#dfeaff",
+     "bright_ft": 3,
+     "dim_ft": 10,
+     "intensity": 0.3,
+     "animation": "none",
+     "z_abs_ft": 660.25,
+     "foundry_px": [
+      3016.66,
+      2567.8
+     ]
+    },
+    {
+     "id": "bld_house_064_win0_2_light",
+     "type": "window",
+     "floor": 0,
+     "room": "bld_house_064_r0_2",
+     "point": [
+      141.441,
+      123.503
+     ],
+     "z_ft": 5.25,
+     "color": "#dfeaff",
+     "bright_ft": 3,
+     "dim_ft": 10,
+     "intensity": 0.3,
+     "animation": "none",
+     "z_abs_ft": 660.25,
+     "foundry_px": [
+      2828.82,
+      2470.06
+     ]
+    },
+    {
+     "id": "bld_house_064_win0_5_light",
+     "type": "window",
+     "floor": 0,
+     "room": "bld_house_064_r0_3",
+     "point": [
+      139.829,
+      140.998
+     ],
+     "z_ft": 5.25,
+     "color": "#dfeaff",
+     "bright_ft": 3,
+     "dim_ft": 10,
+     "intensity": 0.3,
+     "animation": "none",
+     "z_abs_ft": 660.25,
+     "foundry_px": [
+      2796.58,
+      2819.96
+     ]
+    },
+    {
+     "id": "bld_house_064_win0_1_light",
+     "type": "window",
+     "floor": 0,
+     "room": "bld_house_064_r0_4",
+     "point": [
+      132.187,
+      129.717
+     ],
+     "z_ft": 5.25,
+     "color": "#dfeaff",
+     "bright_ft": 3,
+     "dim_ft": 10,
+     "intensity": 0.3,
+     "animation": "none",
+     "z_abs_ft": 660.25,
+     "foundry_px": [
+      2643.74,
+      2594.34
+     ]
+    }
+   ],
    "members": [
     {
      "id": "bld_house_064",
@@ -786,9 +1350,95 @@
     "elevation_ft": 23.2,
     "rotation": 0
    },
-   "tris": 436,
-   "bytes": 28020,
-   "sha256": "07bc882d5557884b0f8c582a402b28a4fb06a8a4e2b3ad6d9577f86b5012cac6",
+   "tris": 1030,
+   "bytes": 84292,
+   "sha256": "8596bc142494768b074588f725e3f9a7822cdf4ea742169670111c0d97756aa8",
+   "lights": [
+    {
+     "id": "bld_house_065_light_hearth0_2",
+     "type": "hearth",
+     "floor": 0,
+     "room": "bld_house_065_r0_2",
+     "point": [
+      44.886,
+      136.848
+     ],
+     "z_ft": 2.0,
+     "color": "#ff9a3c",
+     "bright_ft": 8,
+     "dim_ft": 18,
+     "intensity": 0.8,
+     "animation": "torch",
+     "z_abs_ft": 657.7,
+     "foundry_px": [
+      897.72,
+      2736.96
+     ]
+    },
+    {
+     "id": "bld_house_065_light_hearth0_3",
+     "type": "hearth",
+     "floor": 0,
+     "room": "bld_house_065_r0_3",
+     "point": [
+      53.583,
+      126.839
+     ],
+     "z_ft": 2.0,
+     "color": "#ff9a3c",
+     "bright_ft": 8,
+     "dim_ft": 18,
+     "intensity": 0.8,
+     "animation": "torch",
+     "z_abs_ft": 657.7,
+     "foundry_px": [
+      1071.66,
+      2536.78
+     ]
+    },
+    {
+     "id": "bld_house_065_win0_1_light",
+     "type": "window",
+     "floor": 0,
+     "room": "bld_house_065_r0_1",
+     "point": [
+      52.11,
+      146.488
+     ],
+     "z_ft": 5.25,
+     "color": "#dfeaff",
+     "bright_ft": 3,
+     "dim_ft": 10,
+     "intensity": 0.3,
+     "animation": "none",
+     "z_abs_ft": 660.95,
+     "foundry_px": [
+      1042.2,
+      2929.76
+     ]
+    },
+    {
+     "id": "bld_house_065_win0_3_light",
+     "type": "window",
+     "floor": 0,
+     "room": "bld_house_065_r0_3",
+     "point": [
+      43.896,
+      130.262
+     ],
+     "z_ft": 5.25,
+     "color": "#dfeaff",
+     "bright_ft": 3,
+     "dim_ft": 10,
+     "intensity": 0.3,
+     "animation": "none",
+     "z_abs_ft": 660.95,
+     "foundry_px": [
+      877.92,
+      2605.24
+     ]
+    }
+   ],
    "members": [
     {
      "id": "bld_house_065",
@@ -857,9 +1507,32 @@
     "elevation_ft": 22.8,
     "rotation": 0
    },
-   "tris": 256,
-   "bytes": 18656,
-   "sha256": "844e937ff9de03a9d6ab5aaebdd955a84bfcdbbd031e2f34c99aa7e2713aaac1",
+   "tris": 526,
+   "bytes": 44816,
+   "sha256": "352f88382bace6d7cba3e92ddd3bd946f1205ae1490dda0faa726368113a83c5",
+   "lights": [
+    {
+     "id": "bld_house_066_light_hearth0_1",
+     "type": "hearth",
+     "floor": 0,
+     "room": "bld_house_066_r0_1",
+     "point": [
+      176.804,
+      143.256
+     ],
+     "z_ft": 2.0,
+     "color": "#ff9a3c",
+     "bright_ft": 8,
+     "dim_ft": 18,
+     "intensity": 0.8,
+     "animation": "torch",
+     "z_abs_ft": 656.7,
+     "foundry_px": [
+      3536.08,
+      2865.12
+     ]
+    }
+   ],
    "members": [
     {
      "id": "bld_house_066",
@@ -928,9 +1601,53 @@
     "elevation_ft": 21.5,
     "rotation": 0
    },
-   "tris": 584,
-   "bytes": 35716,
-   "sha256": "23577ddb88121dae55c1918e41fd576f05e7697b2666499cf1517754fa17295f",
+   "tris": 1076,
+   "bytes": 96260,
+   "sha256": "65e93d52b3aad61ffdc4071ce95cc5435b16807779ff4da6634a52728af029ef",
+   "lights": [
+    {
+     "id": "bld_house_069_win0_1_light",
+     "type": "window",
+     "floor": 0,
+     "room": "bld_house_069_r0_2",
+     "point": [
+      159.187,
+      154.3
+     ],
+     "z_ft": 5.25,
+     "color": "#dfeaff",
+     "bright_ft": 3,
+     "dim_ft": 10,
+     "intensity": 0.3,
+     "animation": "none",
+     "z_abs_ft": 658.95,
+     "foundry_px": [
+      3183.74,
+      3086.0
+     ]
+    },
+    {
+     "id": "bld_house_069_win1_1_light",
+     "type": "window",
+     "floor": 1,
+     "room": "bld_house_069_r1_2",
+     "point": [
+      159.187,
+      154.3
+     ],
+     "z_ft": 15.25,
+     "color": "#dfeaff",
+     "bright_ft": 3,
+     "dim_ft": 10,
+     "intensity": 0.3,
+     "animation": "none",
+     "z_abs_ft": 668.95,
+     "foundry_px": [
+      3183.74,
+      3086.0
+     ]
+    }
+   ],
    "members": [
     {
      "id": "bld_house_069",
@@ -999,9 +1716,95 @@
     "elevation_ft": 21.2,
     "rotation": 0
    },
-   "tris": 584,
-   "bytes": 35720,
-   "sha256": "3910e46370327f924fae1d26b9e75fa9681a30afee4a8de53e847e7c62cc94cf",
+   "tris": 1134,
+   "bytes": 100196,
+   "sha256": "5ec463d90a1cebdea553667e49a044d4d0a61a5e836608a9a9d55e0522e7011d",
+   "lights": [
+    {
+     "id": "bld_house_072_win0_1_light",
+     "type": "window",
+     "floor": 0,
+     "room": "bld_house_072_r0_1",
+     "point": [
+      105.188,
+      166.062
+     ],
+     "z_ft": 5.25,
+     "color": "#dfeaff",
+     "bright_ft": 3,
+     "dim_ft": 10,
+     "intensity": 0.3,
+     "animation": "none",
+     "z_abs_ft": 658.55,
+     "foundry_px": [
+      2103.76,
+      3321.24
+     ]
+    },
+    {
+     "id": "bld_house_072_win0_2_light",
+     "type": "window",
+     "floor": 0,
+     "room": "bld_house_072_r0_2",
+     "point": [
+      98.595,
+      159.875
+     ],
+     "z_ft": 5.25,
+     "color": "#dfeaff",
+     "bright_ft": 3,
+     "dim_ft": 10,
+     "intensity": 0.3,
+     "animation": "none",
+     "z_abs_ft": 658.55,
+     "foundry_px": [
+      1971.9,
+      3197.5
+     ]
+    },
+    {
+     "id": "bld_house_072_win1_1_light",
+     "type": "window",
+     "floor": 1,
+     "room": "bld_house_072_r1_1",
+     "point": [
+      105.188,
+      166.062
+     ],
+     "z_ft": 15.25,
+     "color": "#dfeaff",
+     "bright_ft": 3,
+     "dim_ft": 10,
+     "intensity": 0.3,
+     "animation": "none",
+     "z_abs_ft": 668.55,
+     "foundry_px": [
+      2103.76,
+      3321.24
+     ]
+    },
+    {
+     "id": "bld_house_072_win1_2_light",
+     "type": "window",
+     "floor": 1,
+     "room": "bld_house_072_r1_2",
+     "point": [
+      98.595,
+      159.875
+     ],
+     "z_ft": 15.25,
+     "color": "#dfeaff",
+     "bright_ft": 3,
+     "dim_ft": 10,
+     "intensity": 0.3,
+     "animation": "none",
+     "z_abs_ft": 668.55,
+     "foundry_px": [
+      1971.9,
+      3197.5
+     ]
+    }
+   ],
    "members": [
     {
      "id": "bld_house_072",
@@ -1070,9 +1873,95 @@
     "elevation_ft": 20.4,
     "rotation": 0
    },
-   "tris": 436,
-   "bytes": 28012,
-   "sha256": "94bc9178fe4a9a57bc62a0910d393532cb66a9bdebb21f5ce12e5e633c15b0fa",
+   "tris": 1030,
+   "bytes": 84256,
+   "sha256": "64a71f62fca116f5ad69f8e683cc06ff15cdc8e97dae6bd97f348ca60a069544",
+   "lights": [
+    {
+     "id": "bld_house_078_light_hearth0_2",
+     "type": "hearth",
+     "floor": 0,
+     "room": "bld_house_078_r0_2",
+     "point": [
+      179.822,
+      169.254
+     ],
+     "z_ft": 2.0,
+     "color": "#ff9a3c",
+     "bright_ft": 8,
+     "dim_ft": 18,
+     "intensity": 0.8,
+     "animation": "torch",
+     "z_abs_ft": 654.8,
+     "foundry_px": [
+      3596.44,
+      3385.08
+     ]
+    },
+    {
+     "id": "bld_house_078_light_hearth0_3",
+     "type": "hearth",
+     "floor": 0,
+     "room": "bld_house_078_r0_3",
+     "point": [
+      176.486,
+      182.041
+     ],
+     "z_ft": 2.0,
+     "color": "#ff9a3c",
+     "bright_ft": 8,
+     "dim_ft": 18,
+     "intensity": 0.8,
+     "animation": "torch",
+     "z_abs_ft": 654.8,
+     "foundry_px": [
+      3529.72,
+      3640.82
+     ]
+    },
+    {
+     "id": "bld_house_078_win0_1_light",
+     "type": "window",
+     "floor": 0,
+     "room": "bld_house_078_r0_1",
+     "point": [
+      169.9,
+      166.674
+     ],
+     "z_ft": 5.25,
+     "color": "#dfeaff",
+     "bright_ft": 3,
+     "dim_ft": 10,
+     "intensity": 0.3,
+     "animation": "none",
+     "z_abs_ft": 658.05,
+     "foundry_px": [
+      3398.0,
+      3333.48
+     ]
+    },
+    {
+     "id": "bld_house_078_win0_3_light",
+     "type": "window",
+     "floor": 0,
+     "room": "bld_house_078_r0_3",
+     "point": [
+      184.374,
+      174.649
+     ],
+     "z_ft": 5.25,
+     "color": "#dfeaff",
+     "bright_ft": 3,
+     "dim_ft": 10,
+     "intensity": 0.3,
+     "animation": "none",
+     "z_abs_ft": 658.05,
+     "foundry_px": [
+      3687.48,
+      3492.98
+     ]
+    }
+   ],
    "members": [
     {
      "id": "bld_house_078",
@@ -1141,9 +2030,53 @@
     "elevation_ft": 20.0,
     "rotation": 0
    },
-   "tris": 436,
-   "bytes": 28020,
-   "sha256": "7340248c67263d7688af0ce4828e0afdec3b498b06923197c78914525bd1c806",
+   "tris": 766,
+   "bytes": 68800,
+   "sha256": "1c068493adcd12a480af9b368d9b6f23822742af032908296eb4b3774c058fbd",
+   "lights": [
+    {
+     "id": "bld_house_082_win0_2_light",
+     "type": "window",
+     "floor": 0,
+     "room": "bld_house_082_r0_1",
+     "point": [
+      194.989,
+      180.453
+     ],
+     "z_ft": 5.25,
+     "color": "#dfeaff",
+     "bright_ft": 3,
+     "dim_ft": 10,
+     "intensity": 0.3,
+     "animation": "none",
+     "z_abs_ft": 657.35,
+     "foundry_px": [
+      3899.78,
+      3609.06
+     ]
+    },
+    {
+     "id": "bld_house_082_win0_1_light",
+     "type": "window",
+     "floor": 0,
+     "room": "bld_house_082_r0_2",
+     "point": [
+      188.511,
+      186.803
+     ],
+     "z_ft": 5.25,
+     "color": "#dfeaff",
+     "bright_ft": 3,
+     "dim_ft": 10,
+     "intensity": 0.3,
+     "animation": "none",
+     "z_abs_ft": 657.35,
+     "foundry_px": [
+      3770.22,
+      3736.06
+     ]
+    }
+   ],
    "members": [
     {
      "id": "bld_house_082",
@@ -1212,9 +2145,116 @@
     "elevation_ft": 18.7,
     "rotation": 0
    },
-   "tris": 350,
-   "bytes": 23560,
-   "sha256": "5e2a9b599f08e2246c214c0d3012d10a235b874a2d5e32c3876f7dda8e171f33",
+   "tris": 1128,
+   "bytes": 85632,
+   "sha256": "64fb5550e8a4532e88c3ea4796712aebbe971593b4d83673a5ebe868ac951ec7",
+   "lights": [
+    {
+     "id": "bld_house_084_light_hearth0_2",
+     "type": "hearth",
+     "floor": 0,
+     "room": "bld_house_084_r0_2",
+     "point": [
+      107.718,
+      200.027
+     ],
+     "z_ft": 2.0,
+     "color": "#ff9a3c",
+     "bright_ft": 8,
+     "dim_ft": 18,
+     "intensity": 0.8,
+     "animation": "torch",
+     "z_abs_ft": 653.3,
+     "foundry_px": [
+      2154.36,
+      4000.54
+     ]
+    },
+    {
+     "id": "bld_house_084_light_hearth0_3",
+     "type": "hearth",
+     "floor": 0,
+     "room": "bld_house_084_r0_3",
+     "point": [
+      97.701,
+      203.762
+     ],
+     "z_ft": 2.0,
+     "color": "#ff9a3c",
+     "bright_ft": 8,
+     "dim_ft": 18,
+     "intensity": 0.8,
+     "animation": "torch",
+     "z_abs_ft": 653.3,
+     "foundry_px": [
+      1954.02,
+      4075.24
+     ]
+    },
+    {
+     "id": "bld_house_084_win0_3_light",
+     "type": "window",
+     "floor": 0,
+     "room": "bld_house_084_r0_1",
+     "point": [
+      98.784,
+      188.722
+     ],
+     "z_ft": 5.25,
+     "color": "#dfeaff",
+     "bright_ft": 3,
+     "dim_ft": 10,
+     "intensity": 0.3,
+     "animation": "none",
+     "z_abs_ft": 656.55,
+     "foundry_px": [
+      1975.68,
+      3774.44
+     ]
+    },
+    {
+     "id": "bld_house_084_win0_1_light",
+     "type": "window",
+     "floor": 0,
+     "room": "bld_house_084_r0_2",
+     "point": [
+      103.088,
+      202.544
+     ],
+     "z_ft": 5.25,
+     "color": "#dfeaff",
+     "bright_ft": 3,
+     "dim_ft": 10,
+     "intensity": 0.3,
+     "animation": "none",
+     "z_abs_ft": 656.55,
+     "foundry_px": [
+      2061.76,
+      4050.88
+     ]
+    },
+    {
+     "id": "bld_house_084_win0_2_light",
+     "type": "window",
+     "floor": 0,
+     "room": "bld_house_084_r0_3",
+     "point": [
+      93.456,
+      197.415
+     ],
+     "z_ft": 5.25,
+     "color": "#dfeaff",
+     "bright_ft": 3,
+     "dim_ft": 10,
+     "intensity": 0.3,
+     "animation": "none",
+     "z_abs_ft": 656.55,
+     "foundry_px": [
+      1869.12,
+      3948.3
+     ]
+    }
+   ],
    "members": [
     {
      "id": "bld_house_084",
@@ -1283,9 +2323,74 @@
     "elevation_ft": 18.3,
     "rotation": 0
    },
-   "tris": 436,
-   "bytes": 28020,
-   "sha256": "41820456169dbd0caa1ed1d778f56d856835f06b14e0c61bc72c85af46899f27",
+   "tris": 856,
+   "bytes": 74280,
+   "sha256": "5d43a4109098c6d0ba82f1bd5b6d817e7d6ec3b1e4aef3e2e2c4c2e45ef77c34",
+   "lights": [
+    {
+     "id": "bld_house_086_light_hearth0_1",
+     "type": "hearth",
+     "floor": 0,
+     "room": "bld_house_086_r0_1",
+     "point": [
+      148.051,
+      195.096
+     ],
+     "z_ft": 2.0,
+     "color": "#ff9a3c",
+     "bright_ft": 8,
+     "dim_ft": 18,
+     "intensity": 0.8,
+     "animation": "torch",
+     "z_abs_ft": 652.5,
+     "foundry_px": [
+      2961.02,
+      3901.92
+     ]
+    },
+    {
+     "id": "bld_house_086_win0_1_light",
+     "type": "window",
+     "floor": 0,
+     "room": "bld_house_086_r0_1",
+     "point": [
+      143.888,
+      196.49
+     ],
+     "z_ft": 5.25,
+     "color": "#dfeaff",
+     "bright_ft": 3,
+     "dim_ft": 10,
+     "intensity": 0.3,
+     "animation": "none",
+     "z_abs_ft": 655.75,
+     "foundry_px": [
+      2877.76,
+      3929.8
+     ]
+    },
+    {
+     "id": "bld_house_086_win0_2_light",
+     "type": "window",
+     "floor": 0,
+     "room": "bld_house_086_r0_2",
+     "point": [
+      154.412,
+      207.61
+     ],
+     "z_ft": 5.25,
+     "color": "#dfeaff",
+     "bright_ft": 3,
+     "dim_ft": 10,
+     "intensity": 0.3,
+     "animation": "none",
+     "z_abs_ft": 655.75,
+     "foundry_px": [
+      3088.24,
+      4152.2
+     ]
+    }
+   ],
    "members": [
     {
      "id": "bld_house_086",
@@ -1354,9 +2459,74 @@
     "elevation_ft": 18.6,
     "rotation": 0
    },
-   "tris": 436,
-   "bytes": 28016,
-   "sha256": "e3beb62da29156a50789017d21d1ecae5de3d97575b46b31dc5eaec255365154",
+   "tris": 1490,
+   "bytes": 108772,
+   "sha256": "416b0b94c37172954a076b1ec8ad70da715d7faca00e996d5343ac290345c6a0",
+   "lights": [
+    {
+     "id": "bld_house_087_light_hearth0_2",
+     "type": "hearth",
+     "floor": 0,
+     "room": "bld_house_087_r0_2",
+     "point": [
+      198.59,
+      208.44
+     ],
+     "z_ft": 2.0,
+     "color": "#ff9a3c",
+     "bright_ft": 8,
+     "dim_ft": 18,
+     "intensity": 0.8,
+     "animation": "torch",
+     "z_abs_ft": 653.0,
+     "foundry_px": [
+      3971.8,
+      4168.8
+     ]
+    },
+    {
+     "id": "bld_house_087_win0_1_light",
+     "type": "window",
+     "floor": 0,
+     "room": "bld_house_087_r0_1",
+     "point": [
+      203.658,
+      200.406
+     ],
+     "z_ft": 5.25,
+     "color": "#dfeaff",
+     "bright_ft": 3,
+     "dim_ft": 10,
+     "intensity": 0.3,
+     "animation": "none",
+     "z_abs_ft": 656.25,
+     "foundry_px": [
+      4073.16,
+      4008.12
+     ]
+    },
+    {
+     "id": "bld_house_087_win0_3_light",
+     "type": "window",
+     "floor": 0,
+     "room": "bld_house_087_r0_3",
+     "point": [
+      218.796,
+      208.13
+     ],
+     "z_ft": 5.25,
+     "color": "#dfeaff",
+     "bright_ft": 3,
+     "dim_ft": 10,
+     "intensity": 0.3,
+     "animation": "none",
+     "z_abs_ft": 656.25,
+     "foundry_px": [
+      4375.92,
+      4162.6
+     ]
+    }
+   ],
    "members": [
     {
      "id": "bld_house_087",
@@ -1425,9 +2595,53 @@
     "elevation_ft": 17.6,
     "rotation": 0
    },
-   "tris": 350,
-   "bytes": 23548,
-   "sha256": "f29e89520b078221a24eaeee7fed07564ca20616b95318b5a364c89ee760411a",
+   "tris": 646,
+   "bytes": 58548,
+   "sha256": "efca154c6fe19789ae768a7a4d49d0adcbcf50bf5e634d0860926fd627e3caef",
+   "lights": [
+    {
+     "id": "bld_house_089_win0_2_light",
+     "type": "window",
+     "floor": 0,
+     "room": "bld_house_089_r0_1",
+     "point": [
+      158.751,
+      229.087
+     ],
+     "z_ft": 5.25,
+     "color": "#dfeaff",
+     "bright_ft": 3,
+     "dim_ft": 10,
+     "intensity": 0.3,
+     "animation": "none",
+     "z_abs_ft": 654.85,
+     "foundry_px": [
+      3175.02,
+      4581.74
+     ]
+    },
+    {
+     "id": "bld_house_089_win0_1_light",
+     "type": "window",
+     "floor": 0,
+     "room": "bld_house_089_r0_2",
+     "point": [
+      164.094,
+      222.896
+     ],
+     "z_ft": 5.25,
+     "color": "#dfeaff",
+     "bright_ft": 3,
+     "dim_ft": 10,
+     "intensity": 0.3,
+     "animation": "none",
+     "z_abs_ft": 654.85,
+     "foundry_px": [
+      3281.88,
+      4457.92
+     ]
+    }
+   ],
    "members": [
     {
      "id": "bld_house_089",
@@ -1496,9 +2710,32 @@
     "elevation_ft": 18.1,
     "rotation": 0
    },
-   "tris": 256,
-   "bytes": 18668,
-   "sha256": "0a2fb2a9750cd84647bd7ba9ace3326a77f5228a586dacebf79ce812613ba5a8",
+   "tris": 392,
+   "bytes": 37384,
+   "sha256": "f7e964e2f07019f4990d1ec2b7452df3c6c364826977b83628c7b4eb10e34c73",
+   "lights": [
+    {
+     "id": "bld_house_090_light_hearth0_1",
+     "type": "hearth",
+     "floor": 0,
+     "room": "bld_house_090_r0_1",
+     "point": [
+      241.558,
+      228.625
+     ],
+     "z_ft": 2.0,
+     "color": "#ff9a3c",
+     "bright_ft": 8,
+     "dim_ft": 18,
+     "intensity": 0.8,
+     "animation": "torch",
+     "z_abs_ft": 651.6,
+     "foundry_px": [
+      4831.16,
+      4572.5
+     ]
+    }
+   ],
    "members": [
     {
      "id": "bld_house_090",
@@ -1567,9 +2804,74 @@
     "elevation_ft": 16.9,
     "rotation": 0
    },
-   "tris": 694,
-   "bytes": 41440,
-   "sha256": "d9f8cf45daf0f66c54dd9d4b86ec6970e096af090b7f4be1170afcd231961205",
+   "tris": 1238,
+   "bytes": 103656,
+   "sha256": "04eed724de61d9ba2faa7061b9b2c1704933c46ac7583ecfab2ea2c18cc992de",
+   "lights": [
+    {
+     "id": "bld_house_094_win0_2_light",
+     "type": "window",
+     "floor": 0,
+     "room": "bld_house_094_r0_1",
+     "point": [
+      191.891,
+      247.747
+     ],
+     "z_ft": 5.25,
+     "color": "#dfeaff",
+     "bright_ft": 3,
+     "dim_ft": 10,
+     "intensity": 0.3,
+     "animation": "none",
+     "z_abs_ft": 654.55,
+     "foundry_px": [
+      3837.82,
+      4954.94
+     ]
+    },
+    {
+     "id": "bld_house_094_win0_5_light",
+     "type": "window",
+     "floor": 0,
+     "room": "bld_house_094_r0_2",
+     "point": [
+      180.876,
+      246.32
+     ],
+     "z_ft": 5.25,
+     "color": "#dfeaff",
+     "bright_ft": 3,
+     "dim_ft": 10,
+     "intensity": 0.3,
+     "animation": "none",
+     "z_abs_ft": 654.55,
+     "foundry_px": [
+      3617.52,
+      4926.4
+     ]
+    },
+    {
+     "id": "bld_house_094_win0_1_light",
+     "type": "window",
+     "floor": 0,
+     "room": "bld_house_094_r0_3",
+     "point": [
+      182.061,
+      235.221
+     ],
+     "z_ft": 5.25,
+     "color": "#dfeaff",
+     "bright_ft": 3,
+     "dim_ft": 10,
+     "intensity": 0.3,
+     "animation": "none",
+     "z_abs_ft": 654.55,
+     "foundry_px": [
+      3641.22,
+      4704.42
+     ]
+    }
+   ],
    "members": [
     {
      "id": "bld_house_094",
@@ -1638,9 +2940,74 @@
     "elevation_ft": 15.2,
     "rotation": 0
    },
-   "tris": 350,
-   "bytes": 23544,
-   "sha256": "a2bede2e447c117be7cb7b424c3bc64ee97edf3c74530b4d1c1c2bf893fa9c05",
+   "tris": 816,
+   "bytes": 68780,
+   "sha256": "1e97c5a1e8cfc842890d74292881af7cdb66e9400ccf8f2395be00b75fff0348",
+   "lights": [
+    {
+     "id": "bld_house_099_light_hearth0_2",
+     "type": "hearth",
+     "floor": 0,
+     "room": "bld_house_099_r0_2",
+     "point": [
+      260.232,
+      278.211
+     ],
+     "z_ft": 2.0,
+     "color": "#ff9a3c",
+     "bright_ft": 8,
+     "dim_ft": 18,
+     "intensity": 0.8,
+     "animation": "torch",
+     "z_abs_ft": 649.1,
+     "foundry_px": [
+      5204.64,
+      5564.22
+     ]
+    },
+    {
+     "id": "bld_house_099_win0_1_light",
+     "type": "window",
+     "floor": 0,
+     "room": "bld_house_099_r0_1",
+     "point": [
+      247.584,
+      280.848
+     ],
+     "z_ft": 5.25,
+     "color": "#dfeaff",
+     "bright_ft": 3,
+     "dim_ft": 10,
+     "intensity": 0.3,
+     "animation": "none",
+     "z_abs_ft": 652.35,
+     "foundry_px": [
+      4951.68,
+      5616.96
+     ]
+    },
+    {
+     "id": "bld_house_099_win0_2_light",
+     "type": "window",
+     "floor": 0,
+     "room": "bld_house_099_r0_2",
+     "point": [
+      251.428,
+      272.224
+     ],
+     "z_ft": 5.25,
+     "color": "#dfeaff",
+     "bright_ft": 3,
+     "dim_ft": 10,
+     "intensity": 0.3,
+     "animation": "none",
+     "z_abs_ft": 652.35,
+     "foundry_px": [
+      5028.56,
+      5444.48
+     ]
+    }
+   ],
    "members": [
     {
      "id": "bld_house_099",
@@ -1709,9 +3076,95 @@
     "elevation_ft": 14.1,
     "rotation": 0
    },
-   "tris": 436,
-   "bytes": 28000,
-   "sha256": "e0fa73f459c9f092118878b702710d9f0bf84c074a3fbeb05fb689adc44943e7",
+   "tris": 1306,
+   "bytes": 98080,
+   "sha256": "0dcc1cc35cfdfc94f0fae2765e6cd780dee1d5e81c699c40c5eb25ff56a9e6f4",
+   "lights": [
+    {
+     "id": "bld_house_107_light_hearth0_2",
+     "type": "hearth",
+     "floor": 0,
+     "room": "bld_house_107_r0_2",
+     "point": [
+      221.322,
+      314.125
+     ],
+     "z_ft": 2.0,
+     "color": "#ff9a3c",
+     "bright_ft": 8,
+     "dim_ft": 18,
+     "intensity": 0.8,
+     "animation": "torch",
+     "z_abs_ft": 648.6,
+     "foundry_px": [
+      4426.44,
+      6282.5
+     ]
+    },
+    {
+     "id": "bld_house_107_light_hearth0_3",
+     "type": "hearth",
+     "floor": 0,
+     "room": "bld_house_107_r0_3",
+     "point": [
+      221.691,
+      300.745
+     ],
+     "z_ft": 2.0,
+     "color": "#ff9a3c",
+     "bright_ft": 8,
+     "dim_ft": 18,
+     "intensity": 0.8,
+     "animation": "torch",
+     "z_abs_ft": 648.6,
+     "foundry_px": [
+      4433.82,
+      6014.9
+     ]
+    },
+    {
+     "id": "bld_house_107_win0_1_light",
+     "type": "window",
+     "floor": 0,
+     "room": "bld_house_107_r0_1",
+     "point": [
+      233.08,
+      315.05
+     ],
+     "z_ft": 5.25,
+     "color": "#dfeaff",
+     "bright_ft": 3,
+     "dim_ft": 10,
+     "intensity": 0.3,
+     "animation": "none",
+     "z_abs_ft": 651.85,
+     "foundry_px": [
+      4661.6,
+      6301.0
+     ]
+    },
+    {
+     "id": "bld_house_107_win0_3_light",
+     "type": "window",
+     "floor": 0,
+     "room": "bld_house_107_r0_3",
+     "point": [
+      216.169,
+      310.39
+     ],
+     "z_ft": 5.25,
+     "color": "#dfeaff",
+     "bright_ft": 3,
+     "dim_ft": 10,
+     "intensity": 0.3,
+     "animation": "none",
+     "z_abs_ft": 651.85,
+     "foundry_px": [
+      4323.38,
+      6207.8
+     ]
+    }
+   ],
    "members": [
     {
      "id": "bld_house_107",
@@ -1780,9 +3233,116 @@
     "elevation_ft": 11.1,
     "rotation": 0
    },
-   "tris": 436,
-   "bytes": 28020,
-   "sha256": "97ea1ae00ad5636dbac696d586f8d173cb452fdf55d34d46f7297e7c6459010f",
+   "tris": 1112,
+   "bytes": 88212,
+   "sha256": "483fab982b80f99ee8288611a50a21eecf9578f58bac4ebde0f9d9c669c890a1",
+   "lights": [
+    {
+     "id": "bld_house_109_light_hearth0_1",
+     "type": "hearth",
+     "floor": 0,
+     "room": "bld_house_109_r0_1",
+     "point": [
+      276.623,
+      318.737
+     ],
+     "z_ft": 2.0,
+     "color": "#ff9a3c",
+     "bright_ft": 8,
+     "dim_ft": 18,
+     "intensity": 0.8,
+     "animation": "torch",
+     "z_abs_ft": 645.5,
+     "foundry_px": [
+      5532.46,
+      6374.74
+     ]
+    },
+    {
+     "id": "bld_house_109_light_hearth0_2",
+     "type": "hearth",
+     "floor": 0,
+     "room": "bld_house_109_r0_2",
+     "point": [
+      282.181,
+      325.55
+     ],
+     "z_ft": 2.0,
+     "color": "#ff9a3c",
+     "bright_ft": 8,
+     "dim_ft": 18,
+     "intensity": 0.8,
+     "animation": "torch",
+     "z_abs_ft": 645.5,
+     "foundry_px": [
+      5643.62,
+      6511.0
+     ]
+    },
+    {
+     "id": "bld_house_109_win0_1_light",
+     "type": "window",
+     "floor": 0,
+     "room": "bld_house_109_r0_1",
+     "point": [
+      277.831,
+      322.069
+     ],
+     "z_ft": 5.25,
+     "color": "#dfeaff",
+     "bright_ft": 3,
+     "dim_ft": 10,
+     "intensity": 0.3,
+     "animation": "none",
+     "z_abs_ft": 648.75,
+     "foundry_px": [
+      5556.62,
+      6441.38
+     ]
+    },
+    {
+     "id": "bld_house_109_win0_4_light",
+     "type": "window",
+     "floor": 0,
+     "room": "bld_house_109_r0_2",
+     "point": [
+      286.135,
+      323.576
+     ],
+     "z_ft": 5.25,
+     "color": "#dfeaff",
+     "bright_ft": 3,
+     "dim_ft": 10,
+     "intensity": 0.3,
+     "animation": "none",
+     "z_abs_ft": 648.75,
+     "foundry_px": [
+      5722.7,
+      6471.52
+     ]
+    },
+    {
+     "id": "bld_house_109_win0_2_light",
+     "type": "window",
+     "floor": 0,
+     "room": "bld_house_109_r0_3",
+     "point": [
+      288.846,
+      311.034
+     ],
+     "z_ft": 5.25,
+     "color": "#dfeaff",
+     "bright_ft": 3,
+     "dim_ft": 10,
+     "intensity": 0.3,
+     "animation": "none",
+     "z_abs_ft": 648.75,
+     "foundry_px": [
+      5776.92,
+      6220.68
+     ]
+    }
+   ],
    "members": [
     {
      "id": "bld_house_109",
@@ -1835,25 +3395,25 @@
    "size_m": [
     16.4866,
     19.6444,
-    0.9893
+    0.981
    ],
    "size_ft": [
     54.09,
     64.45,
-    3.246
+    3.219
    ],
    "tile": {
     "x": 3515.1,
     "y": 5596.5,
     "width": 1081.8,
     "height": 1289.0,
-    "depth": 64.92,
+    "depth": 64.38,
     "elevation_ft": 16.497,
     "rotation": 0
    },
    "tris": 39,
-   "bytes": 2500,
-   "sha256": "7c056abd7db4846bb6ddf9598a11e6e00809a352f9d48300f4b592a0943dcc1f",
+   "bytes": 2796,
+   "sha256": "041b964ab0f3db1a3cd5b931d8c0aa32939cf1afaba88533a49a10456a865874",
    "members": [
     {
      "id": "sqr_3",
@@ -1928,8 +3488,8 @@
     "rotation": 0
    },
    "tris": 1264,
-   "bytes": 48012,
-   "sha256": "947e301ef29cc742380001b60bdd63dd6c37db6c3901615a0121609ec088d0ae",
+   "bytes": 48596,
+   "sha256": "b7c4ed770d2d1e182251c0a4765d1d9eb531461d7c6e4b2eb222156bf4893314",
    "members": [
     {
      "id": "str_008",
@@ -2085,7 +3645,7 @@
    },
    "tris": 36750,
    "bytes": 1039364,
-   "sha256": "2cf6e7a749b5ae457cbee25c71e9cad50718834ce6c20e143a57e27791b1d5b9",
+   "sha256": "503e33fb5df70e6e179bee36658b5bf1a14b740fa29dc8eefee156d95582009c",
    "members": [
     {
      "id": "terrain_bridgehollow__dyers_walk_local",

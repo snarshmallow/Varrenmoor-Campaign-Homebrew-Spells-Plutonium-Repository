@@ -31,8 +31,153 @@
   "ai_layer": null
  },
  "floors": 1,
- "rooms": [],
- "doors": [],
+ "rooms": [
+  {
+   "id": "bld_house_084_r0_1",
+   "name": "Bedroom",
+   "floor": 0,
+   "polygon": [
+    [
+     107.418,
+     192.407
+    ],
+    [
+     106.383,
+     186.165
+    ],
+    [
+     90.762,
+     188.815
+    ],
+    [
+     91.787,
+     194.998
+    ]
+   ],
+   "area_ft2": 99.772,
+   "use": "bedroom",
+   "doors": [
+    "bld_house_084_idoor_f0_2"
+   ],
+   "entry": false,
+   "stair": false
+  },
+  {
+   "id": "bld_house_084_r0_2",
+   "name": "Hall",
+   "floor": 0,
+   "polygon": [
+    [
+     99.238,
+     193.763
+    ],
+    [
+     100.963,
+     204.172
+    ],
+    [
+     109.138,
+     202.785
+    ],
+    [
+     107.418,
+     192.407
+    ]
+   ],
+   "area_ft2": 87.354,
+   "use": "hall",
+   "doors": [
+    "bld_house_084_door1",
+    "bld_house_084_idoor_f0_2",
+    "bld_house_084_idoor_f0_1"
+   ],
+   "entry": true,
+   "stair": false
+  },
+  {
+   "id": "bld_house_084_r0_3",
+   "name": "Kitchen",
+   "floor": 0,
+   "polygon": [
+    [
+     99.238,
+     193.763
+    ],
+    [
+     91.787,
+     194.998
+    ],
+    [
+     93.517,
+     205.435
+    ],
+    [
+     100.963,
+     204.172
+    ]
+   ],
+   "area_ft2": 79.797,
+   "use": "kitchen",
+   "doors": [
+    "bld_house_084_idoor_f0_1"
+   ],
+   "entry": false,
+   "stair": false
+  }
+ ],
+ "doors": [
+  {
+   "id": "bld_house_084_door1",
+   "kind": "exterior",
+   "floor": 0,
+   "point": [
+    108.5,
+    194.35
+   ],
+   "width_ft": 3.5,
+   "height_ft": 7.0,
+   "rooms": [
+    "bld_house_084_r0_2",
+    null
+   ],
+   "facing": [
+    0.987,
+    -0.164
+   ]
+  },
+  {
+   "id": "bld_house_084_idoor_f0_2",
+   "kind": "interior",
+   "floor": 0,
+   "point": [
+    104.304,
+    192.923
+   ],
+   "width_ft": 3.0,
+   "height_ft": 6.8,
+   "rooms": [
+    "bld_house_084_r0_1",
+    "bld_house_084_r0_2"
+   ],
+   "wall": "bld_house_084_w0_0"
+  },
+  {
+   "id": "bld_house_084_idoor_f0_1",
+   "kind": "interior",
+   "floor": 0,
+   "point": [
+    100.11,
+    199.026
+   ],
+   "width_ft": 3.0,
+   "height_ft": 6.8,
+   "rooms": [
+    "bld_house_084_r0_2",
+    "bld_house_084_r0_3"
+   ],
+   "wall": "bld_house_084_w0_2"
+  }
+ ],
  "elevation_ft": 651.3,
  "site_slope": 0.08,
  "site_relief_ft": 1.6,
@@ -42,5 +187,409 @@
   "edge": true,
   "inside_frac": 0.604,
   "in_region_frac": 0.0
+ },
+ "layout": {
+  "version": 1,
+  "generated": true,
+  "canon": false,
+  "seed": 200933956707967,
+  "kind": "house",
+  "floors": 1,
+  "storey_ft": 10.0,
+  "slab_ft": 0.6,
+  "exterior_wall_ft": 0.75,
+  "partition_ft": 0.4,
+  "entry_room": "bld_house_084_r0_2",
+  "walls": [
+   {
+    "id": "bld_house_084_w0_0",
+    "floor": 0,
+    "a": [
+     107.418,
+     192.407
+    ],
+    "b": [
+     99.238,
+     193.763
+    ],
+    "thickness_ft": 0.4,
+    "rooms": [
+     "bld_house_084_r0_1",
+     "bld_house_084_r0_2"
+    ],
+    "doors": [
+     "bld_house_084_idoor_f0_2"
+    ]
+   },
+   {
+    "id": "bld_house_084_w0_1",
+    "floor": 0,
+    "a": [
+     99.238,
+     193.763
+    ],
+    "b": [
+     91.787,
+     194.998
+    ],
+    "thickness_ft": 0.4,
+    "rooms": [
+     "bld_house_084_r0_1",
+     "bld_house_084_r0_3"
+    ],
+    "doors": []
+   },
+   {
+    "id": "bld_house_084_w0_2",
+    "floor": 0,
+    "a": [
+     99.238,
+     193.763
+    ],
+    "b": [
+     100.963,
+     204.172
+    ],
+    "thickness_ft": 0.4,
+    "rooms": [
+     "bld_house_084_r0_2",
+     "bld_house_084_r0_3"
+    ],
+    "doors": [
+     "bld_house_084_idoor_f0_1"
+    ]
+   }
+  ],
+  "stairs": [],
+  "windows": [
+   {
+    "id": "bld_house_084_win0_1",
+    "floor": 0,
+    "room": "bld_house_084_r0_2",
+    "point": [
+     103.422,
+     204.516
+    ],
+    "edge": 1,
+    "u_ft": 6.672,
+    "width_ft": 3.0,
+    "height_ft": 3.5,
+    "sill_ft": 3.5,
+    "angle_deg": 170.375,
+    "outward": [
+     0.167,
+     0.986
+    ]
+   },
+   {
+    "id": "bld_house_084_win0_2",
+    "floor": 0,
+    "room": "bld_house_084_r0_3",
+    "point": [
+     91.482,
+     197.743
+    ],
+    "edge": 2,
+    "u_ft": 8.673,
+    "width_ft": 3.0,
+    "height_ft": 3.5,
+    "sill_ft": 3.5,
+    "angle_deg": -99.411,
+    "outward": [
+     -0.987,
+     0.164
+    ]
+   },
+   {
+    "id": "bld_house_084_win0_3",
+    "floor": 0,
+    "room": "bld_house_084_r0_1",
+    "point": [
+     98.45,
+     186.75
+    ],
+    "edge": 3,
+    "u_ft": 8.672,
+    "width_ft": 3.0,
+    "height_ft": 3.5,
+    "sill_ft": 3.5,
+    "angle_deg": -9.625,
+    "outward": [
+     -0.167,
+     -0.986
+    ]
+   }
+  ],
+  "fixtures": [
+   {
+    "id": "bld_house_084_fx0_1_1",
+    "type": "bed",
+    "floor": 0,
+    "room": "bld_house_084_r0_1",
+    "point": [
+     94.477,
+     190.738
+    ],
+    "size_ft": [
+     3.8,
+     6.6,
+     2.0
+    ],
+    "angle_deg": 260.589,
+    "material": "mat_fabric"
+   },
+   {
+    "id": "bld_house_084_fx0_1_2",
+    "type": "chest",
+    "floor": 0,
+    "room": "bld_house_084_r0_1",
+    "point": [
+     103.156,
+     187.575
+    ],
+    "size_ft": [
+     3.0,
+     1.6,
+     1.8
+    ],
+    "angle_deg": 350.375,
+    "material": "mat_furn_wood"
+   },
+   {
+    "id": "bld_house_084_fx0_1_3",
+    "type": "shelf",
+    "floor": 0,
+    "room": "bld_house_084_r0_1",
+    "point": [
+     106.268,
+     188.526
+    ],
+    "size_ft": [
+     3.6,
+     0.9,
+     6.0
+    ],
+    "angle_deg": 80.589,
+    "material": "mat_furn_wood"
+   },
+   {
+    "id": "bld_house_084_fx0_2_1",
+    "type": "hearth",
+    "floor": 0,
+    "room": "bld_house_084_r0_2",
+    "point": [
+     107.718,
+     200.027
+    ],
+    "size_ft": [
+     4.5,
+     1.8,
+     3.2
+    ],
+    "angle_deg": 80.589,
+    "material": "mat_hearth_stone"
+   },
+   {
+    "id": "bld_house_084_fx0_2_2",
+    "type": "table",
+    "floor": 0,
+    "room": "bld_house_084_r0_2",
+    "point": [
+     104.631,
+     199.494
+    ],
+    "size_ft": [
+     4.5,
+     2.6,
+     2.5
+    ],
+    "angle_deg": 80.589,
+    "material": "mat_furn_wood"
+   },
+   {
+    "id": "bld_house_084_fx0_2_3",
+    "type": "barrel",
+    "floor": 0,
+    "room": "bld_house_084_r0_2",
+    "point": [
+     101.971,
+     203.037
+    ],
+    "size_ft": [
+     1.8,
+     1.8,
+     2.8
+    ],
+    "angle_deg": 170.375,
+    "material": "mat_furn_wood"
+   },
+   {
+    "id": "bld_house_084_fx0_3_1",
+    "type": "hearth",
+    "floor": 0,
+    "room": "bld_house_084_r0_3",
+    "point": [
+     97.701,
+     203.762
+    ],
+    "size_ft": [
+     4.5,
+     1.8,
+     3.2
+    ],
+    "angle_deg": 170.375,
+    "material": "mat_hearth_stone"
+   },
+   {
+    "id": "bld_house_084_fx0_3_2",
+    "type": "table",
+    "floor": 0,
+    "room": "bld_house_084_r0_3",
+    "point": [
+     95.555,
+     200.449
+    ],
+    "size_ft": [
+     4.5,
+     2.6,
+     2.5
+    ],
+    "angle_deg": 80.589,
+    "material": "mat_furn_wood"
+   },
+   {
+    "id": "bld_house_084_fx0_3_3",
+    "type": "shelf",
+    "floor": 0,
+    "room": "bld_house_084_r0_3",
+    "point": [
+     96.493,
+     194.724
+    ],
+    "size_ft": [
+     3.6,
+     0.9,
+     6.0
+    ],
+    "angle_deg": 350.589,
+    "material": "mat_furn_wood"
+   },
+   {
+    "id": "bld_house_084_fx0_3_4",
+    "type": "shelf",
+    "floor": 0,
+    "room": "bld_house_084_r0_3",
+    "point": [
+     93.584,
+     202.78
+    ],
+    "size_ft": [
+     3.6,
+     0.9,
+     6.0
+    ],
+    "angle_deg": 260.589,
+    "material": "mat_furn_wood"
+   },
+   {
+    "id": "bld_house_084_fx0_3_5",
+    "type": "barrel",
+    "floor": 0,
+    "room": "bld_house_084_r0_3",
+    "point": [
+     93.136,
+     197.328
+    ],
+    "size_ft": [
+     1.8,
+     1.8,
+     2.8
+    ],
+    "angle_deg": 260.589,
+    "material": "mat_furn_wood"
+   }
+  ],
+  "lights": [
+   {
+    "id": "bld_house_084_light_hearth0_2",
+    "type": "hearth",
+    "floor": 0,
+    "room": "bld_house_084_r0_2",
+    "point": [
+     107.718,
+     200.027
+    ],
+    "z_ft": 2.0,
+    "color": "#ff9a3c",
+    "bright_ft": 8,
+    "dim_ft": 18,
+    "intensity": 0.8,
+    "animation": "torch"
+   },
+   {
+    "id": "bld_house_084_light_hearth0_3",
+    "type": "hearth",
+    "floor": 0,
+    "room": "bld_house_084_r0_3",
+    "point": [
+     97.701,
+     203.762
+    ],
+    "z_ft": 2.0,
+    "color": "#ff9a3c",
+    "bright_ft": 8,
+    "dim_ft": 18,
+    "intensity": 0.8,
+    "animation": "torch"
+   },
+   {
+    "id": "bld_house_084_win0_3_light",
+    "type": "window",
+    "floor": 0,
+    "room": "bld_house_084_r0_1",
+    "point": [
+     98.784,
+     188.722
+    ],
+    "z_ft": 5.25,
+    "color": "#dfeaff",
+    "bright_ft": 3,
+    "dim_ft": 10,
+    "intensity": 0.3,
+    "animation": "none"
+   },
+   {
+    "id": "bld_house_084_win0_1_light",
+    "type": "window",
+    "floor": 0,
+    "room": "bld_house_084_r0_2",
+    "point": [
+     103.088,
+     202.544
+    ],
+    "z_ft": 5.25,
+    "color": "#dfeaff",
+    "bright_ft": 3,
+    "dim_ft": 10,
+    "intensity": 0.3,
+    "animation": "none"
+   },
+   {
+    "id": "bld_house_084_win0_2_light",
+    "type": "window",
+    "floor": 0,
+    "room": "bld_house_084_r0_3",
+    "point": [
+     93.456,
+     197.415
+    ],
+    "z_ft": 5.25,
+    "color": "#dfeaff",
+    "bright_ft": 3,
+    "dim_ft": 10,
+    "intensity": 0.3,
+    "animation": "none"
+   }
+  ]
  }
 }

@@ -195,6 +195,12 @@ def _png_size(p):
         return (0, 0)
 
 
+def _glb_json(p):
+    with open(p, "rb") as f:
+        raw = f.read()
+    return json.loads(raw[20:20 + struct.unpack_from("<I", raw, 12)[0]])
+
+
 def _stats(placements, root, tex_dir):
     files = placements["files"]
     tris = draw = nbytes = 0
@@ -203,11 +209,14 @@ def _stats(placements, root, tex_dir):
         p = os.path.join(root, e["file"])
         nbytes += os.path.getsize(p) if os.path.exists(p) else 0
         n = len(e.get("instances", [])) or 1
-        nodes, g = wm.read_glb(p)
-        for _, _, m in nodes:
-            tris += m.tri_count * n
-            draw += len(m.subs) * n
-            mats |= set(m.subs)
+        g = _glb_json(p)                       # JSON chunk only: also works for quantized / meshopt files that read_glb cannot decode
+        for nd in g["nodes"]:
+            if "mesh" not in nd:
+                continue
+            for pr in g["meshes"][nd["mesh"]]["primitives"]:
+                tris += g["accessors"][pr["indices"]]["count"] // 3 * n
+                draw += n
+                mats.add(g["materials"][pr["material"]]["name"])
     tm = 0
     for mid in mats:
         w, h = _png_size(os.path.join(tex_dir, mid + ".png"))
@@ -226,9 +235,9 @@ def next_version_dir(base, name):
 # texture URIs instead of embedding every image into every GLB; -vp 16 keeps terrain heights precise. All three modes need a glTF
 # extension (quantization and/or meshopt) that the 3D Canvas module may not load: see WORLD_PACK.md, Foundry/3D Canvas compatibility.
 GLTFPACK_FLAGS = {
-    "quant": ["-kn", "-km", "-tr", "-vp", "16"],                       # KHR_mesh_quantization only (+ KHR_texture_transform), no meshopt
-    "meshopt": ["-cc", "-kn", "-km", "-tr", "-vp", "16"],              # EXT_meshopt_compression required
-    "meshopt-fallback": ["-cf", "-kn", "-km", "-tr", "-vp", "16"],     # meshopt plus an uncompressed fallback buffer (larger files)
+    "quant": ["-kn", "-km", "-ke", "-tr", "-vp", "16", "-vt", "16"],                       # KHR_mesh_quantization only (+ KHR_texture_transform), no meshopt
+    "meshopt": ["-cc", "-kn", "-km", "-ke", "-tr", "-vp", "16", "-vt", "16"],              # EXT_meshopt_compression required
+    "meshopt-fallback": ["-cf", "-kn", "-km", "-ke", "-tr", "-vp", "16", "-vt", "16"],     # meshopt plus an uncompressed fallback buffer (larger files)
 }
 
 
@@ -339,8 +348,8 @@ def merge_export(pack_dir, preset="layer", out_dir=None, lods=(1, 2), compress="
         else:
             for e in entries:
                 p = os.path.join(out, e["file"])
-                subprocess.run([exe, "-i", p, "-o", p + ".tmp"] + GLTFPACK_FLAGS[compress], check=True, capture_output=True)
-                os.replace(p + ".tmp", p)
+                subprocess.run([exe, "-i", p, "-o", p + ".tmp.glb"] + GLTFPACK_FLAGS[compress], check=True, capture_output=True)    # gltfpack picks the format from the extension
+                os.replace(p + ".tmp.glb", p)
                 e["bytes"], e["sha256"], e["compression"] = os.path.getsize(p), _sha(p), compress
     doc = {**{k: v for k, v in src.items() if k != "files"}, "merge": {"preset": preset, "source": os.path.join(pack_dir, "placements.json"), "lods": list(lods), "compress": compress,
                                                                     "hidden_faces_removed": removed},
