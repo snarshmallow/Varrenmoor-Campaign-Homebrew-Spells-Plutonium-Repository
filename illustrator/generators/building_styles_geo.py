@@ -291,6 +291,109 @@ def _box(g, R, mat, l0, l1, w0, w1, z0, z1, tile=4.0, skip=()):
             g.uvface(mat, pts, tile)
 
 
+def tower_holes(R, S):
+    """Footprints (l0, l1, w0, w1) in the roof frame of towers that rise THROUGH the roof: the roof sheet is cut away there (clip_roof),
+    the ridge cap and barge board stop at the tower wall, so no roof surface passes through the tower volume."""
+    out = []
+    sp = S["special"]
+    if sp.get("tiers"):
+        h = tier_half(R, 0)
+        out.append((-h, h, -h, h))
+    t = sp.get("tower")
+    if t:
+        ts = t.get("size_ft", 9.0) * FT
+        lc = (1 if t.get("end", 1) >= 0 else -1) * (R.hl + ts * 0.15)
+        out.append((lc - ts / 2, lc + ts / 2, -ts / 2, ts / 2))
+    return out
+
+
+def tier_half(R, k):
+    return min(R.hw * 2, R.hl * 2) * 0.62 * (0.78 ** k) / 2
+
+
+def _clip(poly, ax, val, side):
+    """Sutherland-Hodgman against the half-plane (x[ax] <= val if side < 0 else >= val); vertices are arrays [l, w, z, u, v]."""
+    out = []
+    for i, a in enumerate(poly):
+        b = poly[(i + 1) % len(poly)]
+        da, db = (a[ax] - val) * side, (b[ax] - val) * side
+        if da >= 0:
+            out.append(a)
+        if (da > 0 and db < 0) or (da < 0 and db > 0):
+            out.append(a + (b - a) * (da / (da - db)))
+    return out
+
+
+def _area3(pa):
+    return sum(np.linalg.norm(np.cross(pa[i, :3] - pa[0, :3], pa[i + 1, :3] - pa[0, :3])) for i in range(1, len(pa) - 1))
+
+
+def clip_roof(mesh, R, S):
+    """Cut the single-skin roof (and gable triangles) away inside every tower footprint; pieces keep winding, UVs and material."""
+    holes = tower_holes(R, S)
+    if not holes:
+        return mesh
+    V = mesh.V
+    L = (V[:, 0] - R.cxm) * R.ex[0] + (V[:, 1] - R.cym) * R.ex[1]
+    W = (V[:, 0] - R.cxm) * R.ey[0] + (V[:, 1] - R.cym) * R.ey[1]
+    A = np.stack([L, W, V[:, 2], mesh.UV[:, 0], mesh.UV[:, 1]], 1)
+    newv, subs = [], {}
+    nv = len(V)
+    for mat, F in mesh.subs.items():
+        for f in F:
+            tri = [A[k] for k in f]
+            pieces = [tri]
+            for (l0, l1, w0, w1) in holes:
+                nxt = []
+                for pc in pieces:
+                    ls = [p[0] for p in pc]
+                    ws = [p[1] for p in pc]
+                    if max(ls) <= l0 + 1e-9 or min(ls) >= l1 - 1e-9 or max(ws) <= w0 + 1e-9 or min(ws) >= w1 - 1e-9:
+                        nxt.append(pc)
+                    elif max(ls) - min(ls) < 1e-6:                                 # vertical triangle in a plane l = const (gable end)
+                        nxt += [_clip(pc, 1, w0, -1), _clip(pc, 1, w1, 1)]
+                    elif max(ws) - min(ws) < 1e-6:
+                        nxt.append(pc)
+                    else:
+                        rest = _clip(pc, 0, l0, 1)
+                        mid = _clip(rest, 0, l1, -1)
+                        nxt += [_clip(pc, 0, l0, -1), _clip(rest, 0, l1, 1), _clip(mid, 1, w0, -1), _clip(mid, 1, w1, 1)]
+                pieces = [q for q in nxt if len(q) >= 3]
+            if len(pieces) == 1 and pieces[0] is tri:
+                subs.setdefault(mat, []).append(tuple(int(x) for x in f))
+                continue
+            for pc in pieces:
+                pa = np.array(pc)
+                if _area3(pa) < 1e-8:
+                    continue
+                ids = list(range(nv, nv + len(pa)))
+                nv += len(pa)
+                newv.append(pa)
+                for i in range(1, len(ids) - 1):
+                    subs.setdefault(mat, []).append((ids[0], ids[i], ids[i + 1]))
+    if not newv:
+        return mesh
+    add = np.concatenate(newv)
+    xyz = np.stack([R.cxm + R.ex[0] * add[:, 0] + R.ey[0] * add[:, 1], R.cym + R.ex[1] * add[:, 0] + R.ey[1] * add[:, 1], add[:, 2]], 1)
+    return wm.Mesh(np.concatenate([V, xyz]), np.concatenate([mesh.UV, add[:, 3:5]]), subs, mesh.smooth)
+
+
+def roof_collar(g, R, h, mat):
+    """Flashing band where a tower leaves the roof: an upstand that follows the roof surface (sunk 0.12 ft in, 0.5 ft proud), with a flat top ledge."""
+    pad, sink, up = 0.28 * FT, 0.12 * FT, 0.5 * FT
+    xs = [-h - pad, -h, 0.0, h, h + pad]
+    ring = [(-h - pad, w) for w in xs] + [(l, h + pad) for l in xs[1:]] + [(h + pad, w) for w in xs[::-1][1:]] + [(l, -h - pad) for l in xs[::-1][1:-1]]
+    cl = lambda v: max(-h, min(h, v))
+    n = len(ring)
+    for i in range(n):
+        (l0, w0), (l1, w1) = ring[i], ring[(i + 1) % n]
+        z0_, z1_ = R.roof_z(l0, w0), R.roof_z(l1, w1)
+        g.uvface(mat, [R.P(l0, w0, z0_ - sink), R.P(l1, w1, z1_ - sink), R.P(l1, w1, z1_ + up), R.P(l0, w0, z0_ + up)], 3.0)
+        i0, i1 = (cl(l0), cl(w0)), (cl(l1), cl(w1))
+        if i0 != i1:
+            g.uvface(mat, [R.P(l0, w0, z0_ + up), R.P(l1, w1, z1_ + up), R.P(i1[0], i1[1], z1_ + up), R.P(i0[0], i0[1], z0_ + up)], 3.0)
+
+
 def roof_extras(g, R, e, S, zt, zf, z0):
     Rf = S["roof"]
     mat = S["roof_mat"]
@@ -305,11 +408,17 @@ def roof_extras(g, R, e, S, zt, zf, z0):
             for l, wa, wb in ((R.Lh, -R.Wh, R.Wh), (-R.Lh, R.Wh, -R.Wh)):
                 pts = [R.P(l, wa, R.ze), R.P(l, wb, R.ze), R.P(l, wb, R.ze - th), R.P(l, wa, R.ze - th)]
                 g.uvface(mat, pts, 9.0)
-    if Rf["barge"] and not R.hip:       # barge boards under the rake of a gable roof
+    holes = tower_holes(R, S)
+    if Rf["barge"] and not R.hip:       # barge boards under the rake of a gable roof (they stop at a gable-end tower)
         bh = 0.4 * FT
         for sg in (1, -1):
+            a = 0.0
+            for (l0, l1, w0, w1) in holes:
+                if l0 - 0.05 <= sg * R.Lh <= l1 + 0.05:
+                    a = max(a, w1)
             for ws in (-1, 1):
-                pts = [R.P(sg * R.Lh, ws * R.Wh, R.ze), R.P(sg * R.Lh, 0, R.zr), R.P(sg * R.Lh, 0, R.zr - bh), R.P(sg * R.Lh, ws * R.Wh, R.ze - bh)]
+                za = R.zr - (R.zr - R.ze) * a / R.Wh
+                pts = [R.P(sg * R.Lh, ws * R.Wh, R.ze), R.P(sg * R.Lh, ws * a, za), R.P(sg * R.Lh, ws * a, za - bh), R.P(sg * R.Lh, ws * R.Wh, R.ze - bh)]
                 g.b.face(fm, pts, wm.world_uv(pts, 3.0, g.off, 0.0))
     cap = Rf.get("ridge_cap")
     if cap:
@@ -319,12 +428,27 @@ def roof_extras(g, R, e, S, zt, zf, z0):
         rl = (R.Lh if not R.hip else max(R.Lh - R.Wh, 0.5))
         z = R.zr
         sl = R.slope * hw_
-        for s in (-1, 1):
-            pts = [R.P(-rl, s * hw_, z - sl), R.P(rl, s * hw_, z - sl), R.P(rl, 0, z + hgt), R.P(-rl, 0, z + hgt)]
-            g.uvface(cm, pts, 3.0)
-        for l in (-rl, rl):
-            pts = [R.P(l, -hw_, z - sl), R.P(l, hw_, z - sl), R.P(l, 0, z + hgt)]
-            g.uvface(cm, pts, 3.0)
+        segs = [(-rl, rl)]
+        for (l0, l1, w0, w1) in holes:             # the ridge cap stops at a tower rising through the ridge
+            nxt = []
+            for a, b_ in segs:
+                if b_ <= l0 or a >= l1:
+                    nxt.append((a, b_))
+                    continue
+                if a < l0:
+                    nxt.append((a, l0))
+                if b_ > l1:
+                    nxt.append((l1, b_))
+            segs = nxt
+        for a, b_ in segs:
+            for s in (-1, 1):
+                pts = [R.P(a, s * hw_, z - sl), R.P(b_, s * hw_, z - sl), R.P(b_, 0, z + hgt), R.P(a, 0, z + hgt)]
+                g.uvface(cm, pts, 3.0)
+            for l in (a, b_):
+                if any(abs(l - h[0]) < 1e-9 or abs(l - h[1]) < 1e-9 for h in holes):
+                    continue                           # the end against a tower wall is hidden
+                pts = [R.P(l, -hw_, z - sl), R.P(l, hw_, z - sl), R.P(l, 0, z + hgt)]
+                g.uvface(cm, pts, 3.0)
 
 
 def chimney(g, R, e, S, zt, z0):
@@ -453,30 +577,50 @@ def tower(g, R, e, S, zt, z0):
 
 
 def tiers(g, R, e, S, zt, z0):
-    """Stave-church style stacked roofs: square lantern bases with steep pyramidal roofs rising from the ridge, a spire and dragon finials."""
+    """Stave-church tower: one continuous square shaft. Four corner posts stand on the floor and carry the open central bay up to the wall plate, the board-clad
+    tower walls start there and rise THROUGH the roof (the roof sheet is cut away inside the footprint, see clip_roof) with a flashing band at the junction.
+    Above the ridge it steps in tier by tier: each tier's walls end under a skirt roof that rises to the next, narrower tier; the last tier carries the spire."""
     sp = S["special"].get("tiers")
     if not sp:
         return
     n = int(sp.get("count", 2))
     wall = S["wall_mat"]
     roof = S["roof_mat"]
-    size = min(R.hw * 2, R.hl * 2) * 0.62
-    z = R.zr - 0.4 * FT
-    for k in range(n):
-        s = size * (0.78 ** k)
-        bh = sp.get("base_ft", 4.0) * FT * (0.9 ** k)
-        _box(g, R, wall, -s / 2, s / 2, -s / 2, s / 2, z, z + bh, 4.5, skip=("z0", "z1"))
-        ov = 0.9 * FT
-        ro = s / 2 + ov
-        ap = R.P(0, 0, z + bh + (ro * 1.5 if k < n - 1 else ro * 2.6))
-        zr0 = z + bh
-        cs = [R.P(-ro, -ro, zr0), R.P(ro, -ro, zr0), R.P(ro, ro, zr0), R.P(-ro, ro, zr0)]
-        for q in range(4):
-            g.uvface(roof, [cs[q], cs[(q + 1) % 4], ap], 9.0)
-        z = z + bh * 0.9
-    top = z + 0.0
     bm = S.get("beam_mat") or wall
-    _box(g, R, bm, -0.06 * FT, 0.06 * FT, -0.06 * FT, 0.06 * FT, top + size * 0.9, top + size * 0.9 + 3.0 * FT, 3.0)
+    ov = 0.9 * FT
+    pitch = 1.1
+    h0 = tier_half(R, 0)
+    # open central bay: four corner posts floor -> wall plate (the walls above begin exactly at the plate: no overlap)
+    pw = 0.7 * FT
+    for sl in (-1, 1):
+        for sw in (-1, 1):
+            la, lb = sorted((sl * h0, sl * (h0 - pw)))
+            wa, wb = sorted((sw * h0, sw * (h0 - pw)))
+            _box(g, R, wall, la, lb, wa, wb, g.zf, zt, 4.0, skip=("z0", "z1"))
+    roof_collar(g, R, h0, S.get("fascia_mat") or S["trim_mat"])
+    zb = zt                                                    # bottom of the walls of this tier
+    for k in range(n):
+        h = tier_half(R, k)
+        top = (R.zr if k == 0 else zb) + sp.get("base_ft", 4.0) * FT * (0.9 ** k)
+        _box(g, R, wall, -h, h, -h, h, zb, top, 4.5, skip=("z0", "z1"))
+        ro = h + ov
+        cs = [R.P(-ro, -ro, top), R.P(ro, -ro, top), R.P(ro, ro, top), R.P(-ro, ro, top)]
+        ic = [R.P(-h, -h, top), R.P(h, -h, top), R.P(h, h, top), R.P(-h, h, top)]
+        for q in range(4):                                     # soffit under the overhang (faces down)
+            g.uvface(wall, [cs[q], ic[q], ic[(q + 1) % 4], cs[(q + 1) % 4]], 5.0)
+        if k < n - 1:                                          # skirt roof up to the next tier's walls
+            h1 = tier_half(R, k + 1)
+            zj = top + (ro - h1) * pitch
+            inner = [R.P(-h1, -h1, zj), R.P(h1, -h1, zj), R.P(h1, h1, zj), R.P(-h1, h1, zj)]
+            for q in range(4):
+                g.uvface(roof, [cs[q], cs[(q + 1) % 4], inner[(q + 1) % 4], inner[q]], 9.0)
+            zb = zj
+        else:                                                  # spire
+            apex_z = top + ro * 2.6
+            ap = R.P(0, 0, apex_z)
+            for q in range(4):
+                g.uvface(roof, [cs[q], cs[(q + 1) % 4], ap], 9.0)
+            _box(g, R, bm, -0.06 * FT, 0.06 * FT, -0.06 * FT, 0.06 * FT, apex_z - 0.1 * FT, apex_z + 3.0 * FT, 3.0)
     # dragon-head finials on the gable apexes: two crossed boards and a pointed head
     for sg in (1, -1):
         for s in (-1, 1):

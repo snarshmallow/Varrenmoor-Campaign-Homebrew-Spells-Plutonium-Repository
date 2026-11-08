@@ -55,6 +55,15 @@ for bid in ids:
                 hi = Vector(map(max, hi, p))
     ctr = (lo + hi) / 2
     ext = max(hi.x - lo.x, hi.y - lo.y)
+    if VIEW == "section":            # cut the building in half along its long axis (keep +y) and show the inside through the cut
+        for m_ in bpy.data.materials:
+            m_.use_backface_culling = False
+        for o in [o for o in bpy.data.objects if o.type == "MESH"]:
+            bpy.context.view_layer.objects.active = o
+            bpy.ops.object.mode_set(mode="EDIT")
+            bpy.ops.mesh.select_all(action="SELECT")
+            bpy.ops.mesh.bisect(plane_co=(ctr.x, ctr.y, 0), plane_no=(0, 1, 0), clear_inner=True, use_fill=False)
+            bpy.ops.object.mode_set(mode="OBJECT")
     # ground
     mesh = bpy.data.meshes.new("g")
     r = ext * 4
@@ -73,12 +82,16 @@ for bid in ids:
         loc = Vector((ctr.x, ctr.y - size * 1.0, lo.z + (hi.z - lo.z) * 0.22))
     elif VIEW == "gable":            # from the -x end (the end opposite a west tower), slightly raised
         loc = Vector((ctr.x - size * 0.95, ctr.y - size * 0.25, lo.z + (hi.z - lo.z) * 0.3))
+    elif VIEW == "lowtower":         # low and close, looking up at the tower where it leaves the roof
+        loc = Vector((ctr.x + size * 0.45, ctr.y - size * 0.5, lo.z + (hi.z - lo.z) * 0.08))
+    elif VIEW == "section":
+        loc = Vector((ctr.x + size * 0.15, ctr.y - size * 1.0, lo.z + (hi.z - lo.z) * 0.45))
     elif VIEW == "threeq_close":
         loc = Vector((ctr.x + size * 0.55, ctr.y - size * 0.8, lo.z + (hi.z - lo.z) * 0.3))
     cam.location = loc
     cam.data.lens = 34
     cam.data.clip_end = 5000
-    tgt = Vector((ctr.x, ctr.y, lo.z + (hi.z - lo.z) * (0.3 if VIEW else 0.42)))
+    tgt = Vector((ctr.x, ctr.y, lo.z + (hi.z - lo.z) * (0.55 if VIEW in ('lowtower', 'section') else 0.3 if VIEW else 0.42)))
     cam.rotation_euler = (tgt - loc).to_track_quat("-Z", "Y").to_euler()
     sc.render.filepath = os.path.join(out, bid + (("_" + VIEW) if VIEW else "") + ".png")
     bpy.ops.render.render(write_still=True)

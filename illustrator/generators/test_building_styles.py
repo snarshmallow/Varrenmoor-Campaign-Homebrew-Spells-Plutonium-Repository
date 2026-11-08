@@ -178,6 +178,46 @@ class Geometry(unittest.TestCase):
         e, m, _ = build("parish_church")
         self.assertGreater(m.V[:, 2].max(), (e["base_elevation_ft"] - pack().frame.z_origin_ft + 10 + 22 + 24) * FT - 0.5)     # tower + spire
 
+    def test_tower_walls_run_through_the_roof(self):
+        """The stave tower is one shaft from the floor posts through the roof; no roof sheet passes through the tower volume (parish tower: same cut)."""
+        for pid in ("stave_church", "parish_church"):
+            pk = pack()
+            e, m, _ = build(pid)
+            S = e["_style"]
+            zf = (e["base_elevation_ft"] - pk.frame.z_origin_ft) * FT
+            zt = zf + e["wall_height_ft"] * FT
+            R = bsg.Roof(wm.Ctx(pk), e).zt(zt)
+            holes = bsg.tower_holes(R, S)
+            self.assertTrue(holes, pid)
+            for (l0, l1, w0, w1) in holes:
+                V = m.V
+                L = (V[:, 0] - R.cxm) * R.ex[0] + (V[:, 1] - R.cym) * R.ex[1]
+                W = (V[:, 0] - R.cxm) * R.ey[0] + (V[:, 1] - R.cym) * R.ey[1]
+                eps = 1e-3
+                rm = e["roof"]["surface"]["material"]
+                rf = m.subs[rm]
+                pts = [((l0 + l1) / 2 + fl * (l1 - l0) * 0.4, (w0 + w1) / 2 + fw * (w1 - w0) * 0.4) for fl in (-1, 0, 1) for fw in (-1, 0, 1)]
+                for f in rf:
+                    if V[f, 2].mean() > R.zr + 0.05 or V[f, 2].mean() < zt + 0.3:
+                        continue                                  # skirts, spire and the eave strip are not the main roof sheet
+                    a, b_, c_ = [np.array([L[i], W[i]]) for i in f]
+                    den = (b_[1] - c_[1]) * (a[0] - c_[0]) + (c_[0] - b_[0]) * (a[1] - c_[1])
+                    if abs(den) < 1e-12:
+                        continue
+                    for (pl, pw_) in pts:
+                        u = ((b_[1] - c_[1]) * (pl - c_[0]) + (c_[0] - b_[0]) * (pw_ - c_[1])) / den
+                        v = ((c_[1] - a[1]) * (pl - c_[0]) + (a[0] - c_[0]) * (pw_ - c_[1])) / den
+                        self.assertFalse(u > 1e-6 and v > 1e-6 and 1 - u - v > 1e-6, f"{pid}: roof sheet passes through the tower footprint")
+                # the walls reach the plate (stave: the posts reach the floor) and rise above the ridge
+                on = (np.abs(L - l0) < eps) | (np.abs(L - l1) < eps)
+                on &= (W > w0 - eps) & (W < w1 + eps)
+                zs = V[on, 2]
+                self.assertLessEqual(zs.min(), zt + 1e-6, pid)
+                self.assertGreater(zs.max(), R.zr + 2 * FT, pid)
+                if pid == "stave_church":
+                    self.assertLessEqual(zs.min(), zf + 1e-6)
+                    self.assertGreater(len(zs[(zs > zt + 0.1) & (zs < R.zr - 0.1)]), 0)       # wall vertices between plate and ridge: the shaft passes the roof plane
+
     def test_variation_between_buildings(self):
         _, m1, _ = build("tudor", "bld_alpha")
         _, m2, _ = build("tudor", "bld_beta")

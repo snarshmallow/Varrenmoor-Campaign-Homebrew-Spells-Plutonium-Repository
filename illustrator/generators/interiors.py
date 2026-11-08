@@ -573,6 +573,16 @@ def generate_layout(b, doors=None, kind=None):
     for d in door_out:
         pl = fr.loc(d["point"])
         door_keep.append((d["floor"], Point(pl).buffer(3.0)))
+    tower_keep = None                      # stave-church style: the tower's corner posts and open bay stand in the middle of the nave (see building_styles_geo.tiers)
+    try:
+        import building_styles as _bs
+        if b.get("style") and (_bs.load_presets().get(b["style"]) or {}).get("special", {}).get("tiers") and b.get("obb"):
+            o = b["obb"]
+            hh = min(o["length_ft"], o["width_ft"]) * 0.62 / 2 + 1.0
+            c = fr.loc(o["center"])
+            tower_keep = sbox(c[0] - hh, c[1] - hh, c[0] + hh, c[1] + hh)
+    except Exception:
+        tower_keep = None
     for s in range(floors):
         for i in range(nc):
             rid = room_ids[(s, i)]
@@ -581,6 +591,8 @@ def generate_layout(b, doors=None, kind=None):
             if R.exterior.is_ccw is False:
                 R = Polygon(list(R.exterior.coords)[::-1])
             keep = [g for f, g in door_keep if f == s]
+            if tower_keep is not None and s == 0:
+                keep.append(tower_keep)
             if stair:
                 keep.append(stair["hole"].buffer(0.4))
                 keep.append(stair["open_side"].buffer(0.0))

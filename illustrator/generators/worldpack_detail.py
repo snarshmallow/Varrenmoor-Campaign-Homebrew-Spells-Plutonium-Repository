@@ -239,6 +239,9 @@ def build_building_detailed(cx, e):
         b.tri("mat_interior_floor", *[cap[k] for k in tri])
     # roof and gables come from the single-skin builder (keep only what is above the wall top)
     base = wm.build_building(cx, e)
+    if S:                                                    # towers rise through the roof: cut the roof sheet away inside their footprint
+        import building_styles_geo as bsg
+        base = bsg.clip_roof(base, bsg.Roof(cx, e).zt(zt), S)
     keep = base.V[:, 2] >= zt - 1e-6
     subs = {}
     for k, F in base.subs.items():
