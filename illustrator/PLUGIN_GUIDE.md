@@ -198,6 +198,27 @@ Common mistakes:
 - **Regenerate river + terrain** rewrites the terrain. Re-run the Town afterwards, and Refresh child regions from their parent.
 - Adding a river without capturing a path first.
 
+**3D water in Foundry** (group at the bottom of the Water tab): what it does: makes the water in the 3D scene move. A river flows along its channel (faster where the bed is steeper), ponds and lakes ripple and drift with the wind, the ocean rolls in long swells with foam. Pick a **Preset** (River, Pond, Lake, Ocean), then tune it. The sliders and their value boxes are saved with the place.
+
+| Control | Meaning |
+|---|---|
+| Preset | Which preset the sliders show and edit. Each water body uses the preset of its own kind (river and stream = River, pond = Pond, lake = Lake, sea = Ocean) |
+| Use this preset for all water in this place | Overrides the kinds: every water body takes the shown preset |
+| Flow speed (0-4 ft/s) | How fast the ripples drift (river: along the channel, scaled by the slope; others: along the wind) |
+| Wave height (0-2) | How strongly the waves tilt the surface (sun glints, dimples) |
+| Wave scale (0.25-10) | Ripple size, 1 is about 4 ft crest to crest; lakes 3, ocean 8 |
+| Transparency (0-1) | 0 nearly opaque, 1 clear; always clearer at the banks |
+| Depth tint (0-1) | How much darker and bluer it gets away from the bank |
+| Foam (0-1) | White foam at the shore; on the ocean also on the wave crests |
+| Wind direction (deg) | Compass bearing the wind blows toward (0 north, 90 east); a river ignores it |
+| Slope speed-up (0-1) | How much steeper stretches of a river speed up the flow |
+| Shallow / Deep colour | The two water colours |
+| Foundry scene, Dry run | Where to push; Dry run (on by default) only lists what would change |
+
+Buttons: **Refresh scenes** (read-only), **Install on scene** (writes the water shader and these settings into every water tile of that scene; safe to repeat; also switches the scene's animation scripts on if they are off), **Push values** (changes the settings on the scene live, the water tile reloads once). A fresh **Push models** or **Push scene 3D** already puts the script and your saved values on the water tiles, and the export names the water material `VB_water_<preset>` and writes the flow data the shader needs, so re-export after changing a place's water, not after moving a slider.
+
+Common mistakes: forgetting to untick Dry run; expecting the 2D map to move (only the 3D scene does); changing sliders and not pressing **Push values** (the scene keeps the old values until then).
+
 ### 2.9 Town
 
 What it does: generates districts, streets, plazas, blocks, buildings and fields inside a lasso that follows buildable ground.
@@ -355,6 +376,7 @@ This is the busiest tab. Top to bottom:
    | Merge preset | by layer, by district, all, keep individual | by layer for the town view |
    | Layers to push | Blank = all | Use a list (for example `terrain,buildings,roads`) to push only some |
    | LOD | 0 full, 1, 2 | 0 |
+   | Roof mode | None: roofs merged into each building (default, cheapest, nothing can be hidden). Per building: every roof is its own tile so you can hide one roof (about one extra tile per building, same triangle count). Per scene: all roofs are one tile (one extra tile, fewer draw calls); hide or show every roof at once; buildings are exported open at the top | None for play, Per scene for a quick look inside, Per building to open single houses. Applies to Export world pack and Export split models, so re-run both after changing it |
    | Roads (3D) Smoothing | 0 follows raw ground, 1 fully smoothed | 0.5 |
    | Roads (3D) Max grade (deg) | Steepest allowed road slope; steeper ground gets a warning and the road is raised clear | 14 |
    | Skirt | Apron down to the ground under raised roads | On |
@@ -378,7 +400,6 @@ Illustrator panel  ->  relay (on the Foundry PC, port 3030)  <-  Foundry module 
 ```
 
 - The **relay** is a small program (Node.js) on the always-on Foundry PC. It is started with `foundry-bridge\start.bat` (or `bridgectl.mjs start`). Run `start.bat --local` once; the choice is remembered. Allow Node.js on Private networks if Windows Firewall asks.
-   | Roof mode | None: roofs merged into each building (default, cheapest, nothing can be hidden). Per building: every roof is its own tile so you can hide one roof (about one extra tile per building, same triangle count). Per scene: all roofs are one tile (one extra tile, fewer draw calls); hide or show every roof at once; buildings are exported open at the top | None for play, Per scene for a quick look inside, Per building to open single houses. Applies to Export world pack and Export split models, so re-run both after changing it |
 - The **module** (Varrenmoor Bridge, currently 0.5.1) runs inside a **GM browser tab** on Foundry. A GM client must be open: if no GM tab is open nothing can be pushed.
 - Open Foundry as the plain-http LAN address, `http://<foundry-pc>:30000`, **not** an https or Cloudflare address. Pairing is refused on https on purpose.
 - The **panel** (Foundry tab, top block) connects to the relay and lets you pair and revoke devices.

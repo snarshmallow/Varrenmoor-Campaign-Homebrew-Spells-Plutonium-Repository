@@ -1,0 +1,29 @@
+{
+ "version": 1,
+ "note": "3D water presets for the 3D Canvas shader (foundry-bridge/water/vb_water.js). Source of truth for generators/water_presets.py, the plugin panel (panel/lib/water.js) and the exported GLB extras. All lengths in feet.",
+ "params": {
+  "flow_speed":   {"label": "Flow speed",        "min": 0,    "max": 4,  "step": 0.05, "unit": "ft/s", "hint": "How fast the ripple pattern drifts (river: along the channel, slope-scaled; lake/pond/ocean: along the wind)"},
+  "wave_height":  {"label": "Wave height",       "min": 0,    "max": 2,  "step": 0.05, "unit": "",     "hint": "Strength of the light waves (how much they tilt the surface and the sun glints)"},
+  "wave_scale":   {"label": "Wave scale",        "min": 0.25, "max": 10, "step": 0.25, "unit": "x4 ft", "hint": "Ripple wavelength (1 = about 4 ft from crest to crest)"},
+  "transparency": {"label": "Transparency",      "min": 0,    "max": 1,  "step": 0.05, "unit": "",     "hint": "0 = nearly opaque, 1 = clear (the bed shows through, most at the banks)"},
+  "depth_tint":   {"label": "Depth tint",        "min": 0,    "max": 1,  "step": 0.05, "unit": "",     "hint": "How much darker and bluer the water is away from the bank"},
+  "foam":         {"label": "Foam",              "min": 0,    "max": 1,  "step": 0.05, "unit": "",     "hint": "White foam at the shore (and crests on the ocean)"},
+  "wind_dir":     {"label": "Wind direction",    "min": 0,    "max": 360,"step": 5,    "unit": "deg",  "hint": "Compass bearing the wind blows toward, 0 = north, 90 = east (lake, pond, ocean; a river flows along its channel)"}
+ },
+ "presets": {
+  "river": {"label": "River", "mode": "flow", "note": "Directional flow along the centreline, faster where the bed is steeper, foam at the banks",
+            "flow_speed": 1.6, "wave_height": 0.6, "wave_scale": 1.0, "transparency": 0.55, "depth_tint": 0.5, "foam": 0.35, "wind_dir": 0,
+            "slope_speed": 0.8, "shallow_color": "#5f9fb0", "deep_color": "#1f5670"},
+  "pond":  {"label": "Pond", "mode": "wind", "note": "Calm, small ripples, clear and still",
+            "flow_speed": 0.08, "wave_height": 0.2, "wave_scale": 0.6, "transparency": 0.7, "depth_tint": 0.55, "foam": 0.0, "wind_dir": 45,
+            "slope_speed": 0.0, "shallow_color": "#6aa89a", "deep_color": "#26566a"},
+  "lake":  {"label": "Lake", "mode": "wind", "note": "Broader gentle waves driven by the wind, a little shore foam",
+            "flow_speed": 0.3, "wave_height": 0.4, "wave_scale": 3.0, "transparency": 0.5, "depth_tint": 0.65, "foam": 0.12, "wind_dir": 225,
+            "slope_speed": 0.0, "shallow_color": "#5c9bb5", "deep_color": "#1a4a6e"},
+  "ocean": {"label": "Ocean", "mode": "wind", "note": "Long swells, whitecaps and shore foam, wind driven",
+            "flow_speed": 0.7, "wave_height": 1.0, "wave_scale": 8.0, "transparency": 0.35, "depth_tint": 0.8, "foam": 0.6, "wind_dir": 270,
+            "slope_speed": 0.0, "shallow_color": "#4f9bb0", "deep_color": "#0f3a63"}
+ },
+ "kind_map": {"river": "river", "stream": "river", "brook": "river", "spring": "pond", "pond": "pond", "pool": "pond", "lake": "lake", "mere": "lake", "sea": "ocean", "ocean": "ocean", "coast": "ocean"},
+ "default_preset": "lake"
+}
