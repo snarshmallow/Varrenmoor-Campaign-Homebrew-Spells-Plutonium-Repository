@@ -1,3 +1,29 @@
+# Redeploying module 0.4.0 (LAN pairing, no tokens to type)
+0.4.0 adds a new file and changes two. **Three files** go to Vega this time:
+
+| From (this repo) | To (on Vega) |
+|---|---|
+| `foundry-bridge/module/varrenmoor-bridge/module.json` | `<Foundry Data>\modules\varrenmoor-bridge\module.json` |
+| `foundry-bridge/module/varrenmoor-bridge/scripts/bridge.js` | `<Foundry Data>\modules\varrenmoor-bridge\scripts\bridge.js` |
+| `foundry-bridge/module/varrenmoor-bridge/scripts/pairing.js` (NEW) | `<Foundry Data>\modules\varrenmoor-bridge\scripts\pairing.js` |
+
+Keep `relay-url.json` if it exists. `module/varrenmoor-bridge.zip` (all three files) was rebuilt too, for Add-on Modules > Update; use the zip route only after the branch is reachable by Foundry, otherwise copy the files. Nothing is pushed to Vega from here.
+
+The relay side is already in this repo (`foundry-bridge/relay/pairing.js`, `server.js`, `daemon.mjs`, `bridgectl.mjs`, `relay-window.ps1`). The relay must be **restarted once** to load it (a relay started before this change has no pairing endpoints; the module keeps working with the manual token against it). In the Illustrator panel: Foundry tab > Restart (it asks first), or close the relay window and press Connect or launch.
+
+## Steps
+1. Copy the three files to Vega (above). Close all but one Foundry GM tab, then Ctrl+F5 in the remaining GM tab. Check the version: `.\bridge.ps1 version` shows `"module":"0.4.0"` (needs the manual token or a pairing to be connected already; if not, check Add-on Modules).
+2. Make sure the relay PC (Arcturus) runs the new relay: Illustrator panel > Foundry > Restart (or Connect or launch if none is running). The relay window should print `pairing on`.
+3. In the Foundry GM tab (open it as `http://VEGA:30000`, not an https address): Game Settings > Configure Settings > Module Settings > Varrenmoor Bridge. Set **Connect to relay** ON and **Relay address for pairing** to the relay PC's LAN address, e.g. `10.0.0.20:3030` (leave blank to let the button scan the /24). Press **Pair with relay**. A dialog shows a 6-digit code (if the button is missing, run `game.modules.get('varrenmoor-bridge').api.pair()` in the browser console, F12).
+4. On the relay PC the relay window and the Illustrator panel (Foundry tab > Pair devices) show "Approve this device?" with the same code. If the codes are identical, press Approve (panel: pick an expiry; relay window: press A). If they differ, press Deny.
+5. The module says "paired" and connects. From now on it connects with the device token automatically; Module token can stay empty. Revoke any time in the panel (Pair devices > Revoke).
+6. Fallback if pairing is not wanted or fails: leave it unpaired and enter Relay URL + Module token as before.
+7. Roll back: copy the 0.3.1 `module.json` and `bridge.js` back from git history and delete `scripts\pairing.js`; Ctrl+F5. (A paired relay file `run/paired-devices.json` is harmless.)
+
+Security notes (details in `foundry-bridge/README.md`, "Pairing"): pairing works only from private LAN addresses and never through the Cloudflare tunnel; nothing is issued without your Approve; tokens are stored hashed on the relay; traffic is plain HTTP/WS inside your LAN, so do not pair on an untrusted network.
+
+---
+
 # Redeploying module 0.3.1 (4002 reconnect-loop fix)
 0.3.1 changes only `scripts/bridge.js` (and the version in `module.json`): a client closed by the relay with code 4002 ("replaced by another GM tab") no longer reconnects, shows one warning, and "connected" notices are rate limited (1 per minute). The relay needs no change for this (a relay restart is only needed to pick up the new `/health` fields, optional).
 1. Copy `foundry-bridge/module/varrenmoor-bridge/module.json` and `scripts/bridge.js` to `<Foundry Data>\modules\varrenmoor-bridge\` and `...\scripts\` on Vega (same two files as below; keep `relay-url.json` if present). The zip `module/varrenmoor-bridge.zip` was rebuilt too, for Add-on Modules > Update.

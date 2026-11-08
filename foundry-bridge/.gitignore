@@ -5,3 +5,6 @@ run/
 *.log
 *.log.1
 *.pid.json
+paired-devices*.json
+*.tmp
+relay.stop

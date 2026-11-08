@@ -46,5 +46,5 @@ export function lanIp() {
 }
 
 export function paths(stateDir = path.join(root, 'run')) {
-  return { dir: stateDir, pid: path.join(stateDir, 'relay.pid.json'), log: path.join(stateDir, 'relay.log') };
+  return { dir: stateDir, pid: path.join(stateDir, 'relay.pid.json'), log: path.join(stateDir, 'relay.log'), stop: path.join(stateDir, 'relay.stop'), paired: path.join(stateDir, 'paired-devices.json') };
 }

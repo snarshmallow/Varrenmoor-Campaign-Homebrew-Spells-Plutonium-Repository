@@ -13,13 +13,18 @@ const runner = R.createRunner({ root: ROOT, jobsDir: tmp + "/jobs", fs, path, sp
   getPython: () => "python", getPlace: () => "x", getTextures: () => [], setState: (p, v) => VB.setPath(st, p, v), onStale: () => {} });
 const freePort = (p) => new Promise(res => { const s = net.createServer(); s.once("error", () => res(freePort(p + 1))); s.listen(p, "0.0.0.0", () => s.close(() => res(p))); });
 (async () => {
-  check("state defaults", st.bridge && st.bridge.node === "" && st.bridge.cim === false && st.bridge.last === null);
+  check("state defaults", st.bridge && st.bridge.node === "" && st.bridge.cim === false && st.bridge.last === null && st.bridge.hidden === false && st.bridge.terminal === "auto" && st.bridge.target === "");
   check("args: default", VB.bridgeCtlArgs(st, "status").join(" ") === "foundry-bridge/bridgectl.mjs status --json");
   st.bridge.env = "C:/t/e.env"; st.bridge.state = "C:/t/run"; st.bridge.cim = true; st.bridge.node = "C:/n/node.exe";
   check("args: env/state/node/cim only for start+restart", VB.bridgeCtlArgs(st, "start").join(" ") === "foundry-bridge/bridgectl.mjs start --json --env C:/t/e.env --state C:/t/run --node C:/n/node.exe --cim" && VB.bridgeCtlArgs(st, "info", ["--secrets"]).indexOf("--cim") < 0);
   check("launch plan: stopped -> start", VB.bridgeLaunchPlan({ running: false }).action === "start");
   const lp = VB.bridgeLaunchPlan({ running: true, managed: false, port: 3030, pid: 12 });
-  check("launch plan: running -> confirm restart", lp.action === "confirm-restart" && /3030/.test(lp.reason) && /start\.bat/.test(lp.reason), lp.reason);
+  check("launch plan: running -> ATTACH (no restart, no prompt)", lp.action === "attach" && /3030/.test(lp.reason) && /another way/.test(lp.reason), lp.reason);
+  check("restart plan asks first; stop plan asks first", VB.bridgeRestartPlan({ running: true, managed: false, port: 3030 }).ask === true && VB.bridgeStopPlan({ running: true, managed: true, port: 3030 }).ask === true && /NOT started from here/.test(VB.bridgeStopPlan({ running: true, managed: false, port: 3030 }).text));
+  check("remote relay cannot be restarted or stopped from here", VB.bridgeRestartPlan({ running: true, remote: true, host: "10.0.0.9", port: 3030 }).allowed === false && VB.bridgeStopPlan({ running: true, remote: true, host: "10.0.0.9", port: 3030 }).allowed === false);
+  st.bridge.target = "10.0.0.9:3030"; st.bridge.hidden = true; st.bridge.terminal = "conhost";
+  check("args: target on every command, hidden/terminal only on start+restart", VB.bridgeCtlArgs(st, "status").indexOf("--target") > 0 && VB.bridgeCtlArgs(st, "status").indexOf("--hidden") < 0 && VB.bridgeCtlArgs(st, "start").indexOf("--hidden") > 0 && VB.bridgeCtlArgs(st, "start").join(" ").indexOf("--terminal conhost") > 0);
+  st.bridge.target = ""; st.bridge.hidden = false; st.bridge.terminal = "auto";
   const l = (n) => new Array(n).fill("19:00:00 module socket closed 4002");
   check("4002 loop: 3 in last 20 lines", VB.bridgeLoop4002(["a", "b"].concat(l(3))) && !VB.bridgeLoop4002(l(2)) && !VB.bridgeLoop4002(l(3).concat(new Array(20).fill("x"))));
   check("mask hides the token", VB.bridgeMask(MOD).indexOf("throw") < 0 && VB.bridgeMask("") === "");
@@ -46,14 +51,45 @@ const freePort = (p) => new Promise(res => { const s = net.createServer(); s.onc
   // real bridgectl against a throwaway port / env / state dir (never the real relay)
   VB.bridgeExec = realExec; const port = await freePort(8799);
   fs.writeFileSync(tmp + "/e.env", `BRIDGE_API_TOKEN=${API}\nBRIDGE_MODULE_TOKEN=${MOD}\nPORT=${port}\nBIND_HOST=127.0.0.1\nCLIENT_CONFIG_DIR=${tmp}/client\n`);
-  st.bridge.env = tmp + "/e.env"; st.bridge.state = tmp + "/run"; st.bridge.node = ""; st.bridge.cim = false;
+  st.bridge.env = tmp + "/e.env"; st.bridge.state = tmp + "/run"; st.bridge.node = ""; st.bridge.cim = false; st.bridge.hidden = true;   // hidden: no window pops up during the test
   r = await runner.run(VB.jobBridgeStatus(st));
   check("real: status says stopped", r.ok && st.bridge.last.running === false, r.error);
   r = await runner.run(VB.jobBridgeLaunch(st));
   check("real: launch starts a managed relay", r.ok && st.bridge.last.running && st.bridge.last.managed && st.bridge.last.port === port, r.error);
   check("real: info carries tokens in memory and urls", VB.bridgeMem.secrets.moduleToken === MOD && /ws:\/\/127\.0\.0\.1:/.test(VB.bridgeMem.info.urls.localhost));
   r = await runner.run(VB.jobBridgeStatus(st));
-  check("real: plan now asks to restart", VB.bridgeLaunchPlan(VB.bridgeMem.info.status).action === "confirm-restart");
+  check("real: plan now attaches", VB.bridgeLaunchPlan(VB.bridgeMem.info.status).action === "attach" && /managed/.test(VB.bridgeMem.info.status.mode), VB.bridgeMem.info.status.mode);
+  const pid0 = VB.bridgeMem.info.status.pid;
+  r = await runner.run(VB.jobBridgeLaunch(st));
+  check("real: Connect-or-launch on a running relay attaches (same pid, nothing restarted)", r.ok && st.bridge.last.pid === pid0);
+  r = await runner.run(VB.jobBridgeProbe(st));
+  check("real: probe finds the relay", r.ok && VB.bridgeMem.found.some(x => x.running && x.port === port), r.error);
+
+  // pairing admin through the panel logic: API token from .env (memory), then a typed token
+  const post = (p, body, tok) => VB.bridgeHttp({ method: "POST", host: "127.0.0.1", port: port, path: p, body: body, token: tok });
+  const rq = await post("/pair/request", { deviceName: "Vega GM", userName: "Trent", worldId: "w", hostOrigin: "http://vega:30000" });
+  check("pair: device request accepted", rq.status === 200 && /^\d{3} \d{3}$/.test(rq.body.code));
+  let pl = await VB.bridgePairRefresh();
+  check("pair: panel lists the pending request with the same code", pl.pending.length === 1 && pl.pending[0].code === rq.body.code.replace(" ", "") && pl.pending[0].name === "Vega GM");
+  await VB.bridgePairApprove(pl.pending[0].id, 30);
+  const got = await post("/pair/poll", { requestId: rq.body.requestId, pollSecret: rq.body.pollSecret });
+  check("pair: approved, device receives its token once", got.body.state === "approved" && !!got.body.token);
+  pl = await VB.bridgePairRefresh();
+  check("pair: device listed, no token in the list or the panel state", pl.devices.length === 1 && JSON.stringify(pl).indexOf(got.body.token) < 0 && JSON.stringify(st).indexOf(got.body.token) < 0);
+  await VB.bridgePairRotate(pl.devices[0].id); pl = await VB.bridgePairRefresh();
+  check("pair: rotate flags the device", pl.devices[0].rotationPending === true);
+  await VB.bridgePairRevoke(pl.devices[0].id); pl = await VB.bridgePairRefresh();
+  check("pair: revoke removes it", pl.devices.length === 0);
+  const rq2 = await post("/pair/request", { deviceName: "Spoof" });
+  await VB.bridgePairDeny((await VB.bridgePairRefresh()).pending[0].id);
+  check("pair: deny works", (await post("/pair/poll", { requestId: rq2.body.requestId, pollSecret: rq2.body.pollSecret })).body.state === "denied");
+  const keep = VB.bridgeMem.secrets; VB.bridgeMem.secrets = null; VB.bridgeMem.manual = { api: "wrong-token-xxxxxxxxxxxxxxxxxxxxx", module: "" };
+  let bad = ""; try { await VB.bridgePairRefresh(); } catch (e) { bad = e.message; }
+  check("pair: a wrong typed token is rejected with a plain message", /rejected the API token/.test(bad), bad);
+  VB.bridgeMem.manual = { api: API, module: "" };
+  check("pair: a typed token works when .env is not available", (await VB.bridgePairRefresh()).pending.length === 0);
+  VB.bridgeMem.secrets = keep; VB.bridgeMem.manual = { api: "", module: "" };
+  check("tokens never in panel state or logs after pairing", JSON.stringify(st.bridge).indexOf(API) < 0 && logs.join("\n").indexOf(API) < 0);
   r = await runner.run(VB.jobBridgeLaunch(st, { restart: true }));
   check("real: restart ok", r.ok && st.bridge.last.running, r.error);
   r = await runner.run(VB.jobBridgeStop(st));

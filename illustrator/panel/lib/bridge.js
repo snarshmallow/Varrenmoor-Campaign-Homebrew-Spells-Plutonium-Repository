@@ -1,12 +1,12 @@
-// Bridge section (Foundry tab): launch / stop / status of the managed Foundry relay via foundry-bridge/bridgectl.mjs (hidden detached node process,
-// PID file + log file; see foundry-bridge/README.md). Pure logic, no DOM: also loaded by test/test_bridge_jobs.js.
-// Secrets (module token, API token) are kept ONLY in memory (VB.bridgeMem) and are never written to panel_state.json, job logs or the panel log.
+// Bridge section (Foundry tab): connect to (attach) or launch the Foundry relay via foundry-bridge/bridgectl.mjs, status, stop/restart, and the device
+// pairing list (approve / deny / revoke / rotate). Pure logic, no DOM: also loaded by test/test_bridge_jobs.js.
+// Secrets (module token, API token, manual entries) are kept ONLY in memory (VB.bridgeMem) and are never written to panel_state.json, job logs or the panel log.
 (function (root) {
   "use strict";
   var VB = root.VBCore || (typeof require !== "undefined" ? require("./core.js") : null);
   if (!VB) return;
   VB.bridgeRoot = VB.bridgeRoot || "";                 // repo root; set by bridge_ui.js (ctx.root) or the test
-  VB.bridgeMem = { info: null, secrets: null, at: 0 }; // in-memory only
+  VB.bridgeMem = { info: null, secrets: null, at: 0, manual: { api: "", module: "" }, found: [], pair: null }; // in-memory only
   // injectable for tests: (nodeExe, args, cwd) -> Promise<{code, out, err}>
   VB.bridgeExec = function (nodeExe, args, cwd) {
     return new Promise(function (resolve) {
@@ -16,24 +16,52 @@
       });
     });
   };
-  VB.bridgeDefaults = function () { return { node: "", env: "", state: "", cim: false, last: null }; };
+  // injectable for tests: ({method, host, port, path, token, body}) -> Promise<{status, body}>. The token goes in the Authorization header only.
+  VB.bridgeHttp = function (o) {
+    return new Promise(function (resolve, reject) {
+      var data = o.body ? JSON.stringify(o.body) : "";
+      var headers = { "content-type": "application/json", "content-length": Buffer.byteLength(data) };
+      if (o.token) headers.authorization = "Bearer " + o.token;
+      var req = require("http").request({ method: o.method || "POST", host: o.host, port: o.port, path: o.path, headers: headers, timeout: 4000 }, function (r) {
+        var b = ""; r.on("data", function (c) { b += c; });
+        r.on("end", function () { var j = {}; try { j = JSON.parse(b); } catch (e) { /* empty */ } resolve({ status: r.statusCode, body: j }); });
+      });
+      req.on("error", reject); req.on("timeout", function () { req.destroy(new Error("timeout")); });
+      req.end(data);
+    });
+  };
+  VB.bridgeDefaults = function () { return { node: "", env: "", state: "", cim: false, hidden: false, terminal: "auto", target: "", last: null }; };
   var baseDefaults = VB.defaults;
   VB.defaults = function () { var o = baseDefaults(); o.bridge = VB.bridgeDefaults(); return o; };
 
   VB.bridgeMask = function (t) { return t ? new Array(13).join("*") : ""; };
   // 'two GM tabs are fighting' = 3 or more "closed 4002" lines in the last 20 log lines
   VB.bridgeLoop4002 = function (lines) { return (lines || []).slice(-20).filter(function (l) { return /closed 4002\b/.test(l); }).length >= 3; };
-  // pure decision for the Launch button: what to do given the current status object
+  // pure decision for the Connect/Launch button: something already running is ATTACHED to (never restarted); only a stopped relay is launched
   VB.bridgeLaunchPlan = function (status) {
-    if (status && status.running) return { action: "confirm-restart", reason: (status.managed ? "A relay launched from here is already running" : "A relay started another way (start.bat?) is already running") + " on port " + status.port + (status.pid ? " (pid " + status.pid + ")" : "") + "." };
+    if (status && status.running) return { action: "attach", reason: (status.managed ? "Connected to the relay launched from here" : "Attached to a relay that was started another way") + " on " + (status.host || "127.0.0.1") + ":" + status.port + (status.pid ? " (pid " + status.pid + ")" : "") + "." };
     return { action: "start", reason: "" };
+  };
+  // wording for the confirmation modals (Restart / Stop); remote relays cannot be controlled from here
+  VB.bridgeRestartPlan = function (status) {
+    if (!status || !status.running) return { allowed: true, ask: false, text: "" };
+    if (status.remote) return { allowed: false, ask: false, text: "That relay runs on another PC (" + status.host + "); restart it there." };
+    return { allowed: true, ask: true, text: (status.managed ? "Restart the relay launched from here" : "Restart the relay that was started another way (start.bat?)") + " on port " + status.port + (status.pid ? " (pid " + status.pid + ")" : "") + "? The Foundry module reconnects by itself within a few seconds." };
+  };
+  VB.bridgeStopPlan = function (status) {
+    if (!status || !status.running) return { allowed: true, ask: false, text: "" };
+    if (status.remote) return { allowed: false, ask: false, text: "That relay runs on another PC (" + status.host + "); stop it there." };
+    return { allowed: true, ask: true, text: "Stop the bridge relay" + (status.managed ? "" : " (it was NOT started from here)") + "? Claude and the Illustrator Foundry tab lose access until it is launched again." };
   };
   VB.bridgeCtlArgs = function (st, cmd, extra) {
     var b = (st && st.bridge) || {}, a = ["foundry-bridge/bridgectl.mjs", cmd, "--json"];
     if (b.env) a.push("--env", b.env);
     if (b.state) a.push("--state", b.state);
     if (b.node) a.push("--node", b.node);
+    if (b.target) a.push("--target", b.target);
+    if (b.hidden && (cmd === "start" || cmd === "restart")) a.push("--hidden");
     if (b.cim && (cmd === "start" || cmd === "restart")) a.push("--cim");
+    if (b.terminal && b.terminal !== "auto" && (cmd === "start" || cmd === "restart")) a.push("--terminal", b.terminal);
     return a.concat(extra || []);
   };
   VB.bridgeNode = function (st) { return (st && st.bridge && st.bridge.node) || "node"; };
@@ -45,17 +73,46 @@
     return j;
   }
   function ctl(st, cmd, extra) { return VB.bridgeExec(VB.bridgeNode(st), VB.bridgeCtlArgs(st, cmd, extra), VB.bridgeRoot).then(function (r) { return parse(r, "bridge " + cmd); }); }
-  VB.bridgeStatusSummary = function (s) { return { at: new Date().toISOString(), running: !!s.running, managed: !!s.managed, port: s.port, pid: s.pid || null, moduleConnected: !!s.moduleConnected, bind: s.bind, startedAt: s.startedAt || null }; };
-  VB.bridgeRemember = function (info) { VB.bridgeMem = { info: info, secrets: info.secrets || null, at: Date.now() }; };
+  VB.bridgeStatusSummary = function (s) { return { at: new Date().toISOString(), running: !!s.running, managed: !!s.managed, mode: s.mode || null, port: s.port, host: s.host || null, pid: s.pid || null, moduleConnected: !!s.moduleConnected, bind: s.bind, startedAt: s.startedAt || null }; };
+  // keeps the manual token entries across refreshes
+  VB.bridgeRemember = function (info) { var m = VB.bridgeMem.manual || { api: "", module: "" }; VB.bridgeMem = { info: info, secrets: info.secrets || null, at: Date.now(), manual: m, found: VB.bridgeMem.found || [], pair: VB.bridgeMem.pair }; };
+  // the API token pairing admin calls need: the relay's own .env on this PC, else the manual entry
+  VB.bridgeApiToken = function () { var s = VB.bridgeMem.secrets; return (s && s.apiToken) || VB.bridgeMem.manual.api || ""; };
+  VB.bridgeModuleToken = function () { var s = VB.bridgeMem.secrets; return (s && s.moduleToken) || VB.bridgeMem.manual.module || ""; };
+
+  // ---- pairing admin (HTTP to the relay; LAN/loopback only on the relay side) --------------------------------------------------------
+  function relayAddr() {
+    var i = VB.bridgeMem.info, s = i && i.status; if (!s || !s.running) throw new Error("the relay is not running");
+    return { host: s.remote ? s.host : "127.0.0.1", port: s.port };
+  }
+  VB.bridgePairCall = function (p, body) {
+    var tok = VB.bridgeApiToken(); if (!tok) return Promise.reject(new Error("no API token: it is read from foundry-bridge/.env on this PC, or type it under Tokens for another PC"));
+    var a = relayAddr();
+    return VB.bridgeHttp({ method: "POST", host: a.host, port: a.port, path: p, token: tok, body: body || {} }).then(function (r) {
+      if (r.status === 401) throw new Error("the relay rejected the API token");
+      if (r.status === 403) throw new Error("the relay refuses pairing admin from this address (LAN/loopback only)");
+      if (r.status >= 400) throw new Error((r.body && r.body.error) || "relay answered " + r.status);
+      return r.body;
+    });
+  };
+  VB.bridgePairRefresh = function () { return VB.bridgePairCall("/pair/list").then(function (l) { VB.bridgeMem.pair = l; return l; }); };
+  VB.bridgePairApprove = function (id, days) { return VB.bridgePairCall("/pair/approve", { id: id, days: days }); };
+  VB.bridgePairDeny = function (id) { return VB.bridgePairCall("/pair/deny", { id: id }); };
+  VB.bridgePairRevoke = function (deviceId) { return VB.bridgePairCall("/pair/revoke", { deviceId: deviceId }); };
+  VB.bridgePairRotate = function (deviceId) { return VB.bridgePairCall("/pair/rotate", { deviceId: deviceId }); };
 
   var infoStep = function (st) { return { t: "fn", label: "read setup info", fn: function (run) {
-    return ctl(st, "info", ["--secrets"]).then(function (i) { VB.bridgeRemember(i); run.setState("bridge.last", VB.bridgeStatusSummary(i.status)); run.log("bridge: " + (i.status.running ? "running on port " + i.status.port : "not running")); }); } }; };
+    return ctl(st, "info", ["--secrets"]).then(function (i) { VB.bridgeRemember(i); run.setState("bridge.last", VB.bridgeStatusSummary(i.status)); run.log("bridge: " + (i.status.running ? (i.status.mode || "running") + " on " + (i.status.host || "127.0.0.1") + ":" + i.status.port : "not running")); }); } }; };
   VB.jobBridgeStatus = function (st) { return { kind: "bridge_status", label: "Bridge status", params: {}, steps: [infoStep(st)] }; };
+  VB.jobBridgeProbe = function (st) {
+    return { kind: "bridge_probe", label: "Find relays", params: {}, steps: [{ t: "fn", label: "look for relays", fn: function (run) {
+      return ctl(st, "probe").then(function (r) { VB.bridgeMem.found = r.found || []; run.log("bridge: " + VB.bridgeMem.found.filter(function (x) { return x.running; }).length + " relay(s) found"); }); } }] };
+  };
   VB.jobBridgeLaunch = function (st, opts) {
     var restart = !!(opts && opts.restart);
-    return { kind: "bridge_launch", label: restart ? "Restart bridge relay" : "Launch bridge relay", params: { restart: restart, bridge: { node: st.bridge.node, cim: st.bridge.cim } },
-      steps: [{ t: "fn", label: restart ? "restart relay" : "start relay", fn: function (run) {
-        return ctl(st, restart ? "restart" : "start").then(function (r) { run.log("bridge: " + (r.action || "ok") + ", port " + r.port + ", pid " + r.pid); });
+    return { kind: "bridge_launch", label: restart ? "Restart bridge relay" : "Connect or launch bridge relay", params: { restart: restart, bridge: { node: st.bridge.node, cim: st.bridge.cim, hidden: st.bridge.hidden, terminal: st.bridge.terminal, target: st.bridge.target } },
+      steps: [{ t: "fn", label: restart ? "restart relay" : "start relay (attaches when one is already running)", fn: function (run) {
+        return ctl(st, restart ? "restart" : "start").then(function (r) { run.log("bridge: " + (r.action || "ok") + ", port " + r.port + ", pid " + r.pid + (r.how ? ", " + r.how : "")); });
       } }, infoStep(st)] };
   };
   VB.jobBridgeStop = function (st) {

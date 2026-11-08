@@ -26,8 +26,9 @@ async function load() {
     clearTimeout: () => {},
   });
   const src = fs.readFileSync(path.join(here, 'varrenmoor-bridge', 'scripts', 'bridge.js'), 'utf8');
-  const tmp = path.join(os.tmpdir(), `bridge_rc_${Date.now()}_${Math.random().toString(36).slice(2)}.mjs`);
-  fs.writeFileSync(tmp, src);
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'bridge_rc_')), tmp = path.join(dir, 'bridge.mjs');
+  fs.writeFileSync(tmp, src.replace('./pairing.js', './pairing.mjs'));
+  fs.copyFileSync(path.join(here, 'varrenmoor-bridge', 'scripts', 'pairing.js'), path.join(dir, 'pairing.mjs'));
   await import(pathToFileURL(tmp).href);
   return { hooks, notes, timers, sockets };
 }

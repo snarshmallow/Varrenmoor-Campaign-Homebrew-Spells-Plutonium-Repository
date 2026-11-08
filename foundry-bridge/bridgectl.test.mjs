@@ -19,7 +19,7 @@ test('start / status / second start / info / 4002 / restart / stop on a temp por
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'vbridge-'));
   const envFile = path.join(dir, 'e.env');
   fs.writeFileSync(envFile, `BRIDGE_API_TOKEN=${API}\nBRIDGE_MODULE_TOKEN=${MOD}\nPORT=${port}\nBIND_HOST=127.0.0.1\nCLIENT_CONFIG_DIR=${dir.split(path.sep).join('/')}/client\n`);
-  const ctl = makeCtl({ envFile, stateDir: path.join(dir, 'run') });
+  const ctl = makeCtl({ envFile, stateDir: path.join(dir, 'run'), hidden: true });
   try {
     let s = await ctl.status();
     assert.equal(s.running, false);
@@ -87,7 +87,7 @@ test('stale pid file is cleaned on start', async () => {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'vbridge-'));
   const envFile = path.join(dir, 'e.env');
   fs.writeFileSync(envFile, `BRIDGE_API_TOKEN=${API}\nBRIDGE_MODULE_TOKEN=${MOD}\nPORT=${port}\nBIND_HOST=127.0.0.1\nCLIENT_CONFIG_DIR=${dir.split(path.sep).join('/')}/client\n`);
-  const ctl = makeCtl({ envFile, stateDir: path.join(dir, 'run') });
+  const ctl = makeCtl({ envFile, stateDir: path.join(dir, 'run'), hidden: true });
   try {
     fs.mkdirSync(ctl.paths.dir, { recursive: true });
     fs.writeFileSync(ctl.paths.pid, JSON.stringify({ pid: 999999, port }));
