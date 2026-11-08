@@ -1,0 +1,45 @@
+{
+ "id": "covered_timber",
+ "name": "Covered timber bridge (medieval)",
+ "family": "covered",
+ "description": "Plank deck on pile bents (splayed A-frame legs, cross-braced) or stone piers with cutwaters; gable roof of shingle or tile, open posts with knee braces, part-height plank side walls, optional flower boxes. Scales with the span.",
+ "road_classes": [
+  "street",
+  "road",
+  "lane"
+ ],
+ "params": {
+  "width_ft": 15.0,
+  "support": "piles",
+  "roof": "shingle",
+  "flower_boxes": true,
+  "wall_h_ft": 3.9,
+  "post_h_ft": 9.4,
+  "roof_rise_ratio": 0.42,
+  "roof_overhang_ft": 2.6,
+  "plank_t_ft": 0.3,
+  "plank_w_ft": 0.9,
+  "plank_gap_ft": 0.05,
+  "stringer_every_ft": 3.2,
+  "post_every_ft": 8.0,
+  "max_span_ft": 22.0,
+  "pier_t_ft": 3.4,
+  "found_ft": 2.5,
+  "crown_rise_ft": 0.0,
+  "n_arches": null,
+  "clearance_w_ft": 12.0,
+  "clearance_h_ft": 8.0,
+  "freeboard_ft": 3.0,
+  "max_clear_ft": 300
+ },
+ "materials": {
+  "deck": "mat_s_tint_plank_7a5c3c",
+  "log": "mat_s_log_5a4430",
+  "roof": "mat_s_tint_shingle_6b5a48",
+  "roof_tile": "mat_s_tint_red_tile_a4583c",
+  "stone": "mat_wall_stone",
+  "flower": "mat_s_flat_c8506a"
+ },
+ "schema": 1,
+ "thumb": "../../out/bridges/thumbs/covered_timber.png"
+}

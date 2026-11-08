@@ -311,7 +311,7 @@ def build_arch(plan):
                 g.poly(wall, [(u0, y0, s_["base"]), (uc_, ya, s_["base"]), (uc_, ya, zt), (u0, y0, zt)], (-1, side, 0))
                 g.poly(wall, [(uc_, ya, s_["base"]), (u1, y0, s_["base"]), (u1, y0, zt), (uc_, ya, zt)], (1, side, 0))
                 g.poly(M["coping"], [(u0, y0, zt), (uc_, ya, zt), (u1, y0, zt)], (0, 0, 1))
-    return g.mesh()
+    return _finish(g, plan)
 
 
 # ------------------------------------------------------------------ flat cut stone
@@ -365,7 +365,7 @@ def build_flat(plan):
             for u_, sg in ((0.0, -1), (L, 1)):
                 z0_ = float(d(u_))
                 g.poly(M["slab"], [(u_, side * (hw - pt), z0_), (u_, side * hw, z0_), (u_, side * hw, z0_ + ph), (u_, side * (hw - pt), z0_ + ph)], (sg, 0, 0))
-    return g.mesh()
+    return _finish(g, plan)
 
 
 # ------------------------------------------------------------------ timber (truss + footbridge)
@@ -474,10 +474,288 @@ def build_timber(plan):
                         # X braces in the two planes (offset by half a log so they do not intersect each other's faces)
                         g.log(M["log"], (u0_, y + side * (rc * 0.9), z00 + 0.1), (u1_, y + side * (rc * 0.9), z01 + ht - 0.1), rc * 0.5, rc * 0.5, n=5, rng=rng, jit=0.08)
                         g.log(M["log"], (u0_, y - side * (rc * 0.9), z00 + ht - 0.1), (u1_, y - side * (rc * 0.9), z01 + 0.1), rc * 0.5, rc * 0.5, n=5, rng=rng, jit=0.08)
+    return _finish(g, plan)
+
+
+def _hexa(g, mid, A, B, skip=()):
+    """Closed prism between two quads (same corner order); faces point away from the centre. `skip` = face indices (0 = A, 1 = B, 2..5 = the sides)."""
+    A = [np.asarray(p, float) for p in A]
+    B = [np.asarray(p, float) for p in B]
+    c = (sum(A) + sum(B)) / 8.0
+    faces = [A, B, [A[0], A[1], B[1], B[0]], [A[1], A[2], B[2], B[1]], [A[2], A[3], B[3], B[2]], [A[3], A[0], B[0], B[3]]]
+    for k, f in enumerate(faces):
+        if k not in skip:
+            g.poly(mid, f, sum(f) / 4.0 - c)
+
+
+def _finish(g, plan):
+    """Approach ramps (the deck end was lifted clear of the terrain, see bridge_maker.compute_lift): a wedge from the road level, 10 % slope, up to the deck
+    end; no bottom face (it lies on the road ribbon), no end face (it meets the deck)."""
+    l0, l1 = plan.get("lift_ends") or (0.0, 0.0)
+    L, hw = plan["L"], plan["W"] / 2
+    d = Prof(plan["deck"])
+    mat = plan["mats"].get("deck")
+    for lift, u_end, sg in ((l0, 0.0, -1), (l1, L, 1)):
+        if lift < 0.03 or not mat:
+            continue
+        r = lift / 0.10
+        z1 = float(d(u_end))
+        z0, uf = z1 - lift, u_end + sg * r
+        g.poly(mat, [(u_end, -hw, z1), (u_end, hw, z1), (uf, hw, z0), (uf, -hw, z0)], (0, 0, 1), uvmode="road")
+        for sd in (-1, 1):
+            g.poly(mat, [(u_end, sd * hw, z1), (uf, sd * hw, z0), (u_end, sd * hw, z0)], (0, sd, 0))
     return g.mesh()
 
 
-BUILDERS = {"arch": build_arch, "flat": build_flat, "timber": build_timber}
+def _stations(plan, tol=0.015, step=None):
+    """Deck stations kept for long straight members (roof, walls): the ends plus wherever the deck line bends more than `tol` metres."""
+    D = plan["deck"]
+    keep = [0]
+    for i in range(1, len(D) - 1):
+        a, b = D[keep[-1]], D[i + 1]
+        t = (D[i][0] - a[0]) / max(b[0] - a[0], 1e-9)
+        if abs(D[i][1] - (a[1] + t * (b[1] - a[1]))) > tol or (step and D[i][0] - a[0] > step):
+            keep.append(i)
+    keep.append(len(D) - 1)
+    return [D[i][0] for i in keep]
+
+
+# ------------------------------------------------------------------ rough log bridge
+def build_log(plan):
+    g = G()
+    M, L = plan["mats"], plan["L"]
+    d = Prof(plan["deck"])
+    rng = np.random.RandomState(plan["seed"] + 7)
+    slope = (float(d(L)) - float(d(0.0))) / L
+    z0 = float(d(0.0))
+    for lg in plan["logs"]:
+        r, v = lg["r"], lg["v"]
+        zc = lambda u, lg=lg, r=r: z0 + slope * u - lg["off"] - r
+        r0, r1 = (r, r * lg["taper"]) if rng.rand() < 0.5 else (r * lg["taper"], r)
+        g.log(M["log"], (lg["a"], v, zc(lg["a"])), (lg["b"], v, zc(lg["b"])), r0, r1, n=8, rng=rng, jit=0.09)
+        for tip, end, sg, rr in ((lg["tip0"], lg["a"], -1, r0), (lg["tip1"], lg["b"], 1, r1)):    # a broken, splintered end
+            if tip:
+                g.log(M["log"], (end, v, zc(end)), (end + sg * 0.22, v + rng.uniform(-0.04, 0.04), zc(end) + rng.uniform(-0.05, 0.03)), rr * 0.97, rr * 0.5, n=6, rng=rng, jit=0.18)
+    for rk in plan["rocks"]:
+        g.log(M["rock"], (rk["u"] + rng.uniform(-0.05, 0.05), rk["v"], rk["base"]), (rk["u"], rk["v"], rk["top"]), rk["r"], rk["r"] * 0.78, n=7, rng=rng, jit=0.28, phase=rng.uniform(0, 1))
+    return _finish(g, plan)
+
+
+# ------------------------------------------------------------------ covered timber bridge
+def build_covered(plan):
+    g = G()
+    P, M = plan["p"], plan["mats"]
+    L, W = plan["L"], plan["W"]
+    d = Prof(plan["deck"])
+    rng = np.random.RandomState(plan["seed"])
+    hw = W / 2
+    pt = P["plank_t"]
+    sup = plan["supports"]
+    deck_m, tim, stone = M["deck"], M["log"], M["stone"]
+    roof = plan["roof_mat"] or deck_m
+    sr_ = lambda ls: float(np.clip(0.10 + 0.0045 * ls, 0.11, 0.30))
+    # deck planks + stringers
+    pw, gap = P["plank_w"], P["plank_gap"]
+    nplank = max(1, int((L + gap) / (pw + gap)))
+    pw_eff = (L - gap * (nplank - 1)) / nplank
+    for k in range(nplank):
+        a = k * (pw_eff + gap)
+        b = a + pw_eff
+        top = float(d(0.5 * (a + b)))
+        jt = rng.uniform(-0.003, 0.003)
+        ln = hw + rng.uniform(-0.02, 0.02)
+        g.box(deck_m, (a, -ln, top - pt + jt), (b, ln, top + jt))
+    nstr = max(2, int(round(W / P["stringer_every"])) + 1)
+    vs = np.linspace(-hw + 0.28, hw - 0.28, nstr)
+    r_end = []
+    for i in range(len(sup) - 1):
+        ua, ub = sup[i]["u"], sup[i + 1]["u"]
+        r = sr_(ub - ua)
+        r_end.append(r)
+        ex = 0.3 if i == 0 else 0.0
+        ey = 0.3 if i == len(sup) - 2 else 0.0
+        for v in vs:
+            g.log(tim, (ua - ex, v, float(d(ua - ex)) - pt - r - 0.012), (ub + ey, v, float(d(ub + ey)) - pt - r - 0.012), r, r, n=6, rng=rng, jit=0.05)
+    # supports
+    env0 = min([e["u0"] for e in plan["envelopes"]] + [L])
+    env1 = max([e["u1"] for e in plan["envelopes"]] + [0.0])
+    for i, s_ in enumerate(sup):
+        u, base = s_["u"], s_["base"]
+        rs = r_end[min(i, len(r_end) - 1)] if r_end else 0.15
+        under = float(d(u)) - pt - 2 * rs - 0.05                                  # underside of the stringers here
+        if s_["kind"] == "abut":
+            if u < 0.5 * L:
+                u_in = max(0.1, min(0.3, env0 - 0.05))
+                ua_, ub_ = u - 1.2, u + u_in
+            else:
+                u_in = max(0.1, min(0.3, L - env1 - 0.05))
+                ua_, ub_ = u - u_in, u + 1.2
+            g.box(stone, (ua_, -hw - 0.2, base), (ub_, hw + 0.2, under), skip=("+z", "-z"))
+        elif s_["kind"] == "pier":
+            h2 = P["pier_t"] / 2
+            g.box(stone, (u - h2, -hw - 0.3, base), (u + h2, hw + 0.3, under), skip=("+z", "-z"))
+            for sd in (-1, 1):                                                   # cutwaters: pointed prisms up- and downstream
+                y0, ya = sd * (hw + 0.3), sd * (hw + 0.3 + 0.9 * 2 * h2)
+                zt = under - 0.25
+                g.poly(stone, [(u - h2, y0, base), (u, ya, base), (u, ya, zt), (u - h2, y0, zt)], (-1, sd, 0))
+                g.poly(stone, [(u, ya, base), (u + h2, y0, base), (u + h2, y0, zt), (u, ya, zt)], (1, sd, 0))
+                g.poly(stone, [(u - h2, y0, zt), (u, ya, zt), (u + h2, y0, zt)], (0, 0, 1))
+        else:                                                                    # pile bent: an A-frame of two splayed piles on each side, cross-braced
+            zc = under - 0.05
+            for sd in (-1, 1):
+                v = sd * (hw - 0.35)
+                sp = float(np.clip(0.10 * (zc - base), 0.25, 1.1))
+                for sg in (-1, 1):
+                    g.log(tim, (u + sg * 0.22, v, zc), (u + sg * (0.22 + sp), v, base), 0.18, 0.21, n=7, rng=rng, jit=0.07)
+                ul = lambda f, sg_, u=u, sp=sp: u + sg_ * (0.22 + sp * f)
+                zf = lambda f, zc=zc, base=base: zc - (zc - base) * f
+                for f0, f1 in (((0.25, 0.55), (0.55, 0.85)) if zc - base > 5.0 else ((0.3, 0.7),)):
+                    g.log(tim, (ul(f0, -1), v, zf(f0)), (ul(f1, 1), v, zf(f1)), 0.07, 0.07, n=5, rng=rng, jit=0.08)
+                    g.log(tim, (ul(f0, 1), v + sd * 0.16, zf(f0)), (ul(f1, -1), v + sd * 0.16, zf(f1)), 0.07, 0.07, n=5, rng=rng, jit=0.08)
+            g.log(tim, (u, -hw - 0.1, zc + 0.12), (u, hw + 0.1, zc + 0.12), 0.15, 0.15, n=6, rng=rng, jit=0.05)
+    # posts, plate beams, walls, braces, roof
+    stn = _stations(plan, 0.015, 8.0)
+    oh, wall_h, post_h, rise = P["roof_oh"], P["wall_h"], P["post_h"], P["rise"]
+    vp = hw - 0.2
+    npost = max(2, int(round(L / P["post_every"])) + 1)
+    pu = [L * k / (npost - 1) for k in range(npost)]
+    plate = lambda u: float(d(u)) + post_h
+    for u in pu:
+        for sd in (-1, 1):
+            g.box(tim, (u - 0.13, sd * vp - 0.13, float(d(u)) - 0.04), (u + 0.13, sd * vp + 0.13, plate(u) - 0.05), skip=("-z", "+z"))
+            g.log(tim, (u, sd * (vp + 0.13), plate(u) - 0.7), (u, sd * (hw + 0.8 * oh), plate(u) - rise * 0.8 * oh - 0.05), 0.06, 0.06, n=5, rng=rng, jit=0.08)
+            g.log(tim, (u, sd * (vp - 0.13), plate(u) - 0.9), (u, sd * (vp - 0.9), plate(u) - 0.22), 0.055, 0.055, n=5, rng=rng, jit=0.08)
+        g.log(tim, (u, -vp, plate(u) - 0.2), (u, vp, plate(u) - 0.2), 0.11, 0.11, n=6, rng=rng, jit=0.05)
+    for sd in (-1, 1):
+        for ua, ub in zip(stn[:-1], stn[1:]):
+            g.log(tim, (ua, sd * vp, plate(ua) + 0.03), (ub, sd * vp, plate(ub) + 0.03), 0.12, 0.12, n=6, rng=rng, jit=0.04)
+            vi, vo = sd * (hw - 0.14), sd * hw
+            zb0, zb1 = float(d(ua)) - 0.05, float(d(ub)) - 0.05
+            _hexa(g, deck_m, [(ua, vi, zb0), (ub, vi, zb1), (ub, vo, zb1), (ua, vo, zb0)],
+                  [(ua, vi, zb0 + wall_h + 0.05), (ub, vi, zb1 + wall_h + 0.05), (ub, vo, zb1 + wall_h + 0.05), (ua, vo, zb0 + wall_h + 0.05)], skip=(0, 1))
+            va, vb = sd * (hw - 0.2), sd * (hw + 0.06)
+            za, zb = float(d(ua)) + wall_h + 0.05, float(d(ub)) + wall_h + 0.05
+            _hexa(g, tim, [(ua, va, za), (ub, va, zb), (ub, vb, zb), (ua, vb, za)], [(ua, va, za + 0.12), (ub, va, zb + 0.12), (ub, vb, zb + 0.12), (ua, vb, za + 0.12)])
+        if P.get("flower_boxes"):
+            for ua, ub in zip(pu[:-1], pu[1:]):
+                um = 0.5 * (ua + ub)
+                zb_ = float(d(um)) + wall_h - 0.55
+                vlo, vhi = (hw, hw + 0.4) if sd > 0 else (-hw - 0.4, -hw)
+                g.box(tim, (um - 0.6, vlo, zb_), (um + 0.6, vhi, zb_ + 0.32), skip=("-v",) if sd > 0 else ("+v",))
+                for k in range(4):
+                    x_ = um - 0.45 + 0.3 * k
+                    g.log(M["flower"], (x_, sd * (hw + 0.2), zb_ + 0.30), (x_ + rng.uniform(-0.04, 0.04), sd * (hw + 0.2), zb_ + 0.5 + rng.uniform(0, 0.1)), 0.11, 0.1, n=5, rng=rng, jit=0.2)
+    # roof: gable slab of thickness th overhanging the ends; the open portals are closed above the plate by a plank pediment
+    eo, th = 0.7, 0.11
+    slope0 = (plate(stn[1]) - plate(stn[0])) / (stn[1] - stn[0])
+    slope1 = (plate(stn[-1]) - plate(stn[-2])) / (stn[-1] - stn[-2])
+    ru = [-eo] + stn + [L + eo]
+    rp = [plate(stn[0]) - slope0 * eo] + [plate(u) for u in stn] + [plate(stn[-1]) + slope1 * eo]
+    hwr = hw + oh
+    rid_b = lambda p_: p_ + rise * hw                                      # underside of the ridge
+    eav_b = lambda p_: p_ - rise * oh                                      # underside at the eave tip
+    for i in range(len(ru) - 1):
+        ua, ub, pa, pb = ru[i], ru[i + 1], rp[i], rp[i + 1]
+        for sd in (-1, 1):
+            g.poly(roof, [(ua, 0, rid_b(pa) + th), (ub, 0, rid_b(pb) + th), (ub, sd * hwr, eav_b(pb) + th), (ua, sd * hwr, eav_b(pa) + th)], (0, sd * rise, 1))
+            g.poly(roof, [(ua, 0, rid_b(pa)), (ub, 0, rid_b(pb)), (ub, sd * hwr, eav_b(pb)), (ua, sd * hwr, eav_b(pa))], (0, -sd * rise, -1))
+            g.poly(roof, [(ua, sd * hwr, eav_b(pa)), (ub, sd * hwr, eav_b(pb)), (ub, sd * hwr, eav_b(pb) + th), (ua, sd * hwr, eav_b(pa) + th)], (0, sd, 0))
+    for u_, p_, sg in ((ru[0], rp[0], -1), (ru[-1], rp[-1], 1)):
+        for sd in (-1, 1):
+            g.poly(roof, [(u_, 0, rid_b(p_) + th), (u_, sd * hwr, eav_b(p_) + th), (u_, sd * hwr, eav_b(p_)), (u_, 0, rid_b(p_))], (sg, 0, 0))
+    for u_, sg in ((0.0, -1), (L, 1)):
+        g.poly(deck_m, [(u_, -hw, plate(u_)), (u_, hw, plate(u_)), (u_, 0, plate(u_) + rise * hw)], (sg, 0, 0))
+    return _finish(g, plan)
+
+
+# ------------------------------------------------------------------ rope and plank (rotting)
+def build_rope(plan):
+    g = G()
+    P, M = plan["p"], plan["mats"]
+    L, W = plan["L"], plan["W"]
+    d = Prof(plan["deck"])
+    rng = np.random.RandomState(plan["seed"])
+    hw = W / 2
+    pt, pw, gap = P["plank_t"], P["plank_w"], P["plank_gap"]
+    decay = float(P.get("decay", 0.18))
+    deck_m, tim, rope = M["deck"], M["log"], M["rope"]
+    hp = hw - 0.05
+    u, prev_gone = 0.0, False
+    while u < L - 0.02:
+        w = pw * rng.uniform(0.7, 1.3)
+        a, b = u, u + w
+        if b > L - 0.3 * pw:
+            b = L
+        u = b + gap * rng.uniform(0.2, 3.5)                                     # uneven spacing
+        edge = a < 2 * pw or b > L - 2 * pw
+        r = rng.rand()
+        za, zb = float(d(a)) + rng.uniform(-0.01, 0.01), float(d(b)) + rng.uniform(-0.01, 0.01)
+        down = lambda q: [(x, y, z - pt) for x, y, z in q]
+        if edge or r >= decay:
+            q = [(a, -hp, za), (b, -hp, zb), (b, hp, zb), (a, hp, za)]
+            _hexa(g, deck_m, q, down(q))
+            prev_gone = False
+        elif r < decay * 0.45 and not prev_gone:
+            prev_gone = True                                                     # missing
+        elif r < decay * 0.8:                                                    # broken: a stub from one side with a slanted splintered end
+            sd = int(rng.choice([-1, 1]))
+            fr = rng.uniform(0.25, 0.55)
+            v0, v1 = (-hp, -hp + fr * W) if sd < 0 else (hp - fr * W, hp)
+            sk = rng.uniform(0.1, 0.45) * (b - a)
+            if sd < 0:
+                q = [(a, v0, za), (b, v0, zb), (b - sk, v1, zb), (a, v1, za)]
+            else:
+                q = [(a, v0, za), (b, v0, zb), (b, v1, zb), (a + sk, v1, za)]
+            _hexa(g, deck_m, q, down(q))
+            prev_gone = False
+        else:                                                                    # hanging by one side rope
+            sd = int(rng.choice([-1, 1]))
+            th_ = math.radians(rng.uniform(50, 85))
+            wd = W * rng.uniform(0.45, 0.8)
+            ve = sd * hp
+            vf, zdrop = ve - sd * wd * math.cos(th_), wd * math.sin(th_)
+            q = [(a, ve, za), (b, ve, zb), (b, vf, zb - zdrop), (a, vf, za - zdrop)]
+            ny, nz = sd * math.sin(th_), math.cos(th_)
+            _hexa(g, deck_m, q, [(x, y - ny * pt, z - nz * pt) for x, y, z in q])
+            prev_gone = False
+    # side ropes: deck (foot) rope and hand rope, hanging verticals
+    n = max(2, int(math.ceil(L / 0.8)))
+    us = [L * i / n for i in range(n + 1)]
+    rail = P["rail_h"]
+    for sd in (-1, 1):
+        v = sd * hw
+        tear = int(rng.randint(2, max(3, n - 2))) if (rng.rand() < 0.45 and n > 6) else -1
+        for i in range(n):
+            ua, ub = us[i], us[i + 1]
+            g.log(rope, (ua, v, float(d(ua)) - 0.03), (ub, v, float(d(ub)) - 0.03), 0.04, 0.04, n=4, rng=rng, jit=0.2, caps=False)
+            if i != tear:
+                g.log(rope, (ua, v, float(d(ua)) + rail), (ub, v, float(d(ub)) + rail), 0.035, 0.035, n=4, rng=rng, jit=0.2, caps=False)
+        nv = max(2, int(L / 0.5))
+        for i in range(1, nv):
+            uv = min(max(L * i / nv + rng.uniform(-0.08, 0.08), 0.1), L - 0.1)
+            r = rng.rand()
+            zlo, zhi = float(d(uv)) - 0.03, float(d(uv)) + rail
+            if r < decay * 0.6:
+                continue                                                         # rotted away
+            if r < decay * 1.2 or (tear >= 0 and abs(uv - us[tear]) < 0.9):
+                zlo = zhi - rail * rng.uniform(0.3, 0.7)                         # snapped: hangs from the hand rope
+            g.log(rope, (uv, v, zlo), (uv, v + rng.uniform(-0.02, 0.02), zhi), 0.022, 0.022, n=4, rng=rng, jit=0.2, caps=False)
+    # anchor posts and the ropes that tie to them
+    by_end = {0: [], 1: []}
+    for ps in plan["posts"]:
+        g.log(tim, (ps["u"], ps["v"], ps["base"]), (ps["u"], ps["v"], ps["top"]), 0.13, 0.12, n=7, rng=rng, jit=0.07)
+        by_end[ps["end"]].append(ps)
+    for end, pl in by_end.items():
+        ue = 0.0 if end == 0 else L
+        for ps in pl:
+            sd = 1 if ps["v"] > 0 else -1
+            g.log(rope, (ue, sd * hw, float(d(ue)) + rail), (ps["u"], ps["v"], ps["top"] - 0.15), 0.04, 0.04, n=4, rng=rng, jit=0.15, caps=False)
+            g.log(rope, (ue, sd * hw, float(d(ue)) - 0.03), (ps["u"], ps["v"], float(d(ue)) + 0.2), 0.045, 0.045, n=4, rng=rng, jit=0.15, caps=False)
+        g.log(tim, (pl[0]["u"], pl[0]["v"], pl[0]["top"] - 0.12), (pl[1]["u"], pl[1]["v"], pl[1]["top"] - 0.12), 0.08, 0.08, n=6, rng=rng, jit=0.06)
+    return _finish(g, plan)
+
+
+BUILDERS = {"arch": build_arch, "flat": build_flat, "timber": build_timber, "log": build_log, "covered": build_covered, "rope": build_rope}
 
 
 def build(plan):

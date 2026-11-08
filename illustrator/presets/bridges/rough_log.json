@@ -1,0 +1,32 @@
+{
+ "id": "rough_log",
+ "name": "Rough log bridge",
+ "family": "log",
+ "description": "4-5 raw debarked logs laid side by side across the gap: irregular length, diameter and ends, resting on bank rocks (short spans only).",
+ "road_classes": [
+  "path",
+  "footpath"
+ ],
+ "params": {
+  "width_ft": 4.5,
+  "log_d_ft": 1.1,
+  "log_d_var": 0.35,
+  "bear_min_ft": 3.0,
+  "bear_var_ft": 2.2,
+  "max_span_ft": 26.0,
+  "found_ft": 2.0,
+  "rock_r_ft": 1.5,
+  "crown_rise_ft": 0.0,
+  "n_arches": null,
+  "clearance_w_ft": 8.0,
+  "clearance_h_ft": 6.0,
+  "freeboard_ft": 2.0,
+  "max_clear_ft": 22
+ },
+ "materials": {
+  "log": "mat_s_log_5e4a36",
+  "rock": "mat_wall_stone"
+ },
+ "schema": 1,
+ "thumb": "../../out/bridges/thumbs/rough_log.png"
+}

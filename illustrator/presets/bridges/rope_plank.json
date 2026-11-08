@@ -1,0 +1,36 @@
+{
+ "id": "rope_plank",
+ "name": "Rope and plank (rotting hanging bridge)",
+ "family": "rope",
+ "description": "Sagging catenary plank deck on rope rails with hanging verticals, anchor posts at both ends; seeded missing, broken and hanging planks and uneven spacing. The sag is clamped so the lowest point stays above the ground and water.",
+ "road_classes": [
+  "path",
+  "footpath"
+ ],
+ "params": {
+  "width_ft": 4.0,
+  "sag_ratio": 0.075,
+  "min_clear_ft": 2.5,
+  "rail_h_ft": 3.3,
+  "plank_t_ft": 0.18,
+  "plank_w_ft": 0.7,
+  "plank_gap_ft": 0.12,
+  "max_span_ft": 200.0,
+  "post_h_ft": 5.2,
+  "found_ft": 2.5,
+  "decay": 0.18,
+  "crown_rise_ft": 0.0,
+  "n_arches": null,
+  "clearance_w_ft": 6.0,
+  "clearance_h_ft": 6.0,
+  "freeboard_ft": 1.5,
+  "max_clear_ft": 200
+ },
+ "materials": {
+  "deck": "mat_s_tint_plank_6e5a40",
+  "log": "mat_s_log_4e3e2c",
+  "rope": "mat_s_flat_8f7f5c"
+ },
+ "schema": 1,
+ "thumb": "../../out/bridges/thumbs/rope_plank.png"
+}

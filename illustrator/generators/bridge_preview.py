@@ -67,8 +67,23 @@ def scene_mesh(ent, plan):
     return b.build()
 
 
+VARIANTS = {"covered_timber_piers": ("covered_timber", {"support": "piers", "roof": "tile", "flower_boxes": False})}      # extra sheet entries: a preset with parameter overrides
+
+
 def sample_for(pid, span_ft=60.0, seed=7):
+    if pid in VARIANTS:
+        base, ov = VARIANTS[pid]
+        e = sample_for(base, span_ft, seed)
+        e["params"] = dict(ov)
+        e["id"] = f"brg_{pid}_1"
+        return e
     fam = bm.load_preset(pid)["family"]
+    if pid == "rough_log":
+        return bm.sample_entity(pid, span_ft=min(span_ft, 20.0), drop_ft=5.0, water=True, seed=seed, name=pid, wall_slope=1.0)
+    if pid == "covered_timber":
+        return bm.sample_entity(pid, span_ft=max(span_ft, 70.0), drop_ft=14.0, water=True, seed=seed, name=pid, wall_slope=0.5)
+    if pid == "rope_plank":
+        return bm.sample_entity(pid, span_ft=min(max(span_ft, 50.0), 70.0), drop_ft=22.0, water=True, seed=seed, name=pid, wall_slope=0.35)
     if pid == "flat_cut_stone":
         return bm.sample_entity(pid, span_ft=min(span_ft, 34.0), drop_ft=9.0, water=False, seed=seed, name=pid)
     if pid == "plank_footbridge":
@@ -104,8 +119,7 @@ def build(out, only=None, span_ft=60.0, seed=7):
     gdir = os.path.join(out, "glb")
     os.makedirs(os.path.join(gdir, "textures"), exist_ok=True)
     names = []
-    for pr in bm.list_presets():
-        pid = pr["id"]
+    for pid in [pr["id"] for pr in bm.list_presets()] + list(VARIANTS):
         if only and pid not in only:
             continue
         ent = sample_for(pid, span_ft, seed)
@@ -141,9 +155,9 @@ def render(out, only=None, blender=None, views=("threeq", "under"), size=(1000, 
     return ids
 
 
-def sheet(out, ids=None, view="threeq", cols=3, w=600):
+def sheet(out, ids=None, view="threeq", cols=3, w=600, name=None):
     from PIL import Image, ImageDraw
-    ids = ids or [p["id"] for p in bm.list_presets()]
+    ids = ids or [p["id"] for p in bm.list_presets()] + list(VARIANTS)
     ims = []
     for pid in ids:
         f = os.path.join(out, f"{pid}_{view}.png")
@@ -158,7 +172,7 @@ def sheet(out, ids=None, view="threeq", cols=3, w=600):
     for k, (pid, im) in enumerate(ims):
         S.paste(im.resize((w, h)), ((k % cols) * w, (k // cols) * h))
         d.text(((k % cols) * w + 8, (k // cols) * h + 6), pid, fill=(255, 255, 255))
-    p = os.path.join(out, "sheet.png" if view == "threeq" else f"sheet_{view}.png")
+    p = os.path.join(out, name or ("sheet.png" if view == "threeq" else f"sheet_{view}.png"))
     S.save(p)
     return p
 
@@ -188,6 +202,7 @@ def main(argv=None):
     ap.add_argument("--span-ft", type=float, default=60.0)
     ap.add_argument("--views", default="threeq,under")
     ap.add_argument("--blender")
+    ap.add_argument("--sheet-name", help="file name of the sheet (e.g. sheet_v2.png); the under view gets an _under suffix")
     a = ap.parse_args(argv)
     only = a.only.split(",") if a.only else None
     if a.cmd == "entity":
@@ -203,7 +218,7 @@ def main(argv=None):
     elif a.cmd == "render":
         ids = render(a.out, only, a.blender, tuple(a.views.split(",")), span_ft=a.span_ft)
         for v in a.views.split(","):
-            sheet(a.out, ids, v)
+            sheet(a.out, ids, v, name=(a.sheet_name if v == "threeq" else a.sheet_name.replace(".png", "_under.png")) if a.sheet_name else None)
         thumbs(a.out)
         print(json.dumps({"ok": True, "ids": ids, "sheet": os.path.join(a.out, "sheet.png")}))
     else:

@@ -7,17 +7,22 @@
   var GEN = "illustrator/generators/";
   var py = VB.steps.py;
   VB.BRIDGE_PRESETS = [
-    ["stone_arch", "Stone arch"], ["brick_arch", "Brick arch"], ["wooden_truss", "Wooden truss (rough-hewn log)"], ["flat_cut_stone", "Flat cut stone"], ["plank_footbridge", "Plank footbridge"]];
+    ["stone_arch", "Stone arch"], ["brick_arch", "Brick arch"], ["wooden_truss", "Wooden truss (rough-hewn log)"], ["flat_cut_stone", "Flat cut stone"], ["plank_footbridge", "Plank footbridge"],
+    ["rough_log", "Rough log bridge"], ["covered_timber", "Covered timber bridge (medieval)"], ["rope_plank", "Rope and plank (rotting)"]];
 
   VB.bridgesDefaults = function () {
-    return { float_ft: 4, level_ft: 3, selected: "", preset: "", seed: "", width_ft: "", clearance_w_ft: "", clearance_h_ft: "", parapet_h_ft: "", n_arches: "", rise_ratio: "",
+    return { float_ft: 4, level_ft: 3, selected: "", preset: "", seed: "", width_ft: "", clearance_w_ft: "", clearance_h_ft: "", parapet_h_ft: "", n_arches: "", rise_ratio: "", support: "", roof: "", flower_boxes: "", sag_ratio: "", decay: "",
       crossings: [], items: [], preview_png: "", last: null };
   };
   var opt = function (v) { return v === "" || v === null || v === undefined || !isFinite(Number(v)) ? null : Number(v); };
   // slider/number fields -> --set key=value pairs (only the ones that are filled in)
   VB.bridgeOverrides = function (st) {
     var b = st.bridges, a = [];
-    ["width_ft", "clearance_w_ft", "clearance_h_ft", "parapet_h_ft", "n_arches", "rise_ratio"].forEach(function (k) { var v = opt(b[k]); if (v !== null) a.push("--set", k + "=" + v); });
+    ["width_ft", "clearance_w_ft", "clearance_h_ft", "parapet_h_ft", "n_arches", "rise_ratio", "sag_ratio", "decay"].forEach(function (k) { var v = opt(b[k]); if (v !== null) a.push("--set", k + "=" + v); });
+    // text / boolean options of the covered-timber style (blank = preset)
+    if (b.support === "piles" || b.support === "piers") a.push("--set", "support=" + JSON.stringify(b.support));
+    if (b.roof === "shingle" || b.roof === "tile") a.push("--set", "roof=" + JSON.stringify(b.roof));
+    if (b.flower_boxes === "true" || b.flower_boxes === "false") a.push("--set", "flower_boxes=" + b.flower_boxes);
     return a;
   };
   VB.bridgeArgs = function (st, d, extra) {

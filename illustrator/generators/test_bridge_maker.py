@@ -1,6 +1,7 @@
 """Tests for the bridge maker (python test_bridge_maker.py): presets, clearance never intersected, deck continuity, determinism, scale 10-200 ft,
 stable ids, road trimming, detection of the floating-road bug, pack injection."""
 import copy
+import math
 import json
 import os
 import shutil
@@ -23,7 +24,7 @@ def mesh_hash(m):
 
 class PresetTests(unittest.TestCase):
     def test_five_presets_valid(self):
-        self.assertEqual(set(PRESETS), {"stone_arch", "brick_arch", "flat_cut_stone", "wooden_truss", "plank_footbridge"})
+        self.assertEqual(set(PRESETS), {"stone_arch", "brick_arch", "flat_cut_stone", "wooden_truss", "plank_footbridge", "rough_log", "covered_timber", "rope_plank"})
         for p in bm.list_presets():
             self.assertEqual(bm.validate_preset(p), [])
 
@@ -264,6 +265,142 @@ class InjectTests(unittest.TestCase):
             bm.inject(pk, "x", doc=doc)
             self.assertEqual(wp.load_pack(pk).list("bridges"), [])
             self.assertNotIn("gaps", wp.load_pack(pk).get(road["id"]))
+
+
+class NewStyleTests(unittest.TestCase):
+    def test_rough_log_is_irregular_and_rests_on_rocks(self):
+        plan = bm.make_plan(bm.sample_entity("rough_log", 18.0, 6.0, wall_slope=1.0))
+        logs = plan["logs"]
+        self.assertGreaterEqual(len(logs), 3)
+        self.assertLessEqual(len(logs), 6)
+        self.assertGreater(len({round(l["r"], 3) for l in logs}), 2)                 # different diameters
+        self.assertGreater(len({round(l["a"], 3) for l in logs}), 2)                 # different lengths / ends
+        self.assertAlmostEqual(sum(2 * l["r"] for l in logs), plan["W"], places=6)  # side by side, filling the width
+        self.assertEqual(len(plan["rocks"]), 4)
+        self.assertFalse(bm.make_plan(bm.sample_entity("rough_log", 60.0, 14.0))["ok"])  # a log cannot span 60 ft
+
+    def test_covered_variants_piles_and_piers(self):
+        for sup in ("piles", "piers"):
+            for roof in ("shingle", "tile"):
+                ent = bm.sample_entity("covered_timber", 70.0, 14.0, wall_slope=0.5)
+                ent["params"] = {"support": sup, "roof": roof, "flower_boxes": sup == "piles"}
+                m, plan = bm.build_local(ent)
+                self.assertTrue(plan["ok"], plan["notes"])
+                kinds = {s["kind"] for s in plan["supports"]}
+                self.assertIn("pier" if sup == "piers" else "bent", kinds)
+                self.assertEqual(bm.check_clearance(m, plan), 0)
+                self.assertTrue(any(k.startswith("mat_s_tint_" + ("red_tile" if roof == "tile" else "shingle")) for k in m.subs), list(m.subs))
+                self.assertGreater(m.V[:, 2].max() - ent["context"]["deck"][0][1] * FT, 2.5)     # a roof stands well above the deck
+
+    def test_rope_sag_clamped_above_ground(self):
+        for span, drop, ws in ((40, 8, 0.35), (60, 22, 0.35), (120, 24, 0.3), (60, 10, 0.9), (30, 4, 0.9)):
+            ent = bm.sample_entity("rope_plank", span, drop, wall_slope=ws)
+            plan = bm.make_plan(ent)
+            gh = bm.Prof([(u * FT, g * FT) for u, g in ent["context"]["ground_hi"]])
+            D = bm.Prof(plan["deck"])
+            us = np.linspace(0.12 * plan["L"], 0.88 * plan["L"], 80)
+            gap = D(us) - gh(us)
+            self.assertGreaterEqual(float(gap.min()), 0.099, (span, drop))              # never into the ground
+            if not plan["rope"]["clamped"]:
+                self.assertAlmostEqual(plan["rope"]["sag_m"], plan["rope"]["wanted_m"], places=6)
+            self.assertLessEqual(plan["rope"]["sag_m"], plan["rope"]["wanted_m"] + 1e-9)
+        shallow = bm.make_plan(bm.sample_entity("rope_plank", 60.0, 22.0, wall_slope=0.35))
+        tight = bm.make_plan(bm.sample_entity("rope_plank", 60.0, 14.0, wall_slope=0.9))
+        self.assertGreater(shallow["rope"]["sag_m"], tight["rope"]["sag_m"])             # less room = less sag
+
+    def test_rope_planks_seeded_decay(self):
+        a = bm.build_local(bm.sample_entity("rope_plank", 60.0, 22.0, seed=1, wall_slope=0.35))[0]
+        b = bm.build_local(bm.sample_entity("rope_plank", 60.0, 22.0, seed=1, wall_slope=0.35))[0]
+        c = bm.build_local(bm.sample_entity("rope_plank", 60.0, 22.0, seed=2, wall_slope=0.35))[0]
+        self.assertEqual(mesh_hash(a), mesh_hash(b))
+        self.assertNotEqual(mesh_hash(a), mesh_hash(c))
+        ent = bm.sample_entity("rope_plank", 60.0, 22.0, seed=4, wall_slope=0.35)
+        ent["params"] = {"decay": 0.0}
+        m0 = bm.build_local(ent)[0]
+        ent["params"] = {"decay": 0.4}
+        m1 = bm.build_local(ent)[0]
+        self.assertGreater(m0.tri_count, m1.tri_count)                                   # rot removes planks and ropes
+
+
+class TerrainClearanceTests(unittest.TestCase):
+    """B: the deck never sits under the highest terrain beneath it; C: every foot ends below the sampled ground."""
+
+    @classmethod
+    def setUpClass(cls):
+        DetectTests.setUpClass()
+        cls.pack, cls.cell = DetectTests.pack, DetectTests.cell
+        cls.h0 = DetectTests.h
+        cls.c = [c for c in bm.detect(cls.pack, h_raw=cls.h0) if c["type"] == "gully"][0]
+        x0 = cls.pack.get("r_gully")["points"][0][0] + cls.c["s0_ft"]
+        X, Y = np.meshgrid(np.arange(cls.h0.shape[1]) * cls.cell, np.arange(cls.h0.shape[0]) * cls.cell)
+        cls.bump = cls.h0 + (5.0 * np.exp(-((X - x0) ** 2 + (Y - 200) ** 2) / (2 * 9.0 ** 2))).astype(np.float32)     # terrain rising 5 ft above the road at the start abutment
+
+    def test_deck_clears_terrain_at_ends_all_styles(self):
+        for pid in PRESETS:
+            ent = bm.make_entity(self.pack, self.c, self.bump, preset=pid)
+            plan = bm.make_plan(ent)
+            self.assertGreater(plan["lift_ends"][0], 0.05, pid)                           # the start end had to be lifted
+            D = bm.Prof(plan["deck"])
+            gh = bm.Prof([(u * FT, g * FT) for u, g in ent["context"]["ground_hi"]])
+            us = np.linspace(0, plan["L"], 200)
+            self.assertGreaterEqual(float((D(us) - gh(us)).min()), 0.09, pid)             # deck above the highest terrain (>= 0.1 m)
+            m, _ = bm.build_local(ent)
+            self.assertLess(m.V[:, 0].min(), -0.3, pid)                                   # an approach ramp / posts beyond the start
+
+    def test_flat_terrain_needs_no_lift(self):
+        for pid in PRESETS:
+            ent = bm.make_entity(self.pack, self.c, self.h0, preset=pid)
+            self.assertFalse(ent["context"]["deck_lift"], pid)
+
+    def test_lift_is_slope_limited_and_capped(self):
+        us = np.linspace(0, 100, 51)
+        gh = np.zeros(51)
+        gh[0:3] = 20.0
+        lift, over = bm.compute_lift(us, np.zeros(51), gh)
+        self.assertLessEqual(float(lift.max()), bm.DEFAULTS["max_lift_ft"])
+        self.assertGreater(over, 0)
+        self.assertLessEqual(float(np.abs(np.diff(lift) / np.diff(us)).max()), bm.DEFAULTS["lift_slope"] + 1e-9)
+
+    def _check_feet(self, ent, margin_ft=1.5):
+        plan = bm.make_plan(ent)
+        gl = bm.Prof([(u * FT, g * FT) for u, g in ent["context"]["ground_lo"]])
+        self.assertTrue(plan["feet"])
+        for ft in plan["feet"]:
+            self.assertLessEqual(ft["z"], float(gl(ft["u"])) - margin_ft * FT + 1e-6, (ent["preset"], ft))
+        return plan
+
+    def test_foot_bottoms_below_bumpy_ground_all_styles(self):
+        rng = np.random.RandomState(3)
+        for pid in PRESETS:
+            for span in (14, 40, 90):
+                ent = bm.sample_entity(pid, span, 12.0, wall_slope=0.6, seed=span)
+                n = len(ent["context"]["ground_hi"])
+                noise = rng.uniform(-1.2, 1.2, n)
+                for key in ("ground_hi", "ground_lo"):
+                    ent["context"][key] = [[u, g + float(e)] for (u, g), e in zip(ent["context"][key], noise)]
+                self._check_feet(ent)
+
+    def test_foot_bottoms_below_real_terrain_samples(self):
+        import worldpack as wp
+        for pid in PRESETS:
+            ent = bm.make_entity(self.pack, self.c, self.bump, preset=pid)
+            plan = self._check_feet(ent)
+            sx, sy, _ = ent["span"]["start"]
+            ex, ey, _ = ent["span"]["end"]
+            L = math.hypot(ex - sx, ey - sy)
+            d = np.array([ex - sx, ey - sy]) / L
+            lf = np.array([d[1], -d[0]])
+            for ft in plan["feet"]:
+                u = min(max(ft["u"] / FT, 0.0), L)
+                vals = [wp.bilinear(self.bump, self.cell, sx + d[0] * u + lf[0] * v, sy + d[1] * u + lf[1] * v) for v in np.linspace(-ent["span"]["width_ft"] / 2, ent["span"]["width_ft"] / 2, 5)]
+                self.assertLessEqual(ft["z"] / FT, min(vals) - 1.4, (pid, ft))
+
+
+class DeckEndsAfterLiftTests(unittest.TestCase):
+    def test_plain_samples_keep_road_height_and_have_no_ramp(self):
+        for pid in PRESETS:
+            plan = bm.make_plan(bm.sample_entity(pid, 50.0, 14.0, wall_slope=0.5))
+            self.assertEqual(plan["lift_ends"], (0.0, 0.0), pid)
 
 
 if __name__ == "__main__":

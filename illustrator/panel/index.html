@@ -836,11 +836,16 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
     <label>Parapet height, ft <input type="number" data-s="bridges.parapet_h_ft" min="0" step="0.25" placeholder="preset"></label>
     <label>Arches / spans (blank = auto) <input type="number" data-s="bridges.n_arches" min="1" step="1"></label>
     <label>Arch rise (0.15 flat .. 0.5 round) <input type="number" data-s="bridges.rise_ratio" min="0.12" max="0.5" step="0.02"></label>
+    <label>Covered bridge supports <select data-s="bridges.support"><option value="">(preset: pile bents)</option><option value="piles">pile bents</option><option value="piers">stone piers</option></select></label>
+    <label>Covered bridge roof <select data-s="bridges.roof"><option value="">(preset: shingle)</option><option value="shingle">shingle</option><option value="tile">tile</option></select></label>
+    <label>Flower boxes <select data-s="bridges.flower_boxes"><option value="">(preset: yes)</option><option value="true">yes</option><option value="false">no</option></select></label>
+    <label>Rope bridge sag (fraction of span) <input type="number" data-s="bridges.sag_ratio" min="0.02" max="0.2" step="0.01" placeholder="0.075" title="Clamped so the lowest point stays above ground and water"></label>
+    <label>Rope bridge decay (0 sound .. 0.5 ruined) <input type="number" data-s="bridges.decay" min="0" max="0.5" step="0.05" placeholder="0.18"></label>
   </div>
   <div class="btns"><button data-act="br_preview">Preview render</button><button class="primary" data-act="br_apply">Apply to selected</button><button data-act="br_remove">Remove</button><button data-act="br_focus">Zoom to it</button></div>
   <img id="brPreview" hidden alt="bridge preview (Blender)">
   <div id="brOut" class="note"></div>
-  <p class="note">The deck keeps the road level at both ends. Openings are sized from the clearance below (water surface + banks + freeboard, or the road/path passing under, default 8 ft x 12 ft); piers and abutments stay outside them, the road ribbon is removed over the span and the terrain under it is left as it is. The map symbol (outline, parapets, piers) appears on the next Render. Needs a Pack export and Split (Foundry tab) to reach the 3D scene. Notes: illustrator/out/bridges_notes.md.</p>
+  <p class="note">The deck keeps the road level at both ends unless terrain rises above it there: then the deck is lifted just clear (max 6 ft) and a short approach ramp joins it to the road. Piers, piles, posts and rocks always end at least 1.5 ft below the lowest ground under them. Openings are sized from the clearance below (water surface + banks + freeboard, or the road/path passing under, default 8 ft x 12 ft); piers and abutments stay outside them, the road ribbon is removed over the span and the terrain under it is left as it is. The map symbol (outline, parapets, piers) appears on the next Render. Needs a Pack export and Split (Foundry tab) to reach the 3D scene. Notes: illustrator/out/bridges_notes.md.</p>
 </section>
 
 <!-- PADDING TAB (padding_ui.js, lib/padding.js; python generators/padding_heightmap.py, foundry_push.py push-padding) -->
