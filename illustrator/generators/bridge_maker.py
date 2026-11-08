@@ -282,20 +282,62 @@ def bridge_id(road_id, n):
 
 
 # ------------------------------------------------------------------ preset choice
-def choose_preset(c, road_class=None):
+RUSTIC_CULTURES = ("scandinavian", "fantasy_generic")          # log / timber building traditions (rough logs, log trusses)
+BRICK_CULTURES = ("english", "danish_german")                   # brick towns
+COVERED_CULTURES = ("danish_german", "english", "scandinavian")  # covered timber bridges are a northern timber tradition
+RUSTIC_RINGS = ("outskirts", "commoner", "wild", "rural", "farm", "farms")
+BUILT_UP_RINGS = ("authority", "merchant", "market")
+LOG_MAX_SPAN_FT = 70.0            # rough_log trestles
+TRUSS_MAX_SPAN_FT = 60.0          # wooden_truss
+ARCH_MAX_SPAN_FT = 26.0           # one stone / brick arch (longer crossings get several)
+ROPE_MIN_DROP_FT = 16.0           # a rope bridge only makes sense over a real drop
+
+
+def choose_preset(c, road_class=None, culture=None, override=None):
+    """Pick a bridge preset for one crossing. General rules, no place names. Inputs: span (ft), clearance below the deck (c['deck_above_ground_ft']: how
+    far the ground drops, the water depth is not known here), road class, crossing type, ring (district) and culture (c['culture'] or `culture`).
+      paths/footpaths: short -> plank_footbridge (rough_log in rustic settings), long deep gaps -> rope_plank, mid spans -> rough_log (rustic) or wooden_truss
+      lanes/alleys:    short -> flat_cut_stone, long -> wooden_truss (up to 60 ft), longer -> covered_timber (timber cultures) or stone_arch
+      streets/roads:   short water crossings -> flat_cut_stone; very tall or very long crossings -> covered_timber (stone arches stop at 90 ft clearance);
+                       rustic cultures cross 26-60 ft gaps on wooden_truss; otherwise stone_arch, brick_arch in brick cultures / built-up rings
+    `override` (a preset id) wins over everything (the panel's manual choice)."""
+    if override:
+        return override
     cls = (road_class or c.get("road_class") or "street")
     cls = "street" if cls == "bridge" else cls
-    span = c["span_ft"]
+    span = float(c["span_ft"])
+    drop = float(c.get("deck_above_ground_ft") or 0.0)
     ring = str(c.get("ring") or "")
+    cul = culture or c.get("culture") or ""
+    water = c.get("type") == "water"
+    rustic = cul in RUSTIC_CULTURES or ring in RUSTIC_RINGS
+    h3 = int(hashlib.md5(c["id"].encode()).hexdigest(), 16) % 3
     if cls in ("path", "footpath"):
-        return "plank_footbridge" if span <= 24 else "wooden_truss"
+        if span <= 18:
+            return "rough_log" if rustic and span <= 26 and h3 != 0 else "plank_footbridge"
+        if drop >= ROPE_MIN_DROP_FT and span >= 28:
+            return "rope_plank"
+        if rustic and span <= LOG_MAX_SPAN_FT:
+            return "rough_log"
+        if span <= TRUSS_MAX_SPAN_FT:
+            return "wooden_truss"
+        return "rope_plank" if drop >= ROPE_MIN_DROP_FT else "covered_timber"
     if cls in ("lane", "alley"):
         if span <= 16:
             return "flat_cut_stone"
-        return "wooden_truss" if c["type"] == "water" and span > 40 else "stone_arch"
-    if c["type"] == "water" and span <= 14:
+        if span > TRUSS_MAX_SPAN_FT or drop > 90:
+            return "covered_timber" if cul in COVERED_CULTURES or drop > 90 else "stone_arch"
+        return "wooden_truss" if water and span > 40 else ("wooden_truss" if rustic and span > 26 else "stone_arch")
+    if water and span <= 14:
         return "flat_cut_stone"
-    return "brick_arch" if ring in ("authority", "merchant", "market") or int(hashlib.md5(c["id"].encode()).hexdigest(), 16) % 3 == 0 else "stone_arch"
+    if drop > 90 or span > 90:                                    # beyond a stone arch's clearance / a sensible stack of arches
+        return "covered_timber"
+    if cul in COVERED_CULTURES and span > 60 and water:
+        return "covered_timber"
+    if rustic and 26 < span <= TRUSS_MAX_SPAN_FT and ring not in BUILT_UP_RINGS:
+        return "wooden_truss"
+    brick = ring in BUILT_UP_RINGS or (cul in BRICK_CULTURES and h3 != 0) or h3 == 0
+    return "brick_arch" if brick else "stone_arch"
 
 
 # ------------------------------------------------------------------ building the crossing context (spec)
@@ -1000,6 +1042,75 @@ def audit_mesh(ent, h, cell, plan=None):
                 deck_clear_ends_ft=round(float(clear[ends].min()), 2) if ends.any() else None)
 
 
+# ------------------------------------------------------------------ terrain carving under bridges (mesh level)
+STRUCT_FT = {"arch": 3.0, "flat": 1.2, "timber": 3.0, "log": 1.3, "covered": 3.0, "rope": 0.5}      # depth of the deck structure below the road surface, per family
+CARVE_DECK_CLEAR_FT = 0.3                                                                          # audit_mesh wants the deck at least this far above the terrain
+
+
+def carve_under(ent, h, cell, side_ft=2.5, falloff_ft=5.0, end_ft=6.0, extra_ft=0.3):
+    """Heights `h` with the ground cleared through the span envelope of one bridge: inside the footprint (deck width + side_ft each side, smooth falloff over
+    falloff_ft) the terrain is capped at deck top - structure depth - extra_ft, ramped in over end_ft at both abutments so the ground still meets the approach.
+    Only ever lowers. Returns (h2, max_cut_ft, cells_changed)."""
+    fam = load_preset(ent["preset"])["family"]
+    sx, sy, _ = ent["span"]["start"]
+    ex, ey, _ = ent["span"]["end"]
+    L = math.hypot(ex - sx, ey - sy)
+    d = np.array([ex - sx, ey - sy]) / L
+    lf = np.array([d[1], -d[0]])
+    W = float(ent["span"].get("width_ft") or 6.0)
+    pl = make_plan(ent)                                            # the planned deck (a rope bridge sags below the road line)
+    D = Prof([(u / FT, z / FT) for u, z in pl["deck"]])
+    deck = D
+    ny, nx = h.shape
+    reach = W / 2 + side_ft + falloff_ft
+    x0, x1 = min(sx, ex) - reach, max(sx, ex) + reach
+    y0, y1 = min(sy, ey) - reach, max(sy, ey) + reach
+    j0, j1 = max(0, int(x0 // cell)), min(nx - 1, int(x1 // cell) + 1)
+    i0, i1 = max(0, int(y0 // cell)), min(ny - 1, int(y1 // cell) + 1)
+    if j1 <= j0 or i1 <= i0:
+        return h, 0.0, 0
+    X, Y = np.meshgrid(np.arange(j0, j1 + 1) * cell, np.arange(i0, i1 + 1) * cell)
+    u = (X - sx) * d[0] + (Y - sy) * d[1]
+    v = (X - sx) * lf[0] + (Y - sy) * lf[1]
+    inside_u = (u > 0.0) & (u < L)
+    uc = np.clip(u, 0.0, L)
+    ramp = np.clip(np.minimum(uc, L - uc) / max(end_ft, 1e-6), 0.0, 1.0)
+    ramp = ramp * ramp * (3 - 2 * ramp)
+    lat = np.clip((W / 2 + side_ft + falloff_ft - np.abs(v)) / falloff_ft, 0.0, 1.0)
+    lat = lat * lat * (3 - 2 * lat)
+    k = np.where(inside_u, ramp * lat, 0.0)
+    cap = deck(uc) - STRUCT_FT.get(fam, 3.0) - extra_ft
+    sub = h[i0:i1 + 1, j0:j1 + 1].astype(float)
+    new = np.where(sub > cap, sub - k * (sub - cap), sub)
+    out = h.copy()
+    out[i0:i1 + 1, j0:j1 + 1] = new.astype(h.dtype)
+    cut = sub - new
+    return out, float(cut.max()), int((cut > 0.01).sum())
+
+
+def carve_under_bridges(pack, h, mode="auto"):
+    """Terrain carving for every bridge of the pack. mode: 'auto' (default) = only bridges whose deck clearance check against the terrain triangles fails
+    (audit_mesh deck_clear_min < 0.3 ft or terrain_over_deck_ft > 0), True = all bridges, False = none. Returns (h, report [{id, carved, reason, max_cut_ft, cells}])."""
+    rep = []
+    if mode in (False, "off", None):
+        return h, rep
+    for ent in pack.list("bridges"):
+        reason = "forced"
+        if mode == "auto":
+            try:
+                a = audit_mesh(ent, h, pack.cell_ft)
+                bad = a["deck_clear_min_ft"] < CARVE_DECK_CLEAR_FT or float(ent["context"].get("terrain_over_deck_ft") or 0.0) > 0.05
+                reason = f"deck clearance {a['deck_clear_min_ft']} ft" if bad else ""
+            except Exception as ex:                                 # a bridge we cannot audit is left alone
+                bad, reason = False, f"audit failed: {ex}"
+            if not bad:
+                rep.append(dict(id=ent["id"], carved=False, reason="clearance ok" if not reason.startswith("audit") else reason))
+                continue
+        h, cut, n = carve_under(ent, h, pack.cell_ft)
+        rep.append(dict(id=ent["id"], carved=n > 0, reason=reason, max_cut_ft=round(cut, 2), cells=n))
+    return h, rep
+
+
 # ------------------------------------------------------------------ pack integration
 def add_bridge_parts(pack, cx, parts, add, want=True):
     """Hook for worldpack_mesh.build_parts: one Part per bridge entity (layer 'bridges')."""
@@ -1114,13 +1225,16 @@ def apply(place, pack_dir=None, only=None, preset=None, overrides=None, export=T
         if r["id"] in tmp:
             r["gaps"] = tmp[r["id"]]
     h_final = final_heights(pack)
+    culture = (_jload(os.path.join(root, place, "place.json")) if os.path.exists(os.path.join(root, place, "place.json")) else {}).get("culture")
     now = datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds")
     for c in found:
         if c["id"] in keep:
             continue
         prov = {"generated_at": now, "crossing": {k: c[k] for k in ("type", "span_ft", "deck_above_ground_ft")}}
         ent = None
-        order = [preset] if preset else [choose_preset(c)] + [n for n in ("stone_arch", "brick_arch", "flat_cut_stone", "wooden_truss", "plank_footbridge") if n != choose_preset(c)]
+        c.setdefault("culture", culture)
+        first = choose_preset(c, override=preset)
+        order = [first] if preset else [first] + [n for n in ("stone_arch", "brick_arch", "covered_timber", "flat_cut_stone", "wooden_truss", "plank_footbridge", "rough_log", "rope_plank") if n != first]
         best = None
         for k, name in enumerate(order):                               # the first preset whose plan meets the clearance wins; otherwise the one that misses least
             cand = make_entity(pack, c, h_final, preset=name, overrides=overrides, seed=seed, provenance=dict(prov))

@@ -555,5 +555,105 @@ class DeckEndsAfterLiftTests(unittest.TestCase):
             self.assertEqual(plan["lift_ends"], (0.0, 0.0), pid)
 
 
+class ChoosePresetTests(unittest.TestCase):
+    def c(self, span, cls="street", drop=10.0, typ="water", ring="commoner", i="brg_x_1", **kw):
+        return dict(id=i, span_ft=span, road_class=cls, deck_above_ground_ft=drop, type=typ, ring=ring, **kw)
+
+    def test_every_choice_is_a_real_preset(self):
+        for cls in ("path", "footpath", "lane", "alley", "street", "road", "bridge"):
+            for span in (6, 16, 30, 55, 80, 150):
+                for drop in (3, 20, 120):
+                    for cul in ("", "scandinavian", "english", "danish_german", "fantasy_generic"):
+                        self.assertIn(bm.choose_preset(self.c(span, cls, drop), culture=cul), PRESETS)
+
+    def test_new_styles_are_reachable_by_general_rules(self):
+        self.assertEqual(bm.choose_preset(self.c(40, "path", 6, "gully"), culture="scandinavian"), "rough_log")
+        self.assertEqual(bm.choose_preset(self.c(90, "path", 40, "gully")), "rope_plank")
+        self.assertEqual(bm.choose_preset(self.c(120, "road", 40), culture="english"), "covered_timber")
+        self.assertEqual(bm.choose_preset(self.c(40, "street", 8), culture="scandinavian"), "wooden_truss")
+        self.assertEqual(bm.choose_preset(self.c(12, "path"), culture="scandinavian", ), bm.choose_preset(self.c(12, "path"), culture="scandinavian"))
+        seen = {bm.choose_preset(self.c(12, "path", 4, i=f"brg_{k}_1"), culture="scandinavian") for k in range(12)}
+        self.assertEqual(seen, {"rough_log", "plank_footbridge"})
+
+    def test_spans_respect_preset_limits(self):
+        for span in range(6, 200, 7):
+            for cls in ("path", "street", "lane"):
+                name = bm.choose_preset(self.c(span, cls, 10), culture="scandinavian")
+                pr = bm.load_preset(name)
+                if pr["family"] == "log":
+                    self.assertLessEqual(span, bm.LOG_MAX_SPAN_FT)
+                if name == "wooden_truss":
+                    self.assertLessEqual(span, bm.TRUSS_MAX_SPAN_FT)
+
+    def test_road_class_and_culture_matter_not_place(self):
+        a = bm.choose_preset(self.c(40, "street", 8, ring="district"), culture="english")
+        b = bm.choose_preset(self.c(40, "street", 8, ring="district"), culture="scandinavian")
+        self.assertNotEqual(a, b)
+        self.assertEqual(bm.choose_preset(self.c(30, "lane", 5, ring="authority")), bm.choose_preset(self.c(30, "lane", 5, ring="authority")))
+
+    def test_manual_override_wins(self):
+        for name in PRESETS:
+            self.assertEqual(bm.choose_preset(self.c(200, "path", 90), override=name), name)
+        self.assertEqual(bm.choose_preset(self.c(200, "path", 90), culture="english", override="rough_log"), "rough_log")
+
+    def test_old_defaults_unchanged_for_short_street_water(self):
+        self.assertEqual(bm.choose_preset(self.c(10, "street")), "flat_cut_stone")
+        self.assertIn(bm.choose_preset(self.c(22, "street", 8, ring="market")), ("brick_arch",))
+
+
+class BridgeCarveTests(unittest.TestCase):
+    """Terrain carving under bridges (mesh level): ground that pokes through the span is cleared, only where the audit fails unless forced."""
+
+    @classmethod
+    def setUpClass(cls):
+        TerrainClearanceTests.setUpClass.__func__(cls)
+        X, Y = np.meshgrid(np.arange(cls.h0.shape[1]) * cls.cell, np.arange(cls.h0.shape[0]) * cls.cell)
+        xm = cls.pack.get("r_gully")["points"][0][0] + (cls.c["s0_ft"] + cls.c["s1_ft"]) / 2
+        cls.mound = (cls.h0 + 30.0 * np.exp(-((X - xm) ** 2 + (Y - 200) ** 2) / (2 * 8.0 ** 2))).astype(np.float32)   # a hump mid-span, higher than the deck
+
+    def _pack(self, ent, h):
+        import types
+        pk = types.SimpleNamespace(heights=h, cell_ft=self.cell, place="x", entities={"bridges": [ent]})
+        pk.list = lambda t=None: pk.entities.get(t, [])
+        return pk
+
+    def test_auto_leaves_a_passing_bridge_alone(self):
+        for pid in ("stone_arch", "wooden_truss", "covered_timber"):
+            ent = bm.make_entity(self.pack, self.c, self.h0, preset=pid)
+            h2, rep = bm.carve_under_bridges(self._pack(ent, self.h0), self.h0, "auto")
+            self.assertTrue(np.array_equal(h2, self.h0), pid)
+            self.assertFalse(rep[0]["carved"], pid)
+
+    def test_auto_carves_a_failing_bridge_and_the_audit_passes_after(self):
+        for pid in PRESETS:
+            ent = bm.make_entity(self.pack, self.c, self.h0, preset=pid)                        # planned on flat ground, terrain later rose under it
+            before = bm.audit_mesh(ent, self.mound, self.cell)
+            self.assertLess(before["deck_clear_min_ft"], 0.3, pid)
+            h2, rep = bm.carve_under_bridges(self._pack(ent, self.mound), self.mound, "auto")
+            self.assertTrue(rep[0]["carved"] and rep[0]["max_cut_ft"] > 1.0, (pid, rep))
+            after = bm.audit_mesh(ent, h2, self.cell)
+            self.assertGreaterEqual(after["deck_clear_min_ft"], 0.3, (pid, after["deck_clear_min_ft"]))
+            self.assertTrue(bool((h2 <= self.mound + 1e-4).all()), pid)                          # only ever lowers
+            far = (slice(0, 10), slice(0, 10))
+            self.assertTrue(np.array_equal(h2[far], self.mound[far]), pid)                       # far terrain untouched
+
+    def test_off_and_forced(self):
+        ent = bm.make_entity(self.pack, self.c, self.h0, preset="stone_arch")
+        pk = self._pack(ent, self.mound)
+        self.assertTrue(np.array_equal(bm.carve_under_bridges(pk, self.mound, False)[0], self.mound))
+        h2, rep = bm.carve_under_bridges(pk, self.h0 + 8.0, True)
+        self.assertEqual(rep[0]["reason"], "forced")
+
+    def test_build_parts_hook_uses_carving(self):
+        import worldpack_mesh as wm
+        ent = bm.make_entity(self.pack, self.c, self.h0, preset="stone_arch")
+        pk = self._pack(ent, self.mound)
+        pk.manifest = {}
+        h_on = wm.terrain_heights(pk, carve=False, conform=False, road_grade=False)[0]
+        h_off = wm.terrain_heights(pk, carve=False, conform=False, road_grade=False, carve_bridges=False)[0]
+        self.assertLess(float(h_on.max()), float(h_off.max()) - 5.0)
+        self.assertTrue(wm.LAST_BRIDGE_CARVE == [] or wm.LAST_BRIDGE_CARVE[0]["id"])
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=1)
