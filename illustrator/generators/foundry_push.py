@@ -401,6 +401,8 @@ def cmd_push_scene(br, a):
             a.scene_uuid = lk
             LOG(f"no scene given: using the scene linked to the place ({lk})")
     model, v, cfg = load_view(a.place, a.view, a.preset, a.scale, a.grid, a.page, a.major)
+    if not a.image:
+        return {"ok": False, "error": "push-scene needs --image (the exported whole-artboard PNG; the panel's Export view makes it)"}
     img = Image.open(a.image)
     img.load()
     img = img.convert("RGB") if img.mode not in ("RGB", "RGBA") else img

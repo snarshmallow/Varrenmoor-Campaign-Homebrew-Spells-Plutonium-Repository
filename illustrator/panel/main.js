@@ -557,7 +557,9 @@
   async function fExport(only, name, transparent) {
     var png = VB.foundryOut(d, name);
     fs.mkdirSync(path.dirname(png), { recursive: true });
-    var r = await evalHost({ action: "export_view", path: png, dpi: state.foundry.dpi || 150, only: only || [], transparent: !!transparent });
+    var dpi = state.foundry.dpi || 150, nat = ((readJson(d.world + "/place.json", {}) || {}).import || {}).native_export_dpi;   // a place imported from a Foundry scene knows the dpi that keeps the scene's own grid size (below it the grid would fall under Foundry's 50 px minimum)
+    if (+nat > dpi && +nat <= 600) { logLine("export dpi raised from " + dpi + " to " + Math.round(nat) + " (this place was imported from a scene: keeps its native grid size)"); dpi = Math.round(nat); }
+    var r = await evalHost({ action: "export_view", path: png, dpi: dpi, only: only || [], transparent: !!transparent });
     if (!r.ok) throw new Error("Illustrator export failed: " + (r.error || "no reply") + " (is a document open? close and reopen the panel after updating host.jsx)");
     logLine("exported " + png + " (" + r.width_px + "x" + r.height_px + " px at " + r.dpi + " dpi)");
     return { png: png, info: r };

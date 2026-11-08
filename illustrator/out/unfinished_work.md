@@ -57,3 +57,30 @@ Live checks for the second pass of work (each needs the user's Foundry GM tab si
 7. Climate mixes with the imported Baileywiki trees: scatter with `"climate": "temperate"`, merge, and check `triangle_report` / `lod_warnings` in `foliage_merge_report.json` (the beech hero is 30k triangles).
 8. New place layouts: Places tab, layout `radial` and `linear`; look at the result on the map (sheet: `illustrator/out/layout_templates_sheet.png`).
 9. Terrain LODs vs roads: `terrain_lod*.glb` written by `worldpack.py` (not changed, owned by another change set) can still cut roads at distance; use `worldpack_mesh.lod_terrain_heights` there (see road_grade_notes.md).
+
+## D. Live Illustrator checks (2026-11-08, real panel over CDP 8088, scratch places/docs only; screenshots out/panel_ui/live_*.png)
+Setup: panel place before = `bridgehollow` (restored at the end), panel width 823 restored. Scratch place zz_live_export (draft hamlet made via the Places tab), imports zz_import_tavern / zz_import_dyers; all scratch places, docs and renders deleted afterwards. The recovered doc was never touched.
+
+CHECKED, pass
+* Places > Generate (draft) + "Also write the Illustrator job": opens a new doc and places the SVG; panel switched to the new place.
+* Foundry tab > Export view: job runs, writes illustrator/out/foundry/<place>/view_export.png (2550x1650 at 150 dpi, frame, grid, scale bar ok); panel shows "Exported ... (WxH px)". NOTE: this button only writes a PNG, nothing under world/<place>/export.
+* Export world pack (3D) (wp_export) on the scratch place: writes world/<place>/export (entities/*.json, terrain/*, textures, manifest, materials; 37 files, 2.3 MB), panel log "validate: OK"; `worldpack.py validate --place` -> valid.
+* Import scene (real button), tavern Scene.LO9YAwP85R74V3tB with lights+tokens: 110 x 80 ft, 4 tiles, 3D settings, 8 lights, 7 tokens; panel switched to the new place; files foundry_lights/tokens/tiles/regions.json written.
+* Import scene, ZZ Dyers Walk 2D Test: 310 x 360 ft, 100 walls, 25 closed loops, background copied from the shared assets folder ("copied from the shared assets folder", underlay/background.png 3348x3888; the HTTP path was not exercised). Open in Illustrator: underlay lands exactly on the frame (rect 36,36,594,684 pt at 40 ft/in), locked, below LINES.
+* Push scene DRY RUN (CLI, the panel button has no dry-run and applies, so it was NOT pressed): dyers import -> 3348x3888 px, grid 54 px = 5 ft, 100 walls = identical to the source scene. Nothing written to Foundry.
+* Window resize: `panel_ui_audit.mjs --real` 340/600/900 on places, foundry, scale: no findings, no horizontal scroll, resizeContent reached each width (restored to 823).
+
+FAILED / fixed here
+* Export view on a place imported from a 2D scene used the panel default 150 dpi, so push-scene refused ("grid would be 19px per square (Foundry minimum is 50)"). Fixed in panel/main.js fExport: uses place.json import.native_export_dpi (432 here) when higher than the panel dpi (log line says so). Verified after panel reload: 3780x4320 px, dry-run push ok.
+* `foundry_push.py push-scene` without --image crashed with an AttributeError traceback; now returns a JSON error.
+
+FAILED / not fixed (repro)
+1. Scene picker is empty after switching place: Places tab "scene" select is filled from the CURRENT place's foundry.cache (panel_state per place). Repro: import a scene (panel switches to the new place), open Places tab: picker shows only "(pick a scene ...)" until Foundry tab > Refresh again. Fix idea: keep the Foundry lists cache global (world/panel_last_place.json neighbour) or copy it on switchPlace.
+2. Foundry tab refresh does not repaint the Places picker if the Places tab was already painted (set scene right after refresh -> value ""); call VBPlacesUI.paint() at the end of fRefresh.
+3. Grid is hidden by the underlay/shading: GUIDES is the bottom layer, so on an imported 2D scene (and the tavern with its shading PNG) the 5 ft grid is not visible in Illustrator. Design decision needed (move Grid above the underlay for imported places).
+4. Imported closed wall loops render as "Imported room N *" buildings with big white-haloed labels and a Key box (cluttered; 25 labels on Dyers).
+5. Tavern import (3D scene, no background, no entities): the render gets an all-over grass shading PNG; lights and tokens (foundry_lights/tokens.json) are NOT drawn as markers in Illustrator at all (no layer renders them), and import `warnings` is empty although there is no background.
+6. Panel "Push scene" has no dry-run option (only the CLI has); push dry-run in the panel is untestable without applying.
+
+UNTESTED
+* Real Push scene / push-models apply (not allowed), HTTP background download, Regions extract flow, bridges, interior doors (sections A.3, A.5, A.6 still open).
