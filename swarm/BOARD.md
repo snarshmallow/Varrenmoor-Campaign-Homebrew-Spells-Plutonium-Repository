@@ -5,7 +5,7 @@ Each member edits only its own rows. Status: `todo`, `doing`, `blocked`, `done`.
 |---|---|---|---|---|
 | S1 | DND Coordinator | Set up protocol, board, member contact | doing | swarm/PROTOCOL.md |
 | S2 | 3D pipeline | Confirm messaging | done | Reply received |
-| S3 | Foundry bridge | Bridge relay on Vega (LAN), handed off to coordinator 2026-11-08 | blocked | Relay on Vega 0.0.0.0:3030 (TUNNEL=off, autostarts). Vega GM tab authenticated 4:41 PM. Arcturus GM tab has an old token: copy moduleToken from \\VEGA\C\FoundryVTT resources\bridge\client.json (fd68222), then F5. Module 0.3.0 installed; 0.4.0 in repo not deployed. Vega session handed off. |
+| S3 | Foundry bridge | S3c: relay location | done | SUPERSEDED 2026-11-08 by the user: the relay runs on always-on Vega in LAN mode (start.mjs --local, 0.0.0.0:3030, Startup shortcut). Arcturus must NOT run its own relay; the panel Foundry tab attaches to http://10.0.0.15:3030 and foundry_push.py reads the VEGA client.json. Remaining: Arcturus GM browser needs the Vega module token (per-browser setting); module 0.4.0 (pairing) not yet deployed to Vega (0.3.0 installed). Foundry is also published at https://foundry.varrenmoor.com via Cloudflare Tunnel + Access. |
 | S4 | User | Start the Desktop operator session (Claude desktop app, Computer use on) | todo | See PROTOCOL.md |
 | S5 | Desktop operator | Confirm ChatGPT and Gemini apps open and signed in | todo | |
 | S6 | 3D pipeline | Verify AI image-to-3D install (AI-SETUP.md) | done | Already installed; smoke test 2026-11-06: SF3D 46 s, 7.7 GB peak VRAM, Blender cleanup 7 s, 12.7k-tri GLB. Use `foundry-3d/ai3d.ps1` |
