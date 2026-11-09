@@ -7,6 +7,11 @@
   var $ = function (id) { return document.getElementById(id); };
   var cv = null, g = null, off = document.createElement("canvas"), loaded = { place: null, stamp: null }, H = null, D = null, meta = null;
   var hover = null, drag = null, pan = null, pending = [], queue = Promise.resolve(), spaceDown = false, renderTimer = null, dirtyImage = true;
+  var resetArmed = false, resetTimer = null;
+  function disarmReset() {
+    resetArmed = false; clearTimeout(resetTimer);
+    var b = document.querySelector('[data-act="hp_reset"]'); if (b && b.dataset.label) b.textContent = b.dataset.label;
+  }
   function P() { return ctx.state().hp; }
   function busyMsg(t) { var el = $("hpStatus"); if (el) el.textContent = t || ""; }
 
@@ -174,7 +179,14 @@
     hp_save_pack: function () { var p = P(), was = p.rebuild_pack; p.rebuild_pack = true; var j = VB.jobHpSave(ctx.state(), ctx.dirs()); p.rebuild_pack = was; return ctx.startJob(j, function () { readPreview(); summary(); draw(); }); },
     hp_discard: function () { pending = []; applyN(); return enqueue(VB.jobHpDiscard(ctx.state(), ctx.dirs())); },
     hp_reset: function () {
-      if (typeof window.confirm === "function" && !window.confirm("Remove ALL heightmap edits for this place (working copy and saved layer)? The generated terrain is not touched.")) return;
+      // window.confirm is unreliable in CEP panels (can return false at once or block), so arm with a first click and confirm with a second one within 6 s
+      var b = document.querySelector('[data-act="hp_reset"]');
+      if (!resetArmed) {
+        resetArmed = true; if (b) { b.dataset.label = b.textContent; b.textContent = "Click again to remove ALL edits"; }
+        ctx.showError("Reset removes ALL heightmap edits for this place (working copy and saved layer); the generated terrain is not touched. Click the button again within 6 s to confirm.", "warn");
+        clearTimeout(resetTimer); resetTimer = setTimeout(disarmReset, 6000); return;
+      }
+      disarmReset(); ctx.showError("");
       pending = []; return enqueue(VB.jobHpReset(ctx.state(), ctx.dirs()));
     },
     hp_stats: function () { return enqueue(VB.jobHpStats(ctx.state(), ctx.dirs())); }

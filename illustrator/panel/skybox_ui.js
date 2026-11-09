@@ -30,8 +30,7 @@
     var lf = (row && row.lighting_flags) || {}, lk = Object.keys(lf);
     $("skyLightRow").hidden = !lk.length;
     $("skyLightTxt").textContent = lk.length ? "Also apply this sky's sun / lighting flags" : "";
-    $("skyLightRow").title = lk.map(function (k) { return k + " = " + lf[k]; }).join("
-");
+    $("skyLightRow").title = lk.map(function (k) { return k + " = " + lf[k]; }).join("\n");
     $("skyLightNote").textContent = lk.length ? "Flags: " + lk.map(function (k) { return k + " " + lf[k]; }).join(", ") : ""; $("skyLightNote").hidden = !lk.length;
     $("skyScene").innerHTML = sceneOptions(s.scene_uuid);
     $("skyImpScene").innerHTML = sceneOptions(s.import_scene);
