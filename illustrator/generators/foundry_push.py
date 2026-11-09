@@ -1032,6 +1032,15 @@ def _count_lights(doc):
     return len(doc.get("lights", [])) + sum(len(e.get("lights", [])) for e in doc.get("files", []))
 
 
+def no_lights_hint(doc, full=True):
+    """Why a placements doc has 0 lights, in plain words. full = the pack's own placements.json (not a worldpack_merge layer set)."""
+    if not full:
+        return "carries no light entities (a layer set from worldpack_merge has none; pass --lights-placements <full pack placements.json>)"
+    return ("carries no light entities: this world pack has no interior light hints (hearth, window) and no street lamps. Re-export the world pack "
+            "(worldpack.py export, default --derive-doors auto gives buildings doors, windows, interiors and their lights) and split it again; "
+            "for lamps switch Streetlamps on and Generate/Apply them in the Streetlamps tab")
+
+
 def light_placements_path(a):
     """placements.json that carries the lights: --lights-placements, else --placements when it has lights, else the full pack export
     (a layer set from worldpack_merge has no lights, which once made --with-lights find 0 and wipe the scene's lights)."""
@@ -1081,7 +1090,7 @@ def plan_lights(br, a, sc=None):
             warns.append(f"lighting {a.lighting!r} has no 2D point lights (sun/ambient only)")
         items += pts
     if not _count_lights(doc):
-        warns.append(f"{pp} carries no light entities (a layer set from worldpack_merge has none; pass --lights-placements <full pack placements.json>)")
+        warns.append(f"{pp} " + no_lights_hint(doc, full="merge" not in doc))
     import foundry_lightbudget as flb
     if flb.budget_requested(a):                                                    # light budget / mode (--max-lights, --lighting-mode, ...): thin the plan, defaults change nothing
         items, info = flb.limit_new_lights(items, mode=a.lighting_mode, max_lights=a.max_lights, exclude_types=tuple(x for x in (a.exclude_types or "").split(",") if x),

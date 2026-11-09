@@ -481,6 +481,71 @@ def _load_model(place, world_root):
     return m
 
 
+DOOR_BIG_KINDS = {"civic", "inn", "barn", "stable", "craft"}
+
+
+def derive_street_doors(buildings, streets, have=()):
+    """One street-facing front door per building that has none (same rule as region_extract.detail_pass: the footprint edge >= 5 ft nearest
+    the nearest street, longest edge wins ties). A generated town (place_create / town_gen) has no details.json, so without these its
+    buildings got no openings -> no windows, no generated interior and no interior light hints (hearth / window) in placements.json.
+    Not canon: tagged detail/derived, never written to world/. -> list of door dicts (details.json "doors" format)."""
+    from shapely.geometry import LineString, Point, Polygon
+    sg = []
+    for s in streets:
+        pts = (s.get("geometry") or {}).get("points") or []
+        if len(pts) >= 2:
+            sg.append(LineString([tuple(p[:2]) for p in pts]).buffer(float((s.get("geometry") or {}).get("width_ft", 10.0)) / 2, cap_style=2, resolution=4))
+    have = set(have)
+    out = []
+    for b in sorted(buildings, key=lambda e: e["id"]):
+        if b["id"] in have:
+            continue
+        pts = _strip_closed((b.get("geometry") or {}).get("points") or [])
+        if len(pts) < 3:
+            continue
+        g = Polygon([tuple(p[:2]) for p in pts]).buffer(0)
+        if g.geom_type != "Polygon" or g.area < 40:
+            continue
+        coords = list(g.exterior.coords)[:-1]
+        c = g.centroid
+        near = min(sg, key=lambda x: x.distance(c)) if sg else None
+        best = None
+        for i in range(len(coords)):
+            p, q = np.array(coords[i]), np.array(coords[(i + 1) % len(coords)])
+            L = float(np.hypot(*(q - p)))
+            if L < 5:
+                continue
+            mid = (p + q) / 2
+            score = (near.distance(Point(mid)) if near is not None else 0.0) - 0.02 * L
+            if best is None or score < best[0]:
+                best = (score, i, p, q, mid, L)
+        if not best:
+            continue
+        _, i, p, q, mid, L = best
+        n = np.array([q[1] - p[1], -(q[0] - p[0])]) / L
+        if g.contains(Point(mid + n * 0.5)):
+            n = -n
+        out.append({"id": f"{b['id']}_door1", "building": b["id"], "edge": i, "point": [round(float(mid[0]), 2), round(float(mid[1]), 2)],
+                    "width_ft": 6.0 if b.get("kind") in DOOR_BIG_KINDS else 3.5, "facing": [round(float(n[0]), 3), round(float(n[1]), 3)],
+                    "detail": True, "derived": "worldpack.derive_street_doors"})
+    return out
+
+
+def add_derived_doors(model, mode="auto", log=print):
+    """mode auto = derive a front door for every building without one (details.json doors or the building JSON's own doors win); off = never.
+    Doors -> openings (windows derived at mesh time) -> generated interior (interiors.py) -> interior light hints. Returns the number added.
+    Only details.json doors count as existing ones: the building JSON's own doors list holds interior (layout) doors, not exterior openings."""
+    if mode == "off":
+        return 0
+    det = model.setdefault("details", {})
+    have = {d.get("building") for d in det.get("doors", [])}
+    new = derive_street_doors(model["buildings"], model.get("streets", []), have)
+    if new:
+        det["doors"] = list(det.get("doors", [])) + new
+        log(f"derived {len(new)} street-facing front doors (buildings without details.json doors): openings, interiors and interior lights follow")
+    return len(new)
+
+
 def _obb(poly):
     """(centre, long-axis angle deg from +x toward +y, length, width) of the minimum rotated rectangle (same as fills_raster.long_axis)."""
     from shapely.geometry import Polygon
@@ -720,15 +785,18 @@ def _surface(mid, tile_ft):
 
 
 def export_world(place, out_dir=None, lod=(1, 4), world_root=None, terrain_source=None, style=None, phases_path=None, splat_cell_ft=SPLAT_CELL_FT,
-                 albedo_px_per_ft=ALBEDO_PX_PER_FT, foundry_px_per_ft=20.0, z_origin_ft=None, timestamp=None, copy_textures=True, log=print):
+                 albedo_px_per_ft=ALBEDO_PX_PER_FT, foundry_px_per_ft=20.0, z_origin_ft=None, timestamp=None, copy_textures=True, log=print, derive_doors="off"):
     """Write the world pack for `place`. Deterministic for identical inputs (the manifest's `generated` block is the only part that
-    differs between runs; pass timestamp= to pin it). Returns the manifest dict."""
+    differs between runs; pass timestamp= to pin it). Returns the manifest dict.
+    derive_doors: "auto" = street-facing front doors for buildings without details.json doors (add_derived_doors: openings, interiors,
+    interior lights); "off" (the function default, keeps library callers unchanged). The CLI export defaults to auto."""
     sys.path.insert(0, HERE)
     import fills_raster as fr
     import worldio
     if terrain_source:
         worldio.set_source(source=terrain_source)
     model = _load_model(place, world_root)
+    add_derived_doors(model, derive_doors or "off", log=log)
     out = os.path.abspath(out_dir or os.path.join(model["root"], "export"))
     if os.path.exists(out) and os.listdir(out) and not os.path.exists(os.path.join(out, "manifest.json")):
         raise SystemExit(f"{out} exists and is not a world pack; refusing to overwrite")
@@ -1266,6 +1334,8 @@ def main(argv=None):
     e.add_argument("--interior-style", dest="interior_style", choices=["auto", "plain", "rustic_cottage", "farmhouse", "burgher_townhouse", "poor_hovel"], help="record the home interior style "
                    "in the manifest (split/merge use it): auto = by building kind (houses rustic_cottage, farmhouse, townhouses burgher_townhouse, tenements poor_hovel, other kinds plain); "
                    "a building JSON key interior_style overrides it per building")
+    e.add_argument("--derive-doors", dest="derive_doors", choices=["auto", "off"], default="auto", help="auto (default) = a street-facing front door for every building without a "
+                   "details.json door, so generated towns get windows, interiors and interior lights (hearth, window); off = only details.json doors (old behaviour)")
     v = sub.add_parser("validate", help="schema + integrity check")
     v.add_argument("--place", default="bridgehollow")
     v.add_argument("--path")
@@ -1276,7 +1346,7 @@ def main(argv=None):
     if a.cmd == "export":
         m = export_world(a.place, a.out, lod=[int(x) for x in a.lod.split(",") if x], world_root=a.world_root, terrain_source=a.terrain_source, style=a.style,
                          phases_path=a.phases, splat_cell_ft=a.splat_cell_ft, albedo_px_per_ft=a.albedo_px_per_ft, foundry_px_per_ft=a.px_per_ft,
-                         z_origin_ft=a.z_origin_ft, timestamp=a.timestamp, copy_textures=not a.no_textures)
+                         z_origin_ft=a.z_origin_ft, timestamp=a.timestamp, copy_textures=not a.no_textures, derive_doors=a.derive_doors)
         out = a.out or os.path.join(a.world_root or os.path.join(REPO, "world"), a.place, "export")
         if a.roof_mode:
             set_roof_mode(out, a.roof_mode)
