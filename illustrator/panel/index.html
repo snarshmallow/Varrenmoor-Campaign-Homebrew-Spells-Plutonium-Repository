@@ -99,6 +99,7 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
   <button role="tab" data-tab="places">Places</button><!-- PLACES tab (places_ui.js) -->
   <button role="tab" data-tab="layers">Layers</button>
   <button role="tab" data-tab="foundry">Foundry</button>
+  <button role="tab" data-tab="tools">Tools</button><!-- TOOLS tab (tools_ui.js) -->
 </nav>
 <main>
 
@@ -1074,6 +1075,168 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
   <p class="note">The scene needs the 3D model tiles pushed first (Foundry tab). The push publishes a versioned heightmap, table tile and apron GLB, sets tableHeightmap/Scale, tableTex, fog and the level's elevation.bottom, and upserts the apron tile. Formulae and flags: illustrator/out/padding_notes.md.</p>
   <div id="padOut" class="note"></div>
 </section>
+<!-- TOOLS TAB (tools_ui.js, lib/tools.js; command parity map lib/command_manifest.json). Audits + results viewer, texture baking, delete scene, push options, one-shot 3D scene, macro installers, advanced pack options. -->
+<section id="tab-tools" role="tabpanel">
+  <style>#tlOut{white-space:pre-wrap;max-height:260px;overflow:auto;background:var(--bg3);border:1px solid var(--line);padding:4px;font:11px monospace}#tlConfirm{border:1px solid var(--warn);padding:4px;margin:4px 0;background:var(--bg2)}</style>
+  <div class="note">Everything the command line can do that has no home on another tab. Scene actions use the existing scene picked on the Foundry tab: <b id="tlScene"></b></div>
+  <div id="tlConfirm" hidden><div id="tlConfirmText" class="note" style="white-space:pre-wrap"></div><div class="btns"><button class="primary" id="tlYes">Continue</button><button id="tlNo">Cancel</button></div></div>
+  <h4>Result <span class="note" id="tlOutHead"></span></h4>
+  <pre id="tlOut"></pre>
+  <div class="btns"><button data-act="open_out" title="Opens illustrator/out (audit sheets, JSON and previews are written under it)">Open output folder</button></div>
+
+  <h4>Audits (read-only, nothing is written to Foundry or to the world files)</h4>
+  <div class="btns">
+    <button data-act="tl_scene_audit" title="foundry_push scene-audit: duplicate or stale pipeline tiles on the picked scene against the exported placements, with a repair plan">Scene tile audit</button>
+    <button data-act="tl_pack_validate" title="worldpack.py validate: schema and integrity check of world/&lt;place&gt;/export">Validate world pack</button>
+    <button data-act="tl_pack_info" title="worldpack.py info: summary of the exported pack">World pack summary</button>
+    <button data-act="tl_split_info" title="worldpack_split.py info: summary of the split and merged files">Split pack summary</button>
+  </div>
+  <div class="grid">
+    <label>Building ground: show worst N <input type="number" data-s="tools.audits.bga_top" min="1" step="1" title="building_ground_audit.py --top"></label>
+    <label class="chk"><input type="checkbox" data-s="tools.audits.bga_nomesh" title="--no-mesh: skip the built-mesh check (faster)"> Skip mesh check</label>
+  </div>
+  <div class="btns"><button data-act="tl_bga" title="Checks that every building floor sits on or above the terrain (building_ground_audit.py)">Building ground audit</button></div>
+  <div class="grid">
+    <label>Road sample step (ft) <input type="number" data-s="tools.audits.rha_step" min="0.5" step="0.5" title="--step-ft"></label>
+    <label>Audit the built meshes <select data-s="tools.audits.rha_mesh" title="--mesh: blank = the exported road points; legacy = old build; graded = road_grade.py"><option value="">no (exported points)</option><option value="legacy">legacy build</option><option value="graded">graded build</option></select></label>
+    <label>Smoothing (graded) <input type="number" data-s="tools.audits.rha_smooth" min="0" max="1" step="0.05" placeholder="default" title="--smooth"></label>
+    <label>Max grade deg (graded) <input type="number" data-s="tools.audits.rha_maxgrade" min="1" max="60" step="1" placeholder="default" title="--max-grade"></label>
+    <label class="chk"><input type="checkbox" data-s="tools.audits.rha_cutfill" title="--cutfill"> Cut/fill (graded)</label>
+  </div>
+  <div class="btns"><button data-act="tl_rha" title="Road height and slope along every road (road_height_audit.py)">Road height audit</button></div>
+  <div class="grid">
+    <label>Terrain minor contour (ft) <input type="number" data-s="tools.audits.tc_minor" min="1" step="1"></label>
+    <label>Terrain index contour (ft) <input type="number" data-s="tools.audits.tc_index" min="1" step="1"></label>
+  </div>
+  <div class="btns"><button data-act="tl_terrain_check" title="terrain_check.py: heightmap sanity plots into illustrator/out/terrain_check">Terrain check</button></div>
+  <div class="grid">
+    <label>Textures audit tag <input type="text" data-s="tools.audits.ta_tag" title="--tag: names the output sheet"></label>
+    <label class="chk"><input type="checkbox" data-s="tools.audits.ta_padding" title="--padding"> Padding table tiles only</label>
+    <label class="chk"><input type="checkbox" data-s="tools.audits.ta_raw" title="--raw: conditioning off (the before state)"> Raw (conditioning off)</label>
+  </div>
+  <div class="btns"><button data-act="tl_textures_audit" title="textures_audit.py: tiling metrics and a contact sheet of the repo textures">Textures audit</button></div>
+  <div class="btns"><button data-act="tl_places" title="foundry_push places: the places that exist under world/">List places</button><button data-act="tl_export_info" title="foundry_push export-info: window (ft) and px per ft of the current view">View export info</button></div>
+
+  <h4>Bake ground texture (finished 2D map -> table texture of a 3D scene)</h4>
+  <div class="note">Drawings, labels and fills do not render in 3D Canvas, so a rendered map image becomes the ground texture. Local files only unless you press Bake + publish. Apply it afterwards with Push models "Table texture" (Push options below).</div>
+  <div class="grid">
+    <label>Map image (png) <input type="text" data-s="tools.bake.image" title="--image"></label>
+    <label>Window x0,y0,x1,y1 (ft) <input type="text" data-s="tools.bake.window" placeholder="e.g. 0,0,2400,1800" title="--window: the area of the map the image covers"></label>
+    <label>or pixels per foot <input type="number" data-s="tools.bake.px_per_ft" min="0" step="any" title="--px-per-ft (used when Window is blank)"></label>
+    <label>Crop paper margin (pt) <input type="number" data-s="tools.bake.crop_margin_pt" min="0" step="1" title="--crop-margin-pt: page exports carry a margin"></label>
+    <label>Image dpi (for the crop) <input type="number" data-s="tools.bake.dpi" min="1" step="1" title="--dpi"></label>
+    <label>Name <input type="text" data-s="tools.bake.name" placeholder="ground" title="--name"></label>
+    <label>Format <select data-s="tools.bake.format" title="--format"><option value="webp">webp</option><option value="png">png</option></select></label>
+    <label>Output folder (blank = export/baked) <input type="text" data-s="tools.bake.out_dir" title="--out-dir"></label>
+    <label>tableTex path to record (blank = the asset path) <input type="text" data-s="tools.bake.table_texture_path" title="--table-texture-path"></label>
+  </div>
+  <div class="btns">
+    <button data-act="tl_bake_window" title="Fills Window and Map image from the current view (the last Export view on the Foundry tab)">Fill from view</button>
+    <button class="primary" data-act="tl_bake" title="Writes the versioned image and bake.json locally. Nothing goes to Foundry.">Bake (local files)</button>
+    <button data-act="tl_bake_publish" title="Also copies the image into the shared assets folder Foundry serves (asks first)">Bake + publish</button>
+  </div>
+
+  <h4>Push options (used by the Foundry tab buttons)</h4>
+  <details><summary class="note">Push scene (2D)</summary>
+  <div class="grid">
+    <label>Upscale factor <input type="number" data-s="tools.scene.upscale" min="1" max="4" step="0.25" title="--upscale: resample the image up (low-dpi exports)"></label>
+    <label>Scene padding (fraction) <input type="number" data-s="tools.scene.padding" min="0" step="0.05" title="--padding"></label>
+    <label>Max image px <input type="number" data-s="tools.scene.max_px" min="1024" step="256" title="--max-px"></label>
+    <label>Image format <select data-s="tools.scene.format" title="--format"><option value="webp">webp</option><option value="png">png</option></select></label>
+    <label class="chk"><input type="checkbox" data-s="tools.scene.link" title="--link: store the scene uuid in place.json so later pushes default to it"> Remember this scene as the place's scene</label>
+  </div></details>
+  <details><summary class="note">Push models (advanced)</summary>
+  <div class="grid">
+    <label>Only entity ids <input type="text" data-s="tools.push.ids" placeholder="bld_house_041,bld_house_044" title="--ids"></label>
+    <label>Foundry base URL (verify models over HTTP) <input type="text" data-s="tools.push.serve_url" title="--serve-url (blank = env FOUNDRY_URL)"></label>
+    <label>Assets folder <input type="text" data-s="tools.push.assets_dir" title="--assets-dir"></label>
+    <label>Px per foot override <input type="number" data-s="tools.push.px_per_ft" min="0" step="any" title="--px-per-ft"></label>
+    <label>Model folder name <input type="text" data-s="tools.push.set_name" title="--set-name: folder under art/&lt;place&gt;/models/"></label>
+    <label>Table texture path <input type="text" data-s="tools.push.table_texture" title="--table-texture: output of Bake ground texture"></label>
+    <label>Lighting (place id or json) <input type="text" data-s="tools.push.lighting" title="--lighting: sun/ambient scene flags"></label>
+    <label>Collision proxy (layer=ratio) <input type="text" data-s="tools.push.collision_lod" placeholder="terrain=0.5" title="--collision-lod (also used by Set collision)"></label>
+    <label class="chk"><input type="checkbox" data-s="tools.push.yes" title="--yes: do not ask before changing documents the pipeline did not create"> Allow changing documents I made myself (no question)</label>
+  </div>
+  <label>Scene flags, one KEY=VALUE per line <textarea data-s="tools.push.scene_flags" placeholder="tableTex=&quot;path&quot;" title="--scene-flag (JSON value)"></textarea></label></details>
+  <details><summary class="note">Interior lights, walls, tokens, import</summary>
+  <div class="grid">
+    <label>Actor portrait file <input type="text" data-s="tools.tok.portrait" title="push-actor --portrait (otherwise Image file sets portrait and token)"></label>
+    <label>Actor token art file <input type="text" data-s="tools.tok.token" title="push-actor --token"></label>
+    <label>Light animation <input type="text" data-s="tools.lights.animation" placeholder="none" title="--light-animation (never torch/smoke)"></label>
+    <label>Lighting (place id or json) <input type="text" data-s="tools.lights.lighting" title="push-lights --lighting: 2D point lights"></label>
+    <label>Lights placements file <input type="text" data-s="tools.lights.placements" title="--lights-placements"></label>
+    <label class="chk"><input type="checkbox" data-s="tools.lights.prune" title="--prune-lights: allow clearing all pipeline lights when the plan has none"> Allow clearing lights</label>
+    <label>Walls: foliage.json (tree stands) <input type="text" data-s="tools.walls.foliage_json" title="push-walls --foliage-json"></label>
+    <label class="chk"><input type="checkbox" data-s="tools.tok.hidden" title="push-token --hidden"> Token hidden</label>
+    <label>Token key <input type="text" data-s="tools.tok.key" title="push-token --key"></label>
+    <label>Token at px x,y <input type="text" data-s="tools.tok.px" title="push-token --px (instead of Place at)"></label>
+    <label class="chk"><input type="checkbox" data-s="tools.imp.no_image" title="import-scene --no-image"> Import: skip the background image</label>
+    <label class="chk"><input type="checkbox" data-s="tools.imp.force" title="import-scene --force: overwrite an existing world/&lt;id&gt;"> Import: overwrite an existing place</label>
+    <label>Import from a scene JSON file <input type="text" data-s="tools.imp.scene_json" title="import-scene --scene-json (offline)"></label>
+  </div>
+  <label>Wall profiles, one per line (layer:key=val,...) <textarea data-s="tools.walls.profile" placeholder="water:sight=10" title="push-walls --wall-profile (values 0/10/20)"></textarea></label></details>
+
+  <details><summary class="note">Padding extras and per-object editing</summary>
+  <div class="grid">
+    <label>Padding ground texture size (px) <input type="number" data-s="tools.pad.tex_px" min="256" step="256" placeholder="2048" title="padding_heightmap --tex-px (used by Padding generate and push)"></label>
+    <label class="chk"><input type="checkbox" data-s="tools.pad.no_level" title="push-padding --no-level: do not set the level's elevation.bottom"> Padding push: leave the level elevation alone</label>
+    <label class="chk"><input type="checkbox" data-s="tools.objdry" title="object_edit --dry: Apply on the Buildings / Roads tab only reports what it would change"> Per-object edits: preview only (nothing written)</label>
+  </div>
+  <div class="btns"><button data-act="tl_obj_buildings" title="object_edit list-buildings: every building with its edit overrides">List buildings</button><button data-act="tl_obj_roads" title="object_edit list-roads">List roads</button><button data-act="tl_obj_choices" title="object_edit choices: the allowed values of every editable field">Allowed values</button></div></details>
+
+  <h4>Push whole 3D scene (one step)</h4>
+  <div class="note">push-scene-3d: models, foliage, padding, lights, skybox, collision and flags of the picked existing scene in the right order; re-running changes nothing that is identical. Uses the Foundry tab layers, LOD, collision and prune options and the Padding tab settings.</div>
+  <div class="grid">
+    <label>Layers (blank = all) <input type="text" data-s="tools.s3d.layers" title="--layers"></label>
+    <label>LOD <select data-s="tools.s3d.lod"><option value="0">0 full</option><option value="1">1</option><option value="2">2</option></select></label>
+    <label>Skybox preset <input type="text" data-s="tools.s3d.skybox_preset" title="--skybox-preset: export/skybox/&lt;preset&gt;.webp"></label>
+    <label class="chk"><input type="checkbox" data-s="tools.s3d.no_skybox" title="--no-skybox"> No skybox</label>
+    <label class="chk"><input type="checkbox" data-s="tools.s3d.no_padding" title="--no-padding"> No padding</label>
+    <label class="chk"><input type="checkbox" data-s="tools.s3d.use_padding_tab" title="Passes the Padding tab preset, blend, taper, seed, height scale as --padding-arg"> Use the Padding tab settings</label>
+    <label>Extra padding arguments <input type="text" data-s="tools.s3d.padding_arg" placeholder="--preset bowl-ridge" title="--padding-arg (repeatable)"></label>
+    <label class="chk"><input type="checkbox" data-s="tools.s3d.with_lights" title="--with-lights"> Also push interior lights</label>
+    <label class="chk"><input type="checkbox" data-s="tools.s3d.prune_lights" title="--prune-lights"> Allow clearing lights</label>
+    <label>Foliage placements (merged foliage) <input type="text" data-s="tools.s3d.foliage_placements" title="--foliage-placements"></label>
+    <label>Lights placements <input type="text" data-s="tools.s3d.lights_placements" title="--lights-placements"></label>
+  </div>
+  <div class="btns"><button data-act="tl_s3d_dry" title="Plans every step and writes nothing">Push 3D scene (dry run)</button><button class="primary" data-act="tl_s3d_push" title="Writes to Foundry after you confirm">Push 3D scene</button></div>
+
+  <h4>Foundry macros (install once, then use in a GM tab)</h4>
+  <div class="btns">
+    <button data-act="wp_click_macros" title="Click mode (click a roof to hide it, a door to open it) plus the roof macros">Install click mode</button>
+    <button data-act="wp_door_sync_install" title="Door sync: wall doors and model doors follow each other">Install door sync</button>
+    <button data-act="wp_roof_macros" title="Roofs: toggle all / selected">Install roof macros</button>
+    <button data-act="w3_install" title="3D water shader on the scene's water tiles (Water tab scene)">Install water shader</button>
+  </div>
+  <div class="btns"><button data-act="wp_roofs_hide">Hide roofs</button><button data-act="wp_roofs_show">Show roofs</button><button data-act="wp_doors_dry">Sync doors (dry run)</button><button data-act="wp_doors_apply">Sync doors now</button></div>
+
+  <h4>Advanced pack export</h4>
+  <details><summary class="note">Terrain source, scale, textures, merge and split switches, re-export one entity (defaults are right for normal use)</summary>
+  <div class="grid">
+    <label>Terrain source <select data-s="tools.exp.terrain_source" title="worldpack export --terrain-source"><option value="">default (auto)</option><option value="base">base</option><option value="patched">patched</option><option value="carved">carved</option></select></label>
+    <label>Terrain LOD steps <input type="text" data-s="tools.exp.lod" placeholder="1,4" title="--lod (heightmap cells, comma list)"></label>
+    <label>Town style json <input type="text" data-s="tools.exp.style" title="--style"></label>
+    <label>Terrain phases file <input type="text" data-s="tools.exp.phases" title="--phases"></label>
+    <label>Splat cell (ft) <input type="number" data-s="tools.exp.splat_cell_ft" min="0" step="any" title="--splat-cell-ft"></label>
+    <label>Albedo px per ft <input type="number" data-s="tools.exp.albedo_px_per_ft" min="0" step="any" title="--albedo-px-per-ft"></label>
+    <label>Foundry px per ft <input type="number" data-s="tools.exp.px_per_ft" min="0" step="any" title="--px-per-ft (100 px grid / 5 ft = 20)"></label>
+    <label>Z origin (ft) <input type="number" data-s="tools.exp.z_origin_ft" step="any" title="--z-origin-ft"></label>
+    <label>Pin timestamp <input type="text" data-s="tools.exp.timestamp" title="--timestamp: byte-identical exports"></label>
+    <label class="chk"><input type="checkbox" data-s="tools.exp.no_textures" title="--no-textures"> Reference repo textures (do not copy)</label>
+    <label>Split textures <select data-s="tools.exp.textures" title="worldpack_split --textures"><option value="">external (default)</option><option value="embed">embed</option><option value="none">none</option></select></label>
+    <label>Split terrain step (cells) <input type="number" data-s="tools.exp.step" min="1" step="1" title="--step"></label>
+    <label class="chk"><input type="checkbox" data-s="tools.exp.no_hidden_removal" title="merge --no-hidden-removal"> Merge: keep hidden faces</label>
+    <label>Re-export entity ids <input type="text" data-s="tools.exp.reexport_ids" placeholder="bld_house_041" title="worldpack_split reexport --id"></label>
+  </div>
+  <div class="btns"><button data-act="tl_reexport" title="Rebuilds just these entities in the split pack (Blender round trip)">Re-export entities</button></div></details>
+
+  <h4>Delete scene</h4>
+  <div class="note">Permanently deletes the existing scene picked on the Foundry tab (<b id="tlDelWant"></b>). There is no dry run and no undo. Type its exact name to arm the button; you are asked once more.</div>
+  <div class="grid"><label>Type the scene name <input type="text" data-s="tools.del.typed" autocomplete="off"></label></div>
+  <div class="btns"><button class="danger" id="tlDelete" data-act="tl_delete_scene" disabled>Delete scene from Foundry</button></div>
+  <div class="note" id="tlDelHint"></div>
+</section>
+
 </main>
 <div id="log" hidden></div>
 <script src="CSInterface.js"></script>
@@ -1100,6 +1263,8 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
 <script src="bridges_ui.js"></script><!-- BRIDGES -->
 <script src="lib/places.js"></script><!-- PLACES -->
 <script src="places_ui.js"></script><!-- PLACES -->
+<script src="lib/tools.js"></script><!-- TOOLS TAB -->
+<script src="tools_ui.js"></script><!-- TOOLS TAB -->
 <script src="lib/bridge.js"></script><!-- BRIDGE SECTION -->
 <script src="bridge_ui.js"></script><!-- BRIDGE SECTION -->
 <script src="main.js"></script>

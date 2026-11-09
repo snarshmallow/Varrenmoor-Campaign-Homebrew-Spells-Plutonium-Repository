@@ -93,7 +93,7 @@
     return function (st) {
       return { kind: kind, label: label, params: {},
         steps: [{ t: "fn", label: "check fields", fn: function (run) { run.vars.args = getArgs(st); } },
-          { t: "py", label: "object_edit", script: GEN + "object_edit.py", args: function (run) { return run.vars.args; }, json: "edit" },
+          { t: "py", label: "object_edit", script: GEN + "object_edit.py", args: function (run) { return run.vars.args.concat(VB.extraArgs ? VB.extraArgs(st, "object-edit") : []); }, json: "edit" },
           { t: "fn", label: "remember", fn: function (run) { var r = run.vars.edit || {}; run.setState("objects.last", { kind: kind, count: r.count, at: new Date().toISOString() }); run.log((r.count || 0) + " object(s) changed: " + JSON.stringify(r.set || {})); } }] };
     };
   }

@@ -27,6 +27,7 @@
     if (p.texture) a.push("--texture", p.texture);
     if (String(p.base_ft).trim() !== "" && isFinite(Number(p.base_ft))) a.push("--base", String(Number(p.base_ft)));
     if (p.apron === false) a.push("--no-apron");
+    if (st.tools && Number(st.tools.pad.tex_px) > 0 && Number(st.tools.pad.tex_px) !== 2048) a.push("--tex-px", String(Math.round(Number(st.tools.pad.tex_px))));   // TOOLS TAB
     return a.concat(VB.paddingOverrides(st), ["--out", d.world + "/export/padding"]);
   };
   function remember(run, key) {
@@ -47,6 +48,7 @@
     var args = function () {
       var a = ["push-padding"].concat(VB.paddingArgs(st, d), ["--scene-uuid", p.scene_uuid || ""]);
       if (String(p.scene_padding).trim() !== "" && isFinite(Number(p.scene_padding))) a.push("--scene-padding", String(Number(p.scene_padding)));
+      if (st.tools && st.tools.pad.no_level) a.push("--no-level");   // TOOLS TAB
       if (dry) a.push("--dry-run");
       return a;
     };

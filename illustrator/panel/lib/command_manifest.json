@@ -1,0 +1,1479 @@
+{
+ "version": 1,
+ "format": "controls: act:<data-act> | s:<data-s state path> | id:<element id> (checked against index.html and *_ui.js); cli_only / pending carry a reason",
+ "scripts": {
+  "foundry_push.py": {
+   "commands": {
+    "status": {
+     "controls": [
+      "act:f_status"
+     ]
+    },
+    "places": {
+     "controls": [
+      "act:tl_places"
+     ]
+    },
+    "list": {
+     "controls": [
+      "act:f_refresh"
+     ]
+    },
+    "export-info": {
+     "controls": [
+      "act:tl_export_info"
+     ]
+    },
+    "push-scene": {
+     "controls": [
+      "act:f_push_scene",
+      "act:f_push_tiles",
+      "act:f_plan_scene"
+     ]
+    },
+    "push-token": {
+     "controls": [
+      "act:f_token"
+     ]
+    },
+    "push-actor": {
+     "controls": [
+      "act:f_actor"
+     ]
+    },
+    "push-item": {
+     "controls": [
+      "act:f_item"
+     ]
+    },
+    "push-models": {
+     "controls": [
+      "act:wp_push",
+      "act:wp_push_dry"
+     ]
+    },
+    "delete-scene": {
+     "controls": [
+      "act:tl_delete_scene"
+     ]
+    },
+    "link-region": {
+     "controls": [
+      "act:reg_link"
+     ]
+    },
+    "bake-texture": {
+     "controls": [
+      "act:tl_bake",
+      "act:tl_bake_publish"
+     ]
+    },
+    "push-lights": {
+     "controls": [
+      "act:wp_push_lights",
+      "act:wp_push_lights_dry"
+     ]
+    },
+    "import-scene": {
+     "controls": [
+      "act:pl_import_scene",
+      "act:pl_import_check",
+      "act:pl_import_from_foundry_tab"
+     ]
+    },
+    "push-scene-3d": {
+     "controls": [
+      "act:tl_s3d_push",
+      "act:tl_s3d_dry"
+     ]
+    },
+    "install-roof-macros": {
+     "controls": [
+      "act:wp_roof_macros"
+     ]
+    },
+    "install-click-macros": {
+     "controls": [
+      "act:wp_click_macros"
+     ]
+    },
+    "roofs": {
+     "controls": [
+      "act:wp_roofs_hide",
+      "act:wp_roofs_show"
+     ]
+    },
+    "scene-audit": {
+     "controls": [
+      "act:wp_scene_audit",
+      "act:tl_scene_audit"
+     ]
+    },
+    "install-door-sync": {
+     "controls": [
+      "act:wp_door_sync_install"
+     ]
+    },
+    "sync-doors": {
+     "controls": [
+      "act:wp_doors_dry",
+      "act:wp_doors_apply"
+     ]
+    },
+    "set-collision": {
+     "controls": [
+      "act:wp_collision_dry",
+      "act:wp_collision_apply"
+     ]
+    },
+    "push-walls": {
+     "controls": [
+      "act:wp_walls_dry",
+      "act:wp_walls_apply"
+     ]
+    },
+    "install-water": {
+     "controls": [
+      "act:w3_install"
+     ]
+    },
+    "set-water": {
+     "controls": [
+      "act:w3_apply"
+     ]
+    },
+    "push-padding": {
+     "controls": [
+      "act:pad_push",
+      "act:pad_push_dry"
+     ]
+    },
+    "set-lighting": {
+     "pending": "Lighting controls are being added to the panel by the parallel lighting change; add the control ids here when that block lands."
+    }
+   },
+   "flags": {
+    "--actor-uuid": {
+     "controls": [
+      "id:fActor"
+     ]
+    },
+    "--allow-quantized": {
+     "controls": [
+      "s:foundry.models.compress"
+     ]
+    },
+    "--apply": {
+     "controls": [
+      "act:wp_collision_apply",
+      "act:wp_walls_apply",
+      "act:wp_doors_apply",
+      "s:regions.link_apply"
+     ]
+    },
+    "--assets-dir": {
+     "controls": [
+      "s:tools.push.assets_dir"
+     ]
+    },
+    "--at": {
+     "controls": [
+      "s:foundry.at"
+     ]
+    },
+    "--child-scene-uuid": {
+     "cli_only": "link-region: taken automatically from the region's last pushed scene (Regions tab)"
+    },
+    "--closed-as": {
+     "controls": [
+      "s:places.import.closed_as"
+     ]
+    },
+    "--collision": {
+     "controls": [
+      "s:foundry.models.collision.terrain"
+     ]
+    },
+    "--collision-lod": {
+     "controls": [
+      "s:tools.push.collision_lod"
+     ]
+    },
+    "--crop-margin-pt": {
+     "controls": [
+      "s:tools.bake.crop_margin_pt"
+     ]
+    },
+    "--description": {
+     "controls": [
+      "s:foundry.itemDesc"
+     ]
+    },
+    "--dpi": {
+     "controls": [
+      "s:tools.bake.dpi"
+     ]
+    },
+    "--drawings": {
+     "controls": [
+      "s:foundry.drawRoads",
+      "s:foundry.drawWater"
+     ]
+    },
+    "--dry-run": {
+     "controls": [
+      "act:wp_push_dry",
+      "act:f_plan_scene",
+      "act:wp_push_lights_dry",
+      "act:tl_s3d_dry"
+     ]
+    },
+    "--foliage-placements": {
+     "controls": [
+      "s:tools.s3d.foliage_placements"
+     ]
+    },
+    "--force": {
+     "controls": [
+      "s:tools.imp.force"
+     ]
+    },
+    "--format": {
+     "controls": [
+      "s:tools.scene.format",
+      "s:tools.bake.format"
+     ]
+    },
+    "--ft-per-grid": {
+     "controls": [
+      "s:foundry.ftPerGrid"
+     ]
+    },
+    "--grid": {
+     "cli_only": "the view flags come from the Scale tab and the View box; the panel always passes them"
+    },
+    "--grid-major": {
+     "cli_only": "the view flags come from the Scale tab and the View box; the panel always passes them"
+    },
+    "--major": {
+     "cli_only": "the view flags come from the Scale tab and the View box; the panel always passes them"
+    },
+    "--page": {
+     "cli_only": "the view flags come from the Scale tab and the View box; the panel always passes them"
+    },
+    "--preset": {
+     "cli_only": "the view flags come from the Scale tab and the View box; the panel always passes them"
+    },
+    "--scale": {
+     "cli_only": "the view flags come from the Scale tab and the View box; the panel always passes them"
+    },
+    "--view": {
+     "controls": [
+      "s:settings.view"
+     ]
+    },
+    "--hidden": {
+     "controls": [
+      "s:tools.tok.hidden"
+     ]
+    },
+    "--ids": {
+     "controls": [
+      "s:tools.push.ids",
+      "s:tools.exp.reexport_ids"
+     ]
+    },
+    "--image": {
+     "controls": [
+      "s:foundry.image",
+      "s:tools.bake.image"
+     ]
+    },
+    "--include": {
+     "controls": [
+      "s:places.import.lights",
+      "s:places.import.tokens",
+      "s:places.import.notes"
+     ]
+    },
+    "--item-uuid": {
+     "controls": [
+      "id:fItem"
+     ]
+    },
+    "--key": {
+     "controls": [
+      "s:tools.tok.key"
+     ]
+    },
+    "--kinds": {
+     "cli_only": "Refresh from Foundry always reads every kind (scenes, actors, items, journals); narrowing it only saves a second"
+    },
+    "--layers": {
+     "controls": [
+      "s:foundry.models.layers",
+      "s:tools.s3d.layers"
+     ]
+    },
+    "--light-animation": {
+     "controls": [
+      "s:tools.lights.animation"
+     ]
+    },
+    "--lighting": {
+     "controls": [
+      "s:tools.push.lighting",
+      "s:tools.lights.lighting"
+     ]
+    },
+    "--lights-placements": {
+     "controls": [
+      "s:tools.lights.placements",
+      "s:tools.s3d.lights_placements"
+     ]
+    },
+    "--link": {
+     "controls": [
+      "s:tools.scene.link"
+     ]
+    },
+    "--lod": {
+     "controls": [
+      "s:foundry.models.lod",
+      "s:tools.s3d.lod"
+     ]
+    },
+    "--max-px": {
+     "controls": [
+      "s:tools.scene.max_px"
+     ]
+    },
+    "--name": {
+     "controls": [
+      "s:foundry.itemName",
+      "s:tools.bake.name"
+     ]
+    },
+    "--no-image": {
+     "controls": [
+      "s:tools.imp.no_image"
+     ]
+    },
+    "--no-padding": {
+     "controls": [
+      "s:tools.s3d.no_padding"
+     ]
+    },
+    "--no-skybox": {
+     "controls": [
+      "s:tools.s3d.no_skybox"
+     ]
+    },
+    "--no-walls": {
+     "controls": [
+      "s:foundry.walls"
+     ]
+    },
+    "--walls": {
+     "controls": [
+      "s:foundry.walls"
+     ]
+    },
+    "--out-dir": {
+     "controls": [
+      "s:tools.bake.out_dir"
+     ]
+    },
+    "--padding": {
+     "controls": [
+      "s:tools.scene.padding"
+     ]
+    },
+    "--padding-arg": {
+     "controls": [
+      "s:tools.s3d.padding_arg",
+      "s:tools.s3d.use_padding_tab"
+     ]
+    },
+    "--parent-scene-name": {
+     "controls": [
+      "s:regions.parent_scene_name"
+     ]
+    },
+    "--parent-scene-uuid": {
+     "cli_only": "link-region: the parent is found by name (Regions tab 'Parent scene name'); the uuid form is only for scripted use"
+    },
+    "--place": {
+     "controls": [
+      "id:fPlace"
+     ]
+    },
+    "--place-id": {
+     "controls": [
+      "s:places.import.place_id"
+     ]
+    },
+    "--placements": {
+     "cli_only": "the panel always passes the exported pack's world/<place>/export/placements.json; a different file is only for tests and scripted merges (Tools has foliage and lights placements)"
+    },
+    "--portrait": {
+     "controls": [
+      "s:tools.tok.portrait"
+     ]
+    },
+    "--token": {
+     "controls": [
+      "s:tools.tok.token"
+     ]
+    },
+    "--prune": {
+     "controls": [
+      "s:foundry.models.prune"
+     ]
+    },
+    "--prune-lights": {
+     "controls": [
+      "s:tools.lights.prune",
+      "s:tools.s3d.prune_lights"
+     ]
+    },
+    "--publish": {
+     "controls": [
+      "act:tl_bake_publish"
+     ]
+    },
+    "--px": {
+     "controls": [
+      "s:tools.tok.px"
+     ]
+    },
+    "--px-per-ft": {
+     "controls": [
+      "s:tools.push.px_per_ft",
+      "s:tools.bake.px_per_ft"
+     ]
+    },
+    "--roof-state": {
+     "controls": [
+      "act:wp_roofs_hide",
+      "act:wp_roofs_show"
+     ]
+    },
+    "--roofs-hidden": {
+     "controls": [
+      "s:foundry.models.roofsHidden"
+     ]
+    },
+    "--scene-flag": {
+     "controls": [
+      "s:tools.push.scene_flags"
+     ]
+    },
+    "--scene-json": {
+     "controls": [
+      "s:tools.imp.scene_json"
+     ]
+    },
+    "--scene-mode": {
+     "controls": [
+      "s:foundry.models.sceneMode"
+     ]
+    },
+    "--scene-name": {
+     "controls": [
+      "s:foundry.sceneName"
+     ]
+    },
+    "--scene-uuid": {
+     "controls": [
+      "id:fScene"
+     ]
+    },
+    "--serve-url": {
+     "controls": [
+      "s:tools.push.serve_url"
+     ]
+    },
+    "--set-name": {
+     "controls": [
+      "s:tools.push.set_name"
+     ]
+    },
+    "--size-ft": {
+     "controls": [
+      "s:foundry.sizeFt"
+     ]
+    },
+    "--skybox-preset": {
+     "controls": [
+      "s:tools.s3d.skybox_preset"
+     ]
+    },
+    "--spec": {
+     "controls": [
+      "s:foundry.spec"
+     ]
+    },
+    "--table-texture": {
+     "controls": [
+      "s:tools.push.table_texture"
+     ]
+    },
+    "--table-texture-path": {
+     "controls": [
+      "s:tools.bake.table_texture_path"
+     ]
+    },
+    "--tile-id": {
+     "cli_only": "Push tiles always names its overlay tile 'labels'; a second overlay name is only used by scripts"
+    },
+    "--tile-image": {
+     "controls": [
+      "act:f_push_tiles"
+     ]
+    },
+    "--upscale": {
+     "controls": [
+      "s:tools.scene.upscale"
+     ]
+    },
+    "--window": {
+     "controls": [
+      "s:tools.bake.window"
+     ]
+    },
+    "--with-lights": {
+     "controls": [
+      "s:tools.s3d.with_lights"
+     ]
+    },
+    "--yes": {
+     "controls": [
+      "s:tools.push.yes"
+     ]
+    }
+   }
+  },
+  "foundry_collision.py": {
+   "commands": {
+    "set-collision": {
+     "controls": [
+      "act:wp_collision_dry",
+      "act:wp_collision_apply"
+     ]
+    },
+    "push-walls": {
+     "controls": [
+      "act:wp_walls_dry",
+      "act:wp_walls_apply"
+     ]
+    },
+    "sync-doors": {
+     "controls": [
+      "act:wp_doors_dry",
+      "act:wp_doors_apply"
+     ]
+    },
+    "install-door-sync": {
+     "controls": [
+      "act:wp_door_sync_install"
+     ]
+    }
+   },
+   "flags": {
+    "--apply": {
+     "controls": [
+      "act:wp_collision_apply",
+      "act:wp_walls_apply",
+      "act:wp_doors_apply"
+     ]
+    },
+    "--collision": {
+     "controls": [
+      "s:foundry.models.collision.terrain"
+     ]
+    },
+    "--collision-lod": {
+     "controls": [
+      "s:tools.push.collision_lod"
+     ]
+    },
+    "--dry-run": {
+     "controls": [
+      "act:wp_collision_dry",
+      "act:wp_walls_dry",
+      "act:wp_doors_dry"
+     ]
+    },
+    "--foliage-json": {
+     "controls": [
+      "s:tools.walls.foliage_json"
+     ]
+    },
+    "--place": {
+     "controls": [
+      "id:fPlace"
+     ]
+    },
+    "--scene-uuid": {
+     "controls": [
+      "id:fScene"
+     ]
+    },
+    "--wall-layers": {
+     "controls": [
+      "s:foundry.models.wallLayers.buildings"
+     ]
+    },
+    "--wall-profile": {
+     "controls": [
+      "s:tools.walls.profile"
+     ]
+    }
+   }
+  },
+  "foundry_water.py": {
+   "commands": {
+    "install-water": {
+     "controls": [
+      "act:w3_install"
+     ]
+    },
+    "set-water": {
+     "controls": [
+      "act:w3_apply"
+     ]
+    }
+   },
+   "flags": {
+    "--dry-run": {
+     "controls": [
+      "s:water3d.dry_run"
+     ]
+    },
+    "--enable-scripts": {
+     "cli_only": "always passed by 'Install water shader' (the scene flag it switches on is needed for the shader)"
+    },
+    "--force": {
+     "controls": [
+      "s:water3d.force"
+     ]
+    },
+    "--no-panel": {
+     "cli_only": "the panel's own saved Water settings are what Push water settings sends; ignoring them is only for scripted runs"
+    },
+    "--place": {
+     "controls": [
+      "id:fPlace"
+     ]
+    },
+    "--placements": {
+     "cli_only": "defaults to the exported pack's placements.json, which the panel always uses"
+    },
+    "--preset": {
+     "controls": [
+      "id:w3Preset"
+     ]
+    },
+    "--scene-uuid": {
+     "controls": [
+      "s:water3d.scene_uuid"
+     ]
+    },
+    "--set": {
+     "controls": [
+      "id:w3Sliders"
+     ]
+    }
+   }
+  },
+  "worldpack.py": {
+   "commands": {
+    "export": {
+     "controls": [
+      "act:wp_export"
+     ]
+    },
+    "info": {
+     "controls": [
+      "act:tl_pack_info"
+     ]
+    },
+    "validate": {
+     "controls": [
+      "act:tl_pack_validate"
+     ]
+    }
+   },
+   "flags": {
+    "--albedo-px-per-ft": {
+     "controls": [
+      "s:tools.exp.albedo_px_per_ft"
+     ]
+    },
+    "--interior-style": {
+     "controls": [
+      "id:fInteriorStyle"
+     ]
+    },
+    "--lod": {
+     "controls": [
+      "s:tools.exp.lod"
+     ]
+    },
+    "--no-textures": {
+     "controls": [
+      "s:tools.exp.no_textures"
+     ]
+    },
+    "--out": {
+     "cli_only": "the panel always uses the pack folder world/<place>/export that every later step reads; another folder is only for scripts and tests"
+    },
+    "--path": {
+     "cli_only": "the panel always uses the pack folder world/<place>/export that every later step reads; another folder is only for scripts and tests (Validate / Summary pass it)"
+    },
+    "--phases": {
+     "controls": [
+      "s:tools.exp.phases"
+     ]
+    },
+    "--place": {
+     "controls": [
+      "id:fPlace"
+     ]
+    },
+    "--px-per-ft": {
+     "controls": [
+      "s:tools.exp.px_per_ft"
+     ]
+    },
+    "--roof-mode": {
+     "controls": [
+      "id:fRoofMode"
+     ]
+    },
+    "--splat-cell-ft": {
+     "controls": [
+      "s:tools.exp.splat_cell_ft"
+     ]
+    },
+    "--style": {
+     "controls": [
+      "s:tools.exp.style"
+     ]
+    },
+    "--terrain-source": {
+     "controls": [
+      "s:tools.exp.terrain_source"
+     ]
+    },
+    "--timestamp": {
+     "controls": [
+      "s:tools.exp.timestamp"
+     ]
+    },
+    "--world-root": {
+     "cli_only": "redirects the world folder for the automated tests"
+    },
+    "--z-origin-ft": {
+     "controls": [
+      "s:tools.exp.z_origin_ft"
+     ]
+    }
+   }
+  },
+  "worldpack_split.py": {
+   "commands": {
+    "split": {
+     "controls": [
+      "act:wp_split"
+     ]
+    },
+    "merge": {
+     "controls": [
+      "act:wp_merge"
+     ]
+    },
+    "publish": {
+     "controls": [
+      "act:wp_publish"
+     ]
+    },
+    "reexport": {
+     "controls": [
+      "act:tl_reexport"
+     ]
+    },
+    "info": {
+     "controls": [
+      "act:tl_split_info"
+     ]
+    }
+   },
+   "flags": {
+    "--compress": {
+     "controls": [
+      "s:foundry.models.compress"
+     ]
+    },
+    "--dry-run": {
+     "controls": [
+      "act:wp_push_dry"
+     ]
+    },
+    "--foliage": {
+     "controls": [
+      "act:fol_merge"
+     ]
+    },
+    "--foliage-budget": {
+     "controls": [
+      "s:foliage.merge.budget"
+     ]
+    },
+    "--foliage-chunk-ft": {
+     "controls": [
+      "s:foliage.merge.chunk_ft"
+     ]
+    },
+    "--foliage-impostor-ft": {
+     "controls": [
+      "s:foliage.merge.impostor_beyond_ft"
+     ]
+    },
+    "--id": {
+     "controls": [
+      "s:tools.exp.reexport_ids"
+     ]
+    },
+    "--interior-style": {
+     "controls": [
+      "id:fInteriorStyle"
+     ]
+    },
+    "--lod": {
+     "controls": [
+      "s:foundry.models.lod"
+     ]
+    },
+    "--no-carve": {
+     "controls": [
+      "s:foundry.models.carve"
+     ]
+    },
+    "--no-conform": {
+     "controls": [
+      "s:foundry.models.conform"
+     ]
+    },
+    "--no-hidden-removal": {
+     "controls": [
+      "s:tools.exp.no_hidden_removal"
+     ]
+    },
+    "--no-road-skirt": {
+     "controls": [
+      "s:roads.skirt"
+     ]
+    },
+    "--pack": {
+     "cli_only": "the panel always uses the pack folder world/<place>/export that every later step reads; another folder is only for scripts and tests"
+    },
+    "--place": {
+     "controls": [
+      "id:fPlace"
+     ]
+    },
+    "--preset": {
+     "controls": [
+      "s:foundry.models.preset"
+     ]
+    },
+    "--road-cross-deg": {
+     "controls": [
+      "s:roads.cross_deg"
+     ]
+    },
+    "--road-cutfill": {
+     "controls": [
+      "s:roads.cutfill"
+     ]
+    },
+    "--road-grade": {
+     "controls": [
+      "s:roads.grade"
+     ]
+    },
+    "--road-max-grade": {
+     "controls": [
+      "s:roads.max_grade"
+     ]
+    },
+    "--road-smooth": {
+     "controls": [
+      "s:roads.smooth"
+     ]
+    },
+    "--roof-mode": {
+     "controls": [
+      "id:fRoofMode"
+     ]
+    },
+    "--scene-name": {
+     "controls": [
+      "s:foundry.sceneName"
+     ]
+    },
+    "--scene-uuid": {
+     "controls": [
+      "id:fScene"
+     ]
+    },
+    "--split": {
+     "controls": [
+      "s:foundry.models.split"
+     ]
+    },
+    "--split-preset": {
+     "controls": [
+      "s:foundry.models.splitPreset"
+     ]
+    },
+    "--step": {
+     "controls": [
+      "s:tools.exp.step"
+     ]
+    },
+    "--textures": {
+     "controls": [
+      "s:tools.exp.textures"
+     ]
+    },
+    "--yes": {
+     "controls": [
+      "s:tools.push.yes"
+     ]
+    }
+   }
+  },
+  "object_edit.py": {
+   "commands": {
+    "list-buildings": {
+     "controls": [
+      "act:tl_obj_buildings"
+     ]
+    },
+    "list-roads": {
+     "controls": [
+      "act:tl_obj_roads"
+     ]
+    },
+    "choices": {
+     "controls": [
+      "act:tl_obj_choices"
+     ]
+    },
+    "set-building": {
+     "controls": [
+      "act:obj_apply_b"
+     ]
+    },
+    "set-road": {
+     "controls": [
+      "act:obj_apply_r"
+     ]
+    },
+    "reset-building": {
+     "controls": [
+      "act:obj_reset_b"
+     ]
+    },
+    "reset-road": {
+     "controls": [
+      "act:obj_reset_r"
+     ]
+    }
+   },
+   "flags": {
+    "--clear": {
+     "controls": [
+      "act:obj_apply_b",
+      "act:obj_apply_r"
+     ]
+    },
+    "--dry": {
+     "controls": [
+      "s:tools.objdry"
+     ]
+    },
+    "--ids": {
+     "controls": [
+      "act:obj_r_sel",
+      "act:obj_r_all"
+     ]
+    },
+    "--place": {
+     "controls": [
+      "id:fPlace"
+     ]
+    },
+    "--set": {
+     "controls": [
+      "act:obj_apply_b",
+      "act:obj_apply_r"
+     ]
+    },
+    "--world-root": {
+     "cli_only": "redirects the world folder for the automated tests"
+    }
+   }
+  },
+  "scene_audit.py": {
+   "commands": {},
+   "flags": {}
+  },
+  "textures_audit.py": {
+   "commands": {},
+   "flags": {
+    "--padding": {
+     "controls": [
+      "s:tools.audits.ta_padding"
+     ]
+    },
+    "--raw": {
+     "controls": [
+      "s:tools.audits.ta_raw"
+     ]
+    },
+    "--tag": {
+     "controls": [
+      "s:tools.audits.ta_tag"
+     ]
+    }
+   }
+  },
+  "building_ground_audit.py": {
+   "commands": {},
+   "flags": {
+    "--json": {
+     "cli_only": "also writes the report as a JSON file; the Tools results viewer already shows the text report"
+    },
+    "--no-mesh": {
+     "controls": [
+      "s:tools.audits.bga_nomesh"
+     ]
+    },
+    "--pack": {
+     "cli_only": "the panel always uses the pack folder world/<place>/export that every later step reads; another folder is only for scripts and tests"
+    },
+    "--place": {
+     "controls": [
+      "id:fPlace"
+     ]
+    },
+    "--top": {
+     "controls": [
+      "s:tools.audits.bga_top"
+     ]
+    }
+   }
+  },
+  "road_height_audit.py": {
+   "commands": {},
+   "flags": {
+    "--cutfill": {
+     "controls": [
+      "s:tools.audits.rha_cutfill"
+     ]
+    },
+    "--json": {
+     "cli_only": "also writes the report as a JSON file; the Tools results viewer already shows the text report"
+    },
+    "--max-grade": {
+     "controls": [
+      "s:tools.audits.rha_maxgrade"
+     ]
+    },
+    "--mesh": {
+     "controls": [
+      "s:tools.audits.rha_mesh"
+     ]
+    },
+    "--pack": {
+     "cli_only": "the panel always uses the pack folder world/<place>/export that every later step reads; another folder is only for scripts and tests"
+    },
+    "--place": {
+     "controls": [
+      "id:fPlace"
+     ]
+    },
+    "--smooth": {
+     "controls": [
+      "s:tools.audits.rha_smooth"
+     ]
+    },
+    "--step-ft": {
+     "controls": [
+      "s:tools.audits.rha_step"
+     ]
+    }
+   }
+  },
+  "terrain_check.py": {
+   "commands": {},
+   "flags": {
+    "--heightmap": {
+     "cli_only": "defaults to the place's own heightmap, which is what you want"
+    },
+    "--index": {
+     "controls": [
+      "s:tools.audits.tc_index"
+     ]
+    },
+    "--minor": {
+     "controls": [
+      "s:tools.audits.tc_minor"
+     ]
+    },
+    "--out": {
+     "cli_only": "writes under illustrator/out/terrain_check; the 'Open output folder' button opens it"
+    },
+    "--place": {
+     "controls": [
+      "id:fPlace"
+     ]
+    }
+   }
+  },
+  "tile_rotation_inspect.py": {
+   "commands": {
+    "build": {
+     "cli_only": "developer diagnostic that builds a tile-rotation test scene; never part of normal work"
+    },
+    "push": {
+     "cli_only": "developer diagnostic that pushes the tile-rotation test scene; never part of normal work"
+    }
+   },
+   "flags": {
+    "--dry-run": {
+     "cli_only": "belongs to the developer diagnostic above"
+    }
+   }
+  },
+  "padding_heightmap.py": {
+   "commands": {
+    "generate": {
+     "controls": [
+      "act:pad_generate"
+     ]
+    },
+    "presets": {
+     "controls": [
+      "id:padPreset"
+     ]
+    },
+    "push": {
+     "controls": [
+      "act:pad_push"
+     ]
+    },
+    "save-preset": {
+     "controls": [
+      "act:pad_save"
+     ]
+    }
+   },
+   "flags": {
+    "--assets-dir": {
+     "cli_only": "push uses the shared assets folder automatically (same default as every other push)"
+    },
+    "--base": {
+     "controls": [
+      "s:padding.base_ft"
+     ]
+    },
+    "--blend": {
+     "controls": [
+      "s:padding.blend_ft"
+     ]
+    },
+    "--dry-run": {
+     "controls": [
+      "s:padding.dry_run"
+     ]
+    },
+    "--from": {
+     "controls": [
+      "id:padPreset"
+     ]
+    },
+    "--height-scale": {
+     "controls": [
+      "s:padding.height_scale"
+     ]
+    },
+    "--name": {
+     "controls": [
+      "s:padding.save_name"
+     ]
+    },
+    "--no-apron": {
+     "controls": [
+      "s:padding.apron"
+     ]
+    },
+    "--no-level": {
+     "controls": [
+      "s:tools.pad.no_level"
+     ]
+    },
+    "--out": {
+     "cli_only": "generate writes under world/<place>/export/padding, where push reads it"
+    },
+    "--padding": {
+     "cli_only": "generate-only fallback fraction when no scene is read; the pushed scene padding is the 'Set scene padding' box"
+    },
+    "--place": {
+     "controls": [
+      "id:fPlace"
+     ]
+    },
+    "--preset": {
+     "controls": [
+      "id:padPreset"
+     ]
+    },
+    "--scene-json": {
+     "cli_only": "offline canvas geometry for tests; the panel pushes to a real scene"
+    },
+    "--scene-padding": {
+     "controls": [
+      "s:padding.scene_padding"
+     ]
+    },
+    "--scene-uuid": {
+     "controls": [
+      "s:padding.scene_uuid"
+     ]
+    },
+    "--seed": {
+     "controls": [
+      "s:padding.seed"
+     ]
+    },
+    "--set": {
+     "controls": [
+      "s:padding.overrides"
+     ]
+    },
+    "--taper": {
+     "controls": [
+      "s:padding.taper_ft"
+     ]
+    },
+    "--tex-px": {
+     "controls": [
+      "s:tools.pad.tex_px"
+     ]
+    },
+    "--texture": {
+     "controls": [
+      "id:padTexture"
+     ]
+    }
+   }
+  },
+  "foundry_lightbudget.py": {
+   "commands": {
+    "set-lighting": {
+     "pending": "Lighting controls are being added to the panel by the parallel lighting change; add the control ids here when that block lands."
+    }
+   },
+   "flags": {
+    "--light-shadows": {
+     "pending": "Lighting controls are being added to the panel by the parallel lighting change; add the control ids here when that block lands."
+    },
+    "--max-lights": {
+     "pending": "Lighting controls are being added to the panel by the parallel lighting change; add the control ids here when that block lands."
+    },
+    "--lighting-mode": {
+     "pending": "Lighting controls are being added to the panel by the parallel lighting change; add the control ids here when that block lands."
+    },
+    "--exclude-types": {
+     "pending": "Lighting controls are being added to the panel by the parallel lighting change; add the control ids here when that block lands."
+    },
+    "--light-radius-scale": {
+     "pending": "Lighting controls are being added to the panel by the parallel lighting change; add the control ids here when that block lands."
+    },
+    "--light-intensity-scale": {
+     "pending": "Lighting controls are being added to the panel by the parallel lighting change; add the control ids here when that block lands."
+    },
+    "--scene-uuid": {
+     "pending": "Lighting controls are being added to the panel by the parallel lighting change; add the control ids here when that block lands."
+    },
+    "--place": {
+     "pending": "Lighting controls are being added to the panel by the parallel lighting change; add the control ids here when that block lands."
+    },
+    "--placements": {
+     "pending": "Lighting controls are being added to the panel by the parallel lighting change; add the control ids here when that block lands."
+    },
+    "--lights-placements": {
+     "pending": "Lighting controls are being added to the panel by the parallel lighting change; add the control ids here when that block lands."
+    },
+    "--time-of-day": {
+     "pending": "Lighting controls are being added to the panel by the parallel lighting change; add the control ids here when that block lands."
+    },
+    "--ambient": {
+     "pending": "Lighting controls are being added to the panel by the parallel lighting change; add the control ids here when that block lands."
+    },
+    "--ambient-color": {
+     "pending": "Lighting controls are being added to the panel by the parallel lighting change; add the control ids here when that block lands."
+    },
+    "--sun-strength": {
+     "pending": "Lighting controls are being added to the panel by the parallel lighting change; add the control ids here when that block lands."
+    },
+    "--sun-color": {
+     "pending": "Lighting controls are being added to the panel by the parallel lighting change; add the control ids here when that block lands."
+    },
+    "--render-scene-lights": {
+     "pending": "Lighting controls are being added to the panel by the parallel lighting change; add the control ids here when that block lands."
+    },
+    "--apply": {
+     "pending": "Lighting controls are being added to the panel by the parallel lighting change; add the control ids here when that block lands."
+    },
+    "--dry-run": {
+     "pending": "Lighting controls are being added to the panel by the parallel lighting change; add the control ids here when that block lands."
+    }
+   }
+  },
+  "bridgectl.mjs": {
+   "commands": {
+    "start": {
+     "controls": [
+      "act:bg_launch"
+     ]
+    },
+    "stop": {
+     "controls": [
+      "act:bg_close"
+     ]
+    },
+    "restart": {
+     "controls": [
+      "act:bg_restart"
+     ]
+    },
+    "status": {
+     "controls": [
+      "act:bg_status"
+     ]
+    },
+    "local": {
+     "controls": [
+      "id:bgLocal"
+     ]
+    },
+    "closelocal": {
+     "controls": [
+      "act:bg_close"
+     ]
+    },
+    "probe": {
+     "controls": [
+      "act:bg_probe"
+     ]
+    },
+    "info": {
+     "controls": [
+      "act:bg_reveal"
+     ]
+    },
+    "logs": {
+     "controls": [
+      "id:bgLog"
+     ]
+    }
+   },
+   "flags": {
+    "--cim": {
+     "controls": [
+      "s:bridge.cim"
+     ]
+    },
+    "--env": {
+     "controls": [
+      "s:bridge.env"
+     ]
+    },
+    "--hidden": {
+     "controls": [
+      "s:bridge.hidden"
+     ]
+    },
+    "--json": {
+     "cli_only": "the panel always asks for --json to read the result"
+    },
+    "--lines": {
+     "cli_only": "the panel shows a fixed tail of the relay log; use the terminal for a longer one"
+    },
+    "--node": {
+     "controls": [
+      "s:bridge.node"
+     ]
+    },
+    "--secrets": {
+     "controls": [
+      "act:bg_reveal"
+     ]
+    },
+    "--state": {
+     "controls": [
+      "s:bridge.state"
+     ]
+    },
+    "--target": {
+     "controls": [
+      "s:bridge.target"
+     ]
+    },
+    "--terminal": {
+     "controls": [
+      "s:bridge.terminal"
+     ]
+    }
+   }
+  }
+ },
+ "other": {
+  "glb_check.py": {
+   "cli_only": "a library, not a command: Push models runs it automatically before every push and reports the problems in the job log"
+  },
+  "scene_audit.py": {
+   "cli_only": "a library behind 'foundry_push scene-audit' (Scene tile audit button); push-models also uses it to remove superseded tiles"
+  },
+  "foundry_import.py": {
+   "cli_only": "a library behind 'foundry_push import-scene' (Places tab and Foundry tab import buttons)"
+  },
+  "start.mjs": {
+   "cli_only": "first-time setup of the relay on the Foundry PC (installs packages, writes .env, opens the tunnel, prints pairing instructions); interactive, run once per machine in a terminal. Day-to-day launch, restart and pairing are in the Foundry tab Bridge section"
+  },
+  "bridge.ps1": {
+   "cli_only": "developer shell for raw bridge calls (ping, get, create) from a terminal or a Claude session; the panel talks to the bridge through the commands above"
+  },
+  "make-scene.ps1": {
+   "cli_only": "older one-model scene maker, replaced by Push models / Push whole 3D scene"
+  },
+  "publish-client.mjs": {
+   "cli_only": "run on the Foundry PC to rewrite client.json when the relay is already running; the Bridge section reads the file it writes"
+  },
+  "survival-job.ps1": {
+   "cli_only": "test helper that proves which launch modes survive a parent exit; used only by the bridge tests"
+  },
+  "relay-window.ps1": {
+   "cli_only": "wrapper script that bridgectl runs to open the relay window; not called directly"
+  },
+  "git": {
+   "cli_only": "version control (commit, pull, push) is done from a terminal or by Claude; it is not a Foundry or map operation and a panel button would only invite pushing half-finished work"
+  }
+ }
+}

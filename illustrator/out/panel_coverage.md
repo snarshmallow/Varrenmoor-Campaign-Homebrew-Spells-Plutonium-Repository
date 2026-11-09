@@ -90,6 +90,30 @@ Status: **OK** = working control with default and wiring; **NEW** = added in thi
 | Building styles (`building_styles.py`) | Buildings tab | OK |
 | Interior styles preview, glb_check, textures_audit, road_height_audit, terrain_check, building_ground_audit, tile_rotation_inspect, make_fill_textures | none | CLI only (developer audits and one-off tools) |
 
-## What is still missing (summary)
+## Strict parity audit (2026-11-08, second pass): "anything that relies on commands needs a matching GUI"
 
-Door toggles per building, per-building storey height, road sidewalks (generator support does not exist), `bake-texture`, `push-scene-3d`, `delete-scene`, push-scene `--upscale/--padding/--link`, and the developer audit scripts. Everything else a GM would want has a labelled control.
+Machine-checked now: `illustrator/panel/lib/command_manifest.json` + `panel/test/test_command_parity.js` (fails when a command or flag of foundry_push, foundry_collision, foundry_water, worldpack, worldpack_split, object_edit, padding_heightmap, the audits or bridgectl has no manifest line, or names a control that does not exist). New controls live on the new **Tools** tab (`tools_ui.js`, `lib/tools.js`).
+
+| Was CLI only / missing | Now |
+|---|---|
+| `delete-scene` | Tools > Delete scene: typed exact name arms the button, then a confirm; the scene leaves the list |
+| `bake-texture` (+ `--window --crop-margin-pt --dpi --out-dir --table-texture-path --publish --name --format --px-per-ft`) | Tools > Bake ground texture, Fill from view, publish asks first |
+| `push-scene-3d` (+ `--skybox-preset --no-skybox --no-padding --padding-arg --with-lights --prune-lights --foliage-placements --lights-placements`) | Tools > Push whole 3D scene (dry run / real with confirm) |
+| push-scene `--upscale --padding --max-px --format --link` | Tools > Push options > Push scene (2D) |
+| push-models `--ids --serve-url --assets-dir --px-per-ft --set-name --table-texture --lighting --collision-lod --scene-flag --yes` | Tools > Push options > Push models (advanced); `--yes` also for Publish |
+| push-lights `--light-animation --lighting --lights-placements --prune-lights` | Tools > Push options > interior lights |
+| push-walls `--wall-profile --foliage-json`, set-collision `--collision-lod` | Tools > Push options |
+| push-token `--hidden --key --px`, push-actor `--portrait --token` | Tools > Push options |
+| import-scene `--no-image --force --scene-json` | Tools > Push options (applied by the Places / Foundry import buttons) |
+| worldpack export `--terrain-source --lod --style --phases --splat-cell-ft --albedo-px-per-ft --px-per-ft --z-origin-ft --timestamp --no-textures` | Tools > Advanced pack export |
+| split `--textures --step`, merge `--no-hidden-removal`, `reexport --id`, `worldpack_split info`, `worldpack validate/info` | Tools > Advanced pack export, audits |
+| `scene-audit`, `places`, `export-info` | Tools > Audits (results viewer) |
+| building_ground_audit, road_height_audit, terrain_check, textures_audit | Tools > Audits with options and a results viewer |
+| padding `--tex-px`, `--no-level` | Tools > Padding extras |
+| object_edit `--dry`, `list-buildings`, `list-roads`, `choices` | Tools > Padding extras and per-object editing |
+| macro installers scattered over tabs | Tools > Foundry macros (click mode, door sync, roofs, water shader) |
+
+Remaining CLI-only, with reasons (all recorded in the manifest): `--placements / --pack / --out / --path / --assets-dir` (the panel always uses the pack folder; the override exists for tests), `--world-root` (tests), padding `--scene-json` (offline test input), `--kinds` (Refresh always reads every kind), `--tile-id` (always "labels"), link-region `--parent-scene-uuid / --child-scene-uuid` (found by name / last push), water `--enable-scripts / --no-panel / --placements`, bridgectl `--json / --lines`, audit `--json` file export (the viewer shows the report), terrain_check `--heightmap / --out`, tile_rotation_inspect (developer diagnostic), glb_check / scene_audit / foundry_import (libraries behind buttons), start.mjs (first-time relay setup on the Foundry PC, interactive), bridge.ps1, make-scene.ps1 (superseded), publish-client.mjs, survival-job.ps1, relay-window.ps1, and git.
+Pending, tracked by the test: `set-lighting` and the light budget flags (`--max-lights --lighting-mode --exclude-types --light-radius-scale --light-intensity-scale --light-shadows --time-of-day --ambient --ambient-color --sun-strength --sun-color --render-scene-lights`) belong to the Lighting block being added in parallel; add their control ids to the manifest when it lands.
+Still missing (no generator support, unchanged): per-building door on/off and storey height, road sidewalks.
+Verified: node tests only (`test_command_parity.js`, `test_tools_jobs.js`, plus the existing objects / places / water job tests). Not verified in the real panel: DOM wiring of the Tools tab, the typed-name arming of Delete, the in-panel confirms, the results viewer layout, and any live Foundry call (nothing was pushed or deleted).

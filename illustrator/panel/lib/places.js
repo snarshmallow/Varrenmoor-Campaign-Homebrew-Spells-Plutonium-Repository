@@ -121,6 +121,7 @@
           var inc = ["walls", "tiles", "regions"].concat(snap.lights ? ["lights"] : [], snap.tokens ? ["tokens"] : [], snap.notes ? ["notes"] : []);
           var a = ["import-scene", "--scene-uuid", uuid, "--include", inc.join(","), "--closed-as", snap.closed_as || "lines"];
           if (String(snap.place_id || "").trim()) a.push("--place-id", VB.PLACE_SLUG(snap.place_id));
+          if (VB.extraArgs) a = a.concat(VB.extraArgs(st, "import-scene"));   // TOOLS TAB: --no-image, --force, --scene-json
           if (dry) a.push("--dry-run");
           return a;
         }, "foundry_push.py import-scene", { json: "imp" }),

@@ -687,7 +687,7 @@
   VB.interiorStyle = function (st) { var m = st && st.foundry && st.foundry.models && st.foundry.models.interiorStyle; return VB.INTERIOR_STYLES.indexOf(m) >= 0 ? m : "auto"; };
   VB.jobWorldPack = function (st, d, out) {
     return { kind: "worldpack_export", label: "Export world pack (3D)", params: { out: out || null, roof_mode: VB.roofMode(st), interior_style: VB.interiorStyle(st) },
-      steps: [py(GEN + "worldpack.py", ["export", "--place", st.place].concat(out ? ["--out", out] : []).concat(["--roof-mode", VB.roofMode(st), "--interior-style", VB.interiorStyle(st)]), "world pack export")] };
+      steps: [py(GEN + "worldpack.py", ["export", "--place", st.place].concat(out ? ["--out", out] : []).concat(["--roof-mode", VB.roofMode(st), "--interior-style", VB.interiorStyle(st)], (VB.extraArgs ? VB.extraArgs(st, "worldpack-export") : [])), "world pack export")] };
   };
   VB.jobWorldSplit = function (st, d, pack) {
     var m = st.foundry.models, a = ["split", "--place", st.place, "--pack", pack || VB.packDir(d), "--roof-mode", VB.roofMode(st), "--interior-style", VB.interiorStyle(st)]; if (m.split) a.push("--split", m.split);
@@ -698,12 +698,13 @@
     if (m.splitPreset && m.splitPreset !== "default") a.push("--split-preset", m.splitPreset);
     if (m.carve === false) a.push("--no-carve");
     if (m.conform === false) a.push("--no-conform");
+    a = a.concat((VB.extraArgs ? VB.extraArgs(st, "worldpack-split") : []));   // TOOLS TAB: --textures, --step
     return { kind: "worldpack_split", label: "Export split models", params: { split: m.split, roads: rd, roof_mode: VB.roofMode(st), interior_style: VB.interiorStyle(st) }, steps: [py(GEN + "worldpack_split.py", a, "split models")] };
   };
   VB.jobWorldMerge = function (st, d, pack) {
     var m = st.foundry.models;
     return { kind: "worldpack_merge", label: "Merge/compress (" + m.preset + ")", params: { preset: m.preset },
-      steps: [py(GEN + "worldpack_split.py", ["merge", "--place", st.place, "--pack", pack || VB.packDir(d), "--preset", m.preset, "--compress", m.compress || "none"], "merge models")] };
+      steps: [py(GEN + "worldpack_split.py", ["merge", "--place", st.place, "--pack", pack || VB.packDir(d), "--preset", m.preset, "--compress", m.compress || "none"].concat((VB.extraArgs ? VB.extraArgs(st, "worldpack-merge") : [])), "merge models")] };
   };
   // push-models argument list (target scene as in the scene push: new by name, or the picked existing one); o = { dry, placements }
   VB.worldPushArgs = function (st, d, o) {
@@ -717,6 +718,7 @@
     if (m.sceneMode === "flat" || m.sceneMode === "3d") a.push("--scene-mode", m.sceneMode);
     if (m.compress === "quant") a.push("--allow-quantized");
     var cs = VB.collisionSpec(m); if (cs) a.push("--collision", cs);
+    a = a.concat((VB.extraArgs ? VB.extraArgs(st, "push-models") : []));   // TOOLS TAB: advanced push options
     if (o.dry) a.push("--dry-run");
     return a;
   };
@@ -732,7 +734,7 @@
   // set-collision / push-walls on the picked existing scene; apply = false gives the dry run (the commands write only with --apply)
   VB.jobSetCollision = function (st, apply) {
     var f = st.foundry; if (f.target !== "existing" || !f.sceneUuid) throw new Error("pick an existing scene (Refresh from Foundry first)");
-    var a = ["set-collision", "--scene-uuid", f.sceneUuid], cs = VB.collisionSpec(f.models); if (cs) a.push("--collision", cs); if (apply) a.push("--apply");
+    var a = ["set-collision", "--scene-uuid", f.sceneUuid], cs = VB.collisionSpec(f.models); if (cs) a.push("--collision", cs); a = a.concat((VB.extraArgs ? VB.extraArgs(st, "set-collision") : [])); if (apply) a.push("--apply");
     return { kind: "set_collision", label: "Set collision on scene tiles" + (apply ? "" : " (dry run)"), params: { apply: !!apply }, steps: [py(VB.FOUNDRY_PY || "illustrator/generators/foundry_push.py", a, "set collision")] };
   };
   VB.jobInstallDoorSync = function () {
@@ -745,7 +747,7 @@
   };
   VB.jobPushWalls = function (st, apply) {
     var f = st.foundry; if (f.target !== "existing" || !f.sceneUuid) throw new Error("pick an existing scene (Refresh from Foundry first)");
-    var a = ["push-walls", "--place", st.place, "--scene-uuid", f.sceneUuid, "--wall-layers", VB.wallLayers(f.models)]; if (apply) a.push("--apply");
+    var a = ["push-walls", "--place", st.place, "--scene-uuid", f.sceneUuid, "--wall-layers", VB.wallLayers(f.models)].concat((VB.extraArgs ? VB.extraArgs(st, "push-walls") : [])); if (apply) a.push("--apply");
     return { kind: "push_walls", label: "Push walls (block sight/sound/light)" + (apply ? "" : " (dry run)"), params: { apply: !!apply }, steps: [py(VB.FOUNDRY_PY || "illustrator/generators/foundry_push.py", a, "push walls")] };
   };
   VB.jobWorldPush = function (st, d, o) {
@@ -770,13 +772,14 @@
   };
   VB.jobPushLights = function (st, d, dry) {
     var f = st.foundry; if (f.target !== "existing" || !f.sceneUuid) throw new Error("pick an existing scene (Refresh from Foundry first)");
-    var a = ["push-lights", "--place", st.place, "--scene-uuid", f.sceneUuid, "--placements", VB.packDir(d) + "/placements.json"]; if (dry) a.push("--dry-run");
+    var a = ["push-lights", "--place", st.place, "--scene-uuid", f.sceneUuid, "--placements", VB.packDir(d) + "/placements.json"].concat((VB.extraArgs ? VB.extraArgs(st, "push-lights") : [])); if (dry) a.push("--dry-run");
     return { kind: "push_lights", label: "Push interior lights" + (dry ? " (dry run)" : ""), params: { dry: !!dry }, steps: [py(VB.FOUNDRY_PY || "illustrator/generators/foundry_push.py", a, "push lights")] };
   };
   VB.jobWorldPublish = function (st, d) {
     var f = st.foundry, m = f.models, a = ["publish", "--place", st.place, "--pack", VB.packDir(d), "--preset", m.preset, "--compress", m.compress || "none", "--lod", String(+m.lod || 0)];
     if (f.target === "existing") { if (!f.sceneUuid) throw new Error("pick an existing scene (Refresh from Foundry first)"); a.push("--scene-uuid", f.sceneUuid); }
     else { if (!String(f.sceneName || "").trim()) throw new Error("type a name for the new scene"); a.push("--scene-name", String(f.sceneName).trim()); }
+    if (VB.extraArgs) a = a.concat(VB.extraArgs(st, "publish"));   // TOOLS TAB: --yes
     return { kind: "worldpack_publish", label: "Publish models (merge + push)", params: { preset: m.preset }, steps: [py(GEN + "worldpack_split.py", a, "merge + push models")] };
   };
 
@@ -799,7 +802,7 @@
     var dr = VB.foundryDrawings(f); a.push("--drawings", dr);
     if (f.ftPerGrid) a.push("--ft-per-grid", String(f.ftPerGrid));
     if (o.tileImage) a.push("--tile-image", o.tileImage, "--tile-id", "labels");
-    return a;
+    return a.concat((VB.extraArgs ? VB.extraArgs(st, "push-scene") : []));   // TOOLS TAB: --upscale --padding --max-px --format --link
   };
   // Name of the scene a push goes to: the picked existing scene (name from the cached list), or the new scene's name.
   VB.foundryPushTarget = function (st) {

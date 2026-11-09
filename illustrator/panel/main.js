@@ -450,7 +450,7 @@
     $("candTag").className = "tag" + (state.town.candidate ? " stale" : "");
     $("statePath").textContent = d.state;
   }
-  function refreshAll() { paintInputs(); if (window.VBRegionUI) VBRegionUI.paint(); if (window.VBLightUI) VBLightUI.paint(); if (window.VBStylesUI) VBStylesUI.paint(); if (window.VBObjectsUI) VBObjectsUI.paint(); if (window.VBFoliageUI) VBFoliageUI.paint(); if (window.VBPaddingUI) VBPaddingUI.paint(); if (window.VBSkyUI) VBSkyUI.paint(); if (window.VBWaterUI) VBWaterUI.paint(); if (window.VBBridgesUI) VBBridgesUI.paint(); if (window.VBPlacesUI) VBPlacesUI.paint(); paintTags(); paintStale(); paintPatchForm(); paintRings(); if (typeof fPaint === "function" && state) fPaint(); }
+  function refreshAll() { paintInputs(); if (window.VBRegionUI) VBRegionUI.paint(); if (window.VBLightUI) VBLightUI.paint(); if (window.VBStylesUI) VBStylesUI.paint(); if (window.VBObjectsUI) VBObjectsUI.paint(); if (window.VBFoliageUI) VBFoliageUI.paint(); if (window.VBPaddingUI) VBPaddingUI.paint(); if (window.VBSkyUI) VBSkyUI.paint(); if (window.VBWaterUI) VBWaterUI.paint(); if (window.VBBridgesUI) VBBridgesUI.paint(); if (window.VBPlacesUI) VBPlacesUI.paint(); if (window.VBToolsUI) VBToolsUI.paint(); paintTags(); paintStale(); paintPatchForm(); paintRings(); if (typeof fPaint === "function" && state) fPaint(); }
 
   function showCrossings() {
     var j = readJson(d.water + "/crossings.json", null), el = $("crossInfo");
@@ -697,6 +697,7 @@
       var f = state.foundry; if (!f.actorUuid) throw new Error("pick an actor"); if (!f.at) throw new Error("fill in Place at (building id or x,y feet)");
       var a = ["push-token", "--place", state.place, "--scene-uuid", fSceneUuid(), "--actor-uuid", f.actorUuid, "--at", f.at, "--size-ft", String(f.sizeFt || 5)];
       if (f.image) a.push("--image", f.image);
+      if (VB.extraArgs) a = a.concat(VB.extraArgs(state, "push-token"));   // TOOLS TAB: --hidden, --key, --px
       var r = await fHandle(a, "token"); if (r) fOut((r.created ? "Placed" : "Moved") + " token " + r.uuid + " at " + r.x + "," + r.y + ".");
     }); },
     f_actor: function () { return fGuard("push actor", async function () {
@@ -704,6 +705,7 @@
       if (f.actorUuid) { if (!f.image) throw new Error("give an image file to update the picked actor's portrait and token"); a.push("--actor-uuid", f.actorUuid); }
       else { if (!f.spec) throw new Error("pick an actor and an image, or give an NPC spec json"); a.push("--spec", f.spec); }
       if (f.image) a.push("--image", f.image);
+      if (VB.extraArgs) a = a.concat(VB.extraArgs(state, "push-actor"));   // TOOLS TAB: --portrait, --token
       var r = await fHandle(a, "actor");
       if (r) { fOut("Actor " + r.uuid + (r.created === undefined ? " updated: " + (r.updated || []).join(", ") : r.created ? " created." : " updated.")); }
     }); },
@@ -803,6 +805,7 @@
     if (window.VBPaddingUI) VBPaddingUI.init({ state: function () { return state; }, dirs: function () { return d; }, save: save, startJob: startJob, syncInputs: paintInputs, readJson: readJson, fs: fs, path: path, root: root, acts: acts }); // padding tab (padding_ui.js)
     if (window.VBBridgesUI) VBBridgesUI.init({ state: function () { return state; }, dirs: function () { return d; }, save: save, startJob: startJob, syncInputs: paintInputs, readJson: readJson, fs: fs, path: path, root: root, acts: acts }); // BRIDGES tab (bridges_ui.js)
     if (window.VBPlacesUI) VBPlacesUI.init({ state: function () { return state; }, dirs: function () { return d; }, save: save, startJob: startJob, syncInputs: paintInputs, readJson: readJson, fs: fs, path: path, root: root, acts: acts, switchPlace: switchPlace, showError: showError }); // PLACES tab (places_ui.js)
+    if (window.VBToolsUI) VBToolsUI.init({ state: function () { return state; }, dirs: function () { return d; }, save: save, startJob: startJob, syncInputs: paintInputs, readJson: readJson, fs: fs, path: path, root: root, acts: acts, refreshAll: refreshAll, showError: showError }); // TOOLS tab (tools_ui.js)
     if (window.VBBridgeUI) VBBridgeUI.init({ state: function () { return state; }, save: save, startJob: startJob, syncInputs: paintInputs, fs: fs, root: root, acts: acts }); // BRIDGE section of the Foundry tab (bridge_ui.js)
     sel.addEventListener("change", function () { try { fs.writeFileSync(path.join(root, "world", "panel_last_place.json"), JSON.stringify({ place: sel.value })); } catch (e) { /* ignore */ } });
     $("fPlace").addEventListener("change", function () { sel.value = $("fPlace").value; switchPlace($("fPlace").value); try { fs.writeFileSync(path.join(root, "world", "panel_last_place.json"), JSON.stringify({ place: sel.value })); } catch (e) { /* ignore */ } });
