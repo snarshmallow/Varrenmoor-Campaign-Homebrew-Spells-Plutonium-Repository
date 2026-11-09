@@ -1,0 +1,13 @@
+{
+ "id": "bh_warden_civic_winter",
+ "extends": "bh_warden_civic",
+ "name": "Bridgehollow warden-ring civic hall (winter)",
+ "description": "Warden's Ring civic buildings (hall, court, records, treasury, barracks, customs, lockup): dressed grey stone with pale quoins and storey bands, steep hipped slate roof with dormers, leaded windows in stone surrounds, round-arched doorway, two stone chimneys. Winter: snow on the roof and dormer roofs.",
+ "special": {
+  "snow": {
+   "depth_ft": 0.42,
+   "color": "#eef2f6"
+  }
+ },
+ "preview": "illustrator/out/building_styles/bh_warden_civic_winter.png"
+}

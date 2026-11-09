@@ -1,0 +1,13 @@
+{
+ "id": "bh_ring_outbuilding_winter",
+ "extends": "bh_ring_outbuilding",
+ "name": "Bridgehollow ring outbuilding (winter)",
+ "description": "Sheds and stables inside the Warden's and inner rings: dark tarred boards with oak corner posts on a stone plinth, wood-shingle roof with barge boards and a ridge cap. Winter: snow on the roof and dormer roofs.",
+ "special": {
+  "snow": {
+   "depth_ft": 0.42,
+   "color": "#eef2f6"
+  }
+ },
+ "preview": "illustrator/out/building_styles/bh_ring_outbuilding_winter.png"
+}

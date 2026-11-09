@@ -1,0 +1,13 @@
+{
+ "id": "bh_warden_house_winter",
+ "extends": "bh_warden_house",
+ "name": "Bridgehollow warden-ring burgher house (winter)",
+ "description": "Warden's Ring: grey stone ground storey with pale quoins and a weathered string course, close-studded oak upper storey and gables on limewash, steep slate roof with gabled dormers both sides, two ridge chimneys, carved finials, leaded casements with shutters, round-arched stone doorway. Winter: snow on the roof and dormer roofs.",
+ "special": {
+  "snow": {
+   "depth_ft": 0.42,
+   "color": "#eef2f6"
+  }
+ },
+ "preview": "illustrator/out/building_styles/bh_warden_house_winter.png"
+}

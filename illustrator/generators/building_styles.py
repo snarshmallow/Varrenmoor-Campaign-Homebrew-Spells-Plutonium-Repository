@@ -38,8 +38,26 @@ def load_presets(force=False):
                         d = json.load(f)
                     d.setdefault("id", fn[:-5])
                     out[d["id"]] = d
+        for pid in list(out):                       # "extends": "<base id>" = the base preset deep-merged with this file's keys (winter variants)
+            out[pid] = _extended(out, pid, set())
         _CACHE["p"] = out
     return _CACHE["p"]
+
+
+def _merge(a, b):
+    out = dict(a)
+    for k, v in b.items():
+        out[k] = _merge(a[k], v) if isinstance(v, dict) and isinstance(a.get(k), dict) else v
+    return out
+
+
+def _extended(pres, pid, seen):
+    d = pres[pid]
+    base = d.get("extends")
+    if not base or base not in pres or pid in seen:
+        return d
+    seen.add(pid)
+    return _merge(_extended(pres, base, seen), {k: v for k, v in d.items() if k != "extends"})
 
 
 def list_presets():
@@ -128,12 +146,35 @@ def resolve(style_id, bid, kind=None, district=None):
                     "frame_color": _pick(wi.get("frame_colors"), k, "framec"), "bar_color": wi.get("bar_color", "#2b2b2d"), "hood": bool(wi.get("hood", False)),
                     "shape": _pick(wi.get("shape"), k, "wshape") if isinstance(wi.get("shape"), list) else wi.get("shape", "rect"),
                     "width_ft": _rng(wi.get("width_ft", 1.9), k, "ww"), "height_ft": _rng(wi.get("height_ft", 6.5), k, "wh"), "sill_ft": wi.get("sill_ft"), "triple_width_ft": wi.get("triple_width_ft", 4.8)}
+    if w.get("gable_rails"):
+        S["wall"]["gable_rails"] = True
+    if "shutter_d_ft" in wi:                     # burgher-house options (absent in the older presets: their output is unchanged)
+        S["windows"]["shutter_d_ft"] = wi["shutter_d_ft"]
+    if wi.get("shutter_clear"):
+        S["windows"]["shutter_clear"] = True
     S["door"] = {"color": _pick(dr.get("colors"), k, "doorc"), "surround": bool(dr.get("surround", True)), "shape": dr.get("shape", "rect")}
     if ch.get("type", "none") != "none" and _u(k, "chim") < ch.get("prob", 1.0):
         S["chimney"] = {"type": ch["type"], "material": ch.get("material", "brick"), "color": _pick(ch.get("colors"), k, "chimc"), "width_ft": ch.get("width_ft", 2.4),
-                        "rise_ft": ch.get("rise_ft", 3.0), "end": 1 if _u(k, "chend") < 0.5 else -1}
+                        "rise_ft": ch.get("rise_ft", 3.0), "end": 1 if _u(k, "chend") < 0.5 else -1, "both": bool(ch.get("both", False))}
     else:
         S["chimney"] = None
+    # burgher-house blocks (Bridgehollow tiers): stone/brick ground storey with a plaster + timber upper, quoins, string course, dormers, finials, snow
+    up = w.get("upper")
+    S["upper"] = {"material": up.get("material", "plaster"), "color": _pick(up.get("colors") or ["#e6dfcf"], k, "upc"), "ground_storeys": int(up.get("ground_storeys", 1)),
+                  "gables": bool(up.get("gables", True))} if up else None
+    q = p.get("quoins")
+    S["quoins"] = {"color": _pick(q.get("colors") or ["#c4beb2"], k, "quoinc"), "course_ft": q.get("course_ft", 1.0), "long_ft": q.get("long_ft", 1.7), "short_ft": q.get("short_ft", 1.0),
+                   "depth_ft": q.get("depth_ft", 0.12)} if q else None
+    S["string_course"] = bool(p.get("string_course", False))
+    dm = rf.get("dormers")
+    if dm and _u(k, "dorm") < dm.get("prob", 1.0):
+        cnt = dm.get("count", "auto")
+        S["dormers"] = {"count": cnt if cnt in (None, "auto") else int(round(_rng(cnt, k, "dcount"))), "width_ft": _rng(dm.get("width_ft", 3.6), k, "dw"),
+                        "height_ft": _rng(dm.get("height_ft", 3.8), k, "dh"), "pitch": _rng(dm.get("pitch", 1.0), k, "dp"), "inset_ft": dm.get("inset_ft", 1.3),
+                        "sides": int(dm.get("sides", 1)), "side": 1 if _u(k, "dside") < 0.5 else -1}
+    else:
+        S["dormers"] = None
+    S["finials"] = bool(rf.get("finials", False))
     S["trim_color"] = _pick(p.get("trim_colors"), k, "trim")
     S["tile_scale"] = float(p.get("tile_scale", 1.0))
     return S
@@ -427,6 +468,17 @@ def apply_style(e, district=None):
     if R.get("fascia_color"):
         S["fascia_mat"] = mid_for("board", R["fascia_color"])
         mats.add(S["fascia_mat"])
+    if S.get("upper"):
+        S["upper_mat"] = mid_for(S["upper"]["material"], S["upper"]["color"])
+        mats.add(S["upper_mat"])
+    if S.get("quoins"):
+        S["quoin_mat"] = wall_mat("stone", S["quoins"]["color"])
+        mats.add(S["quoin_mat"])
+    if S.get("string_course"):
+        S["band_mat"] = S.get("quoin_mat") or (S.get("plinth_mat") if PL else None)
+    if S["special"].get("snow"):
+        S["snow_mat"] = mid_for("plaster", S["special"]["snow"].get("color", "#eef2f6"))
+        mats.add(S["snow_mat"])
     S["trim_mat"] = mm.get("mat_trim", "mat_trim")
     for k in ("door_mat",):
         pass

@@ -1,0 +1,115 @@
+{
+ "id": "bh_warden_civic",
+ "name": "Bridgehollow warden-ring civic hall",
+ "category": "town",
+ "culture": "Bridgehollow (North German / Danish)",
+ "description": "Warden's Ring civic buildings (hall, court, records, treasury, barracks, customs, lockup): dressed grey stone with pale quoins and storey bands, steep hipped slate roof with dormers, leaded windows in stone surrounds, round-arched doorway, two stone chimneys.",
+ "kinds": {},
+ "tier": "warden",
+ "wall": {
+  "system": "plain",
+  "material": "stone",
+  "colors": [
+   "#8a857d",
+   "#928c84",
+   "#837e77"
+  ],
+  "beam_colors": [
+   "#2b231d"
+  ]
+ },
+ "plinth": {
+  "material": "stone",
+  "colors": [
+   "#6c6863"
+  ],
+  "height_ft": [
+   2.0,
+   2.4
+  ]
+ },
+ "quoins": {
+  "colors": [
+   "#d6cdb6",
+   "#cfc5ac"
+  ],
+  "course_ft": 1.2,
+  "long_ft": 2.0,
+  "short_ft": 1.2,
+  "depth_ft": 0.14
+ },
+ "string_course": true,
+ "roof": {
+  "type": "hip",
+  "material": "slate",
+  "colors": [
+   "#474d55",
+   "#50565e"
+  ],
+  "pitch": [
+   0.95,
+   1.1
+  ],
+  "overhang_ft": [
+   1.3,
+   1.5
+  ],
+  "ridge_cap": true,
+  "fascia_colors": [
+   "#2b231d"
+  ],
+  "dormers": {
+   "prob": 1.0,
+   "count": "auto",
+   "width_ft": [
+    3.8,
+    4.2
+   ],
+   "height_ft": [
+    3.8,
+    4.2
+   ],
+   "pitch": 1.05,
+   "inset_ft": 1.5,
+   "sides": 2
+  }
+ },
+ "windows": {
+  "type": "leaded",
+  "cols": [
+   3,
+   3
+  ],
+  "rows": [
+   3,
+   4
+  ],
+  "shutter_prob": 0.25,
+  "shutter_colors": [
+   "#2f4a3c",
+   "#2e3e52"
+  ],
+  "shutter_d_ft": 0.12
+ },
+ "door": {
+  "colors": [
+   "#3b2a1e",
+   "#2d3b30"
+  ],
+  "shape": "round_arch"
+ },
+ "chimney": {
+  "type": "ridge",
+  "material": "stone",
+  "colors": [
+   "#7d7870"
+  ],
+  "width_ft": 2.8,
+  "rise_ft": 3.6,
+  "both": true
+ },
+ "trim_colors": [
+  "#d2ccbf"
+ ],
+ "preview": "illustrator/out/building_styles/bh_warden_civic.png"
+}

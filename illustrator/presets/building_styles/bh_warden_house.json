@@ -1,0 +1,154 @@
+{
+ "id": "bh_warden_house",
+ "name": "Bridgehollow warden-ring burgher house",
+ "category": "house",
+ "culture": "Bridgehollow (North German / Danish)",
+ "description": "Warden's Ring: grey stone ground storey with pale quoins and a weathered string course, close-studded oak upper storey and gables on limewash, steep slate roof with gabled dormers both sides, two ridge chimneys, carved finials, leaded casements with shutters, round-arched stone doorway.",
+ "kinds": {},
+ "tier": "warden",
+ "wall": {
+  "system": "halftimber",
+  "material": "stone",
+  "colors": [
+   "#7f7a72",
+   "#87817a",
+   "#78736c"
+  ],
+  "upper": {
+   "material": "plaster",
+   "colors": [
+    "#ebe5d6",
+    "#e2d8c0",
+    "#e6dcc8",
+    "#d9cdb0"
+   ],
+   "ground_storeys": 1,
+   "gables": true
+  },
+  "beam_colors": [
+   "#231c17",
+   "#2b221b"
+  ],
+  "pattern": [
+   "close",
+   "braced",
+   "close",
+   "square"
+  ],
+  "spacing_ft": [
+   2.8,
+   3.2
+  ],
+  "beam_w_ft": [
+   0.4,
+   0.46
+  ],
+  "beam_depth_ft": 0.2,
+  "trim_from_beam": false,
+  "gable_rails": true
+ },
+ "plinth": {
+  "material": "stone",
+  "colors": [
+   "#6c6863",
+   "#66625d"
+  ],
+  "height_ft": [
+   1.6,
+   2.0
+  ]
+ },
+ "quoins": {
+  "colors": [
+   "#d6cdb6",
+   "#cfc5ac"
+  ],
+  "course_ft": 1.05,
+  "long_ft": 1.8,
+  "short_ft": 1.05,
+  "depth_ft": 0.12
+ },
+ "string_course": true,
+ "roof": {
+  "type": "gable",
+  "material": "slate",
+  "colors": [
+   "#4a5058",
+   "#555b63",
+   "#43484f"
+  ],
+  "pitch": [
+   1.15,
+   1.35
+  ],
+  "overhang_ft": [
+   1.4,
+   1.7
+  ],
+  "ridge_cap": true,
+  "barge": true,
+  "fascia_colors": [
+   "#2b231d",
+   "#33291f"
+  ],
+  "finials": true,
+  "dormers": {
+   "prob": 1.0,
+   "count": "auto",
+   "width_ft": [
+    3.6,
+    4.0
+   ],
+   "height_ft": [
+    3.8,
+    4.2
+   ],
+   "pitch": 1.05,
+   "inset_ft": 1.3,
+   "sides": 2
+  }
+ },
+ "windows": {
+  "type": "leaded",
+  "cols": [
+   2,
+   3
+  ],
+  "rows": [
+   3,
+   3
+  ],
+  "shutter_prob": 0.55,
+  "shutter_colors": [
+   "#2f4a3c",
+   "#5a2e26",
+   "#2e3e52"
+  ],
+  "shutter_d_ft": 0.12,
+  "shutter_clear": true
+ },
+ "door": {
+  "colors": [
+   "#3b2a1e",
+   "#2d3b30",
+   "#4a2220"
+  ],
+  "shape": "round_arch"
+ },
+ "chimney": {
+  "type": "ridge",
+  "material": "stone",
+  "colors": [
+   "#7d7870",
+   "#857f76"
+  ],
+  "width_ft": 2.6,
+  "rise_ft": 3.4,
+  "both": true
+ },
+ "trim_colors": [
+  "#cfc9bc",
+  "#c6bfb1"
+ ],
+ "preview": "illustrator/out/building_styles/bh_warden_house.png"
+}

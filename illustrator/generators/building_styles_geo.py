@@ -103,6 +103,11 @@ def wall_frame(g, i, X, L, holes, P, D, zf, zt, floors, S, z0):
     ext = d if _corner_info(P, D, i) else 0.0
     zbot = zf + ph
     zt = zt - (d * S["roof"]["pitch"] + 0.03)            # the roof surface is lower at the beams' outward position: keep the top plate under it
+    zg = S.get("_zg")                                    # stone / brick ground storey (preset wall.upper): the frame starts on top of it
+    if zg is not None:
+        zbot = max(zbot, zg)
+        if zt - zbot < 2.0 * FT:
+            return
     ztop_all = zt
     # corner posts (full height), a notch filler at the start corner
     g.rect(X, mat, -ext, cw, zbot, ztop_all, d, True, skip=(0,))
@@ -120,6 +125,8 @@ def wall_frame(g, i, X, L, holes, P, D, zf, zt, floors, S, z0):
             zs = zf + s * sh
             cand.append((zs + 2.55 * FT, zs + 2.55 * FT + rh, d, 0))
             cand.append((zs + 7.5 * FT, zs + 7.5 * FT + rh, d, 0))
+    if zg is not None:
+        cand = [c for c in cand if c[0] >= zbot - 1e-6]
     acc = []
     for lo, hi, dd, jt in cand:
         if all(lo >= a[1] + 1.1 * FT or hi <= a[0] - 1.1 * FT for a in acc):
@@ -232,7 +239,7 @@ def window_extras(g, i, X, h, t, S):
         sw = w / 2
         tw = 0.4 * FT
         for (a, c) in ((u0 - tw - sw, u0 - tw), (u1 + tw, u1 + tw + sw)):
-            g.rect(X, S["shutter_mat"], a, c, za, zb_ + tw, 0.05 * FT, True, tile_ft=4.5)
+            g.rect(X, S["shutter_mat"], a, c, za, zb_ + tw, Wd.get("shutter_d_ft", 0.05) * FT, True, tile_ft=4.5)
 
 
 def _inbox(g, X, mat, ua, ub, va, vb, za, zb_):
@@ -455,10 +462,14 @@ def chimney(g, R, e, S, zt, z0):
     ch = S.get("chimney")
     if not ch:
         return
+    for end in ((1, -1) if ch.get("both") else (ch["end"],)):
+        _chimney_at(g, R, S, ch, end, zt, z0)
+
+
+def _chimney_at(g, R, S, ch, end, zt, z0):
     mat = ch["mat"]
     cwid = ch["width_ft"] * FT
     rise = ch["rise_ft"] * FT
-    end = ch["end"]
     if ch["type"] == "gable":
         l0, l1 = end * (R.hl - 0.35 * FT), end * (R.hl + 1.7 * FT)
         l0, l1 = min(l0, l1), max(l0, l1)
@@ -521,11 +532,31 @@ def gable_timber(g, R, e, S, zt):
             continue
         sp = (1.15 if W["pattern"] == "close" else W["spacing_ft"]) * FT
         n = max(2, int(round(2 * R.hw / sp)))
+        rails = []
+        if W.get("gable_rails"):            # collar rails across the gable every ~3.9 ft (studs are split at them: no crossing beams)
+            zr_ = zt + RAIL_H * FT + 3.9 * FT
+            while True:
+                hu = (zt + R.rise - zr_ - RAIL_H * FT - 0.35 * FT) / R.slope - 0.15 * FT
+                edges_ = [abs(-R.hw + 2 * R.hw * k / n) + bw / 2 for k in range(1, n)]
+                hu = max([x for x in edges_ if x <= hu] or [0.0])          # the rail ends flush with the outer face of a stud (no stud half across it)
+                if hu < 1.6 * FT:
+                    break
+                rails.append((zr_, zr_ + RAIL_H * FT, hu))
+                g.rect(X, mat, -hu, hu, zr_, zr_ + RAIL_H * FT, d, False)
+                zr_ += RAIL_H * FT + 3.9 * FT
         for k in range(1, n):
             u = -R.hw + 2 * R.hw * k / n
             top = zt + R.rise - abs(u) * R.slope - 0.35 * FT
-            if top - (zt + RAIL_H * FT) > 0.5 * FT:
-                g.rect(X, mat, u - bw / 2, u + bw / 2, zt + RAIL_H * FT, top, d, True, skip=(0,))
+            zlo_ = zt + RAIL_H * FT
+            for (ra, rb, hu) in rails + [(None, None, None)]:
+                if ra is not None and abs(u) + bw / 2 <= hu + 1e-9:
+                    if ra - zlo_ > 0.5 * FT:
+                        g.rect(X, mat, u - bw / 2, u + bw / 2, zlo_, ra, d, True, skip=(0, 2))
+                    zlo_ = rb
+                    continue
+                if top - zlo_ > 0.5 * FT:
+                    g.rect(X, mat, u - bw / 2, u + bw / 2, zlo_, top, d, True, skip=(0,))
+                break
         # rafter beams along the rake: parallelograms under the roof sheet (top edge ROOF_INSET below the roof surface, bottom edge one beam-width lower), so they
         # never poke through the thatch / tiles; they run from the tie beam end up to the apex
         wh = bw * math.sqrt(1 + R.slope ** 2)
@@ -676,6 +707,265 @@ def windmill(g, R, e, S, zt, z0):
             g.b.face(S.get("sail_mat") or "mat_s_flat_d9d0b8", pts, wm.world_uv(pts, 3.0, g.off, 0.0))
 
 
+# ------------------------------------------------------------------ burgher-house features (Bridgehollow tiers; all optional preset keys, see building_styles.resolve)
+SKIN_D_FT = 0.05          # plaster skin of the timber-framed upper storey, proud of the stone / brick ground-storey shell
+TRIM_CLEAR_FT = 0.43      # skins and quoins stop this far from an opening: clear of the 0.4 ft window / door trim (no touching faces)
+BAND_H_FT, BAND_D_FT = 0.5, 0.26
+
+
+def gable_edges(R, P):
+    """Edge i -> True when it is a gable end of a gable roof (perpendicular to the ridge, at one end of the obb)."""
+    out = []
+    for i in range(len(P)):
+        a, b = P[i], P[(i + 1) % len(P)]
+        L = math.dist(a, b) or 1.0
+        along = abs((b[0] - a[0]) * R.ex[0] + (b[1] - a[1]) * R.ex[1]) / L
+        lm = ((a[0] + b[0]) / 2 - R.cxm) * R.ex[0] + ((a[1] + b[1]) / 2 - R.cym) * R.ex[1]
+        out.append((not R.hip) and along < 0.3 and abs(lm) > 0.6 * R.hl)
+    return out
+
+
+def upper_skin(g, i, X, L, holes, P, D, zg, ztop, S, gable, on_band):
+    """Plaster skin of the upper storeys over the stone ground-storey shell (the timber frame sits on it). Cut around every opening and its trim."""
+    sd = SKIN_D_FT * FT
+    ext = sd if _corner_info(P, D, i) else 0.0
+    skip = ((0,) if on_band else ()) + ((2,) if gable else ())
+    for (ua, ub, za, zb_) in _minus([(-ext, L, zg, ztop)], holes, TRIM_CLEAR_FT * FT):
+        if ub - ua > 0.05 * FT and zb_ - za > 0.05 * FT:
+            sk = tuple(k for k in skip if (k == 0 and abs(za - zg) < 1e-9) or (k == 2 and abs(zb_ - ztop) < 1e-9))
+            g.prism(X, S["upper_mat"], [(ua, za), (ub, za), (ub, zb_), (ua, zb_)], sd, (1.0, 0.0), skip=sk, tile_ft=6.0)
+
+
+def gable_skin(g, R, S, zbase, on_wall_skin):
+    """Plaster pentagon on each gable (wall top -> under the rakes, ROOF_INSET below the roof surface), proud of the stone gable by SKIN_D_FT."""
+    if R.hip:
+        return
+    sd = SKIN_D_FT * FT
+    ins = 0.03 * FT
+    hw = R.hw
+    zc = R.zt_ + R.rise - hw * R.slope - ins
+    apex = R.zt_ + R.rise - ins
+    for sg in (1, -1):
+        def X(u, v, z, sg=sg):
+            return R.P(sg * (R.hl - v), sg * u, z)
+        poly = [(-hw, zbase), (hw, zbase), (hw, zc), (0.0, apex), (-hw, zc)]
+        front = [X(u, -sd, z) for u, z in poly]
+        g.uvface(S["upper_mat"], front, 6.0)
+        for k in range(5):
+            if k == 0 and on_wall_skin:
+                continue                                            # rests on the wall skin's top (both skipped: no touching faces)
+            (ua, za), (ub, zb_) = poly[k], poly[(k + 1) % 5]
+            g.uvface(S["upper_mat"], [X(ua, 0, za), X(ub, 0, zb_), X(ub, -sd, zb_), X(ua, -sd, za)], 6.0)
+
+
+def string_course(g, i, X, L, holes, P, D, zc, S):
+    """Weathered stone band under the storey line zc: front, soffit, top sloping down outward (its back edge 0.02 ft under zc, so nothing above touches it)."""
+    bd, bh = BAND_D_FT * FT, BAND_H_FT * FT
+    ext = bd if _corner_info(P, D, i) else 0.0
+    m = S.get("band_mat") or S["trim_mat"]
+    z0_, z1b, z1f = zc - bh, zc - 0.02 * FT, zc - 0.1 * FT
+    for (ua, ub, za, zb_) in _minus([(-ext, L, z0_, z1b)], holes, TRIM_CLEAR_FT * FT):
+        if ub - ua < 0.2 * FT:
+            continue
+        g.uvface(m, [X(ua, -bd, z0_), X(ub, -bd, z0_), X(ub, -bd, z1f), X(ua, -bd, z1f)], 4.0)
+        g.uvface(m, [X(ua, -bd, z1f), X(ub, -bd, z1f), X(ub, 0, z1b), X(ua, 0, z1b)], 4.0)
+        g.uvface(m, [X(ua, 0, z0_), X(ub, 0, z0_), X(ub, -bd, z0_), X(ua, -bd, z0_)], 4.0)
+        for u in (ua, ub):
+            g.uvface(m, [X(u, 0, z0_), X(u, -bd, z0_), X(u, -bd, z1f), X(u, 0, z1b)], 4.0)
+
+
+def quoins(g, X_of, P, D, edge_holes, zlo, zhi, S, on_plinth):
+    """Dressed corner stones on every convex corner, long and short faces alternating across the corner, 0.035 ft joints between courses."""
+    Q = S.get("quoins")
+    if not Q:
+        return
+    n = len(P)
+    qd, ch, gap = Q["depth_ft"] * FT, Q["course_ft"] * FT, 0.035 * FT
+    lo_, sh_ = Q["long_ft"] * FT, Q["short_ft"] * FT
+    m = S["quoin_mat"]
+    for c in range(n):
+        if not _corner_info(P, D, c):
+            continue
+        ip = (c - 1) % n
+        Lp = math.dist(P[ip], P[c])
+        Xa, Xb = X_of(c), X_of(ip)
+        k, z = 0, zlo
+        while z + ch * 0.6 < zhi:
+            z1 = min(z + ch - gap, zhi)
+            la, lb = (lo_, sh_) if k % 2 == 0 else (sh_, lo_)
+            if not _hits((0.0, la, z, z1), edge_holes[c], 0.35 * FT) and not _hits((Lp - lb, Lp, z, z1), edge_holes[ip], 0.35 * FT):
+                sk = (0,) if (on_plinth and k == 0) else ()
+                g.rect(Xa, m, -qd, la, z, z1, qd, False, skip=sk, tile_ft=4.0)
+                g.rect(Xb, m, Lp - lb, Lp, z, z1, qd, False, skip=sk, tile_ft=4.0)
+            z += ch
+            k += 1
+
+
+def _rbox(g, R, s, mat, l0, l1, w0, w1, z0, z1, tile=3.0, skip=()):
+    """_box with w mirrored to side s (w0 < w1 given for side +1)."""
+    wa, wb = sorted((s * w0, s * w1))
+    sk = tuple({"w0": "w1", "w1": "w0"}.get(k, k) if s < 0 else k for k in skip)
+    _box(g, R, mat, l0, l1, wa, wb, z0, z1, tile, skip=sk)
+
+
+def dormer_spots(R, S):
+    """[(side, l_centre)] for the roof's dormers, plus the dormer dimensions; [] when the roof is too low or too small."""
+    Dm = S.get("dormers")
+    if not Dm or R.slope < 0.7:
+        return [], None
+    W, Hf, pd = Dm["width_ft"] * FT, Dm["height_ft"] * FT, Dm["pitch"]
+    ovd, tk = 0.45 * FT, 0.12 * FT
+    wf = R.hw - Dm["inset_ft"] * FT
+    if wf < 3.2 * FT:
+        return [], None
+    zb = R.zt_ + R.rise - wf * R.slope
+    Hf = min(Hf, R.zr - 1.0 * FT - W / 2 * pd - zb)
+    if Hf < 2.8 * FT:
+        return [], None
+    ztop = zb + Hf
+    zrd = ztop + W / 2 * pd
+    w_r = (R.zt_ + R.rise - zrd) / R.slope
+    half = W / 2 + ovd
+    rh = max(R.hl - R.hw, 0.0) if R.hip else None
+    lim = (rh + (R.hw - (wf + ovd)) - 0.4 * FT - half) if R.hip else (R.hl - 1.6 * FT - half)
+    if lim < 0:
+        return [], None
+    n = Dm["count"]
+    if n in (None, "auto"):
+        n = 1 + int(2 * lim / (W + 6.0 * FT))
+    n = max(1, min(int(n), 3))
+    while n > 1 and (2 * lim + 2 * half) / n < W + 2.2 * FT:
+        n -= 1
+    span = 2 * lim + 2 * half
+    ls = [-span / 2 + span * (k + 0.5) / n for k in range(n)]
+    ch = S.get("chimney")                                  # a ridge chimney near the dormer's back end: keep clear of it
+    blocked = []
+    if ch and ch["type"] != "gable":
+        cwid = ch["width_ft"] * FT
+        if w_r < cwid * 0.45 + 0.4 * FT:
+            for end in ((1, -1) if ch.get("both") else (ch["end"],)):
+                lc = end * R.hl * 0.55
+                blocked.append((lc - cwid * 0.4 - 0.3 * FT, lc + cwid * 0.4 + 0.3 * FT))
+    ls = [l for l in ls if not any(l + half > a and l - half < b for a, b in blocked)]
+    sides = (1, -1) if Dm["sides"] == 2 else (Dm["side"],)
+    dims = {"W": W, "Hf": Hf, "pd": pd, "ovd": ovd, "tk": tk, "wf": wf, "zb": zb, "ztop": ztop, "zrd": zrd, "w_r": w_r, "half": half}
+    return [(s, l) for s in sides for l in ls], dims
+
+
+def _dormer_roof_polys(R, d, lc):
+    """Top polygons [(l, w, z)] (side +1 frame) of the two dormer roof planes: ridge -> eave, front edge -> valley with the main roof."""
+    out = []
+    zr0 = R.zt_ + R.rise
+    ze = d["zrd"] - d["half"] * d["pd"]
+    wv = (zr0 - ze) / R.slope
+    for x in (-1, 1):
+        out.append([(lc, d["wf"] + d["ovd"], d["zrd"]), (lc + x * d["half"], d["wf"] + d["ovd"], ze), (lc + x * d["half"], wv, ze), (lc, d["w_r"], d["zrd"])])
+    return out
+
+
+def dormers(g, R, S):
+    """Gabled dormers on the eave slopes: front wall with a glazed casement in a trim frame, slate-hung cheeks (roof material) buried 0.1 ft into the roof,
+    a small gable roof (slab with fascia) whose back edges run down the valleys into the main roof."""
+    spots, d = dormer_spots(R, S)
+    if not spots:
+        return
+    W, wf, zb, ztop, zrd, tk = d["W"], d["wf"], d["zb"], d["ztop"], d["zrd"], d["tk"]
+    sink = 0.1 * FT
+    fm = S.get("upper_mat") or S["wall_mat"]
+    cm, rm = S["roof_mat"], S["roof_mat"]
+    tm = S.get("fascia_mat") or S["trim_mat"]
+    frame = S["trim_mat"] if S["trim_mat"] != S.get("beam_mat") else (S.get("fascia_mat") or S["trim_mat"])
+    zroof = lambda w: R.zt_ + R.rise - w * R.slope
+    ww = min(2.2 * FT, W - 1.3 * FT)
+    sill = zb + 0.75 * FT
+    wtop = min(ztop - 0.45 * FT, sill + 3.0 * FT)
+    for s, lc in spots:
+        Pq = lambda l, w, z, s=s: R.P(l, s * w, z)
+        l0, l1 = lc - W / 2, lc + W / 2
+        a0, a1 = lc - ww / 2, lc + ww / 2
+        # front wall around the window
+        for (la, lb, za, zb_) in ((l0, a0, zb - sink, ztop), (a1, l1, zb - sink, ztop), (a0, a1, zb - sink, sill), (a0, a1, wtop, ztop)):
+            g.uvface(fm, [Pq(la, wf, za), Pq(lb, wf, za), Pq(lb, wf, zb_), Pq(la, wf, zb_)], 6.0)
+        g.uvface(fm, [Pq(l0, wf, ztop), Pq(l1, wf, ztop), Pq(lc, wf, zrd - tk * 0.5)], 6.0)
+        # reveal and glass 0.25 ft back
+        rv = 0.25 * FT
+        for pts in ([Pq(a0, wf, sill), Pq(a1, wf, sill), Pq(a1, wf - rv, sill), Pq(a0, wf - rv, sill)], [Pq(a0, wf, wtop), Pq(a1, wf, wtop), Pq(a1, wf - rv, wtop), Pq(a0, wf - rv, wtop)],
+                    [Pq(a0, wf, sill), Pq(a0, wf - rv, sill), Pq(a0, wf - rv, wtop), Pq(a0, wf, wtop)], [Pq(a1, wf, sill), Pq(a1, wf - rv, sill), Pq(a1, wf - rv, wtop), Pq(a1, wf, wtop)]):
+            g.uvface(fm, pts, 6.0)
+        g.uvface("mat_glass", [Pq(a0, wf - rv, sill), Pq(a1, wf - rv, sill), Pq(a1, wf - rv, wtop), Pq(a0, wf - rv, wtop)], 3.0)
+        bm = frame                                               # not the beam material: frame members never rise above the roof (TimberStaysUnderRoof)
+        lm, zm = (a0 + a1) / 2, (sill + wtop) / 2
+        _rbox(g, R, s, bm, lm - 0.04 * FT, lm + 0.04 * FT, wf - rv - 0.05 * FT, wf - rv + 0.05 * FT, sill, wtop, skip=("z0", "z1"))
+        _rbox(g, R, s, bm, a0, lm - 0.04 * FT, wf - rv - 0.04 * FT, wf - rv + 0.04 * FT, zm - 0.035 * FT, zm + 0.035 * FT, skip=("l0", "l1"))
+        _rbox(g, R, s, bm, lm + 0.04 * FT, a1, wf - rv - 0.04 * FT, wf - rv + 0.04 * FT, zm - 0.035 * FT, zm + 0.035 * FT, skip=("l0", "l1"))
+        # trim frame proud of the front (0.1 ft), sill board below
+        fw = 0.22 * FT
+        _rbox(g, R, s, frame, a0 - fw, a0, wf, wf + 0.1 * FT, sill, wtop + fw, skip=("w0",))
+        _rbox(g, R, s, frame, a1, a1 + fw, wf, wf + 0.1 * FT, sill, wtop + fw, skip=("w0",))
+        _rbox(g, R, s, frame, a0, a1, wf, wf + 0.1 * FT, wtop, wtop + fw, skip=("w0", "l0", "l1"))
+        _rbox(g, R, s, frame, a0 - fw - 0.1 * FT, a1 + fw + 0.1 * FT, wf, wf + 0.2 * FT, sill - 0.18 * FT, sill, skip=("w0",))
+        # cheeks: front edge -> where the dormer top meets the roof, bottom edge 0.1 ft under the roof surface
+        wt = (R.zt_ + R.rise - ztop) / R.slope - sink / R.slope
+        for l in (l0, l1):
+            g.uvface(cm, [Pq(l, wf, zb - sink), Pq(l, wf, ztop), Pq(l, wt, ztop)], 6.0)
+        # roof slabs
+        for top in _dormer_roof_polys(R, d, lc):
+            T = [Pq(l, w, z) for l, w, z in top]
+            B = [Pq(l, w, z - tk) for l, w, z in top]
+            g.uvface(rm, T, 9.0)
+            g.uvface(rm, B[::-1], 9.0)
+            for k in (0, 1):                                     # front fascia (ridge -> eave) and eave fascia (front -> valley)
+                g.uvface(tm, [T[k], T[k + 1], B[k + 1], B[k]], 3.0)
+
+
+def roof_snow(g, R, S):
+    """Snow: the roof facets (gable or hip) and the dormer roofs raised by the snow depth (a separate sheet, never coplanar with the roof), closed at the eaves and verges.
+    It covers the ridge cap (cap 0.34 ft < snow depth); chimneys, finials and dormer fronts rise through it."""
+    sn = S["special"].get("snow")
+    if not sn or not S.get("snow_mat"):
+        return
+    dz = sn.get("depth_ft", 0.4) * FT
+    m = S["snow_mat"]
+    Lh, Wh, zr, ze = R.Lh, R.Wh, R.zr, R.ze
+    facets = []
+    if R.hip:
+        rh = max(R.hl - R.hw, 0.0)
+        for s in (1, -1):
+            facets.append([(-rh, 0.0, zr), (rh, 0.0, zr), (Lh, s * Wh, ze), (-Lh, s * Wh, ze)] if rh > 1e-6 else [(0.0, 0.0, zr), (Lh, s * Wh, ze), (-Lh, s * Wh, ze)])
+            facets.append([(s * rh, 0.0, zr), (s * Lh, Wh, ze), (s * Lh, -Wh, ze)])
+        edges = [((-Lh, -Wh), (Lh, -Wh)), ((Lh, -Wh), (Lh, Wh)), ((Lh, Wh), (-Lh, Wh)), ((-Lh, Wh), (-Lh, -Wh))]
+        for (la, wa), (lb, wb) in edges:
+            g.uvface(m, [R.P(la, wa, ze), R.P(lb, wb, ze), R.P(lb, wb, ze + dz), R.P(la, wa, ze + dz)], 6.0)
+    else:
+        for s in (1, -1):
+            facets.append([(-Lh, 0.0, zr), (Lh, 0.0, zr), (Lh, s * Wh, ze), (-Lh, s * Wh, ze)])
+            g.uvface(m, [R.P(-Lh, s * Wh, ze), R.P(Lh, s * Wh, ze), R.P(Lh, s * Wh, ze + dz), R.P(-Lh, s * Wh, ze + dz)], 6.0)
+            for l in (-Lh, Lh):
+                g.uvface(m, [R.P(l, 0.0, zr), R.P(l, s * Wh, ze), R.P(l, s * Wh, ze + dz), R.P(l, 0.0, zr + dz)], 6.0)
+    spots, d = dormer_spots(R, S)
+    for f in facets:
+        g.uvface(m, [R.P(l, w, z + dz) for l, w, z in f], 6.0)
+    for s, lc in spots:
+        for top in _dormer_roof_polys(R, d, lc):
+            g.uvface(m, [R.P(l, s * w, z + dz) for l, w, z in top], 6.0)
+            (la, wa, za), (lb, wb, zb_) = top[1], top[2]
+            g.uvface(m, [R.P(la, s * wa, za), R.P(lb, s * wb, zb_), R.P(lb, s * wb, zb_ + dz), R.P(la, s * wa, za + dz)], 6.0)
+            (la, wa, za), (lb, wb, zb_) = top[0], top[1]
+            g.uvface(m, [R.P(la, s * wa, za), R.P(lb, s * wb, zb_), R.P(lb, s * wb, zb_ + dz), R.P(la, s * wa, za + dz)], 6.0)
+
+
+def finials(g, R, S):
+    """Turned finial with a pendant at both gable apexes (one post through the barge apex, a knob on top)."""
+    if not S.get("finials") or R.hip:
+        return
+    m = S.get("fascia_mat") or S["trim_mat"]
+    a, k = 0.11 * FT, 0.2 * FT
+    for sg in (1, -1):
+        l = sg * R.Lh
+        _box(g, R, m, l - a, l + a, -a, a, R.zr - 1.2 * FT, R.zr + 1.6 * FT, 3.0, skip=("z1",))
+        _box(g, R, m, l - k, l + k, -k, k, R.zr + 1.6 * FT, R.zr + 2.0 * FT, 3.0)
+
+
 # ------------------------------------------------------------------ entry point
 def decorate(cx, e, g_builder, S, P, D, N, edge_holes, zf, zt, floors, X_of, t_wall, off):
     """Add the style's geometry to `g_builder` (the detailed shell's Builder).
@@ -683,25 +973,63 @@ def decorate(cx, e, g_builder, S, P, D, N, edge_holes, zf, zt, floors, X_of, t_w
     z0 = zf - e["skirt_depth_ft"] * FT
     g = Ctx(g_builder, S, off, zf)
     S["bar_mat"] = S.get("beam_mat") or S["trim_mat"]
+    R = Roof(cx, e).zt(zt)
+    up = S.get("upper")
+    S["_zg"] = None
+    zg_skin = None
+    if up:                                                   # stone / brick ground storey (the shell), plaster + timber frame above it
+        zg = zf + (zt - zf) / max(floors, 1) * up["ground_storeys"]
+        S["_zg"] = zg
+        if zt - zg > 4.0 * FT:
+            zg_skin = zg
+    gables = gable_edges(R, P)
+    band = bool(S.get("string_course"))
+    sd = SKIN_D_FT * FT
+    ztop_skin = zt - sd * R.slope - 0.01
+    ph = S["plinth"]["height_ft"] * FT if S.get("plinth") else 0.0
+    all_fholes = []
     for i in range(len(P)):
         L = math.dist(P[i], P[(i + 1) % len(P)])
         X = X_of(i)
         holes = edge_holes[i]
         plinth(g, i, X, L, holes, P, D, zf, z0, S)
-        wall_frame(g, i, X, L, holes, P, D, zf, zt, floors, S, z0)
+        fholes = holes
+        if S["windows"].get("shutter_clear") and S["windows"]["shutters"]:     # frame members stop beside shutters instead of crossing them
+            fholes = holes + [{"u0": h["u0"] - (h["u1"] - h["u0"]) / 2 - 0.45 * FT, "u1": h["u1"] + (h["u1"] - h["u0"]) / 2 + 0.45 * FT, "z0": h["z0"], "z1": h["z1"] + 0.4 * FT,
+                               "kind": "shutter"} for h in holes if h["kind"] == "window"]
+        wall_frame(g, i, X, L, fholes, P, D, zf, zt, floors, S, z0)
+        if zg_skin is not None:
+            upper_skin(g, i, X, L, holes, P, D, zg_skin, ztop_skin, S, gables[i], band)
+            if band:
+                string_course(g, i, X, L, holes, P, D, zg_skin, S)
+        elif band and floors > 1 and not up:                  # stone civic building: a band at every storey line
+            for s in range(1, floors):
+                string_course(g, i, X, L, holes, P, D, zf + (zt - zf) * s / floors, S)
         for h in holes:
             if h["kind"] == "window":
                 if h.get("shape"):                           # arched / round window: tracery bars follow the outline (building_styles_arch.py)
                     bsa.tracery(g, X, h, t_wall, S["bar_mat"])
                 elif S["windows"]["type"] != "plain" or S["windows"]["shutters"]:
                     window_extras(g, i, X, h, t_wall, S)
-    R = Roof(cx, e).zt(zt)
+        all_fholes.append(fholes)
+    if S.get("quoins"):
+        qd = S["quoins"]["depth_ft"] * FT
+        if zg_skin is not None:
+            zhi = zg_skin - ((BAND_H_FT + 0.05) * FT if band else 0.05 * FT)
+        else:
+            zhi = zt - qd * R.slope - 0.12 * FT
+        quoins(g, X_of, P, D, all_fholes, zf + ph if ph else zf, zhi, S, bool(ph))
     if S["roof"].get("ridge_cap") and not S.get("cap_mat"):
         S["cap_mat"] = S["roof_mat"]
     roof_extras(g, R, e, S, zt, zf, z0)
     chimney(g, R, e, S, zt, z0)
     stepped_gable(g, R, e, S, zt)
+    if up and up.get("gables") and S.get("upper_mat"):
+        gable_skin(g, R, S, ztop_skin, zg_skin is not None)
     gable_timber(g, R, e, S, zt)
+    dormers(g, R, S)
+    finials(g, R, S)
+    roof_snow(g, R, S)
     tower(g, R, e, S, zt, z0)
     if S["special"].get("rose"):
         bsa.gable_rose(g, R, S, zt, S["special"]["rose"])
