@@ -272,5 +272,42 @@ class SkirtTexture(unittest.TestCase):
         self.assertEqual(len(np.unique(np.round(u, 6))) > 3, True)
 
 
+class KerbFlush(unittest.TestCase):
+    def test_kerb_embedded_and_flush_with_graded_edge(self):
+        """Kerb base must be below the terrain (no hovering over the skirt) and the kerb top must sit KERB_H above the graded road surface at its inner edge."""
+        from shapely.geometry import LineString
+        h = terrain()
+        r = road("k", [(30, 60, 100.0), (300, 140, 100.0)], width=16.0)
+        pk = synth(h, [r])
+        runs, rep = rg.grade_roads(pk, h, {})
+        ring = LineString([(30, 60), (300, 140)]).buffer(8.7, cap_style=2).difference(LineString([(30, 60), (300, 140)]).buffer(8.0, cap_style=2))
+        rings = [[list(p) for p in list(g.exterior.coords)[:-1]] for g in getattr(ring, "geoms", [ring])]
+        e = dict(r, _grade={"runs": runs["k"], "skirt": True}, kerbs=rings)
+        cx = wm.Ctx(pk)
+        b = wm.Builder()
+        wm._add_kerbs(cx, b, e)
+        m = b.build()
+        V = m.V[m.subs["mat_kerb"]].reshape(-1, 3)
+        x, y, z = V[:, 0] / FT, pk.frame.height_ft - V[:, 1] / FT, V[:, 2] / FT + ZO
+        g = rg.mesh_height(h, CELL, x, y)
+        run = runs["k"][0]
+        surf, _ = wm.kerb_heights(cx, e, list(zip(x, y)))
+        low = z < surf + wm.KERB_H_FT - 0.05                                  # base vertices (not the top face)
+        self.assertTrue(low.any())
+        self.assertLessEqual(float((z[low] - g[low]).max()), -wm.KERB_SINK_FT + 0.02)     # all base vertices sit below the ground
+        top = ~low
+        self.assertLess(float(np.abs(z[top] - surf[top] - wm.KERB_H_FT).max()), 0.02)
+        # inner-edge kerb top vs the road ribbon edge height (cross-slope aware): within 0.1 ft
+        i = len(run.x) // 2
+        d = np.hypot(x - run.x[i], y - run.y[i])
+        tx, ty = np.gradient(run.x)[i], np.gradient(run.y)[i]
+        lon = np.abs((x - run.x[i]) * tx + (y - run.y[i]) * ty) / math.hypot(tx, ty)
+        near = top & (d < 10.0) & (lon < 0.8)
+        edge = np.maximum(run.zl[i], run.zr[i]) + wm.KERB_H_FT
+        edgel = np.minimum(run.zl[i], run.zr[i]) + wm.KERB_H_FT
+        self.assertTrue(near.any())
+        self.assertTrue(np.all((z[near] <= edge + 0.1) & (z[near] >= edgel - 0.1)))
+
+
 if __name__ == "__main__":
     unittest.main()

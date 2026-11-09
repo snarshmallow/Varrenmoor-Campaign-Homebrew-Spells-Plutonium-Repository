@@ -50,7 +50,7 @@ def mesh_audit(pack, road_grade=True, step=1):
         if p["layer"] != "roads" or p["mesh"] is None or not p["mesh"].tri_count:
             continue
         m = p["mesh"]
-        T = np.concatenate([f for f in m.subs.values()])
+        T = np.concatenate([f for k, f in m.subs.items() if k != "mat_kerb"])        # the deck only: kerbs are deliberately buried at the base and may touch a cut bank
         V = m.V[T]                                           # [n, 3, 3] metres
         nz = np.cross(V[:, 1] - V[:, 0], V[:, 2] - V[:, 0])
         nz = nz[:, 2] / np.maximum(np.linalg.norm(nz, axis=1), 1e-12)

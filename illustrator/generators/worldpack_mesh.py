@@ -360,38 +360,75 @@ def build_road(cx, e):
 
 
 KERB_H_FT = 0.5
+KERB_SINK_FT = 0.5      # the kerb base is buried this far below the lower of road surface and terrain, so it never hovers over the skirt/ground
+
+
+def kerb_heights(cx, e, ring):
+    """Per-vertex (surface_ft, ground_ft or None) for kerb ring vertices (pack frame feet, absolute z).
+    Graded roads: nearest dense run station, surface tilted across by the run's per-side heights (zl/zr), so the kerb meets the road edge on both
+    sides of a cross-slope. Others: centreline profile. ground = terrain mesh height under the vertex (kerb base goes below it)."""
+    P = np.array(ring, float)
+    gr = (e.get("_grade") or {}).get("runs")
+    if gr:
+        best_d = np.full(len(P), 1e18)
+        zs = np.zeros(len(P))
+        for r in gr:
+            X, Y = np.asarray(r.x, float), np.asarray(r.y, float)
+            nx, ny = np.gradient(X), np.gradient(Y)
+            nl = np.maximum(np.hypot(nx, ny), 1e-9)
+            tx, ty = nx / nl, ny / nl                                   # tangent; left normal = (-ty, tx)
+            hw = np.maximum(np.asarray(r.hw, float), 1e-6)
+            for k, (px, py) in enumerate(P):
+                d2 = (X - px) ** 2 + (Y - py) ** 2
+                i = int(np.argmin(d2))
+                if d2[i] < best_d[k]:
+                    lat = (px - X[i]) * -ty[i] + (py - Y[i]) * tx[i]
+                    u = float(np.clip(lat / hw[i], -1.0, 1.0))
+                    zs[k] = r.z[i] + (r.zl[i] - r.zr[i]) / 2 * u
+                    best_d[k] = d2[i]
+        surf = zs
+    else:
+        cl = np.array([[p[0], p[1]] for p in e["points"]], float)
+        zc = np.array([p[2] for p in e["points"]], float)
+        seg = np.diff(cl, axis=0)
+        sl2 = np.maximum((seg ** 2).sum(1), 1e-9)
+        surf = np.zeros(len(P))
+        for k, (x, y) in enumerate(P):
+            t = np.clip(((x - cl[:-1, 0]) * seg[:, 0] + (y - cl[:-1, 1]) * seg[:, 1]) / sl2, 0, 1)
+            d = np.hypot(cl[:-1, 0] + t * seg[:, 0] - x, cl[:-1, 1] + t * seg[:, 1] - y)
+            i = int(np.argmin(d))
+            surf[k] = zc[i] + t[i] * (zc[i + 1] - zc[i]) + LIFT["roads"] / FT
+    ground = None
+    if getattr(cx, "h", None) is not None:
+        ground = np.asarray(wg.mesh_height(cx.h, cx.pack.cell_ft, P[:, 0], P[:, 1]), float)
+    return surf, ground
 
 
 def _add_kerbs(cx, b, e):
-    """Raised stone kerb bands (e['kerbs'] rings in feet): top at road surface + 0.5 ft, vertical sides, heights follow the road centreline profile."""
-    cl = np.array([[p[0], p[1]] for p in e["points"]], float)
-    zc = np.array([p[2] for p in e["points"]], float)
-    seg = np.diff(cl, axis=0)
-    sl2 = np.maximum((seg ** 2).sum(1), 1e-9)
-
-    def zroad(x, y):
-        t = np.clip(((x - cl[:-1, 0]) * seg[:, 0] + (y - cl[:-1, 1]) * seg[:, 1]) / sl2, 0, 1)
-        d = np.hypot(cl[:-1, 0] + t * seg[:, 0] - x, cl[:-1, 1] + t * seg[:, 1] - y)
-        i = int(np.argmin(d))
-        return zc[i] + t[i] * (zc[i + 1] - zc[i])
+    """Raised stone kerb bands (e['kerbs'] rings in feet): top at road surface + 0.5 ft, vertical sides. Heights follow the graded road surface including
+    its cross-slope; the base is buried KERB_SINK_FT below the lower of surface and terrain (no hovering kerb, no grass gap under it)."""
     mat, tile = "mat_kerb", 4.0
+    z0 = cx.fr.z_origin_ft
     for ring in e["kerbs"]:
         P = [tuple(p) for p in ring]
         # densify long edges so the kerb follows the road profile
         D = []
         for i, p in enumerate(P):
             q = P[(i + 1) % len(P)]
-            n = max(1, int(math.dist(p, q) / 6.0))
+            n = max(1, int(math.dist(p, q) / 3.0))
             D += [(p[0] + (q[0] - p[0]) * k / n, p[1] + (q[1] - p[1]) * k / n) for k in range(n)]
         Bp = [(x, cx.fr.height_ft - y) for x, y in D]
-        zb = [(zroad(x, y) - cx.fr.z_origin_ft) * FT + LIFT["roads"] for x, y in D]
-        top = [b.vert((x * FT, yb * FT, z + KERB_H_FT * FT), (x / tile, yb / tile)) for (x, yb), z in zip(Bp, zb)]
+        surf, ground = kerb_heights(cx, e, D)
+        low = surf if ground is None else np.minimum(surf, ground)
+        zt = [(float(s_) - z0 + KERB_H_FT) * FT for s_ in surf]
+        zb = [(float(l_) - z0 - KERB_SINK_FT) * FT for l_ in low]
+        top = [b.vert((x * FT, yb * FT, z), (x / tile, yb / tile)) for (x, yb), z in zip(Bp, zt)]
         for t in earclip(Bp):
             b.tri(mat, *[top[i] for i in t])
         for i in range(len(D)):
             j = (i + 1) % len(D)
-            a0 = b.vert((Bp[i][0] * FT, Bp[i][1] * FT, zb[i] + 0.002), (0, 0))
-            a1 = b.vert((Bp[j][0] * FT, Bp[j][1] * FT, zb[j] + 0.002), (1, 0))
+            a0 = b.vert((Bp[i][0] * FT, Bp[i][1] * FT, zb[i]), (0, 0))
+            a1 = b.vert((Bp[j][0] * FT, Bp[j][1] * FT, zb[j]), (1, 0))
             b.quad(mat, a0, a1, top[j], top[i])
 
 
