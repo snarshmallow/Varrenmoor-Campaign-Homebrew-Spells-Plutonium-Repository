@@ -669,13 +669,55 @@ def terrain_heights(pack, carve=True, conform=True, road_grade=True, carve_bridg
             h = wp.road_conformed_heights(pack, h)
     if pack.list("buildings"):                                         # level pads + door aprons so no ground rises through walls, roofs or door sills (building_ground.py)
         import worldpack_interiors as wi
+        h_graded = h
         h = wi.pad_buildings(pack, h)
+        if runs and os.environ.get("VB_KEEP_ROAD_BEDS", "1") != "0":   # the roads were graded on the terrain BEFORE the pads: a pad / door apron cut under a road bed
+            h = keep_road_beds(h, h_graded, pack.cell_ft, runs, buildings=[e for e in pack.list("buildings") if e.get("polygon")])   # left the deck up to 3-4 ft in the air (Bridgehollow 2026-11)
     LAST_BRIDGE_CARVE.clear()
     if pack.list("bridges") and carve_bridges not in (False, "off"):
         import bridge_maker as _bm                                     # TERRAIN CARVING under bridges: clear the ground through the span where the deck clearance check fails
         h, rep_b = _bm.carve_under_bridges(pack, h, carve_bridges)
         LAST_BRIDGE_CARVE.extend(rep_b)
     return h, runs, gp
+
+
+def keep_road_beds(h, h_before, cell, runs, margin_cells=1.0, buildings=()):
+    """h with every node inside a graded road footprint (+ margin_cells, so the terrain triangles under the deck edge keep their corners) set back to
+    h_before where h is lower. Pads only cut, so this restores the ground the roads were graded on and nothing else; nodes inside a building
+    footprint or door apron (+ 0.6 cell) keep their pad, so no ground rises through a wall or sill."""
+    import shapely
+    from shapely.geometry import Polygon
+    from shapely.ops import unary_union
+    fps = [wg.footprint(r).buffer(margin_cells * cell) for rr in runs.values() for r in rr if len(getattr(r, "x", [])) >= 2]
+    if not fps:
+        return h
+    fp = unary_union(fps)
+    if buildings:                                                      # buildings: pack entities (polygon + openings.doors) or bare polygons
+        import building_ground as bg
+        from shapely.geometry import Point
+        keep = []
+        for b in buildings:
+            e = b if isinstance(b, dict) else {"polygon": b}
+            keep.append(Polygon(e["polygon"]).buffer(0.6 * cell + 1.0))      # a node nearer a wall shapes the terrain triangles under it
+            ap = bg.cfg_for(e)["door_apron_ft"]
+            for fx, fy, ux, uy in bg.door_fronts((e.get("openings") or {}).get("doors")):      # door aprons stay level with the sill
+                keep.append(Point(fx + ux * ap * 0.5, fy + uy * ap * 0.5).buffer(ap * 0.5 + 0.6 * cell + 1.0))
+        fp = fp.difference(unary_union(keep))
+    if fp.is_empty:
+        return h
+    ny, nx = h.shape
+    x0, y0, x1, y1 = fp.bounds
+    j0, j1 = max(0, int(x0 // cell)), min(nx - 1, int(x1 // cell) + 1)
+    i0, i1 = max(0, int(y0 // cell)), min(ny - 1, int(y1 // cell) + 1)
+    J, I = np.meshgrid(np.arange(j0, j1 + 1), np.arange(i0, i1 + 1))
+    inside = np.zeros(h.shape, bool)
+    inside[i0:i1 + 1, j0:j1 + 1] = shapely.contains_xy(fp, J * cell, I * cell)
+    lowered = inside & (h < h_before)
+    if not lowered.any():
+        return h
+    out = np.array(h, copy=True)
+    out[lowered] = h_before[lowered]
+    return out
 
 
 def final_heights(pack, carve=True, conform=True, road_grade=True, carve_bridges="auto", carve_edge_ease_ft=100.0):

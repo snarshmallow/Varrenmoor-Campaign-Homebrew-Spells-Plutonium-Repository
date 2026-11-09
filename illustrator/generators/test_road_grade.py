@@ -640,5 +640,24 @@ class KerbSkirt(unittest.TestCase):
             self.assertLess(worst, -0.1, f"a kerb base sits {worst:.2f} ft relative to terrain (must stay below)")
 
 
+
+class PadsKeepRoadBeds(unittest.TestCase):
+    """Building pads are cut AFTER the roads are graded: a pad / door apron that reached under a road bed left the deck floating (Bridgehollow 2026-11,
+    45-96 % of road length more than 1.6 ft above the ground). keep_road_beds restores the graded ground under the road, never next to a wall."""
+
+    def test_restores_bed_not_building(self):
+        cell = 10.0
+        h0 = np.full((20, 40), 100.0)
+        x = np.arange(0.0, 390.0, 10.0)
+        run = rg.Run("r", x, np.full(len(x), 100.0), np.full(len(x), 100.8), None, None, np.full(len(x), 8.0), x, [False, False])
+        cut = h0.copy()
+        cut[8:14, :] = 97.0                                   # a pad cut 3 ft across the road (rows 8..13 = y 80..130)
+        bld = [[200.0, 120.0], [240.0, 120.0], [240.0, 160.0], [200.0, 160.0]]
+        out = wm.keep_road_beds(cut, h0, cell, {"r": [run]}, margin_cells=0.5, buildings=[bld])
+        self.assertTrue(np.all(out[9:12, 0:15] == 100.0))     # under the road (y 90..110), away from the building: ground the road was graded on
+        self.assertEqual(out[13, 22], 97.0)                   # next to the building wall the pad stays
+        self.assertTrue(np.all(out >= cut))                   # only ever raises back to the graded ground
+        self.assertTrue(np.all(out <= h0))
+
 if __name__ == "__main__":
     unittest.main()

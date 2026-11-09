@@ -932,6 +932,9 @@ def cmd_push_models(br, a):
             return {"ok": False, "needs_confirm": True, "scene_uuid": uuid,
                     "summary": f"Scene {sc['name']} was not created by the pipeline; tiles flagged model:* will be added to it (existing tiles untouched)."}
     ppf = float(a.px_per_ft or (calib or {}).get("ppf") or fr["px_per_ft"])
+    if not uuid and not a.px_per_ft and max(fr["width_ft"], fr["height_ft"]) > 1200:      # a whole town at the pack's 20 px/ft is 48000 px wide: the 3D camera cannot zoom out over it
+        ppf = TOWN_PX_PER_FT
+        LOG(f"{fr['width_ft']:g} x {fr['height_ft']:g} ft place: {ppf:g} px/ft (5 ft = {5 * ppf:g} px) for a new scene; pass --px-per-ft to choose")
     c = {"ppf": ppf, "x0": (calib or {}).get("x0", 0.0), "y0": (calib or {}).get("y0", 0.0), "sceneX": (calib or {}).get("sceneX", 0), "sceneY": (calib or {}).get("sceneY", 0)}
     root = a.assets_dir or assets_dir()
     batch = model_batch(root, place, set_name, a.dry_run)          # plan every model + the textures once, then ONE batched copy (publish_batch.py)
@@ -948,6 +951,10 @@ def cmd_push_models(br, a):
         f"assets: {pst['files_skipped']} unchanged, {pst['would_copy']} {'to copy' if a.dry_run else 'copied'} in {pst['copy_seconds']:.1f} s")
     result = {"ok": True, "tiles": len(items), "px_per_ft": ppf, "set": set_name, "dry_run": bool(a.dry_run), "sample": items[0] if items else None,
               "publish": pst, "copy_seconds": pst["copy_seconds"], "files_copied": pst["files_copied"], "files_skipped": pst["files_skipped"], "bytes": pst["bytes"]}
+    sw = scale_warning(calib) if calib and not a.px_per_ft else None
+    if sw:
+        LOG("WARNING: " + sw)
+        result["scale_warning"] = sw
     import scene_audit as sa
     dup = sa.check_plan_unique(items)
     if dup:
@@ -1187,6 +1194,124 @@ def cmd_scene_audit(br, a):
             "keep": len(res["keep"]), "missing": res["missing"], "repair_plan": plan}
 
 
+PLAY_GRID_FT = 5.0          # a playable 3D scene: one square = 5 ft (tokens are grid.size px wide and grid.distance * 0.89 ft tall in 3D Canvas, token3d.js)
+TOWN_PX_PER_FT = 10.0       # default for big places: 5 ft = 50 px. 3D Canvas works in scene px / 1000 (main.js factor); its orbit camera zooms 0.1..20 units
+                            # (10 ft .. 2000 ft at 10 px/ft) and clips nearer than 0.01 unit (1 ft), so 10 px/ft shows a whole town and still gets close to a token.
+                            # 20 px/ft (100 px squares, the repo's interior scenes) halves the zoom-out range; under ~5 px/ft the camera cannot get near a token.
+
+
+def scale_plan(width_ft, height_ft, px_per_ft=None, grid_ft=None, padding=0.25):
+    """Scene size for a whole place at a playable scale. -> dict(ppf, grid_px, grid_ft, width, height, sceneX, sceneY). Foundry: grid.size >= 20 px (CONST.GRID_MIN_SIZE), integer."""
+    import padding_heightmap as ph
+    gft = float(grid_ft or PLAY_GRID_FT)
+    gp = int(round(gft * float(px_per_ft or TOWN_PX_PER_FT)))
+    if gp < 20:
+        raise PushError(f"grid would be {gp}px per {gft:g} ft square: Foundry's minimum is 20 px; raise --px-per-ft")
+    ppf = gp / gft
+    W, H = int(round(width_ft * ppf)), int(round(height_ft * ppf))
+    _, _, sx, sy = ph.canvas_dims(W, H, padding, gp)
+    return {"ppf": ppf, "grid_px": gp, "grid_ft": gft, "width": W, "height": H, "sceneX": sx, "sceneY": sy, "x0": 0.0, "y0": 0.0}
+
+
+def scale_warning(calib):
+    """Plain warning when a scene's calibration is not playable (tokens are one grid square: a 100 ft grid makes a token 100 ft wide and 89 ft tall)."""
+    if not calib:
+        return None
+    gft = float(calib.get("grid_ft") or 0)
+    if gft and gft > PLAY_GRID_FT * 2:
+        return (f"scene grid is {gft:g} ft per square ({calib.get('ppf')} px/ft): a token is one square, i.e. {gft:g} ft wide in 3D. "
+                f"Fix with: foundry_push.py rescale-scene --scene-uuid <uuid> --px-per-ft {TOWN_PX_PER_FT:g} --grid-ft {PLAY_GRID_FT:g} --apply")
+    return None
+
+
+def cmd_rescale_scene(br, a):
+    """Move a pipeline scene to a playable scale in place: the whole place at --px-per-ft (default 10) with a --grid-ft (default 5) grid. Every tile, light,
+    token, sound, note and drawing keeps its position in FEET (affine map from the stored calibration); tile footprints and depth scale with px/ft,
+    elevations (ft) stay. Pipeline walls are deleted with --drop-walls (3D Canvas tile collision/sight replaces them). The 2D background (an export-view
+    crop that no longer matches) is cleared unless --keep-background. Dry run unless --apply."""
+    if not a.scene_uuid:
+        raise PushError("give --scene-uuid")
+    sc = br.call("get", uuid=a.scene_uuid)
+    old = (sc.get("flags", {}).get(FLAG, {}) or {}).get("calib")
+    if not old:
+        raise PushError("the scene has no flags.varrenmoor.calib (not a pipeline scene): nothing to map from")
+    pp = a.placements or os.path.join(REPO, "world", a.place, "export", "placements.json")
+    with open(pp, encoding="utf-8") as f:
+        fr = json.load(f)["frame"]
+    pad = float(sc.get("padding") or 0) if a.scene_padding is None else float(a.scene_padding)
+    new = scale_plan(fr["width_ft"], fr["height_ft"], a.px_per_ft, a.grid_ft, pad)
+    oppf, ogp = float(old["ppf"]), float((sc.get("grid") or {}).get("size") or old.get("grid_px") or 100)
+    k = new["ppf"] / oppf
+
+    def mp(x, y):
+        fx, fy = (x - old.get("sceneX", 0)) / oppf + old.get("x0", 0.0), (y - old.get("sceneY", 0)) / oppf + old.get("y0", 0.0)
+        return round(new["sceneX"] + (fx - new["x0"]) * new["ppf"], 1), round(new["sceneY"] + (fy - new["y0"]) * new["ppf"], 1)
+
+    plan = {"Tile": [], "AmbientLight": [], "AmbientSound": [], "Note": [], "Drawing": [], "Wall": [], "Token": []}
+    for t in sc.get("tiles", []):
+        x, y = mp(t["x"], t["y"])
+        d = {"x": x, "y": y, "width": max(1, round(t["width"] * k)), "height": max(1, round(t["height"] * k))}
+        dep = ((t.get("flags") or {}).get(L3D) or {}).get("depth")
+        if dep is not None:
+            d["flags"] = {L3D: {"depth": max(1, round(float(dep) * k))}}
+        plan["Tile"].append((t, d))
+    for coll, key in (("lights", "AmbientLight"), ("sounds", "AmbientSound"), ("notes", "Note")):
+        for o in sc.get(coll, []) or []:
+            x, y = mp(o["x"], o["y"])
+            plan[key].append((o, {"x": x, "y": y}))
+    for o in sc.get("drawings", []) or []:
+        x, y = mp(o["x"], o["y"])
+        s = dict(o.get("shape") or {})
+        s.update({kk: round(s[kk] * k, 1) for kk in ("width", "height") if s.get(kk) is not None})
+        if s.get("points"):
+            s["points"] = [round(v * k, 1) for v in s["points"]]
+        plan["Drawing"].append((o, {"x": x, "y": y, "shape": s}))
+    drop_walls = []
+    for o in sc.get("walls", []) or []:
+        if a.drop_walls and pipe_id(o):
+            drop_walls.append(o)
+            continue
+        c = o["c"]
+        (x1, y1), (x2, y2) = mp(c[0], c[1]), mp(c[2], c[3])
+        plan["Wall"].append((o, {"c": [x1, y1, x2, y2]}))
+    for o in sc.get("tokens", []) or []:          # token x,y = top-left; its size stays in grid squares (now 5 ft)
+        cx, cy = mp(o["x"] + o.get("width", 1) * ogp / 2, o["y"] + o.get("height", 1) * ogp / 2)
+        plan["Token"].append((o, {"x": round(cx - o.get("width", 1) * new["grid_px"] / 2), "y": round(cy - o.get("height", 1) * new["grid_px"] / 2)}))
+    calib = {**{kk: new[kk] for kk in ("x0", "y0", "ppf", "grid_px", "grid_ft", "width", "height", "sceneX", "sceneY")}, "place": a.place, "view": "place",
+             "rescaled_from": {kk: old.get(kk) for kk in ("x0", "y0", "ppf", "grid_px", "grid_ft", "width", "height", "sceneX", "sceneY")},
+             "pushed": datetime.datetime.now().isoformat(timespec="seconds")}
+    res = {"ok": True, "applied": False, "scene": sc.get("name"),
+           "before": {"width": sc.get("width"), "height": sc.get("height"), "grid": {kk: (sc.get("grid") or {}).get(kk) for kk in ("size", "distance")}, "ppf": oppf,
+                      "window_ft": [old.get("x0"), old.get("y0"), old.get("width", 0) / oppf, old.get("height", 0) / oppf]},
+           "after": {"width": new["width"], "height": new["height"], "padding": pad, "grid": {"size": new["grid_px"], "distance": new["grid_ft"]}, "ppf": new["ppf"],
+                     "window_ft": [0.0, 0.0, fr["width_ft"], fr["height_ft"]]},
+           "moves": {kk: len(v) for kk, v in plan.items()}, "walls_deleted": len(drop_walls), "background_cleared": not a.keep_background}
+    if not a.apply or a.dry_run:
+        res["note"] = "dry run: nothing written, repeat with --apply"
+        return res
+    require_module(br)
+    upd = {"width": new["width"], "height": new["height"], "padding": pad, "grid": {"size": new["grid_px"], "distance": new["grid_ft"], "units": "ft"},
+           "flags": {FLAG: {"calib": calib}}}
+    br.call("update", uuid=a.scene_uuid, data=upd)          # no autoReposition: the bridge never asks Foundry to move objects; done below in feet
+    if not a.keep_background:
+        br.call("set_scene_background", uuid=a.scene_uuid, src=None)
+    ops = {}
+    for key, rows in plan.items():
+        piped = [{"id": pipe_id(o), "data": d} for o, d in rows if pipe_id(o)]
+        if piped:
+            ops[key] = br.call("upsert_many", documentName=key, parentUuid=a.scene_uuid, items=piped, prune=False)
+        for o, d in rows:
+            if not pipe_id(o):
+                br.call("update", uuid=f"{a.scene_uuid}.{key}.{o['_id']}", data=d)
+                ops[key + "_unflagged"] = ops.get(key + "_unflagged", 0) + 1
+    if drop_walls:
+        ops["walls_deleted"] = br.call("delete_by_flag", documentName="Wall", parentUuid=a.scene_uuid, prefix="wall:")
+    res.update(applied=True, ops=ops)
+    LOG(f"rescaled {sc.get('name')}: {sc.get('width')}x{sc.get('height')} px @ {oppf:g} px/ft, grid {ogp:g} px = {(sc.get('grid') or {}).get('distance')} ft "
+        f"-> {new['width']}x{new['height']} px @ {new['ppf']:g} px/ft, grid {new['grid_px']} px = {new['grid_ft']:g} ft")
+    return res
+
+
 def cmd_push_scene_3d(br, a):
     """One idempotent push of a whole 3D test scene: terrain/buildings -> foliage -> padding -> lights -> skybox + sun/ambient/tint flags (last) -> verification
     (files exist and load, scene flags read back). Re-running changes nothing that is byte-identical (versioned assets, id-keyed upserts)."""
@@ -1302,7 +1427,7 @@ def cmd_push_scene_3d(br, a):
 
 def parser():
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
-    ap.add_argument("cmd", choices=["status", "places", "list", "export-info", "push-scene", "push-token", "push-actor", "push-item", "push-models", "delete-scene", "link-region", "bake-texture", "push-lights", "import-scene", "push-scene-3d", "install-roof-macros", "install-click-macros", "roofs", "scene-audit"])
+    ap.add_argument("cmd", choices=["status", "places", "list", "export-info", "push-scene", "push-token", "push-actor", "push-item", "push-models", "delete-scene", "link-region", "bake-texture", "push-lights", "import-scene", "push-scene-3d", "install-roof-macros", "install-click-macros", "roofs", "scene-audit", "rescale-scene"])
     ap.add_argument("--place", default="bridgehollow")
     ap.add_argument("--view", default="town")
     ap.add_argument("--preset")
@@ -1380,6 +1505,10 @@ def parser():
     ap.add_argument("--padding-arg", dest="padding_args", action="append", default=[], help="push-scene-3d: extra argument for padding_heightmap push (repeatable, use --padding-arg=--preset --padding-arg=bowl-ridge)")
     import foundry_lightbudget as _flb
     _flb.add_light_args(ap)                           # --max-lights, --lighting-mode, --exclude-types, --light-radius-scale, --light-intensity-scale (see foundry_lightbudget.py)
+    ap.add_argument("--grid-ft", dest="grid_ft", type=float, help=f"rescale-scene: feet per grid square (default {PLAY_GRID_FT:g}, the playable battle grid)")
+    ap.add_argument("--scene-padding", dest="scene_padding", type=float, help="rescale-scene: scene padding fraction (default: keep the scene's)")
+    ap.add_argument("--drop-walls", dest="drop_walls", action="store_true", help="rescale-scene: delete the pipeline walls (wall:*); 3D Canvas tile collision/sight blocks movement and vision")
+    ap.add_argument("--keep-background", dest="keep_background", action="store_true", help="rescale-scene: keep the 2D background image (default: cleared, the export-view crop no longer lines up)")
     ap.add_argument("--with-lights", dest="with_lights", action="store_true", help="push-scene-3d: also push the interior point lights")
     # import-scene (foundry_import.py) and the place <-> scene link
     ap.add_argument("--place-id", help="import-scene: id of the new place (default: slug of the scene name)")
@@ -1485,7 +1614,7 @@ def cmd_roofs(br, a):
 CMDS = {"status": cmd_status, "places": cmd_places, "list": cmd_list, "export-info": cmd_export_info, "push-scene": cmd_push_scene,
         "push-token": cmd_push_token, "push-actor": cmd_push_actor, "push-item": cmd_push_item, "push-models": cmd_push_models, "delete-scene": cmd_delete_scene,
         "link-region": cmd_link_region, "bake-texture": cmd_bake_texture, "push-lights": cmd_push_lights, "import-scene": cmd_import_scene, "push-scene-3d": cmd_push_scene_3d,
-        "install-roof-macros": cmd_install_roof_macros, "install-click-macros": cmd_install_click_macros, "roofs": cmd_roofs, "scene-audit": cmd_scene_audit}
+        "install-roof-macros": cmd_install_roof_macros, "install-click-macros": cmd_install_click_macros, "roofs": cmd_roofs, "scene-audit": cmd_scene_audit, "rescale-scene": cmd_rescale_scene}
 
 
 def main(argv=None, bridge=None):
