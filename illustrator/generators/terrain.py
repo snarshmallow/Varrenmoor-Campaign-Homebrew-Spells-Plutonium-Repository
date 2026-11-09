@@ -276,6 +276,14 @@ if __name__ == "__main__":
     a = ap.parse_args()
     root = os.path.join(REPO, "world", a.place)
     spec = load_spec(a.spec or os.path.join(root, "terrain_spec.json"))
+    if "size_ft" not in spec:      # image-imported base maps (place_create import-image) have no terrain recipe: take the size from the place
+        try:
+            with open(os.path.join(root, "place.json"), encoding="utf-8") as f:
+                b = json.load(f).get("bounds") or {}
+            spec["size_ft"] = [float(b["width_ft"]), float(b["height_ft"])]
+            print("terrain size from place.json bounds: %.0f x %.0f ft" % tuple(spec["size_ft"]))
+        except (OSError, KeyError, ValueError, TypeError):
+            raise SystemExit("terrain_spec.json has no size_ft and place.json has no bounds: set size_ft [width, height] in feet in world/%s/terrain_spec.json" % a.place)
     h, meta = generate(spec, a.cell, a.seed, verbose=True)
     out = a.out or os.path.join(root, "terrain")
     save(h, meta, out)
