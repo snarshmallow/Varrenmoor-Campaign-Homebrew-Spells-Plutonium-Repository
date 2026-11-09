@@ -171,7 +171,7 @@ const freePort = (p) => new Promise(res => { const s = net.createServer(); s.onc
   st.bridge.mode = "attach"; st.bridge.target = "10.255.255.1:3030";   // a remote address is saved: Close bridge must still only act locally
   r = await runner.run(VB.jobBridgeClose(st));
   st.bridge.mode = "local"; st.bridge.target = "";
-  check("close job: stops the local relay (remote address ignored)", r.ok && (await VB.bridgeLocalDetect(st)).found === false && st.bridge.last === st.bridge.last, r.error);
+  check("close job: stops the local relay (remote address ignored)", r.ok && await (async () => { const l = await VB.bridgeLocalDetect(st); return l.found === false || Number(l.port) !== port; })(), r.error);   // detection also probes 3030: a real relay on this machine there is not ours (this test's relay is on its own port)
   r = await runner.run(VB.jobBridgeStop(st));
   check("real: stop ok", r.ok && st.bridge.last.running === false, r.error);
   fs.rmSync(TMP, { recursive: true, force: true });

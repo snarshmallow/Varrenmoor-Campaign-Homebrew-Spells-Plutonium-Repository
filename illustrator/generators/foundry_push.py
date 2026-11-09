@@ -730,9 +730,9 @@ def build_model_tiles(doc, scene_calib, a, publish=None):
         path = publish(e, rel) if publish else rel
         sz = e["size_ft"]
         rot0 = e["tile"]["rotation"] + e.get("rotation_deg", 0.0)
-        flags = lambda extra: {"levels-3d-preview": {"model3d": path, "autoGround": True, "autoCenter": False, "collision": False, "sight": False, **extra},
+        flags = lambda extra, ids=None: {"levels-3d-preview": {"model3d": path, "autoGround": True, "autoCenter": False, "collision": False, "sight": False, **extra},
                                FLAG: {"modelFile": e["file"], "sha256": e["sha256"], "layer": e["layer"],
-                                      "ids": [("roof:" + i if e["layer"] == "roofs" else i) for i in e["ids"][:400]],      # roofs are NOT the building's source id (scene_audit: one tile per source)
+                                      "ids": [("roof:" + i if e["layer"] == "roofs" else i) for i in (e["ids"] if ids is None else ids)[:400]],      # roofs are NOT the building's source id (scene_audit: one tile per source)
                                       **({"roof": {**e["roof"], "scope": "building" if e["roof"]["mode"] == "per_building" else "scene"}} if e.get("roof") else {})}}
         if e["kind"] == "instances":
             for ins in e["instances"]:
@@ -741,7 +741,7 @@ def build_model_tiles(doc, scene_calib, a, publish=None):
                 items.append({"id": f"model:{place}:{ins['id']}", "data": {
                     "x": round(px), "y": round(py), "width": max(4, round(sz[0] * s * ppf)), "height": max(4, round(sz[1] * s * ppf)),
                     "elevation": round(ins["pivot_ft"][2] - doc["frame"]["z_origin_ft"], 2), "rotation": rot0 + ins["rotation_deg"],
-                    "texture": {"src": "modules/levels-3d-preview/assets/blank.webp"}, "flags": flags({"depth": max(2, round(sz[2] * s * ppf))})}})
+                    "texture": {"src": "modules/levels-3d-preview/assets/blank.webp"}, "flags": flags({"depth": max(2, round(sz[2] * s * ppf))}, [ins["id"]])}})        # one instance tile draws ONE source id (not every id of the shared file: scene_audit would see N tiles drawing the same trees)
             continue
         px, py = c["sceneX"] + (e["pivot"]["x_ft"] - c["x0"]) * ppf, c["sceneY"] + (e["pivot"]["y_ft"] - c["y0"]) * ppf
         sc = e.get("scale", 1.0)

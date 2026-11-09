@@ -494,7 +494,10 @@ class Scene3DTests(unittest.TestCase):
         """A layer set has no lights: --with-lights must fail early, write nothing and keep the scene's lights."""
         self._seed_lights()
         before = len(self.br.emb["s0"]["AmbientLight"])
-        r, code = self.go("--set-name", "t", "--with-lights", "--lighting", "bridgehollow", "--lights-placements", self.pl)
+        lp = os.path.join(self.tmp, "lighting.json")          # self-contained: world/<place>/panel_state.json is untracked and absent on a clean clone
+        with open(lp, "w", encoding="utf-8") as f:
+            json.dump({"lighting": {"sun": {"azimuth": 200, "altitude": 40}, "ambient": 0.4}}, f)
+        r, code = self.go("--set-name", "t", "--with-lights", "--lighting", lp, "--lights-placements", self.pl)
         self.assertFalse(r["ok"], r)
         self.assertIn("0 lights", r["error"])
         self.assertEqual(before, len(self.br.emb["s0"]["AmbientLight"]))
@@ -527,6 +530,23 @@ class Scene3DTests(unittest.TestCase):
         r, _ = self.go("--set-name", "t", "--dry-run")
         self.assertTrue(r["ok"], r)
         self.assertNotIn("update", self.kinds())
+
+
+class ScatterInstanceTilesTests(unittest.TestCase):
+    """Regression: every instance tile of a shared scatter file (trees) used to list ALL ids of the file, so scene_audit.check_plan_unique saw each tree
+    drawn by every tile and push-models refused with 'one source model must be drawn by one tile only'."""
+    def test_instance_tiles_each_draw_only_their_own_id(self):
+        import scene_audit as sa
+        ids = [f"fol_trees_{i:04d}" for i in (1, 2, 3)]
+        doc = {"place": "p", "frame": {"z_origin_ft": 0.0}, "files": [{
+            "file": "models/foliage/oak.glb", "kind": "instances", "layer": "foliage", "ids": ids, "sha256": "x", "size_ft": [10, 10, 20],
+            "tile": {"rotation": 0}, "instances": [{"id": i, "pivot_ft": [10.0 * n, 5.0, 0.0], "scale": 1.0, "rotation_deg": 0.0} for n, i in enumerate(ids)]}]}
+        a = argparse.Namespace(layers=None, ids=None, lod=None, roofs_hidden=False)
+        items = fp.build_model_tiles(doc, {"ppf": 1.0, "x0": 0.0, "y0": 0.0, "sceneX": 0, "sceneY": 0}, a, lambda e, rel: "assets/varrenmoor-3d/" + rel)
+        self.assertEqual(3, len(items))
+        for it, i in zip(items, ids):
+            self.assertEqual([i], it["data"]["flags"]["varrenmoor"]["ids"])
+        self.assertEqual([], sa.check_plan_unique(items))
 
 
 class FoliageOnlyPruneTests(unittest.TestCase):

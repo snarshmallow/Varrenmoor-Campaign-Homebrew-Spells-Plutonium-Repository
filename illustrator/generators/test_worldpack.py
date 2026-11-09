@@ -18,6 +18,7 @@ import numpy as np
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import foundry_push as fp  # noqa: E402
+import building_ground as bg  # noqa: E402
 import test_foundry_push as tfp  # noqa: E402
 import worldpack as wp  # noqa: E402
 import worldpack_mesh as wm  # noqa: E402
@@ -80,7 +81,10 @@ class PackTests(unittest.TestCase):
         for b in pack.list("buildings"):
             src = wp._jload(os.path.join(WORLD, "bridgehollow", "buildings", b["id"] + ".json"))
             self.assertAlmostEqual(b["area_ft2"], wp.polygon_area(src["geometry"]["points"]), delta=0.5)
-            self.assertAlmostEqual(b["base_elevation_ft"], src["elevation_ft"], places=2)
+            # The source elevation_ft is the starting base; building_ground.resolve (deliberate, since 6caa277) only moves it when the walls would float more
+            # than max_float_ft over the lowest footprint ground or need a cut deeper than max_cut_ft. So it is kept up to that correction, never replaced.
+            bgc = bg.DEFAULTS
+            self.assertLessEqual(abs(b["base_elevation_ft"] - src["elevation_ft"]), bgc["max_float_ft"] + bgc["max_cut_ft"], b["id"])
             self.assertAlmostEqual(b["wall_height_ft"], src["floors"] * wp.STOREY_FT, places=2)
             self.assertGreater(b["height_ft"], b["wall_height_ft"])
         for d in pack.list("districts") + pack.list("plazas") + pack.list("fields"):
