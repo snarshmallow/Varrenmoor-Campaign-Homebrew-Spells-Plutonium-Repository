@@ -1,0 +1,43 @@
+{
+ "id": "osc_the_clerk_s_room",
+ "name": "The Clerk's Room",
+ "kind": "civic",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    275.0,
+    717.5
+   ],
+   [
+    375.0,
+    717.5
+   ],
+   [
+    375.0,
+    792.5
+   ],
+   [
+    275.0,
+    792.5
+   ]
+  ]
+ },
+ "notes": "EXISTING scene. Footprint = scene canvas 100x75 ft. Connects: The Hallway (double doors); FEMORAL INTAKE (Pringus); Session 14 Reconciliation Audit. Source: evidence: handoff (FEMORAL INTAKE plaque in the clerk room) + hallway double doors; side [APPROXIMATE]",
+ "links": {
+  "foundry_scene": "Scene.9FXgTuuLHDgm5Zs9",
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "ossuary": {
+  "status": "existing",
+  "district": "Exchange Core",
+  "connects": "The Hallway (double doors); FEMORAL INTAKE (Pringus); Session 14 Reconciliation Audit",
+  "source": "evidence: handoff (FEMORAL INTAKE plaque in the clerk room) + hallway double doors; side [APPROXIMATE]",
+  "approximate": true
+ }
+}

@@ -1,0 +1,43 @@
+{
+ "id": "osc_ossuary_exchange_tavern",
+ "name": "Ossuary Exchange Tavern",
+ "kind": "inn",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    647.7,
+    602.3
+   ],
+   [
+    757.7,
+    602.3
+   ],
+   [
+    757.7,
+    682.3
+   ],
+   [
+    647.7,
+    682.3
+   ]
+  ]
+ },
+ "notes": "EXISTING scene. Footprint = scene canvas 110x80 ft. Connects: Market (plaza side); west door to The Hallway; bar drop-tube down to the Conveyor Shafts; stair to Upstairs. Source: evidence: market plan angles (ossuary_market_new.py SCENE_NOTE) (290 deg)",
+ "links": {
+  "foundry_scene": "Scene.LO9YAwP85R74V3tB",
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "ossuary": {
+  "status": "existing",
+  "district": "Lower Market",
+  "connects": "Market (plaza side); west door to The Hallway; bar drop-tube down to the Conveyor Shafts; stair to Upstairs",
+  "source": "evidence: market plan angles (ossuary_market_new.py SCENE_NOTE) (290 deg)",
+  "approximate": false
+ }
+}

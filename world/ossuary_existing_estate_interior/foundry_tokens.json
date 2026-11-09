@@ -1,0 +1,89 @@
+{
+ "place": "ossuary_existing_estate_interior",
+ "tokens": [
+  {
+   "id": "ft_001",
+   "name": "Lil' Apostrophe",
+   "point": [
+    97.5,
+    97.5
+   ],
+   "actor_id": "SPrDUsMzarbTP4SV",
+   "elevation": 5,
+   "size_squares": [
+    1,
+    1
+   ]
+  },
+  {
+   "id": "ft_002",
+   "name": "Mavis Bracken",
+   "point": [
+    92.5,
+    102.5
+   ],
+   "actor_id": "pVnKr0mDP7I1THlY",
+   "elevation": 3.25,
+   "size_squares": [
+    1,
+    1
+   ]
+  },
+  {
+   "id": "ft_003",
+   "name": "Betsy",
+   "point": [
+    107.5,
+    102.5
+   ],
+   "actor_id": "cD6q71Ets9uJ2mbU",
+   "elevation": 3.24,
+   "size_squares": [
+    1,
+    1
+   ]
+  },
+  {
+   "id": "ft_004",
+   "name": "Dale",
+   "point": [
+    112.5,
+    102.5
+   ],
+   "actor_id": "tkVXV0t9xCDe9kBc",
+   "elevation": 3.24,
+   "size_squares": [
+    1,
+    1
+   ]
+  },
+  {
+   "id": "ft_005",
+   "name": "Stellan",
+   "point": [
+    112.5,
+    97.5
+   ],
+   "actor_id": "CMKxYYzoE9nZILWs",
+   "elevation": 3.24,
+   "size_squares": [
+    1,
+    1
+   ]
+  },
+  {
+   "id": "ft_006",
+   "name": "Violet",
+   "point": [
+    102.5,
+    97.5
+   ],
+   "actor_id": "PJ8bhdjjjtpnT0Pz",
+   "elevation": 3.25,
+   "size_squares": [
+    1,
+    1
+   ]
+  }
+ ]
+}

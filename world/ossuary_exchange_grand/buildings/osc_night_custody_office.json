@@ -1,0 +1,43 @@
+{
+ "id": "osc_night_custody_office",
+ "name": "Night Custody Office",
+ "kind": "office",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    425.0,
+    707.0
+   ],
+   [
+    465.0,
+    707.0
+   ],
+   [
+    465.0,
+    737.0
+   ],
+   [
+    425.0,
+    737.0
+   ]
+  ]
+ },
+ "notes": "NEW scene. Spec size 40x30 ft. Custody ledger, open claim. Connects: The Hallway (door in its south wall). Source: spec B2: door from The Hallway in its south wall (so it sits on the hall's north side); position along the hall [APPROXIMATE]",
+ "links": {
+  "foundry_scene": "Scene.M3QYxMNlFcXtK0l0",
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "ossuary": {
+  "status": "new",
+  "district": "Exchange Core",
+  "connects": "The Hallway (door in its south wall)",
+  "source": "spec B2: door from The Hallway in its south wall (so it sits on the hall's north side); position along the hall [APPROXIMATE]",
+  "approximate": true
+ }
+}

@@ -1,0 +1,43 @@
+{
+ "id": "osc_estate_interior",
+ "name": "Estate *interior",
+ "kind": "manor",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    1210.0,
+    420.0
+   ],
+   [
+    1290.0,
+    420.0
+   ],
+   [
+    1290.0,
+    480.0
+   ],
+   [
+    1210.0,
+    480.0
+   ]
+  ]
+ },
+ "notes": "EXISTING scene. House drawn at its real 80x60 ft; scene canvas 200x200 ft. Connects: Estate exterior (front hall). Source: handoff: main block 16x12 grids = 80x60 ft (seven rooms + conservatory)",
+ "links": {
+  "foundry_scene": "Scene.ShsYfH88NeYoxcSU",
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "ossuary": {
+  "status": "existing",
+  "district": "Mavis Bracken's Estate",
+  "connects": "Estate exterior (front hall)",
+  "source": "handoff: main block 16x12 grids = 80x60 ft (seven rooms + conservatory)",
+  "approximate": false
+ }
+}

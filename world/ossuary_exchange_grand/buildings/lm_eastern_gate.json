@@ -1,0 +1,43 @@
+{
+ "id": "lm_eastern_gate",
+ "name": "Eastern Gate",
+ "kind": "gate",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    739.0,
+    447.0
+   ],
+   [
+    755.0,
+    447.0
+   ],
+   [
+    755.0,
+    493.0
+   ],
+   [
+    739.0,
+    493.0
+   ]
+  ]
+ },
+ "notes": "LANDMARK scene.  Connects: Market; Mavis's road east (outside Exchange jurisdiction). Source: evidence: market plan (gate 0 deg = east), handoff eastern exit (-Z road/Mavis)",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "ossuary": {
+  "status": "landmark",
+  "district": "Lower Market",
+  "connects": "Market; Mavis's road east (outside Exchange jurisdiction)",
+  "source": "evidence: market plan (gate 0 deg = east), handoff eastern exit (-Z road/Mavis)",
+  "approximate": false
+ }
+}

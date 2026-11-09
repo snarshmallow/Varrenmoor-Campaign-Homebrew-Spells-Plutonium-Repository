@@ -1,0 +1,43 @@
+{
+ "id": "osc_quill_s_rune_workshop",
+ "name": "Quill's Rune Workshop",
+ "kind": "shop",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    423.0,
+    430.0
+   ],
+   [
+    513.0,
+    430.0
+   ],
+   [
+    513.0,
+    510.0
+   ],
+   [
+    423.0,
+    510.0
+   ]
+  ]
+ },
+ "notes": "EXISTING scene. Footprint = scene canvas 90x80 ft. Connects: Market (south street door). Source: evidence: market plan angles (ossuary_market_new.py SCENE_NOTE) (180 deg)",
+ "links": {
+  "foundry_scene": "Scene.is4fru586eHliLJ4",
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "ossuary": {
+  "status": "existing",
+  "district": "Lower Market",
+  "connects": "Market (south street door)",
+  "source": "evidence: market plan angles (ossuary_market_new.py SCENE_NOTE) (180 deg)",
+  "approximate": false
+ }
+}

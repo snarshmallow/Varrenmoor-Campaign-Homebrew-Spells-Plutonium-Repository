@@ -1,0 +1,7 @@
+{
+ "place": "ossuary_existing_clerks_room",
+ "layer": "WALLS",
+ "units": "ft",
+ "origin": "scene top-left, y down",
+ "walls": []
+}

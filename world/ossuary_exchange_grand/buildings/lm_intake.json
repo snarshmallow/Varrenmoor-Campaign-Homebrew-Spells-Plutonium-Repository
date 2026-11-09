@@ -1,0 +1,43 @@
+{
+ "id": "lm_intake",
+ "name": "Intake Hall",
+ "kind": "civic",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    290.0,
+    815.0
+   ],
+   [
+    360.0,
+    815.0
+   ],
+   [
+    360.0,
+    845.0
+   ],
+   [
+    290.0,
+    845.0
+   ]
+  ]
+ },
+ "notes": "LANDMARK scene.  Connects: The Clerk's Room; where arrivals are entered (entry anatomy / provenance). Source: canon: Ossuary intake with Pringus (Session 12); spot [APPROXIMATE]",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "ossuary": {
+  "status": "landmark",
+  "district": "Exchange Core",
+  "connects": "The Clerk's Room; where arrivals are entered (entry anatomy / provenance)",
+  "source": "canon: Ossuary intake with Pringus (Session 12); spot [APPROXIMATE]",
+  "approximate": true
+ }
+}

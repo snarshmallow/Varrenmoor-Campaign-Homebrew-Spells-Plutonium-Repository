@@ -1,0 +1,43 @@
+{
+ "id": "osc_ossuary_exchange_conveyor_shafts_annex",
+ "name": "Ossuary Exchange Conveyor Shafts + Annex",
+ "kind": "service",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    652.7,
+    775.0
+   ],
+   [
+    812.7,
+    775.0
+   ],
+   [
+    812.7,
+    905.0
+   ],
+   [
+    652.7,
+    905.0
+   ]
+  ]
+ },
+ "notes": "EXISTING scene. Underground (below the market level). Footprint = scene canvas 160x130 ft. Connects: Tavern (bar drop-tube to the cellar); Lost Property annex; south dogleg to the Dusty Terminal. Source: evidence: GM ref Quest 2 (drop-tube from the bar into the Exchange shafts) + spec (south dogleg to B3); placed BELOW the tavern, drawn south of it [APPROXIMATE]",
+ "links": {
+  "foundry_scene": "Scene.JSt608S3TkmcBAzS",
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "ossuary": {
+  "status": "existing",
+  "district": "Service Ways",
+  "connects": "Tavern (bar drop-tube to the cellar); Lost Property annex; south dogleg to the Dusty Terminal",
+  "source": "evidence: GM ref Quest 2 (drop-tube from the bar into the Exchange shafts) + spec (south dogleg to B3); placed BELOW the tavern, drawn south of it [APPROXIMATE]",
+  "approximate": true
+ }
+}

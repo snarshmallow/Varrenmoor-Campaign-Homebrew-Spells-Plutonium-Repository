@@ -1,0 +1,43 @@
+{
+ "id": "lm_post_office",
+ "name": "Post Office",
+ "kind": "civic",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    477.5,
+    537.7
+   ],
+   [
+    532.5,
+    537.7
+   ],
+   [
+    532.5,
+    577.7
+   ],
+   [
+    477.5,
+    577.7
+   ]
+  ]
+ },
+ "notes": "LANDMARK scene. Foundry has 'Postal Office Interior' (not in the Ossuary folder; not confirmed to be this one). Connects: Market. Source: evidence: market plan angles (ossuary_market_new.py SCENE_NOTE) (210-230 deg)",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "ossuary": {
+  "status": "landmark",
+  "district": "Lower Market",
+  "connects": "Market",
+  "source": "evidence: market plan angles (ossuary_market_new.py SCENE_NOTE) (210-230 deg)",
+  "approximate": false
+ }
+}

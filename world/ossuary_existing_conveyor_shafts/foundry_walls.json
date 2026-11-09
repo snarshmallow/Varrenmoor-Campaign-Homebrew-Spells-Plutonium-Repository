@@ -1,0 +1,7 @@
+{
+ "place": "ossuary_existing_conveyor_shafts",
+ "layer": "WALLS",
+ "units": "ft",
+ "origin": "scene top-left, y down",
+ "walls": []
+}

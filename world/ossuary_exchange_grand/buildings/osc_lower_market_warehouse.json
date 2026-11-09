@@ -1,0 +1,43 @@
+{
+ "id": "osc_lower_market_warehouse",
+ "name": "Lower Market Warehouse",
+ "kind": "warehouse",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    767.6,
+    490.8
+   ],
+   [
+    887.6,
+    490.8
+   ],
+   [
+    887.6,
+    585.8
+   ],
+   [
+    767.6,
+    585.8
+   ]
+  ]
+ },
+ "notes": "EXISTING scene. Footprint = scene canvas 120x95 ft. Connects: Market; the amended warehouse door (Quest 1). Source: evidence: market plan angles (ossuary_market_new.py SCENE_NOTE) (340 deg)",
+ "links": {
+  "foundry_scene": "Scene.zOY5zJ6WgGd3kTFE",
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "ossuary": {
+  "status": "existing",
+  "district": "Lower Market",
+  "connects": "Market; the amended warehouse door (Quest 1)",
+  "source": "evidence: market plan angles (ossuary_market_new.py SCENE_NOTE) (340 deg)",
+  "approximate": false
+ }
+}

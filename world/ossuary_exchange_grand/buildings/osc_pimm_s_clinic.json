@@ -1,0 +1,43 @@
+{
+ "id": "osc_pimm_s_clinic",
+ "name": "Pimm's Clinic",
+ "kind": "shop",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    463.2,
+    279.4
+   ],
+   [
+    568.2,
+    279.4
+   ],
+   [
+    568.2,
+    364.4
+   ],
+   [
+    463.2,
+    364.4
+   ]
+  ]
+ },
+ "notes": "EXISTING scene. Footprint = scene canvas 105x85 ft. Connects: Market (south street door). Source: evidence: market plan angles (ossuary_market_new.py SCENE_NOTE) (130 deg)",
+ "links": {
+  "foundry_scene": "Scene.DB8SFIbpKIQg2NJE",
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "ossuary": {
+  "status": "existing",
+  "district": "Lower Market",
+  "connects": "Market (south street door)",
+  "source": "evidence: market plan angles (ossuary_market_new.py SCENE_NOTE) (130 deg)",
+  "approximate": false
+ }
+}

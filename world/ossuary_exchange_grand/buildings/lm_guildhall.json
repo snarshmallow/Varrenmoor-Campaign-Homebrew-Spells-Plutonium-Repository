@@ -1,0 +1,43 @@
+{
+ "id": "lm_guildhall",
+ "name": "Exchange Guildhall",
+ "kind": "civic",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    618.3,
+    295.6
+   ],
+   [
+    688.3,
+    295.6
+   ],
+   [
+    688.3,
+    340.6
+   ],
+   [
+    618.3,
+    340.6
+   ]
+  ]
+ },
+ "notes": "LANDMARK scene. No Foundry scene. Connects: Market (north side). Source: evidence: market plan angles (ossuary_market_new.py SCENE_NOTE) (70-100 deg)",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "ossuary": {
+  "status": "landmark",
+  "district": "Lower Market",
+  "connects": "Market (north side)",
+  "source": "evidence: market plan angles (ossuary_market_new.py SCENE_NOTE) (70-100 deg)",
+  "approximate": false
+ }
+}

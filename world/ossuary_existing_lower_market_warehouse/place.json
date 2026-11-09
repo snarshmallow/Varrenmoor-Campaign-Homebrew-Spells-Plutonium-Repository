@@ -1,0 +1,102 @@
+{
+ "id": "ossuary_existing_lower_market_warehouse",
+ "name": "Lower Market Warehouse",
+ "kind": "scene",
+ "status": "imported",
+ "units": "feet",
+ "origin": "scene top-left, y down",
+ "bounds": {
+  "width_ft": 120.0,
+  "height_ft": 95.0
+ },
+ "notes": "Imported from Foundry scene Scene.zOY5zJ6WgGd3kTFE by import-scene (read-only). Grid 5 ft = 100 px.",
+ "files": {
+  "districts": "districts.json",
+  "streets": "streets.json",
+  "water": "water.json",
+  "buildings": "buildings/",
+  "view_settings": "view_settings.json",
+  "terrain": "terrain/"
+ },
+ "view_focus": {
+  "town": [
+   60,
+   48
+  ]
+ },
+ "links": {
+  "foundry_scene": "Scene.zOY5zJ6WgGd3kTFE",
+  "model3d": null,
+  "ai_layer": null
+ },
+ "generated_by": "foundry_import.py",
+ "sea_level_ft": -1000.0,
+ "phase_elevation": "percentile",
+ "import": {
+  "scene_uuid": "Scene.zOY5zJ6WgGd3kTFE",
+  "scene_name": "Lower Market Warehouse",
+  "scene_px": [
+   2400.0,
+   1900.0
+  ],
+  "scene_offset_px": [
+   600.0,
+   500.0
+  ],
+  "padding": 0.25,
+  "grid": {
+   "size": 100.0,
+   "distance": 5.0,
+   "units": "ft"
+  },
+  "px_per_ft": 20.0,
+  "native_export_dpi": 200.0,
+  "background": null,
+  "underlay": null,
+  "imported": "2026-11-09T17:41:09",
+  "levels": [
+   {
+    "id": "defaultLevel0000",
+    "name": "Level",
+    "elevation": {
+     "bottom": 0,
+     "top": 20
+    }
+   }
+  ],
+  "scene_3d": {
+   "auto3d": true,
+   "renderTable": "matcustom",
+   "tableTex": "baileywiki-content/assets/modules/baileywiki-3d/models/black-tone-pure.webp",
+   "tableColor": "#341f0f",
+   "tableHeightmap": "",
+   "tableHeightmapScale": 1,
+   "exr": "assets/ossuary-exchange-skybox3.webp",
+   "skybox": "",
+   "renderBackground": false,
+   "sunPosition": 9,
+   "sunDistance": 10,
+   "ambientLightIntensity": 0,
+   "ambientLightColor": "#ffffff",
+   "enableFog": false,
+   "fogColor": "#000000",
+   "fogDistance": 3000,
+   "exposure": 1,
+   "sceneTint": "#ffffff",
+   "timeSync": "darkness",
+   "maxElevation": 100000,
+   "grounding": ""
+  },
+  "warnings": [
+   "no background image"
+  ],
+  "counts": {
+   "tiles": 0,
+   "regions": 0,
+   "walls": 0,
+   "tokens": 7,
+   "lights": 5,
+   "notes": 0
+  }
+ }
+}

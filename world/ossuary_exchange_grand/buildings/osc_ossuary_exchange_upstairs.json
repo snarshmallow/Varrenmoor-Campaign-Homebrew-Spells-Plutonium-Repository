@@ -1,0 +1,43 @@
+{
+ "id": "osc_ossuary_exchange_upstairs",
+ "name": "Ossuary Exchange Upstairs",
+ "kind": "inn",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    782.7,
+    635.3
+   ],
+   [
+    852.7,
+    635.3
+   ],
+   [
+    852.7,
+    669.3
+   ],
+   [
+    782.7,
+    669.3
+   ]
+  ]
+ },
+ "notes": "EXISTING scene. Floor ABOVE the tavern; drawn as a tag below the tavern so both stay visible. Scene canvas 160x85 ft. Connects: Tavern (stair); rooms 201-208, Room 208 (Europa, Session 14). Source: evidence: GM reference (inn upstairs rooms)",
+ "links": {
+  "foundry_scene": "Scene.KuSqU8GKwpee7eG4",
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "ossuary": {
+  "status": "existing",
+  "district": "Lower Market",
+  "connects": "Tavern (stair); rooms 201-208, Room 208 (Europa, Session 14)",
+  "source": "evidence: GM reference (inn upstairs rooms)",
+  "approximate": false
+ }
+}

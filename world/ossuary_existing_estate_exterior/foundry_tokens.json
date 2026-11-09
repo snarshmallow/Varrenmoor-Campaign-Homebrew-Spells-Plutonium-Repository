@@ -1,0 +1,61 @@
+{
+ "place": "ossuary_existing_estate_exterior",
+ "tokens": [
+  {
+   "id": "ft_001",
+   "name": "Betsy",
+   "point": [
+    32.5,
+    92.5
+   ],
+   "actor_id": "cD6q71Ets9uJ2mbU",
+   "elevation": 2.77,
+   "size_squares": [
+    1,
+    1
+   ]
+  },
+  {
+   "id": "ft_002",
+   "name": "Dale",
+   "point": [
+    37.5,
+    97.5
+   ],
+   "actor_id": "tkVXV0t9xCDe9kBc",
+   "elevation": 1.6,
+   "size_squares": [
+    1,
+    1
+   ]
+  },
+  {
+   "id": "ft_003",
+   "name": "Stellan",
+   "point": [
+    27.5,
+    92.5
+   ],
+   "actor_id": "CMKxYYzoE9nZILWs",
+   "elevation": 20.37,
+   "size_squares": [
+    1,
+    1
+   ]
+  },
+  {
+   "id": "ft_004",
+   "name": "Violet",
+   "point": [
+    27.5,
+    97.5
+   ],
+   "actor_id": "PJ8bhdjjjtpnT0Pz",
+   "elevation": 5.02,
+   "size_squares": [
+    1,
+    1
+   ]
+  }
+ ]
+}

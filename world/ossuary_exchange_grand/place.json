@@ -1,0 +1,51 @@
+{
+ "id": "ossuary_exchange_grand",
+ "name": "Ossuary Exchange: Grand Layout",
+ "kind": "blank",
+ "status": "blank",
+ "units": "feet",
+ "origin": "top-left, x right, y down (up = north)",
+ "bounds": {
+  "width_ft": 1600,
+  "height_ft": 1100
+ },
+ "population_estimate": 0,
+ "notes": "Grand layout of the Ossuary Exchange: one footprint per Foundry scene (grey = existing, gold = Session 14), landmarks, districts, trolley / pneumatic / threshold links. Built by illustrator/generators/ossuary_grand.py; legend in gm-guide/Ossuary_Grand_Layout.md.",
+ "files": {
+  "districts": "districts.json",
+  "streets": "streets.json",
+  "water": "water.json",
+  "buildings": "buildings/",
+  "view_settings": "view_settings.json",
+  "terrain": "terrain/"
+ },
+ "view_focus": {
+  "town": [
+   800.0,
+   560.0
+  ]
+ },
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "generated_by": "place_create.py create-blank",
+ "sea_level_ft": -1000.0,
+ "phase_elevation": "percentile",
+ "culture": "fantasy_generic",
+ "defaults": {
+  "shading_preset": "temperate_valley_calm",
+  "padding_preset": "flat-plain",
+  "foliage_mix": "oak_beech_wood",
+  "season": "summer",
+  "fills_style": "full_map",
+  "label_preset": "working"
+ },
+ "blank": {
+  "recipe": "flat",
+  "seed": 3998,
+  "cell_ft": 20.0,
+  "created": "2026-11-09T17:41:13"
+ }
+}

@@ -1,0 +1,103 @@
+{
+ "place": "ossuary_existing_market",
+ "tokens": [
+  {
+   "id": "ft_001",
+   "name": "Violet",
+   "point": [
+    -27.5,
+    2.5
+   ],
+   "actor_id": "PJ8bhdjjjtpnT0Pz",
+   "elevation": 1.57,
+   "size_squares": [
+    1,
+    1
+   ]
+  },
+  {
+   "id": "ft_002",
+   "name": "Gerald",
+   "point": [
+    -27.5,
+    11.25
+   ],
+   "actor_id": "EEYvBrcdo7VOgRt5",
+   "elevation": 1.5698817617202527,
+   "size_squares": [
+    0.5,
+    0.5
+   ]
+  },
+  {
+   "id": "ft_003",
+   "name": "Dale",
+   "point": [
+    -27.5,
+    12.5
+   ],
+   "actor_id": "tkVXV0t9xCDe9kBc",
+   "elevation": 1.5698817617202527,
+   "size_squares": [
+    1,
+    1
+   ]
+  },
+  {
+   "id": "ft_004",
+   "name": "Betsy",
+   "point": [
+    -27.5,
+    7.5
+   ],
+   "actor_id": "cD6q71Ets9uJ2mbU",
+   "elevation": 1.5698817617202527,
+   "size_squares": [
+    1,
+    1
+   ]
+  },
+  {
+   "id": "ft_005",
+   "name": "Stellan",
+   "point": [
+    -12.5,
+    12.5
+   ],
+   "actor_id": "CMKxYYzoE9nZILWs",
+   "elevation": 1.5698817617202527,
+   "size_squares": [
+    1,
+    1
+   ]
+  },
+  {
+   "id": "ft_006",
+   "name": "Kenko",
+   "point": [
+    -12.5,
+    6.25
+   ],
+   "actor_id": "P09VNmUlMcS08qq4",
+   "elevation": 1.5698817617202527,
+   "size_squares": [
+    0.5,
+    0.5
+   ]
+  },
+  {
+   "id": "ft_007",
+   "name": "Biscuit",
+   "point": [
+    -22.5,
+    -2.5
+   ],
+   "actor_id": "x1Cav5j4zhLiuE2V",
+   "elevation": 1.56,
+   "size_squares": [
+    1,
+    1
+   ]
+  }
+ ]
+}

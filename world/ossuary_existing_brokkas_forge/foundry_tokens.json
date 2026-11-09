@@ -1,0 +1,19 @@
+{
+ "place": "ossuary_existing_brokkas_forge",
+ "tokens": [
+  {
+   "id": "ft_001",
+   "name": "Brokka ??Three-Fingers?? Vell",
+   "point": [
+    57.5,
+    37.5
+   ],
+   "actor_id": "cIfDcLnqX2nwJBsU",
+   "elevation": 0.43,
+   "size_squares": [
+    1,
+    1
+   ]
+  }
+ ]
+}

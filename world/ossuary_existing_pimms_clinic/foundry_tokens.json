@@ -1,0 +1,103 @@
+{
+ "place": "ossuary_existing_pimms_clinic",
+ "tokens": [
+  {
+   "id": "ft_001",
+   "name": "Doctor Pimm ??Mostly?? Pimm",
+   "point": [
+    52.5,
+    32.5
+   ],
+   "actor_id": "Tm6TIzXE8dWBbadN",
+   "elevation": 0.43,
+   "size_squares": [
+    1,
+    1
+   ]
+  },
+  {
+   "id": "ft_002",
+   "name": "Violet",
+   "point": [
+    52.5,
+    52.5
+   ],
+   "actor_id": "PJ8bhdjjjtpnT0Pz",
+   "elevation": 0.43,
+   "size_squares": [
+    1,
+    1
+   ]
+  },
+  {
+   "id": "ft_003",
+   "name": "Stellan",
+   "point": [
+    52.5,
+    37.5
+   ],
+   "actor_id": "CMKxYYzoE9nZILWs",
+   "elevation": 0.43,
+   "size_squares": [
+    1,
+    1
+   ]
+  },
+  {
+   "id": "ft_004",
+   "name": "Dale",
+   "point": [
+    57.5,
+    42.5
+   ],
+   "actor_id": "tkVXV0t9xCDe9kBc",
+   "elevation": 0,
+   "size_squares": [
+    1,
+    1
+   ]
+  },
+  {
+   "id": "ft_005",
+   "name": "Betsy",
+   "point": [
+    47.5,
+    32.5
+   ],
+   "actor_id": "cD6q71Ets9uJ2mbU",
+   "elevation": 0.43,
+   "size_squares": [
+    1,
+    1
+   ]
+  },
+  {
+   "id": "ft_006",
+   "name": "Lil' Apostrophe",
+   "point": [
+    57.5,
+    37.5
+   ],
+   "actor_id": "SPrDUsMzarbTP4SV",
+   "elevation": 0.43,
+   "size_squares": [
+    1,
+    1
+   ]
+  },
+  {
+   "id": "ft_007",
+   "name": "Salamander",
+   "point": [
+    76.45,
+    26.4
+   ],
+   "actor_id": "HEKJGeKAcmB8IMGt",
+   "elevation": 0.76,
+   "size_squares": [
+    1,
+    1
+   ]
+  }
+ ]
+}

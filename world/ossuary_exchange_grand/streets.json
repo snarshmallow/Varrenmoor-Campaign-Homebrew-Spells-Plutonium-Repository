@@ -1,0 +1,550 @@
+{
+ "place": "ossuary_exchange_grand",
+ "streets": [
+  {
+   "id": "str_market_ring",
+   "name": "Market Ring",
+   "kind": "street",
+   "status": "proposed",
+   "geometry": {
+    "type": "polyline",
+    "points": [
+     [
+      725.0,
+      470.0
+     ],
+     [
+      724.3,
+      481.1
+     ],
+     [
+      722.1,
+      492.0
+     ],
+     [
+      718.5,
+      502.5
+     ],
+     [
+      713.6,
+      512.5
+     ],
+     [
+      707.4,
+      521.7
+     ],
+     [
+      700.1,
+      530.1
+     ],
+     [
+      691.7,
+      537.4
+     ],
+     [
+      682.5,
+      543.6
+     ],
+     [
+      672.5,
+      548.5
+     ],
+     [
+      662.0,
+      552.1
+     ],
+     [
+      651.1,
+      554.3
+     ],
+     [
+      640.0,
+      555.0
+     ],
+     [
+      628.9,
+      554.3
+     ],
+     [
+      618.0,
+      552.1
+     ],
+     [
+      607.5,
+      548.5
+     ],
+     [
+      597.5,
+      543.6
+     ],
+     [
+      588.3,
+      537.4
+     ],
+     [
+      579.9,
+      530.1
+     ],
+     [
+      572.6,
+      521.7
+     ],
+     [
+      566.4,
+      512.5
+     ],
+     [
+      561.5,
+      502.5
+     ],
+     [
+      557.9,
+      492.0
+     ],
+     [
+      555.7,
+      481.1
+     ],
+     [
+      555.0,
+      470.0
+     ],
+     [
+      555.7,
+      458.9
+     ],
+     [
+      557.9,
+      448.0
+     ],
+     [
+      561.5,
+      437.5
+     ],
+     [
+      566.4,
+      427.5
+     ],
+     [
+      572.6,
+      418.3
+     ],
+     [
+      579.9,
+      409.9
+     ],
+     [
+      588.3,
+      402.6
+     ],
+     [
+      597.5,
+      396.4
+     ],
+     [
+      607.5,
+      391.5
+     ],
+     [
+      618.0,
+      387.9
+     ],
+     [
+      628.9,
+      385.7
+     ],
+     [
+      640.0,
+      385.0
+     ],
+     [
+      651.1,
+      385.7
+     ],
+     [
+      662.0,
+      387.9
+     ],
+     [
+      672.5,
+      391.5
+     ],
+     [
+      682.5,
+      396.4
+     ],
+     [
+      691.7,
+      402.6
+     ],
+     [
+      700.1,
+      409.9
+     ],
+     [
+      707.4,
+      418.3
+     ],
+     [
+      713.6,
+      427.5
+     ],
+     [
+      718.5,
+      437.5
+     ],
+     [
+      722.1,
+      448.0
+     ],
+     [
+      724.3,
+      458.9
+     ],
+     [
+      725.0,
+      470.0
+     ]
+    ],
+    "width_ft": 18.0
+   },
+   "edit": {
+    "class": "street",
+    "surface": "cobble",
+    "kerb": false
+   },
+   "ossuary_way": "street",
+   "notes": "ossuary_grand.py: street ring in front of the shop doors"
+  },
+  {
+   "id": "str_mavis_road",
+   "name": "Mavis's Road",
+   "kind": "road",
+   "status": "proposed",
+   "geometry": {
+    "type": "polyline",
+    "points": [
+     [
+      755.0,
+      470.0
+     ],
+     [
+      900,
+      460.0
+     ],
+     [
+      1060,
+      430.0
+     ],
+     [
+      1150.0,
+      430.0
+     ]
+    ],
+    "width_ft": 16.0
+   },
+   "edit": {
+    "class": "road",
+    "surface": "dirt",
+    "kerb": false
+   },
+   "ossuary_way": "road",
+   "notes": "ossuary_grand.py: eastern gate to the estate (outside Exchange jurisdiction)"
+  },
+  {
+   "id": "str_arrival_passage",
+   "name": "Arrival Passage",
+   "kind": "lane",
+   "status": "proposed",
+   "geometry": {
+    "type": "polyline",
+    "points": [
+     [
+      640.0,
+      572.0
+     ],
+     [
+      640.0,
+      715.0
+     ],
+     [
+      570.0,
+      755.0
+     ],
+     [
+      540.0,
+      755.0
+     ]
+    ],
+    "width_ft": 12.0
+   },
+   "edit": {
+    "class": "lane",
+    "surface": "cobble",
+    "kerb": false
+   },
+   "ossuary_way": "lane",
+   "notes": "ossuary_grand.py: arrival portal (market south) to the hallway's east exit [APPROXIMATE]"
+  },
+  {
+   "id": "str_tavern_hall_door",
+   "name": "Tavern West Door",
+   "kind": "path",
+   "status": "proposed",
+   "geometry": {
+    "type": "polyline",
+    "points": [
+     [
+      647.7,
+      642.3
+     ],
+     [
+      648.0,
+      667.3
+     ],
+     [
+      646.0,
+      695.0
+     ]
+    ],
+    "width_ft": 6.0
+   },
+   "edit": {
+    "class": "path",
+    "surface": "cobble",
+    "kerb": false
+   },
+   "ossuary_way": "path",
+   "notes": "ossuary_grand.py: ossuary_tavern.py: door to the Exchange hallway under the mezzanine (west wall)"
+  },
+  {
+   "id": "str_trolley_line",
+   "name": "Overhead Bone Trolley Line",
+   "kind": "path",
+   "status": "proposed",
+   "geometry": {
+    "type": "polyline",
+    "points": [
+     [
+      580.0,
+      420.0
+     ],
+     [
+      640.0,
+      470.0
+     ],
+     [
+      710.0,
+      510.0
+     ],
+     [
+      772.7,
+      820.0
+     ],
+     [
+      782.7,
+      932.0
+     ],
+     [
+      842.7,
+      910.0
+     ]
+    ],
+    "width_ft": 4.0
+   },
+   "edit": {
+    "class": "path",
+    "surface": "cobble",
+    "kerb": false
+   },
+   "ossuary_way": "trolley",
+   "notes": "ossuary_grand.py: overhead hub over the plaza; the last trolley of the night passes the cold door [route APPROXIMATE]"
+  },
+  {
+   "id": "str_trolley_west",
+   "name": "Trolley Line West",
+   "kind": "path",
+   "status": "proposed",
+   "geometry": {
+    "type": "polyline",
+    "points": [
+     [
+      580.0,
+      420.0
+     ],
+     [
+      490.0,
+      350.0
+     ],
+     [
+      410.0,
+      350.0
+     ]
+    ],
+    "width_ft": 4.0
+   },
+   "edit": {
+    "class": "path",
+    "surface": "cobble",
+    "kerb": false
+   },
+   "ossuary_way": "trolley",
+   "notes": "ossuary_grand.py: spoke to the north-west houses [APPROXIMATE]"
+  },
+  {
+   "id": "str_trolley_hall",
+   "name": "Trolley Line to the Hallway",
+   "kind": "path",
+   "status": "proposed",
+   "geometry": {
+    "type": "polyline",
+    "points": [
+     [
+      640.0,
+      470.0
+     ],
+     [
+      610.0,
+      590.0
+     ],
+     [
+      465.0,
+      755.0
+     ]
+    ],
+    "width_ft": 4.0
+   },
+   "edit": {
+    "class": "path",
+    "surface": "cobble",
+    "kerb": false
+   },
+   "ossuary_way": "trolley",
+   "notes": "ossuary_grand.py: 12 overhead carriers in the hall (handoff) [route APPROXIMATE]"
+  },
+  {
+   "id": "str_pneumatic",
+   "name": "Pneumatic Tube Run",
+   "kind": "path",
+   "status": "proposed",
+   "geometry": {
+    "type": "polyline",
+    "points": [
+     [
+      732.7,
+      662.3
+     ],
+     [
+      747.7,
+      840.0
+     ],
+     [
+      762.7,
+      950.0
+     ]
+    ],
+    "width_ft": 3.0
+   },
+   "edit": {
+    "class": "path",
+    "surface": "cobble",
+    "kerb": false
+   },
+   "ossuary_way": "pneumatic",
+   "notes": "ossuary_grand.py: tubes heard through the tavern wall (Mottle rumour 3) to the dusty terminal [route APPROXIMATE]"
+  },
+  {
+   "id": "str_shaft_dogleg",
+   "name": "Shafts South Dogleg",
+   "kind": "path",
+   "status": "proposed",
+   "geometry": {
+    "type": "polyline",
+    "points": [
+     [
+      732.7,
+      905.0
+     ],
+     [
+      732.7,
+      950.0
+     ],
+     [
+      745.2,
+      950.0
+     ]
+    ],
+    "width_ft": 5.0
+   },
+   "edit": {
+    "class": "path",
+    "surface": "cobble",
+    "kerb": false
+   },
+   "ossuary_way": "path",
+   "notes": "ossuary_grand.py: spec B3: the terminal's west entry continues the shafts' south dogleg"
+  },
+  {
+   "id": "str_cold_door_link",
+   "name": "Cold Door Threshold (one minute, the usual time)",
+   "kind": "path",
+   "status": "proposed",
+   "geometry": {
+    "type": "polyline",
+    "points": [
+     [
+      799.2,
+      950.0
+     ],
+     [
+      1100.0,
+      900.0
+     ]
+    ],
+    "width_ft": 3.0
+   },
+   "edit": {
+    "class": "path",
+    "surface": "cobble",
+    "kerb": false
+   },
+   "ossuary_way": "threshold",
+   "notes": "ossuary_grand.py: threshold link, not a walkable road"
+  },
+  {
+   "id": "str_mountain_road",
+   "name": "Mountain Road",
+   "kind": "road",
+   "status": "proposed",
+   "geometry": {
+    "type": "polyline",
+    "points": [
+     [
+      1100.0,
+      905.0
+     ],
+     [
+      1210.0,
+      890.0
+     ],
+     [
+      1300,
+      870
+     ],
+     [
+      1410.0,
+      840
+     ]
+    ],
+    "width_ft": 12.0
+   },
+   "edit": {
+    "class": "road",
+    "surface": "dirt",
+    "kerb": false
+   },
+   "ossuary_way": "road",
+   "notes": "ossuary_grand.py: snowy road east up the slope to the Eirwitch camp"
+  }
+ ]
+}

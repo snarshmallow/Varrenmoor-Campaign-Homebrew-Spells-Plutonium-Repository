@@ -1,0 +1,43 @@
+{
+ "id": "osc_dusty_terminal_and_the_cold_door",
+ "name": "Dusty Terminal and the Cold Door",
+ "kind": "service",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    745.2,
+    935.0
+   ],
+   [
+    800.2,
+    935.0
+   ],
+   [
+    800.2,
+    965.0
+   ],
+   [
+    745.2,
+    965.0
+   ]
+  ]
+ },
+ "notes": "NEW scene. Spec size 45x30 interior + 10x30 exterior strip. Connects: west entry: Conveyor Shafts south dogleg; east wall: the COLD DOOR (one minute at the usual time) -> Cold Door Landing. Source: spec B3: entry continues the shafts' south dogleg, cold door in the east wall",
+ "links": {
+  "foundry_scene": "Scene.nuVW7YxDumRi6Wa3",
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "ossuary": {
+  "status": "new",
+  "district": "Service Ways",
+  "connects": "west entry: Conveyor Shafts south dogleg; east wall: the COLD DOOR (one minute at the usual time) -> Cold Door Landing",
+  "source": "spec B3: entry continues the shafts' south dogleg, cold door in the east wall",
+  "approximate": false
+ }
+}

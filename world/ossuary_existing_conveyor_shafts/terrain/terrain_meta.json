@@ -1,0 +1,17 @@
+{
+ "size_ft": [
+  160.0,
+  130.0
+ ],
+ "cell_ft": 10.0,
+ "nx": 17,
+ "ny": 14,
+ "seed": 0,
+ "elev_min": 0.0,
+ "elev_max": 0.0,
+ "relief_ft": 0.0,
+ "units": "feet",
+ "pipeline": "flat_stub",
+ "node_convention": "h[i,j] at x=j*cell_ft, y=i*cell_ft (y down)",
+ "sea_level_ft": -1000.0
+}

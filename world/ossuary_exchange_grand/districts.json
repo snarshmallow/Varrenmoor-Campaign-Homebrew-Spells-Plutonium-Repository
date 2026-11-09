@@ -1,0 +1,156 @@
+{
+ "place": "ossuary_exchange_grand",
+ "districts": [
+  {
+   "id": "dis_lower_market",
+   "name": "Lower Market",
+   "kind": "district",
+   "status": "proposed",
+   "geometry": {
+    "type": "polygon",
+    "points": [
+     [
+      290,
+      240
+     ],
+     [
+      960,
+      240
+     ],
+     [
+      960,
+      700
+     ],
+     [
+      560,
+      700
+     ],
+     [
+      560,
+      655
+     ],
+     [
+      290,
+      655
+     ]
+    ]
+   }
+  },
+  {
+   "id": "dis_exchange_core",
+   "name": "Exchange Core",
+   "kind": "district",
+   "status": "proposed",
+   "geometry": {
+    "type": "polygon",
+    "points": [
+     [
+      240,
+      655
+     ],
+     [
+      560,
+      655
+     ],
+     [
+      560,
+      700
+     ],
+     [
+      640,
+      700
+     ],
+     [
+      640,
+      880
+     ],
+     [
+      240,
+      880
+     ]
+    ]
+   }
+  },
+  {
+   "id": "dis_service_ways",
+   "name": "Service Ways (below ground)",
+   "kind": "district",
+   "status": "proposed",
+   "geometry": {
+    "type": "polygon",
+    "points": [
+     [
+      640,
+      700
+     ],
+     [
+      960,
+      700
+     ],
+     [
+      960,
+      1000
+     ],
+     [
+      640,
+      1000
+     ]
+    ]
+   }
+  },
+  {
+   "id": "dis_mavis_estate",
+   "name": "Mavis Bracken's Estate",
+   "kind": "district",
+   "status": "proposed",
+   "geometry": {
+    "type": "polygon",
+    "points": [
+     [
+      1080,
+      230
+     ],
+     [
+      1500,
+      230
+     ],
+     [
+      1500,
+      640
+     ],
+     [
+      1080,
+      640
+     ]
+    ]
+   }
+  },
+  {
+   "id": "dis_mountain_road",
+   "name": "Mountain Road (beyond the cold door)",
+   "kind": "district",
+   "status": "proposed",
+   "geometry": {
+    "type": "polygon",
+    "points": [
+     [
+      1020,
+      760
+     ],
+     [
+      1560,
+      760
+     ],
+     [
+      1560,
+      1060
+     ],
+     [
+      1020,
+      1060
+     ]
+    ]
+   }
+  }
+ ]
+}

@@ -1,0 +1,103 @@
+{
+ "place": "ossuary_existing_lower_market_warehouse",
+ "tokens": [
+  {
+   "id": "ft_001",
+   "name": "Dunmore Kell, Night Porter",
+   "point": [
+    62.5,
+    37.5
+   ],
+   "actor_id": "9uTDLULNxJ3DdvHf",
+   "elevation": 0.43,
+   "size_squares": [
+    1,
+    1
+   ]
+  },
+  {
+   "id": "ft_002",
+   "name": "Dale",
+   "point": [
+    77.5,
+    65.7
+   ],
+   "actor_id": "tkVXV0t9xCDe9kBc",
+   "elevation": 0.43,
+   "size_squares": [
+    1,
+    1
+   ]
+  },
+  {
+   "id": "ft_003",
+   "name": "Stellan",
+   "point": [
+    82.5,
+    67.5
+   ],
+   "actor_id": "CMKxYYzoE9nZILWs",
+   "elevation": 0.43,
+   "size_squares": [
+    1,
+    1
+   ]
+  },
+  {
+   "id": "ft_004",
+   "name": "Violet",
+   "point": [
+    87.5,
+    67.5
+   ],
+   "actor_id": "PJ8bhdjjjtpnT0Pz",
+   "elevation": 0.43,
+   "size_squares": [
+    1,
+    1
+   ]
+  },
+  {
+   "id": "ft_005",
+   "name": "Betsy",
+   "point": [
+    62.5,
+    62.5
+   ],
+   "actor_id": "cD6q71Ets9uJ2mbU",
+   "elevation": 0.43,
+   "size_squares": [
+    1,
+    1
+   ]
+  },
+  {
+   "id": "ft_006",
+   "name": "Biscuit",
+   "point": [
+    67.5,
+    32.5
+   ],
+   "actor_id": "x1Cav5j4zhLiuE2V",
+   "elevation": 0.42,
+   "size_squares": [
+    1,
+    1
+   ]
+  },
+  {
+   "id": "ft_007",
+   "name": "Kenko",
+   "point": [
+    67.5,
+    28.75
+   ],
+   "actor_id": "P09VNmUlMcS08qq4",
+   "elevation": 0.42,
+   "size_squares": [
+    0.5,
+    0.5
+   ]
+  }
+ ]
+}

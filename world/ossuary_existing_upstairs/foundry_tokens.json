@@ -1,0 +1,75 @@
+{
+ "place": "ossuary_existing_upstairs",
+ "tokens": [
+  {
+   "id": "ft_001",
+   "name": "Dale",
+   "point": [
+    112.5,
+    52.5
+   ],
+   "actor_id": "tkVXV0t9xCDe9kBc",
+   "elevation": 0.47,
+   "size_squares": [
+    1,
+    1
+   ]
+  },
+  {
+   "id": "ft_002",
+   "name": "Violet",
+   "point": [
+    117.5,
+    52.5
+   ],
+   "actor_id": "PJ8bhdjjjtpnT0Pz",
+   "elevation": 0.47,
+   "size_squares": [
+    1,
+    1
+   ]
+  },
+  {
+   "id": "ft_003",
+   "name": "Stellan",
+   "point": [
+    112.5,
+    57.5
+   ],
+   "actor_id": "CMKxYYzoE9nZILWs",
+   "elevation": 0.43,
+   "size_squares": [
+    1,
+    1
+   ]
+  },
+  {
+   "id": "ft_004",
+   "name": "Kenko",
+   "point": [
+    116.25,
+    51.25
+   ],
+   "actor_id": "P09VNmUlMcS08qq4",
+   "elevation": 0.47,
+   "size_squares": [
+    0.5,
+    0.5
+   ]
+  },
+  {
+   "id": "ft_005",
+   "name": "Lil' Apostrophe",
+   "point": [
+    117.5,
+    57.5
+   ],
+   "actor_id": "SPrDUsMzarbTP4SV",
+   "elevation": 0.43,
+   "size_squares": [
+    1,
+    1
+   ]
+  }
+ ]
+}

@@ -1,0 +1,171 @@
+{
+ "id": "osc_ossuary_exchange_market",
+ "name": "Ossuary Exchange Market",
+ "kind": "plaza",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    715.0,
+    470.0
+   ],
+   [
+    713.9,
+    483.0
+   ],
+   [
+    710.5,
+    495.7
+   ],
+   [
+    705.0,
+    507.5
+   ],
+   [
+    697.5,
+    518.2
+   ],
+   [
+    688.2,
+    527.5
+   ],
+   [
+    677.5,
+    535.0
+   ],
+   [
+    665.7,
+    540.5
+   ],
+   [
+    653.0,
+    543.9
+   ],
+   [
+    640.0,
+    545.0
+   ],
+   [
+    627.0,
+    543.9
+   ],
+   [
+    614.3,
+    540.5
+   ],
+   [
+    602.5,
+    535.0
+   ],
+   [
+    591.8,
+    527.5
+   ],
+   [
+    582.5,
+    518.2
+   ],
+   [
+    575.0,
+    507.5
+   ],
+   [
+    569.5,
+    495.7
+   ],
+   [
+    566.1,
+    483.0
+   ],
+   [
+    565.0,
+    470.0
+   ],
+   [
+    566.1,
+    457.0
+   ],
+   [
+    569.5,
+    444.3
+   ],
+   [
+    575.0,
+    432.5
+   ],
+   [
+    582.5,
+    421.8
+   ],
+   [
+    591.8,
+    412.5
+   ],
+   [
+    602.5,
+    405.0
+   ],
+   [
+    614.3,
+    399.5
+   ],
+   [
+    627.0,
+    396.1
+   ],
+   [
+    640.0,
+    395.0
+   ],
+   [
+    653.0,
+    396.1
+   ],
+   [
+    665.7,
+    399.5
+   ],
+   [
+    677.5,
+    405.0
+   ],
+   [
+    688.2,
+    412.5
+   ],
+   [
+    697.5,
+    421.8
+   ],
+   [
+    705.0,
+    432.5
+   ],
+   [
+    710.5,
+    444.3
+   ],
+   [
+    713.9,
+    457.0
+   ]
+  ]
+ },
+ "notes": "EXISTING scene. The junction: 150-ft circular plaza, overhead trolley hub-and-spoke. Scene canvas 200x150 ft. Connects: every shop door; Eastern Gate (E); arrival portal to The Hallway (S); trolley hub overhead. Source: evidence: handoff (150-ft circular patio) + market plan",
+ "links": {
+  "foundry_scene": "Scene.p7Id2gr9TF5dN1Iz",
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "ossuary": {
+  "status": "existing",
+  "district": "Lower Market",
+  "connects": "every shop door; Eastern Gate (E); arrival portal to The Hallway (S); trolley hub overhead",
+  "source": "evidence: handoff (150-ft circular patio) + market plan",
+  "approximate": false
+ }
+}

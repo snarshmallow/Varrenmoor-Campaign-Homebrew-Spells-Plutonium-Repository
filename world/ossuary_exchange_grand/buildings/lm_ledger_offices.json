@@ -1,0 +1,43 @@
+{
+ "id": "lm_ledger_offices",
+ "name": "Three-Ledger Offices",
+ "kind": "office",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    475.0,
+    780.0
+   ],
+   [
+    535.0,
+    780.0
+   ],
+   [
+    535.0,
+    820.0
+   ],
+   [
+    475.0,
+    820.0
+   ]
+  ]
+ },
+ "notes": "LANDMARK scene.  Connects: The Hallway (office doors): intake ledger, custody ledger, physical tags. Source: canon: three records (Session 14 7.2); offices along the hall [APPROXIMATE]",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "ossuary": {
+  "status": "landmark",
+  "district": "Exchange Core",
+  "connects": "The Hallway (office doors): intake ledger, custody ledger, physical tags",
+  "source": "canon: three records (Session 14 7.2); offices along the hall [APPROXIMATE]",
+  "approximate": true
+ }
+}

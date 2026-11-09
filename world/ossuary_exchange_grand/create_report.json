@@ -1,0 +1,15 @@
+{
+ "id": "ossuary_exchange_grand",
+ "blank": true,
+ "size_ft": [
+  1600,
+  1100
+ ],
+ "cell_ft": 20.0,
+ "recipe": "flat",
+ "seed": 3998,
+ "terrain": {
+  "elev_min": 100.0,
+  "elev_max": 100.0
+ }
+}

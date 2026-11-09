@@ -1,0 +1,43 @@
+{
+ "id": "osc_the_hallway",
+ "name": "The Hallway",
+ "kind": "hall",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    390.0,
+    740.0
+   ],
+   [
+    540.0,
+    740.0
+   ],
+   [
+    540.0,
+    770.0
+   ],
+   [
+    390.0,
+    770.0
+   ]
+  ]
+ },
+ "notes": "EXISTING scene. Real hall 30x150 ft (scene canvas 200x150 ft). Connects: west: large double doors to The Clerk's Room / intake; east: exit to the arrival portal and Market; 20 office doors incl. Night Custody Office. Source: evidence: handoff (grand hall 30x150 ft, double doors left, exit right); orientation and position [APPROXIMATE]",
+ "links": {
+  "foundry_scene": "Scene.WQh8sMDG7aexrRb6",
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "ossuary": {
+  "status": "existing",
+  "district": "Exchange Core",
+  "connects": "west: large double doors to The Clerk's Room / intake; east: exit to the arrival portal and Market; 20 office doors incl. Night Custody Office",
+  "source": "evidence: handoff (grand hall 30x150 ft, double doors left, exit right); orientation and position [APPROXIMATE]",
+  "approximate": true
+ }
+}

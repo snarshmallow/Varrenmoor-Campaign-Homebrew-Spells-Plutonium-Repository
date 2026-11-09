@@ -1,0 +1,19 @@
+{
+ "place": "ossuary_existing_quills_workshop",
+ "tokens": [
+  {
+   "id": "ft_001",
+   "name": "Quillibus ??Quill?? Scratch",
+   "point": [
+    47.5,
+    42.5
+   ],
+   "actor_id": "PsjbmI1M64DINQmV",
+   "elevation": 0.61,
+   "size_squares": [
+    1,
+    1
+   ]
+  }
+ ]
+}

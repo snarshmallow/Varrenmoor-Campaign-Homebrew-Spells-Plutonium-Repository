@@ -1,0 +1,43 @@
+{
+ "id": "osc_ropewalk_and_signal_loft",
+ "name": "Ropewalk and Signal Loft",
+ "kind": "workshop",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    552.5,
+    601.1
+   ],
+   [
+    632.5,
+    601.1
+   ],
+   [
+    632.5,
+    631.1
+   ],
+   [
+    552.5,
+    631.1
+   ]
+  ]
+ },
+ "notes": "NEW scene. Spec size 80x30 ft, E-W. Connects: Market (Market_Doors); signal window onto the trolley rails. Source: spec: connects to Market, loft overlooks the rails; angle 252 deg (house plots 230-260) [APPROXIMATE]",
+ "links": {
+  "foundry_scene": "Scene.nlackHJHF82YaGwm",
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "ossuary": {
+  "status": "new",
+  "district": "Lower Market",
+  "connects": "Market (Market_Doors); signal window onto the trolley rails",
+  "source": "spec: connects to Market, loft overlooks the rails; angle 252 deg (house plots 230-260) [APPROXIMATE]",
+  "approximate": true
+ }
+}

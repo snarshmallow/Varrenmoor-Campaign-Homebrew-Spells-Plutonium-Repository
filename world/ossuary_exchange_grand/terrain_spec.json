@@ -1,0 +1,12 @@
+{
+ "size_ft": [
+  1600,
+  1100
+ ],
+ "cell_ft": 20.0,
+ "seed": 3998,
+ "recipe": "flat",
+ "base_elevation_ft": 100.0,
+ "sea_level_ft": -1000.0,
+ "_note": "Blank place: flat ground at 100 ft. To get relief, pick a Base terrain recipe on the Terrain tab, or paint it (Heightmap paint tab)."
+}

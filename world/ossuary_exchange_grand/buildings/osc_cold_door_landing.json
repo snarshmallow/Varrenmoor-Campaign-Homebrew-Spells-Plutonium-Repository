@@ -1,0 +1,43 @@
+{
+ "id": "osc_cold_door_landing",
+ "name": "Cold Door Landing",
+ "kind": "landmark",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    1100.0,
+    880.0
+   ],
+   [
+    1160.0,
+    880.0
+   ],
+   [
+    1160.0,
+    920.0
+   ],
+   [
+    1100.0,
+    920.0
+   ]
+  ]
+ },
+ "notes": "NEW scene. Spec size 60x40 ft. Snowy road above Bridgehollow. Connects: Cold door (threshold, not walking distance); road east up the slope to the Eirwitch Camp. Source: spec B5; the cold door is a threshold, so the map distance is SYMBOLIC [APPROXIMATE]",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "ossuary": {
+  "status": "new",
+  "district": "Mountain Road (beyond the cold door)",
+  "connects": "Cold door (threshold, not walking distance); road east up the slope to the Eirwitch Camp",
+  "source": "spec B5; the cold door is a threshold, so the map distance is SYMBOLIC [APPROXIMATE]",
+  "approximate": true
+ }
+}

@@ -1,0 +1,43 @@
+{
+ "id": "osc_harrowgate_restorations",
+ "name": "Harrowgate Restorations",
+ "kind": "shop",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    475.1,
+    375.6
+   ],
+   [
+    525.1,
+    375.6
+   ],
+   [
+    525.1,
+    415.6
+   ],
+   [
+    475.1,
+    415.6
+   ]
+  ]
+ },
+ "notes": "NEW scene. Spec size 50x40 ft. Connects: Market (street door, south side of the front room). Source: spec: connects to Market; angle 152 deg between the clinic and the rune shop [APPROXIMATE]",
+ "links": {
+  "foundry_scene": "Scene.1b5q3kkFove7vk6Z",
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "ossuary": {
+  "status": "new",
+  "district": "Lower Market",
+  "connects": "Market (street door, south side of the front room)",
+  "source": "spec: connects to Market; angle 152 deg between the clinic and the rune shop [APPROXIMATE]",
+  "approximate": true
+ }
+}

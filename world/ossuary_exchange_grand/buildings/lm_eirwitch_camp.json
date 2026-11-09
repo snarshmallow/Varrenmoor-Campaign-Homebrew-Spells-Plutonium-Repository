@@ -1,0 +1,43 @@
+{
+ "id": "lm_eirwitch_camp",
+ "name": "Eirwitch Camp (Night)",
+ "kind": "landmark",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    1410.0,
+    820.0
+   ],
+   [
+    1470.0,
+    820.0
+   ],
+   [
+    1470.0,
+    860.0
+   ],
+   [
+    1410.0,
+    860.0
+   ]
+  ]
+ },
+ "notes": "LANDMARK scene.  Connects: Cold Door Landing (road west end = 'Cold door landing'). Source: spec A (Eirwitch Camp scene, other place world/eirwitch_camp); off-map in reality [APPROXIMATE]",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "ossuary": {
+  "status": "landmark",
+  "district": "Mountain Road (beyond the cold door)",
+  "connects": "Cold Door Landing (road west end = 'Cold door landing')",
+  "source": "spec A (Eirwitch Camp scene, other place world/eirwitch_camp); off-map in reality [APPROXIMATE]",
+  "approximate": true
+ }
+}

@@ -1,0 +1,43 @@
+{
+ "id": "lm_arrival_portal",
+ "name": "Arrival Portal",
+ "kind": "gate",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    625.0,
+    558.0
+   ],
+   [
+    655.0,
+    558.0
+   ],
+   [
+    655.0,
+    572.0
+   ],
+   [
+    625.0,
+    572.0
+   ]
+  ]
+ },
+ "notes": "LANDMARK scene.  Connects: Market (S) <-> The Hallway. Source: evidence: market plan angles (ossuary_market_new.py SCENE_NOTE) (arrival 270 deg)",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "ossuary": {
+  "status": "landmark",
+  "district": "Lower Market",
+  "connects": "Market (S) <-> The Hallway",
+  "source": "evidence: market plan angles (ossuary_market_new.py SCENE_NOTE) (arrival 270 deg)",
+  "approximate": false
+ }
+}

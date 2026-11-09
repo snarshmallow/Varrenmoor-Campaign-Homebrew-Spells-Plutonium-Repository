@@ -1,0 +1,43 @@
+{
+ "id": "osc_estate_exterior",
+ "name": "Estate exterior",
+ "kind": "manor",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    1150.0,
+    330.0
+   ],
+   [
+    1350.0,
+    330.0
+   ],
+   [
+    1350.0,
+    530.0
+   ],
+   [
+    1150.0,
+    530.0
+   ]
+  ]
+ },
+ "notes": "EXISTING scene. Scene canvas 200x200 ft. Connects: Eastern Gate via Mavis's road; Estate *interior. Source: canon: estate beyond the eastern gate (GM ref, Session 12); distance east [APPROXIMATE]",
+ "links": {
+  "foundry_scene": "Scene.qeyU7cygquu3EE4S",
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "ossuary": {
+  "status": "existing",
+  "district": "Mavis Bracken's Estate",
+  "connects": "Eastern Gate via Mavis's road; Estate *interior",
+  "source": "canon: estate beyond the eastern gate (GM ref, Session 12); distance east [APPROXIMATE]",
+  "approximate": true
+ }
+}

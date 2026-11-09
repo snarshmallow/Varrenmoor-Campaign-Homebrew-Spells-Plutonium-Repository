@@ -1,0 +1,43 @@
+{
+ "id": "lm_cladis_memorial",
+ "name": "Cladis Memorial",
+ "kind": "monument",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    399.0,
+    780.0
+   ],
+   [
+    417.0,
+    780.0
+   ],
+   [
+    417.0,
+    798.0
+   ],
+   [
+    399.0,
+    798.0
+   ]
+  ]
+ },
+ "notes": "LANDMARK scene.  Connects: The Hallway / intake (Session 12: memorial, Stolen Shard, concealed Eirwitch passage). Source: canon: memorial is in the Exchange (GM ref); exact spot [APPROXIMATE]",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "ossuary": {
+  "status": "landmark",
+  "district": "Exchange Core",
+  "connects": "The Hallway / intake (Session 12: memorial, Stolen Shard, concealed Eirwitch passage)",
+  "source": "canon: memorial is in the Exchange (GM ref); exact spot [APPROXIMATE]",
+  "approximate": true
+ }
+}

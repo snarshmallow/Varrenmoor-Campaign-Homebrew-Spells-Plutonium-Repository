@@ -1,0 +1,89 @@
+{
+ "place": "ossuary_existing_clerks_room",
+ "tokens": [
+  {
+   "id": "ft_001",
+   "name": "Pringus Ballowaysmith",
+   "point": [
+    57.5,
+    22.5
+   ],
+   "actor_id": "r8Pjo0N1xfqR0Qpq",
+   "elevation": 3.11,
+   "size_squares": [
+    1,
+    1
+   ]
+  },
+  {
+   "id": "ft_002",
+   "name": "Betsy",
+   "point": [
+    42.5,
+    37.5
+   ],
+   "actor_id": "cD6q71Ets9uJ2mbU",
+   "elevation": 1.2,
+   "size_squares": [
+    1,
+    1
+   ]
+  },
+  {
+   "id": "ft_003",
+   "name": "Dale",
+   "point": [
+    62.5,
+    37.5
+   ],
+   "actor_id": "tkVXV0t9xCDe9kBc",
+   "elevation": 1.2,
+   "size_squares": [
+    1,
+    1
+   ]
+  },
+  {
+   "id": "ft_004",
+   "name": "Stellan",
+   "point": [
+    62.5,
+    37.5
+   ],
+   "actor_id": "CMKxYYzoE9nZILWs",
+   "elevation": 1.2,
+   "size_squares": [
+    1,
+    1
+   ]
+  },
+  {
+   "id": "ft_005",
+   "name": "Violet",
+   "point": [
+    57.5,
+    37.5
+   ],
+   "actor_id": "PJ8bhdjjjtpnT0Pz",
+   "elevation": 1.2,
+   "size_squares": [
+    1,
+    1
+   ]
+  },
+  {
+   "id": "ft_006",
+   "name": "Biscuit",
+   "point": [
+    37.5,
+    37.5
+   ],
+   "actor_id": "x1Cav5j4zhLiuE2V",
+   "elevation": 1.2,
+   "size_squares": [
+    1,
+    1
+   ]
+  }
+ ]
+}

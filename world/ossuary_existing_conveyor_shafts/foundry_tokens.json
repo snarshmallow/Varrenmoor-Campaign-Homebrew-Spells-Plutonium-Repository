@@ -1,0 +1,103 @@
+{
+ "place": "ossuary_existing_conveyor_shafts",
+ "tokens": [
+  {
+   "id": "ft_001",
+   "name": "Gerald",
+   "point": [
+    130.55,
+    64.0
+   ],
+   "actor_id": "EEYvBrcdo7VOgRt5",
+   "elevation": 0,
+   "size_squares": [
+    0.5,
+    0.5
+   ]
+  },
+  {
+   "id": "ft_002",
+   "name": "Violet",
+   "point": [
+    122.5,
+    72.5
+   ],
+   "actor_id": "PJ8bhdjjjtpnT0Pz",
+   "elevation": 0.43,
+   "size_squares": [
+    1,
+    1
+   ]
+  },
+  {
+   "id": "ft_003",
+   "name": "Dale",
+   "point": [
+    117.5,
+    77.5
+   ],
+   "actor_id": "tkVXV0t9xCDe9kBc",
+   "elevation": 0.43,
+   "size_squares": [
+    1,
+    1
+   ]
+  },
+  {
+   "id": "ft_004",
+   "name": "Betsy",
+   "point": [
+    117.5,
+    72.5
+   ],
+   "actor_id": "cD6q71Ets9uJ2mbU",
+   "elevation": 0.43,
+   "size_squares": [
+    1,
+    1
+   ]
+  },
+  {
+   "id": "ft_005",
+   "name": "Stellan",
+   "point": [
+    132.5,
+    77.5
+   ],
+   "actor_id": "CMKxYYzoE9nZILWs",
+   "elevation": 0.43,
+   "size_squares": [
+    1,
+    1
+   ]
+  },
+  {
+   "id": "ft_006",
+   "name": "Kenko",
+   "point": [
+    131.25,
+    71.25
+   ],
+   "actor_id": "P09VNmUlMcS08qq4",
+   "elevation": 0.43,
+   "size_squares": [
+    0.5,
+    0.5
+   ]
+  },
+  {
+   "id": "ft_007",
+   "name": "Gerald",
+   "point": [
+    116.25,
+    76.25
+   ],
+   "actor_id": "EEYvBrcdo7VOgRt5",
+   "elevation": 0.43,
+   "size_squares": [
+    0.5,
+    0.5
+   ]
+  }
+ ]
+}

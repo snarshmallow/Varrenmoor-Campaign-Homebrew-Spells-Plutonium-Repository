@@ -1,0 +1,75 @@
+{
+ "place": "ossuary_existing_hallway",
+ "tokens": [
+  {
+   "id": "ft_001",
+   "name": "Betsy",
+   "point": [
+    37.5,
+    102.5
+   ],
+   "actor_id": "cD6q71Ets9uJ2mbU",
+   "elevation": 1.03,
+   "size_squares": [
+    1,
+    1
+   ]
+  },
+  {
+   "id": "ft_002",
+   "name": "Dale",
+   "point": [
+    22.5,
+    97.5
+   ],
+   "actor_id": "tkVXV0t9xCDe9kBc",
+   "elevation": 1.03,
+   "size_squares": [
+    1,
+    1
+   ]
+  },
+  {
+   "id": "ft_003",
+   "name": "Violet",
+   "point": [
+    47.5,
+    92.5
+   ],
+   "actor_id": "PJ8bhdjjjtpnT0Pz",
+   "elevation": 1.03,
+   "size_squares": [
+    1,
+    1
+   ]
+  },
+  {
+   "id": "ft_004",
+   "name": "Stellan",
+   "point": [
+    22.5,
+    102.5
+   ],
+   "actor_id": "CMKxYYzoE9nZILWs",
+   "elevation": 1.03,
+   "size_squares": [
+    1,
+    1
+   ]
+  },
+  {
+   "id": "ft_005",
+   "name": "Lil' Apostrophe",
+   "point": [
+    27.5,
+    107.5
+   ],
+   "actor_id": "SPrDUsMzarbTP4SV",
+   "elevation": 1.03,
+   "size_squares": [
+    1,
+    1
+   ]
+  }
+ ]
+}

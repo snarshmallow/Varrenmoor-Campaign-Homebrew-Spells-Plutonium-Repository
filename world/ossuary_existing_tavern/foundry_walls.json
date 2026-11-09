@@ -1,0 +1,7 @@
+{
+ "place": "ossuary_existing_tavern",
+ "layer": "WALLS",
+ "units": "ft",
+ "origin": "scene top-left, y down",
+ "walls": []
+}

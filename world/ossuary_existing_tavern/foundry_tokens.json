@@ -1,0 +1,103 @@
+{
+ "place": "ossuary_existing_tavern",
+ "tokens": [
+  {
+   "id": "ft_001",
+   "name": "Mottle",
+   "point": [
+    92.5,
+    7.5
+   ],
+   "actor_id": "CpnpvLREOBrLp9K1",
+   "elevation": 0.43,
+   "size_squares": [
+    1,
+    1
+   ]
+  },
+  {
+   "id": "ft_002",
+   "name": "Lil' Apostrophe",
+   "point": [
+    87.5,
+    7.5
+   ],
+   "actor_id": "SPrDUsMzarbTP4SV",
+   "elevation": 0.43,
+   "size_squares": [
+    1,
+    1
+   ]
+  },
+  {
+   "id": "ft_003",
+   "name": "Stellan",
+   "point": [
+    72.5,
+    22.5
+   ],
+   "actor_id": "CMKxYYzoE9nZILWs",
+   "elevation": 0.43,
+   "size_squares": [
+    1,
+    1
+   ]
+  },
+  {
+   "id": "ft_004",
+   "name": "Violet",
+   "point": [
+    67.5,
+    22.5
+   ],
+   "actor_id": "PJ8bhdjjjtpnT0Pz",
+   "elevation": 0.43,
+   "size_squares": [
+    1,
+    1
+   ]
+  },
+  {
+   "id": "ft_005",
+   "name": "Dale",
+   "point": [
+    72.5,
+    17.5
+   ],
+   "actor_id": "tkVXV0t9xCDe9kBc",
+   "elevation": 0.43,
+   "size_squares": [
+    1,
+    1
+   ]
+  },
+  {
+   "id": "ft_006",
+   "name": "Biscuit",
+   "point": [
+    72.5,
+    37.5
+   ],
+   "actor_id": "x1Cav5j4zhLiuE2V",
+   "elevation": 0.42,
+   "size_squares": [
+    1,
+    1
+   ]
+  },
+  {
+   "id": "ft_007",
+   "name": "Betsy",
+   "point": [
+    67.5,
+    37.5
+   ],
+   "actor_id": "cD6q71Ets9uJ2mbU",
+   "elevation": 0.42,
+   "size_squares": [
+    1,
+    1
+   ]
+  }
+ ]
+}

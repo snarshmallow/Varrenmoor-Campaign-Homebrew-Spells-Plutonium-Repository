@@ -1,0 +1,43 @@
+{
+ "id": "osc_brokka_s_forge",
+ "name": "Brokka's Forge",
+ "kind": "smithy",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    736.3,
+    307.2
+   ],
+   [
+    836.3,
+    307.2
+   ],
+   [
+    836.3,
+    387.2
+   ],
+   [
+    736.3,
+    387.2
+   ]
+  ]
+ },
+ "notes": "EXISTING scene. Footprint = scene canvas 100x80 ft. Connects: Market (south street door). Source: evidence: market plan angles (ossuary_market_new.py SCENE_NOTE) (40 deg)",
+ "links": {
+  "foundry_scene": "Scene.DfVC08aOlUXg9kQ1",
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "ossuary": {
+  "status": "existing",
+  "district": "Lower Market",
+  "connects": "Market (south street door)",
+  "source": "evidence: market plan angles (ossuary_market_new.py SCENE_NOTE) (40 deg)",
+  "approximate": false
+ }
+}
