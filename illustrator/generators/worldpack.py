@@ -646,7 +646,7 @@ def _export_terrain(out, h, meta, frame, model, lods, splat_cell_ft, albedo_ppf,
     return {"cell_ft": cell, "nx": nx, "ny": ny, "size_ft": [float(meta["size_ft"][0]), float(meta["size_ft"][1])], "elev_min_ft": r3(lo), "elev_max_ft": r3(hi),
             "heights_dtype": "float32-le", "heights_layout": "row-major [ny][nx]; h[i][j] at x=j*cell_ft, y=i*cell_ft (y south); row 0 is the north edge",
             "png16": {"min_ft": lo, "max_ft": hi, "decode": "elev_ft = min_ft + value / 65535 * (max_ft - min_ft)"},
-            "source": meta.get("source", "base"), "pipeline": meta.get("pipeline"), "seed": meta.get("seed"), "meshes": meshes,
+            "source": meta.get("source", "base"), **({"height_edits": meta["height_edits"]} if meta.get("height_edits") else {}), "pipeline": meta.get("pipeline"), "seed": meta.get("seed"), "meshes": meshes,
             "slope_png": {"decode": "slope_deg = value / 255 * 90"}, "normal_png": {"decode": "n = value / 255 * 2 - 1 as (east, north, up)"},
             "albedo": {"file": "terrain/albedo.png", "px_per_ft": ap, "size_px": [int(img.shape[1]), int(img.shape[0])],
                        "note": "baked shading phases, no hillshade; UV = (x / width_ft, y / height_ft), row 0 north"},
@@ -703,6 +703,18 @@ def _entity_z(h, cell, pts):
     return [r3(bilinear(h, cell, p[0], p[1])) for p in pts]
 
 
+def _edit_shift(h, h0, cell):
+    """-> fn(x, y) = how far the height edit layer moved the terrain at (x, y) (h - h0), or None when no edits apply.
+    Cached per-entity heights (streets' elevations_ft, buildings' elevation_ft, ...) were graded against the UNEDITED terrain; adding this keeps
+    them riding the edited ground instead of floating or sinking."""
+    if h0 is None or h0.shape != h.shape:
+        return None
+    d = (h - h0).astype(np.float32)
+    if not np.any(np.abs(d) > 1e-4):
+        return None
+    return lambda x, y: bilinear(d, cell, x, y)
+
+
 def _surface(mid, tile_ft):
     return {"material": mid, "tile_ft": tile_ft}
 
@@ -727,6 +739,10 @@ def export_world(place, out_dir=None, lod=(1, 4), world_root=None, terrain_sourc
     h, meta = worldio.load_terrain(place, source=terrain_source, root=world_root)
     h = np.asarray(h, np.float32)
     cell = float(meta["cell_ft"])
+    shift, hedits = None, meta.get("height_edits")
+    if hedits:
+        h0, _m0 = worldio.load_terrain(place, source=terrain_source, root=world_root, edits=False)
+        shift = _edit_shift(h, np.asarray(h0, np.float32), cell)
     pl = model["place"]
     W, H = float(pl["bounds"]["width_ft"]), float(pl["bounds"]["height_ft"])
     sea = float(pl.get("sea_level_ft", meta.get("sea_level_ft", 0.0)))
@@ -775,7 +791,10 @@ def export_world(place, out_dir=None, lod=(1, 4), world_root=None, terrain_sourc
     for s in sorted(model["streets"], key=lambda e: e["id"]):
         e = _common(s, place, "roads", srcp("", "streets.json"))
         pts = [[p[0], p[1]] for p in s["geometry"]["points"]]
-        z = s.get("elevations_ft") or _entity_z(h, cell, pts)
+        z = s.get("elevations_ft")
+        if z and shift and len(z) == len(pts) and s.get("elevations_edits_hash") != hedits.get("hash"):
+            z = [zz + shift(p[0], p[1]) for zz, p in zip(z, pts)]      # cached grade from before the height edits: carry it over the edit delta
+        z = z or _entity_z(h, cell, pts)
         cls = fr.classify_street(s, sc)
         ed = road_edit(s)                                              # per-road overrides (panel: Roads tab > Edit road); empty = unchanged behaviour
         if ed.get("class") in sc:
@@ -852,6 +871,8 @@ def export_world(place, out_dir=None, lod=(1, 4), world_root=None, terrain_sourc
         if bed.get("wall_material"):
             wtex = bed["wall_material"]
         floor_z = float(b.get("elevation_ft", bilinear(h, cell, cx, cy)))
+        if shift and "elevation_ft" in b:
+            floor_z += shift(cx, cy)
         import building_ground as bg
         floor_z, skirt_ft, _g = bg.resolve(poly, [d for d in model.get("details", {}).get("doors", []) if d.get("building") == b["id"]], floor_z, h, cell)   # base from the footprint ground (building_ground.py)
         e.update({"polygon": [[r3(p[0]), r3(p[1])] for p in poly], "area_ft2": r3(polygon_area(poly)), "floors": floors,
@@ -894,7 +915,7 @@ def export_world(place, out_dir=None, lod=(1, 4), world_root=None, terrain_sourc
                   "elevation_ft": d.get("elevation_ft"), "label_point": d.get("label_point")})
         if d.get("kind") == "square":
             pc = types.get("plazas", {}).get("default", {"texture": "cobble", "tile_ft": 14})
-            e["base_elevation_ft"] = r3(d.get("elevation_ft", bilinear(h, cell, *np.mean(poly, 0))))
+            e["base_elevation_ft"] = r3(d.get("elevation_ft", bilinear(h, cell, *np.mean(poly, 0))) + (shift(*np.mean(poly, 0)) if shift and "elevation_ft" in d else 0.0))
             e["surface"] = _surface(tex.tex(pc["texture"]), pc.get("tile_ft"))
             ents["plazas"].append(e)
         elif d.get("kind") == "field":
@@ -903,7 +924,7 @@ def export_world(place, out_dir=None, lod=(1, 4), world_root=None, terrain_sourc
             cc = (fc.get("crops") or {}).get(crop, {"texture": crop})
             spec = fr.pick(cc, rng(d["id"]))
             e["crop"] = crop
-            e["base_elevation_ft"] = r3(d.get("elevation_ft", bilinear(h, cell, *np.mean(poly, 0))))
+            e["base_elevation_ft"] = r3(d.get("elevation_ft", bilinear(h, cell, *np.mean(poly, 0))) + (shift(*np.mean(poly, 0)) if shift and "elevation_ft" in d else 0.0))
             e["surface"] = _surface(tex.tex(spec), cc.get("tile_ft", 40))
             ents["fields"].append(e)
             f = {"id": "fnc_" + d["id"], "name": "Fence of " + d.get("name", d["id"]), "kind": "field_fence", "status": d.get("status", "proposed"),
@@ -1057,6 +1078,7 @@ def export_world(place, out_dir=None, lod=(1, 4), world_root=None, terrain_sourc
         "terrain": {**{k: v for k, v in terrain.items() if k != "files"}, **terrain["files"]},
         "entities": index, "materials_file": "materials.json",
         "sources": {"style": f"illustrator/presets/town_styles/{st_name}.json", "terrain_source": meta.get("source", "base"),
+                    **({"height_edits": {"applied": True, "note": "painted heightmap edit layer (heightmap_edits.*) added on top of the terrain source; cached road/building heights shifted by it", **hedits}} if hedits else {}),
                     "world_dir": f"world/{place}/", "town_params": f"world/{place}/town_params.json" if os.path.exists(os.path.join(model["root"], "town_params.json")) else None},
     }
     files = {}

@@ -19,6 +19,12 @@ import sys
 
 import numpy as np
 
+try:
+    import cv2  # noqa: F401
+except ImportError:
+    cv2 = None
+    CV2_MSG = "rectify_map.py needs OpenCV: pip install opencv-python"
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT_DIR = os.path.join(HERE, "..", "out")
 DEFAULT_IN = os.path.join(OUT_DIR, "foundry_screens", "varrenmoor_original_map.png")
@@ -376,6 +382,8 @@ def make_compare(src, plan, Ho, path):
 
 
 def main(argv=None):
+    if cv2 is None:
+        raise SystemExit(CV2_MSG)
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("cmd", choices=["fit", "warp"], nargs="?", default="warp")
     ap.add_argument("--in", dest="inp", default=DEFAULT_IN)

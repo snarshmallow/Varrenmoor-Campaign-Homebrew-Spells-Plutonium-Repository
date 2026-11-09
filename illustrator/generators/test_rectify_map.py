@@ -9,6 +9,11 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import rectify_map as R  # noqa: E402
 
+try:
+    import cv2  # noqa: F401
+except ImportError:
+    cv2 = None
+
 
 class Homography(unittest.TestCase):
     def test_identity(self):
@@ -38,6 +43,7 @@ class Homography(unittest.TestCase):
         p = np.array([[100, 200.0], [1300, 900.0]])
         self.assertTrue(np.allclose(R.apply_h(R.invert(Ho), R.apply_h(Ho, p)), p, atol=1e-6))
 
+    @unittest.skipUnless(cv2 is not None, "OpenCV (pip install opencv-python) not installed")
     def test_fit_makes_circle_round(self):
         best = R.fit()
         q = R.quality(R.camera_h(*best.x[:3]))

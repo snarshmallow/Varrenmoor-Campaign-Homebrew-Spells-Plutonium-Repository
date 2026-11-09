@@ -202,8 +202,10 @@ class FakePlace(unittest.TestCase):
         only1 = hp.run_strokes(self.base, CELL, None, [hp.validate_stroke(s1)])
         self.assertTrue(np.allclose(d1, only1, atol=1e-5))
         self.assertFalse(np.allclose(d1, d2))
+        self.assertTrue(hp.stats("pl", self.root, self.work)["unsaved"])
         hp.apply_strokes("pl", [], "undo-last", self.root, self.work)
         self.assertEqual(hp.summarize(hp.load_layer(self.work)[0])["changed_cells"], 0)
+        self.assertFalse(hp.stats("pl", self.root, self.work)["unsaved"])   # back to zero strokes with nothing saved reads clean
         with self.assertRaises(ValueError):
             hp.apply_strokes("pl", [], "undo-last", self.root, self.work)
 

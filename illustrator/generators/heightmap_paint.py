@@ -341,8 +341,14 @@ def overlay(place, h, meta, root=None):
     h = (h.astype(np.float32) + d).astype(np.float32)
     meta["elev_min"], meta["elev_max"] = float(h.min()), float(h.max())
     meta["relief_ft"] = meta["elev_max"] - meta["elev_min"]
-    meta["height_edits"] = {"strokes": len(info.get("strokes", [])), "updated": info.get("updated"), **(info.get("summary") or {})}
+    meta["height_edits"] = {"strokes": len(info.get("strokes", [])), "updated": info.get("updated"), **(info.get("summary") or {}), "hash": delta_hash(d)}
     return h, meta
+
+
+def delta_hash(d):
+    """Short fingerprint of an edit layer (float32 delta bytes): lets cached heights say which terrain they were computed against."""
+    import hashlib
+    return hashlib.sha1(np.ascontiguousarray(d, np.float32).tobytes()).hexdigest()[:16]
 
 
 def base_terrain(place, root=None):
@@ -449,6 +455,15 @@ def reset(place, root=None, wdir=None, layer="both"):
     return out
 
 
+def _unsaved(wd, sd):
+    """Working layer differs from the saved layer. A missing saved layer counts as all zeros, so undoing back to no edits reads clean."""
+    if wd is None:
+        return False
+    if sd is None:
+        return bool(np.any(wd))
+    return wd.shape != sd.shape or not np.array_equal(wd, sd)
+
+
 def stats(place, root=None, wdir=None, layer="work"):
     base, meta = base_terrain(place, root)
     d, info = load_layer(wdir or work_dir(place, root)) if layer == "work" else load_layer(saved_dir(place, root))
@@ -460,7 +475,7 @@ def stats(place, root=None, wdir=None, layer="work"):
     return {"ok": True, "layer": layer, "shape": list(base.shape), "cell_ft": float(meta["cell_ft"]), "base_min_ft": round(float(base.min()), 3), "base_max_ft": round(float(base.max()), 3),
             "final_min_ft": round(float(fin.min()), 3), "final_max_ft": round(float(fin.max()), 3), "strokes": len(info.get("strokes", [])), "summary": summarize(d),
             "has_saved": sd is not None, "has_work": wd is not None, "saved_strokes": len(sinfo.get("strokes", [])),
-            "unsaved": (wd is not None) and (sd is None or wd.shape != sd.shape or not np.array_equal(wd, sd)), "source": meta.get("source")}
+            "unsaved": _unsaved(wd, sd), "source": meta.get("source")}
 
 
 # ------------------------------------------------------------------ preview
