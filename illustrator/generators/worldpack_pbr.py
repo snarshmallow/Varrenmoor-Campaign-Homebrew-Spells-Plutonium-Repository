@@ -25,11 +25,11 @@ TEXTURE_DIR = os.path.join(HERE, "..", "presets", "textures")
 # id -> properties. src: preset texture to start from (default: the id itself), gen: procedural generator name, tile: feet per repeat,
 # n: normal strength (0 = none), mr: write a metallicRoughness map (crevices rougher), rough/metal/alpha: glTF factors.
 CATALOG = {
-    "mat_plank": dict(tile=5.0, rough=0.82, n=2.2),
-    "mat_w_plank": dict(src="w_plank", tile=5.0, rough=0.8, n=2.2),
+    "mat_plank": dict(tile=4.0, rough=0.82, n=2.2),            # 8 boards per repeat: 6 in weatherboards (5 ft drew 7.5 in, coarse next to a figure)
+    "mat_w_plank": dict(src="w_plank", tile=4.0, rough=0.8, n=2.2),
     "mat_plaster": dict(gen="plaster", tile=6.0, rough=0.93, n=1.4),
     "mat_wall_stone": dict(gen="rubble", tile=7.0, rough=0.85, n=4.0, mr=True),
-    "mat_wall_frame": dict(gen="timberframe", tile=10.0, rough=0.9, n=2.4),
+    "mat_wall_frame": dict(gen="timberframe", tile=10.0, rough=0.9, n=2.4),     # = FRAME_TILE_FT: one storey, three bays (frame_layout)
     "mat_wall_batten": dict(gen="batten", tile=6.0, rough=0.88, n=2.6),
     "mat_stone_slab": dict(tile=6.0, rough=0.8, n=3.0, mr=True),
     "mat_door_wood": dict(gen="door", tile=3.5, rough=0.75, n=2.4),
@@ -51,10 +51,11 @@ CATALOG = {
     "mat_red_tile": dict(tile=9.0, rough=0.55, n=3.5, mr=True),
     "mat_timber_roof": dict(tile=9.0, rough=0.85, n=2.8),
     "mat_w_roof_snow": dict(tile=9.0, rough=0.75, n=2.0),
-    "mat_w_roof_thatch": dict(tile=9.0, rough=0.95, n=2.5),
-    "mat_w_roof_timber": dict(tile=9.0, rough=0.85, n=2.5),
-    "mat_w_roof_slate": dict(tile=9.0, rough=0.55, n=3.0, mr=True),
-    "mat_w_roof_red": dict(tile=9.0, rough=0.6, n=3.0, mr=True),
+    # winter roofs in 3D: generated snow cover over the summer roof (gen_roofsnow); the 2D map keeps the w_roof_* fills
+    "mat_w_roof_thatch": dict(gen="roofsnow_thatch", tile=9.0, rough=0.75, n=1.6),
+    "mat_w_roof_timber": dict(gen="roofsnow_timber_roof", tile=9.0, rough=0.75, n=1.6),
+    "mat_w_roof_slate": dict(gen="roofsnow_slate", tile=9.0, rough=0.7, n=1.8),
+    "mat_w_roof_red": dict(gen="roofsnow_red_tile", tile=9.0, rough=0.7, n=1.8),
     "mat_water": dict(tile=12.0, rough=0.06, n=1.2, alpha=0.82),
     "mat_w_water": dict(src="w_water", tile=12.0, rough=0.06, n=1.0, alpha=0.82),
     "mat_w_ice": dict(tile=10.0, rough=0.12, n=0.8),
@@ -303,20 +304,57 @@ def gen_plaster(n=512):
     return col * (0.96 + 0.08 * fine[..., None]), h
 
 
-def gen_timberframe(n=512):
-    """Whitewashed panel in a dark oak frame: post on the left edge, rail at the bottom (floor line), diagonal brace."""
+FRAME_TILE_FT = 10.0      # mat_wall_frame / mat_int_frame: one repeat = one 10 ft storey (worldpack.STOREY_FT) and three 3.3 ft bays
+# Members of the painted frame, feet (real oak framing: posts and plates 6-8 in, studs and rails 5-6 in, braces 4-5 in). The first version drew
+# 1.1 ft posts and rails and a 1 ft brace across a single 10 ft panel: the wall read like a toy.
+FRAME_POST_FT, FRAME_STUD_FT, FRAME_RAIL_FT, FRAME_PLATE_FT, FRAME_BRACE_FT = 0.62, 0.46, 0.42, 0.60, 0.40
+FRAME_BAYS = 3
+FRAME_RAILS_FT = (2.9, 7.0)          # rail centres above the floor: under the window sills, over the window heads
+
+
+def frame_layout(tile_ft=FRAME_TILE_FT):
+    """Members of one repeat of the painted timber frame in feet (u along the wall, z up from the floor line): [(kind, u0, u1, z0, z1)] boxes and
+    [(u_bottom, z_bottom, u_top, z_top, width)] braces. Posts and the sill / head plate straddle the tile edges so neighbouring repeats join."""
+    bay = tile_ft / FRAME_BAYS
+    boxes = [("post", -FRAME_POST_FT / 2, FRAME_POST_FT / 2, 0.0, tile_ft), ("post", tile_ft - FRAME_POST_FT / 2, tile_ft + FRAME_POST_FT / 2, 0.0, tile_ft),
+             ("plate", 0.0, tile_ft, -FRAME_PLATE_FT / 2, FRAME_PLATE_FT / 2), ("plate", 0.0, tile_ft, tile_ft - FRAME_PLATE_FT / 2, tile_ft + FRAME_PLATE_FT / 2)]
+    for k in range(1, FRAME_BAYS):
+        boxes.append(("stud", k * bay - FRAME_STUD_FT / 2, k * bay + FRAME_STUD_FT / 2, 0.0, tile_ft))
+    for zc in FRAME_RAILS_FT:
+        boxes.append(("rail", 0.0, tile_ft, zc - FRAME_RAIL_FT / 2, zc + FRAME_RAIL_FT / 2))
+    z_lo, z_hi = FRAME_RAILS_FT[0] + FRAME_RAIL_FT / 2, FRAME_RAILS_FT[1] - FRAME_RAIL_FT / 2
+    braces = [(FRAME_POST_FT / 2, z_lo, bay - FRAME_STUD_FT / 2, z_hi, FRAME_BRACE_FT),                  # outer bays, rising toward the middle bay
+              (tile_ft - FRAME_POST_FT / 2, z_lo, 2 * bay + FRAME_STUD_FT / 2, z_hi, FRAME_BRACE_FT),
+              (FRAME_POST_FT / 2, FRAME_PLATE_FT / 2, bay - FRAME_STUD_FT / 2, FRAME_RAILS_FT[0] - FRAME_RAIL_FT / 2, FRAME_BRACE_FT)]   # one foot brace (sill to rail)
+    return boxes, braces
+
+
+def gen_timberframe(n=1024, tile_ft=FRAME_TILE_FT):
+    """Whitewashed infill in a dark oak frame, at real member sizes: posts at the tile edges, two studs (three 3.3 ft bays), sill / head plate on the
+    floor line, a rail under the sills and one over the window heads, braces in the outer bays. Image bottom = floor line (world_uv v0)."""
     plaster, hp = gen_plaster(n)
     oak = hexrgb("#4a3624")
+    ppf = n / tile_ft
     yy, xx = np.mgrid[0:n, 0:n].astype(float)
-    bw = n * 0.055
-    post = xx < 2 * bw
-    rail = yy > n - 2 * bw
-    diag = np.abs(xx - yy) < bw * 0.9                   # diagonal brace, top-left to bottom-right
-    mask = post | rail | diag
+    U, Z = (xx + 0.5) / ppf, (n - yy - 0.5) / ppf                     # feet; image row 0 is the top of the storey
+    boxes, braces = frame_layout(tile_ft)
+    mask = np.zeros((n, n), bool)
+    for _k, u0, u1, z0, z1 in boxes:
+        for du in (-tile_ft, 0.0, tile_ft):
+            for dz in (-tile_ft, 0.0, tile_ft):
+                mask |= (U >= u0 + du) & (U < u1 + du) & (Z >= z0 + dz) & (Z < z1 + dz)
+    for ub, zb, ut, zt, w in braces:
+        d = np.array([ut - ub, zt - zb])
+        ln = float(np.hypot(*d))
+        t = ((U - ub) * d[0] + (Z - zb) * d[1]) / ln
+        s = np.abs((U - ub) * d[1] - (Z - zb) * d[0]) / ln
+        mask |= (s < w / 2) & (t > 0) & (t < ln) & (Z >= zb) & (Z <= zt) & (U >= min(ub, ut)) & (U <= max(ub, ut))
     grain = fbm(n, 31, 2.0, 2, shape=(n, n))
     streak = blur(fbm(n, 32, 1.2, 1), 0)
     wood = oak * (0.78 + 0.5 * streak[..., None] * 0.6 + 0.3 * grain[..., None] * 0.4)
-    alb = np.where(mask[..., None], wood, plaster)
+    m = mask.astype(float)
+    shade = blur(m, ppf * 0.06)                                       # a little contact shadow on the plaster along each member
+    alb = np.where(mask[..., None], wood, plaster * (1.0 - 0.18 * np.clip(shade, 0, 1))[..., None])
     h = np.where(mask, 0.8 + 0.2 * streak, 0.45 * hp)
     h = blur(h, 0.7)
     return alb, h
@@ -415,7 +453,41 @@ def gen_rug(n=256):
     return alb, 0.6 * fibre + 0.4 * weave * np.ones((n, 1))
 
 
-GENERATORS = {"rplank": gen_rplank, "lime": gen_lime, "rug": gen_rug, "rubble": gen_rubble, "plaster": gen_plaster, "timberframe": gen_timberframe, "batten": gen_batten, "door": gen_door, "trim": gen_trim}
+SNOW_RGB, SNOW_SHADE_RGB = "#eef2f7", "#c8d2de"
+# winter roofs (3D): base roof texture -> share of its saturation kept in the few bare specks (thatch goes grey-brown, an inn's red tile keeps a hint)
+ROOF_SNOW_BASES = {"thatch": 0.15, "timber_roof": 0.35, "red_tile": 0.55, "slate": 1.0, "shingle": 0.35}
+
+
+def gen_roofsnow(base, n=512, seed=0):
+    """Snow-covered roof for the 3D world (mat_w_roof_<base>): white with a slight blue-grey variation, the courses of the roof beneath showing
+    faintly through the snow, and a few small bare specks (desaturated, damp-dark). Replaces the 2D map fills w_roof_* in 3D, whose large
+    snow blotches over golden thatch read as yellow-cream noise on a roof (the map tiles stay as they are)."""
+    from PIL import Image
+    p = os.path.join(TEXTURE_DIR, base + ".png")
+    rgb = np.asarray(Image.open(p).convert("RGB").resize((n, n), Image.BICUBIC), float)
+    struct = height_from_albedo(rgb)                                  # courses / joints of the roof under the snow
+    s0 = 101 + 17 * seed + sum(map(ord, base))
+    low, mid, fine = fbm(n, s0, 2.6, 2), fbm(n, s0 + 1, 1.8, 6), fbm(n, s0 + 2, 0.9, 24)
+    snow = hexrgb(SNOW_RGB) * (0.98 + 0.04 * low[..., None] + 0.025 * (fine[..., None] - 0.5))
+    snow = lerp(snow, hexrgb(SNOW_SHADE_RGB), 0.55 * np.clip(mid - 0.55, 0, 1) * 2)            # drifts and hollows: soft blue-grey
+    snow = snow * (0.93 + 0.07 * blur(struct, 1.2))[..., None]                                  # roof structure faintly showing through
+    gaps = fbm(n, s0 + 3, 2.6, 5)
+    thr = np.percentile(gaps, 98.0)
+    bare = np.clip(blur(np.clip((gaps - thr) / 0.04, 0, 1), 1.5), 0, 1) * 0.85                                            # ~2 % soft bare patches, 0.3-1 ft across
+    lum = (rgb @ np.array([0.3, 0.59, 0.11]))[..., None]
+    keep = ROOF_SNOW_BASES.get(base, 0.3)
+    under = (lum + (rgb - lum) * keep) * 0.8 * np.array([0.97, 0.99, 1.04])                     # damp, desaturated, a touch cool
+    alb = lerp(snow, under, bare)
+    h = np.clip(0.55 + 0.25 * low + 0.1 * struct - 0.45 * bare, 0, 1)
+    return alb, h
+
+
+def _roofsnow(base):
+    return lambda n=512: gen_roofsnow(base, n)
+
+
+GENERATORS = {"roofsnow_" + b: _roofsnow(b) for b in ROOF_SNOW_BASES}
+GENERATORS.update({"rplank": gen_rplank, "lime": gen_lime, "rug": gen_rug, "rubble": gen_rubble, "plaster": gen_plaster, "timberframe": gen_timberframe, "batten": gen_batten, "door": gen_door, "trim": gen_trim})
 
 
 # ------------------------------------------------------------------ conditioning (seams, macro blotches, flat normals)

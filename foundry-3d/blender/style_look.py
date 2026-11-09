@@ -17,6 +17,38 @@ W, H = (int(a[3]), int(a[4])) if len(a) >= 5 else (960, 720)
 VIEWS = [v for v in os.environ.get("LOOK_VIEWS", "threeq").split(",") if v]
 SNOW = os.environ.get("LOOK_GROUND", "grass") == "snow"
 FT = 0.3048
+FIGURE = os.environ.get("LOOK_FIGURE", "") not in ("", "0")       # 1 = a 5 ft 9 in figure and a 5 ft bar (1 ft stripes) at the front corner, for scale
+
+
+def _flat(name, rgb):
+    m = bpy.data.materials.new(name)
+    m.use_nodes = True
+    m.node_tree.nodes["Principled BSDF"].inputs["Base Color"].default_value = (*rgb, 1)
+    return m
+
+
+def _box(sc, name, x0, x1, y0, y1, z0, z1, mat):
+    me = bpy.data.meshes.new(name)
+    v = [(x, y, zz) for zz in (z0, z1) for y in (y0, y1) for x in (x0, x1)]
+    f = [(0, 1, 3, 2), (4, 6, 7, 5), (0, 4, 5, 1), (2, 3, 7, 6), (0, 2, 6, 4), (1, 5, 7, 3)]
+    me.from_pydata(v, [], f)
+    o = bpy.data.objects.new(name, me)
+    o.data.materials.append(mat)
+    sc.collection.objects.link(o)
+
+
+def add_scale_refs(sc, lo, hi, zg):
+    """Dark figure (5 ft 9 in: legs, torso, head) and a 5 ft bar striped every foot, standing 2.5 ft off the building's south-east corner."""
+    x, y = hi.x + 2.5 * FT, lo.y - 2.5 * FT
+    fig = _flat("fig", (0.05, 0.05, 0.06))
+    _box(sc, "legs", x - 0.55 * FT, x + 0.55 * FT, y - 0.35 * FT, y + 0.35 * FT, zg, zg + 2.9 * FT, fig)
+    _box(sc, "torso", x - 0.75 * FT, x + 0.75 * FT, y - 0.4 * FT, y + 0.4 * FT, zg + 2.9 * FT, zg + 4.95 * FT, fig)
+    bpy.ops.mesh.primitive_uv_sphere_add(radius=0.38 * FT, location=(x, y, zg + 5.37 * FT))
+    bpy.context.active_object.data.materials.append(fig)
+    a, b = _flat("bar_a", (0.85, 0.12, 0.08)), _flat("bar_b", (0.95, 0.95, 0.92))
+    bx = x + 2.0 * FT
+    for k in range(5):
+        _box(sc, f"bar{k}", bx - 0.12 * FT, bx + 0.12 * FT, y - 0.12 * FT, y + 0.12 * FT, zg + k * FT, zg + (k + 1) * FT, a if k % 2 == 0 else b)
 
 
 def setup():
@@ -79,6 +111,8 @@ for name in names:
         bsdf.inputs["Base Color"].default_value = (0.78, 0.80, 0.84, 1) if SNOW else (0.10, 0.20, 0.06, 1)
         bsdf.inputs["Roughness"].default_value = 0.9 if SNOW else 1.0
         go.data.materials.append(mat)
+        if FIGURE:
+            add_scale_refs(sc, lo, hi, z)
         size = ((hi.x - lo.x) ** 2 + (hi.y - lo.y) ** 2 + (hi.z - lo.z) ** 2) ** 0.5 * 0.85
         hz = hi.z - lo.z
         if view == "back":

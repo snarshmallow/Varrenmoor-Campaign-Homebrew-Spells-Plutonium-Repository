@@ -2,7 +2,7 @@
 headless in Blender from several angles (foundry-3d/blender/style_look.py), plus a labelled contact sheet. Light on memory: one building at a time.
 
   python illustrator/generators/building_styles_look.py --ids bld_house_101,bld_inn --style keep|none|<preset id> --tag after [--snow-ground] [--views threeq,back,street,aerial]
-       [--pack world/bridgehollow/export] [--out illustrator/out/building_styles_look] [--sheet name.png]
+       [--pack world/bridgehollow/export] [--out illustrator/out/building_styles_look] [--sheet name.png] [--wall-mat mat_wall_frame] [--roof-mat mat_w_roof_thatch] [--figure]
 --style keep = the building json's own style (from world/<place>/buildings/<id>.json, else none), none = legacy look, <id> = that preset for every building.
 Prints the triangle count of every building (shell + style geometry, door leaf excluded).
 """
@@ -28,7 +28,15 @@ DEFAULT_PACK = os.path.join(REPO, "world", "bridgehollow", "export")
 DEFAULT_OUT = os.path.join(REPO, "illustrator", "out", "building_styles_look")
 
 
-def build(pack_dir, ids, style, tag, out):
+def _ensure_mat(pack, mid):
+    """Add a catalogue / dynamic material record the pack does not have yet (a winter roof on a summer pack, a legacy wall)."""
+    if mid in pack.materials:
+        return
+    pack.materials[mid] = bs.material_record(mid) if bs.is_dynamic(mid) else {"id": mid, "name": mid[4:], "kind": "image", "texture": f"textures/{mid[4:]}.png"}
+    pbr.prepare(pack.materials)
+
+
+def build(pack_dir, ids, style, tag, out, wall_mat=None, roof_mat=None):
     pack = wp.load_pack(pack_dir)
     pbr.prepare(pack.materials)
     cx = wm.Ctx(pack)
@@ -50,6 +58,12 @@ def build(pack_dir, ids, style, tag, out):
             e = bs.apply_style(e)
             if e.get("_style"):
                 bs.register_materials(pack.materials, e["_style"])
+        if wall_mat:                                         # legacy look with a chosen wall finish (what worldpack_pbr.restyle_building may pick)
+            _ensure_mat(pack, wall_mat)
+            e["wall"]["surface"] = {**e["wall"]["surface"], "material": wall_mat, "tile_ft": pbr.tile_ft(wall_mat)}
+        if roof_mat:                                         # e.g. a winter roof (mat_w_roof_thatch) on a summer pack
+            _ensure_mat(pack, roof_mat)
+            e["roof"]["surface"] = {**e["roof"]["surface"], "material": roof_mat}
         m, dn = wd.build_building_detailed(cx, e)
         lo, hi = m.bbox()
         piv = ((lo[0] + hi[0]) / 2, (lo[1] + hi[1]) / 2, lo[2])
@@ -73,8 +87,8 @@ def build(pack_dir, ids, style, tag, out):
     return names, tris
 
 
-def render(out, names, views, snow_ground=False, size=(960, 720), blender=None):
-    env = dict(os.environ, LOOK_VIEWS=",".join(views), LOOK_GROUND="snow" if snow_ground else "grass")
+def render(out, names, views, snow_ground=False, size=(960, 720), blender=None, figure=False):
+    env = dict(os.environ, LOOK_VIEWS=",".join(views), LOOK_GROUND="snow" if snow_ground else "grass", LOOK_FIGURE="1" if figure else "")
     cmd = [bsp.find_blender(blender), "-b", "--factory-startup", "--python", os.path.join(REPO, "foundry-3d", "blender", "style_look.py"), "--",
            os.path.join(out, "glb"), out, ",".join(names), str(size[0]), str(size[1])]
     subprocess.run(cmd, check=True, env=env, stdout=subprocess.DEVNULL)
@@ -114,10 +128,13 @@ def main():
     ap.add_argument("--out", default=DEFAULT_OUT)
     ap.add_argument("--no-render", action="store_true")
     ap.add_argument("--blender")
+    ap.add_argument("--wall-mat", help="legacy wall material for every building (mat_plank, mat_wall_frame, mat_plaster, ...)")
+    ap.add_argument("--roof-mat", help="roof material for every building (e.g. mat_w_roof_thatch)")
+    ap.add_argument("--figure", action="store_true", help="a 5 ft 9 in figure and a 5 ft bar next to the building, for scale")
     a = ap.parse_args()
-    names, tris = build(a.pack, a.ids.split(","), a.style, a.tag, a.out)
+    names, tris = build(a.pack, a.ids.split(","), a.style, a.tag, a.out, a.wall_mat, a.roof_mat)
     if not a.no_render:
-        render(a.out, names, a.views.split(","), a.snow_ground, blender=a.blender)
+        render(a.out, names, a.views.split(","), a.snow_ground, blender=a.blender, figure=a.figure)
     print(json.dumps({"tris": tris}))
 
 
