@@ -38,6 +38,8 @@ VERSION = 1
 TOOLS = ("raise", "lower", "smooth", "flatten", "noise", "set", "ridge", "valley", "river")
 CONFORM = "conform-roads"
 CONFORM_MAX_GRADE_DEG = 12.0
+PROTECT_MARGIN_FT = 1.0       # conform leaves the ground alone this far beyond a protected (not conformed) road's half width ...
+PROTECT_RAMP_FT = 4.0         # ... and blends back in over this distance
 FALLOFFS = ("smooth", "linear", "sharp", "round", "constant")
 DAB_TOOLS = ("raise", "lower", "smooth", "flatten", "set")
 EDITS_NAME = "heightmap_edits"
@@ -108,7 +110,12 @@ def validate_stroke(s):
             roads.append({"id": str(r.get("id", "")), "points": [[float(q[0]), float(q[1])] for q in pts], "width_ft": max(float(r.get("width_ft") or 12.0), 1.0)})
         if not roads:
             raise ValueError("conform-roads: no roads")
-        return {"tool": CONFORM, "roads": roads, "extra_ft": max(float(s.get("extra_ft", 2.0)), 0.0), "falloff_ft": max(float(s.get("falloff_ft", 12.0)), 0.5),
+        prot = []                                                  # neighbouring roads that are NOT conformed: their ground is left as it is
+        for r in s.get("protect") or []:
+            pts = r.get("points") if isinstance(r, dict) else None
+            if isinstance(pts, list) and len(pts) >= 2 and all(isinstance(q, (list, tuple)) and len(q) >= 2 and all(isinstance(v, (int, float)) and np.isfinite(v) for v in q[:2]) for q in pts):
+                prot.append({"id": str(r.get("id", "")), "points": [[float(q[0]), float(q[1])] for q in pts], "width_ft": max(float(r.get("width_ft") or 12.0), 1.0)})
+        return {"tool": CONFORM, "roads": roads, "protect": prot, "extra_ft": max(float(s.get("extra_ft", 2.0)), 0.0), "falloff_ft": max(float(s.get("falloff_ft", 12.0)), 0.5),
                 "smooth_ft": max(float(s.get("smooth_ft", 40.0)), 0.0)}
     if tool not in TOOLS:
         raise ValueError(f"unknown tool {tool!r}; have {', '.join(TOOLS)}")
@@ -310,6 +317,17 @@ def conform_roads_stroke(h, cell, s):
         dist, par = _polyline_dist(X, Y, P)
         w = falloff_weight(np.maximum(dist - hw, 0.0), fall, 0.0, "smooth")
         w = np.where(dist <= hw, 1.0, w)
+        for pr in s.get("protect") or []:                          # roads that keep their ground (junction neighbours): no blend inside their footprint, a short ramp outside
+            Q = _decimate(pr["points"], cell, pr["width_ft"])
+            if len(Q) < 2:
+                continue
+            qx, qy = Q[:, 0], Q[:, 1]
+            if qx.min() > X.max() + pr["width_ft"] or qx.max() < X.min() - pr["width_ft"] or qy.min() > Y.max() + pr["width_ft"] or qy.max() < Y.min() - pr["width_ft"]:
+                continue
+            dq, _ = _polyline_dist(X, Y, Q)
+            php = pr["width_ft"] / 2.0 + PROTECT_MARGIN_FT
+            u = np.clip((dq - php) / PROTECT_RAMP_FT, 0.0, 1.0)
+            w = w * u * u * (3 - 2 * u)
         target = np.interp(par, np.arange(len(P)), zc)
         sub = h[i0:i1, j0:j1]
         sub += w * (target - sub)
@@ -590,11 +608,12 @@ def _ribbon_check(base, delta, cell, f, cfg):
     grade = lambda a: float(np.degrees(np.arctan(np.abs(np.diff(a[:, 2])) / np.maximum(np.diff(s), 1e-6))).max()) if len(s) > 1 else 0.0
     i = int(np.abs(d).argmax())
     r = {"id": f["id"], "name": f.get("name"), "width_ft": f["width_ft"], "max_delta_ft": round(float(d.flat[i]), 2), "mean_shift_ft": round(float(d[:, 2].mean()), 2),
-         "edge_delta_diff_ft": round(float(np.abs(d[:, 0] - d[:, -1]).max()), 2), "cross_slope_before_deg": round(cross(hb), 1), "cross_slope_after_deg": round(cross(ha), 1),
+         "edge_delta_diff_ft": round(float(np.abs(d[:, 0] - d[:, -1]).max()), 2),
+         "edge_height_diff_before_ft": round(float(np.abs(hb[:, 0] - hb[:, -1]).max()), 2), "edge_height_diff_after_ft": round(float(np.abs(ha[:, 0] - ha[:, -1]).max()), 2), "cross_slope_before_deg": round(cross(hb), 1), "cross_slope_after_deg": round(cross(ha), 1),
          "grade_before_deg": round(grade(hb), 1), "grade_after_deg": round(grade(ha), 1), "length_ft": round(float(s[-1]), 1)}
     r["touched"] = bool(np.abs(d).max() > 0.05)
     why = []
-    if r["edge_delta_diff_ft"] > cfg["delta_ft"]:
+    if r["edge_delta_diff_ft"] > cfg["delta_ft"] and r["edge_height_diff_after_ft"] > r["edge_height_diff_before_ft"] + 1.0:   # a tilted road that an edit LEVELS is not flagged
         why.append(f"one edge moved {r['edge_delta_diff_ft']:.1f} ft more than the other")
     if r["cross_slope_after_deg"] > cfg["cross_deg"] and r["cross_slope_after_deg"] > r["cross_slope_before_deg"] + 2.0:
         why.append(f"cross-slope {r['cross_slope_after_deg']:.0f} deg (was {r['cross_slope_before_deg']:.0f})")
@@ -682,9 +701,36 @@ def conform_roads(place, roads="flagged", root=None, wdir=None, extra_ft=2.0, fa
     sel = [r for r in feats["roads"] if r["id"] in set(ids)]
     if not sel:
         return {"ok": True, "conformed": [], "note": "no roads to conform", "strokes_total": len((info or {}).get("strokes", []))}
-    r = apply_strokes(place, [{"tool": CONFORM, "roads": sel, "extra_ft": extra_ft, "falloff_ft": falloff_ft, "smooth_ft": smooth_ft}], "append", root, wdir)
+    stroke = {"tool": CONFORM, "roads": sel, "protect": neighbours_to_protect(feats["roads"], sel, extra_ft, falloff_ft), "extra_ft": extra_ft, "falloff_ft": falloff_ft, "smooth_ft": smooth_ft}
+    before = check_arrays(base, delta, cell, feats, cfg)
+    h_tmp = np.array(base, np.float64) + delta
+    apply_stroke(h_tmp, cell, stroke)
+    after = check_arrays(base, h_tmp - base, cell, feats, cfg)
+    r = apply_strokes(place, [stroke], "append", root, wdir)
     r["conformed"] = [x["id"] for x in sel]
+    r["protected"] = [x["id"] for x in stroke["protect"]]
+    r["newly_flagged"] = sorted(set(after["flagged_roads"]) - set(before["flagged_roads"]))
+    r["still_flagged"] = [i for i in after["flagged_roads"]]
     return r
+
+
+def neighbours_to_protect(all_roads, sel, extra_ft=2.0, falloff_ft=12.0):
+    """Roads that are not being conformed but lie within the blend reach of one that is (junction neighbours, parallel streets): conform leaves their ground alone."""
+    ids = {r["id"] for r in sel}
+    boxes = []
+    for r in sel:
+        P = np.asarray(r["points"], float)
+        m = float(r.get("width_ft") or 12.0) / 2.0 + extra_ft + falloff_ft
+        boxes.append((P[:, 0].min() - m, P[:, 1].min() - m, P[:, 0].max() + m, P[:, 1].max() + m))
+    out = []
+    for r in all_roads:
+        if r["id"] in ids or len(r.get("points") or []) < 2:
+            continue
+        P = np.asarray(r["points"], float)
+        pm = float(r.get("width_ft") or 12.0) / 2.0
+        if any(P[:, 0].max() + pm >= b[0] and P[:, 0].min() - pm <= b[2] and P[:, 1].max() + pm >= b[1] and P[:, 1].min() - pm <= b[3] for b in boxes):
+            out.append({"id": r["id"], "points": r["points"], "width_ft": r.get("width_ft")})
+    return out
 
 
 # ------------------------------------------------------------------ preview

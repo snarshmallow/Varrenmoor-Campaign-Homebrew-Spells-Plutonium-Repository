@@ -134,8 +134,14 @@ class PackTests(unittest.TestCase):
         wp.export_world("bridgehollow", out2, world_root=WORLD, timestamp=TS, lod=(4,), log=lambda m: None)
         a, b = wp._jload(os.path.join(OUT, "manifest.json")), wp._jload(os.path.join(out2, "manifest.json"))
         # the split rewrote models/ + placements.json and re-hashed them in the manifest (refresh_manifest_files): compare everything else
-        keep = lambda d: {k: v for k, v in d.items() if k != "placements.json" and not k.startswith("models/")}  # noqa: E731
+        # ... and it wrote the final (deeper) foundation skirts back into entities/buildings.json (worldpack_split.write_back_skirts): same entities, skirts only deeper
+        keep = lambda d: {k: v for k, v in d.items() if k not in ("placements.json", "entities/buildings.json") and not k.startswith("models/")}  # noqa: E731
         self.assertEqual(keep(a["files"]), keep(b["files"]))
+        ba, bb = wp._jload(os.path.join(OUT, "entities", "buildings.json"))["items"], wp._jload(os.path.join(out2, "entities", "buildings.json"))["items"]
+        strip = lambda e: {k: v for k, v in e.items() if k != "skirt_depth_ft"}  # noqa: E731
+        self.assertEqual([strip(e) for e in ba], [strip(e) for e in bb])
+        for x, y in zip(ba, bb):
+            self.assertGreaterEqual(x["skirt_depth_ft"], y["skirt_depth_ft"] - 1e-6)
         self.assertIn("placements.json", a["files"])
         self.assertEqual(wp.validate_pack(OUT), [])                    # hashes valid right after the split
 

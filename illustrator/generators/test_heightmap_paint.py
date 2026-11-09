@@ -379,6 +379,48 @@ REAL = "bridgehollow__dyers_walk_local"
 
 
 @unittest.skipUnless(os.path.exists(os.path.join(worldio.REPO, "world", REAL, "terrain", "heightmap.npy")), "Dyers Walk terrain missing")
+class ConformJunction(unittest.TestCase):
+    """Two roads meeting in a T: conforming one must not move the ground under the other."""
+    def setUp(self):
+        n = 121
+        Y, X = np.mgrid[0:n, 0:n] * CELL
+        self.h0 = 100.0 + 0.05 * X + 3.0 * np.sin(X / 25.0)                 # gentle ground, bumpy along x
+        self.main = {"id": "m", "points": [[20.0, 120.0], [220.0, 120.0]], "width_ft": 14.0}
+        self.side = {"id": "s", "points": [[120.0, 120.0], [120.0, 20.0]], "width_ft": 12.0}
+        self.h = self.h0.copy()
+        hp.apply_stroke(self.h, CELL, stroke("raise", [[60, 120], [90, 120]], radius_ft=14, rate_ft=6.0))
+
+    def _run(self, protect):
+        h = self.h.copy()
+        st = {"tool": "conform-roads", "roads": [self.main], "protect": [self.side] if protect else []}
+        hp.apply_stroke(h, CELL, st)
+        return h
+
+    def test_protected_neighbour_keeps_its_ground(self):
+        yy, xx = np.mgrid[0:self.h.shape[0], 0:self.h.shape[1]] * CELL
+        foot = (np.abs(xx - 120.0) <= 6.0) & (yy <= 105.0) & (yy >= 25.0)       # the side road's footprint clear of the main road's own strip
+        raw, prot = self._run(False), self._run(True)
+        self.assertGreater(np.abs(raw - self.h)[foot].max(), 0.2)               # without protection the blend runs into the side road ...
+        self.assertLess(np.abs(prot - self.h)[foot].max(), 1e-6)                # ... with it the side road's ground is untouched
+
+    def test_conformed_road_is_still_levelled(self):
+        prot = self._run(True)
+        yy, xx = np.mgrid[0:self.h.shape[0], 0:self.h.shape[1]] * CELL
+        cross = prot[(np.abs(yy - 120.0) <= 6.0) & (np.abs(xx - 80.0) < 1.0)]
+        self.assertLess(cross.max() - cross.min(), 0.05)
+
+    def test_deterministic_and_validate_keeps_protect(self):
+        a, b = self._run(True), self._run(True)
+        self.assertTrue(np.array_equal(a, b))
+        v = hp.validate_stroke({"tool": "conform-roads", "roads": [self.main], "protect": [self.side, {"id": "bad", "points": [[1, 2]]}]})
+        self.assertEqual([x["id"] for x in v["protect"]], ["s"])
+
+    def test_neighbours_to_protect_picks_nearby_roads_only(self):
+        far = {"id": "far", "points": [[400.0, 400.0], [450.0, 400.0]], "width_ft": 10.0}
+        got = hp.neighbours_to_protect([self.main, self.side, far], [self.main])
+        self.assertEqual([x["id"] for x in got], ["s"])
+
+
 class RealPlace(unittest.TestCase):
     def test_real_place_working_layer_only(self):
         base, meta = hp.base_terrain(REAL)

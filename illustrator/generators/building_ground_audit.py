@@ -92,6 +92,7 @@ def eave_clearance(pack, h, rows):
         Q = V[sel].reshape(-1, 3)
         x, y, z = Q[:, 0] / FT, fr.height_ft - Q[:, 1] / FT, Q[:, 2] / FT + fr.z_origin_ft
         d = z - rg.mesh_height(h, pack.cell_ft, x, y)
+        by[p["id"]]["mesh_skirt_ft"] = round(float(zf / FT - V[:, :, 2].min() / FT), 3)   # built mesh bottom below the floor line vs the stored skirt_ft
         by[p["id"]]["eave_clear_ft"] = round(float(d.min()), 2)
         by[p["id"]]["roof_low_z_above_base_ft"] = round(float(z.min() - e["base_elevation_ft"]), 2)
 
@@ -101,7 +102,11 @@ def audit(pack, with_mesh=True):
     import road_grade as rg
     h = wm.final_heights(pack)
     import building_ground as bg
-    rows = [audit_building(bg.with_final_skirt(e, h, pack.cell_ft), h, pack.cell_ft, rg) for e in pack.list("buildings")]
+    rows = []
+    for e in pack.list("buildings"):                                   # judged against the STORED skirt (entities/buildings.json), not a recomputed one
+        r = audit_building(e, h, pack.cell_ft, rg)
+        r["skirt_needed_ft"] = bg.final_skirt(dict(e, skirt_depth_ft=0.0), h, pack.cell_ft)   # what the final terrain needs; skirt_short_ft > 0 = record too shallow
+        rows.append(r)
     if with_mesh:
         eave_clearance(pack, h, rows)
     return rows

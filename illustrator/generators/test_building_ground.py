@@ -131,6 +131,10 @@ class CloseNeighbours(unittest.TestCase):
             r = ba.audit_building(bg.with_final_skirt(e, hf, CELL), hf, CELL, rg)
             self.assertLessEqual(r["skirt_short_ft"], 0.01)
             self.assertLessEqual(r["wall_burial_ft"], 0.02)
+        rows = ba.audit(pk, with_mesh=False)                      # the audit judges the STORED skirt: before the split writes the final one back it reports the gap
+        self.assertGreater(max(r["skirt_short_ft"] for r in rows), 0.5)
+        self.assertTrue(all(r["skirt_needed_ft"] >= r["skirt_ft"] - 0.01 or r["skirt_short_ft"] <= 0.01 for r in rows))
+        pk.entities["buildings"] = [bg.with_final_skirt(e, hf, CELL) for e in ents]   # what worldpack_split.write_back_skirts records
         rows = ba.audit(pk, with_mesh=False)
         self.assertLessEqual(max(r["skirt_short_ft"] for r in rows), 0.01)
 

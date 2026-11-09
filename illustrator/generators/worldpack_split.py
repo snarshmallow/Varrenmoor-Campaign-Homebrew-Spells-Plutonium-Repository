@@ -148,6 +148,30 @@ def _entry(pack, rel, parts, textures, out, tex_mode):
     return e
 
 
+def write_back_skirts(pack_dir, parts):
+    """The mesh builder deepens a building's skirt when the FINAL terrain (neighbour pads, road grading, painted cuts) lies below the stored one. Record that depth in
+    entities/buildings.json so the entity, placements.json (pivot z, size), the audit and the panel agree with the mesh. Only the underground skirt gets deeper: the
+    floor line (base_elevation_ft) and every wall/roof vertex keep their world z. Never makes a skirt shallower. -> number of buildings changed."""
+    new = {p["id"]: float(p["entity"]["skirt_depth_ft"]) for p in parts if p["layer"] == "buildings" and p.get("entity") and p["entity"].get("skirt_depth_ft") is not None}
+    if not new:
+        return 0
+    man = wp._jload(os.path.join(pack_dir, "manifest.json"))
+    info = man["entities"].get("buildings") or {}
+    if not info.get("file"):
+        return 0
+    fp = os.path.join(pack_dir, info["file"])
+    doc = wp._jload(fp)
+    n = 0
+    for e in doc["items"]:
+        s = new.get(e["id"])
+        if s is not None and s > float(e.get("skirt_depth_ft") or 0.0) + 1e-6:
+            e["skirt_depth_ft"] = round(s, 3)
+            n += 1
+    if n:
+        wp._jdump(fp, doc)
+    return n
+
+
 def split_export(pack_dir, out_dir=None, split=None, textures="external", step=1, carve=True, conform=True, only=None, log=print, road_grade=True, roof_mode=None):
     """Write per-model GLBs and placements.json. `only`: ids -> rebuild just the files containing them and keep every other entry.
     roof_mode none|per_building|per_scene (worldpack_roofs.py); None = keep the mode of the existing placements.json (reexport) else none."""
@@ -166,6 +190,11 @@ def split_export(pack_dir, out_dir=None, split=None, textures="external", step=1
     parts = wm.build_parts(pack, step=step, carve=carve, conform=conform, road_grade=road_grade, roof_mode=roof_mode)
     if roof_mode == "per_scene" and split.get("roofs") == "layer" and sum(1 for p in parts if p["layer"] == "roofs") > 1:
         split["roofs"] = "group"                                  # chunked per district (too many roof triangles for one tile)
+    if os.path.abspath(out) == os.path.abspath(pack_dir):
+        n_sk = write_back_skirts(pack_dir, parts)
+        if n_sk:
+            log(f"foundation skirts: {n_sk} building(s) deepened to reach below the final terrain (written to entities/buildings.json)")
+            pack = wp.load_pack(pack_dir)
     rg_report = dict(wm.LAST_ROAD_GRADE)
     for w_ in rg_report.get("warnings", []):
         log("road grade warning: " + w_)
