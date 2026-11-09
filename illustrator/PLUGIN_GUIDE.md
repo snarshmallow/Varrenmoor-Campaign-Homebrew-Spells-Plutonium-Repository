@@ -563,6 +563,10 @@ Not available (no generator support yet): door on/off per building (doors come f
 
 **More pack options (Foundry tab, 3D models, collapsible)**: split preset, merge compression (quant adds the needed `--allow-quantized` automatically), scene mode flat/3d, carve river beds, conform terrain to roads, prune stale tiles, create roof tiles hidden, **Push models (dry run)**, **Audit scene tiles** (read-only duplicate/stale tile finder), **Lights (dry run)** and **Push interior lights**. Roads (3D) also has Max cross slope and a Road grading on/off switch.
 
+
+### 2.19 Collision and walls (Foundry tab)
+Foundry tab > "More pack options" > "Collision and walls (3D Canvas)": one box per layer for the tile collision flag (defaults: on for ground, roads, buildings, fences, bridges; off for roofs, foliage, water), "Set collision (dry run)" / "Set collision on scene tiles" for the picked existing scene, and boxes per wall layer (Buildings, Walls, Fences, Trees, Water) with "Walls (dry run)" / "Push walls". Push models passes `--collision` only when the boxes differ from the defaults. Walls block sight, sound and light as described in WORLD_PACK.md; the model door and its wall door are opened separately.
+
 ## 7. Troubleshooting
 
 | Symptom | Likely cause | Fix |

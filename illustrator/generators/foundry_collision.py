@@ -27,7 +27,7 @@ FLAG = "varrenmoor"
 L3D = "levels-3d-preview"
 NONE, LIMITED, NORMAL = 0, 10, 20
 
-COLLISION_LAYERS = ("terrain", "water", "roads", "plazas", "fields", "fences", "walls", "bridges", "buildings", "roofs", "foliage", "props")
+COLLISION_LAYERS = ("padding", "terrain", "water", "roads", "plazas", "fields", "fences", "walls", "bridges", "buildings", "roofs", "foliage", "props")
 COLLISION_DEFAULT = ("terrain", "roads", "plazas", "fields", "fences", "walls", "bridges", "buildings", "props")
 
 WALL_LAYERS = ("buildings", "walls", "fences", "trees", "water")
@@ -305,20 +305,24 @@ def _items(base, name):
         return json.load(f).get("items", [])
 
 
-def tree_points(place_dir):
-    """Tree positions (ft): world/<place>/foliage.json items, else world/<place>/scatter/foliage.json instances, else the pack's foliage entities."""
-    for rel, key in (("foliage.json", "items"), (os.path.join("scatter", "foliage.json"), "instances"), (os.path.join("export", "entities", "foliage.json"), "items")):
-        p = os.path.join(place_dir, rel)
+LOW_PLANTS = ("bush", "shrub", "hedge", "grass", "flower", "reed", "fern", "crop")      # not tall enough to block sight
+
+
+def tree_points(place_dir, foliage_json=None):
+    """Tree positions (ft): --foliage-json file, else world/<place>/foliage.json items, else scatter/foliage.json instances, else the pack's foliage entities. Low plants are skipped."""
+    cands = [(foliage_json, "items")] if foliage_json else []
+    cands += [(os.path.join(place_dir, rel), key) for rel, key in (("foliage.json", "items"), (os.path.join("scatter", "foliage.json"), "instances"), (os.path.join("export", "entities", "foliage.json"), "items"))]
+    for p, key in cands:
         if os.path.isfile(p):
             with open(p, encoding="utf-8") as f:
                 its = json.load(f).get(key) or []
-            pts = [(float(i["x"]), float(i["y"])) for i in its if "x" in i and "y" in i]
+            pts = [(float(i["x"]), float(i["y"])) for i in its if "x" in i and "y" in i and not any(w in str(i.get("species", "")).lower() for w in LOW_PLANTS)]
             if pts:
                 return pts
     return []
 
 
-def build_walls(place_dir, calib, layers, profiles=None):
+def build_walls(place_dir, calib, layers, profiles=None, foliage_json=None):
     """-> (items for upsert_many prefix 'wall3d:', {layer: count}). place_dir = world/<place>; reads <place_dir>/export/entities/*.json."""
     base = os.path.join(place_dir, "export")
     prof = {k: dict(v) for k, v in WALL_PROFILES.items()}
@@ -351,7 +355,7 @@ def build_walls(place_dir, calib, layers, profiles=None):
             if poly and len(poly) >= 3:
                 plan.ring("water", w["id"], simplify_ring(poly, SIMPLIFY_FT["water"]), prof["water"])
     if "trees" in layers:
-        for i, r in enumerate(tree_rings(tree_points(place_dir))):
+        for i, r in enumerate(tree_rings(tree_points(place_dir, foliage_json))):
             plan.ring("trees", f"stand{i:03d}", r, prof["trees"])
     return plan.items, plan.counts
 
@@ -421,7 +425,7 @@ def cmd_push_walls(br, a):
     if not calib:
         raise fp.PushError("the scene carries no varrenmoor calibration (push models / push-scene first)")
     place = a.place or calib.get("place")
-    items, counts = build_walls(os.path.join(fp.REPO, "world", place), calib, layers, profiles)
+    items, counts = build_walls(os.path.join(fp.REPO, "world", place), calib, layers, profiles, a.foliage_json)
     old = [w for w in sc.get("walls", []) if (((w.get("flags") or {}).get(FLAG) or {}).get("pipelineId") or "").startswith("wall3d:")]
     keep = {i["id"] for i in items}
     stale = [w for w in old if w["flags"][FLAG]["pipelineId"] not in keep]
@@ -446,6 +450,7 @@ def parser():
     ap.add_argument("--collision-lod", dest="collision_lod", help="set-collision: simplified collision proxies, e.g. terrain=0.5 (3D Canvas sightMeshComplexity)")
     ap.add_argument("--wall-layers", dest="wall_layers", help="push-walls: comma list of " + ",".join(WALL_LAYERS) + " (default all; 'none' removes every pipeline 3D wall)")
     ap.add_argument("--wall-profile", dest="wall_profile", action="append", default=[], help="push-walls: layer:key=val,... (values 0/10/20), e.g. water:sight=10")
+    ap.add_argument("--foliage-json", dest="foliage_json", help="push-walls: foliage.json with the tree positions (default world/<place>/foliage.json, scatter/foliage.json or the pack entities)")
     ap.add_argument("--apply", action="store_true", help="really write (default is a dry run)")
     ap.add_argument("--dry-run", action="store_true")
     return ap
