@@ -15,6 +15,9 @@ Spec (JSON, feet, origin top-left, y down; see world/bridgehollow/terrain_spec.j
   natural  optional block; when present the v2 pipeline runs (smoothed/wandering constraint lines, spurs, plateaus,
            stream-power + thermal erosion with scree aprons, terraces, basin micro-relief, monotone river bed).
            See terrain_natural.py for the keys. Without it the original (v1) pipeline is used unchanged.
+  recipe / relief_ft / image_blend   specs WITHOUT ridges, peaks, valleys, passes or natural (image-imported base maps) run
+           terrain_basemap.py: recipe rolling_hills | valley | highland_ridge, scale-aware relief, optional gentle
+           bias from the base image (see that module). Specs with features are unchanged.
   sea_level_ft  optional datum copied to terrain_meta.json (elevations stay signed feet relative to it)
 Output: heightmap.npy (float32 feet, shape [ny, nx], node (i,j) at x=j*cell, y=i*cell, nx=W/cell+1),
 heightmap_16.png (16-bit, linearly scaled between terrain_meta.json elev_min/elev_max) and terrain_meta.json.
@@ -225,11 +228,18 @@ def load_heightmap(place, root=None, source=None):
     return worldio.load_terrain(place, source=source, root=root)
 
 
+def _basemap():
+    import terrain_basemap
+    return terrain_basemap
+
+
 def generate(spec, cell_ft=None, seed=None, verbose=False):
     """Dispatch: spec["natural"] present -> v2 natural pipeline, otherwise the original v1 pipeline."""
     if "natural" in spec:
         import terrain_natural
         h, meta = terrain_natural.generate(spec, cell_ft, seed, verbose)
+    elif _basemap().wants_basemap(spec):
+        h, meta = _basemap().generate(spec, cell_ft, seed, verbose)
     else:
         h, meta = generate_v1(spec, cell_ft, seed, verbose)
     if "sea_level_ft" in spec:
@@ -284,6 +294,11 @@ if __name__ == "__main__":
             print("terrain size from place.json bounds: %.0f x %.0f ft" % tuple(spec["size_ft"]))
         except (OSError, KeyError, ValueError, TypeError):
             raise SystemExit("terrain_spec.json has no size_ft and place.json has no bounds: set size_ft [width, height] in feet in world/%s/terrain_spec.json" % a.place)
+    if spec.get("image_blend"):      # optional: let the base image's luminance gently shape the ground
+        for nm in ("background.png", "background.jpg"):
+            if os.path.exists(os.path.join(root, "underlay", nm)):
+                spec["image_path"] = os.path.join(root, "underlay", nm)
+                break
     h, meta = generate(spec, a.cell, a.seed, verbose=True)
     out = a.out or os.path.join(root, "terrain")
     save(h, meta, out)

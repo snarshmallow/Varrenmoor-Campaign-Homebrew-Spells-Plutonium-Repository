@@ -144,6 +144,9 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
     <label>Noise scale (ft) <input type="number" data-s="terrain.spec.noise_scale_ft" step="any"></label>
     <label>Thermal erosion iters <input type="number" data-s="terrain.spec.thermal_iterations" min="0" step="1"></label>
     <label>Smooth sigma (cells) <input type="number" data-s="terrain.spec.smooth_sigma_cells" min="0" step="0.1"></label>
+    <label title="Base maps without ridges or peaks only (image-imported places)">Recipe <select data-s="terrain.spec.recipe"><option value="rolling_hills">Rolling hills</option><option value="valley">Valley</option><option value="highland_ridge">Highland ridge</option></select></label>
+    <label title="Broad relief of a base-map recipe; 0 = automatic from the map size">Relief (ft, 0 = auto) <input type="number" data-s="terrain.spec.relief_ft" min="0" step="any"></label>
+    <label title="0 = off. Gently biases the ground by the base image's light and dark (light = higher)">Shape from image 0-1 <input type="number" data-s="terrain.spec.image_blend" min="0" max="1" step="0.05"></label>
   </div>
   <div class="btns">
     <button data-act="terrain_generate" class="danger" title="Regenerates the base heightmap, then replays the patches onto it">Generate base terrain</button>

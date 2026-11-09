@@ -73,7 +73,8 @@
       settings: { python: "python", dpi: 150, view: "town", link_images: false },
       scale: { preset: "town", scale_ft_per_in: 100, grid_ft: 100, grid_major_every: 5, page_w_in: 17, page_h_in: 11, units: "ft", grid_full_page: false, grid_show: true, loaded: false },
       terrain: {
-        spec: { seed: 1103, cell_ft: 10, base_elevation_ft: 660, ridged_amp_ft: 110, noise_scale_ft: 420, thermal_iterations: 60, smooth_sigma_cells: 1 },
+        spec: { seed: 1103, cell_ft: 10, base_elevation_ft: 660, ridged_amp_ft: 110, noise_scale_ft: 420, thermal_iterations: 60, smooth_sigma_cells: 1,
+          recipe: "rolling_hills", relief_ft: 0, image_blend: 0 },
         spec_loaded: false,
         patch: { terrain_type: "mountain", max_height_ft: 900, min_height_ft: 600, avg_height_ft: 800, steepness: 0.5, feather_ft: 80,
           roughness: 0.4, seed: 1, angle_deg: 0, polygon: [], polygon_src: "" },
@@ -234,6 +235,10 @@
     var o = clone(spec); o.seed = +s.seed; o.cell_ft = +s.cell_ft; o.base_elevation_ft = +s.base_elevation_ft;
     o.noise = Object.assign({}, o.noise, { ridged_amp_ft: +s.ridged_amp_ft, scale_ft: +s.noise_scale_ft });
     o.erosion = Object.assign({}, o.erosion, { thermal_iterations: Math.round(+s.thermal_iterations), smooth_sigma_cells: +s.smooth_sigma_cells });
+    // base-map recipe keys (terrain_basemap.py; only used by specs without ridges/peaks/valleys, ignored by the others): relief 0 = automatic
+    o.recipe = s.recipe || "rolling_hills";
+    if (+s.relief_ft > 0) o.relief_ft = +s.relief_ft; else delete o.relief_ft;
+    if (+s.image_blend > 0) o.image_blend = Math.min(1, +s.image_blend); else delete o.image_blend;
     return o;
   };
   VB.specToState = function (spec, s) {
@@ -243,6 +248,7 @@
     if (n.scale_ft != null) s.noise_scale_ft = n.scale_ft;
     if (e.thermal_iterations != null) s.thermal_iterations = e.thermal_iterations;
     if (e.smooth_sigma_cells != null) s.smooth_sigma_cells = e.smooth_sigma_cells;
+    s.recipe = spec.recipe || "rolling_hills"; s.relief_ft = spec.relief_ft || 0; s.image_blend = spec.image_blend || 0;
     return s;
   };
   VB.applyViewSettings = function (raw, sc) {
