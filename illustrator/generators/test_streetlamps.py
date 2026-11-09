@@ -224,10 +224,54 @@ class Meshes(unittest.TestCase):
         self.assertEqual(set(st["styles"]), set(sl.BUILDERS))
         for k, v in st["styles"].items():
             m = sl.style_mesh(k, v["height_ft"])
-            self.assertTrue(40 < m.tri_count < 600, (k, m.tri_count))
+            self.assertTrue(40 < m.tri_count < 700, (k, m.tri_count))
             if v["mount"] == "post":
                 self.assertGreater(m.V[:, 2].max(), v["height_ft"] * 0.9)
                 self.assertLess(m.V[:, 2].min(), 0.01)
+
+
+class NewStyles(unittest.TestCase):
+    def _mat_centroid(self, m, mat):
+        import numpy as np
+        idx = np.unique(np.array(m.subs[mat]).ravel())
+        return m.V[idx].mean(axis=0)
+
+    def test_new_styles_budget_and_flame_height(self):
+        st = sl.load_styles()["styles"]
+        for k, hdef in (("old_wooden_lantern", 10), ("antique_gas_lantern", 13)):
+            for h in (hdef, hdef + 3):
+                m = sl.style_mesh(k, h)
+                self.assertTrue(150 < m.tri_count < 700, (k, m.tri_count))
+                self.assertGreater(m.V[:, 2].max(), h * 0.9)
+                self.assertIn("mat_lamp_flame", m.subs)
+                fc = self._mat_centroid(m, "mat_lamp_flame")
+                r = sl.plan_lamps([MAIN], [], cfg(spacing_ft=50, style=k, height_ft=h))
+                lamp = r["lamps"][0]
+                lt = sl.lamp_lights([lamp], r["config"])[0]
+                self.assertAlmostEqual(lt["z_abs_ft"] - lamp["z"], fc[2], delta=0.1, msg=(k, h))     # light sits at the flame
+                self.assertAlmostEqual(st[k]["light"]["dx_ft"], fc[0], delta=0.1, msg=k)
+            self.assertLess(sl.style_mesh(k, hdef).V[:, 2].min(), -0.3)                              # buried, no grey base
+            self.assertNotIn("mat_lamp_stone", sl.style_mesh(k, hdef).subs)
+
+    def test_no_grey_bases(self):
+        st = sl.load_styles()["styles"]
+        for k, v in st.items():
+            if v["mount"] != "post" or k == "stone_pillar":
+                continue
+            self.assertNotIn("mat_lamp_stone", sl.style_mesh(k, v["height_ft"]).subs, k)
+            self.assertLess(sl.style_mesh(k, v["height_ft"]).V[:, 2].min(), -0.3, k)
+
+    def test_gas_is_steady_and_taller_wood_flickers(self):
+        st = sl.load_styles()["styles"]
+        self.assertGreater(st["antique_gas_lantern"]["height_ft"], st["old_wooden_lantern"]["height_ft"])
+        for k, anim in (("antique_gas_lantern", None), ("old_wooden_lantern", "torch")):
+            r = sl.plan_lamps([MAIN], [], cfg(spacing_ft=50, style=k))
+            for l in sl.lamp_lights(r["lamps"], r["config"]):
+                self.assertEqual(l["animation"], anim, k)
+        r = sl.plan_lamps([MAIN], [], cfg(spacing_ft=50, style="antique_gas_lantern"))
+        self.assertEqual(sl.lamp_lights(r["lamps"], r["config"])[0]["color"], "#ffe2a8")
+        for k in ("old_wooden_lantern", "antique_gas_lantern"):
+            self.assertTrue(os.path.exists(os.path.join(HERE, "..", "presets", "streetlamps", "thumbs", k + ".png")))
 
 
 @unittest.skipUnless(os.path.exists(os.path.join(PACK, "placements.json")), "no Dyers pack")

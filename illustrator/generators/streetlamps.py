@@ -388,19 +388,22 @@ def lamp_lights(lamps, cfg, styles=None):
         st = styles["styles"][l["style"]]
         sl = st["light"]
         k = lc["kelvin"] or sl["kelvin"]
-        col = lc["color"] or kelvin_to_hex(k)
+        col = lc["color"] or ((sl.get("color") or "") if not lc["kelvin"] else "") or kelvin_to_hex(k)
         a = math.radians(l["rot_deg"])
         scale = (l["height_ft"] / st["height_ft"]) if st["mount"] == "post" and st["height_ft"] else 1.0
-        dz = sl["dz_ft"] * scale if st["mount"] == "post" else l["height_ft"] - (st["height_ft"] - sl["dz_ft"])
+        dz = (l["height_ft"] - sl["dz_from_top_ft"] if "dz_from_top_ft" in sl else sl["dz_ft"] * scale) if st["mount"] == "post" else l["height_ft"] - (st["height_ft"] - sl["dz_ft"])
         dx = sl["dx_ft"]
         out.append({"id": l["id"], "type": "lamp", "road": l["road"], "style": l["style"], "building": l.get("building"),
                     "point": [round(l["x"] + math.cos(a) * dx, 3), round(l["y"] + math.sin(a) * dx, 3)], "z_abs_ft": round(l["z"] + dz, 3),
                     "dim_ft": lc["dim_ft"] or sl["dim_ft"], "bright_ft": lc["bright_ft"] or sl["bright_ft"], "color": col, "kelvin": k,
-                    "intensity": lc["intensity"] or sl["intensity"], "animation": "torch" if (lc["flicker"] and (sl["flicker"] or lc["flicker"])) else None, "shadows": bool(lc["shadows"])})
+                    "intensity": lc["intensity"] or sl["intensity"], "animation": "torch" if (lc["flicker"] and sl["flicker"]) else None, "shadows": bool(lc["shadows"])})
     return out
 
 
 # ------------------------------------------------------------------ meshes (built in feet around the base, +x = arm direction, scaled to metres at the end)
+GLOW_MATS = ("mat_lamp_glow", "mat_lamp_gas_glow", "mat_lamp_flame")
+
+
 class LB:
     """Small solid builder: prisms, boxes, pyramids and beams, faces unshared so the lamp is flat shaded."""
 
@@ -478,8 +481,30 @@ class LB:
         self.prism(x, 0, z0 + s * 0.75 + h * 0.95, z0 + s * 0.88 + h * 0.95, s * 0.09, s * 0.09, 6, mat_frame)
         return z0 + s * 0.88 + h * 0.95
 
-    def footing(self, r=0.55, top=0.15):
-        self.prism(0, 0, -1.0, top, r, r * 0.8, 8, "mat_lamp_stone", math.pi / 8)
+    def lprism(self, c0, c1, z0, z1, r0, r1, n, mat, rot=0.0, cap_top=True, cap_bot=True):
+        """Prism whose axis leans from c0 = (x, y) at z0 to c1 at z1."""
+        ring = lambda c, r, z: [(c[0] + r * math.cos(rot + 2 * math.pi * k / n), c[1] + r * math.sin(rot + 2 * math.pi * k / n), z) for k in range(n)]
+        a, b = ring(c0, r0, z0), ring(c1, r1, z1)
+        for k in range(n):
+            self._poly(mat, [a[k], a[(k + 1) % n], b[(k + 1) % n], b[k]])
+        if cap_top and r1 > 0:
+            self._poly(mat, b[::-1])
+        if cap_bot and r0 > 0:
+            self._poly(mat, a)
+
+    def fluted(self, z0, z1, r0, r1, n, mat, depth=0.16):
+        """Round post with n flutes: a 2n-gon alternating between the full radius and (1 - depth) of it. Open at the bottom, capped on top."""
+        def ring(r, z):
+            return [((r if k % 2 == 0 else r * (1 - depth)) * math.cos(math.pi * k / n), (r if k % 2 == 0 else r * (1 - depth)) * math.sin(math.pi * k / n), z) for k in range(2 * n)]
+        a, b = ring(r0, z0), ring(r1, z1)
+        m = 2 * n
+        for k in range(m):
+            self._poly(mat, [a[k], a[(k + 1) % m], b[(k + 1) % m], b[k]])
+        self._poly(mat, b[::-1])
+
+    def sink(self, r, top, mat):
+        """Buried foot in the post's own material (no separate grey base): the post goes half a foot into the ground."""
+        self.prism(0, 0, -0.5, top, r, r, 8, mat, math.pi / 8, cap_top=False)
 
     def mesh(self):
         return self.b.build()
@@ -487,7 +512,7 @@ class LB:
 
 def _s_wrought_iron(h):
     b = LB()
-    b.footing()
+    b.sink(0.5, 0.15, "mat_lamp_iron")
     b.prism(0, 0, 0.15, 0.95, 0.5, 0.3, 8, "mat_lamp_iron", math.pi / 8)
     b.prism(0, 0, 0.95, 1.2, 0.3, 0.3, 8, "mat_lamp_iron", math.pi / 8)
     top = h - 1.7
@@ -503,9 +528,7 @@ def _s_wrought_iron(h):
 
 def _s_wooden_oil(h):
     b = LB()
-    b.footing(0.6)
-    b.box(0, 0, 0.1, 0.7, 0.7, 0.45, "mat_lamp_stone")
-    b.box(0, 0, 0.55, 0.36, 0.36, h - 0.55, "mat_lamp_wood")
+    b.box(0, 0, -0.5, 0.36, 0.36, h + 0.5, "mat_lamp_wood")
     arm_z = h - 0.45
     b.beam((0, 0, arm_z), (2.0, 0, arm_z), 0.22, "mat_lamp_wood")
     b.beam((0, 0, h - 2.4), (1.6, 0, arm_z - 0.05), 0.18, "mat_lamp_wood")
@@ -516,9 +539,7 @@ def _s_wooden_oil(h):
 
 def _s_stone_pillar(h):
     b = LB()
-    b.footing(0.9)
-    b.box(0, 0, 0.1, 1.9, 1.9, 0.7, "mat_lamp_stone")
-    b.box(0, 0, 0.8, 1.45, 1.45, h - 1.9, "mat_lamp_stone")
+    b.box(0, 0, -0.5, 1.45, 1.45, h - 0.6, "mat_lamp_stone")
     b.box(0, 0, h - 1.1, 1.95, 1.95, 0.28, "mat_lamp_stone")
     b.box(0, 0, h - 0.82, 1.1, 1.1, 0.08, "mat_lamp_iron")
     b.box(0, 0, h - 0.74, 0.8, 0.8, 0.9, "mat_lamp_glow")
@@ -542,8 +563,7 @@ def _s_bracket_wall(h):
 
 def _s_torch_post(h):
     b = LB()
-    b.footing(0.55)
-    b.prism(0, 0, 0.15, h, 0.24, 0.18, 8, "mat_lamp_wood", cap_bot=False)
+    b.prism(0, 0, -0.5, h, 0.24, 0.18, 8, "mat_lamp_wood", cap_bot=False)
     b.prism(0, 0, h - 1.4, h - 1.25, 0.3, 0.3, 8, "mat_lamp_iron")
     b.prism(0, 0, h - 0.55, h, 0.28, 0.55, 8, "mat_lamp_iron", cap_top=False)
     for k in range(6):
@@ -556,8 +576,7 @@ def _s_torch_post(h):
 
 def _s_shepherd_crook(h):
     b = LB()
-    b.footing(0.5)
-    b.prism(0, 0, 0.15, 0.5, 0.35, 0.18, 8, "mat_lamp_iron")
+    b.prism(0, 0, -0.5, 0.5, 0.35, 0.18, 8, "mat_lamp_iron", cap_bot=False)
     b.prism(0, 0, 0.5, h - 0.9, 0.09, 0.07, 8, "mat_lamp_iron", cap_bot=False)
     b.arc((0.9, h - 0.9), 0.9, 180, 20, 0.07, "mat_lamp_iron", 10)
     xe = 0.9 + 0.9 * math.cos(math.radians(20))
@@ -567,8 +586,97 @@ def _s_shepherd_crook(h):
     return b.mesh()
 
 
+# old wooden lantern post: weathered timber, braced cross-arm, iron straps, a hook with a hanging cage lantern (flame core visible)
+OWL_FROM_TOP = 2.55      # flame centre this far below the post top (light.dz_from_top_ft)
+OWL_ARM_X = 2.2          # flame x offset from the post axis, in the local frame (light.dx_ft)
+
+
+def _s_old_wooden_lantern(h):
+    b = LB()
+    W, WD, IR, MO = "mat_lamp_wood_old", "mat_lamp_wood", "mat_lamp_iron", "mat_lamp_moss"
+    lean = (-0.14, 0.12)                                                  # the top of the post is out of true
+    ax = lambda z: (lean[0] * z / h, lean[1] * z / h)                    # axis position at height z
+    rad = lambda z: 0.3 - 0.1 * (z - 0.2) / (h - 0.2)                    # post radius at height z
+    b.lprism(ax(-0.5), ax(h), -0.5, h, 0.3, 0.2, 8, W, math.pi / 8, cap_bot=False)   # post goes straight into the ground
+    b.lprism(ax(0.0), ax(1.9), 0.0, 1.9, rad(0.0) + 0.02, rad(1.9) + 0.02, 8, MO, math.pi / 8, cap_top=False, cap_bot=False)   # moss creeping up the foot
+    for z in (1.5, 4.3, h - 1.8):                                         # iron straps
+        cx, cy = ax(z)
+        r = rad(z) + 0.035
+        b.prism(cx, cy, z - 0.13, z + 0.13, r, r, 8, IR, math.pi / 8, cap_top=False, cap_bot=False)
+    tx, ty = ax(h)
+    b.prism(tx, ty, h - 0.05, h + 0.14, 0.26, 0.19, 8, WD, math.pi / 8)  # weathered cap
+    arm_z = h - 0.65
+    b.beam((tx - 0.9, ty, arm_z + 0.05), (tx + 2.45, ty, arm_z), 0.26, W)     # cross-arm, tail behind the post
+    b.beam((tx + 0.1, ty, h - 3.0), (tx + 1.7, ty, arm_z - 0.05), 0.2, W)     # diagonal brace
+    b.beam((tx - 0.1, ty, h - 2.5), (tx - 0.85, ty, arm_z - 0.1), 0.14, W)    # short back brace
+    b.box(tx + 0.12, ty, h - 3.0, 0.1, 0.34, 0.2, IR)                         # iron plates at the brace joints
+    b.box(tx + 1.7, ty, arm_z - 0.45, 0.1, 0.34, 0.2, IR)
+    hx = tx + OWL_ARM_X
+    top = arm_z - 0.2
+    b.beam((hx, ty, arm_z - 0.05), (hx, ty, top - 0.1), 0.07, IR)             # hook peg through the arm
+    z0 = h - OWL_FROM_TOP - 0.45                                              # lantern base plate; flame centre = z0 + 0.45
+    for k in range(3):                                                        # chain links
+        b.box(hx, ty, top - 0.1 - 0.27 * (k + 1) + 0.1, 0.09, 0.05, 0.27, IR)
+    ring_z = z0 + 1.2
+    b.prism(hx, ty, ring_z, ring_z + 0.07, 0.11, 0.11, 6, IR)                 # hanger ring
+    b.box(hx, ty, z0 + 1.0, 0.8, 0.8, 0.08, IR)                               # top plate
+    b.pyramid(hx, ty, z0 + 1.08, z0 + 1.2, 0.42, 4, IR, math.pi / 4)          # little roof
+    b.box(hx, ty, z0, 0.74, 0.74, 0.1, IR)                                    # base plate
+    b.pyramid(hx, ty, z0 - 0.28, z0, 0.2, 6, IR)                              # drip cone under it
+    for sx in (-1, 1):
+        for sy in (-1, 1):
+            b.box(hx + sx * 0.3, ty + sy * 0.3, z0 + 0.1, 0.07, 0.07, 0.9, IR)
+    for sg in (-1, 1):                                                        # glass panes, open slot top and bottom so the flame shows
+        b.box(hx + sg * 0.29, ty, z0 + 0.2, 0.03, 0.46, 0.66, "mat_lamp_glow")
+        b.box(hx, ty + sg * 0.29, z0 + 0.2, 0.46, 0.03, 0.66, "mat_lamp_glow")
+    b.prism(hx, ty, z0 + 0.1, z0 + 0.3, 0.1, 0.08, 6, IR)                     # oil pot
+    b.prism(hx, ty, z0 + 0.3, z0 + 0.6, 0.075, 0.03, 6, "mat_lamp_flame")      # the flame, centre at z0 + 0.45
+    return b.mesh()
+
+
+def _gas_geometry(h):
+    top = h - 1.9                       # shaft top / lantern seat
+    gz = top + 0.35                     # bottom of the glass
+    return top, gz, 1.55                # glass height 1.55
+
+
+def _s_antique_gas_lantern(h):
+    b = LB()
+    IR, GL = "mat_lamp_iron_cast", "mat_lamp_gas_glow"
+    top, gz, gh = _gas_geometry(h)
+    b.prism(0, 0, -0.5, 0.0, 0.66, 0.66, 8, IR, math.pi / 8, cap_top=False)           # cast-iron foot, buried half a foot
+    b.prism(0, 0, 0.0, 1.0, 0.66, 0.5, 8, IR, math.pi / 8, cap_top=False, cap_bot=False)   # flared foot
+    b.prism(0, 0, 1.0, 1.2, 0.54, 0.54, 8, IR, math.pi / 8)
+    b.prism(0, 0, 1.2, 2.5, 0.46, 0.32, 8, IR, math.pi / 8, cap_bot=False)           # tapering pedestal
+    b.prism(0, 0, 2.5, 2.7, 0.4, 0.4, 8, IR, math.pi / 8)
+    b.prism(0, 0, 2.7, 3.0, 0.3, 0.3, 8, IR, math.pi / 8)                             # base collar ring
+    b.fluted(3.0, top - 0.5, 0.25, 0.19, 8, IR)                                        # fluted column
+    b.prism(0, 0, top - 0.5, top - 0.3, 0.27, 0.27, 8, IR, math.pi / 8)                # collar rings under the lantern
+    b.prism(0, 0, top - 0.3, top - 0.18, 0.2, 0.2, 8, IR, math.pi / 8)
+    lz = top - 1.5
+    b.beam((0, -0.75, lz), (0, 0.75, lz), 0.06, IR)                                    # ladder bar
+    for sg in (-1, 1):
+        b.prism(0, sg * 0.78, lz - 0.07, lz + 0.07, 0.09, 0.09, 6, IR)
+    for sg in (-1, 1):                                                                 # scrolled brackets either side of the shaft
+        b.arc((sg * 0.55, top - 0.75), 0.55, 90 if sg < 0 else 90, 180 if sg < 0 else 0, 0.06, IR, 6)
+    b.prism(0, 0, top - 0.18, top, 0.34, 0.5, 8, IR, math.pi / 8)                      # seat flare
+    b.box(0, 0, top, 1.0, 1.0, 0.1, IR, 45.0)                                          # lantern base plate
+    b.pyramid(0, 0, top + 0.1, gz, 0.4, 4, IR, math.pi / 4, top_r=0.34)                # burner housing
+    b.prism(0, 0, gz, gz + gh, 0.36, 0.6, 4, GL, math.pi / 4, cap_top=False, cap_bot=False)  # tapered glass, wider at the top
+    for k in range(4):                                                                 # frame posts along the corners
+        a = math.pi / 4 + k * math.pi / 2
+        b.beam((0.36 * math.cos(a) * 1.0, 0.36 * math.sin(a), gz), (0.6 * math.cos(a), 0.6 * math.sin(a), gz + gh), 0.07, IR)
+    b.prism(0, 0, gz + 0.45, gz + 0.9, 0.09, 0.16, 6, "mat_lamp_flame")                # gas mantle, centre at gz + 0.675
+    b.box(0, 0, gz + gh, 1.55, 1.55, 0.09, IR, 45.0)                                   # top rim
+    b.pyramid(0, 0, gz + gh + 0.09, gz + gh + 0.7, 0.95, 4, IR, math.pi / 4, top_r=0.2)  # cap
+    b.prism(0, 0, gz + gh + 0.7, gz + gh + 0.84, 0.24, 0.24, 6, IR)                    # vent collar
+    b.pyramid(0, 0, gz + gh + 0.84, gz + gh + 1.1, 0.14, 6, IR)                        # finial
+    return b.mesh()
+
+
 BUILDERS = {"wrought_iron": _s_wrought_iron, "wooden_oil": _s_wooden_oil, "stone_pillar": _s_stone_pillar, "bracket_wall": _s_bracket_wall,
-            "torch_post": _s_torch_post, "shepherd_crook": _s_shepherd_crook}
+            "torch_post": _s_torch_post, "shepherd_crook": _s_shepherd_crook,
+            "old_wooden_lantern": _s_old_wooden_lantern, "antique_gas_lantern": _s_antique_gas_lantern}
 _CACHE = {}
 
 
@@ -749,8 +857,8 @@ def render_thumb(style, path, height_ft=None, size=220, styles=None):
             n = n / ln
             wn = np.array([n[0] * c - n[1] * s, n[0] * s + n[1] * c, n[2]])
             lit = 0.55 + 0.45 * abs(float(np.dot(wn, np.array([-0.4, -0.6, 0.7]) / 0.9)))
-            tris.append((float(Y[f].mean()), f, mid, 1.0 if mid == "mat_lamp_glow" else lit))
-            if mid == "mat_lamp_glow":
+            tris.append((float(Y[f].mean()), f, mid, 1.0 if mid in GLOW_MATS else lit))
+            if mid in GLOW_MATS:
                 gx += float(X[f].mean())
                 gz += float(Z[f].mean())
                 gn += 1
@@ -849,7 +957,7 @@ def build_parser():
             s.add_argument("--pack", help="pack folder (default world/<place>/export)")
             s.add_argument("--config", help="JSON file with the settings (the panel writes one); the options below override it")
             s.add_argument("--enabled", choices=["on", "off"], help="scene toggle: off removes the lamp layer and lamp lights from the placements. Omitted: apply keeps the setting stored by the last apply (on the first run: on), plan is always a dry run as if on")
-            s.add_argument("--style", help="wrought_iron | wooden_oil | stone_pillar | bracket_wall | torch_post | shepherd_crook")
+            s.add_argument("--style", help="wrought_iron | wooden_oil | stone_pillar | bracket_wall | torch_post | shepherd_crook | old_wooden_lantern | antique_gas_lantern")
             s.add_argument("--spacing", type=float, help="distance between lamps along the road, ft")
             s.add_argument("--side", choices=list(SIDES), help="left | right | alternating | both")
             s.add_argument("--offset", type=float, help="distance from the road edge, ft")

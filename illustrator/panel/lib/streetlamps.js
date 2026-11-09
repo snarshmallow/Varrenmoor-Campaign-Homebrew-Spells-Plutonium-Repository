@@ -8,7 +8,7 @@
   var py = VB.steps.py;
   var n = function (v, d) { v = Number(v); return isFinite(v) ? v : d; };
 
-  VB.SL_STYLES = ["wrought_iron", "wooden_oil", "stone_pillar", "bracket_wall", "torch_post", "shepherd_crook"];
+  VB.SL_STYLES = ["wrought_iron", "wooden_oil", "stone_pillar", "bracket_wall", "torch_post", "shepherd_crook", "old_wooden_lantern", "antique_gas_lantern"];
   VB.SL_SIDES = { alternating: "Alternating (one lamp per station, switching sides)", left: "Left of travel", right: "Right of travel", both: "Both sides (a pair per station)" };
 
   VB.streetlampsDefaults = function () {

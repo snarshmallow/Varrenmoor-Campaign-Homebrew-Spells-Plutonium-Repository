@@ -14,12 +14,21 @@
     "torch_post": {"name": "Torch post", "description": "Wooden post with an iron torch basket. Dirt roads, outskirts, gates. Strong flicker.", "mount": "post", "height_ft": 7.5,
       "light": {"dz_ft": 8.2, "dx_ft": 0.0, "kelvin": 1800, "dim_ft": 44, "bright_ft": 14, "intensity": 0.7, "flicker": true}},
     "shepherd_crook": {"name": "Shepherd's crook lamp", "description": "Thin iron post with a curved crook and a hanging lantern. Lanes and rustic paths.", "mount": "post", "height_ft": 10,
-      "light": {"dz_ft": 8.1, "dx_ft": 1.8, "kelvin": 2100, "dim_ft": 34, "bright_ft": 11, "intensity": 0.55, "flicker": true}}
+      "light": {"dz_ft": 8.1, "dx_ft": 1.8, "kelvin": 2100, "dim_ft": 34, "bright_ft": 11, "intensity": 0.55, "flicker": true}},
+    "old_wooden_lantern": {"name": "Old wooden post, hanging lantern", "description": "Weathered leaning timber post with a braced cross-arm, iron straps, moss at the foot and a glass-and-iron cage lantern on a chain hook. Moorland lanes and village greens. Warm flicker.", "mount": "post", "height_ft": 10,
+      "light": {"dz_ft": 7.45, "dz_from_top_ft": 2.55, "dx_ft": 2.06, "kelvin": 1900, "dim_ft": 34, "bright_ft": 11, "intensity": 0.55, "flicker": true}},
+    "antique_gas_lantern": {"name": "Antique gas lantern", "description": "Tall cast-iron fluted column on a stepped base with a ladder bar, scrolled brackets and a four-pane tapered gas lantern with a cap and finial. Steady, slightly whiter light. Main streets and squares.", "mount": "post", "height_ft": 13,
+      "light": {"dz_ft": 12.125, "dz_from_top_ft": 0.875, "dx_ft": 0.0, "color": "#ffe2a8", "kelvin": 2900, "dim_ft": 44, "bright_ft": 16, "intensity": 0.65, "flicker": false}}
   },
   "materials": {
     "mat_lamp_iron": {"mean_color": "#25272b", "metallic": 0.6, "roughness": 0.55},
     "mat_lamp_wood": {"mean_color": "#6a4a2c", "metallic": 0.0, "roughness": 0.9},
     "mat_lamp_stone": {"mean_color": "#8b8780", "metallic": 0.0, "roughness": 0.95},
+    "mat_lamp_wood_old": {"mean_color": "#4d3a28", "metallic": 0.0, "roughness": 0.95},
+    "mat_lamp_moss": {"mean_color": "#4f6b34", "metallic": 0.0, "roughness": 1.0},
+    "mat_lamp_iron_cast": {"mean_color": "#1c2024", "metallic": 0.7, "roughness": 0.45},
+    "mat_lamp_flame": {"mean_color": "#fff2c8", "metallic": 0.0, "roughness": 0.3, "emissive": "#ffc46a"},
+    "mat_lamp_gas_glow": {"mean_color": "#fff0c4", "metallic": 0.0, "roughness": 0.3, "emissive": "#ffe0a0"},
     "mat_lamp_glow": {"mean_color": "#ffd58a", "metallic": 0.0, "roughness": 0.4, "emissive": "#ffb450"}
   }
 }
