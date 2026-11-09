@@ -1,5 +1,25 @@
 # Europa Valwater: 3D token
 
+## v2 (current): level head, cape down her back, portrait face
+The actor now uses `assets/varrenmoor-3d/Player Characters/Tokens/token_europa_valwater_ai_v2.glb` (only `prototypeToken.flags.levels-3d-preview.model3d` changed from v1; read back OK, everything else identical; the original pre-v1 state is still in `actor_backup_before.json`). v1 (`token_europa_valwater_ai.glb`) is left on the share.
+- 14,149 triangles, 1.676 m tall, footprint 0.78 x 0.63 m, base Z=0, centred, facing -Y. Three materials: `Material_0` (SF3D body atlas 2048), `cape` (512x1024, double-sided), `face` (1024 front projection). GLB about 1.1 MB.
+- Renders: `europa_v2_turntable.png` (front, 3/4, side, back, other side), `europa_v2_face_closeup.png` (front, 3/4, side of the head), `europa_v2_cape_closeup.png` (side, back 3/4, back).
+
+Steps (run from this folder; Python = `..\..\.venv\Scripts\python.exe`, Blender = `blender -b --factory-startup --python`):
+1. `face2d.py --seeds 5,11,23,31`: crops the portrait face, rolls it level (the eye line was 8.9 deg off), upscales it to 1024 and repaints only the eyes with SDXL inpainting (strength 0.75) so they look straight ahead. Seed **11** chosen (`europa_face_11.png`).
+2. `ref_v2.py 11`: seed-29 reference with the levelled face pasted into the hood opening and the side cape cut away (`europa_ref_v2.png`, `_rgba.png`). Without the cape in the image, SF3D makes a clean closed body instead of a flat sheet fused to her side.
+3. From `foundry-3d`, run `.\ai3d.ps1 -Image ai\characters\europa\europa_ref_v2_rgba.png -Name token_europa_valwater_ai_v2 -Folder "Player Characters/Tokens" -Tris 12000 -Height 1.676`, then `blender\turn180.py`, then `darken.py <in> <out> 0.9 1.2 1.7`.
+4. `cape_tex.py`: cape texture (portrait green x1.7, fold shading, gold trim on the sides and hem).
+5. `build_v2.py -- geo <dark.glb> <geo.glb> europa_cape_tex.png nocut`: levels the head (pitch/yaw measured from the face normal, falloff over the neck; this run: yaw 9.9 deg, pitch 0) and adds the procedural cape: a 26x44 grid hanging from the shoulder line (z 1.376) to mid-calf (0.36 m), 0.38 m wide at the top widening to 0.66 m, kept just behind the body's back profile so it clears the arms and legs, 5 folds growing toward the hem, the top edge tucked under the hood. (`nocut` skips the v1-only deletion of the old side sheet.)
+6. `closeup.py -- <geo.glb> europa_head_front_flat.png emit`: flat front render of the head (0.32 m window).
+7. `facecomp.py 11 0.72 0.89 550 550`: lays the levelled portrait face over that render through a soft ellipse, giving `europa_face_tex.png`.
+8. `build_v2.py -- face <geo.glb> <final.glb> europa_face_tex.png`: front-facing head faces get the `face` material with planar front UVs in the same window.
+9. Copy to `out\Player Characters\Tokens\` and `\\VEGA\varrenmoor-3d\Player Characters\Tokens\`; update the actor's `model3d` through the bridge.
+
+Limits: the head shape itself is SF3D's, and the face is a front projection, so it reads best from the front and 3/4 (from the side the hood hides it). The hands are still SF3D's paler skin. The SF3D back has a yellow-green mantle under the new cape. `analyze.py`, `capesel.py` and the `nocut`-less path of `build_v2.py` are the v1-mesh attempt (deleting the fused sheet left holes in her sleeve), kept for reference. `out/.../token_europa_valwater_ai_v2.blend` is the raw SF3D clean-up stage, not the final.
+
+## v1
+
 Player character Europa Valwater (player PerrottaTheOne), Foundry `Actor.Rugwcr8bm3BirxgK`. The token model is built from her portrait, with the staff and the pangolin removed and her legs set so she stands.
 
 ## Result
