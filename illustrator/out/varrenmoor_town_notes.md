@@ -71,3 +71,7 @@ No true street-level shot of the whole town: the 3D camera snapped back when set
 * Terrain elevation is invented; north-east ridge and Greyspine peaks are only the part inside the window.
 * The first scenes pushed with an old foliage zone naming collided in the push duplicate guard (zone ids with digits and underscores); `varrenmoor_trees.py` now writes letter-only zone ids.
 * Gemini was not used: the existing `dirt` and `grass` textures are used by the new town style. ChatGPT was used for the naming/canon check and the 3-line style brief only.
+
+## Pine density (2026-11-09)
+`varrenmoor_trees.py scatter` has `--pine-density` (default 1.5), `--hill-boost` (default 0.6: pines x (1 + 0.6 x relative height)), `--max-trees` (default 12000, caps the expected count; 0 = no cap) and `--dry-run`. `--pine-density 1 --hill-boost 0` reproduces the old scatter exactly.
+Counts (varrenmoor): before 4642 trees (pines 1516 = scots_pine 885 + spruce 516 + fir 115); after 6090 trees (pines 2939 = 1644 + 1039 + 256; broadleaf unchanged +-1 %), +31 % trees, pines x1.94. Foundry load: the foliage merge writes one GLB per 150 ft chunk with a triangle budget, LOD and impostors, so tile count follows the area, not the tree count; only the thinning budget and LOD2 impostor cards see more trees. Rough estimate: +31 % foliage triangles before thinning, nothing after the budget bites. foliage.json 1.38 MB, scatter pack 1.27 MB. Re-merge / push the foliage layer to see it in Foundry (not done here).

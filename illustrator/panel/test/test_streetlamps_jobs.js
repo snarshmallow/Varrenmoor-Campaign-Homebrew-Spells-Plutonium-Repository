@@ -37,6 +37,9 @@ check("readout counts lamps + pack lights and the budget", /90 lamps on 6 road/.
 st.lighting.f3d.mode = "lights";
 check("warns above 150 visible lights", /WARNING: 162 visible lights/.test(VB.streetlampsReadout(st)));
 s.last.lights = 10; check("small count: no warning", !/WARNING/.test(VB.streetlampsReadout(st)));
+check("config carries centre_short", VB.streetlampsConfig(st).centre_short === false && (s.centre_short = true, VB.streetlampsConfig(st).centre_short === true));
+s.last.empty_roads = ["str_014 on (too short: 0 lamps), 98.8 ft"];
+check("readout lists on-but-empty roads", /Roads switched on but with no lamp: str_014 on \(too short: 0 lamps\)/.test(VB.streetlampsReadout(st)));
 s.light.shadows = true; check("shadow warning", /light shadows on/.test(VB.streetlampsReadout(st)));
 // kelvin: same value as python
 const py = cp.spawnSync("python", ["-c", "import sys;sys.path.insert(0,'" + ROOT + "/illustrator/generators');import streetlamps as s;print(s.kelvin_to_hex(1800),s.kelvin_to_hex(2700),s.kelvin_to_hex(6500))"], { encoding: "utf-8" });

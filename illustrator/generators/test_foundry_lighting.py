@@ -37,7 +37,10 @@ class Lighting(unittest.TestCase):
         items = fp.build_light_docs(doc, {"ppf": 20, "x0": 0, "y0": 0, "sceneX": 0, "sceneY": 0})
         d = items[0]["data"]
         self.assertFalse(d["flags"]["levels-3d-preview"].get("enableParticle"))
-        self.assertIsNone(d["config"]["animation"]["type"])
+        # the per-light "animation" field is Foundry's own flicker (lamps use it), not a particle preset: it is honoured; a hint without one stays plain
+        self.assertEqual(d["config"]["animation"]["type"], "torch")
+        plain = fp.build_light_docs({**doc, "files": [{"lights": [{k: v for k, v in doc["files"][0]["lights"][0].items() if k != "animation"}]}]}, {"ppf": 20, "x0": 0, "y0": 0, "sceneX": 0, "sceneY": 0})
+        self.assertIsNone(plain[0]["data"]["config"]["animation"]["type"])
         self.assertEqual((d["x"], d["y"], d["elevation"]), (200, 400, 5.0))
         c = fl.load_lighting({"sun": {}, "lights": [{"id": "a", "x": 740, "y": 720, "radius": 40, "height": 8}]})
         p = fl.point_light_docs(c, [730, 710], 20)[0]["data"]

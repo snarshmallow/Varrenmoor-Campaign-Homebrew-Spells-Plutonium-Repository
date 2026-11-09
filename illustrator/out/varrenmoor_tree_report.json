@@ -1,18 +1,23 @@
 {
  "summary": {
   "place": "varrenmoor",
-  "trees": 4642,
+  "trees": 6090,
+  "expected_before_clearances": 6848,
+  "cap_factor": 1.0,
+  "pine_density": 1.5,
+  "hill_boost": 0.6,
+  "dry_run": false,
   "blocks": 226,
   "scale_density_per_ha_at_full_canopy": 21.499,
   "per_species": {
-   "alder": 140,
-   "beech": 774,
-   "birch": 1401,
-   "fir": 115,
-   "oak": 775,
-   "scots_pine": 885,
-   "spruce": 516,
-   "willow": 37
+   "alder": 156,
+   "beech": 779,
+   "birch": 1398,
+   "fir": 256,
+   "oak": 780,
+   "scots_pine": 1644,
+   "spruce": 1039,
+   "willow": 39
   }
  },
  "blocks": [
@@ -22,9 +27,9 @@
     160
    ],
    "canopy": 0.96,
-   "density_per_ha": 21.84,
+   "density_per_ha": 44.02,
    "zr": 0.69,
-   "added": 49
+   "added": 99
   },
   {
    "block_px": [
@@ -32,9 +37,9 @@
     224
    ],
    "canopy": 0.95,
-   "density_per_ha": 21.55,
+   "density_per_ha": 43.62,
    "zr": 0.7,
-   "added": 47
+   "added": 97
   },
   {
    "block_px": [
@@ -42,9 +47,9 @@
     288
    ],
    "canopy": 0.94,
-   "density_per_ha": 20.71,
+   "density_per_ha": 30.4,
    "zr": 0.38,
-   "added": 46
+   "added": 67
   },
   {
    "block_px": [
@@ -52,9 +57,9 @@
     352
    ],
    "canopy": 0.78,
-   "density_per_ha": 13.09,
+   "density_per_ha": 19.37,
    "zr": 0.4,
-   "added": 27
+   "added": 42
   },
   {
    "block_px": [
@@ -62,9 +67,9 @@
     416
    ],
    "canopy": 0.87,
-   "density_per_ha": 17.25,
+   "density_per_ha": 25.3,
    "zr": 0.38,
-   "added": 39
+   "added": 57
   },
   {
    "block_px": [
@@ -72,9 +77,9 @@
     480
    ],
    "canopy": 0.74,
-   "density_per_ha": 11.41,
+   "density_per_ha": 12.24,
    "zr": 0.01,
-   "added": 23
+   "added": 25
   },
   {
    "block_px": [
@@ -82,9 +87,9 @@
     544
    ],
    "canopy": 0.68,
-   "density_per_ha": 8.77,
+   "density_per_ha": 9.41,
    "zr": 0.01,
-   "added": 19
+   "added": 20
   },
   {
    "block_px": [
@@ -92,9 +97,9 @@
     608
    ],
    "canopy": 0.87,
-   "density_per_ha": 17.56,
+   "density_per_ha": 19.35,
    "zr": 0.24,
-   "added": 25
+   "added": 39
   },
   {
    "block_px": [
@@ -102,9 +107,9 @@
     672
    ],
    "canopy": 0.95,
-   "density_per_ha": 21.58,
+   "density_per_ha": 33.23,
    "zr": 0.52,
-   "added": 48
+   "added": 74
   },
   {
    "block_px": [
@@ -112,9 +117,9 @@
     736
    ],
    "canopy": 0.97,
-   "density_per_ha": 22.85,
+   "density_per_ha": 34.45,
    "zr": 0.46,
-   "added": 51
+   "added": 78
   },
   {
    "block_px": [
@@ -122,9 +127,9 @@
     800
    ],
    "canopy": 0.92,
-   "density_per_ha": 19.72,
+   "density_per_ha": 29.95,
    "zr": 0.48,
-   "added": 45
+   "added": 67
   },
   {
    "block_px": [
@@ -132,9 +137,9 @@
     864
    ],
    "canopy": 0.61,
-   "density_per_ha": 6.04,
+   "density_per_ha": 11.65,
    "zr": 0.58,
-   "added": 14
+   "added": 26
   },
   {
    "block_px": [
@@ -142,9 +147,9 @@
     928
    ],
    "canopy": 0.7,
-   "density_per_ha": 9.57,
+   "density_per_ha": 14.42,
    "zr": 0.46,
-   "added": 10
+   "added": 16
   },
   {
    "block_px": [
@@ -152,9 +157,9 @@
     160
    ],
    "canopy": 0.88,
-   "density_per_ha": 18.08,
+   "density_per_ha": 27.48,
    "zr": 0.49,
-   "added": 42
+   "added": 63
   },
   {
    "block_px": [
@@ -162,9 +167,9 @@
     224
    ],
    "canopy": 0.9,
-   "density_per_ha": 19.01,
+   "density_per_ha": 28.58,
    "zr": 0.45,
-   "added": 44
+   "added": 64
   },
   {
    "block_px": [
@@ -172,9 +177,9 @@
     288
    ],
    "canopy": 0.93,
-   "density_per_ha": 20.29,
+   "density_per_ha": 29.98,
    "zr": 0.4,
-   "added": 45
+   "added": 67
   },
   {
    "block_px": [
@@ -182,9 +187,9 @@
     352
    ],
    "canopy": 0.76,
-   "density_per_ha": 12.34,
+   "density_per_ha": 18.33,
    "zr": 0.42,
-   "added": 27
+   "added": 40
   },
   {
    "block_px": [
@@ -192,9 +197,9 @@
     416
    ],
    "canopy": 0.75,
-   "density_per_ha": 11.73,
+   "density_per_ha": 12.63,
    "zr": 0.04,
-   "added": 26
+   "added": 28
   },
   {
    "block_px": [
@@ -202,7 +207,7 @@
     480
    ],
    "canopy": 0.69,
-   "density_per_ha": 9.36,
+   "density_per_ha": 10.08,
    "zr": 0.04,
    "added": 21
   },
@@ -212,9 +217,9 @@
     544
    ],
    "canopy": 0.84,
-   "density_per_ha": 16.04,
+   "density_per_ha": 23.49,
    "zr": 0.37,
-   "added": 36
+   "added": 53
   },
   {
    "block_px": [
@@ -222,9 +227,9 @@
     608
    ],
    "canopy": 0.98,
-   "density_per_ha": 23.08,
+   "density_per_ha": 33.56,
    "zr": 0.35,
-   "added": 53
+   "added": 77
   },
   {
    "block_px": [
@@ -232,9 +237,9 @@
     672
    ],
    "canopy": 0.93,
-   "density_per_ha": 20.62,
+   "density_per_ha": 30.17,
    "zr": 0.37,
-   "added": 45
+   "added": 67
   },
   {
    "block_px": [
@@ -242,9 +247,9 @@
     736
    ],
    "canopy": 0.92,
-   "density_per_ha": 20.07,
+   "density_per_ha": 29.93,
    "zr": 0.43,
-   "added": 45
+   "added": 67
   },
   {
    "block_px": [
@@ -252,9 +257,9 @@
     800
    ],
    "canopy": 0.87,
-   "density_per_ha": 17.38,
+   "density_per_ha": 25.82,
    "zr": 0.42,
-   "added": 39
+   "added": 57
   },
   {
    "block_px": [
@@ -262,9 +267,9 @@
     160
    ],
    "canopy": 0.88,
-   "density_per_ha": 17.62,
+   "density_per_ha": 18.59,
    "zr": 0.06,
-   "added": 32
+   "added": 34
   },
   {
    "block_px": [
@@ -272,9 +277,9 @@
     224
    ],
    "canopy": 0.87,
-   "density_per_ha": 17.13,
+   "density_per_ha": 18.65,
    "zr": 0.13,
-   "added": 17
+   "added": 20
   },
   {
    "block_px": [
@@ -282,9 +287,9 @@
     288
    ],
    "canopy": 0.72,
-   "density_per_ha": 10.26,
+   "density_per_ha": 11.02,
    "zr": 0.02,
-   "added": 21
+   "added": 23
   },
   {
    "block_px": [
@@ -292,9 +297,9 @@
     352
    ],
    "canopy": 0.73,
-   "density_per_ha": 10.71,
+   "density_per_ha": 11.56,
    "zr": 0.06,
-   "added": 21
+   "added": 24
   },
   {
    "block_px": [
@@ -302,9 +307,9 @@
     416
    ],
    "canopy": 0.61,
-   "density_per_ha": 6.21,
+   "density_per_ha": 6.65,
    "zr": -0.01,
-   "added": 12
+   "added": 13
   },
   {
    "block_px": [
@@ -312,9 +317,9 @@
     480
    ],
    "canopy": 0.94,
-   "density_per_ha": 21.2,
+   "density_per_ha": 22.54,
    "zr": 0.15,
-   "added": 39
+   "added": 42
   },
   {
    "block_px": [
@@ -322,9 +327,9 @@
     544
    ],
    "canopy": 0.96,
-   "density_per_ha": 21.9,
+   "density_per_ha": 23.29,
    "zr": 0.15,
-   "added": 40
+   "added": 43
   },
   {
    "block_px": [
@@ -332,9 +337,9 @@
     608
    ],
    "canopy": 0.96,
-   "density_per_ha": 22.28,
+   "density_per_ha": 23.67,
    "zr": 0.14,
-   "added": 40
+   "added": 43
   },
   {
    "block_px": [
@@ -342,9 +347,9 @@
     672
    ],
    "canopy": 0.91,
-   "density_per_ha": 19.39,
+   "density_per_ha": 20.55,
    "zr": 0.1,
-   "added": 35
+   "added": 38
   },
   {
    "block_px": [
@@ -352,9 +357,9 @@
     736
    ],
    "canopy": 0.82,
-   "density_per_ha": 15.02,
+   "density_per_ha": 15.92,
    "zr": 0.1,
-   "added": 27
+   "added": 29
   },
   {
    "block_px": [
@@ -362,9 +367,9 @@
     800
    ],
    "canopy": 0.92,
-   "density_per_ha": 19.99,
+   "density_per_ha": 21.34,
    "zr": 0.19,
-   "added": 36
+   "added": 39
   },
   {
    "block_px": [
@@ -372,9 +377,9 @@
     160
    ],
    "canopy": 0.92,
-   "density_per_ha": 19.88,
+   "density_per_ha": 21.4,
    "zr": 0.04,
-   "added": 42
+   "added": 46
   },
   {
    "block_px": [
@@ -382,9 +387,9 @@
     224
    ],
    "canopy": 0.76,
-   "density_per_ha": 12.2,
+   "density_per_ha": 13.07,
    "zr": 0.0,
-   "added": 23
+   "added": 25
   },
   {
    "block_px": [
@@ -392,9 +397,9 @@
     288
    ],
    "canopy": 0.76,
-   "density_per_ha": 12.14,
+   "density_per_ha": 13.03,
    "zr": 0.01,
-   "added": 12
+   "added": 24
   },
   {
    "block_px": [
@@ -402,9 +407,9 @@
     352
    ],
    "canopy": 0.71,
-   "density_per_ha": 10.09,
+   "density_per_ha": 10.83,
    "zr": 0.01,
-   "added": 23
+   "added": 24
   },
   {
    "block_px": [
@@ -412,9 +417,9 @@
     416
    ],
    "canopy": 0.71,
-   "density_per_ha": 9.98,
+   "density_per_ha": 10.72,
    "zr": 0.02,
-   "added": 9
+   "added": 11
   },
   {
    "block_px": [
@@ -422,9 +427,9 @@
     480
    ],
    "canopy": 0.86,
-   "density_per_ha": 16.85,
+   "density_per_ha": 17.74,
    "zr": 0.03,
-   "added": 29
+   "added": 31
   },
   {
    "block_px": [
@@ -432,9 +437,9 @@
     544
    ],
    "canopy": 0.86,
-   "density_per_ha": 16.66,
+   "density_per_ha": 17.53,
    "zr": 0.03,
-   "added": 29
+   "added": 31
   },
   {
    "block_px": [
@@ -442,9 +447,9 @@
     608
    ],
    "canopy": 0.72,
-   "density_per_ha": 10.28,
+   "density_per_ha": 10.81,
    "zr": 0.02,
-   "added": 19
+   "added": 20
   },
   {
    "block_px": [
@@ -452,9 +457,9 @@
     672
    ],
    "canopy": 0.71,
-   "density_per_ha": 10.13,
+   "density_per_ha": 10.67,
    "zr": 0.03,
-   "added": 19
+   "added": 20
   },
   {
    "block_px": [
@@ -462,9 +467,9 @@
     736
    ],
    "canopy": 0.77,
-   "density_per_ha": 12.49,
+   "density_per_ha": 13.14,
    "zr": 0.02,
-   "added": 23
+   "added": 25
   },
   {
    "block_px": [
@@ -472,9 +477,9 @@
     800
    ],
    "canopy": 0.98,
-   "density_per_ha": 23.09,
+   "density_per_ha": 24.52,
    "zr": 0.13,
-   "added": 41
+   "added": 44
   },
   {
    "block_px": [
@@ -482,9 +487,9 @@
     160
    ],
    "canopy": 0.92,
-   "density_per_ha": 19.66,
+   "density_per_ha": 21.06,
    "zr": -0.02,
-   "added": 40
+   "added": 42
   },
   {
    "block_px": [
@@ -492,9 +497,9 @@
     224
    ],
    "canopy": 0.82,
-   "density_per_ha": 15.13,
+   "density_per_ha": 16.29,
    "zr": 0.04,
-   "added": 15
+   "added": 18
   },
   {
    "block_px": [
@@ -502,9 +507,9 @@
     288
    ],
    "canopy": 0.83,
-   "density_per_ha": 15.55,
+   "density_per_ha": 16.36,
    "zr": 0.02,
-   "added": 28
+   "added": 30
   },
   {
    "block_px": [
@@ -512,9 +517,9 @@
     352
    ],
    "canopy": 0.83,
-   "density_per_ha": 15.42,
+   "density_per_ha": 16.22,
    "zr": 0.02,
-   "added": 28
+   "added": 30
   },
   {
    "block_px": [
@@ -522,9 +527,9 @@
     416
    ],
    "canopy": 0.86,
-   "density_per_ha": 16.78,
+   "density_per_ha": 17.64,
    "zr": 0.01,
-   "added": 31
+   "added": 33
   },
   {
    "block_px": [
@@ -532,9 +537,9 @@
     480
    ],
    "canopy": 0.69,
-   "density_per_ha": 9.36,
+   "density_per_ha": 9.84,
    "zr": 0.02,
-   "added": 16
+   "added": 17
   },
   {
    "block_px": [
@@ -542,9 +547,9 @@
     544
    ],
    "canopy": 0.7,
-   "density_per_ha": 9.7,
+   "density_per_ha": 10.2,
    "zr": 0.02,
-   "added": 16
+   "added": 17
   },
   {
    "block_px": [
@@ -552,7 +557,7 @@
     608
    ],
    "canopy": 0.65,
-   "density_per_ha": 7.6,
+   "density_per_ha": 7.99,
    "zr": 0.02,
    "added": 8
   },
@@ -562,9 +567,9 @@
     672
    ],
    "canopy": 0.57,
-   "density_per_ha": 4.9,
+   "density_per_ha": 5.15,
    "zr": 0.01,
-   "added": 8
+   "added": 9
   },
   {
    "block_px": [
@@ -572,9 +577,9 @@
     736
    ],
    "canopy": 0.77,
-   "density_per_ha": 12.69,
+   "density_per_ha": 13.34,
    "zr": 0.01,
-   "added": 24
+   "added": 25
   },
   {
    "block_px": [
@@ -582,9 +587,9 @@
     800
    ],
    "canopy": 0.95,
-   "density_per_ha": 21.68,
+   "density_per_ha": 23.02,
    "zr": 0.13,
-   "added": 40
+   "added": 43
   },
   {
    "block_px": [
@@ -592,9 +597,9 @@
     160
    ],
    "canopy": 0.65,
-   "density_per_ha": 7.76,
+   "density_per_ha": 8.35,
    "zr": 0.03,
-   "added": 7
+   "added": 9
   },
   {
    "block_px": [
@@ -602,9 +607,9 @@
     224
    ],
    "canopy": 0.77,
-   "density_per_ha": 12.46,
+   "density_per_ha": 13.08,
    "zr": -0.0,
-   "added": 23
+   "added": 24
   },
   {
    "block_px": [
@@ -612,9 +617,9 @@
     288
    ],
    "canopy": 0.61,
-   "density_per_ha": 6.27,
+   "density_per_ha": 6.58,
    "zr": 0.0,
-   "added": 11
+   "added": 12
   },
   {
    "block_px": [
@@ -622,9 +627,9 @@
     352
    ],
    "canopy": 0.67,
-   "density_per_ha": 8.34,
+   "density_per_ha": 8.77,
    "zr": 0.01,
-   "added": 16
+   "added": 17
   },
   {
    "block_px": [
@@ -632,9 +637,9 @@
     416
    ],
    "canopy": 0.78,
-   "density_per_ha": 12.87,
+   "density_per_ha": 13.52,
    "zr": 0.01,
-   "added": 24
+   "added": 25
   },
   {
    "block_px": [
@@ -642,9 +647,9 @@
     480
    ],
    "canopy": 0.57,
-   "density_per_ha": 4.79,
+   "density_per_ha": 5.04,
    "zr": 0.01,
-   "added": 8
+   "added": 9
   },
   {
    "block_px": [
@@ -652,9 +657,9 @@
     544
    ],
    "canopy": 0.61,
-   "density_per_ha": 6.02,
+   "density_per_ha": 6.33,
    "zr": 0.01,
-   "added": 11
+   "added": 12
   },
   {
    "block_px": [
@@ -662,7 +667,7 @@
     608
    ],
    "canopy": 0.55,
-   "density_per_ha": 4.17,
+   "density_per_ha": 4.38,
    "zr": 0.01,
    "added": 8
   },
@@ -672,9 +677,9 @@
     672
    ],
    "canopy": 0.79,
-   "density_per_ha": 13.39,
+   "density_per_ha": 14.07,
    "zr": 0.01,
-   "added": 24
+   "added": 26
   },
   {
    "block_px": [
@@ -682,9 +687,9 @@
     736
    ],
    "canopy": 0.89,
-   "density_per_ha": 18.14,
+   "density_per_ha": 19.05,
    "zr": 0.0,
-   "added": 32
+   "added": 34
   },
   {
    "block_px": [
@@ -692,9 +697,9 @@
     800
    ],
    "canopy": 0.95,
-   "density_per_ha": 21.29,
+   "density_per_ha": 22.55,
    "zr": 0.1,
-   "added": 39
+   "added": 42
   },
   {
    "block_px": [
@@ -702,9 +707,9 @@
     160
    ],
    "canopy": 0.68,
-   "density_per_ha": 8.57,
+   "density_per_ha": 9.01,
    "zr": 0.01,
-   "added": 16
+   "added": 17
   },
   {
    "block_px": [
@@ -712,9 +717,9 @@
     224
    ],
    "canopy": 0.75,
-   "density_per_ha": 11.72,
+   "density_per_ha": 12.32,
    "zr": 0.01,
-   "added": 21
+   "added": 22
   },
   {
    "block_px": [
@@ -722,9 +727,9 @@
     288
    ],
    "canopy": 0.7,
-   "density_per_ha": 9.76,
+   "density_per_ha": 10.26,
    "zr": 0.01,
-   "added": 17
+   "added": 18
   },
   {
    "block_px": [
@@ -732,9 +737,9 @@
     352
    ],
    "canopy": 0.8,
-   "density_per_ha": 14.06,
+   "density_per_ha": 14.77,
    "zr": 0.01,
-   "added": 25
+   "added": 26
   },
   {
    "block_px": [
@@ -742,9 +747,9 @@
     416
    ],
    "canopy": 0.81,
-   "density_per_ha": 14.29,
+   "density_per_ha": 15.01,
    "zr": 0.01,
-   "added": 25
+   "added": 27
   },
   {
    "block_px": [
@@ -752,9 +757,9 @@
     480
    ],
    "canopy": 0.53,
-   "density_per_ha": 3.63,
+   "density_per_ha": 3.81,
    "zr": 0.01,
-   "added": 7
+   "added": 8
   },
   {
    "block_px": [
@@ -762,7 +767,7 @@
     544
    ],
    "canopy": 0.45,
-   "density_per_ha": 1.45,
+   "density_per_ha": 1.52,
    "zr": 0.01,
    "added": 3
   },
@@ -772,9 +777,9 @@
     608
    ],
    "canopy": 0.46,
-   "density_per_ha": 1.59,
+   "density_per_ha": 1.67,
    "zr": 0.01,
-   "added": 3
+   "added": 4
   },
   {
    "block_px": [
@@ -782,9 +787,9 @@
     672
    ],
    "canopy": 0.8,
-   "density_per_ha": 13.9,
+   "density_per_ha": 14.6,
    "zr": 0.01,
-   "added": 24
+   "added": 26
   },
   {
    "block_px": [
@@ -792,9 +797,9 @@
     736
    ],
    "canopy": 0.94,
-   "density_per_ha": 20.77,
+   "density_per_ha": 21.83,
    "zr": 0.01,
-   "added": 37
+   "added": 39
   },
   {
    "block_px": [
@@ -802,9 +807,9 @@
     800
    ],
    "canopy": 0.96,
-   "density_per_ha": 21.89,
+   "density_per_ha": 23.25,
    "zr": 0.13,
-   "added": 40
+   "added": 43
   },
   {
    "block_px": [
@@ -812,9 +817,9 @@
     864
    ],
    "canopy": 0.68,
-   "density_per_ha": 8.59,
+   "density_per_ha": 13.01,
    "zr": 0.47,
-   "added": 18
+   "added": 28
   },
   {
    "block_px": [
@@ -822,9 +827,9 @@
     928
    ],
    "canopy": 0.66,
-   "density_per_ha": 7.85,
+   "density_per_ha": 15.35,
    "zr": 0.61,
-   "added": 9
+   "added": 16
   },
   {
    "block_px": [
@@ -832,7 +837,7 @@
     160
    ],
    "canopy": 0.45,
-   "density_per_ha": 1.38,
+   "density_per_ha": 1.46,
    "zr": 0.15,
    "added": 3
   },
@@ -842,9 +847,9 @@
     224
    ],
    "canopy": 0.61,
-   "density_per_ha": 6.29,
+   "density_per_ha": 6.72,
    "zr": 0.2,
-   "added": 11
+   "added": 12
   },
   {
    "block_px": [
@@ -852,9 +857,9 @@
     288
    ],
    "canopy": 0.89,
-   "density_per_ha": 18.53,
+   "density_per_ha": 19.47,
    "zr": 0.01,
-   "added": 33
+   "added": 35
   },
   {
    "block_px": [
@@ -862,9 +867,9 @@
     352
    ],
    "canopy": 0.93,
-   "density_per_ha": 20.44,
+   "density_per_ha": 21.47,
    "zr": 0.0,
-   "added": 37
+   "added": 39
   },
   {
    "block_px": [
@@ -872,9 +877,9 @@
     416
    ],
    "canopy": 0.74,
-   "density_per_ha": 11.44,
+   "density_per_ha": 12.02,
    "zr": 0.01,
-   "added": 16
+   "added": 17
   },
   {
    "block_px": [
@@ -882,7 +887,7 @@
     480
    ],
    "canopy": 0.47,
-   "density_per_ha": 1.96,
+   "density_per_ha": 2.06,
    "zr": 0.01,
    "added": 0
   },
@@ -892,7 +897,7 @@
     544
    ],
    "canopy": 0.39,
-   "density_per_ha": 0.33,
+   "density_per_ha": 0.34,
    "zr": 0.01,
    "added": 0
   },
@@ -902,9 +907,9 @@
     608
    ],
    "canopy": 0.67,
-   "density_per_ha": 8.43,
+   "density_per_ha": 8.86,
    "zr": 0.01,
-   "added": 16
+   "added": 17
   },
   {
    "block_px": [
@@ -912,9 +917,9 @@
     672
    ],
    "canopy": 0.9,
-   "density_per_ha": 18.93,
+   "density_per_ha": 19.87,
    "zr": -0.0,
-   "added": 35
+   "added": 37
   },
   {
    "block_px": [
@@ -922,9 +927,9 @@
     736
    ],
    "canopy": 0.97,
-   "density_per_ha": 22.55,
+   "density_per_ha": 23.68,
    "zr": 0.0,
-   "added": 40
+   "added": 43
   },
   {
    "block_px": [
@@ -932,9 +937,9 @@
     800
    ],
    "canopy": 0.86,
-   "density_per_ha": 16.62,
+   "density_per_ha": 17.61,
    "zr": 0.1,
-   "added": 29
+   "added": 33
   },
   {
    "block_px": [
@@ -942,9 +947,9 @@
     864
    ],
    "canopy": 0.95,
-   "density_per_ha": 21.44,
+   "density_per_ha": 32.35,
    "zr": 0.46,
-   "added": 48
+   "added": 73
   },
   {
    "block_px": [
@@ -952,9 +957,9 @@
     928
    ],
    "canopy": 0.8,
-   "density_per_ha": 13.97,
+   "density_per_ha": 28.88,
    "zr": 0.75,
-   "added": 16
+   "added": 31
   },
   {
    "block_px": [
@@ -962,9 +967,9 @@
     160
    ],
    "canopy": 0.68,
-   "density_per_ha": 8.57,
+   "density_per_ha": 9.18,
    "zr": 0.23,
-   "added": 16
+   "added": 17
   },
   {
    "block_px": [
@@ -972,9 +977,9 @@
     224
    ],
    "canopy": 0.73,
-   "density_per_ha": 10.87,
+   "density_per_ha": 15.36,
    "zr": 0.27,
-   "added": 24
+   "added": 34
   },
   {
    "block_px": [
@@ -982,9 +987,9 @@
     288
    ],
    "canopy": 0.74,
-   "density_per_ha": 11.24,
+   "density_per_ha": 11.82,
    "zr": 0.01,
-   "added": 20
+   "added": 21
   },
   {
    "block_px": [
@@ -992,9 +997,9 @@
     352
    ],
    "canopy": 0.68,
-   "density_per_ha": 8.66,
+   "density_per_ha": 9.1,
    "zr": 0.01,
-   "added": 16
+   "added": 17
   },
   {
    "block_px": [
@@ -1002,7 +1007,7 @@
     416
    ],
    "canopy": 0.51,
-   "density_per_ha": 2.87,
+   "density_per_ha": 3.01,
    "zr": 0.01,
    "added": 5
   },
@@ -1012,7 +1017,7 @@
     480
    ],
    "canopy": 0.43,
-   "density_per_ha": 1.06,
+   "density_per_ha": 1.12,
    "zr": 0.0,
    "added": 1
   },
@@ -1022,7 +1027,7 @@
     544
    ],
    "canopy": 0.51,
-   "density_per_ha": 2.84,
+   "density_per_ha": 2.98,
    "zr": 0.01,
    "added": 5
   },
@@ -1032,9 +1037,9 @@
     608
    ],
    "canopy": 0.59,
-   "density_per_ha": 5.33,
+   "density_per_ha": 5.6,
    "zr": 0.01,
-   "added": 8
+   "added": 9
   },
   {
    "block_px": [
@@ -1042,9 +1047,9 @@
     672
    ],
    "canopy": 0.86,
-   "density_per_ha": 17.1,
+   "density_per_ha": 17.97,
    "zr": 0.01,
-   "added": 31
+   "added": 33
   },
   {
    "block_px": [
@@ -1052,9 +1057,9 @@
     736
    ],
    "canopy": 0.83,
-   "density_per_ha": 15.48,
+   "density_per_ha": 16.26,
    "zr": -0.0,
-   "added": 28
+   "added": 30
   },
   {
    "block_px": [
@@ -1062,9 +1067,9 @@
     800
    ],
    "canopy": 0.82,
-   "density_per_ha": 14.91,
+   "density_per_ha": 15.74,
    "zr": 0.06,
-   "added": 27
+   "added": 29
   },
   {
    "block_px": [
@@ -1072,9 +1077,9 @@
     864
    ],
    "canopy": 0.75,
-   "density_per_ha": 11.67,
+   "density_per_ha": 17.54,
    "zr": 0.45,
-   "added": 27
+   "added": 39
   },
   {
    "block_px": [
@@ -1082,9 +1087,9 @@
     928
    ],
    "canopy": 0.76,
-   "density_per_ha": 12.33,
+   "density_per_ha": 25.47,
    "zr": 0.75,
-   "added": 14
+   "added": 28
   },
   {
    "block_px": [
@@ -1092,9 +1097,9 @@
     160
    ],
    "canopy": 0.86,
-   "density_per_ha": 16.88,
+   "density_per_ha": 18.03,
    "zr": 0.2,
-   "added": 31
+   "added": 34
   },
   {
    "block_px": [
@@ -1102,9 +1107,9 @@
     224
    ],
    "canopy": 0.83,
-   "density_per_ha": 15.32,
+   "density_per_ha": 16.08,
    "zr": -0.01,
-   "added": 27
+   "added": 29
   },
   {
    "block_px": [
@@ -1112,9 +1117,9 @@
     288
    ],
    "canopy": 0.71,
-   "density_per_ha": 9.96,
+   "density_per_ha": 10.47,
    "zr": 0.01,
-   "added": 16
+   "added": 17
   },
   {
    "block_px": [
@@ -1122,7 +1127,7 @@
     352
    ],
    "canopy": 0.56,
-   "density_per_ha": 4.33,
+   "density_per_ha": 4.55,
    "zr": 0.0,
    "added": 8
   },
@@ -1132,9 +1137,9 @@
     416
    ],
    "canopy": 0.69,
-   "density_per_ha": 9.0,
+   "density_per_ha": 9.45,
    "zr": -0.01,
-   "added": 16
+   "added": 17
   },
   {
    "block_px": [
@@ -1142,9 +1147,9 @@
     480
    ],
    "canopy": 0.81,
-   "density_per_ha": 14.67,
+   "density_per_ha": 15.41,
    "zr": 0.01,
-   "added": 27
+   "added": 29
   },
   {
    "block_px": [
@@ -1152,9 +1157,9 @@
     544
    ],
    "canopy": 0.72,
-   "density_per_ha": 10.25,
+   "density_per_ha": 10.76,
    "zr": 0.0,
-   "added": 19
+   "added": 20
   },
   {
    "block_px": [
@@ -1162,9 +1167,9 @@
     608
    ],
    "canopy": 0.68,
-   "density_per_ha": 8.69,
+   "density_per_ha": 9.15,
    "zr": 0.03,
-   "added": 16
+   "added": 17
   },
   {
    "block_px": [
@@ -1172,9 +1177,9 @@
     672
    ],
    "canopy": 0.8,
-   "density_per_ha": 14.05,
+   "density_per_ha": 14.77,
    "zr": 0.01,
-   "added": 25
+   "added": 26
   },
   {
    "block_px": [
@@ -1182,9 +1187,9 @@
     736
    ],
    "canopy": 0.82,
-   "density_per_ha": 14.72,
+   "density_per_ha": 15.46,
    "zr": -0.01,
-   "added": 27
+   "added": 29
   },
   {
    "block_px": [
@@ -1192,9 +1197,9 @@
     800
    ],
    "canopy": 0.48,
-   "density_per_ha": 2.19,
+   "density_per_ha": 2.31,
    "zr": 0.04,
-   "added": 3
+   "added": 4
   },
   {
    "block_px": [
@@ -1202,9 +1207,9 @@
     864
    ],
    "canopy": 0.47,
-   "density_per_ha": 1.9,
+   "density_per_ha": 2.79,
    "zr": 0.38,
-   "added": 3
+   "added": 4
   },
   {
    "block_px": [
@@ -1212,9 +1217,9 @@
     928
    ],
    "canopy": 0.81,
-   "density_per_ha": 14.27,
+   "density_per_ha": 22.03,
    "zr": 0.53,
-   "added": 17
+   "added": 26
   },
   {
    "block_px": [
@@ -1222,9 +1227,9 @@
     160
    ],
    "canopy": 0.9,
-   "density_per_ha": 19.05,
+   "density_per_ha": 28.51,
    "zr": 0.44,
-   "added": 44
+   "added": 65
   },
   {
    "block_px": [
@@ -1232,9 +1237,9 @@
     224
    ],
    "canopy": 0.69,
-   "density_per_ha": 9.21,
+   "density_per_ha": 9.67,
    "zr": 0.0,
-   "added": 16
+   "added": 17
   },
   {
    "block_px": [
@@ -1242,7 +1247,7 @@
     288
    ],
    "canopy": 0.49,
-   "density_per_ha": 2.45,
+   "density_per_ha": 2.59,
    "zr": 0.04,
    "added": 0
   },
@@ -1252,9 +1257,9 @@
     352
    ],
    "canopy": 0.51,
-   "density_per_ha": 2.87,
+   "density_per_ha": 3.02,
    "zr": 0.01,
-   "added": 3
+   "added": 4
   },
   {
    "block_px": [
@@ -1262,9 +1267,9 @@
     416
    ],
    "canopy": 0.68,
-   "density_per_ha": 8.61,
+   "density_per_ha": 9.05,
    "zr": 0.02,
-   "added": 16
+   "added": 17
   },
   {
    "block_px": [
@@ -1272,9 +1277,9 @@
     480
    ],
    "canopy": 0.78,
-   "density_per_ha": 13.17,
+   "density_per_ha": 13.83,
    "zr": -0.01,
-   "added": 24
+   "added": 25
   },
   {
    "block_px": [
@@ -1282,9 +1287,9 @@
     544
    ],
    "canopy": 0.8,
-   "density_per_ha": 13.81,
+   "density_per_ha": 14.53,
    "zr": 0.02,
-   "added": 24
+   "added": 26
   },
   {
    "block_px": [
@@ -1292,9 +1297,9 @@
     608
    ],
    "canopy": 0.78,
-   "density_per_ha": 12.83,
+   "density_per_ha": 13.49,
    "zr": 0.01,
-   "added": 24
+   "added": 25
   },
   {
    "block_px": [
@@ -1302,7 +1307,7 @@
     672
    ],
    "canopy": 0.5,
-   "density_per_ha": 2.73,
+   "density_per_ha": 2.86,
    "zr": 0.01,
    "added": 5
   },
@@ -1312,7 +1317,7 @@
     736
    ],
    "canopy": 0.64,
-   "density_per_ha": 7.38,
+   "density_per_ha": 7.74,
    "zr": 0.0,
    "added": 13
   },
@@ -1322,7 +1327,7 @@
     800
    ],
    "canopy": 0.54,
-   "density_per_ha": 3.96,
+   "density_per_ha": 4.17,
    "zr": 0.03,
    "added": 4
   },
@@ -1332,9 +1337,9 @@
     864
    ],
    "canopy": 0.5,
-   "density_per_ha": 2.74,
+   "density_per_ha": 3.93,
    "zr": 0.32,
-   "added": 1
+   "added": 2
   },
   {
    "block_px": [
@@ -1342,9 +1347,9 @@
     928
    ],
    "canopy": 0.65,
-   "density_per_ha": 7.75,
+   "density_per_ha": 11.8,
    "zr": 0.49,
-   "added": 9
+   "added": 14
   },
   {
    "block_px": [
@@ -1352,9 +1357,9 @@
     160
    ],
    "canopy": 0.65,
-   "density_per_ha": 7.64,
+   "density_per_ha": 15.28,
    "zr": 0.67,
-   "added": 17
+   "added": 34
   },
   {
    "block_px": [
@@ -1362,9 +1367,9 @@
     224
    ],
    "canopy": 0.76,
-   "density_per_ha": 12.05,
+   "density_per_ha": 12.68,
    "zr": 0.02,
-   "added": 21
+   "added": 22
   },
   {
    "block_px": [
@@ -1372,7 +1377,7 @@
     288
    ],
    "canopy": 0.62,
-   "density_per_ha": 6.53,
+   "density_per_ha": 6.88,
    "zr": 0.04,
    "added": 4
   },
@@ -1382,9 +1387,9 @@
     352
    ],
    "canopy": 0.68,
-   "density_per_ha": 8.64,
+   "density_per_ha": 9.08,
    "zr": 0.01,
-   "added": 11
+   "added": 12
   },
   {
    "block_px": [
@@ -1392,9 +1397,9 @@
     416
    ],
    "canopy": 0.84,
-   "density_per_ha": 16.04,
+   "density_per_ha": 16.87,
    "zr": 0.02,
-   "added": 29
+   "added": 30
   },
   {
    "block_px": [
@@ -1402,9 +1407,9 @@
     480
    ],
    "canopy": 0.85,
-   "density_per_ha": 16.5,
+   "density_per_ha": 17.35,
    "zr": 0.01,
-   "added": 29
+   "added": 31
   },
   {
    "block_px": [
@@ -1412,9 +1417,9 @@
     544
    ],
    "canopy": 0.95,
-   "density_per_ha": 21.71,
+   "density_per_ha": 22.79,
    "zr": -0.01,
-   "added": 40
+   "added": 42
   },
   {
    "block_px": [
@@ -1422,9 +1427,9 @@
     608
    ],
    "canopy": 0.59,
-   "density_per_ha": 5.55,
+   "density_per_ha": 5.84,
    "zr": 0.02,
-   "added": 9
+   "added": 10
   },
   {
    "block_px": [
@@ -1432,9 +1437,9 @@
     672
    ],
    "canopy": 0.53,
-   "density_per_ha": 3.53,
+   "density_per_ha": 3.71,
    "zr": 0.01,
-   "added": 5
+   "added": 7
   },
   {
    "block_px": [
@@ -1442,9 +1447,9 @@
     736
    ],
    "canopy": 0.61,
-   "density_per_ha": 6.2,
+   "density_per_ha": 6.52,
    "zr": 0.03,
-   "added": 11
+   "added": 12
   },
   {
    "block_px": [
@@ -1452,7 +1457,7 @@
     800
    ],
    "canopy": 0.6,
-   "density_per_ha": 5.74,
+   "density_per_ha": 6.04,
    "zr": 0.01,
    "added": 5
   },
@@ -1462,7 +1467,7 @@
     864
    ],
    "canopy": 0.44,
-   "density_per_ha": 1.27,
+   "density_per_ha": 1.36,
    "zr": 0.19,
    "added": 0
   },
@@ -1472,9 +1477,9 @@
     928
    ],
    "canopy": 0.7,
-   "density_per_ha": 9.71,
+   "density_per_ha": 13.72,
    "zr": 0.27,
-   "added": 10
+   "added": 14
   },
   {
    "block_px": [
@@ -1482,9 +1487,9 @@
     160
    ],
    "canopy": 0.64,
-   "density_per_ha": 7.17,
+   "density_per_ha": 15.05,
    "zr": 0.79,
-   "added": 16
+   "added": 34
   },
   {
    "block_px": [
@@ -1492,9 +1497,9 @@
     224
    ],
    "canopy": 0.81,
-   "density_per_ha": 14.46,
+   "density_per_ha": 15.36,
    "zr": 0.14,
-   "added": 27
+   "added": 29
   },
   {
    "block_px": [
@@ -1502,9 +1507,9 @@
     288
    ],
    "canopy": 0.81,
-   "density_per_ha": 14.38,
+   "density_per_ha": 15.12,
    "zr": 0.02,
-   "added": 25
+   "added": 27
   },
   {
    "block_px": [
@@ -1512,9 +1517,9 @@
     352
    ],
    "canopy": 0.67,
-   "density_per_ha": 8.38,
+   "density_per_ha": 8.8,
    "zr": 0.0,
-   "added": 16
+   "added": 17
   },
   {
    "block_px": [
@@ -1522,9 +1527,9 @@
     416
    ],
    "canopy": 0.88,
-   "density_per_ha": 17.65,
+   "density_per_ha": 18.57,
    "zr": 0.03,
-   "added": 32
+   "added": 34
   },
   {
    "block_px": [
@@ -1532,9 +1537,9 @@
     480
    ],
    "canopy": 0.67,
-   "density_per_ha": 8.48,
+   "density_per_ha": 8.91,
    "zr": 0.02,
-   "added": 16
+   "added": 17
   },
   {
    "block_px": [
@@ -1542,9 +1547,9 @@
     544
    ],
    "canopy": 0.83,
-   "density_per_ha": 15.59,
+   "density_per_ha": 16.4,
    "zr": 0.02,
-   "added": 27
+   "added": 29
   },
   {
    "block_px": [
@@ -1552,9 +1557,9 @@
     608
    ],
    "canopy": 0.8,
-   "density_per_ha": 13.93,
+   "density_per_ha": 14.66,
    "zr": 0.02,
-   "added": 24
+   "added": 26
   },
   {
    "block_px": [
@@ -1562,7 +1567,7 @@
     672
    ],
    "canopy": 0.64,
-   "density_per_ha": 7.21,
+   "density_per_ha": 7.59,
    "zr": 0.02,
    "added": 8
   },
@@ -1572,7 +1577,7 @@
     736
    ],
    "canopy": 0.63,
-   "density_per_ha": 6.98,
+   "density_per_ha": 7.33,
    "zr": 0.01,
    "added": 9
   },
@@ -1582,9 +1587,9 @@
     800
    ],
    "canopy": 0.64,
-   "density_per_ha": 7.08,
+   "density_per_ha": 7.45,
    "zr": 0.03,
-   "added": 12
+   "added": 13
   },
   {
    "block_px": [
@@ -1592,9 +1597,9 @@
     864
    ],
    "canopy": 0.66,
-   "density_per_ha": 8.02,
+   "density_per_ha": 8.43,
    "zr": 0.02,
-   "added": 15
+   "added": 16
   },
   {
    "block_px": [
@@ -1602,9 +1607,9 @@
     928
    ],
    "canopy": 0.81,
-   "density_per_ha": 14.25,
+   "density_per_ha": 15.07,
    "zr": 0.08,
-   "added": 13
+   "added": 14
   },
   {
    "block_px": [
@@ -1612,9 +1617,9 @@
     160
    ],
    "canopy": 0.81,
-   "density_per_ha": 14.57,
+   "density_per_ha": 31.54,
    "zr": 0.87,
-   "added": 33
+   "added": 71
   },
   {
    "block_px": [
@@ -1622,9 +1627,9 @@
     224
    ],
    "canopy": 0.82,
-   "density_per_ha": 14.93,
+   "density_per_ha": 21.63,
    "zr": 0.34,
-   "added": 35
+   "added": 50
   },
   {
    "block_px": [
@@ -1632,9 +1637,9 @@
     288
    ],
    "canopy": 0.78,
-   "density_per_ha": 13.15,
+   "density_per_ha": 13.81,
    "zr": 0.0,
-   "added": 24
+   "added": 25
   },
   {
    "block_px": [
@@ -1642,9 +1647,9 @@
     352
    ],
    "canopy": 0.74,
-   "density_per_ha": 11.4,
+   "density_per_ha": 11.99,
    "zr": 0.02,
-   "added": 21
+   "added": 22
   },
   {
    "block_px": [
@@ -1652,9 +1657,9 @@
     416
    ],
    "canopy": 0.63,
-   "density_per_ha": 6.87,
+   "density_per_ha": 7.26,
    "zr": 0.08,
-   "added": 12
+   "added": 13
   },
   {
    "block_px": [
@@ -1662,9 +1667,9 @@
     480
    ],
    "canopy": 0.56,
-   "density_per_ha": 4.53,
+   "density_per_ha": 4.77,
    "zr": 0.04,
-   "added": 8
+   "added": 9
   },
   {
    "block_px": [
@@ -1672,9 +1677,9 @@
     544
    ],
    "canopy": 0.68,
-   "density_per_ha": 8.57,
+   "density_per_ha": 9.02,
    "zr": 0.02,
-   "added": 16
+   "added": 17
   },
   {
    "block_px": [
@@ -1682,9 +1687,9 @@
     608
    ],
    "canopy": 0.81,
-   "density_per_ha": 14.33,
+   "density_per_ha": 15.06,
    "zr": 0.01,
-   "added": 25
+   "added": 27
   },
   {
    "block_px": [
@@ -1692,7 +1697,7 @@
     672
    ],
    "canopy": 0.58,
-   "density_per_ha": 5.11,
+   "density_per_ha": 5.37,
    "zr": 0.01,
    "added": 4
   },
@@ -1702,9 +1707,9 @@
     736
    ],
    "canopy": 0.66,
-   "density_per_ha": 7.87,
+   "density_per_ha": 8.27,
    "zr": 0.02,
-   "added": 11
+   "added": 12
   },
   {
    "block_px": [
@@ -1712,7 +1717,7 @@
     800
    ],
    "canopy": 0.58,
-   "density_per_ha": 5.0,
+   "density_per_ha": 5.26,
    "zr": 0.02,
    "added": 5
   },
@@ -1722,9 +1727,9 @@
     864
    ],
    "canopy": 0.61,
-   "density_per_ha": 6.18,
+   "density_per_ha": 6.5,
    "zr": 0.03,
-   "added": 11
+   "added": 12
   },
   {
    "block_px": [
@@ -1732,7 +1737,7 @@
     928
    ],
    "canopy": 0.68,
-   "density_per_ha": 8.82,
+   "density_per_ha": 9.27,
    "zr": 0.02,
    "added": 8
   },
@@ -1742,9 +1747,9 @@
     160
    ],
    "canopy": 0.85,
-   "density_per_ha": 16.29,
+   "density_per_ha": 37.02,
    "zr": 1.98,
-   "added": 36
+   "added": 83
   },
   {
    "block_px": [
@@ -1752,9 +1757,9 @@
     224
    ],
    "canopy": 0.76,
-   "density_per_ha": 12.31,
+   "density_per_ha": 23.93,
    "zr": 0.6,
-   "added": 28
+   "added": 55
   },
   {
    "block_px": [
@@ -1762,9 +1767,9 @@
     288
    ],
    "canopy": 0.72,
-   "density_per_ha": 10.4,
+   "density_per_ha": 15.03,
    "zr": 0.33,
-   "added": 24
+   "added": 34
   },
   {
    "block_px": [
@@ -1772,9 +1777,9 @@
     352
    ],
    "canopy": 0.82,
-   "density_per_ha": 14.68,
+   "density_per_ha": 15.52,
    "zr": 0.08,
-   "added": 34
+   "added": 36
   },
   {
    "block_px": [
@@ -1782,7 +1787,7 @@
     416
    ],
    "canopy": 0.64,
-   "density_per_ha": 7.25,
+   "density_per_ha": 7.62,
    "zr": 0.02,
    "added": 13
   },
@@ -1792,9 +1797,9 @@
     480
    ],
    "canopy": 0.81,
-   "density_per_ha": 14.25,
+   "density_per_ha": 14.96,
    "zr": 0.0,
-   "added": 25
+   "added": 27
   },
   {
    "block_px": [
@@ -1802,9 +1807,9 @@
     544
    ],
    "canopy": 0.81,
-   "density_per_ha": 14.3,
+   "density_per_ha": 15.05,
    "zr": 0.03,
-   "added": 25
+   "added": 27
   },
   {
    "block_px": [
@@ -1812,9 +1817,9 @@
     608
    ],
    "canopy": 0.89,
-   "density_per_ha": 18.43,
+   "density_per_ha": 19.38,
    "zr": 0.02,
-   "added": 32
+   "added": 35
   },
   {
    "block_px": [
@@ -1822,9 +1827,9 @@
     672
    ],
    "canopy": 0.62,
-   "density_per_ha": 6.43,
+   "density_per_ha": 6.76,
    "zr": 0.01,
-   "added": 11
+   "added": 12
   },
   {
    "block_px": [
@@ -1832,7 +1837,7 @@
     736
    ],
    "canopy": 0.6,
-   "density_per_ha": 5.64,
+   "density_per_ha": 5.93,
    "zr": 0.02,
    "added": 9
   },
@@ -1842,9 +1847,9 @@
     800
    ],
    "canopy": 0.6,
-   "density_per_ha": 5.85,
+   "density_per_ha": 6.15,
    "zr": 0.02,
-   "added": 3
+   "added": 4
   },
   {
    "block_px": [
@@ -1852,7 +1857,7 @@
     800
    ],
    "canopy": 0.6,
-   "density_per_ha": 5.85,
+   "density_per_ha": 6.15,
    "zr": 0.02,
    "added": 0
   },
@@ -1862,9 +1867,9 @@
     864
    ],
    "canopy": 0.85,
-   "density_per_ha": 16.38,
+   "density_per_ha": 17.26,
    "zr": 0.04,
-   "added": 24
+   "added": 25
   },
   {
    "block_px": [
@@ -1872,9 +1877,9 @@
     928
    ],
    "canopy": 0.78,
-   "density_per_ha": 12.9,
+   "density_per_ha": 13.6,
    "zr": 0.04,
-   "added": 11
+   "added": 12
   },
   {
    "block_px": [
@@ -1882,9 +1887,9 @@
     160
    ],
    "canopy": 0.89,
-   "density_per_ha": 18.13,
+   "density_per_ha": 41.2,
    "zr": 1.95,
-   "added": 41
+   "added": 94
   },
   {
    "block_px": [
@@ -1892,9 +1897,9 @@
     224
    ],
    "canopy": 0.75,
-   "density_per_ha": 11.58,
+   "density_per_ha": 26.33,
    "zr": 1.17,
-   "added": 25
+   "added": 59
   },
   {
    "block_px": [
@@ -1902,9 +1907,9 @@
     288
    ],
    "canopy": 0.61,
-   "density_per_ha": 6.21,
+   "density_per_ha": 14.12,
    "zr": 1.48,
-   "added": 14
+   "added": 31
   },
   {
    "block_px": [
@@ -1912,9 +1917,9 @@
     352
    ],
    "canopy": 0.67,
-   "density_per_ha": 8.5,
+   "density_per_ha": 19.31,
    "zr": 1.27,
-   "added": 19
+   "added": 44
   },
   {
    "block_px": [
@@ -1922,9 +1927,9 @@
     416
    ],
    "canopy": 0.69,
-   "density_per_ha": 9.32,
+   "density_per_ha": 20.98,
    "zr": 0.97,
-   "added": 22
+   "added": 47
   },
   {
    "block_px": [
@@ -1932,9 +1937,9 @@
     480
    ],
    "canopy": 0.83,
-   "density_per_ha": 15.28,
+   "density_per_ha": 22.05,
    "zr": 0.33,
-   "added": 35
+   "added": 51
   },
   {
    "block_px": [
@@ -1942,9 +1947,9 @@
     544
    ],
    "canopy": 0.9,
-   "density_per_ha": 18.86,
+   "density_per_ha": 19.87,
    "zr": 0.03,
-   "added": 40
+   "added": 43
   },
   {
    "block_px": [
@@ -1952,9 +1957,9 @@
     608
    ],
    "canopy": 0.86,
-   "density_per_ha": 16.97,
+   "density_per_ha": 17.86,
    "zr": 0.02,
-   "added": 31
+   "added": 33
   },
   {
    "block_px": [
@@ -1962,9 +1967,9 @@
     672
    ],
    "canopy": 0.71,
-   "density_per_ha": 10.09,
+   "density_per_ha": 10.63,
    "zr": 0.03,
-   "added": 17
+   "added": 18
   },
   {
    "block_px": [
@@ -1972,7 +1977,7 @@
     736
    ],
    "canopy": 0.56,
-   "density_per_ha": 4.34,
+   "density_per_ha": 4.57,
    "zr": 0.03,
    "added": 8
   },
@@ -1982,9 +1987,9 @@
     800
    ],
    "canopy": 0.72,
-   "density_per_ha": 10.25,
+   "density_per_ha": 10.79,
    "zr": 0.04,
-   "added": 16
+   "added": 17
   },
   {
    "block_px": [
@@ -1992,7 +1997,7 @@
     864
    ],
    "canopy": 0.79,
-   "density_per_ha": 13.42,
+   "density_per_ha": 14.16,
    "zr": 0.05,
    "added": 1
   },
@@ -2002,9 +2007,9 @@
     928
    ],
    "canopy": 0.94,
-   "density_per_ha": 20.9,
+   "density_per_ha": 22.04,
    "zr": 0.05,
-   "added": 16
+   "added": 17
   },
   {
    "block_px": [
@@ -2012,9 +2017,9 @@
     160
    ],
    "canopy": 0.73,
-   "density_per_ha": 10.75,
+   "density_per_ha": 24.44,
    "zr": 2.38,
-   "added": 24
+   "added": 55
   },
   {
    "block_px": [
@@ -2022,9 +2027,9 @@
     224
    ],
    "canopy": 0.92,
-   "density_per_ha": 20.02,
+   "density_per_ha": 45.5,
    "zr": 1.75,
-   "added": 44
+   "added": 102
   },
   {
    "block_px": [
@@ -2032,9 +2037,9 @@
     288
    ],
    "canopy": 0.82,
-   "density_per_ha": 14.98,
+   "density_per_ha": 21.69,
    "zr": 0.34,
-   "added": 35
+   "added": 50
   },
   {
    "block_px": [
@@ -2042,9 +2047,9 @@
     352
    ],
    "canopy": 0.76,
-   "density_per_ha": 12.13,
+   "density_per_ha": 27.58,
    "zr": 1.15,
-   "added": 27
+   "added": 62
   },
   {
    "block_px": [
@@ -2052,9 +2057,9 @@
     416
    ],
    "canopy": 0.77,
-   "density_per_ha": 12.79,
+   "density_per_ha": 29.07,
    "zr": 1.27,
-   "added": 30
+   "added": 65
   },
   {
    "block_px": [
@@ -2062,9 +2067,9 @@
     480
    ],
    "canopy": 0.81,
-   "density_per_ha": 14.26,
+   "density_per_ha": 32.42,
    "zr": 1.05,
-   "added": 33
+   "added": 73
   },
   {
    "block_px": [
@@ -2072,9 +2077,9 @@
     544
    ],
    "canopy": 0.85,
-   "density_per_ha": 16.58,
+   "density_per_ha": 35.06,
    "zr": 0.81,
-   "added": 36
+   "added": 78
   },
   {
    "block_px": [
@@ -2082,9 +2087,9 @@
     608
    ],
    "canopy": 0.9,
-   "density_per_ha": 18.81,
+   "density_per_ha": 29.09,
    "zr": 0.54,
-   "added": 42
+   "added": 66
   },
   {
    "block_px": [
@@ -2092,9 +2097,9 @@
     672
    ],
    "canopy": 0.52,
-   "density_per_ha": 3.29,
+   "density_per_ha": 3.47,
    "zr": 0.04,
-   "added": 5
+   "added": 7
   },
   {
    "block_px": [
@@ -2102,9 +2107,9 @@
     736
    ],
    "canopy": 0.45,
-   "density_per_ha": 1.53,
+   "density_per_ha": 1.61,
    "zr": 0.04,
-   "added": 3
+   "added": 4
   },
   {
    "block_px": [
@@ -2112,7 +2117,7 @@
     800
    ],
    "canopy": 0.53,
-   "density_per_ha": 3.49,
+   "density_per_ha": 3.68,
    "zr": 0.04,
    "added": 7
   },
@@ -2122,7 +2127,7 @@
     864
    ],
    "canopy": 0.75,
-   "density_per_ha": 11.6,
+   "density_per_ha": 12.22,
    "zr": 0.04,
    "added": 3
   },
@@ -2132,7 +2137,7 @@
     864
    ],
    "canopy": 0.75,
-   "density_per_ha": 11.6,
+   "density_per_ha": 12.22,
    "zr": 0.04,
    "added": 4
   },
@@ -2142,9 +2147,9 @@
     928
    ],
    "canopy": 0.88,
-   "density_per_ha": 18.07,
+   "density_per_ha": 19.03,
    "zr": 0.04,
-   "added": 16
+   "added": 17
   },
   {
    "block_px": [
@@ -2152,7 +2157,7 @@
     160
    ],
    "canopy": 0.45,
-   "density_per_ha": 1.36,
+   "density_per_ha": 3.08,
    "zr": 2.8,
    "added": 0
   },
@@ -2162,9 +2167,9 @@
     224
    ],
    "canopy": 0.92,
-   "density_per_ha": 20.1,
+   "density_per_ha": 45.67,
    "zr": 1.34,
-   "added": 9
+   "added": 19
   },
   {
    "block_px": [
@@ -2172,9 +2177,9 @@
     288
    ],
    "canopy": 0.87,
-   "density_per_ha": 17.47,
+   "density_per_ha": 18.5,
    "zr": 0.09,
-   "added": 5
+   "added": 7
   },
   {
    "block_px": [
@@ -2182,9 +2187,9 @@
     352
    ],
    "canopy": 0.71,
-   "density_per_ha": 9.89,
+   "density_per_ha": 10.55,
    "zr": 0.19,
-   "added": 4
+   "added": 5
   },
   {
    "block_px": [
@@ -2192,9 +2197,9 @@
     416
    ],
    "canopy": 0.76,
-   "density_per_ha": 11.97,
+   "density_per_ha": 18.51,
    "zr": 0.54,
-   "added": 6
+   "added": 8
   },
   {
    "block_px": [
@@ -2202,9 +2207,9 @@
     480
    ],
    "canopy": 0.9,
-   "density_per_ha": 18.9,
+   "density_per_ha": 37.82,
    "zr": 0.67,
-   "added": 8
+   "added": 16
   },
   {
    "block_px": [
@@ -2212,9 +2217,9 @@
     544
    ],
    "canopy": 0.67,
-   "density_per_ha": 8.51,
+   "density_per_ha": 19.35,
    "zr": 1.34,
-   "added": 3
+   "added": 8
   },
   {
    "block_px": [
@@ -2222,9 +2227,9 @@
     608
    ],
    "canopy": 0.61,
-   "density_per_ha": 6.13,
+   "density_per_ha": 13.93,
    "zr": 1.11,
-   "added": 3
+   "added": 5
   },
   {
    "block_px": [
@@ -2232,7 +2237,7 @@
     672
    ],
    "canopy": 0.52,
-   "density_per_ha": 3.22,
+   "density_per_ha": 3.4,
    "zr": 0.05,
    "added": 0
   },
@@ -2242,7 +2247,7 @@
     736
    ],
    "canopy": 0.63,
-   "density_per_ha": 6.98,
+   "density_per_ha": 7.36,
    "zr": 0.05,
    "added": 3
   },
@@ -2252,7 +2257,7 @@
     800
    ],
    "canopy": 0.51,
-   "density_per_ha": 2.97,
+   "density_per_ha": 3.13,
    "zr": 0.04,
    "added": 0
   },
@@ -2262,9 +2267,9 @@
     864
    ],
    "canopy": 0.81,
-   "density_per_ha": 14.45,
+   "density_per_ha": 15.2,
    "zr": 0.03,
-   "added": 4
+   "added": 5
   },
   {
    "block_px": [
@@ -2272,7 +2277,7 @@
     928
    ],
    "canopy": 0.83,
-   "density_per_ha": 15.59,
+   "density_per_ha": 16.46,
    "zr": 0.06,
    "added": 3
   }

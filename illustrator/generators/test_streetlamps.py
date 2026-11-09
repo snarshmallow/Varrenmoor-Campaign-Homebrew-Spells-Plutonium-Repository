@@ -99,6 +99,44 @@ class Placement(unittest.TestCase):
         self.assertEqual(len(sl.plan_lamps([short], [], cfg(spacing_ft=60, min_lamps=2))["lamps"]), 0)
         self.assertEqual(len(sl.plan_lamps([short], [], cfg(spacing_ft=60, min_lamps=1, end_margin_ft=6))["lamps"]), 1)
 
+    def test_centre_short_and_state(self):
+        short = road("str_s", [(0, 0), (10, 0)])
+        r = sl.plan_lamps([short], [], cfg(spacing_ft=60, min_lamps=2))
+        self.assertEqual(len(r["lamps"]), 0)
+        r = sl.plan_lamps([short], [], cfg(spacing_ft=60, min_lamps=2, centre_short=True))
+        self.assertEqual(len(r["lamps"]), 1)
+        self.assertAlmostEqual(r["lamps"][0]["station_ft"], 5.0, places=1)
+        self.assertEqual(r["roads"]["str_s"]["lamps"], 1)
+        # on but every position skipped by a junction: never a plain "on"
+        cross = road("str_x", [(50, -50), (50, 50)])
+        r = sl.plan_lamps([road("str_s", [(0, 0), (100, 0)]), cross], [], cfg(spacing_ft=60, min_lamps=1, skip_junction_ft=200))
+        st = r["roads"]["str_s"]["state"]
+        self.assertTrue(st == "on" or st.startswith("on ("), st)
+        if not r["roads"]["str_s"]["lamps"]:
+            self.assertIn("0 lamps", st)
+        # forced-on road too short for its margins reports that
+        tiny = road("str_t", [(0, 0), (8, 0)], edit={"lamps": {"on": True}})
+        self.assertEqual(sl.plan_lamps([tiny], [], cfg(spacing_ft=60))["roads"]["str_t"]["state"], "too short for 1 lamp(s)")
+
+    def test_apply_default_keeps_stored_switch(self):
+        class A:
+            pass
+        d = tempfile.mkdtemp()
+        try:
+            self.assertTrue(sl._stored_enabled([os.path.join(d, "none.json")]))
+            p = os.path.join(d, "placements.json")
+            with open(p, "w") as f:
+                json.dump({"streetlamps": {"enabled": False, "config": {"enabled": False}}}, f)
+            self.assertFalse(sl._stored_enabled([p]))
+            with open(p, "w") as f:
+                json.dump({"streetlamps": {"enabled": True, "config": {"enabled": True}}}, f)
+            self.assertTrue(sl._stored_enabled([p]))
+        finally:
+            shutil.rmtree(d, ignore_errors=True)
+        a = sl.build_parser().parse_args(["apply", "--centre-short", "on"])
+        self.assertTrue(sl._cfg_from_args(a)["centre_short"])
+        self.assertNotIn("enabled", sl._cfg_from_args(a))
+
     def test_determinism_and_jitter(self):
         a = sl.plan_lamps([MAIN], [], cfg(spacing_ft=30, jitter_ft=6, seed=3))
         b = sl.plan_lamps([MAIN], [], cfg(spacing_ft=30, jitter_ft=6, seed=3))

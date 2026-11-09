@@ -46,7 +46,7 @@ SIDE_CLASS = ("lane", "alley", "path", "track")
 
 DEFAULTS = {
     "enabled": False, "style": "wooden_oil", "spacing_ft": 60.0, "side": "alternating", "offset_ft": 1.5, "height_ft": 0.0,
-    "classes": ["main", "side", "dirt"], "skip_junction_ft": 20.0, "skip_doors_ft": 8.0, "skip_bridges": True, "jitter_ft": 0.0, "seed": 7, "min_lamps": 2,
+    "classes": ["main", "side", "dirt"], "skip_junction_ft": 20.0, "skip_doors_ft": 8.0, "skip_bridges": True, "jitter_ft": 0.0, "seed": 7, "min_lamps": 2, "centre_short": False,
     "end_margin_ft": 6.0, "ground": "road", "wall_reach_ft": 14.0, "chunk_ft": 0.0,
     "light": {"enabled": True, "kelvin": 0, "color": "", "dim_ft": 0.0, "bright_ft": 0.0, "intensity": 0.0, "flicker": True, "shadows": False},
 }
@@ -90,7 +90,7 @@ def normalize_config(cfg=None, styles=None):
         if k == "light" or k not in cfg or cfg[k] is None:
             continue
         v = cfg[k]
-        if k in ("enabled", "skip_bridges"):
+        if k in ("enabled", "skip_bridges", "centre_short"):
             out[k] = bool(v)
         elif k == "style":
             if v not in styles["styles"]:
@@ -311,9 +311,13 @@ def plan_lamps(roads, buildings=None, cfg=None, ground=None, styles=None):
         height = cfg["height_ft"] or st["height_ft"]
         half = r.get("width_ft", 12.0) / 2.0
         sts = _stations(L, spacing, cfg["end_margin_ft"])
+        centred = False
         if len(sts) < max(cfg["min_lamps"], 1) and not (on and sts):
-            info["state"] = f"too short for {max(cfg['min_lamps'], 1)} lamp(s)"
-            continue
+            if cfg["centre_short"] and L >= 4.0:
+                sts, centred = [L / 2.0], True                      # centre_short: a road too short for the margins / min_lamps gets one lamp in the middle
+            else:
+                info["state"] = f"too short for {max(cfg['min_lamps'], 1)} lamp(s)"
+                continue
         cand = []
         for i, s in enumerate(sts):
             if cfg["jitter_ft"] > 0:
@@ -360,9 +364,11 @@ def plan_lamps(roads, buildings=None, cfg=None, ground=None, styles=None):
         info["lamps"] = n_road
         if info["state"] == "class":
             info["state"] = "on"
-        if 0 < n_road < cfg["min_lamps"] and not on:
+        if 0 < n_road < cfg["min_lamps"] and not on and not centred:
             res["lamps"] = [l for l in res["lamps"] if l["road"] != r["id"]]
             info["lamps"], info["state"] = 0, f"fewer than {cfg['min_lamps']} lamps fit after skips"
+        elif n_road == 0 and info["state"] == "on":                 # never report a plain "on" for a road that got nothing
+            info["state"] = "on (too short: 0 lamps)" if not sts else f"on (0 lamps: all {len(cand)} position(s) skipped)"
     cnt = {}                                                    # stable ids after skips: lamp_<road>_<nnn> counted per road
 
     for l in res["lamps"]:
@@ -779,10 +785,10 @@ def _cfg_from_args(a, base=None):
             cfg.update(json.load(f))
     lt = dict(cfg.get("light") or {})
     m = {"enabled": a.enabled, "style": a.style, "spacing_ft": a.spacing, "side": a.side, "offset_ft": a.offset, "height_ft": a.height, "classes": a.classes,
-         "skip_junction_ft": a.skip_junction, "skip_doors_ft": a.skip_doors, "jitter_ft": a.jitter, "seed": a.seed, "min_lamps": a.min_lamps}
+         "skip_junction_ft": a.skip_junction, "skip_doors_ft": a.skip_doors, "jitter_ft": a.jitter, "seed": a.seed, "min_lamps": a.min_lamps, "centre_short": a.centre_short}
     for k, v in m.items():
         if v is not None:
-            cfg[k] = (v == "on") if k == "enabled" else v
+            cfg[k] = (v == "on") if k in ("enabled", "centre_short") else v
     for k, v in (("kelvin", a.kelvin), ("dim_ft", a.dim), ("bright_ft", a.bright), ("intensity", a.intensity)):
         if v is not None:
             lt[k] = v
@@ -793,12 +799,25 @@ def _cfg_from_args(a, base=None):
     return cfg
 
 
+def _stored_enabled(paths):
+    """The scene switch stored by the last apply in the first existing placements file; True when never applied."""
+    for p in paths:
+        try:
+            with open(p, encoding="utf-8") as f:
+                return bool(((json.load(f).get("streetlamps") or {}).get("config") or {}).get("enabled", True))
+        except (OSError, ValueError):
+            continue
+    return True
+
+
 def cmd_plan(a, write=False):
     styles = load_styles()
     pack, pd = _load_pack(a)
     cfg = _cfg_from_args(a)
     if not write:
         cfg["enabled"] = True                                         # a dry run plans "what would it do if on" (the readout)
+    elif "enabled" not in cfg:
+        cfg["enabled"] = _stored_enabled(a.placements or [os.path.join(pd, "placements.json")])   # apply without --enabled / config: keep the stored switch (first run: on, like plan)
     roads, blds = _pack_roads_buildings(pack)
     plan = plan_lamps(roads, blds, normalize_config(cfg, styles), ground=pack.elevation_at, styles=styles)
     lights = lamp_lights(plan["lamps"], plan["config"], styles)
@@ -829,7 +848,7 @@ def build_parser():
             s.add_argument("--place", default="bridgehollow", help="place id (world/<place>/export is the pack unless --pack)")
             s.add_argument("--pack", help="pack folder (default world/<place>/export)")
             s.add_argument("--config", help="JSON file with the settings (the panel writes one); the options below override it")
-            s.add_argument("--enabled", choices=["on", "off"], help="scene toggle: off removes the lamp layer and lamp lights from the placements")
+            s.add_argument("--enabled", choices=["on", "off"], help="scene toggle: off removes the lamp layer and lamp lights from the placements. Omitted: apply keeps the setting stored by the last apply (on the first run: on), plan is always a dry run as if on")
             s.add_argument("--style", help="wrought_iron | wooden_oil | stone_pillar | bracket_wall | torch_post | shepherd_crook")
             s.add_argument("--spacing", type=float, help="distance between lamps along the road, ft")
             s.add_argument("--side", choices=list(SIDES), help="left | right | alternating | both")
@@ -841,6 +860,7 @@ def build_parser():
             s.add_argument("--jitter", type=float, help="random shift along the road, ft (0 = regular)")
             s.add_argument("--seed", type=int, help="jitter seed")
             s.add_argument("--min-lamps", dest="min_lamps", type=int, help="a road that fits fewer lamps than this gets none")
+            s.add_argument("--centre-short", dest="centre_short", choices=["on", "off"], help="a road too short for min-lamps / the end margins gets one centred lamp (default off)")
             s.add_argument("--kelvin", type=float, help="light colour temperature K (0 = style default)")
             s.add_argument("--dim", type=float, help="light dim radius ft (0 = style default)")
             s.add_argument("--bright", type=float, help="light bright radius ft (0 = style default)")

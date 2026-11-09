@@ -14,7 +14,7 @@
   VB.streetlampsDefaults = function () {
     // enabled false: an untouched place exports exactly as before. Light numbers of 0 mean "the style's own value" (kelvin, radius, strength)
     return { enabled: false, style: "wooden_oil", spacing_ft: 60, side: "alternating", offset_ft: 1.5, height_ft: 0, classes: { main: true, side: true, dirt: true },
-      skip_junction_ft: 20, skip_doors_ft: 8, skip_bridges: true, jitter_ft: 0, seed: 7, min_lamps: 2, extra: "", dry: true,
+      skip_junction_ft: 20, skip_doors_ft: 8, skip_bridges: true, jitter_ft: 0, seed: 7, min_lamps: 2, centre_short: false, extra: "", dry: true,
       light: { enabled: true, kelvin: 0, color: "", dim_ft: 0, bright_ft: 0, intensity: 0, flicker: true, shadows: false },
       last: null, scene: null };
   };
@@ -22,7 +22,7 @@
     var s = st.streetlamps || VB.streetlampsDefaults(), L = s.light || {};
     return { enabled: !!s.enabled, style: s.style, spacing_ft: n(s.spacing_ft, 60), side: s.side, offset_ft: n(s.offset_ft, 1.5), height_ft: n(s.height_ft, 0),
       classes: ["main", "side", "dirt"].filter(function (k) { return (s.classes || {})[k]; }), skip_junction_ft: n(s.skip_junction_ft, 20), skip_doors_ft: n(s.skip_doors_ft, 8),
-      skip_bridges: s.skip_bridges !== false, jitter_ft: n(s.jitter_ft, 0), seed: Math.round(n(s.seed, 7)), min_lamps: Math.round(n(s.min_lamps, 2)),
+      skip_bridges: s.skip_bridges !== false, jitter_ft: n(s.jitter_ft, 0), seed: Math.round(n(s.seed, 7)), min_lamps: Math.round(n(s.min_lamps, 2)), centre_short: !!s.centre_short,
       light: { enabled: L.enabled !== false, kelvin: n(L.kelvin, 0), color: /^#[0-9a-f]{6}$/i.test(L.color || "") ? L.color : "", dim_ft: n(L.dim_ft, 0), bright_ft: n(L.bright_ft, 0),
         intensity: n(L.intensity, 0), flicker: L.flicker !== false, shadows: !!L.shadows } };
   };
@@ -35,7 +35,8 @@
   };
   function remember(run) {
     var r = run.vars.sl; if (!r || r.ok === false) throw new Error((r && r.error) || "streetlamps.py gave no result");
-    run.setState("streetlamps.last", { at: new Date().toISOString(), lamps: r.lamps, lights: r.lights, by_class: r.by_class, by_style: r.by_style, skipped: r.skipped, other: r.other_lights,
+    var rd = r.roads || {}, empty = Object.keys(rd).filter(function (k) { return /^on \(/.test(String(rd[k].state || "")); }).map(function (k) { return k + " " + rd[k].state + ", " + rd[k].length_ft + " ft"; });
+    run.setState("streetlamps.last", { empty_roads: empty, at: new Date().toISOString(), lamps: r.lamps, lights: r.lights, by_class: r.by_class, by_style: r.by_style, skipped: r.skipped, other: r.other_lights,
       total_lights: r.total_lights, written: !!r.written, enabled: r.config && r.config.enabled, tris: r.written && r.written[0] && r.written[0].tris, roads: Object.keys(r.roads || {}).length });
     return r;
   }
@@ -102,6 +103,7 @@
     if (p.warn) lines.push("WARNING: " + p.warn);
     else if (total > VB.F3D.AUTO_HYBRID_ABOVE) lines.push("Note: more than " + VB.F3D.AUTO_HYBRID_ABOVE + " lights: the Lighting tab budget (auto) will thin them; lamps keep priority 80 (above doors, hearths and windows).");
     if (s.light && s.light.shadows) lines.push("WARNING: light shadows on: each shadow-casting lamp renders the scene 6 more times per frame. Keep this off unless you only have a few lamps.");
+    if (l.empty_roads && l.empty_roads.length) lines.push("Roads switched on but with no lamp: " + l.empty_roads.slice(0, 6).join("; ") + (l.empty_roads.length > 6 ? "; +" + (l.empty_roads.length - 6) + " more" : "") + (s.centre_short ? "." : ". Tick 'Centre a lamp on short roads' to give short roads one."));
     if (l.tris) lines.push("Lamp mesh: " + l.tris + " triangles in one tile.");
     return lines.join("\n");
   };

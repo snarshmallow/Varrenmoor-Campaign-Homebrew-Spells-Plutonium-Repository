@@ -100,5 +100,31 @@ class MoorPalette(unittest.TestCase):
             self.assertNotIn('"texture": ' + bad, txt)
 
 
+class TreeDensity(unittest.TestCase):
+    def test_pine_boost_only_touches_pines(self):
+        import varrenmoor_trees as vt
+        mix = vt.mix_for(0, 0.8, False)                       # high ground: mostly pines
+        m, fac = vt.boosted_mix(mix, 2.0)
+        self.assertGreater(fac, 1.0)
+        base = sum(x["weight"] for x in mix)
+        # total density x pine share of the new mix = 2 x the old pine share; broadleaf share x total unchanged
+        def share(mx, group, inv=False):
+            t = sum(x["weight"] for x in mx)
+            return sum(x["weight"] for x in mx if (x["species"] in vt.PINES) != inv) / t
+        self.assertAlmostEqual(fac * share(m, vt.PINES), 2.0 * share(mix, vt.PINES), places=6)
+        self.assertAlmostEqual(fac * share(m, vt.PINES, True), share(mix, vt.PINES, True), places=6)
+        self.assertEqual(vt.boosted_mix(mix, 1.0), (mix, 1.0))
+        self.assertEqual(vt.boosted_mix([{"species": "oak", "weight": 1}], 3.0)[1], 1.0)
+        self.assertGreater(base, 0)
+
+    def test_hills_denser_and_defaults(self):
+        import varrenmoor_trees as vt
+        self.assertEqual(vt.pine_multiplier(0.0, 1.0, 0.0), 1.0)                     # old scatter reproducible
+        self.assertGreater(vt.DEFAULT_PINE_DENSITY, 1.0)
+        self.assertGreater(vt.pine_multiplier(1.0), vt.pine_multiplier(0.0))
+        self.assertAlmostEqual(vt.pine_multiplier(5.0), vt.pine_multiplier(1.0))     # clamped
+        self.assertGreater(vt.DEFAULT_MAX_TREES, 0)
+
+
 if __name__ == "__main__":
     unittest.main()

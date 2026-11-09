@@ -1940,6 +1940,11 @@
       "s:streetlamps.min_lamps"
      ]
     },
+    "--centre-short": {
+     "controls": [
+      "s:streetlamps.centre_short"
+     ]
+    },
     "--kelvin": {
      "controls": [
       "s:streetlamps.light.kelvin"
