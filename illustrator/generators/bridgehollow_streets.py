@@ -313,12 +313,60 @@ def extract_one(p, dry=False, force=False, root=None, out_root=None):
     pl["season"] = "winter"
     pl["street"] = {"key": p["key"], "part": p["part"], "parts": p["parts"], "street_ids": p["ids"], "generated_by": "bridgehollow_streets.py"}
     _wj(os.path.join(cdir, "place.json"), pl)
+    res["street_trees"] = street_trees(p["child"], p["size_ft"], out_root)
     styles = {}
     for f in glob.glob(os.path.join(cdir, "buildings", "*.json")):
         s = _rj(f).get("style") or "(default)"
         styles[s] = styles.get(s, 0) + 1
     res.update(buildings=sum(styles.values()), styles=styles, origin_ft=origin)
     return res
+
+
+STREET_TREE_MIX = [{"species": "oak", "weight": 1.0}, {"species": "birch", "weight": 1.2}, {"species": "rowan", "weight": 1.0}, {"species": "maple", "weight": 0.6},
+                   {"species": "alder", "weight": 0.5}, {"species": "spruce", "weight": 0.9}, {"species": "fir", "weight": 0.5}, {"species": "scots_pine", "weight": 0.4}]
+HEDGE_MIX = [{"species": "hedge", "weight": 2.0}, {"species": "bush", "weight": 1.0}, {"species": "juniper", "weight": 0.8}]
+
+
+def street_tree_params(size_ft, seed):
+    """Two foliage.py scatter zones over the whole street window: st_trees (bare broadleaf + conifers in yards, behind houses, on commons and
+    square edges, kept off buildings and road beds) and st_hedges (hedges / bushes along plots). Caps scale with the window area (about 2-3 trees per
+    100 ft of street frontage on a 400 ft window)."""
+    w, h = float(size_ft[0]), float(size_ft[1])
+    poly = [[0, 0], [w, 0], [w, h], [0, h]]
+    area = w * h
+    cap_t = int(max(12, min(70, round(area / 3800))))
+    cap_h = int(max(6, min(30, round(area / 9000))))
+    base = {"polygon": poly, "size_var": 0.35, "pattern": "uniform", "avoid_buildings": True, "avoid_roads": True, "avoid_water": True,
+            "slope_max_deg": 36, "moisture_bias": 0.0, "replace_zone": True, "edge_ft": 0, "line_jitter": 0.15}
+    trees = {**base, "zone": "st_trees", "name": "Street and yard trees (winter)", "mix": STREET_TREE_MIX, "density_per_ha": 34, "seed": seed,
+             "clearance_building_ft": 6, "clearance_road_ft": 5, "max_instances": cap_t}
+    hedges = {**base, "zone": "st_hedges", "name": "Hedges and bushes", "mix": HEDGE_MIX, "density_per_ha": 22, "seed": seed + 1, "pattern": "clustered",
+              "cluster_radius_ft": 18, "cluster_size": 4, "clearance_building_ft": 3, "clearance_road_ft": 3, "max_instances": cap_h}
+    return [trees, hedges]
+
+
+def street_trees(child, size_ft, out_root=None):
+    """Scatter the street trees into world/<child>/foliage.json (zones replaced, the town's copied trees kept) and re-export scatter/foliage.json.
+    Params are written next to the place (street_trees.json) so a rerun is identical. -> {zone: count}."""
+    if out_root:                                               # foliage.py works on the repo world/ only; tests pass out_root and skip this
+        return {}
+    import zlib
+    cdir = world_dir(child)
+    out = {}
+    zones = street_tree_params(size_ft, zlib.crc32(child.encode()) % 100000)
+    _wj(os.path.join(cdir, "street_trees.json"), {"zones": zones})
+    for z in zones:
+        pf = os.path.join(cdir, f"_scatter_{z['zone']}.json")
+        _wj(pf, z)
+        try:
+            r = _py([os.path.join("illustrator", "generators", "foliage.py"), "scatter", "--place", child, "--params", pf])
+            out[z["zone"]] = r.get("added", r.get("total"))
+        finally:
+            try:
+                os.remove(pf)
+            except OSError:
+                pass
+    return out
 
 
 # ------------------------------------------------------------------ build (local, one heavy step at a time)
@@ -400,7 +448,7 @@ def find_scene(br, p):
     return hit[0]["uuid"] if hit else None
 
 
-def push_one(p, dry=False):
+def push_one(p, dry=False, prune=False):
     import foundry_push as fpm
     br = fpm.PsBridge()
     c = p["child"]
@@ -415,7 +463,7 @@ def push_one(p, dry=False):
         raise RuntimeError(f"a scene named {p['scene_name']} exists and was not created for {c}: refusing")
     res = {"child": c, "scene_name": p["scene_name"], "scenes_before": len(before)}
     r = _fp(["push-models", "--place", c, "--placements", pp, "--px-per-ft", str(PX_PER_FT), "--scene-mode", "3d"]
-            + (["--scene-uuid", uuid] if uuid else ["--scene-name", p["scene_name"]]) + (["--dry-run"] if dry else []))
+            + (["--scene-uuid", uuid] if uuid else ["--scene-name", p["scene_name"]]) + (["--prune"] if prune and uuid else []) + (["--dry-run"] if dry else []))
     if dry:
         res.update(dry_run=True, tiles=r.get("tiles"), exists=bool(uuid))
         return res
@@ -524,13 +572,18 @@ def write_md(st):
 # ------------------------------------------------------------------ CLI
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
-    ap.add_argument("cmd", choices=["list", "extract", "build", "push", "verify", "run"])
-    ap.add_argument("--street", default=None)
+    ap.add_argument("cmd", choices=["list", "extract", "build", "push", "verify", "run", "refresh"])
+    ap.add_argument("--street", "--scenes", dest="street", default=None, help="comma list of street / part keys, or all")
+    ap.add_argument("--all", action="store_true", help="every street scene (same as --street all)")
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--force", action="store_true")
     a = ap.parse_args(argv)
     plan = scene_plan()
     out = {"ok": True, "cmd": a.cmd}
+    if a.all:
+        a.street = "all"
+    if a.cmd == "refresh":                                     # re-cut from the parent, re-export, push to the SAME scene (found by its pipeline flag), prune stale tiles
+        a.force = True
     if a.cmd == "list":
         out["scenes"] = select(plan, a.street)
         print(json.dumps(out))
@@ -541,21 +594,21 @@ def main(argv=None):
     for p in select(plan, a.street):
         row = {"part_key": p["part_key"]}
         try:
-            if a.cmd in ("extract", "run"):
+            if a.cmd in ("extract", "run", "refresh"):
                 r = extract_one(p, dry=a.dry_run, force=a.force)
                 row["extract"] = r
                 if not a.dry_run:
                     update_status(p, buildings=r.get("buildings"), trees=r.get("trees"), status="extracted")
-            if a.cmd in ("build", "run") and not a.dry_run:
+            if a.cmd in ("build", "run", "refresh") and not a.dry_run:
                 r = build_one(p)
                 row["build"] = r
                 update_status(p, tris=r["tris"], lamps=r["lamps"], status="built")
-            if a.cmd in ("push", "run"):
-                r = push_one(p, dry=a.dry_run)
+            if a.cmd in ("push", "run", "refresh"):
+                r = push_one(p, dry=a.dry_run, prune=a.cmd == "refresh")
                 row["push"] = r
                 if not a.dry_run:
                     update_status(p, scene_uuid=r["scene_uuid"], status="pushed")
-            if a.cmd in ("verify", "run") and not a.dry_run:
+            if a.cmd in ("verify", "run", "refresh") and not a.dry_run:
                 r = verify_one(p)
                 row["verify"] = r
                 update_status(p, **{k: r.get(k) for k in ("scene_uuid", "tiles", "foliage_tiles", "lights", "tris", "status", "audit", "light_types") if k in r})
