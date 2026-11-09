@@ -4,10 +4,11 @@
 // ROOFS (GM only). Roof tiles carry flags.varrenmoor.roof = {mode, buildings, ...} (written by push-models). A click raycasts through the 3D Canvas camera (Levels3DPreview.THREE)
 //   against the roof tiles only, finds the glTF node `<building>_roof` under the cursor and:
 //   * per_building mode (one tile per building): toggles that tile's `hidden` (saved with the scene, every player sees it; the GM sees a hidden roof as a 50% ghost and can click the ghost to show it again).
-//   * per_scene mode (one tile holds every roof): a plain click hides THAT building's roof node on THIS GM screen only (outlined, nothing saved, restored when the mode is switched off).
-//     Shift+click toggles the whole roof tile for everybody (the same as the "Roofs: toggle all" macro).
-// DOORS. Level 3D Canvas already opens a door on a left click, but only while the Tokens layer is active and (for players) a controlled token is within 3 squares. In click mode a click on a door node
-//   (extras isDoor) also works from the other layers, through the module's own Socket.toggleDoor (same permission checks: the user needs the WALL_DOORS permission, the game must not be paused for players).
+//   * per_scene mode (one tile; the exporter merges all roofs into one node "roofs", so no per-building node exists): a click toggles the whole tile for everybody. If a shared tile does have `<id>_roof` nodes,
+//     a plain click hides that building's node on THIS GM screen only (outlined, nothing saved, restored when the mode is switched off); Shift+click toggles the whole tile.
+// DOORS. 3D Canvas opens a door on a left click only while the Tokens layer is active AND the tile has `collision` on (its hover filter ignores tiles without collision outside the Tiles layer; pack tiles
+//   have collision off, so the native click never fires). In click mode a click on a door node (extras isDoor) works on every layer through the module's own Socket.toggleDoor (same GM-side checks:
+//   WALL_DOORS permission, game not paused for players); on the Tokens layer with a collision tile the module does it itself and click mode stays out of the way.
 // A short click only (moved < 5 px, left button, no Ctrl/Alt). Re-running the macro switches the mode off.
 const MODE_KEY = "__vbClickMode";
 const root = (typeof window !== "undefined" ? window : globalThis);
@@ -29,11 +30,11 @@ const core = {
     return { kind: "roof", building, node: node || null, whole };
   },
   // hits sorted by distance [{distance, chain, tileFlags, ...}] -> first classified hit
-  pick(hits, skipDoors) {
+  pick(hits) {
     for (const h of hits.slice().sort((a, b) => a.distance - b.distance)) {
       const c = core.classify(h.chain, h.tileFlags);
       if (!c) continue;
-      if (c.kind === "door" && skipDoors) continue;
+      if (c.kind === "door" && h.nativeDoor) continue;               // the module opens this one itself (Tokens layer + tile collision on)
       return { ...c, hit: h };
     }
     return null;
@@ -64,16 +65,15 @@ function raycast(ev) {
   for (const id of Object.keys(L.tiles)) {
     const t = L.tiles[id]; const doc = t.document || t.tile; const f = doc?.flags?.varrenmoor;
     if (!t.mesh || seen.has(t.mesh)) continue;
-    const tokenLayer = canvas.activeLayer?.options?.objectClass?.embeddedName === "Token";     // the module itself handles door clicks there
-    const isRoof = !!f?.roof;
-    if (isRoof ? game.user.isGM : !tokenLayer) { meshes.push(t.mesh); seen.add(t.mesh); }
+    if (f?.roof ? game.user.isGM : true) { meshes.push(t.mesh); seen.add(t.mesh); }
   }
   const hits = [];
   for (const h of rc.intersectObjects(meshes, true)) {
     if (!h.object.visible) continue;
     const t3 = tileOf(h.object); if (!t3) continue;
     const doc = t3.document || t3.tile;
-    hits.push({ distance: h.distance, object: h.object, tile3d: t3, doc, chain: chainOf(h.object).slice(0, chainOf(h.object).indexOf(t3.mesh) + 1), tileFlags: doc?.flags?.varrenmoor });
+    hits.push({ distance: h.distance, object: h.object, tile3d: t3, doc, chain: chainOf(h.object).slice(0, chainOf(h.object).indexOf(t3.mesh) + 1), tileFlags: doc?.flags?.varrenmoor,
+      nativeDoor: canvas.activeLayer?.options?.objectClass?.embeddedName === "Token" && !!t3.collision });
   }
   return hits;
 }
@@ -91,7 +91,7 @@ function setPeek(node, hide) {
 
 async function onClick(ev) {
   const L = game.Levels3DPreview;
-  const picked = core.pick(raycast(ev), canvas.activeLayer?.options?.objectClass?.embeddedName === "Token");
+  const picked = core.pick(raycast(ev));
   if (!picked) return;
   const { hit } = picked;
   if (picked.kind === "door") {

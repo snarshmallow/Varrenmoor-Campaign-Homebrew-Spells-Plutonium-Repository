@@ -46,7 +46,7 @@ test('core: classify, pick, short click', async () => {
   assert.equal(core.classify([{ name: 'wall', userData: {} }], {}), null);
   const hits = [{ distance: 5, chain: [{ name: 'g', userData: {} }], tileFlags: {} }, { distance: 9, chain: [{ name: 'q_roof', userData: {} }], tileFlags: { roof: { mode: 'per_building', buildings: ['q'] } } },
     { distance: 7, chain: [{ name: 'doorleaf', userData: { isDoor: 1, doorId: 'dd' } }], tileFlags: {} }];
-  assert.equal(core.pick(hits, false).kind, 'door'); assert.equal(core.pick(hits, true).kind, 'roof');
+  assert.equal(core.pick(hits).kind, 'door'); hits[2].nativeDoor = true; assert.equal(core.pick(hits).kind, 'roof');
   assert.ok(core.isShortClick({ x: 0, y: 0 }, { x: 2, y: 2 })); assert.ok(!core.isShortClick({ x: 0, y: 0 }, { x: 20, y: 0 })); assert.ok(!core.isShortClick(null, { x: 0, y: 0 }));
   e.env.window.__vbClickMode.off();
 });
@@ -80,8 +80,10 @@ test('door: click toggles via module socket on non-token layer; token layer left
   const e = makeEnv({ layer: 'Tile', hitsFor: (mesh) => [{ distance: 1, object: node('leaf', { isDoor: true, doorId: 'bld_1_door1' }, mesh) }] });
   await e.run(); await e.click();
   assert.deepEqual(e.toggles, [{ tileId: 'T1', sceneId: 'S1', userId: 'U1', subDoorId: 'bld_1_door1' }]);
-  const t = makeEnv({ layer: 'Token', hitsFor: (mesh, m) => (m.length ? [{ distance: 1, object: node('leaf', { isDoor: true, doorId: 'd' }, mesh) }] : []) });
-  await t.run(); await t.click(); assert.equal(t.toggles.length, 0);
+  const t = makeEnv({ layer: 'Token', hitsFor: (mesh) => [{ distance: 1, object: node('leaf', { isDoor: true, doorId: 'd' }, mesh) }] });
+  await t.run(); await t.click(); assert.equal(t.toggles.length, 1, 'Tokens layer, collision off: native click never fires, click mode opens it');
+  const n = makeEnv({ layer: 'Token', hitsFor: (mesh) => [{ distance: 1, object: node('leaf', { isDoor: true, doorId: 'd' }, mesh) }] });
+  n.env.game.Levels3DPreview.tiles.T1.collision = true; await n.run(); await n.click(); assert.equal(n.toggles.length, 0, 'collision tile on Tokens layer: the module handles it');
   const p = makeEnv({ isGM: false, layer: 'Tile', roofFlag: { mode: 'per_building', buildings: ['x'] }, hitsFor: (mesh, m) => (m.length ? [{ distance: 1, object: node('leaf', { isDoor: true, doorId: 'd' }, mesh) }] : []) });
   await p.run(); await p.click(); assert.equal(p.toggles.length, 0);
 });
