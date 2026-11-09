@@ -907,6 +907,39 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
     <label>Roof mode <select id="fRoofMode" data-s="foundry.models.roofMode"><option value="none">None: roofs merged into buildings (cheapest)</option><option value="per_building">Per building: hide each roof separately</option><option value="per_scene">Per scene: one switch for all roofs</option></select></label>
     <label>Home interior style <select id="fInteriorStyle" data-s="foundry.models.interiorStyle" title="Furnishing and finish of generated home interiors. Auto picks by building kind; a building JSON key interior_style overrides it. Export again + Push models to apply."><option value="auto">Auto: by building kind (houses rustic)</option><option value="rustic_cottage">Rustic cottage: plank floor, beams, hearth, rag rug</option><option value="farmhouse">Farmhouse: flagstone floor, lime-washed walls</option><option value="burgher_townhouse">Burgher townhouse: plastered, canopy bed</option><option value="poor_hovel">Poor hovel: earth floor, sparse</option><option value="plain">Plain: the original look</option></select></label>
   </div>
+  <details id="wpCollision"><summary class="note">Collision and walls (3D Canvas)</summary>
+  <div class="note">Collision: the tile blocks player movement through it and tokens stand on it (terrain, roads, floors); costs no render time. Applies to Push models and, with Set collision, to the scene's existing tiles.</div>
+  <div class="grid">
+    <label class="chk"><input type="checkbox" data-s="foundry.models.collision.terrain" title="Tokens stand on the ground relief"> Terrain</label>
+    <label class="chk"><input type="checkbox" data-s="foundry.models.collision.roads" title="roads"> Roads</label>
+    <label class="chk"><input type="checkbox" data-s="foundry.models.collision.plazas" title="plazas"> Plazas</label>
+    <label class="chk"><input type="checkbox" data-s="foundry.models.collision.fields" title="fields"> Fields</label>
+    <label class="chk"><input type="checkbox" data-s="foundry.models.collision.fences" title="fences"> Fences</label>
+    <label class="chk"><input type="checkbox" data-s="foundry.models.collision.walls" title="Town walls"> Walls</label>
+    <label class="chk"><input type="checkbox" data-s="foundry.models.collision.bridges" title="bridges"> Bridges</label>
+    <label class="chk"><input type="checkbox" data-s="foundry.models.collision.buildings" title="Walls, floors and doors of the buildings; a native click opens doors"> Buildings</label>
+    <label class="chk"><input type="checkbox" data-s="foundry.models.collision.props" title="props"> Props</label>
+    <label class="chk"><input type="checkbox" data-s="foundry.models.collision.roofs" title="Off: a roof under the cursor would catch a dragged token"> Roofs</label>
+    <label class="chk"><input type="checkbox" data-s="foundry.models.collision.foliage" title="Off: a tree canopy would catch a dragged token"> Foliage</label>
+    <label class="chk"><input type="checkbox" data-s="foundry.models.collision.water" title="Off: no standing surface"> Water</label>
+  </div>
+  <div class="btns">
+    <button data-act="wp_collision_dry" title="Lists which tiles of the picked existing scene would change collision. Writes nothing.">Set collision (dry run)</button>
+    <button data-act="wp_collision_apply" title="Writes the collision flag of the picked scene's pipeline tiles to match the boxes above (idempotent)">Set collision on scene tiles</button>
+  </div>
+  <div class="note">Walls (block sight, sound, light; the 3D model alone does not block token vision): Foundry walls from footprints, fences and tree stands. Re-running replaces the pipeline's 3D walls; unticked layers are removed.</div>
+  <div class="grid">
+    <label class="chk"><input type="checkbox" data-s="foundry.models.wallLayers.buildings" title="Buildings: full block, exterior doors are door walls"> Buildings</label>
+    <label class="chk"><input type="checkbox" data-s="foundry.models.wallLayers.walls" title="Town walls and gates: full block"> Walls</label>
+    <label class="chk"><input type="checkbox" data-s="foundry.models.wallLayers.fences" title="Fences: block movement only"> Fences</label>
+    <label class="chk"><input type="checkbox" data-s="foundry.models.wallLayers.trees" title="Tree stands: limited sight and sound, movement free"> Trees</label>
+    <label class="chk"><input type="checkbox" data-s="foundry.models.wallLayers.water" title="Water: limited sound"> Water</label>
+  </div>
+  <div class="btns">
+    <button data-act="wp_walls_dry" title="Counts the walls that would be written to the picked existing scene. Writes nothing.">Walls (dry run)</button>
+    <button data-act="wp_walls_apply" title="Create/update the sight, sound and light walls on the picked existing scene (flagged, idempotent, stale ones removed)">Push walls (block sight/sound/light)</button>
+  </div>
+  </details>
   <details id="wpMore"><summary class="note">More pack options (split granularity, compression, push options)</summary>
   <div class="grid">
     <label>Split preset <select data-s="foundry.models.splitPreset" title="Granularity of the split files when the Split box above is empty: default (buildings one file each), layers (one file per layer), districts (buildings and roads per district), individual (everything one file per entity)"><option value="default">default</option><option value="layers">layers</option><option value="districts">districts</option><option value="individual">individual</option></select></label>

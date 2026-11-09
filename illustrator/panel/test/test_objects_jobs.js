@@ -68,6 +68,22 @@ const thrown = f => { try { f(); return ""; } catch (e) { return String(e.messag
     /--prune/.test(pa(st2)) && /--roofs-hidden/.test(pa(st2)) && /--scene-mode 3d/.test(pa(st2)) && /--allow-quantized/.test(pa(st2)), sp(st2) + " | " + pa(st2));
   check("dry run + audit + lights jobs", /--dry-run/.test(VB.jobWorldPush(st2, d, { dry: true }).steps[0].args.join(" ")) && thrown(() => VB.jobSceneAudit(st2, d)).length > 0 &&
     (st2.foundry.target = "existing", st2.foundry.sceneUuid = "Scene.abc", /scene-audit.*--scene-uuid Scene.abc/.test(VB.jobSceneAudit(st2, d).steps[0].args.join(" "))) && /push-lights.*--dry-run/.test(VB.jobPushLights(st2, d, true).steps[0].args.join(" ")));
+  // collision per layer + walls (Foundry tab "Collision and walls")
+  const st3 = VB.normalize(null); st3.place = place; st3.foundry.sceneName = "x"; st3.foundry.target = "existing"; st3.foundry.sceneUuid = "Scene.abc";
+  check("collision default adds no argument", !/--collision/.test(VB.worldPushArgs(st3, d, {}).join(" ")) && !/--collision/.test(VB.jobSetCollision(st3, false).steps[0].args.join(" ")));
+  st3.foundry.models.collision.water = true; st3.foundry.models.collision.terrain = false;
+  const ca = VB.worldPushArgs(st3, d, {}), cs = ca[ca.indexOf("--collision") + 1];
+  check("collision spec lists the ticked layers", cs.split(",").includes("water") && !cs.split(",").includes("terrain") && cs.split(",").includes("buildings"), cs);
+  const sc1 = VB.jobSetCollision(st3, false).steps[0].args.join(" "), sc2 = VB.jobSetCollision(st3, true).steps[0].args.join(" ");
+  check("set-collision dry run vs apply", /set-collision --scene-uuid Scene.abc --collision /.test(sc1) && !/--apply/.test(sc1) && /--apply$/.test(sc2), sc1 + " | " + sc2);
+  Object.keys(st3.foundry.models.collision).forEach(k => { st3.foundry.models.collision[k] = false; });
+  check("all collision off = none", /--collision none/.test(VB.jobSetCollision(st3, true).steps[0].args.join(" ")));
+  const wa = VB.jobPushWalls(st3, true).steps[0].args.join(" ");
+  check("push-walls all layers by default, apply", /push-walls --place \S+ --scene-uuid Scene.abc --wall-layers buildings,walls,fences,trees,water --apply$/.test(wa), wa);
+  st3.foundry.models.wallLayers.trees = false; st3.foundry.models.wallLayers.water = false;
+  const wd = VB.jobPushWalls(st3, false).steps[0].args.join(" ");
+  check("push-walls layer boxes", /--wall-layers buildings,walls,fences( |$)/.test(wd) && !/--apply/.test(wd), wd);
+  st3.foundry.target = "new"; check("walls job needs an existing scene", thrown(() => VB.jobPushWalls(st3, true)).length > 0);
   const real = JSON.parse(fs.readFileSync(`${ROOT}/world/${place}/streets.json`, "utf8")).streets[0];
   check("real world untouched", !real.edit && real.geometry.width_ft === w0);
   console.log(ok + " passed, " + fail + " failed"); process.exit(fail ? 1 : 0);
