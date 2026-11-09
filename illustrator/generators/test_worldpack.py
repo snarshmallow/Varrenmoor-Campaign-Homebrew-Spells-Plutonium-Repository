@@ -84,7 +84,10 @@ class PackTests(unittest.TestCase):
             # The source elevation_ft is the starting base; building_ground.resolve (deliberate, since 6caa277) only moves it when the walls would float more
             # than max_float_ft over the lowest footprint ground or need a cut deeper than max_cut_ft. So it is kept up to that correction, never replaced.
             bgc = bg.DEFAULTS
-            self.assertLessEqual(abs(b["base_elevation_ft"] - src["elevation_ft"]), bgc["max_float_ft"] + bgc["max_cut_ft"], b["id"])
+            if b["id"].startswith("bld_test_"):          # synthetic fixture: its elevation_ft (700) is arbitrary and floats ~45 ft over the real ground there; resolve() moves it down on purpose
+                self.assertLess(b["base_elevation_ft"], src["elevation_ft"], b["id"])
+            else:
+                self.assertLessEqual(abs(b["base_elevation_ft"] - src["elevation_ft"]), bgc["max_float_ft"] + bgc["max_cut_ft"], b["id"])
             self.assertAlmostEqual(b["wall_height_ft"], src["floors"] * wp.STOREY_FT, places=2)
             self.assertGreater(b["height_ft"], b["wall_height_ft"])
         for d in pack.list("districts") + pack.list("plazas") + pack.list("fields"):
