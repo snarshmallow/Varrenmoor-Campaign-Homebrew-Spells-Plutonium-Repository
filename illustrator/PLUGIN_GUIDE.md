@@ -238,7 +238,7 @@ What it does: the base heightmap and hand-made "patches" (hills, valleys, trench
 | Thermal erosion iters | Smoothing of steep slopes | 0 or more; about 60 is the shipped default |
 | Smooth sigma (cells) | Blur | About 1 |
 
-Patches: choose a terrain type, set Max height (raise types) or Min height (bowl, valley, trench, sinkhole, seabed shelf), Steepness 0 to 1, Feather (ft), Roughness 0 to 1, Seed, Angle. **Capture polygon** takes the selected closed path in Illustrator, an open path (closed for you), a shape drawn on the **VB LASSO** layer, a native Lasso/Direct Selection pick of 3 or more anchor points, or the path on layer TERRAIN AREA (see **Lasso** below). The Lasso rows under the button also set the patch Feather. **Preview** shows a hillshade and changes nothing. **Apply** saves it. Undo and Redo work.
+Patches: choose a terrain type, set Max height (raise types) or Min height (bowl, valley, trench, sinkhole, seabed shelf), Steepness 0 to 1, Feather (ft), Roughness 0 to 1, Seed, Angle. **Capture polygon** takes the selected closed path in Illustrator, an open path (closed for you), a shape drawn on the **VB LASSO** layer, a native Lasso/Direct Selection pick of 3 or more anchor points, or the path on layer TERRAIN AREA (see **Lasso** below). The Lasso rows under the button also set the patch Feather. **Preview** shows a hillshade and changes nothing; the log lists before and after mean, max rise, max drop and the achievable average for your Max height, and a warning tells you what to change (for example "avg 800 needs max height >= 1025"). Heights are absolute elevations in feet. **Apply** saves it. Undo and Redo work.
 
 Common mistakes:
 

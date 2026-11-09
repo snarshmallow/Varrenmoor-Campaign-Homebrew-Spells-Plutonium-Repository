@@ -184,22 +184,40 @@ def build_shape(ttype, d, sd, X, Y, inside, cell, p, rng, centre_xy, rad_ft):
 
 
 # ------------------------------------------------------------------ main op
-def _fit(E, base, w, s, inside, sign, ext_target, avg_target):
+def _fit(E, base, w, s, inside, sign, ext_target, avg_target, core_w=0.9):
     """F = E + w*(base + sign*A*s**k - E). Solve A,k so the extreme (max for sign>0, min for sign<0) and mean hit targets.
-    Works for any signed targets."""
+    The extreme is fitted over the CORE of the patch (nodes with blend weight >= core_w, i.e. farther than ~0.7 feather
+    from the edge). Existing ground inside the feather band is bounded by the seam-free edge blend and must not
+    decide the fit: before this, rugged ground already above the requested max near the border drove A to 0 and the
+    patch silently degraded to a smoothing of the old ground.
+    Returns (shape, A, k, warn, diag) with diag = achievable mean range and limiting info."""
     Ei, wi, bi, si = E[inside], w[inside], base[inside], s[inside]
     smax = si.max()
     si = si / smax if smax > 0 else si
+    # ABSOLUTE elevations: the shape rises from the local smooth ground (base) to the requested extreme, so
+    # the peak lands on max_height_ft (not base + a constant, which pinned it to wherever the ground was highest)
+    amp0 = np.maximum(sign * (ext_target - bi), 0.0)
+    core = wi >= core_w
+    if not core.any():
+        core = wi >= wi.max() * 0.999
+    # the extreme is fitted on the crest of the new shape (shape >= 0.95 of its peak) inside the core: smooth ground
+    # elsewhere in the polygon that is already above max_height_ft cannot cancel the relief
+    crest = core & (si >= 0.95)
+    if crest.any():
+        core = crest
 
     def F_of(A, k):
-        return Ei + wi * (bi + sign * A * si ** k - Ei)
+        return Ei + wi * (bi + sign * A * amp0 * si ** k - Ei)
 
-    def solve_A(k):
+    def solve_A(k, tgt_ext=None):
+        tgt_ext = ext_target if tgt_ext is None else tgt_ext
         lo, hi = 0.0, 1.0
-        f = (lambda A: F_of(A, k).max()) if sign > 0 else (lambda A: -F_of(A, k).min())
-        tgt = ext_target if sign > 0 else -ext_target
+        f = (lambda A: F_of(A, k)[core].max()) if sign > 0 else (lambda A: -F_of(A, k)[core].min())
+        tgt = tgt_ext if sign > 0 else -tgt_ext
+        if f(0.0) >= tgt:          # ground already reaches the target in the core: nothing to add
+            return 0.0
         # f is non-decreasing in A (sign*A*s*w moves the extreme outward)
-        while f(hi) < tgt and hi < 1e6:
+        while f(hi) < tgt and hi < 4.0:     # A is a correction factor around 1 (w<1 at the peak of small patches)
             hi *= 2
         for _ in range(60):
             mid = 0.5 * (lo + hi)
@@ -212,16 +230,45 @@ def _fit(E, base, w, s, inside, sign, ext_target, avg_target):
     kl, kh = 0.02, 14.0
     ml = F_of(solve_A(kl), kl).mean()
     mh = F_of(solve_A(kh), kh).mean()
+    lo_r, hi_r = min(ml, mh), max(ml, mh)
     # mean decreases with k for raise (increasing for depress)
     if sign > 0:
         target_k = kl if avg_target >= ml else kh if avg_target <= mh else None
     else:
         target_k = kl if avg_target <= ml else kh if avg_target >= mh else None
     warn = None
+    diag = dict(avg_range=[float(lo_r), float(hi_r)], ext_target=float(ext_target), avg_target=float(avg_target))
     if target_k is not None:
         k = target_k
-        warn = "avg_height_ft %.1f outside achievable range [%.1f, %.1f]; clamped" % (
-            avg_target, min(ml, mh), max(ml, mh))
+        word = "max" if sign > 0 else "min"
+        direction = (avg_target > hi_r) if sign > 0 else (avg_target < lo_r)
+        if sign > 0:
+            gnd = float(F_of(0.0, kl)[core].max())
+        else:
+            gnd = float(F_of(0.0, kl)[core].min())
+        if solve_A(kl) == 0.0:
+            why = "existing ground in the patch core already reaches %.1f ft (beyond the requested %s %.1f), so no %s was added" % (
+                gnd, word, ext_target, "relief" if sign > 0 else "depth")
+        else:
+            why = "with %s %.1f the mean can only span this range (feather %s blend and the flat-top limit)" % (
+                word, ext_target, "edge")
+        need = None
+        if direction and sign > 0 or (not direction and sign < 0):
+            # extreme needed so a flat-topped shape reaches the requested mean
+            lo_e, hi_e = ext_target, (ext_target + 4000.0 if sign > 0 else ext_target - 4000.0)
+            for _ in range(30):
+                mid = 0.5 * (lo_e + hi_e)
+                A = solve_A(kl, mid)
+                m = F_of(A, kl).mean()
+                if (m < avg_target) == (sign > 0):
+                    lo_e = mid
+                else:
+                    hi_e = mid
+            need = 0.5 * (lo_e + hi_e)
+            diag["needed_ext"] = float(need)
+        warn = "avg_height_ft %.1f outside achievable range [%.1f, %.1f]; clamped. %s." % (avg_target, lo_r, hi_r, why)
+        if need is not None:
+            warn += " avg %.0f needs %s height %s %.0f" % (avg_target, word, ">=" if sign > 0 else "<=", need)
     else:
         a, b = kl, kh
         for _ in range(60):
@@ -234,8 +281,8 @@ def _fit(E, base, w, s, inside, sign, ext_target, avg_target):
         k = 0.5 * (a + b)
     A = solve_A(k)
     full = np.zeros_like(E)
-    full[inside] = si ** k
-    return full, A, k, warn
+    full[inside] = amp0 * si ** k
+    return full, A, k, warn, diag
 
 
 def apply_patch(heightmap, meta, polygon_ft, params, return_info=False):
@@ -283,12 +330,26 @@ def apply_patch(heightmap, meta, polygon_ft, params, return_info=False):
         ext = float(p["max_height_ft"])
     else:
         ext = float(p["min_height_ft"])
-    g, A, k, warn = _fit(E, base, w, s, inside, sign, ext, avg)
+    g, A, k, warn, diag = _fit(E, base, w, s, inside, sign, ext, avg)
+    unused = "min_height_ft" if sign > 0 else "max_height_ft"
+    if p.get(unused) is not None:
+        info["warnings"].append("%s is ignored for %s patches (use %s)" % (
+            unused, ttype, "max_height_ft" if sign > 0 else "min_height_ft"))
     if warn:
         info["warnings"].append(warn)
     F = E + w * (base + sign * A * g - E)
+    gx = F[inside].max() if sign > 0 else F[inside].min()
+    if (sign > 0 and gx > ext + 2) or (sign < 0 and gx < ext - 2):
+        info["warnings"].append("existing ground inside the polygon still reaches %.1f ft, %s the requested %s %.1f "
+                                "(the peak of the new shape is at the requested height)" % (
+                                    gx, "above" if sign > 0 else "below", "max" if sign > 0 else "min", ext))
     info.update(A=float(A), k=float(k), type=ttype, centre_ft=[float(centre[0]), float(centre[1])],
                 max=float(F[inside].max()), min=float(F[inside].min()), mean=float(F[inside].mean()))
+    dl = (F - E)[inside]
+    info.update(diag, before_mean=float(E[inside].mean()), before_max=float(E[inside].max()), before_min=float(E[inside].min()),
+                max_rise_ft=float(dl.max()), max_drop_ft=float(dl.min()), mean_change_ft=float(dl.mean()),
+                peak_core_ft=float(F[inside][w[inside] >= 0.9].max() if (w[inside] >= 0.9).any() else F[inside].max()),
+                feather_ft=feather)
     out = F.astype(np.float32)
     return (out, info) if return_info else out
 

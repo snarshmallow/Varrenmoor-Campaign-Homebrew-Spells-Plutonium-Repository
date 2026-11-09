@@ -37,6 +37,14 @@ kept near the edge and fades toward the smooth base. `A` is solved so the extrem
 (monotone remap) is solved so the mean hits `avg_height_ft`. If the mean is unreachable it is clamped and a warning
 is returned.
 
+Heights are absolute: the new shape rises from the local ground to the requested extreme (`P = base + (ext - base)*shape^k`,
+`ext` = `max_height_ft` or `min_height_ft`), and the extreme is fitted on the crest of the shape inside the core (blend
+weight >= 0.9), so rugged ground near the border that already exceeds `max_height_ft` cannot cancel the relief (this made a
+"mountain" come out as just a smoothed copy of the ground, `A` = 0). The result `info` and the warnings are actionable:
+`avg_range` (achievable mean for that max), `needed_ext` ("avg 800 needs max height >= 1025"), `before_mean`, `max_rise_ft`,
+`max_drop_ft`, `mean_change_ft`, `peak_core_ft`; a note when existing ground still exceeds the requested max, and when
+`min_height_ft` is given to a raise type (ignored). Tests: `generators/test_terrain_patch_absolute.py`.
+
 ## Signed elevations
 Elevations are signed feet relative to `sea_level_ft` in terrain meta (default 0, only used for previews). Nothing is
 clamped at zero; targets may be negative or span zero. Depression types take `min_height_ft`. Verified with a -60 ft

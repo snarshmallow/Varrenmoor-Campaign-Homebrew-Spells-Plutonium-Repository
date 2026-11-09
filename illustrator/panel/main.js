@@ -311,6 +311,9 @@
     if (j && j.info) {
       var i = j.info, s = j.seam || {};
       info.textContent = "type " + i.type + "  max " + (+i.max).toFixed(1) + "  min " + (+i.min).toFixed(1) + "  mean " + (+i.mean).toFixed(1) + " ft" +
+        (i.max_rise_ft != null ? "\nbefore mean " + (+i.before_mean).toFixed(1) + " -> after " + (+i.mean).toFixed(1) + " ft | max rise " + (+i.max_rise_ft).toFixed(1) +
+          " ft, max drop " + Math.abs(+i.max_drop_ft).toFixed(1) + " ft, mean change " + (+i.mean_change_ft).toFixed(1) + " ft" +
+          (i.avg_range ? " | achievable avg " + (+i.avg_range[0]).toFixed(0) + ".." + (+i.avg_range[1]).toFixed(0) + " ft" : "") : "") +
         (s.outside_max_change != null ? "\noutside change " + (+s.outside_max_change).toFixed(3) + " ft, seam ratio " + (+s.dgrad_ratio).toFixed(3) : "") +
         ((i.warnings || []).length ? "\nWARN: " + i.warnings.join("; ") : "");
     } else info.textContent = "";
