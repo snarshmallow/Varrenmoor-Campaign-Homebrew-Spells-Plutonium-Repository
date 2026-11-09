@@ -175,7 +175,31 @@ def uv_offset(key):
     return (d[0] / 255.0, d[1] / 255.0)
 
 
-def world_uv(pts, tile_ft, off=(0.0, 0.0), v0_m=0.0):
+_RIDGE_PHASE = {}
+
+
+def ridge_phase(mat):
+    """v phase (0..1, fraction of one image repeat) of the darkest image row of a roof texture, so a ridge placed there ends in the shadow edge of a
+    course / a plank gap / a straw band instead of at a random (often the brightest) row of the repeat (the light ridge line)."""
+    if mat not in _RIDGE_PHASE:
+        ph = 0.0
+        try:
+            import worldpack_pbr as pbr
+            a = np.asarray(pbr.base_texture(mat)[0], float)
+            prof = (a @ np.array([0.3, 0.59, 0.11])).mean(1)
+            H = len(prof)
+            f = np.abs(np.fft.rfft(prof - prof.mean()))
+            k = int(np.argmax(f[1:H // 2])) + 1                     # dominant course frequency (16 courses, 8 straw bands, 10 planks ...)
+            per = H // k if H % k == 0 else H
+            fold = prof[:per * (H // per)].reshape(-1, per).mean(0)   # the average course: its darkest row is the shadow edge
+            ph = float((int(np.argmin(fold)) + 0.5) / H)
+        except Exception:
+            pass
+        _RIDGE_PHASE[mat] = ph
+    return _RIDGE_PHASE[mat]
+
+
+def world_uv(pts, tile_ft, off=(0.0, 0.0), v0_m=0.0, anchor_v=None):
     """UVs for one planar polygon (Blender frame, metres) at constant texel density: one image repeat = tile_ft feet on every face.
     Orientation: u runs along the horizontal direction of the face (course direction: planks, shingle rows, stone courses), v runs DOWN the
     face's steepest slope (image row 0 = up-slope), so thatch strands and board-and-batten follow the slope and gable triangles are upright.
@@ -198,7 +222,13 @@ def world_uv(pts, tile_ft, off=(0.0, 0.0), v0_m=0.0):
         if s[2] < 0:
             s = -s
         v0 = v0_m
-    return [((float(p @ u)) / t + off[0], -(float(p @ s) - v0) / t + off[1]) for p in P]
+    uv = [((float(p @ u)) / t + off[0], -(float(p @ s) - v0) / t + off[1]) for p in P]
+    if anchor_v is not None and abs(n[2]) <= 0.95:        # sloped roof face: put its highest vertex (the ridge / apex) at image phase anchor_v
+        top = int(np.argmax(P[:, 2]))
+        sh = uv[top][1] - anchor_v
+        sh -= math.floor(sh)                              # only the phase matters (whole repeats look the same)
+        uv = [(a, b - sh) for a, b in uv]
+    return uv
 
 
 def uv_ft(x_ft, y_ft, tile_ft):
@@ -216,7 +246,8 @@ def build_terrain(cx, step=1):
     Z = h[np.ix_(ii, jj)].astype(float)
     V = np.stack([X * FT, (fr.height_ft - Y) * FT, (Z - fr.z_origin_ft) * FT], -1).reshape(-1, 3)
     UV = np.stack([X / fr.width_ft, Y / fr.height_ft], -1).reshape(-1, 2)
-    ni, nj = len(ii), len(jj)
+    UV = 1.0 - np.abs(1.0 - UV)           # the height grid can reach a few feet past the frame (UV up to 1.02): the albedo sampler clamps, which smeared the last
+    ni, nj = len(ii), len(jj)             # texel across that strip (band of streaks along the east/south edge). Mirror the UVs back into the image instead.
     a = (np.arange(ni - 1)[:, None] * nj + np.arange(nj - 1)[None, :]).reshape(-1)
     b, c, d = a + 1, a + nj, a + nj + 1
     # a=(i,j) b=(i,j+1) c=(i+1,j) (south of a): in the y-up Blender frame a->b is east, a->c is south, so (a,c,b) is counter-clockwise
@@ -421,8 +452,8 @@ def build_building(cx, e):
     wm_, wt = e["wall"]["surface"]["material"], pbr.tile_ft(e["wall"]["surface"]["material"], e["wall"]["surface"].get("tile_ft") or 8)
     off = uv_offset(e["id"])
 
-    def F(mat, pts, tile, v0=0.0):
-        b.face(mat, pts, world_uv(pts, tile, off, v0))
+    def F(mat, pts, tile, v0=0.0, anchor_v=None):
+        b.face(mat, pts, world_uv(pts, tile, off, v0, anchor_v))
     for i in range(len(P)):
         p, q = P[i], P[(i + 1) % len(P)]
         F(wm_, [(p[0], p[1], z0), (q[0], q[1], z0), (q[0], q[1], zt), (p[0], p[1], zt)], wt, zf)
@@ -447,7 +478,7 @@ def build_building(cx, e):
         return (cxm + ex[0] * l + ey[0] * w, cym + ex[1] * l + ey[1] * w, z)
 
     def R(mat, tile, *lwz):
-        F(mat, [Pt(*a) for a in lwz], tile)
+        F(mat, [Pt(*a) for a in lwz], tile, anchor_v=ridge_phase(mat))
     if r["type"] == "hip":
         rh = max(Lh - Wh, 0.0)
         R(rm, rt, (-Lh, -Wh, ze), (Lh, -Wh, ze), (rh, 0, zr), (-rh, 0, zr))
@@ -700,6 +731,7 @@ def write_glb(path, nodes, materials, textures="external", tex_root=None, extras
     written Y-up as (x, z, -y). textures: 'external' (uri relative to the GLB: textures/<mat>.png), 'embed' or 'none'.
     tex_root: folder holding <mat_id>.png (external) or the source images (embed); records carry 'texture' relative to the pack."""
     blobs, views, acc, gmats, gimgs, gtex, gnodes, gmeshes = [], [], [], [], [], [], [], []
+    door_parents = []
     off = [0]
 
     def view(data, target=None):
@@ -818,7 +850,13 @@ def write_glb(path, nodes, materials, textures="external", tex_root=None, extras
         if tr is not None:
             gn["translation"] = [float(tr[0]), float(tr[2]), -float(tr[1])]
         gnodes.append(gn)
-    g = {"asset": {"version": "2.0", "generator": "varrenmoor worldpack_mesh.py", "extras": extras or {}}, "scene": 0, "scenes": [{"nodes": list(range(len(gnodes)))}],
+        if ex.get("isDoor"):
+            door_parents.append(len(gnodes) - 1)
+    n_roots = len(gnodes)
+    for pi in door_parents:                                       # 3D Canvas applyTransforms() bakes the local matrix of every LEAF mesh into its
+        gnodes.append({"name": gnodes[pi]["name"] + "_hinge", "extras": {"hingeMarker": True}})    # geometry (hinge translation lost, door swings about the
+        gnodes[pi]["children"] = [len(gnodes) - 1]                # tile origin); a mesh that has a child is skipped, so every door leaf gets an empty child
+    g = {"asset": {"version": "2.0", "generator": "varrenmoor worldpack_mesh.py", "extras": extras or {}}, "scene": 0, "scenes": [{"nodes": list(range(n_roots))}],
          "nodes": gnodes, "meshes": gmeshes, "materials": gmats, "accessors": acc, "bufferViews": views, "buffers": [{"byteLength": off[0]}],
          "samplers": [{"wrapS": 10497, "wrapT": 10497, "magFilter": 9729, "minFilter": 9987}, {"wrapS": 33071, "wrapT": 33071, "magFilter": 9729, "minFilter": 9987}]}
     if gimgs:
@@ -851,6 +889,8 @@ def read_glb(path):
         return np.frombuffer(bn, comp[a["componentType"]], a["count"] * n, v.get("byteOffset", 0)).reshape(-1, n)
     out = []
     for nd in g["nodes"]:
+        if "mesh" not in nd:                            # empty hinge marker child of a door leaf (see write_glb)
+            continue
         m = g["meshes"][nd["mesh"]]
         V = UV = None
         subs = {}
