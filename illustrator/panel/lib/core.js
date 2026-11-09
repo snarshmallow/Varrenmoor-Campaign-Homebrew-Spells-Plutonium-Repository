@@ -11,7 +11,7 @@
   var TOWN_LAYERS = ["Buildings", "Blocks", "Roads", "Water", "Fences", "Labels - Districts", "Labels - Streets", "Labels - Buildings", "Label Backing", "Leaders", "Leader Anchors", "Callout Markers", "Legend", "Labels - Hidden", "NOTES"];
   // label styling (mirrors generators/label_style.py; run_mock.js checks both agree)
   var LABEL_CATS = ["districts", "streets", "buildings", "rooms", "elevation"];
-  var LABEL_LAYERS = ["Legend", "Callout Markers", "Leader Anchors", "Leaders", "Labels - Hidden", "Labels - Districts", "Labels - Streets", "Labels - Buildings", "Labels - Rooms", "Labels - Elevation", "Label Backing"];
+  var LABEL_LAYERS = ["Legend", "Callout Markers", "Leader Anchors", "Leaders", "Labels - Districts", "Labels - Streets", "Labels - Buildings", "Labels - Rooms", "Labels - Hidden", "Labels - Elevation", "Label Backing"];   // top to bottom = render_world.SPEC LABELS
   var LABEL_TARGETS = { contours: ["Contours - Minor", "Contours - Index"], streets: ["Roads"], buildings: ["Buildings", "Walls"], blocks: ["Blocks"],
     water: ["Water"], fences: ["Fences"], grid: ["Grid"] };
   var LABEL_DEFAULT = { font: "Arial", size: null, bold: false, italic: false, letter_spacing: 0, case: "asis", color: "#111111", auto_contrast: false,
@@ -366,7 +366,39 @@
     steps.push(host({ action: "replace_layer", path: svgAbs, names: names, restore_lock: !guides }, label || "replace layers", true));
     if (guides) steps.push(host({ action: "lock_layers", names: GUIDE_LAYERS, locked: true }, "lock GUIDES", true));
     if (names.indexOf("Label Backing") >= 0) steps.push(host({ action: "finalize_labels" }, "group labels (halo + text = one item)", true));
+    if (names.some(function (n) { return LABEL_LAYERS.indexOf(n) >= 0; })) steps.push(VB.orderStep());
     return steps;
+  };
+  // canonical stacking, top to bottom, per parent layer (mirrors render_world.SPEC; test/test_host_watchdog.js checks they agree):
+  // Label Backing (halos / boxes) strictly under every label text layer and under leaders / callouts; LABELS above LINES.
+  VB.LAYER_ORDER = [LABEL_LAYERS.slice(), ["LABELS", "LINES"]];
+  // presets/layer_order.json (shared with the SVG writer) overrides the built-in lists when present. Accepted shapes: {groups: [[top..bottom], ...]},
+  // or any object / array whose arrays of layer names are the lists. Refused (built-in kept) when a list puts 'Label Backing' above a 'Labels - *' layer.
+  VB.applyLayerOrderPreset = function (o) {
+    if (!o) return false;
+    var lists = [], walk = function (v) {
+      if (Array.isArray(v)) { if (v.length && v.every(function (x) { return typeof x === "string"; })) lists.push(v.slice()); else v.forEach(walk); }
+      else if (v && typeof v === "object") Object.keys(v).forEach(function (k) { walk(v[k]); });
+    };
+    walk(o.groups || o);
+    var bad = lists.some(function (l) { var b = l.indexOf("Label Backing"); return b >= 0 && l.some(function (n, i) { return /^Labels - /.test(n) && i > b; }); });
+    if (!lists.length || bad) return false;
+    VB.LAYER_ORDER = lists; return true;
+  };
+  VB.orderStep = function () { return host({ action: "order_layers", groups: VB.LAYER_ORDER, timeout_ms: 30000 }, "layer order (halos under label text)", true); };
+  // ---- Redraw labels, in chunks: one Illustrator call per layer group (status 'labels 3/8: ...'), each with its own time limit, Cancel works between them.
+  // A label redraw must never hang Illustrator: a preflight call names the target document and counts what would be replaced first.
+  VB.LABEL_CHUNKS = [["contours", ["Contours - Minor", "Contours - Index"]], ["roads, blocks, water, fences", ["Roads", "Blocks", "Water", "Fences"]],
+    ["buildings, walls", ["Buildings", "Walls"]], ["grid", ["Grid"]]];
+  VB.LABEL_BIG_ITEMS = 5000;          // a document this full that does not look like the place's own is refused (Redraw labels would rewrite its linework)
+  VB.labelDocCheck = function (place, pre, cut) {
+    var name = String((pre && pre.doc) || "") + " " + String((pre && pre.path) || "");
+    var low = name.toLowerCase(), segs = String(place || "").toLowerCase().split("__").filter(Boolean);
+    var looks = segs.some(function (s) { return low.indexOf(s) >= 0 || low.indexOf(s.replace(/_/g, " ")) >= 0; });
+    var items = (pre && pre.items) || 0;
+    if (!looks && cut && items > VB.LABEL_BIG_ITEMS) return { ok: false, error: "the active Illustrator document '" + (pre.doc || "?") + "' does not look like place '" + place + "' and has " + items +
+      " items in the layers Redraw labels replaces. Switch to the place's document (Window menu), or untick 'Redraw the cut linework too' (Labels tab) to replace the label layers only." };
+    return { ok: true, looks: looks, items: items };
   };
   VB.fillAssignments = function (st, textures) {
     var tex = {}; (textures || []).forEach(function (t) { tex[t.name] = t.rgb; });
@@ -417,10 +449,39 @@
     var cut = l.redraw_lines !== false;
     if (cut) Object.keys(LABEL_TARGETS).forEach(function (k) { names = names.concat(LABEL_TARGETS[k]); });
     var args = ["--place", st.place].concat(VB.viewFlags(st), VB.labelFlags(st), VB.srcFlags(st), VB.contourFlags(st), ["--out", svg]);
-    return {
-      kind: "labels", label: "Redraw labels", params: { labels: st.labels, offset: st.label_offset },
-      steps: [py(GEN + "render_world.py", args, "render_world (labels)")].concat(VB.replaceSteps(svg, names, "replace label layers"), VB.labelAfterSteps(st, d))
-    };
+    var chunks = VB.labelChunks(cut), n = chunks.length + 4, k = 0, tag = function (s) { k++; return "labels " + k + "/" + n + ": " + s; };
+    var steps = [py(GEN + "render_world.py", args, tag("render_world (labels)")),
+      host({ action: "label_preflight", names: names, timeout_ms: 30000 }, tag("check the Illustrator document")),
+      { t: "fn", label: "document check", fn: async function (run) {
+        var pre = run.last || {}, c = VB.labelDocCheck(st.place, pre, cut);
+        run.log("Redraw labels target: " + (pre.doc || "?") + " (" + (pre.items || 0) + " items in the layers to replace, " + (pre.text_frames || 0) + " text frames" +
+          (pre.heavy_layers ? ", " + pre.heavy_layers + " raster layer(s) hidden while it runs" : "") + ")");
+        if (!c.ok) throw new Error(c.error);
+      } }];
+    chunks.forEach(function (ch, i) {
+      var guides = ch.names.some(function (x) { return GUIDE_LAYERS.indexOf(x) >= 0; }), t = tag("replace " + ch.label);
+      if (guides) steps.push(host({ action: "lock_layers", names: GUIDE_LAYERS, locked: false }, "unlock GUIDES", true));
+      steps.push(host({ action: "replace_layer", path: svg, names: ch.names, restore_lock: !guides, curved: false, timeout_ms: i === 0 ? 120000 : 180000 }, t, true));
+      if (guides) steps.push(host({ action: "lock_layers", names: GUIDE_LAYERS, locked: true }, "lock GUIDES", true));
+    });
+    steps.push(host({ action: "apply_curved", path: svg, timeout_ms: 120000 }, tag("street / river names on their paths"), true));
+    steps.push(host({ action: "finalize_labels", timeout_ms: 120000 }, tag("group labels (halo + text = one item)"), true));
+    steps.push(VB.orderStep());
+    return { kind: "labels", label: "Redraw labels", params: { labels: st.labels, offset: st.label_offset }, steps: steps.concat(VB.labelAfterSteps(st, d)) };
+  };
+  // label layers first (what the user is waiting for), then the cut linework one group per Illustrator call
+  VB.labelChunks = function (cut) {
+    var out = [{ label: "label layers", names: LABEL_LAYERS.slice() }];
+    if (!cut) return out;
+    var all = []; Object.keys(LABEL_TARGETS).forEach(function (k) { all = all.concat(LABEL_TARGETS[k]); });
+    var used = [];
+    VB.LABEL_CHUNKS.forEach(function (c) {
+      var nm = c[1].filter(function (x) { return all.indexOf(x) >= 0; });
+      if (nm.length) { out.push({ label: c[0], names: nm }); used = used.concat(nm); }
+    });
+    var rest = all.filter(function (x) { return used.indexOf(x) < 0; });
+    if (rest.length) out.push({ label: rest.join(", "), names: rest });
+    return out;
   };
   // after labels are drawn: the hidden-labels sublayer stays hidden, leaders locked unless asked otherwise, QA numbers read back
   VB.labelAfterSteps = function (st, d) {

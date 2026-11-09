@@ -95,6 +95,7 @@
   var labelPresets = {};
   function loadLabelPresets() {
     labelPresets = readJson(path.join(root, "illustrator", "presets", "label_presets.json"), {});
+    try { VB.applyLayerOrderPreset(readJson(path.join(root, "illustrator", "presets", "layer_order.json"), null)); } catch (e) { /* keep the built-in order */ }
     var sel = $("lblPreset"); if (!sel) return;
     sel.innerHTML = "";
     Object.keys(labelPresets).filter(function (k) { return k.charAt(0) !== "_"; }).forEach(function (k) {

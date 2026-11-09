@@ -112,10 +112,13 @@ const actions = () => hostLog.map(h => h.action);
     const jsDef = VB.labelDefaults();
     check("label defaults agree (python == panel)", JSON.stringify(Object.keys(jsDef).sort()) === JSON.stringify(Object.keys(pyDef).filter(k => k in jsDef).sort())
       && Object.keys(pyDef.default).every(k => jsDef.default[k] === pyDef.default[k]) && VB.LABEL_CATS.every(c => JSON.stringify(jsDef[c]) === JSON.stringify(pyDef[c])), JSON.stringify([jsDef, pyDef]));
+    const h0 = 0;   // run() starts a fresh hostLog
     let r = await run(VB.jobLabels(st, d));
     check("labels job ok", r.ok, r.error);
-    const rl = hostLog.find(h => h.action === "replace_layer");
-    check("labels job replaces label + backing + cut linework layers", rl && ["Label Backing", "Leaders", "Labels - Districts", "Roads", "Contours - Minor", "Grid"].every(n => rl.names.includes(n)), JSON.stringify(rl && rl.names));
+    const rls = hostLog.slice(h0).filter(h => h.action === "replace_layer"), rlNames = [].concat(...rls.map(h => h.names));
+    check("labels job replaces label + backing + cut linework layers (in chunks)", rls.length > 1 && ["Label Backing", "Leaders", "Labels - Districts", "Roads", "Contours - Minor", "Grid"].every(n => rlNames.includes(n)), JSON.stringify(rlNames));
+    check("labels job: label layers first, then curved names, grouping and layer order", rls[0].names.includes("Label Backing") && rls.every(h => h.curved === false) &&
+      ["label_preflight", "apply_curved", "finalize_labels", "order_layers"].every(a => hostLog.slice(h0).some(h => h.action === a)), hostLog.slice(h0).map(h => h.action).join());
     st.labels.styles.default.mode = "mask"; st.labels.styles.districts.size = 12; st.labels.styles.default.font = "Georgia"; st.labels.mask_targets.water = true; st.labels.backing_layer = false;
     const js = JSON.parse(Buffer.from(VB.labelStyleFlags(st)[1], "base64").toString("utf8"));
     check("label flags carry style, targets and backing option", js.default.font === "Georgia" && js.districts.size === 12 && js.mask_targets.includes("water") && js.backing_layer === false);

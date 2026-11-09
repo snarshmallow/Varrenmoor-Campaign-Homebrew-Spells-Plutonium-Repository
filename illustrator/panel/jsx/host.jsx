@@ -41,7 +41,55 @@ function VB_ensureLike(doc, src) {
   try { if (src.parent && src.parent.typename === "Layer") par = VB_ensureLike(doc, src.parent); } catch (e) {}
   t = par ? par.layers.add() : doc.layers.add();
   t.name = src.name;
+  // layers.add() puts the new layer on TOP of its parent: a missing 'Label Backing' then landed above every label text layer.
+  // Put it where the SVG has it instead: below the nearest sibling above it in the source, else above the nearest one below it.
+  try {
+    var sp = src.parent, sibs = sp.layers, si = -1, k, ref;
+    for (k = 0; k < sibs.length; k++) if (sibs[k].name === src.name) { si = k; break; }
+    var tc = par ? par.layers : doc.layers, done = false;
+    for (k = si - 1; k >= 0 && !done; k--) { ref = VB_childLayer(tc, sibs[k].name); if (ref && ref !== t) { t.move(ref, ElementPlacement.PLACEAFTER); done = true; } }
+    for (k = si + 1; k < sibs.length && !done && si >= 0; k++) { ref = VB_childLayer(tc, sibs[k].name); if (ref && ref !== t) { t.move(ref, ElementPlacement.PLACEBEFORE); done = true; } }
+  } catch (e2) {}
   return t;
+}
+function VB_sameParent(a, b) { if (a === b) return true; try { return a.typename === b.typename && String(a.name) === String(b.name); } catch (e) { return false; } }
+function VB_childLayer(layers, name) { try { return layers.getByName(name); } catch (e) { return null; } }
+// Canonical stacking, top to bottom, one list per parent (mirrors render_world.SPEC; panel lib/core.js VB.LAYER_ORDER sends the same lists).
+// Only layers found under the same parent as the list's first found layer are ordered; nothing moves when the order is already right.
+function VB_orderLayers(doc, groups) {
+  var res = { moved: 0, checked: 0, errors: [] };
+  var buckets = [], g, b, i;
+  for (g = 0; g < groups.length; g++) {                  // a list may mix parents (a flat top-to-bottom list): each parent's layers are ordered among themselves
+    var names = groups[g];
+    for (i = 0; i < names.length; i++) {
+      var l = VB_find(doc, names[i]); if (!l) continue;
+      var p = null; try { p = l.parent; } catch (e) {}
+      if (!p) continue;
+      for (b = 0; b < buckets.length; b++) if (VB_sameParent(buckets[b].par, p)) break;
+      if (b === buckets.length) buckets.push({ par: p, found: [], seen: {} });
+      if (buckets[b].seen[l.name]) continue;
+      buckets[b].seen[l.name] = true; buckets[b].found.push(l);
+    }
+  }
+  for (b = 0; b < buckets.length; b++) {
+    var par = buckets[b].par, found = buckets[b].found;
+    res.checked += found.length;
+    if (found.length < 2) continue;
+    var sibs = par.layers, pos = {}, inOrder = true, last = -1;
+    for (i = 0; i < sibs.length; i++) pos[sibs[i].name] = i;
+    for (i = 0; i < found.length; i++) { var ix = pos[found[i].name]; if (ix < last) { inOrder = false; break; } last = ix; }
+    if (inOrder) continue;
+    var undo = [];
+    try { if (par.typename === "Layer") VB_unlockChain(par, undo); } catch (e) {}
+    for (i = 1; i < found.length; i++) {
+      var lay = found[i], wl = false;
+      try { wl = lay.locked; if (wl) lay.locked = false; } catch (e) {}
+      try { lay.move(found[i - 1], ElementPlacement.PLACEAFTER); res.moved++; } catch (e) { res.errors.push(lay.name + ": " + e); }
+      try { if (wl) lay.locked = true; } catch (e) {}
+    }
+    for (i = 0; i < undo.length; i++) { try { undo[i].locked = true; } catch (e) {} }
+  }
+  return res;
 }
 // Layer `name` (created if missing), stacked directly beneath the first existing layer of `below` (string or array of names).
 function VB_orderLayer(doc, name, below) {
@@ -244,7 +292,7 @@ function VB_callouts(doc) {
   return m;
 }
 // Group halo/box + text of every label that is not yet grouped into <id>_callout (on the text's layer). -> number grouped
-function VB_finalizeLabels(doc, m) {
+function VB_finalizeLabels(doc, m, repair) {
   var n = 0, id, undo = [], i;
   for (id in m.texts) {
     if (!m.texts.hasOwnProperty(id) || m.groups[id]) continue;
@@ -254,10 +302,26 @@ function VB_finalizeLabels(doc, m) {
     try {
       var lay = tx.layer, g = lay.groupItems.add();
       g.name = id + "_callout";
-      hal.move(g, ElementPlacement.PLACEATEND);
+      // z-order inside the group: PLACEATEND = bottom of the stack. The text goes in first, then the halo/box goes under it.
+      // (Was halo first, then text at the end: the text ended up BELOW its own halo, hidden by it.)
       tx.move(g, ElementPlacement.PLACEATEND);
+      hal.move(g, ElementPlacement.PLACEATEND);
       m.groups[id] = g; n++;
     } catch (e) {}
+  }
+  // repair callouts grouped by the old code (halo on top of its text): the text goes back to the front of its group
+  m.fixed = 0;
+  for (id in m.groups) {
+    if (!repair) break;                                              // the live reroute poll skips this pass (cost: 2 reads per callout)
+    if (!m.groups.hasOwnProperty(id)) continue;
+    try {
+      var gg = m.groups[id], tt = m.texts[id];
+      if (!tt || gg.pageItems.length < 2) continue;
+      var tn = String(tt.name), top = String(gg.pageItems[0].name);
+      if (tn === "" || top === tn) continue;                       // text already in front (or cannot be told apart from its halo)
+      if (!undo.length) for (i = 0; i < m.layers.length; i++) VB_unlockChain(m.layers[i], undo);
+      tt.move(gg, ElementPlacement.PLACEATBEGINNING); m.fixed++;
+    } catch (e2) {}
   }
   for (i = 0; i < undo.length; i++) { try { undo[i].locked = true; } catch (e) {} }
   return n;
@@ -345,10 +409,25 @@ function VB_findItem(container, name) {
 // Illustrator flattens SVG <textPath> on import (and blocks on a dialog), so render_world writes <svg>.curved.json and leaves a straight
 // fallback label per entry. Here each fallback (and its halo copy) is replaced by path type that follows the street / river centreline.
 // Entry: {id, layer, text, points[[x,y] page pt], size, font, bold, italic, small_caps, color, letter_spacing, halo{color,width,opacity}|null}.
-var VB_fontCache = {};
+// Kept across a host.jsx reload ($.evalFile re-runs this file; `var` keeps the existing global's value when it is set).
+var VB_fontCache = (typeof VB_fontCache === "object" && VB_fontCache) ? VB_fontCache : {};
+var VB_fontScans = (typeof VB_fontScans === "number") ? VB_fontScans : 0;   // how often the slow app.textFonts walk ran (reported by label_preflight)
+// PostScript names to try with app.textFonts.getByName before walking every installed font (that walk reads 3 properties per font and takes
+// seconds to minutes with a big font library). Never shows a missing-font dialog: a miss is a caught exception.
+function VB_fontNames(family, bold, italic) {
+  var f = String(family).replace(/\s+/g, ""), out = [];
+  var suf = bold && italic ? ["-BoldItalicMT", "-BoldItalic", "-BoldOblique", "-BoldIt"] : bold ? ["-BoldMT", "-Bold"] : italic ? ["-ItalicMT", "-Italic", "-Oblique", "-It"] : ["MT", "", "-Regular", "-Roman", "-Book"];
+  for (var i = 0; i < suf.length; i++) out.push(f + suf[i]);
+  return out;
+}
 function VB_font(family, bold, italic) {
   var key = family + "|" + bold + "|" + italic;
   if (VB_fontCache.hasOwnProperty(key)) return VB_fontCache[key];
+  var cand = VB_fontNames(family, bold, italic);
+  for (var c = 0; c < cand.length; c++) {
+    try { var g = app.textFonts.getByName(cand[c]); if (g) { VB_fontCache[key] = g; return g; } } catch (e) {}
+  }
+  VB_fontScans++;
   var best = null, bs = -1;
   for (var i = 0; i < app.textFonts.length; i++) {
     var f = app.textFonts[i];
@@ -364,15 +443,27 @@ function VB_font(family, bold, italic) {
 }
 // Text frame called `name` anywhere (inside the callout groups Illustrator makes on SVG import too). The halo copies lose their names on import,
 // so for "<id>_halo" an unnamed text frame with the same contents whose centre is nearest the label wins.
-function VB_textNamed(doc, name, c) {
-  var tfs = doc.textFrames, best = null, i;
-  for (i = 0; i < tfs.length; i++) if (String(tfs[i].name) === name) return tfs[i];
+// One pass over doc.textFrames -> {named: {name: frame}, unnamed: [frame]} (each DOM read is slow; the old per-label rescans of every text frame
+// in the document were O(labels x frames) and took minutes on a big map).
+function VB_textIndex(doc) {
+  var idx = { named: {}, unnamed: [] }, tfs = doc.textFrames, n = tfs.length;
+  for (var i = 0; i < n; i++) {
+    var t = tfs[i], nm = "";
+    try { nm = String(t.name); } catch (e) { continue; }
+    if (nm === "") idx.unnamed.push(t);
+    else if (!idx.named.hasOwnProperty(nm)) idx.named[nm] = t;
+  }
+  return idx;
+}
+function VB_textNamed(doc, name, c, idx) {
+  if (!idx) idx = VB_textIndex(doc);
+  if (idx.named.hasOwnProperty(name)) return idx.named[name];
   if (!c) return null;
-  var base = VB_textNamed(doc, c.id, null); if (!base) return null;
-  var bb = base.geometricBounds, cx = (bb[0] + bb[2]) / 2, cy = (bb[1] + bb[3]) / 2, bd = 1e9;
-  for (i = 0; i < tfs.length; i++) {
-    var t = tfs[i]; if (t === base || String(t.name) !== "") continue;
-    try { if (t.contents !== base.contents) continue; } catch (e) { continue; }
+  var base = idx.named.hasOwnProperty(c.id) ? idx.named[c.id] : null; if (!base) return null;
+  var bb = base.geometricBounds, cx = (bb[0] + bb[2]) / 2, cy = (bb[1] + bb[3]) / 2, bd = 1e9, best = null, bc = base.contents;
+  for (var i = 0; i < idx.unnamed.length; i++) {
+    var t = idx.unnamed[i]; if (!t || t === base) continue;
+    try { if (t.contents !== bc) continue; } catch (e) { continue; }
     var g = t.geometricBounds, d = Math.abs((g[0] + g[2]) / 2 - cx) + Math.abs((g[1] + g[3]) / 2 - cy);
     if (d < bd && d < 20) { bd = d; best = t; }
   }
@@ -384,10 +475,12 @@ function VB_applyCurved(doc, svgPath) {
   if (!jf.exists) return res;
   jf.encoding = "UTF-8"; jf.open("r"); var txt = jf.read(); jf.close();
   var data = eval("(" + txt + ")"), items = data.items || [];
+  if (!items.length) return res;
+  var tidx = VB_textIndex(doc);
   for (var i = 0; i < items.length; i++) {
-    var c = items[i], fb = VB_textNamed(doc, c.id, null);
+    var c = items[i], fb = VB_textNamed(doc, c.id, null, tidx);
     if (!fb || !c.points || c.points.length < 2) { res.skipped++; continue; }
-    var undo = [], lyr = fb.layer, hb = VB_textNamed(doc, c.id + "_halo", c);
+    var undo = [], lyr = fb.layer, hb = VB_textNamed(doc, c.id + "_halo", c, tidx);
     try {
       VB_unlockChain(lyr, undo);
       var hl = null;
@@ -411,8 +504,8 @@ function VB_applyCurved(doc, svgPath) {
       // z-order: halo first (below), then the label; each goes where the fallback of that kind was
       if (c.halo && hb) { var h2 = mk(hl, c.id + "_halo", c.halo.color, c.halo.color, c.halo.width, (c.halo.opacity || 1) * 100); h2.move(hb, ElementPlacement.PLACEBEFORE); }
       var t2 = mk(lyr, c.id, c.color, null, 0, 100); t2.move(fb, ElementPlacement.PLACEBEFORE);
-      if (hb) { try { hb.remove(); } catch (e) {} }
-      fb.remove();
+      if (hb) { for (var ui = 0; ui < tidx.unnamed.length; ui++) if (tidx.unnamed[ui] === hb) tidx.unnamed[ui] = null; try { hb.remove(); } catch (e) {} }
+      fb.remove(); tidx.named[c.id] = t2;
       res.made++; res.ids.push(c.id);
     } catch (e) { res.skipped++; res.error = String(e); }
     for (var u = 0; u < undo.length; u++) { try { undo[u].locked = true; } catch (e) {} }
@@ -440,7 +533,14 @@ function VB_openQuiet(f) {
   try { app.userInteractionLevel = UserInteractionLevel.DONTDISPLAYALERTS; } catch (e) {}
   try { return app.open(f); } finally { try { app.userInteractionLevel = old; } catch (e) {} }
 }
+// Every host call runs with alerts off (restored after): a modal dialog Illustrator opens while a script runs (Swatch / Font conflict when items are
+// duplicated from the SVG document, missing fonts, 'Text on Path will be flattened' ...) is often behind the main window, waits for a click that never
+// comes, and Illustrator shows 'Not Responding' at 0 % CPU.
 function VB_run(json) {
+  var vbQuiet = VB_quietBegin();
+  try { return VB_runInner(json); } finally { VB_quietEnd(vbQuiet); }
+}
+function VB_runInner(json) {
   try {
     var a = eval("(" + json + ")");
     var out = { ok: true };
@@ -527,7 +627,7 @@ function VB_run(json) {
           if (rsvg) { try { rsvg.close(SaveOptions.DONOTSAVECHANGES); } catch (e) {} try { app.activeDocument = tdoc; } catch (e) {} }
           VB_restoreHeavy(hidden);
         }
-        out.curved = VB_applyCurved(tdoc, rf.fsName);
+        out.curved = (a.curved === false) ? { made: 0, skipped: 0, ids: [], deferred: true } : VB_applyCurved(tdoc, rf.fsName);   // curved:false = a separate apply_curved step
         out.replaced = replaced; out.missing = missing; out.items = moved; out.hidden_heavy = hidden.length;
         if (missing.length && a.strict !== false) out.ok = false, out.error = "layers not in SVG: " + missing.join(", ");
         break;
@@ -939,10 +1039,35 @@ function VB_run(json) {
         var fdoc = app.activeDocument;
         if (!VB_find(fdoc, "Leaders") && !VB_find(fdoc, "Label Backing")) { out.skipped = "not a generated map"; break; }
         var fm = VB_callouts(fdoc);
-        out.grouped = VB_finalizeLabels(fdoc, fm);
+        out.grouped = VB_finalizeLabels(fdoc, fm, a.repair !== false); out.reordered = fm.fixed || 0;
         var fc = 0, fk; for (fk in fm.groups) if (fm.groups.hasOwnProperty(fk)) fc++;
         out.callouts = fc; out.texts = 0; for (fk in fm.texts) if (fm.texts.hasOwnProperty(fk)) out.texts++;
         out.unnamed_fallback = fm.unnamed; break;
+      }
+      case "apply_curved": {
+        // street / river names as type on a path, from <svg>.curved.json (split out of replace_layer so Redraw labels shows it as its own step)
+        if (app.documents.length === 0) throw new Error("no open document");
+        if (!a.path) throw new Error("path required");
+        var cdoc = app.activeDocument, ch = VB_hideHeavy(cdoc, []);
+        try { out.curved = VB_applyCurved(cdoc, new File(a.path).fsName); } finally { VB_restoreHeavy(ch); }
+        out.font_scans = VB_fontScans; break;
+      }
+      case "order_layers": {
+        // a.groups: [[name, ...] top to bottom, ...]; moves layers only when out of order (labels: backing under every text layer)
+        if (app.documents.length === 0) throw new Error("no open document");
+        var ores = VB_orderLayers(app.activeDocument, a.groups || []);
+        out.moved = ores.moved; out.checked = ores.checked; if (ores.errors.length) out.warn = "layer order: " + ores.errors.join("; ");
+        break;
+      }
+      case "label_preflight": {
+        // cheap look at the active document before a label redraw: which document, how many items the replace will remove, heavy layers
+        if (app.documents.length === 0) throw new Error("no open document");
+        var qd = app.activeDocument, qn = a.names || [], qc = {}, qt = 0;
+        out.doc = String(qd.name); try { out.path = qd.fullName.fsName; } catch (e) { out.path = ""; }
+        for (var qi = 0; qi < qn.length; qi++) { var ql = VB_find(qd, qn[qi]); var cnt = ql ? ql.pageItems.length : -1; qc[qn[qi]] = cnt; if (cnt > 0) qt += cnt; }
+        out.counts = qc; out.items = qt; out.text_frames = qd.textFrames.length;
+        var qh = 0; for (var qj = 0; qj < qd.layers.length; qj++) { var qln = qd.layers[qj].name; if (/^UNDERLAY$/i.test(qln) || /^ART(\s|$|-)/i.test(qln)) { if (qd.layers[qj].rasterItems.length || qd.layers[qj].placedItems.length) qh++; } }
+        out.heavy_layers = qh; out.docs_open = app.documents.length; out.font_scans = VB_fontScans; break;
       }
       case "read_label_positions": {
         if (app.documents.length === 0) throw new Error("no open document");

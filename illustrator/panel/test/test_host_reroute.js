@@ -20,7 +20,8 @@ class Group extends Item {
   translate(dx, dy) { if (this.layer.locked) throw new Error("layer locked"); this.pageItems.forEach(c => c.translate(dx, dy)); }
   get geometricBounds() { return this.pageItems.length ? this.pageItems[0].geometricBounds : [0, 0, 0, 0]; }
 }
-Item.prototype.move = function (g) { this.layer.pageItems.splice(this.layer.pageItems.indexOf(this), 1); g.pageItems.push(this); };
+// Illustrator z-order: pageItems[0] is the FRONT (top) item; PLACEATBEGINNING = top, PLACEATEND = bottom of the container.
+Item.prototype.move = function (g, where) { this.layer.pageItems.splice(this.layer.pageItems.indexOf(this), 1); if (where === "PLACEATBEGINNING") g.pageItems.unshift(this); else g.pageItems.push(this); };
 Layer.prototype.groupItems = null;
 const AB = [0, 792, 1224, 0];
 const root = { layers: [], artboards: [{ artboardRect: AB }], selection: [] };
@@ -41,7 +42,7 @@ global.app = { documents: { length: 1 }, activeDocument: root, version: "mock" }
 root.layers.getByName = undefined;
 Object.defineProperty(app.documents, "length", { value: 1 });
 root.layers.getByName = function (n) { const f = this.find(l => l.name === n); if (!f) throw new Error("no layer"); return f; };
-global.ElementPlacement = {}; global.PathPointSelection = { ANCHORPOINT: 1 };
+global.ElementPlacement = { PLACEATBEGINNING: "PLACEATBEGINNING", PLACEATEND: "PLACEATEND", PLACEBEFORE: "PLACEBEFORE", PLACEAFTER: "PLACEAFTER" }; global.PathPointSelection = { ANCHORPOINT: 1 };
 global.RGBColor = function () {}; global.File = function () {}; global.DocumentColorSpace = {}; global.SaveOptions = {}; global.IllustratorSaveOptions = function () {};
 global.ExportOptionsPNG24 = function () {}; global.ExportType = {};
 vm.runInThisContext(fs.readFileSync(path.join(__dirname, "..", "jsx", "host.jsx"), "utf8"));
@@ -105,7 +106,7 @@ check("lock_leaders action", r.ok && Lds.locked === false);
 let r2 = run({ action: "finalize_labels" });
 check("finalize_labels groups halo + text", r2.ok && r2.grouped === 1 && r2.callouts === 1, JSON.stringify(r2));
 const grp = Lb.pageItems.find(i => i.name === "bld_a_callout");
-check("group holds both items, halo under text", grp && grp.pageItems.length === 2 && grp.pageItems[0].name === "bld_a_label_halo" && grp.pageItems[1].name === "bld_a_label");
+check("group holds both items, halo UNDER text (text is pageItems[0] = front)", grp && grp.pageItems.length === 2 && grp.pageItems[0].name === "bld_a_label" && grp.pageItems[1].name === "bld_a_label_halo", grp && grp.pageItems.map(i => i.name).join());
 r2 = run({ action: "finalize_labels" });
 check("finalize is idempotent", r2.grouped === 0 && r2.callouts === 1, JSON.stringify(r2));
 run({ action: "reroute_leaders", changed_only: true, group: true }); // record state
@@ -115,13 +116,44 @@ const gb = grp.pageItems.map(c => (c.geometricBounds[0] + c.geometricBounds[2]) 
 check("one drag of the group moves text and halo together", Math.abs(gb[0] - gb[1]) < 0.01, JSON.stringify(gb));
 r2 = run({ action: "reroute_leaders", changed_only: true, group: true });
 const li = run({ action: "read_items", names: ["bld_a_leader"] }).items.bld_a_leader;
-const tt = grp.pageItems[1].geometricBounds;
+const tt = grp.pageItems.find(i => i.name === "bld_a_label").geometricBounds;
 check("leader follows the moved group (ends beside the text, anchor unchanged)", r2.rerouted === 1 && Math.abs(li.points[0][0] - 230) < 0.01 && Math.abs(li.points[0][1] - 280) < 0.01 &&
   Math.abs(li.points[li.points.length - 1][1] - (792 - (tt[1] + tt[3]) / 2)) < 0.5, JSON.stringify([li.points, tt]));
 // text frames without usable names: matched to the leader by position
 T.name = ""; 
 r2 = run({ action: "read_label_positions" });
 check("name fallback keeps the callout findable (text nearest the leader end)", r2.labels.length === 1, JSON.stringify(r2.labels));
+// callouts grouped by the old code (halo in FRONT of its text) are repaired by finalize_labels
+{
+  T.name = "bld_a_label";
+  const g2 = new Group(Lb); g2.name = "bld_b_callout";
+  const hb = new Item(Lb, "bld_b_label_halo", "TextFrame", textBox(500, 500, 40, 8)), tb2 = new Item(Lb, "bld_b_label", "TextFrame", textBox(500, 500, 40, 8));
+  [hb, tb2].forEach(i => { Lb.pageItems.splice(Lb.pageItems.indexOf(i), 1); g2.pageItems.push(i); i.layer = Lb; });   // [halo, text] = halo on top (the bug)
+  const rr = run({ action: "finalize_labels" });
+  check("finalize_labels repairs an old callout with the halo on top", rr.ok && rr.reordered >= 1 && g2.pageItems[0].name === "bld_b_label", JSON.stringify(rr) + " " + g2.pageItems.map(i => i.name).join());
+  const rr2 = run({ action: "finalize_labels" });
+  check("repair is idempotent", rr2.ok && rr2.reordered === 0, JSON.stringify(rr2));
+  const rp = run({ action: "reroute_leaders", changed_only: true, group: true });
+  check("live reroute poll does not run the repair pass", rp.ok);
+}
+// order_layers: backing strictly under every label text layer, moves only when out of order
+{
+  Layer.prototype.move = function (ref, where) {
+    const sib = this.parent.layers; sib.splice(sib.indexOf(this), 1);
+    const at = sib.indexOf(ref); sib.splice(where === "PLACEAFTER" ? at + 1 : at, 0, this);
+  };
+  const Ls = mk("Labels - Streets", LABELS);
+  LABELS.layers.splice(LABELS.layers.indexOf(Lback), 1); LABELS.layers.unshift(Lback);  // backing on top: the reported bug
+  Lback.locked = true;
+  const ORDER = ["Legend", "Callout Markers", "Leader Anchors", "Leaders", "Labels - Districts", "Labels - Streets", "Labels - Buildings", "Labels - Rooms", "Labels - Hidden", "Labels - Elevation", "Label Backing"];
+  let ro = run({ action: "order_layers", groups: [ORDER] });
+  const names = LABELS.layers.map(l => l.name);
+  check("order_layers puts Label Backing below every label layer", ro.ok && names[names.length - 1] === "Label Backing" && names.indexOf("Labels - Streets") < names.indexOf("Label Backing"), names.join(" | ") + " " + JSON.stringify(ro));
+  check("order_layers keeps the canonical order of the rest", names.indexOf("Leader Anchors") < names.indexOf("Leaders") && names.indexOf("Leaders") < names.indexOf("Labels - Streets") && names.indexOf("Labels - Streets") < names.indexOf("Labels - Buildings"), names.join(" | "));
+  check("a locked layer is locked again after the move", Lback.locked === true);
+  ro = run({ action: "order_layers", groups: [ORDER] });
+  check("order_layers moves nothing when the order is right", ro.ok && ro.moved === 0, JSON.stringify(ro));
+}
 // close_docs: names required, only exact names, unsaved documents skipped unless discard:true, never saves
 {
   const closedLog = [], mkDoc = (name, saved) => ({ name, saved, close(opt) { closedLog.push(name + ":" + (opt === global.SaveOptions.DONOTSAVECHANGES ? "nosave" : "?")); const i = app.documents.indexOf(this); app.documents.splice(i, 1); } });
