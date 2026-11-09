@@ -501,7 +501,9 @@ Common mistakes:
 
 - A rough log longer than its limit needs trestles (handled automatically up to about 70 ft). A very long span may report `ok: false`; try a different preset.
 - Expecting the terrain to be cut: it is lifted and ramped, not cut, unless auto carving triggers.
-- After applying bridges you must re-export, split, merge and push (steps 7 to 8).
+- After applying bridges you must re-export, split, merge and push (steps 7 to 8). Every export puts the bridges of `world/<place>/bridges.json` back into the pack, rebuilt on the new roads and terrain (the export log says `bridges: N from bridges.json`), so a later re-export no longer drops them. No `bridges.json` means no bridge models: run Detect and Apply first.
+- A covered bridge's roof is a separate roof tile when the split uses per-building or per-scene roofs. Its collision is off, so a token dragged from above lands on the deck, and the roof toggle can hide it.
+- Extracting a street place (region extract) copies the parent's bridges inside the window into the child's `bridges.json`.
 
 ### 2.15 Places
 

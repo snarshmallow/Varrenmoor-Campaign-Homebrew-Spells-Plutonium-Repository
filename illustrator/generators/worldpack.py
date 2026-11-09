@@ -1157,7 +1157,16 @@ def export_world(place, out_dir=None, lod=(1, 4), world_root=None, terrain_sourc
                 files[rel] = _sha(os.path.join(dp, f))
     manifest["files"] = dict(sorted(files.items()))
     _jdump(os.path.join(out, "manifest.json"), manifest)
-    counts = ", ".join(f"{t}={index[t]['count']}" for t in ENTITY_TYPES if index[t]["count"])
+    # BRIDGES: entities/ was wiped above, so the modelled bridges of world/<place>/bridges.json (Bridges tab / bridge_maker.py apply) go back in here,
+    # rebuilt on this export's roads and terrain. Without this every plain re-export silently dropped them (Bridgehollow 2026-11).
+    if os.path.exists(os.path.join(model["root"], "bridges.json")):
+        import bridge_maker
+        br = bridge_maker.refresh_for_export(out, place, world_root, log=log)
+        if br:
+            manifest = _jload(os.path.join(out, "manifest.json"))
+            index["bridges"] = manifest["entities"]["bridges"]
+            files = manifest["files"]
+    counts = ", ".join(f"{t}={index[t]['count']}" for t in list(ENTITY_TYPES) + (["bridges"] if "bridges" in index else []) if index[t]["count"])
     tot = sum(os.path.getsize(os.path.join(out, k)) for k in files)
     log(f"  entities: {counts}; {len(files)} files, {tot / 1e6:.1f} MB")
     return manifest

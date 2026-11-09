@@ -1112,12 +1112,20 @@ def carve_under_bridges(pack, h, mode="auto"):
 
 
 # ------------------------------------------------------------------ pack integration
-def add_bridge_parts(pack, cx, parts, add, want=True):
-    """Hook for worldpack_mesh.build_parts: one Part per bridge entity (layer 'bridges')."""
+def add_bridge_parts(pack, cx, parts, add, want=True, roof_list=None):
+    """Hook for worldpack_mesh.build_parts: one Part per bridge entity (layer 'bridges'). roof_list (a list, given when the split's roof_mode is not
+    'none'): the roof of a covered bridge goes there as (entity, mesh) and becomes a 'roofs' Part like a building roof: collision off (a token dragged
+    from a top-down camera lands on the deck, not on the roof), hideable by the roof toggle."""
     import worldpack_mesh as wm
     for e in pack.list("bridges"):
         m, plan = build_local(e)
         mesh = to_blender(m, e, cx.fr)
+        if roof_list is not None and plan.get("roof_mat") and plan["roof_mat"] in mesh.subs:
+            import worldpack_roofs as wr
+            body, roof = wr.split_mesh(mesh, plan["roof_mat"], float("inf"))
+            if roof.tri_count and body.tri_count:
+                mesh = body
+                roof_list.append((e, roof))
         for mid in plan["mats"].values():
             if mid not in pack.materials:
                 try:
@@ -1197,6 +1205,81 @@ def inject(pack_dir, place, world_root=None, doc=None):
     import worldpack as wp
     wp.refresh_manifest_files(pack_dir)                                 # roads.json changed (gaps) and bridges.json is new: re-hash
     return {"bridges": len(bridges), "roads_with_gaps": sorted(gaps)}
+
+
+KEEP_ON_REFRESH = ("name", "status", "notes", "links", "locked", "seed", "from_parent")
+
+
+def refresh_for_export(pack_dir, place, world_root=None, log=print):
+    """Called by worldpack.export_world after every export: the export wipes entities/, so the bridges of world/<place>/bridges.json are put back here.
+    Each saved bridge is rebuilt against the FRESH pack (same id, preset, params, seed) so a re-graded or rescaled town gets a bridge that fits its new
+    road ends and terrain; a saved bridge whose crossing is no longer detected is kept as saved (warning). bridges.json itself is not rewritten.
+    Returns None when the place has no bridges, else {bridges, rebuilt, kept_as_saved, roads_with_gaps}."""
+    import worldpack as wp
+    doc = load_bridges(place, world_root)
+    removed = set(doc.get("removed") or [])
+    saved = [b for b in doc.get("bridges", []) if b["id"] not in removed]
+    if not saved:
+        return None
+    pack = wp.load_pack(pack_dir)
+    for r in pack.list("roads"):
+        r.pop("gaps", None)
+    found = {c["id"]: c for c in detect(pack, **{k: (doc.get("thresholds") or {}).get(k) for k in ("float_ft", "level_ft")})}
+    match, used = {}, set()
+    for b in saved:                                                  # same id first
+        if b["id"] in found:
+            match[b["id"]] = found[b["id"]]
+            used.add(b["id"])
+    for b in saved:                                                  # then the same road (or a clipped part of it, `<id>__pN`) and the same place on the map
+        if b["id"] in match:
+            continue
+        sx, sy = b["span"]["start"][:2]
+        ex, ey = b["span"]["end"][:2]
+        mx, my, tol = 0.5 * (sx + ex), 0.5 * (sy + ey), max(20.0, 0.3 * float(b["span"].get("length_ft") or 0.0))
+        best = None
+        for c in found.values():
+            if c["id"] in used or c["road"].split("__")[0] != str(b["road"]).split("__")[0]:
+                continue
+            cx_, cy_, _ = road_at(pack.get(c["road"])["points"], 0.5 * (c["s0_ft"] + c["s1_ft"]))
+            d = math.hypot(cx_ - mx, cy_ - my)
+            if d <= tol and (best is None or d < best[0]):
+                best = (d, c)
+        if best:
+            match[b["id"]] = best[1]
+            used.add(best[1]["id"])
+    tmp = {}
+    for b in saved:
+        c = match.get(b["id"])
+        if c:
+            tmp.setdefault(c["road"], []).append({"s0_ft": c["s0_ft"], "s1_ft": c["s1_ft"]})
+    for r in pack.list("roads"):
+        if r["id"] in tmp:
+            r["gaps"] = tmp[r["id"]]
+    h_final = final_heights(pack) if tmp else None
+    out, rebuilt, kept = [], [], []
+    for b in saved:
+        c = match.get(b["id"])
+        if c is None:
+            kept.append(b["id"])
+            log(f"  bridges: {b['id']} no longer matches a detected crossing; kept as saved (re-apply it in the Bridges tab)")
+            out.append(b)
+            continue
+        try:
+            ent = make_entity(pack, c, h_final, preset=b["preset"], overrides=b.get("params") or None, seed=b.get("seed"), provenance=dict(b.get("provenance") or {}))
+        except Exception as ex:                                      # never lose a bridge on export
+            log(f"  bridges: {b['id']} rebuild failed ({ex}); kept as saved")
+            kept.append(b["id"])
+            out.append(b)
+            continue
+        for k in KEEP_ON_REFRESH:
+            if k in b:
+                ent[k] = b[k]
+        out.append(ent)
+        rebuilt.append(b["id"])
+    res = inject(pack_dir, place, world_root, dict(doc, bridges=out, removed=sorted(removed)))
+    res.update(rebuilt=rebuilt, kept_as_saved=kept)
+    log(f"  bridges: {res['bridges']} from bridges.json ({len(rebuilt)} rebuilt on the new terrain, {len(kept)} kept as saved)")
+    return res
 
 
 def apply(place, pack_dir=None, only=None, preset=None, overrides=None, export=True, world_root=None, float_ft=None, level_ft=None, merge=True, seed=None):

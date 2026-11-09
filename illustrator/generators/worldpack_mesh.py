@@ -776,7 +776,7 @@ def build_parts(pack, step=1, carve=True, conform=True, layers=None, drape_edge_
             add(e, "roads", rm)
     if want("bridges") and pack.list("bridges"):                       # BRIDGES: modelled bridges (bridge_maker.py), one Part each
         import bridge_maker as _bm
-        _bm.add_bridge_parts(pack, cx, parts, add)
+        _bm.add_bridge_parts(pack, cx, parts, add, roof_list=roof_list if roof_mode != "none" else None)
     for e in pack.list("plazas"):
         if want("plazas"):
             add(e, "plazas", build_drape(cx, e, LIFT["plazas"], drape_edge_ft))

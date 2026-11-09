@@ -268,6 +268,80 @@ class InjectTests(unittest.TestCase):
             self.assertNotIn("gaps", wp.load_pack(pk).get(road["id"]))
 
 
+class ExportKeepsBridgesTests(unittest.TestCase):
+    """A place with bridges.json exports bridge entities (every plain re-export used to drop them: export wipes entities/), covered roofs split into
+    the roofs layer, and a region extracted around a bridge carries it (Bridgehollow 2026-11: the pushed town had no Pilgrim Bridge)."""
+    SRC = os.path.join(bm.WORLD, "zz_bridge_scratch")
+
+    @classmethod
+    def setUpClass(cls):
+        if not os.path.exists(os.path.join(cls.SRC, "bridges.json")):
+            raise unittest.SkipTest("no world/zz_bridge_scratch (illustrator/tools/make_bridge_scratch.py)")
+        import worldpack as wp
+        cls.td = tempfile.mkdtemp()
+        shutil.copytree(cls.SRC, os.path.join(cls.td, "zz_bridge_scratch"), ignore=shutil.ignore_patterns("export"))
+        cls.doc = bm.load_bridges("zz_bridge_scratch", cls.td)
+        cls.saved = {b["id"]: b for b in cls.doc["bridges"] if b["id"] not in set(cls.doc.get("removed") or [])}
+        cls.pk = os.path.join(cls.td, "zz_bridge_scratch", "export")
+        wp.export_world("zz_bridge_scratch", cls.pk, world_root=cls.td, log=lambda *a: None)
+
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(cls.td, ignore_errors=True)
+
+    def test_export_writes_bridge_entities(self):
+        import worldpack as wp
+        pack = wp.load_pack(self.pk)
+        got = {b["id"]: b for b in pack.list("bridges")}
+        self.assertEqual(set(got), set(self.saved))
+        for bid, b in got.items():
+            self.assertEqual(b["preset"], self.saved[bid]["preset"])
+            self.assertEqual(b.get("params") or {}, self.saved[bid].get("params") or {})
+            self.assertTrue(any(g["bridge"] == bid for g in pack.get(b["road"]).get("gaps", [])), bid)
+        self.assertEqual(wp.validate_pack(self.pk), [])
+
+    def test_reexport_keeps_them(self):
+        import worldpack as wp
+        wp.export_world("zz_bridge_scratch", self.pk, world_root=self.td, log=lambda *a: None)
+        self.assertEqual({b["id"] for b in wp.load_pack(self.pk).list("bridges")}, set(self.saved))
+
+    def test_covered_roof_goes_to_roofs_layer(self):
+        import worldpack as wp
+        import worldpack_mesh as wm
+        pack = wp.load_pack(self.pk)
+        cov = [b["id"] for b in pack.list("bridges") if b["preset"] == "covered_timber"]
+        if not cov:
+            self.skipTest("no covered bridge in the scratch place")
+        parts = wm.build_parts(pack, step=4, layers={"bridges"}, roof_mode="per_building")
+        roofs = {p["roof"]["buildings"][0] for p in parts if p["layer"] == "roofs"}
+        self.assertEqual(roofs, set(cov))
+        n_br = len([p for p in parts if p["layer"] == "bridges"])
+        self.assertEqual(n_br, len(pack.list("bridges")))
+        none = wm.build_parts(pack, step=4, layers={"bridges"}, roof_mode="none")
+        self.assertFalse([p for p in none if p["layer"] == "roofs"])
+
+    def test_region_extract_carries_bridges(self):
+        import region_extract as rx
+        import worldpack as wp
+        b = sorted(self.saved.values(), key=lambda x: x["id"])[0]
+        (sx, sy, _), (ex, ey, _) = b["span"]["start"], b["span"]["end"]
+        rect = [min(sx, ex) - 30, min(sy, ey) - 30, max(sx, ex) + 30, max(sy, ey) + 30]
+        res = rx.extract("zz_bridge_scratch", {"kind": "rect", "rect": rect}, name="bridge carry", root=self.td, out_root=self.td, child_id="zz_child", local_origin=True,
+                         detail="none", log=lambda *a: None)
+        self.assertTrue(res["report"]["bridges"])
+        cdoc = bm.load_bridges("zz_child", self.td)
+        self.assertTrue(cdoc["bridges"])
+        c = cdoc["bridges"][0]
+        self.assertEqual(c["from_parent"]["place"], "zz_bridge_scratch")
+        ox, oy = res["report"]["origin_ft"]
+        self.assertAlmostEqual(c["span"]["start"][0], round(sx - ox, 2), places=2)
+        out = os.path.join(self.td, "zz_child", "export")
+        wp.export_world("zz_child", out, world_root=self.td, log=lambda *a: None)
+        got = wp.load_pack(out).list("bridges")
+        self.assertIn(c["id"], [x["id"] for x in got])
+        self.assertEqual([x["preset"] for x in got if x["id"] == c["id"]], [b["preset"]])
+
+
 class NewStyleTests(unittest.TestCase):
     def test_rough_log_is_irregular_and_rests_on_rocks(self):
         plan = bm.make_plan(bm.sample_entity("rough_log", 18.0, 6.0, wall_slope=1.0))

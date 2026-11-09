@@ -48,7 +48,7 @@ def setUpModule():
          "links": {"foundry_scene": None, "model3d": None, "ai_layer": None}, "floors": 2, "rooms": [{"id": "rm_a", "name": "A"}], "doors": [], "elevation_ft": 700.0,
          "site_slope": 0.0, "site_relief_ft": 1.0}
     json.dump(d, open(os.path.join(b, "bld_test_40x30.json"), "w"))
-    os.makedirs(os.path.join(WORLD, "bridgehollow", "scatter"))
+    os.makedirs(os.path.join(WORLD, "bridgehollow", "scatter"), exist_ok=True)
     json.dump({"instances": [{"x": 900, "y": 900, "species": "oak", "scale": 1.0}, {"x": 920, "y": 905, "species": "oak", "scale": 1.5, "rotation": 30},
                              {"x": 950, "y": 950, "species": "pine"}]}, open(os.path.join(WORLD, "bridgehollow", "scatter", "trees.json"), "w"))
     wp.export_world("bridgehollow", OUT, world_root=WORLD, timestamp=TS, lod=(4,), log=lambda m: None)

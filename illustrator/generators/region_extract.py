@@ -650,6 +650,59 @@ def write_child(cid, out_root, parent, model, coll, idmap, dropped, markers, det
     return cdir, reg
 
 
+def carry_bridges(parent, root, cid, cdir, streets, origin, work, log=LOG):
+    """Copy the parent's modelled bridges (world/<parent>/bridges.json, Bridges tab) whose deck lies in the child's work area into the child's
+    bridges.json: same preset / params / seed / lock, road id mapped to the child street (clipped parts `<id>__pN` included), coordinates shifted by the
+    child origin. The child's export rebuilds each one on its own roads and terrain (bridge_maker.refresh_for_export). Child-only bridges (no
+    `from_parent`) already in the child file are kept. Returns the carried ids."""
+    from shapely.geometry import LineString, Point
+    pp = os.path.join(worldio.world_dir(parent, root), "bridges.json")
+    cp = os.path.join(cdir, "bridges.json")
+    pdoc = _rj(pp, None)
+    old = _rj(cp, None) or {}
+    own = [b for b in old.get("bridges", []) if not b.get("from_parent")]
+    if not pdoc and not old:
+        return []
+    ox, oy = origin
+    removed = set((pdoc or {}).get("removed") or [])
+    out, carried = [], []
+    for b in (pdoc or {}).get("bridges", []):
+        if b["id"] in removed:
+            continue
+        sx, sy, sz = b["span"]["start"]
+        ex, ey, ez = b["span"]["end"]
+        deck = LineString([(sx, sy), (ex, ey)])
+        if not work.intersects(deck.interpolate(0.5, normalized=True)):
+            continue
+        mid = Point(0.5 * (sx + ex) - ox, 0.5 * (sy + ey) - oy)
+        cands = [s for s in streets if s["id"] == b["road"] or (s.get("region") or {}).get("parent_id") == b["road"] or s["id"].split("__")[0] == b["road"]]
+        if not cands:
+            log(f"  bridge {b['id']}: its road {b['road']} is not in the child; not carried")
+            continue
+        s = min(cands, key=lambda s_: LineString(s_["geometry"]["points"]).distance(mid))
+        line = LineString(s["geometry"]["points"])
+        n = b["id"].rsplit("_", 1)[-1] if b["id"].rsplit("_", 1)[-1].isdigit() else "1"
+        e = json.loads(json.dumps(b))
+        e["id"] = f"brg_{s['id']}_{n}"
+        e["road"] = s["id"]
+        e["span"]["start"] = [round(sx - ox, 2), round(sy - oy, 2), sz]
+        e["span"]["end"] = [round(ex - ox, 2), round(ey - oy, 2), ez]
+        a0, a1 = line.project(Point(sx - ox, sy - oy)), line.project(Point(ex - ox, ey - oy))
+        e["span"]["s0_ft"], e["span"]["s1_ft"] = round(min(a0, a1), 2), round(max(a0, a1), 2)
+        e["foundry"] = {"pipelineId": f"world:{cid}:{e['id']}"}
+        e["from_parent"] = {"place": parent, "id": b["id"]}
+        out.append(e)
+        carried.append(e["id"])
+    ids = {e["id"] for e in out}
+    doc = {"place": cid, "schema": (pdoc or old).get("schema", 1), "generated_by": "region_extract.py (from the parent's bridges.json)", "status": (pdoc or old).get("status", "proposed"),
+           "thresholds": (pdoc or old).get("thresholds", {}), "removed": [r for r in old.get("removed", []) if r not in ids],
+           "bridges": sorted([b for b in own if b["id"] not in ids] + out, key=lambda b: b["id"])}
+    _wj(cp, doc)
+    if carried:
+        log(f"bridges: carried {len(carried)} from {parent} ({', '.join(carried)})")
+    return carried
+
+
 # ------------------------------------------------------------------ extract (library entry)
 def extract(parent, rspec, name=None, root=None, out_root=None, margin=40.0, terrain_cell=2.5, seed=None, scale=20.0, grid=5.0, detail="all",
             detail_params=None, clip_buildings=False, local_origin=False, sandbox=False, child_id=None, terrain=True, detail_ft=0.45,
@@ -707,7 +760,8 @@ def extract(parent, rspec, name=None, root=None, out_root=None, margin=40.0, ter
     fp = parent_fingerprint(parent, root)
     cdir, reg = write_child(cid, out_root, parent, model, coll, idmap, dropped, markers, details, tout, rspec, region, work, opts, fp)
     log(f"wrote child {cid} -> {cdir}")
-    return {"child": cid, "dir": cdir, "report": {"counts": reg["counts"], "dropped": len(dropped), "markers": len(markers), "terrain": reg["terrain"],
+    carried = carry_bridges(parent, root, cid, cdir, coll["streets"], origin, work, log=log)
+    return {"child": cid, "dir": cdir, "report": {"counts": reg["counts"], "dropped": len(dropped), "markers": len(markers), "terrain": reg["terrain"], "bridges": carried,
                                                     "window_ft": reg["window_parent_ft"], "origin_ft": list(origin), "page_in": _rj(os.path.join(cdir, "view_settings.json"))["page_in"]}}
 
 
