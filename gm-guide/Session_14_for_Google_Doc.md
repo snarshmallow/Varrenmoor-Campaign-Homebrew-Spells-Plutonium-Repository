@@ -1,6 +1,6 @@
 # Part 7: (Session 14) The Thaw
 
-> **Current campaign clarifications.** Cladis, the ancient Eirwitch Winter Queen, was banished outside the Wyrd. She left a trail for others to follow, then broke and shredded her own thread and re-tied it at the Rhime Goddess's Ice Palace. She is alive out there. The Goddess, Lakkar, Lady of Eternal Hunger, has noticed, and she needs her name carried back into the Wyrd to help fight the Niorghast, who means to resurrect Nior. The old woman at the Eirwitch camp is Venfyura. Nobody knows who banished Cladis, what happened in Nior's fortress, or who cut the sentence. The sword and the egg stay in party custody. Trainers give no extra charges. Werd is not Wyrd.
+> **Current campaign clarifications.** Cladis, the ancient Eirwitch Winter Queen, was banished outside the Wyrd. She left a trail for others to follow, then broke and shredded her own thread and re-tied it at the Rhime Goddess's Ice Palace. She is alive out there. The Goddess, Lakkar, Lady of Eternal Hunger, has noticed, and she needs her thread, the name Lakkar, woven back into the Wyrd to help fight the Niorghast, who means to resurrect Nior. The old woman at the Eirwitch camp is Venfyura. Nobody knows who banished Cladis, what happened in Nior's fortress, or who cut the thread. The sword and the egg stay in party custody. Trainers give no extra charges. Werd is not Wyrd.
 
 **Tags:** [COMMON] anyone says it. [ASK] shared if asked. [EARN] after a favor, payment, good roll or trust. [SECRET] DM only. NEW marks new canon. SETTLED marks the GM's rulings. [UNSETTLED] is yours to decide. New proper nouns: the Thaw, and Lakkar.
 
@@ -13,8 +13,8 @@
 - Cladis was banished outside the Wyrd and left a trail so others could follow her and help stop Nior. (SETTLED)
 - She broke her own thread, shredded it, and re-tied it at the Ice Palace. She is alive, on a thread tied off in the wrong place. (SETTLED)
 - One trail mark is an open claim in the custody ledger: "Held: the place where even time cannot leave. Tag: outstanding." Those are the words on the Stolen Shard. (NEW)
-- The Goddess needs her name, Lakkar, Lady of Eternal Hunger, carried back into the Wyrd. Cladis can do that. (SETTLED)
-- The Goddess has noticed. In Scene 7 she writes her name on the Stolen Shard in frost. (SETTLED; the frost is NEW)
+- The Goddess needs her thread, Lakkar, Lady of Eternal Hunger, woven back into the Wyrd. Cladis can do that. (SETTLED)
+- The Goddess has noticed. In Scene 7 she writes her thread on the Stolen Shard in frost. (SETTLED; the frost is NEW)
 - The far end must be tied at the gorge by the Eirwitch camp, where Venfyura keeps the fire. The camp bell's clapper has been seized in Bridgehollow.
 
 **What it costs.** Most of a day's craft charges; the risk that Inspector Tallis seals the door for good; the Stolen Shard is needed (it stays in party custody, but it is the Goddess's shard and she is watching it); the Goddess's attention; and a promise of silence.
@@ -35,9 +35,9 @@ Not in it: **Inspector Corvin Tallis** (suspects; pressure, not a villain), **Na
 
 **Why now.** The party carried the Stolen Shard through intake in Session 12, so a piece of the palace and the open claim are in the same building for the first time in 300 years. News from Bridgehollow (the Regarder, the missing Reave, Iron Bailiffs, Fen-Reiver whispers) says the Niorghast is moving. Venfyura sends word that the Goddess is looking. And Tallis has started counting door openings.
 
-**Why the Goddess needs a name.** Something outside the Wyrd can't touch anything inside it unless the Wyrd has a name for it, the same way the Exchange won't move a bone that isn't in the ledger. A name is the handle, like an entry key. Lakkar has been outside so long her handle is gone, so someone whose thread is inside has to carry her name back in, and Cladis knows how to bargain with her.
+**Why the Goddess needs a thread.** Everything in the Wyrd is held by a thread, and something outside it can't touch anything inside unless the weave has a thread for it, the same way the Exchange won't move a bone that isn't in the ledger. Lakkar has been outside so long her thread has frayed away, so someone with a thread inside has to weave hers back in (the words Lakkar, Lady of Eternal Hunger are its pattern), and Cladis knows how to bargain with her.
 
-**What "return" means.** Not resurrection. Cladis is alive outside. Return means re-tying her thread inside the Wyrd so she can climb back along it, into her own body if it survives the crossing or a lawful vessel if not. Name persists, so she is the same woman (the Room 6 logic).
+**What "return" means.** Not resurrection. Cladis is alive outside. Return means re-tying her thread inside the Wyrd so she can climb back along it, into her own body if it survives the crossing or a lawful vessel if not. Her thread persists, so she is the same woman (the Room 6 logic).
 
 ## The method: mending a torn hem
 
@@ -50,8 +50,8 @@ Her thread is a torn hem: one edge inside the Wyrd, the other tied to a post in 
 | The far knot | The line tied off at the gorge beside the camp, with Venfyura | You can't knot two threads that never touch. The gorge, where some frost never melts, is where her end is nearest. |
 | The sinker | The Stolen Shard (fast) or a jar of never-melting frost (slow) | A piece of a place hangs toward that place, like a plumb line. Narrative only: no power for the sword. The Goddess will notice it. |
 | The bell | The camp bell rung in the Bell knock (four slow) | Where nothing changes, a repeating sound is the one thing she can walk toward to find the new line, like a climber following a camp bell in a whiteout. |
-| The vessel | A lawful body: construct material without identity, prepared like a restoration | She shredded her thread to escape; what comes back may be only name and mind. If her own body makes it, the vessel isn't used. |
-| Three records | Intake (her name), custody (the "held" line), the physical tag | The threshold only accepts a named person when all three agree. A Nox or an echo following the bell won't match, so it can't come through. |
+| The vessel | A lawful body: construct material without identity, prepared like a restoration | She shredded her thread to escape; what comes back may be only thread and mind. If her own body makes it, the vessel isn't used. |
+| Three records | Intake (her thread entered), custody (the "held" line), the physical tag | The threshold only accepts a woven thread when all three records agree. A Nox or an echo following the bell won't match, so it can't come through. |
 
 **The cold door.** An old iron service door behind Pell's dusty terminal, recorded as permanently sealed. Its rune opens it for one minute when the last trolley passes ("the usual time"). The other side is a snowy road above Bridgehollow, near the camp. (NEW)
 
@@ -66,11 +66,11 @@ Craft check: d20 + proficiency + craft ability. Level 4: up to 3 charges per cra
 | T3 The living strand | Violet (Starweaving) | Read Green Pattern 12; Quickening 13 | Dale's Rime dose | 30-ft strand; Tie Green Thread makes it the signal | Only 10 ft; a second Quickening finishes it |
 | T4 The vessel | Betsy (Splicing, per her sheet) | Judge 12; apply 14 | Nothing | Vessel Stable ("warm from the core") | Vessel Strained; she arrives weak if it is used |
 | T5 The third record | Party; Pringus | Investigation or History 12 | Sabeline's page | Tag found; audit reconciles the claim (legal, but visible to Tallis) | Rite of the Remaining Bone (Expose Claim) as the second path |
-| T6 Braid and test pull | Europa (or anyone) | Braid 12; the count 12 | T1, T2, T3 | The door opens, the line holds, the capsule drops, the name appears | Wrong rhythm, the strand goes slack; try the next minute or night |
+| T6 Braid and test pull | Europa (or anyone) | Braid 12; the count 12 | T1, T2, T3 | The door opens, the line holds, the capsule drops, the thread-word appears | Wrong rhythm, the strand goes slack; try the next minute or night |
 
 **Task notes**
 
-- **T1.** The sentence: subject the line; Threshold and Bind; scope this door; condition while the bell sounds; anchor this stone. The old repair used iron with a Hunger trace that eats the instruction. Quill: "Hunger. Her name has that word in it. I don't like that either." If Stellan lacks Threshold, it is cut on the lintel: study it with Quill (Quill's one Tier I glyph reward).
+- **T1.** The weave: the warp is the line; Threshold and Bind are the pattern; scope this door; the knot holds only while the bell sounds; anchor this stone. The old repair used iron with a Hunger trace that unravels the weave. Quill: "Hunger. Her thread has that word in it. I don't like that either." If Stellan lacks Threshold, it is cut on the lintel: study it with Quill (Quill's one Tier I glyph reward).
 - **T2.** Four bars: one clean Iron, two with Hunger (old Mwooreth salvage), one Stone. The frost match is the party's own proof the gorge is the place. No time essence, ever.
 - **T3.** The culture is Strained by cold. Pell says it came from "the woman at the fire": a first breadcrumb for Violet. Her craft reads the fungus only.
 - **T4.** Three continuations: warm from the core (correct; cost: always hungry), freeze-and-stop blood (wrong problem: stopping is where she's been stuck), frost-proof bones (not viable: "That is a wish").
@@ -82,8 +82,8 @@ Craft check: d20 + proficiency + craft ability. Level 4: up to 3 charges per cra
 | Scene | Where | Who | What happens |
 |---|---|---|---|
 | 1. Breakfast and Room 208 | Mottle's Mugs; Upstairs | Mottle, Lil, Europa | Europa wakes with frost on her lashes that won't melt, remembering an old voice: "Not yet, little one." Mottle: "Paid three nights. He did not sign. He drew a bell." |
-| 2. The slip and the map | Quill's Rune Workshop | Quill | Quill reads the CLADIS marks on Europa's map as trail marks, left on purpose. The "Q." slip shows anchor strokes. Quill's test: "Can you keep a sentence unfinished?" |
-| 3. Table Seven | Mottle's Mugs, after the evening rush | Quill, Sabeline, Pell | The pitch in layers: the claim, the banishment and trail, the re-tied thread, the method, why a name matters. Knock four slow. |
+| 2. The slip and the map | Quill's Rune Workshop | Quill | Quill reads the CLADIS marks on Europa's map as trail marks, left on purpose. The "Q." slip shows anchor strokes. Quill's test: "Can you leave a weave unfinished?" |
+| 3. Table Seven | Mottle's Mugs, after the evening rush | Quill, Sabeline, Pell | The pitch in layers: the claim, the banishment and trail, the re-tied thread, the method, why a thread matters. Knock four slow. |
 | 4. The work | Brokka's Forge, Harrowgate Restorations, the Ropewalk | Ysolde, Haddo, Nan | T2, T3, T4, braid prep. Nan gossips that Tallis rides the tenth-hour trolley. |
 | 5. The Inspector | Night Custody Office | Tallis, Sabeline | Forty-one openings. Delay (Persuasion 15), permit (17 with the audit), lie (16, he posts anyway), or Nan holds his trolley. Never violence. |
 | 6. The records | The Clerk's Room | Pringus | T5: the Reconciliation Audit. |
@@ -93,7 +93,7 @@ Craft check: d20 + proficiency + craft ability. Level 4: up to 3 charges per cra
 
 **The Goddess notices (read aloud, Scene 7).** The cold that comes through the door doesn't stay by the door. It walks in. Every lamp in the room dims at once, not out, just smaller, as if something very large has turned to look. Frost runs up the Stolen Shard's blade from the tip, and in it, letter by letter, as if written from the inside of the steel: LAKKAR. Then, smaller: LADY OF ETERNAL HUNGER. The lamps come back. The frost does not melt.
 
-Quill: "That's the name. She's given it to you. Not to us." No damage, no save. Anyone who touches the blade feels a cold that isn't temperature: being counted.
+Quill: "That's her thread. She's handed you the end of it. Not us." No damage, no save. Anyone who touches the blade feels a cold that isn't temperature: being counted.
 
 **If Europa doesn't join,** the party sees a frosted, empty bed in Room 208 being stripped, and Mottle complains about a guest "carried in, carried out, paid in bells".
 
@@ -105,7 +105,7 @@ Quill: "That's the name. She's given it to you. Not to us." No damage, no save. 
 | Cladis was banished and left a trail | Quill at Table Seven | Quill reads Europa's map | The tag "was left to be found" (Pringus) |
 | She is alive, re-tied at the Ice Palace | Custody page plus Quill | The sword's inscription matches word for word | Dale's frost match |
 | The method | Quill and Sabeline explain | Each NPC explains their part | Stellan reads the anchor |
-| The Goddess needs a name: Lakkar | Quill's three sentences, then the frost on the blade | Stellan's Hunger reading and Quill's aside | Backup: Pell's next capsule carries the name from "V." |
+| The Goddess needs her thread: Lakkar | Quill's three plain lines, then the frost on the blade | Stellan's Hunger reading and Quill's aside | Backup: Pell's next capsule carries the thread-word from "V." |
 | The Goddess has noticed | Europa's frost that won't melt | The lamps dim (Scene 7) | Venfyura's word via Pell: "She's looking" |
 | The gorge is the far end | Pell (EARN) | Dale's frost match | Europa's map: the trail runs past the camp |
 | Europa's brother is connected | Mottle's bell receipt | Pell's message | The frost came from the camp |
@@ -121,7 +121,7 @@ Quill: "That's the name. She's given it to you. Not to us." No damage, no save. 
 | The name "Cladis" aloud | Never in a common room; at Table Seven once the pitch starts | EARN |
 | Banishment, trail, shredded thread | Table Seven, after the claim page | EARN |
 | The method | After the party agrees to help, one part per task | EARN |
-| The Goddess's name | Quill never says it; the Goddess writes it in Scene 7 | SECRET until Scene 7 |
+| The Goddess's thread (Lakkar) | Quill never says it; the Goddess writes it in Scene 7 | SECRET until Scene 7 |
 | The far end is the camp | After T1, or Europa's frost and the bell receipt are put to Pell (Insight 13) | EARN |
 | The woman at the fire is Venfyura | Not this session ("V.", "the woman at the fire") | SECRET |
 | Who carried Europa in | Europa asks Pell alone | EARN |
@@ -135,8 +135,8 @@ Quill: "That's the name. She's given it to you. Not to us." No damage, no save. 
 ## The Goddess's attention (a consequence, not a fight)
 
 - **Cold attention:** frost that never fully melts where a party member sleeps, on the Shard, on the line. Harmless, unsettling, and it leaves a trail Bailiffs can notice.
-- **A message:** the name on the blade. Later, more words in frost: short and exact.
-- **A price** ([UNSETTLED], choose later): her shard back when the work is done (the party's choice, never forced); the name spoken inside the Wyrd by the party, binding them to the bargain; or something only Cladis can tell them.
+- **A message:** her thread, written on the blade. Later, more words in frost: short and exact.
+- **A price** ([UNSETTLED], choose later): her shard back when the work is done (the party's choice, never forced); her thread spoken and knotted inside the Wyrd by the party, binding them to the bargain; or something only Cladis can tell them.
 - **Never this session:** no combat, no avatar, no goddess on stage. "Eternal Hunger" shares a word with a Mwooreth Root Rune; let Stellan notice, let nobody explain.
 
 ## Rewards
@@ -147,9 +147,9 @@ Quill: "That's the name. She's given it to you. Not to us." No damage, no save. 
 - Betsy: a supervised adaptation study; no extra charges or actions.
 - Bones: Ysolde takes his restoration at cost after the operation. No guarantee.
 - Europa: her brother's message: "the time is right, and he's at the fire."
-- Everyone: the name Lakkar, Lady of Eternal Hunger (entrusted, not a power); passage through the cold door; 25 gp each for travel.
+- Everyone: the thread Lakkar, Lady of Eternal Hunger (entrusted, not a power); passage through the cold door; 25 gp each for travel.
 
-**If they say no:** the capsule still reaches them, the frost still writes the name (the Goddess noticed the party, not the Thaw), Bones still needs Ysolde, and the Pilgrim Road still leads to Bridgehollow. The cold door is the shortcut, not the only road.
+**If they say no:** the capsule still reaches them, the frost still writes her thread (the Goddess noticed the party, not the Thaw), Bones still needs Ysolde, and the Pilgrim Road still leads to Bridgehollow. The cold door is the shortcut, not the only road.
 
 ## DM cheat sheet
 
@@ -159,7 +159,7 @@ Quill: "That's the name. She's given it to you. Not to us." No damage, no save. 
 - T1 Stellan anchor DC 14 (needs Dale's wire). T2 Dale bars DC 12, frost DC 14, Rime dose.
 - T3 Violet strand DC 13 plus Green Thread. T4 Betsy vessel DC 14: warm from the core.
 - T5 the tag from Session 12; Pringus audits (legal and visible). T6 the count, four slow, DC 12.
-- Quill's aim: Cladis enlists the Goddess, who needs her name back in the Wyrd to stop the Niorghast resurrecting Nior.
+- Quill's aim: Cladis enlists the Goddess, who needs her thread woven back into the Wyrd to stop the Niorghast resurrecting Nior.
 - Scene 7: lamps dim, frost writes LAKKAR, LADY OF ETERNAL HUNGER on the Shard. She noticed. No fight.
 - Capsule: "Bell silent. Clapper taken to the Customs House. Bailiffs on the road. V. keeps the fire." Tallis posts at noon.
 - End: through the cold door onto the mountain road above Bridgehollow, a fire up the slope.
@@ -224,7 +224,7 @@ Quill: "That's the name. She's given it to you. Not to us." No damage, no save. 
 
 ### Existing NPCs with new lines
 
-- **Quill Scratch.** [EARN] "She left marks for whoever came after. A trail. Your map is one. We follow it." [EARN] "There is a name. It isn't ours to say in a tavern."
+- **Quill Scratch.** [EARN] "She left marks for whoever came after. A trail. Your map is one. We follow it." [EARN] "There is a thread. It isn't ours to pull in a tavern."
 - **Venfyura** (off stage). Keeps the fire and the bell at the Eirwitch camp; writes to the Thaw as "V."; grew the fungal culture. Revealed at the camp in Session 15. Her reason for withdrawing stays unsettled.
 
 ## Open questions (add to Part 5)
