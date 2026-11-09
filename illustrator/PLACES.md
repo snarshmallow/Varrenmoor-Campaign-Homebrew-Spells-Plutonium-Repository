@@ -54,8 +54,10 @@ Example: `varrenmoor_base` = `illustrator/out/varrenmoor_overhead_map.png` at 4.
 
 ## 3. Creating a new place
 
-**From the Places tab (form).** Pick a template (coastal fishing village, river market town, mountain pass fort-town, walled hill town, farming hamlet)
-or fill in: name, culture (names and building looks), population, layout, terrain, rivers, lakes, climate, season. The line under the form estimates buildings and
+**From scratch (empty).** *Blank place (from scratch)*: section 3b. **Tiny (under 20 people)**: section 3a.
+
+**From the Places tab (form).** Pick a template (coastal fishing village, river market town, mountain pass fort-town, walled hill town, farming hamlet;
+tiny: lone farmstead, hunter's cabin, roadside inn, hamlet of 12) or fill in: name, culture (names and building looks), population, layout, terrain, rivers, lakes, climate, season. The line under the form estimates buildings and
 area. **Draft quality** (default on) makes coarse terrain and civic buildings only, in seconds, and is safe to open. Full quality adds every house.
 The size caps (about 1200 buildings, 3 million ft2 of town, 9000 ft place) stop a huge town freezing Illustrator; *Allow large* lifts them.
 *Generate place* writes `world/<id>/`, switches to it and renders a preview PNG. *Open selected in Illustrator* writes a job that opens the map as a new document.
@@ -71,12 +73,51 @@ Vocabulary: top of `place_text.py`.
 
 **From a Foundry scene**: section 2.
 
-Command line: `place_create.py create|validate|prompt-help|from-text|templates|regen|import-image|write-schema`; schema `world/schema/place-spec.schema.json`.
-Same spec + seed = same place. `create` refuses to overwrite an existing folder without `--force`.
+Command line: `place_create.py create|create-blank|validate|prompt-help|from-text|templates|regen|import-image|write-schema`; schema `world/schema/place-spec.schema.json`.
+Same spec + seed = same place. `create` refuses to overwrite an existing folder without `--force`. An empty spec `{}` is accepted: a name is generated.
+
+### 3a. Tiny settlements (fewer than 20 people)
+`town.population` 0 to 19 does not use the town generator; `generators/town_tiny.py` writes the same files (streets, districts, buildings, fields) for:
+
+| `town.settlement` | People (auto) | What you get | Default size |
+|---|---|---|---|
+| `farmstead` | 1-5 | farmhouse, barn, shed (3+), byre (5+), well, yard, 2-3 fenced fields, a farm track from the map edge | 600 x 450 ft |
+| `hamlet` | 6-19 | 2-4 houses and 1-2 barns round a yard / green with a well on a lane, 3-4 fields (2-6 buildings) | 800 x 600 ft |
+| `cabin` | (choose) | hunter's / woodcutter's cabin and a woodshed on a footpath, no fields | 400 x 300 ft |
+| `lodge` | (choose) | hunter's lodge, stable, woodshed, small yard | 500 x 400 ft |
+| `inn` | (choose) | roadside inn, stables, shed, well, inn yard beside a road that crosses the whole map, one paddock | 600 x 450 ft |
+
+`town.population: 0` = no settlement: terrain and water only. Rivers default to 0 for tiny places (ask for one with `terrain.rivers`). No market, plaza,
+districts rings, walls or gates (layout, wall, gates, districts and central feature are ignored, with a warning). Templates: `lone_farmstead`, `hunters_cabin`,
+`roadside_inn`, `hamlet_of_12`. Words: "a lone farmstead", "homestead", "a single house", "lone cabin", "hunter's lodge", "roadside inn", "hamlet of 12",
+"a family of five", "no town" (a town / village / city word wins over these). Fields get fences in the 3D pack; a track over a river becomes a ford.
+Limits: a fixed plan per kind; a building or field with no dry, level spot near the yard is skipped (listed in `create_report.json` town warnings); the
+ground under buildings is not levelled; the well is a 7 ft well house.
+
+### 3b. Blank place (from scratch)
+`place_create.py create-blank --name N [--id ID] --size-ft W H --recipe flat|rolling_hills|valley|highland_ridge [--relief-ft R] [--cell-ft F] [--seed S]
+[--scale-ft-per-in F] [--grid-ft G] [--underlay IMAGE] [--force] [--dry-run]` (panel: Places tab > *Blank place (from scratch)*). Writes `world/<id>/` of kind
+`blank`: the terrain (flat at 100 ft, or the base-terrain generator `terrain_basemap.py`), `terrain_spec.json`, empty `streets.json`, `districts.json`,
+`water.json` and `buildings/`, `view_settings.json` (town view = the whole place unless a scale is given) and `place.json`. An underlay image is stretched over
+the whole place as the locked UNDERLAY layer. Then draw roads (Roads tab), add buildings (Buildings tools), paint terrain (Heightmap paint), add water (Water tab).
+Preview, Open in Illustrator and the 3D world-pack export work on it with 0 buildings and 0 streets.
+
+### 3c. Managing places (rename, duplicate, trash, edit)
+`place_manage.py` (panel: Places tab > *Manage the selected place*):
+`edit --place ID [--name] [--notes] [--kind] [--status] [--culture] [--season] [--units] [--focus X Y] [--scale-ft-per-in F] [--grid-ft G]`,
+`rename --place OLD --new-id NEW [--include-export]`, `duplicate --place ID --new-id NEW [--name N] [--include-export]`, `trash --place ID`, `trash-list`,
+`restore --entry E [--as NEW]`, `purge --entry E --confirm ID`, `check-id --id X`; every changing command takes `--dry-run`.
+- Ids: lower-case letters, digits, underscore, 2-41 characters; not `schema`, `export`, `trash`, `world`, `panel`, `places` or a Windows device name; unique.
+- Rename renames the folder and rewrites references (place.json id, `place` / `place_id` / `parent` fields and `world/<id>/` paths in the place's JSON files,
+  region children's parent, `world/panel_last_place.json`, `illustrator/out/{panel,water,foundry,heightmap_paint}/<id>`, `illustrator/out/places/<id>_*`,
+  `illustrator/out/<id>_*`). Not changed: `export/` (unless `--include-export`), the linked Foundry scene, the Foundry asset folder `art/<id>/`, region child
+  folder names, entity ids. On any failure every finished step is undone in reverse order.
+- Trash moves the folder to `world/.trash/<id>_<date-time>/` (git-ignored); restore moves it back; purge deletes a trash entry only, after the id is typed.
+- The place open in the panel is refused for rename and trash (switch first). Foundry is never contacted.
 
 ### What a spec controls
 Terrain recipes: flat, rolling, hills, valley, bowl, coastal, island, pass, fjord, mountain (relief, sea side, rivers 0-3 with bends and width, up to 4 lakes).
-Town: population (hamlet < 150 < village < 450 < town < 2500 < city), layout (organic, radial, grid, linear, walled), districts (names or automatic), centre feature
+Town: population (0 = none, 1-19 = tiny settlement (3a), hamlet < 150 < village < 450 < town < 2500 < city), layout (organic, radial, grid, linear, walled), districts (names or automatic), centre feature
 (market, green, temple, castle), wall and gates, extra civic buildings. Culture sets names and default building styles. Climate and season choose the shading preset.
 
 ### Honest limits
