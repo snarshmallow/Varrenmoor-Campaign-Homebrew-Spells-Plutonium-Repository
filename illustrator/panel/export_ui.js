@@ -23,6 +23,7 @@
     }
     f.buildingCount = lastCount.n;
     try { f.packExists = fs.existsSync(VB.packDir(d) + "/placements.json"); f.splitExists = fs.existsSync(VB.packDir(d) + "/models"); } catch (e) { /* none */ }
+    f.lights = f.packExists && X.readPackLights ? X.readPackLights(fs, VB.packDir(d) + "/placements.json") : null;   // lights precheck (cached by mtime)
     var c = $("fConn"), t = c ? String(c.textContent || "") : "";
     f.connected = /^connected/.test(t) ? true : /offline/.test(t) ? false : null;
     return f;
@@ -36,6 +37,7 @@
     if (running && r && r.status === "running") return '<span class="tag stale">running...</span>';
     if (!r) return '<span class="tag">not run</span>';
     if (r.status === "failed") return '<span class="tag stale" title="' + esc(r.error) + '">failed ' + esc(ago(r.at)) + "</span>";
+    if (r.status === "skipped") return '<span class="tag" title="' + esc(r.error) + '">skipped ' + esc(ago(r.at)) + '</span> <span class="note">' + esc(r.error) + "</span>";
     return '<span class="tag" title="' + esc(r.info || "") + '">' + (r.status === "dry" ? "dry run ok " : "done ") + esc(ago(r.at)) + "</span>" + (r.info ? ' <span class="note">' + esc(r.info) + "</span>" : "");
   }
 
@@ -47,7 +49,8 @@
       html += '<div class="exrow' + (s.enabled ? "" : " off") + '"><label class="chk"><input type="checkbox" ' + g.attr + '="' + s.id + '"' + (s.checked ? " checked" : "") + (running ? " disabled" : "") + "> " +
         '<b>' + esc(s.label) + "</b></label>" + (s.write ? ' <span class="tag exw" title="writes to Foundry' + (dry ? " (dry run only while Dry run is on)" : "") + '">Foundry' + (dry ? " (dry)" : " WRITE") + "</span>" : "") +
         (s.heavy ? ' <span class="tag" title="slow / memory heavy on big places">heavy</span>' : "") + " " + statusTag(st, s) +
-        '<div class="note">' + esc(s.enabled ? s.note : "Disabled: " + s.reason) + "</div></div>";
+        '<div class="note">' + esc(s.enabled ? s.note : (s.precheck ? s.precheck + " " : "") + "Disabled: " + s.reason) + "</div>" +
+        (s.offerApply && !running ? '<button class="tiny" data-exslapply="1" title="Ticks Street lamps enabled on the Streetlamps tab and runs Generate with its current settings (writes the pack, not Foundry)">Apply streetlamps now (switch on with the current settings)</button>' : "") + "</div>";
     });
     box.innerHTML = html;
     var rl = X.runList(plan, ""), block = "", wr = plan.steps.filter(function (s) { return s.checked && s.write; });
@@ -102,13 +105,22 @@
             res = await fn(); if (res === null || res === undefined) { if (!dry) throw new Error("cancelled or failed: see the message above"); } res = { ok: true };
           } else res = await ctx.startJob(job);
         } catch (e) { res = { ok: false, error: String(e.message || e) }; }
+        if (X.retryWithoutLights(id, res)) {   // push-scene-3d refused --with-lights on a 0-light pack before writing anything: same push without lights
+          try { res = await ctx.startJob(X.dropLights(step.build())); } catch (e) { res = { ok: false, error: String(e.message || e) }; }
+          if (res && res.ok) { info = "lights skipped: the pack has no lights (re-export so buildings get interior lights; the scene's lights were kept)"; }
+        }
+        var skipWhy = X.softSkip(id, res);
+        if (skipWhy) {   // a lights step with 0 lights in the pack: skipped, not failed; nothing was written and no scene light was pruned; the run goes on
+          X.record(st, id, "skipped", skipWhy); infos.push(step.id + ": " + skipWhy); ctx.showError("");
+          continue;
+        }
         if (!res || !res.ok) {
           why = !res ? "another job is running (wait for it, then resume)" : String(res.error || "failed");
           X.record(st, id, "failed", why); failedId = id;
           msgs[key] = "Stopped at \"" + step.label + "\" (" + (res && res.cancelled ? "cancelled" : "failed") + "): " + why + "\nEarlier steps are kept. Fix the problem and press Resume from here.";
           break;
         }
-        info = infoOf(res); X.record(st, id, step.write && dry ? "dry" : "done"); if (info) { st.exp.last[id].info = info; infos.push(step.id + ": " + info); }
+        info = info || infoOf(res); X.record(st, id, step.write && dry ? "dry" : "done"); if (info) { st.exp.last[id].info = info; infos.push(step.id + ": " + info); }
         done.push(step.id);
         if (step.write && !dry) { var a = $("exArm"); if (a) a.checked = false; }
       }
@@ -126,6 +138,11 @@
       $(g.list).addEventListener("change", function (e) {
         var id = e.target && e.target.getAttribute && e.target.getAttribute(g.attr); if (!id) return;
         S().exp[g.selKey][id] = !!e.target.checked; ctx.save(); paint();
+      });
+      $(g.list).addEventListener("click", function (e) {   // "Apply streetlamps now": an explicit click switches lamps on and runs the Streetlamps tab Generate (pack only, no Foundry)
+        var b = e.target && e.target.closest && e.target.closest("[data-exslapply]"); if (!b || running) return;
+        var st = S(); st.streetlamps.enabled = true; ctx.save(); if (ctx.syncInputs) ctx.syncInputs();
+        if (ctx.acts && ctx.acts.sl_apply) Promise.resolve(ctx.acts.sl_apply()).then(function () { paint(); });
       });
       $(g.run).addEventListener("click", function () { runSteps(key, dryNow(), ""); });
       $(g.dryAll).addEventListener("click", function () { runSteps(key, true, ""); });

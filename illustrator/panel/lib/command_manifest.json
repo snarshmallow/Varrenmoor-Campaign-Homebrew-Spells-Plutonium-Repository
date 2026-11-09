@@ -756,6 +756,9 @@
       "s:tools.exp.albedo_px_per_ft"
      ]
     },
+    "--derive-doors": {
+     "cli_only": "default auto (street-facing front doors -> windows, interiors, interior lights) is what the panel export wants; off is only for reproducing an old pack"
+    },
     "--interior-style": {
      "controls": [
       "id:fInteriorStyle"

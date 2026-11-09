@@ -510,7 +510,9 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
   <label class="chk"><input type="checkbox" data-s="streetlamps.light.shadows" title="Off by default: every shadow-casting light renders the scene 6 more times"> Light shadows (costly, off)</label>
   <h4>Count and light budget</h4>
   <pre class="note" id="slReadout" style="white-space:pre-wrap"></pre>
-  <div class="btns"><button data-act="sl_plan" title="Counts lamps and lights without writing anything">Preview (dry run)</button><button class="primary" data-act="sl_apply" title="Writes (or, when switched off, removes) the lamp layer and lamp lights in the pack placements.json">Generate</button><button data-act="sl_push" title="Pushes the streetlamps tile and the pack lights to the scene picked on the Foundry tab">Push layer + lights</button></div>
+  <div class="btns"><button data-act="sl_plan" title="Counts lamps and lights without writing anything">Preview (dry run)</button><button class="primary" data-act="sl_apply" title="Writes (or, when switched off, removes) the lamp layer and lamp lights in the pack placements.json">Generate</button><button data-act="sl_push" id="slPushBtn" title="Pushes the streetlamps tile and the pack lights to the scene picked on the Foundry tab">Push layer + lights</button></div>
+  <div class="note" id="slPushCheck"></div>
+  <div class="btns" id="slApplyOnRow" hidden><button data-act="sl_apply_on" title="Ticks Street lamps enabled and runs Generate with the current settings (writes the pack placements.json, not Foundry)">Apply streetlamps now (switch on with the current settings)</button></div>
   <label>Also write into these placements.json (one path per line, e.g. the merged optimized set) <textarea data-s="streetlamps.extra" rows="2"></textarea></label>
   <h4>Picked scene: <span id="slScene" class="note"></span></h4>
   <label class="chk"><input type="checkbox" data-s="streetlamps.dry" title="Scene buttons only report what they would change"> Dry run (preview only)</label>

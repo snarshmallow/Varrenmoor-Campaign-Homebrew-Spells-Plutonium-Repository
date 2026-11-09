@@ -104,5 +104,38 @@ check("record keeps status, time, error", st.exp.last.export.status === "done" &
   check("batch copy numbers parsed from a job's JSON", X.copySummary("log\n" + '{"push":{"copy_seconds":1.5,"files_copied":10,"files_skipped":3,"bytes":5242880}}') === "copied 10 file(s), 3 unchanged, 5.0 MB in 1.5 s" && X.copySummary("nothing") === "" && X.copySummary('{"ok":true}') === "");
   check("state defaults carry the push selection", st.exp && st.exp.psel && st.exp.psel.models === true && st.exp.psel.l_roofs === false);
 }
+// ---- lights / streetlamps precheck and soft skips (Bridgehollow: a pack with 0 lights, streetlamps switched off)
+{
+  const ex = mk(s => { s.foundry.target = "existing"; s.foundry.sceneUuid = "Scene.abc"; });
+  const none = X.packLightCounts({ files: [{ file: "a.glb" }], lights: [] });
+  const interior = X.packLightCounts({ files: [{ file: "b.glb", lights: [{ type: "hearth" }, { type: "window" }, { type: "window" }] }] });
+  const lamps = X.packLightCounts({ files: [{ file: "s.glb", layer: "streetlamps" }], lights: [{ type: "lamp" }, { type: "lamp" }], streetlamps: { lamps: 2 } });
+  check("packLightCounts: file-entry hints + doc lights + lamp tiles", none.total === 0 && interior.total === 3 && interior.hearth === 1 && interior.window === 2 && lamps.lamp === 2 && lamps.lampTiles === 1 && lamps.lamps === 2 && X.packLightCounts(null) === null);
+  let pp = X.pushPlan(VB, ex, d, Object.assign({}, facts, { packExists: true, lights: none }), { dry: true });
+  check("0 lights: every lights item disabled with the plain re-export / streetlamps reason", ["lights", "lights_interior", "lights_lamps", "streetlamps"].every(i => !X.step(pp, i).enabled) &&
+    /re-export first/.test(X.step(pp, "lights").reason) && /re-export first/.test(X.step(pp, "lights_interior").reason) && /switch Streetlamps on/.test(X.step(pp, "lights_lamps").reason) && /switch Streetlamps on/.test(X.step(pp, "streetlamps").reason));
+  check("precheck line counts the pack before running", /^Pack: 0 light\(s\)/.test(X.step(pp, "lights").precheck) && /lamp tile/.test(X.step(pp, "streetlamps").precheck));
+  check("streetlamps items offer Apply streetlamps now, interior items do not", X.step(pp, "streetlamps").offerApply && X.step(pp, "lights_lamps").offerApply && !X.step(pp, "lights").offerApply);
+  const rl = X.runList(pp, "");
+  check("0-light items are reported, the rest of Push everything still runs", rl.skipped.some(x => x.id === "lights") && rl.run.join(",") === "models,padding,skybox,sun,lighting,collision,doors,foliage", rl.run.join(","));
+  pp = X.pushPlan(VB, ex, d, Object.assign({}, facts, { packExists: true, lights: interior }), { dry: true });
+  check("interior lights only: lights + interior enabled with a count, lamps disabled", X.step(pp, "lights").enabled && X.step(pp, "lights_interior").enabled && /3 light\(s\) \(1 hearth, 2 window, 0 lamp\)/.test(X.step(pp, "lights").note) && !X.step(pp, "lights_lamps").enabled && !X.step(pp, "streetlamps").enabled);
+  pp = X.pushPlan(VB, ex, d, Object.assign({}, facts, { packExists: true, lights: lamps }), { dry: true });
+  check("lamps in the pack: streetlamps and lamp items enabled, interior disabled", X.step(pp, "streetlamps").enabled && X.step(pp, "lights_lamps").enabled && X.step(pp, "lights").enabled && !X.step(pp, "lights_interior").enabled);
+  pp = X.pushPlan(VB, ex, d, Object.assign({}, facts, { packExists: true }), { dry: true });
+  check("unknown counts (no read): lights items unchanged", X.step(pp, "lights").enabled && !X.step(pp, "lights").precheck);
+  const err = { ok: false, error: 'push lights exited with code 1: light budget: 0 of 0 lights kept | {"ok": false, "error": "the plan has 0 lights, nothing written and the scene\'s existing lights are kept"}' };
+  check("a 0-light failure of a lights step is a skip with the reason, not a failure", /^skipped: No lights/.test(X.softSkip("lights", err)) && /^skipped: No streetlamps/.test(X.softSkip("streetlamps", err)) && /^skipped: No streetlamps/.test(X.softSkip("lights_lamps", err)));
+  check("other failures stay failures", X.softSkip("lights", { ok: false, error: "bridge offline" }) === "" && X.softSkip("models", err) === "" && X.softSkip("lights", { ok: true }) === "");
+  const e3 = { ok: false, error: "push-scene-3d: --with-lights: the plan has 0 lights (...); nothing was written" };
+  const job = X.plan(VB, ex, d, facts, { dry: true }).steps.find(s => s.id === "push").build();
+  check("push-scene-3d refused for 0 lights: retried without --with-lights, never with --prune-lights", X.retryWithoutLights("push", e3) && !X.retryWithoutLights("push", err) && !X.retryWithoutLights("push", { ok: true }) &&
+    /--with-lights/.test(job.steps[0].args.join(" ")) && !/--with-lights|--prune-lights/.test(X.dropLights(job).steps[0].args.join(" ")) && /lights skipped/.test(job.label));
+  check("export push note warns when the current pack has no lights", /no lights/.test(X.step(X.plan(VB, ex, d, Object.assign({}, facts, { lights: none }), { dry: true }), "push").note));
+  check("Streetlamps tab push check", X.streetlampsPushCheck(none).offerApply && /switch Streetlamps on/.test(X.streetlampsPushCheck(none).reason) && X.streetlampsPushCheck(lamps).reason === "");
+  const fs = require("fs"), os = require("os"), tp = path.join(os.tmpdir(), "vb_lc_" + process.pid + ".json");
+  fs.writeFileSync(tp, JSON.stringify({ files: [{ lights: [{ type: "window" }] }] }));
+  check("readPackLights reads the pack, null when missing", X.readPackLights(fs, tp).window === 1 && X.readPackLights(fs, tp + ".none") === null); fs.unlinkSync(tp);
+}
 check("window.VBExportPlan published alongside module.exports", /window\.VBExportPlan = X/.test(require("fs").readFileSync(__dirname + "/../lib/exportplan.js", "utf8")));
 console.log(ok + " passed, " + fail + " failed"); process.exit(fail ? 1 : 0);

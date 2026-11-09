@@ -62,7 +62,8 @@
       build: function () { return VB.jobSceneAudit(st, d); } });
     var pushLabel = ex ? "Push 3D scene (models, padding, skybox, lights)" : "Push models (new scene)";
     add({ id: "push", label: pushLabel, group: "foundry", write: true, heavy: false,
-      note: ex ? "push-scene-3d on the picked scene: models, then padding, skybox, interior lights, collision, in the order that survives the reset."
+      note: ex ? "push-scene-3d on the picked scene: models, then padding, skybox, interior lights, collision, in the order that survives the reset." +
+                 (facts.lights && !facts.lights.total ? " The current pack has no lights: if it still has none after the export, the push runs without lights (the scene's lights are kept)." : "")
                : "push-models creates the scene " + JSON.stringify(String((st.foundry || {}).sceneName || "")) + ". Padding, skybox and lights follow once it exists (Refresh from Foundry, pick it, Existing, run again).",
       needs: function () {
         if (tp) return tp;
@@ -95,6 +96,54 @@
   X.pushDefaultSel = function () { var o = {}; PUSH_ORDER.forEach(function (k) { o[k] = X.PUSH_EVERYTHING.indexOf(k) >= 0; }); return o; };
   X.PUSH_LAYERS = { l_terrain: "terrain", l_buildings: "buildings", l_roofs: "roofs", l_roads: "roads", l_bridges: "bridges", l_walls: "walls", l_fences: "fences", l_props: "props", l_water: "water", l_foliage: "foliage", l_streetlamps: "streetlamps", l_signs: "signs" };
 
+  // ------------------------------------------------------------------ lights / streetlamps precheck (what the pack placements.json carries) and soft skips
+  // counts of a placements doc: interior light hints sit on file entries (worldpack_split), lamp lights + the streetlamps tile on the doc (streetlamps.py apply)
+  X.packLightCounts = function (doc) {
+    var c = { total: 0, hearth: 0, window: 0, lamp: 0, other: 0, lampTiles: 0, lamps: 0 };
+    if (!doc || typeof doc !== "object") return null;
+    function one(l) { var t = (l && l.type) || "other"; c.total++; if (t === "hearth" || t === "window" || t === "lamp") c[t]++; else c.other++; }
+    (doc.lights || []).forEach(one);
+    (doc.files || []).forEach(function (e) { (e.lights || []).forEach(one); if (e.layer === "streetlamps") c.lampTiles++; });
+    c.lamps = +((doc.streetlamps || {}).lamps) || 0;
+    return c;
+  };
+  var lcCache = { p: "", m: 0, c: null };
+  // cheap cached read (re-parsed only when the file's mtime changes); null when there is no pack
+  X.readPackLights = function (fs, p) {
+    try {
+      var m = fs.statSync(p).mtimeMs; if (lcCache.p === p && lcCache.m === m) return lcCache.c;
+      lcCache = { p: p, m: m, c: X.packLightCounts(JSON.parse(fs.readFileSync(p, "utf8"))) }; return lcCache.c;
+    } catch (e) { return null; }
+  };
+  X.NO_LIGHTS = "No lights in this pack: re-export first (Export world pack + Export split models: buildings get doors, windows, interiors and their hearth/window lights; check the interior style). The scene's existing lights are kept.";
+  X.NO_INTERIOR = "No interior lights (hearth, window) in this pack: re-export first (Export world pack + Export split models). The scene's existing lights are kept.";
+  X.NO_LAMPS = "No streetlamps in this pack: switch Streetlamps on and press Generate (Streetlamps tab) first, then push. A fresh export also removes them: Generate again after each export. The scene's lamp lights are kept.";
+  // precheck per lights item: { line: what the pack has, reason: "" or why it cannot run }
+  X.lightsPrecheck = function (id, c) {
+    if (!c) return { line: "", reason: "" };
+    var line = "Pack: " + c.total + " light(s) (" + c.hearth + " hearth, " + c.window + " window, " + c.lamp + " lamp" + (c.other ? ", " + c.other + " other" : "") + ")" + (id === "streetlamps" ? ", " + c.lampTiles + " lamp tile(s)" : "") + ".";
+    var r = "";
+    if (id === "lights" && !c.total) r = X.NO_LIGHTS;
+    else if (id === "lights_interior" && !(c.hearth + c.window)) r = X.NO_INTERIOR;
+    else if ((id === "lights_lamps" && !c.lamp) || (id === "streetlamps" && !c.lamp && !c.lampTiles)) r = X.NO_LAMPS;
+    return { line: line, reason: r };
+  };
+  X.LIGHT_STEPS = ["lights", "lights_interior", "lights_lamps", "streetlamps"];
+  // a lights step that failed only because the plan had 0 lights is SKIPPED, not failed: -> the plain reason, else ""
+  X.softSkip = function (id, res) {
+    if (!res || res.ok || X.LIGHT_STEPS.indexOf(id) < 0) return "";
+    if (!/the plan has 0 lights/.test(String(res.error || ""))) return "";
+    return "skipped: " + (id === "streetlamps" || id === "lights_lamps" ? X.NO_LAMPS : id === "lights_interior" ? X.NO_INTERIOR : X.NO_LIGHTS);
+  };
+  // push-scene-3d --with-lights refuses (before any write) when the pack has 0 lights: rerun once without lights instead of stopping the run
+  X.retryWithoutLights = function (id, res) { return id === "push" && !!res && !res.ok && /--with-lights: the plan has 0 lights/.test(String(res.error || "")); };
+  X.dropLights = function (job) {
+    job.steps.forEach(function (s) { if (Array.isArray(s.args)) s.args = s.args.filter(function (a) { return a !== "--with-lights" && a !== "--prune-lights"; }); });
+    job.label += " (lights skipped: the pack has none)"; return job;
+  };
+  // the same check for the Streetlamps tab's Push layer + lights button
+  X.streetlampsPushCheck = function (c) { var p = X.lightsPrecheck("streetlamps", c); return { line: p.line, reason: p.reason, offerApply: !!p.reason }; };
+
   function clone(o) { return JSON.parse(JSON.stringify(o)); }
   // one shared target: padding, skybox and foliage keep their own scene uuid fields, so a copy of the state carries the Foundry tab's scene into all of them
   X.scopedState = function (st, layers) {
@@ -122,7 +171,13 @@
     }
     function add(id, label, o) {
       var s = { id: id, label: label, group: "push", write: true, heavy: false, note: o.note || "", checked: !!sel[id], dryOnly: dry && !o.noDry, noDry: !!o.noDry };
-      s.reason = reasonCommon(!!o.existing, !!o.pack, !!o.noDry, !!o.noTarget); s.enabled = !s.reason;
+      s.reason = reasonCommon(!!o.existing, !!o.pack, !!o.noDry, !!o.noTarget);
+      if (X.LIGHT_STEPS.indexOf(id) >= 0 && facts.packExists) {   // precheck: count the pack's lights before running; 0 = disabled with the plain reason
+        var pc = X.lightsPrecheck(id, facts.lights);
+        s.precheck = pc.line; if (pc.line) s.note = pc.line + " " + s.note;
+        if (pc.reason) { s.reason = pc.reason; s.noLights = true; s.offerApply = pc.reason === X.NO_LAMPS; }
+      }
+      s.enabled = !s.reason;
       s.build = o.build; steps.push(s);
     }
     var sc = function (layers) { return X.scopedState(st, layers); };
