@@ -13,7 +13,7 @@
 - **ideal / bond / flaw** (`system.details`): fill from the lines below.
 - **environment:** `Ossuary Exchange — Lower Ring` (match existing).
 - **Skeletal NPCs:** `details.type.value: "undead"`, subtype `"sentient skeleton"`, `dv: ["bludgeoning"]`, `di: ["poison"]`, `ci: ["exhaustion", "poisoned"]`, darkvision 60.
-- **Do not activate scenes or move any PC items.** No changes to existing actors (Quill etc.).
+- **Do not activate scenes or move any PC items.** The only change to an existing actor is the one added feature on Quill (section 7 below). Do not build Venfyura (section 8).
 
 ---
 
@@ -122,7 +122,7 @@
 | languages | common |
 | tools | tinker (value 1, int) |
 | disposition | 0 |
-| ideal / bond / flaw | "Usual time. Never early." / "The people on the other side of his door." / "Keeps other people's secrets better than his own job." |
+| ideal / bond / flaw | "Usual time. Never early." / "The woman at the fire on the other side of his door (Venfyura; GM-only)." / "Keeps other people's secrets better than his own job." |
 
 **Items**
 1. feat `Knows the Time`
@@ -189,16 +189,25 @@
 
 ---
 
+## 7. Quill Scratch (EXISTING actor: add one feature only)
+- Add feat `Lore Reference: Cladis's Trail` (no activities) with the text from the NPC spec ("Quill and Venfyura" section). Keep it GM-only (the feature is not shown to players; no biography change needed).
+- Do **not** change Quill's stats, other features, folder or token.
+
+## 8. Venfyura (EXISTING NPC: do NOT build)
+- SETTLED: Venfyura is the woman at the Eirwitch camp. She already exists in canon (Violet's grandmother, an Eirwitch).
+- **Check first:** no Venfyura actor JSON was found on the Vega share (`Act 2 Road to Bridgehollow/Ossuary Exchange`) or in the repo. Look for her in the live world's actors. If she exists, leave her alone (at most, add a GM note feature `GM Reference: Venfyura at the Camp` with the spec text). If she does not exist, **report it** to the coordinator; do not invent a stat block.
+
 ## Optional quest items (folder "Quest Items (Session 14)", loot, player-facing text only)
 | Item | Text |
 |---|---|
 | `Copied Custody Page` | "A certified copy of a custody ledger page. One entry: Named. Held: the place where even time cannot leave. Tag: outstanding." |
-| `Capsule: Bell Silent` | "A capsule with a bone-style tag. The letter reads: Bell silent. Clapper taken to the Customs House. Bailiffs on the road." |
+| `Capsule: Bell Silent` | "A capsule with a bone-style tag. The letter reads: Bell silent. Clapper taken to the Customs House. Bailiffs on the road. V. keeps the fire." |
 | `Mottle's Receipt (Room 208)` | "Paid in advance. Three nights. Instead of a signature, someone drew a bell." |
 | `Outstanding Intake Tag` | "An old intake tag stamped with a crown mark. The number is very low." (Only if the party has not already got the Session 12 tags as items.) |
+| `Stolen Shard frost note` | Not an item: a GM reminder. In Scene 7, frost writes LAKKAR, LADY OF ETERNAL HUNGER on the existing Stolen Shard. Do not edit the Stolen Shard item. |
 | `Braided Line (30 ft)` | "Three strands braided together: white linen, fine iron wire, and a pale living fungal thread." |
 
 ## Verify after building
 - Each actor imports without the "newer core version" error; item and activity ids are 16 chars.
 - Feature names match the spec; no feature grants charges or spell slots.
-- Folder is `Ossuary`; nothing else in the world was changed.
+- Folder is `Ossuary`; nothing else in the world was changed except the one added Quill feature.

@@ -5,6 +5,7 @@ Source: GM / player conversation on Discord, 2026-11-04 to 2026-11-08 (summarise
 ## Quick summary
 - **Character:** Europa, a half-"drow" (see canon note below) from Bridgehollow. Clockwork Soul sorcerer. Joins the party at **level 4**. Has a small non-combat animal companion (the player chose not to make it mechanical; "he's just there"). The player made a character model and was asked to email it to the GM for a 3D model.
 - **How she joins (GM plan):** Europa stumbles upon the **supposed Eirwitch camp** (outside Bridgehollow, high in the mountains) while trying to find help getting to the Ossuary Exchange. On reaching the camp she is **knocked out cold by an unknown force**, and wakes up in a room in **Mottle's and Mugs, in the Ossuary** (Ossuary Exchange), where the party meets her.
+- **Settled (GM, Session 14 prep):** the lone ancient Eirwitch at the camp is **Venfyura**, Violet's grandmother. See `Session_14_Cladis_Return_Conspiracy.md`.
 - **Systems:** Foundry runs 24/7 at foundry.varrenmoor.com (player signs in with the Discord/OIDC option; she already has a character under her login). Plutonium handles progression and spells (5.5e/2024 PHB progression works; spells can be imported from 5e.tools). The player considered a Draconic sorcerer with the new Floral Dragons but chose Clockwork Soul because there was no matching accompaniment for the dragons.
 
 ## Canon note (GM question from the player, to be confirmed)

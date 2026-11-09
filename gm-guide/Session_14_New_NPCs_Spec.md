@@ -1,5 +1,5 @@
 # SESSION 14: NEW OSSUARY NPCs (BUILD SPEC)
-*Companion to `Session_14_Cladis_Return_Conspiracy.md` (Part 7). Six new NPCs: four members of the Thaw (Quill is the fifth, already built), one pressure NPC, one ally. All are NEW. Foundry fields are in `Session_14_Foundry_Build_Checklist.md`.*
+*Companion to `Session_14_Cladis_Return_Conspiracy.md` (Part 7). Six new NPCs: four members of the Thaw (Quill, already built, is its driving cause), one pressure NPC, one ally. All are NEW. Venfyura (the woman at the camp's fire, SETTLED) is an existing NPC and is not rebuilt here; see the end of this file. Foundry fields are in `Session_14_Foundry_Build_Checklist.md`.*
 
 **Schema these follow.** The native Ossuary JSONs (Quill, Brokka, Pimm, Mottle on the Vega share) are dnd5e `npc` actors whose non-combat content lives in **feat items with no activities**, named by kind:
 - `GM Reference: <Name>, Voice and <Place>` (appearance, voice, sample dialogue)
@@ -15,15 +15,15 @@ Then a small number of real traits/actions (feat, utility, weapon). Biography ho
 
 ---
 
-## 1. SABELINE NOCK, Night Custody Clerk (leader of the Thaw)
+## 1. SABELINE NOCK, Night Custody Clerk (runs the Thaw day to day)
 *"Three records must agree. One of mine never has."*
 
 **Species / body.** Sentient skeleton, contracted Exchange staff (a person under contract, not property). Small and upright; reading spectacles wired to her skull; a clerk's sleeve-garters on bare arm bones. Very neat.
 **Role in the Exchange.** Keeps the night copy of the custody ledger: reconciles the day's entries, copies forward open claims when a volume fills.
-**Secret role.** Founded the Thaw. Found Cladis's open claim while copying it forward for the fourth time. Keeps the custody page and the meeting times.
-**Motivation.** Duty first: a claim that never closes offends her. Second, plain politics: Nior wanted authority over every settlement and road; a Niorghast would not leave a neutral house neutral, and her contract only exists because the Exchange is neutral.
+**Secret role.** Runs the Thaw day to day; Quill is its cause. She found Cladis's open claim while copying it forward for the fourth time and brought it to Quill, who recognized it as one mark of Cladis's trail. Keeps the custody page and the meeting times.
+**Motivation.** Duty first: a claim that never closes offends her. Second, plain politics: Nior wanted authority over every settlement and road, and the Niorghast means to resurrect him; that would not leave a neutral house neutral, and her contract only exists because the Exchange is neutral.
 **Relationship to Quill.** Old colleagues. She brought Quill the custody line because it reads like an unfinished instruction. They argue about commas.
-**Knows.** The open claim, the method, every member, the cold door's timetable, Tallis's interest. **Doesn't know.** What happened in Nior's fortress, who cut the sentence, who wrote the custody line, whether it will work.
+**Knows.** The open claim, the method, every member, the cold door's timetable, Tallis's interest. **Doesn't know.** Who banished Cladis, what happened in Nior's fortress, who cut the sentence, whether it will work. She knows of the Goddess's name but has never heard it said.
 **Where.** Night custody office (new scene) from the tenth hour; Table Seven at Mottle's after the evening rush.
 **Voice and mannerisms.** Quiet, exact, faintly amused. Taps four slow with her pen when thinking (the Bell knock). Calls Cladis "the claimant" in public. Never raises her voice; she lowers it.
 
@@ -32,7 +32,7 @@ Then a small number of real traits/actions (feat, utility, weapon). Biography ho
 - [COMMON] "I don't sell anything. I write down who did."
 - [ASK] "There is an open claim in my ledger. It's been open for three hundred years. I'd like to close it properly."
 - [ASK] *(showing the page)* "Named. Held. Tag outstanding. Two out of three. Pringus would call it a rumor. I call it a job."
-- [EARN] "We think she's stopped, not dead. Like a clock with a thumb on the hand. We'd like to move the thumb."
+- [EARN] "She isn't dead. She was put outside, and she tied herself off out there. A thread tied in the wrong place can be tied again. That's all we're doing. Knots."
 - [EARN] "Why now? Because you walked a piece of the place she's in through my intake hall. And because of the news from Bridgehollow."
 - [EARN] "No, I don't know what happened in the fortress. Nobody does. I am not going to guess at you."
 - *(to Tallis)* "Inspector. You're early. Sit. The kettle's honest."
@@ -164,12 +164,12 @@ Then a small number of real traits/actions (feat, utility, weapon). Biography ho
 **Species / body.** A sentient skeleton missing both legs below the knee, who rides a counterweighted chair along a short rail in the terminal room. Very fast on the rail, very slow on the floor.
 **Role in the Exchange.** Nominal keeper of a pneumatic terminal the Exchange lists as being on no active route. Nobody remembers giving him the job; nobody has taken it away.
 **Secret role.** Keeps the cold door's timetable. Receives and sends the Thaw's capsules at the usual time. Lets the courier (Europa's brother **[SUGGESTED]**) through.
-**Motivation.** Old loyalty to the people on the other side of the door. **[UNSETTLED]** whether that loyalty is to the old woman at the camp. He won't say.
+**Motivation.** Old loyalty to the woman at the fire on the other side of the door. **SETTLED:** she is Venfyura. Pell calls her "V." in writing and never names her aloud; he won't confirm who she is this session.
 **Relationship to Quill.** Quill keeps his door's anchor running. He calls Quill "the grammarian" and means it fondly.
 **Knows.** The schedule, the capsules, the Bridgehollow news, who carried Europa in, that the gorge frost never melts (he has a jar). **Doesn't know.** The vessel, the records, the method beyond "line and bell".
 **Where.** The Dusty Terminal and the Cold Door (new scene). Sometimes at Table Seven.
 **Voice and mannerisms.** Short sentences, railway-clerk precise, dry. Checks a pocket watch with no hands (he says he knows the time; the watch is for company).
-**[UNSETTLED / DM choice]** If you tie Part 6's "note lead" to the Thaw, Pell is who sends "Drop off at the usual time." If not, he uses knocks, not capsules.
+**Note lead (Part 6).** Pell is who sends "Drop off at the usual time." The notes are the Thaw's capsules. If you want that lead kept separate, have him use knocks instead.
 
 **Sample dialogue**
 - [COMMON] "No route. No logging. No visitors. You're visiting."
@@ -296,10 +296,21 @@ Then a small number of real traits/actions (feat, utility, weapon). Biography ho
 ## ROSTER AT A GLANCE
 | NPC | One line | CR | Thaw? |
 |---|---|---|---|
-| Sabeline Nock | Skeletal night custody clerk who found Cladis's open claim and leads the Thaw | 1/4 | Leader |
+| Sabeline Nock | Skeletal night custody clerk who found Cladis's open claim and runs the Thaw day to day | 1/4 | Organizer |
 | Ysolde Harrowgate | Licensed restorer in a leased body; prepares the lawful vessel | 1/2 | Member |
 | Haddo Rook | Ropewright with two donors' arms; braids the line, knows nothing else | 1/2 | Paid specialist |
 | Pell Ostry | Legless skeleton keeper of the dusty terminal; the cold door's timetable and courier post | 1/8 | Member |
 | Corvin Tallis | Living Inspector of Thresholds; has counted forty-one openings of a sealed door | 1 | No (pressure) |
 | Nan Gristle | Loud, kind trolley signalwoman; lends the bell and can delay Tallis | 0 | No (ally) |
-| *(Quill Scratch)* | *Existing; keeps the cold door's anchor rune working* | *1/2* | *Member* |
+| *(Quill Scratch)* | *Existing; the Thaw's cause: wants Cladis back to enlist the Rhime Goddess; keeps the cold door's anchor rune* | *1/2* | *Driving member* |
+| *(Venfyura)* | *Existing; the woman at the camp's fire, Violet's grandmother; the far end's partner (off stage)* | *existing* | *Partner* |
+
+---
+
+## QUILL AND VENFYURA (EXISTING NPCs: ADD, DON'T REBUILD)
+
+**Quill Scratch (existing actor).** Add one feature to the existing actor, no stat changes:
+- `Lore Reference: Cladis's Trail` (GM only). Quill has collected Cladis's trail marks for years: Threshold-family wayfinding marks, the open claim, an outstanding tag. Quill's aim (SETTLED): bring Cladis back so she can enlist the Rhime Goddess, who needs her name carried back into the Wyrd to fight the Niorghast and stop him resurrecting Nior. Quill knows the name from the trail but will not say it aloud; the Goddess writes it on the Stolen Shard in Scene 7.
+- Sample lines: [EARN] *"She left marks for whoever came after. A trail. Your map is one. We follow it."* [EARN] *"There is a name. It isn't ours to say in a tavern."* [EARN] *"A thread tied in the wrong place can be tied again. Two knots and a good line. That's all."* *(On the anchor's Hunger trace)* *"Hunger. Her name has that word in it. I don't like that either."*
+
+**Venfyura (existing NPC; SETTLED as the woman at the Eirwitch camp).** Do not build a new actor. Use her canon voice from the GM Reference ("little one", "Slowly. Truths keep.", choosing which truth to say today). Session 14 role: off stage. She keeps the fire and the bell at the camp, sends word through Pell ("V."), grew the fungal culture Violet works with, and (suggested) is the voice Europa remembers: "Not yet, little one." Her withdrawal/desertion reason stays [UNSETTLED]. **Foundry note:** no Venfyura actor JSON was found on the Vega share or in the repo; check the live world, and if she is missing, raise it with the GM rather than inventing a stat block.

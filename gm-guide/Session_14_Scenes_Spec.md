@@ -19,7 +19,7 @@
 | **Ossuary Exchange Conveyor S...** (shafts + annex) | Route to the dusty terminal (south dogleg) | The new terminal scene (B3) picks up where the dogleg ends. |
 | **Ossuary Exchange Market** | Travel between shops; Nan's loft is visible above the rails | Nothing. |
 | **The Hallway** | Sabeline's office door opens off it (flavor only) | Nothing. |
-| **Eirwitch Camp (Night)** (other agent) | Session end: where the cold door lets out, and Session 15 | Ask its builder to mark the **west road end** as "Cold door landing". |
+| **Eirwitch Camp (Night)** (other agent) | Session end: where the cold door lets out, and Session 15 | Ask its builder to mark the **west road end** as "Cold door landing". SETTLED: the woman at the fire is **Venfyura** (existing NPC): place her token by the campfire in Session 15, not before. The stave church needs a **bell with no clapper** (seized) and the gorge edge needs a tie-off point (a post or rock horn) for the line. |
 
 ---
 
@@ -70,6 +70,7 @@
   - **Beyond the door (exterior strip, x 45 to 55):** packed snow, the edge of a dark pine road, a few trees, night sky. Visible only when the door is open.
 - **Interaction objects:** `Dusty_Terminal`, `Capsule_Plinth`, `Terminal_Lever`, `Pell_Rail`, `Cold_Door` (real door node), `Anchor_Stone`, `Lintel_Threshold_Glyph`, `Workbench`, `Braided_Line_Coil`, `Gorge_Frost_Jar`.
 - **Lighting:** night. 3 lights: a dim warm lamp over the terminal (#ffc78a), a faint cool glow on the anchor stone (#9fd0ff, small radius; turn it on only after T1 succeeds), cold blue moonlight outside the door (#a8c4ff, exterior strip only). No other lights.
+- **The Goddess's notice (Scene 7 cue):** when the door opens, the DM drops the terminal lamp and the anchor glow to about half for a few seconds, then restores them ("every lamp dims at once, as if something very large has turned to look"). Frost writes LAKKAR, LADY OF ETERNAL HUNGER on the Stolen Shard (the party's item; narrate it, no prop needed). Optional: a frost decal on the workbench where the sword lies.
 - **Mood / audio:** dust, a slow drip, pipes ticking. When the door opens: wind, pine smell, a distant bell (only on the real night). Suggest a short wind ambience on a sound object at the door.
 - **Hidden:** the anchor stone looks like ordinary masonry until read (Perception DC 13 or Read Inscription). The capsule plinth has a cubby with old capsules (EARN, Pell's letters).
 - **NPC positions:** Pell in his chair on the rail by the terminal; Quill at the anchor stone; Sabeline by the workbench.
@@ -95,9 +96,9 @@
 - **Purpose:** the last beat of Session 14 (stepping through) if the Eirwitch Camp scene does not cover the road end. Otherwise skip and use the camp scene's west road end.
 - **Size:** 60 x 40 ft (12 x 8 squares). Outdoor, night, snow.
 - **Layout:** a rock face on the west edge with the **outside of the cold door** set into it (a plain iron door in a stone frame, no handle on this side); a snowy dirt road running east up the slope; pines both sides; an orange glow of a distant fire to the north-east (a light, not a model); a cairn by the door with a bell carved on its top stone (the courier's mark).
-- **Interaction objects:** `Cold_Door_Outside`, `Courier_Cairn`, `Road`.
+- **Interaction objects:** `Cold_Door_Outside`, `Courier_Cairn` (a "V." scratched under the bell), `Road`.
 - **Lighting:** 2 lights: moonlight (#a8c4ff), the faint distant fire glow at the edge (#ff9a4a, large dim).
-- **Mood / audio:** wind, creaking pines, very quiet.
+- **Mood / audio:** wind, creaking pines, very quiet. Frost that doesn't melt on the cairn (the Goddess's attention).
 - **Connects to:** B3 (the cold door); Eirwitch Camp (Night) (road east).
 - **Build:** illustrator blank place 60 x 40 ft with terrain + foliage (reuse the Eirwitch camp's foliage params), or a cropped region of the camp place. Do not duplicate the camp itself.
 
