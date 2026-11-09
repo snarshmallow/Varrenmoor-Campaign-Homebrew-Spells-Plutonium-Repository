@@ -259,5 +259,18 @@ class RealPackTests(unittest.TestCase):
             self.assertGreater(r["min_ft"], 0.0, r)
 
 
+class SkirtTexture(unittest.TestCase):
+    def test_skirt_uv_continues_the_road_texture(self):
+        """The skirt used u = 0 for its outer edge, so one texel column was stretched down the flank (a pale vertical band)."""
+        b = wm.Builder()
+        pts = [(0.0, float(i)) for i in range(5)]
+        wm._ribbon(b, "m", pts, [4.0] * 5, [2.0] * 5, 10.0, skirt={"ground": lambda x, y: 0.0})
+        m = b.build()
+        u = m.UV[:, 0]
+        self.assertGreater(float(u.max()), 4.0 / FT / 10.0 + 1e-6)          # left flank continues past the road's right-hand u
+        self.assertLess(float(u.min()), -1e-6)                              # right flank continues below u = 0
+        self.assertEqual(len(np.unique(np.round(u, 6))) > 3, True)
+
+
 if __name__ == "__main__":
     unittest.main()

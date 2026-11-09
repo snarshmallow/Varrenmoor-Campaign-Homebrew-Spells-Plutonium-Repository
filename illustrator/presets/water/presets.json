@@ -12,7 +12,7 @@
  },
  "presets": {
   "river": {"label": "River", "mode": "flow", "note": "Directional flow along the centreline, faster where the bed is steeper, foam at the banks",
-            "flow_speed": 1.6, "wave_height": 0.6, "wave_scale": 1.0, "transparency": 0.55, "depth_tint": 0.5, "foam": 0.35, "wind_dir": 0,
+            "flow_speed": 2.4, "wave_height": 0.6, "wave_scale": 1.0, "transparency": 0.55, "depth_tint": 0.5, "foam": 0.35, "wind_dir": 0,
             "slope_speed": 0.8, "shallow_color": "#5f9fb0", "deep_color": "#1f5670"},
   "pond":  {"label": "Pond", "mode": "wind", "note": "Calm, small ripples, clear and still",
             "flow_speed": 0.08, "wave_height": 0.2, "wave_scale": 0.6, "transparency": 0.7, "depth_tint": 0.55, "foam": 0.0, "wind_dir": 45,

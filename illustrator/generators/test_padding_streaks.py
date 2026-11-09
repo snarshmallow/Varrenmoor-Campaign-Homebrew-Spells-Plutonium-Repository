@@ -85,6 +85,27 @@ class Streaks(unittest.TestCase):
         Image.fromarray(np.concatenate([a, np.full((a.shape[0], 8, 3), 255, np.uint8), b], 1)).save(out)
 
 
+class SeamMatch(unittest.TestCase):
+    def test_grain_and_brightness_match_terrain_at_the_seam(self):
+        P = pt.load_texture_preset("meadow")
+        rng = np.random.RandomState(1)
+        alb = (np.clip(0.45 + 0.07 * rng.randn(200, 200, 1), 0, 1) * np.array([0.9, 1.2, 0.6])[None, None, :] * 255).astype(np.uint8)   # 7 % grain
+        box = (0, 0, W, H)
+        mean_t, rel_t = pt.terrain_edge_stats(alb, box)
+        self.assertGreater(rel_t, 0.05)
+        from skybox import srgb_to_lin
+        h = w = 320
+        yy, xx = np.mgrid[0:h, 0:w]
+        s = np.maximum(0.0, np.abs(xx - w / 2) - 100)                    # synthetic distance field (ft ~ px)
+        fine = np.random.RandomState(2).rand(h, w).astype(np.float32) * 0.3 + 0.35
+        base = np.full((h, w, 3), 0.2, np.float32)
+        out = pt.seam_colour_match(base, s, fine, alb, box, match_ft=110.0, gain=1.12)
+        near, far = out[s < 5], out[s > 120]
+        self.assertGreater(float(near.mean(-1).std() / near.mean()), 0.8 * 0.052)      # grain added at the seam (apron was flat)
+        self.assertAlmostEqual(float(near.mean() / 0.2), 1.12, delta=0.12)             # brightness gain at the seam
+        self.assertTrue(np.allclose(far, 0.2, atol=1e-6))                              # untouched beyond match_ft
+
+
 class ChannelFade(unittest.TestCase):
     """A river channel carved into the tile edge must not be extruded into the apron (north/south 'ladder' streak)."""
 

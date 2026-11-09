@@ -1,4 +1,4 @@
-// Varrenmoor 3D water for 3D Canvas (levels-3d-preview 9.x, three.js r132). VERSION 1
+// Varrenmoor 3D water for 3D Canvas (levels-3d-preview 9.x, three.js r132). VERSION 2
 //
 // This file is the BODY of a tile "onAnimation" function: new Function("delta", <this file>). 3D Canvas runs that function every frame for a tile that has
 // the flag flags.levels-3d-preview.onAnimation (scene flag enableAnimationScripts, default on), with `this` = the first child of the tile's model once the
@@ -32,32 +32,39 @@ if (S === undefined) {
       // one travelling sine layer: returns (height, d height / du, d height / dv); amplitude is a fraction of the wavelength, so slopes do not depend on scale
       "vec3 vbLayer(vec2 p, vec2 dir, float len, float w, float ph){ float k = 6.2831853 / len; float a = dot(dir, p) * k + ph; float amp = 0.02 * len * w;",
       "  return vec3(amp * sin(a), dir * (amp * k * cos(a))); }",
-      "vec3 vbPattern(vec2 p, vec2 d, float len, float t){",
-      "  vec2 q = p + len * 0.35 * vec2(sin(p.y / len * 1.9 + 1.3), cos(p.x / len * 1.6 + 0.7));",
+      // stretch > 1 elongates the ripples along the flow (river streaks); the returned gradient is with respect to the unstretched p
+      "vec3 vbPattern(vec2 p, vec2 d, float len, float t, float str){",
+      "  vec2 ps = vec2(p.x, p.y / str);",
+      "  vec2 q = ps + len * 0.35 * vec2(sin(ps.y / len * 1.9 + 1.3), cos(ps.x / len * 1.6 + 0.7));",
       "  vec3 s = vbLayer(q, d, len, 1.0, t * 0.9);",
       "  s += vbLayer(q, vbRot(d, 0.62), len * 0.62, 0.6, 1.7 + t * 1.2);",
       "  s += vbLayer(q, vbRot(d, -0.85), len * 0.43, 0.38, 3.1 + t * 1.5);",
       "  s += vbLayer(q, vbRot(d, 1.3), len * 0.27, 0.22, 4.9 + t * 1.9);",
-      "  return s; }",
+      "  return vec3(s.x, s.y, s.z / str); }",
+      // thin ridge lines of a noise field, stretched along the flow: they translate with the water and read as travelling streaks
+      "float vbStreak(vec2 p, float len){ float n = vbNoise(vec2(p.x / (len * 0.45), p.y / (len * 3.2))); float r = 1.0 - abs(2.0 * n - 1.0); return smoothstep(0.80, 0.97, r); }",
       "vec3 vbPerturb(vec3 eye_pos, vec3 surf_norm, vec3 mapN, float faceDirection){",
       "  vec3 q0 = dFdx(eye_pos); vec3 q1 = dFdy(eye_pos); vec2 st0 = dFdx(vbUv); vec2 st1 = dFdy(vbUv); vec3 N = surf_norm;",
       "  vec3 q1perp = cross(q1, N); vec3 q0perp = cross(N, q0); vec3 T = q1perp * st0.x + q0perp * st1.x; vec3 B = q1perp * st0.y + q0perp * st1.y;",
-      "  float det = max(dot(T, T), dot(B, B)); float scale = (det == 0.0) ? 0.0 : faceDirection * inversesqrt(det);",
+      "  float det = max(dot(T, T), dot(B, B)); float scale = faceDirection * inversesqrt(max(det, 1e-12));",
       "  return normalize(T * (mapN.x * scale) + B * (mapN.y * scale) + N * mapN.z); }"
     ].join("\n");
     const COLOR_FRAG = [
       "vec4 vbD = abs(vbData.w - 0.5) < 0.01 ? vbData : vec4(1.0, 0.0, 0.5, 0.5);",         // no _VBWATER data: open water, no slope, heading 180
       "float vbSh = vbD.x; float vbSlope = vbD.y;",
-      "float vbSpd = vbP0.x * mix(1.0, 0.35 + 1.3 * vbSlope, vbP1.z);",
-      "float vbLen = vbP0.z; float vbWH = vbP0.y; float vbFoamAmt = vbP0.w;",
+      "float vbEnd = vbData.w > 0.49 && vbData.w < 0.76 ? clamp((vbData.w - 0.5) * 4.0, 0.0, 1.0) : 0.0;",   // river end fade: 1 = invisible
+      "float vbSpd = vbP0.x * mix(1.0, 0.75 + 1.0 * vbSlope, vbP1.z);",
+      "float vbLen = max(vbP0.z, 0.01); float vbWH = vbP0.y; float vbFoamAmt = vbP0.w;",
       "vec2 vbDir = vbMode < 0.5 ? vec2(0.0, 1.0) : vbRot(vec2(0.0, 1.0), vbP1.w - vbD.z * 6.2831853);",
-      "vec3 vbW;",
-      "if (vbMode < 0.5) {",                                                                    // river: two-phase flow so the pattern can follow a speed that changes along the channel
-      "  float cyc = 2.5; float ph0 = fract(vbTime / cyc); float ph1 = fract(vbTime / cyc + 0.5);",
+      "vec3 vbW; float vbStrk = 0.0;",
+      "if (vbMode < 0.5) {",                                                                    // river: two-phase flow; both phases are the SAME pattern, translated by speed * cycle * phase, so it travels downstream instead of cross-fading in place
+      "  float cyc = 4.0; float ph0 = fract(vbTime / cyc); float ph1 = fract(vbTime / cyc + 0.5);",
       "  float w0 = 1.0 - abs(2.0 * ph0 - 1.0); float w1 = 1.0 - abs(2.0 * ph1 - 1.0);",
-      "  vbW = w0 * vbPattern(vbUv - vbDir * vbSpd * cyc * ph0, vbDir, vbLen, vbTime) + w1 * vbPattern(vbUv - vbDir * vbSpd * cyc * ph1 + vec2(0.37, 0.21), vbDir, vbLen, vbTime + 1.3);",
+      "  vec2 p0 = vbUv - vbDir * vbSpd * cyc * ph0; vec2 p1 = vbUv - vbDir * vbSpd * cyc * ph1 + vec2(0.37, 0.21);",
+      "  vbW = w0 * vbPattern(p0, vbDir, vbLen, vbTime * 0.3, 3.0) + w1 * vbPattern(p1, vbDir, vbLen, vbTime * 0.3, 3.0);",
+      "  vbStrk = w0 * vbStreak(p0, vbLen) + w1 * vbStreak(p1 + vec2(1.7, 0.0), vbLen);",
       "} else {",
-      "  vbW = vbPattern(vbUv - vbDir * vbSpd * vbTime, vbDir, vbLen, vbTime);",
+      "  vbW = vbPattern(vbUv - vbDir * vbSpd * vbTime, vbDir, vbLen, vbTime, 1.0);",
       "}",
       "vec2 vbGrad = vbW.yz * vbWH;",
       "float vbHn = clamp(vbW.x / (0.02 * vbLen * 2.2) * 0.5 + 0.5, 0.0, 1.0);",
@@ -67,13 +74,16 @@ if (S === undefined) {
       "vbFoam += vbFoamAmt * smoothstep(0.7, 1.0, vbHn) * clamp(vbWH, 0.0, 1.0) * (vbMode < 0.5 ? 0.3 : 0.6) * smoothstep(0.3, 0.9, vbNz);",
       "vbFoam += vbFoamAmt * vbSlope * vbSlope * 0.6 * smoothstep(0.55, 0.85, vbNz);",
       "vbFoam = clamp(vbFoam, 0.0, 1.0);",
+      "float vbShine = vbMode < 0.5 ? vbStrk * (0.5 + 0.5 * vbHn) : 0.0;",
       "vec3 vbCol = mix(vbShallow, vbDeep, vbP1.y * smoothstep(0.0, 0.9, vbSh));",
-      "diffuseColor.rgb = mix(vbCol, vec3(0.93, 0.96, 0.98), vbFoam);",
+      "vbCol *= 0.88 + 0.24 * vbHn;",                                                           // crests lighter, troughs darker: visible from straight above
+      "diffuseColor.rgb = mix(mix(vbCol, vec3(0.80, 0.93, 0.97), clamp(vbShine * 0.55 * (0.4 + vbWH), 0.0, 0.7)), vec3(0.93, 0.96, 0.98), vbFoam * (1.0 - vbEnd));",
       "float vbAlpha = mix(1.0 - 0.85 * vbP1.x, 1.0 - 0.55 * vbP1.x, smoothstep(0.0, 0.8, vbSh));",
-      "vbAlpha = mix(max(vbAlpha, 0.12), 1.0, vbFoam);"
+      "vbAlpha = mix(max(vbAlpha, 0.12), 1.0, vbFoam);",
+      "vbAlpha = mix(vbAlpha, max(vbAlpha, 0.8), vbShine * 0.5);"
     ].join("\n");
     const NORMAL_FRAG = "vec3 vbMapN = normalize(vec3(-vbGrad, 1.0));\nnormal = vbPerturb(-vViewPosition, normal, vbMapN, faceDirection);";
-    const ALPHA_FRAG = "float vbFres = pow(1.0 - clamp(dot(normal, normalize(vViewPosition)), 0.0, 1.0), 4.0);\ndiffuseColor.a = clamp(mix(vbAlpha, 1.0, vbFres * 0.7), 0.0, 1.0);\n#include <output_fragment>";
+    const ALPHA_FRAG = "float vbFres = pow(1.0 - clamp(dot(normal, normalize(vViewPosition)), 0.0, 1.0), 4.0);\ndiffuseColor.a = clamp(mix(vbAlpha, 1.0, vbFres * 0.7), 0.0, 1.0) * (1.0 - smoothstep(0.0, 0.9, vbEnd));\n#include <output_fragment>";
     S.patch = function (mesh, uniforms) {
       const mat = (mesh.material = mesh.material.clone());
       mat.transparent = true;
@@ -88,7 +98,7 @@ if (S === undefined) {
           .replace("#include <normal_fragment_maps>", NORMAL_FRAG)
           .replace("#include <output_fragment>", ALPHA_FRAG);
       };
-      mat.customProgramCacheKey = function () { return "vbwater1"; };
+      mat.customProgramCacheKey = function () { return "vbwater2"; };
       mat.needsUpdate = true;
       mesh.castShadow = false;
     };

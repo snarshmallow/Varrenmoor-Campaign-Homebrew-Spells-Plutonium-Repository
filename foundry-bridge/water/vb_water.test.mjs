@@ -53,7 +53,7 @@ test('patches a real r132 physical material (needs the module three.js)', { skip
   const resolve = (s) => { let prev; do { prev = s; s = s.replace(/^[ \t]*#include +<([\w\d./]+)>/gm, (_, n) => T.ShaderChunk[n]); } while (s !== prev); return s; };
   const vs = resolve(sh.vertexShader), fs_ = resolve(sh.fragmentShader);
   for (const k of ['attribute vec4 _vbwater', 'vbUv = uv; vbData = _vbwater;']) assert.ok(vs.includes(k), k);
-  for (const k of ['vec3 vbPerturb(', 'vbPattern(', 'diffuseColor.rgb = mix(vbCol', 'normal = vbPerturb(-vViewPosition', 'diffuseColor.a = clamp(mix(vbAlpha', 'roughnessFactor = mix(roughnessFactor']) assert.ok(fs_.includes(k), k);
+  for (const k of ['vec3 vbPerturb(', 'vbPattern(', 'vbStreak(', 'vbEnd', 'diffuseColor.rgb = mix(mix(vbCol', 'normal = vbPerturb(-vViewPosition', 'diffuseColor.a = clamp(mix(vbAlpha', 'roughnessFactor = mix(roughnessFactor']) assert.ok(fs_.includes(k), k);
   // balanced braces in what we injected
   assert.equal((fs_.match(/{/g) || []).length, (fs_.match(/}/g) || []).length);
   assert.equal((vs.match(/{/g) || []).length, (vs.match(/}/g) || []).length);

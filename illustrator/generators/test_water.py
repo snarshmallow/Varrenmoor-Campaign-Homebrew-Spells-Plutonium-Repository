@@ -60,7 +60,9 @@ class Meshes(unittest.TestCase):
         m = river()
         X = m.X["_VBWATER"]
         self.assertEqual(len(X), len(m.V))
-        self.assertTrue(np.allclose(X[:, 3], 0.5))
+        self.assertTrue(np.all((X[:, 3] >= 0.5 - 1e-9) & (X[:, 3] <= 0.5 + ww.END_W + 1e-9)))
+        self.assertAlmostEqual(float(X[0, 3]), 0.5 + ww.END_W, places=6)                                  # first vertex = invisible end
+        self.assertAlmostEqual(float(X[len(X) // 2, 3]), 0.5, places=6)                                  # mid-river = full water
         rows = ww.ACROSS
         edge = X[0::rows, 0]
         mid = X[rows // 2::rows, 0]
@@ -70,7 +72,20 @@ class Meshes(unittest.TestCase):
         v = m.UV[rows // 2::rows, 1]
         self.assertTrue(np.all(np.diff(v) > 0))                                                        # v grows downstream
         self.assertAlmostEqual(float(v[-1]), 400 / ww.UV_FT, delta=0.5)
-        self.assertEqual(m.tri_count, (12 - 1) * (rows - 1) * 2)
+        self.assertEqual(m.tri_count, (len(m.V) // rows - 1) * (rows - 1) * 2)
+        self.assertGreater(len(m.V) // rows, 12)                                                          # ends are densified for a smooth taper
+
+    def test_end_fade(self):
+        f = ww.end_fade(np.linspace(0, 400, 41))
+        self.assertAlmostEqual(f[0], 1.0)
+        self.assertAlmostEqual(f[-1], 1.0)
+        self.assertAlmostEqual(f[20], 0.0)
+        self.assertTrue(np.all(np.diff(f[:10]) <= 1e-12))                                                # monotone fade-out from the end
+        self.assertTrue(np.allclose(ww.end_fade([0.0, 0.0]), 0))                                         # degenerate: no NaN
+        m = river()
+        rows = ww.ACROSS
+        y = m.V[:, 1].reshape(-1, rows)
+        self.assertLess(float(np.ptp(y[0])), float(np.ptp(y[len(y) // 2])) * 0.6)                                   # narrower at the end
 
     def test_river_slope_zero_when_flat(self):
         X = river(drop_ft=0.0).X["_VBWATER"]

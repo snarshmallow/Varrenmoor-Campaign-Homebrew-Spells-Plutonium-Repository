@@ -109,3 +109,23 @@ class ApronSeam(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class SoftenAlbedo(unittest.TestCase):
+    def test_grey_wedge_at_the_edge_becomes_grass_interior_untouched(self):
+        n = 200
+        img = np.zeros((n, n, 3), np.uint8)
+        img[...] = (100, 150, 70)                                    # grass
+        img[0:40, 90:110] = (120, 120, 125)                          # grey bank wedge touching the north edge (ft = px here: size 200)
+        img[100:140, 90:110] = (120, 120, 125)                       # grey patch in the middle of the map
+        out = te.soften_edge_albedo(img, (200.0, 200.0), edge_ft=60.0, sigma_ft=10.0)
+        g0 = int(out[2, 100, 1]) - int(out[2, 100, 0])               # at the boundary: green again
+        self.assertGreater(g0, 30)
+        self.assertTrue(np.array_equal(out[100:140, 90:110], img[100:140, 90:110]))     # interior untouched
+        rng = np.random.RandomState(4)
+        noisy = np.clip(np.array([100, 150, 70])[None, None, :] + rng.randn(n, n, 3) * 12, 0, 255).astype(np.uint8)
+        o2 = te.soften_edge_albedo(noisy, (200.0, 200.0), edge_ft=40.0, border_ft=10.0)
+        self.assertLess(float(np.abs(o2[:, 0].astype(float) - o2[:, -1].astype(float)).mean()), 3.0)      # opposite edges agree (no wrap bleed)
+        self.assertLess(float(np.abs(o2[0].astype(float) - o2[-1].astype(float)).mean()), 3.0)
+        flat = np.full((n, n, 3), 128, np.uint8)
+        self.assertTrue(np.array_equal(te.soften_edge_albedo(flat, (200.0, 200.0)), flat))   # no green ground: unchanged

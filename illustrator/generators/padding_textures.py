@@ -201,7 +201,37 @@ def _soft_terrain(alb, box, sigma_ft=45.0):
     return np.stack([ndimage.gaussian_filter(a[..., c], sigma_ft * px_per_ft, mode="nearest") for c in range(3)], -1)
 
 
-def apron_albedo(height_fn, bbox, px, P, seed=5, seam=None, terrain_albedo=None, terrain_box=None, blend_ft=80.0, far_mean=None, apron_len=None, streak_fix=True, table_tile=None, tile_ft=500.0):
+def terrain_edge_stats(terrain_albedo, terrain_box, band_ft=150.0):
+    """(mean linear RGB, relative luminance std) of the terrain colour map within band_ft of its border (its texture grain as it is actually seen at the seam)."""
+    th, tw = terrain_albedo.shape[:2]
+    tx0, ty0, tx1, ty1 = terrain_box
+    tx = tx0 + (np.arange(tw) + 0.5) * (tx1 - tx0) / tw
+    ty = ty0 + (np.arange(th) + 0.5) * (ty1 - ty0) / th
+    d = np.minimum(np.minimum(tx[None, :] - tx0, tx1 - tx[None, :]), np.minimum(ty[:, None] - ty0, ty1 - ty[:, None]))
+    m = d < band_ft
+    if m.sum() < 16:
+        m = np.ones_like(m)
+    lin = srgb_to_lin(terrain_albedo[..., :3].astype(np.float32) / 255.0)[m]
+    lum = lin.mean(-1)
+    return lin.mean(0), float(lum.std() / max(lum.mean(), 1e-6))
+
+
+def seam_colour_match(col, s, fine, terrain_albedo, terrain_box, match_ft=110.0, gain=1.12, grain_boost=1.8):
+    """Match the apron colour (linear, (h, w, 3)) to the terrain it continues, within match_ft of the seam: (1) the terrain's own grain (relative luminance std)
+    is added as zero-mean noise (the blurred terrain colour and the palette are much flatter than the terrain texture, which shows as a smooth band at the seam),
+    (2) a brightness gain (the apron renders slightly darker than the terrain at the seam: measured live), both fading out smoothly by match_ft."""
+    _, rel = terrain_edge_stats(terrain_albedo, terrain_box)
+    rel *= grain_boost                                                         # the terrain's real texture adds detail (grass blades, clods) on top of the baked colour map; measured live: apron grain 63 % of the terrain's
+    f = fine - float(fine.mean())
+    f = f / max(float(fine.std()), 1e-6)
+    w = (1.0 - smoothstep01(np.asarray(s) / max(match_ft, 1.0)))[..., None]
+    cur = np.maximum(col.mean(-1), 1e-6)
+    cs = float(np.sqrt(max(rel * rel - 0.04 ** 2, 0.0)))                       # the apron already has ~4 % grain
+    col = col * (1.0 + cs * f[..., None] * w)
+    return col * (1.0 + (gain - 1.0) * w)
+
+
+def apron_albedo(height_fn, bbox, px, P, seed=5, seam=None, terrain_albedo=None, terrain_box=None, blend_ft=80.0, far_mean=None, apron_len=None, streak_fix=True, table_tile=None, tile_ft=500.0, seam_match=True, seam_gain=1.12, match_ft=110.0):
     """Baked colour map of the apron mesh. height_fn(X, Y) -> absolute elevation ft (vectorised); bbox = (x0, y0, x1, y1) ft; px = (w, h).
     seam(X, Y) -> (s, qx, qy): distance to the terrain rectangle and the nearest point on it (for the colour fade). terrain_albedo = RGB uint8 image covering
     terrain_box (x0, y0, x1, y1) ft; near the seam the colour continues the terrain's own colour and fades to the palette over blend_ft.
@@ -256,6 +286,8 @@ def apron_albedo(height_fn, bbox, px, P, seed=5, seam=None, terrain_albedo=None,
             t = (t * t * (3 - 2 * t))[..., None]
         # the terrain colour carries its own value variation; keep the palette's fine grain on top so the extension is not a smear
         col = tcol * (0.92 + 0.16 * fine)[..., None] * (1 - t) + col * t
+    if seam_match and seam is not None and terrain_albedo is not None:
+        col = seam_colour_match(col, seam(X, Y)[0], fine, terrain_albedo, terrain_box, match_ft, seam_gain)
     if far_mean is not None and seam is not None and apron_len:        # the outer part of the apron fades to the table tile's mean colour (the tiled table cannot follow the height)
         s = seam(X, Y)[0]
         f = smoothstep01((s - 0.45 * apron_len) / (0.55 * apron_len))[..., None]

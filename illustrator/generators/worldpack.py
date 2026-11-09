@@ -558,6 +558,8 @@ def _export_terrain(out, h, meta, frame, model, lods, splat_cell_ft, albedo_ppf,
                            "slope_max_deg": p.get("slope_max_deg"), "water": bool(p.get("water_depth") or p.get("below_datum"))})
     ap = float(albedo_ppf)
     img, _ = shading.render(h, meta, [p for p, _ in raw], ap, base_dir, None, seed, base_color, verbose=False)
+    import terrain_edge
+    img = terrain_edge.soften_edge_albedo(img, (float(meta["size_ft"][0]), float(meta["size_ft"][1])))        # grey bank wedges fade to grass at the map boundary (the apron eases the relief away there)
     _save_png(img, os.path.join(T, "albedo.png"))
     files["albedo_png"] = "terrain/albedo.png"
     return {"cell_ft": cell, "nx": nx, "ny": ny, "size_ft": [float(meta["size_ft"][0]), float(meta["size_ft"][1])], "elev_min_ft": r3(lo), "elev_max_ft": r3(hi),
@@ -815,8 +817,8 @@ def export_world(place, out_dir=None, lod=(1, 4), world_root=None, terrain_sourc
             if x is None:
                 continue
             sp = str(it.get("symbol") or it.get("species") or it.get("name") or "tree")
-            fid = f"fol_{area}_{n + 1:04d}"
-            ents["foliage"].append({"id": fid, "name": sp, "kind": "tree" if "tree" in sp or "oak" in sp or "pine" in sp else "plant", "status": "proposed", "notes": "",
+            fid = it.get("id") or f"fol_{area}_{n + 1:04d}"          # foliage.py scatter files carry stable ids
+            ents["foliage"].append({"id": fid, "name": sp, "kind": it.get("kind") or ("tree" if "tree" in sp or "oak" in sp or "pine" in sp else "plant"), "status": "proposed", "notes": "",
                                     "links": {"foundry_scene": None, "model3d": None, "ai_layer": None}, "source": srcp("scatter/", f),
                                     "foundry": {"pipelineId": f"world:{place}:{fid}"}, "area": area, "species": slug_id(sp),
                                     "points": [[r3(x), r3(y), r3(it.get("z", bilinear(h, cell, x, y)))]], "scale": float(it.get("scale", 1.0)),

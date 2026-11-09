@@ -269,7 +269,9 @@ def _ribbon(b, mat, pts, widths_m, zs, tile_ft, lift=0.0, thick=0.0, miter=2.0, 
                 ox, oy = S[i, 0] + side * nrm[i, 0] * off, S[i, 1] + side * nrm[i, 1] * off
                 go = skirt["ground"](ox, oy)
                 zo = min(go - skirt.get("sink_m", 0.1), ze - 0.02)
-                O.append(b.vert((ox, oy, zo), (0.0, cum[i] / tl)))
+                run = math.hypot(off, max(ze - zo, 0.0)) / FT / tl         # texture continues down the flank (it used u = 0, one texel column smeared into a pale vertical band)
+                u0 = (widths_m[i] / FT / tl) if side == 1 else 0.0
+                O.append(b.vert((ox, oy, zo), (u0 + side * run, cum[i] / tl)))
             for i in range(n - 1):
                 if side == 1:
                     b.quad(mat, ids[i], ids[i + 1], O[i + 1], O[i])       # outward + down on the left of travel

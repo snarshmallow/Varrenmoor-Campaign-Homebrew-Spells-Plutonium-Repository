@@ -72,7 +72,7 @@
      "label": "River",
      "mode": "flow",
      "note": "Directional flow along the centreline, faster where the bed is steeper, foam at the banks",
-     "flow_speed": 1.6,
+     "flow_speed": 2.4,
      "wave_height": 0.6,
      "wave_scale": 1.0,
      "transparency": 0.55,
