@@ -45,14 +45,15 @@ def main(argv=None):
     dfl = pj.get("defaults", {})
     imp = pj.get("import") or {}
     underlay = os.path.join(REPO, "world", a.place, imp["underlay"]) if imp.get("underlay") and os.path.exists(os.path.join(REPO, "world", a.place, imp["underlay"])) else None
-    flat_import = False                  # imported scene with no background and no terrain (flat stub heightmap): a plain flat sheet, no all-over shading PNG
-    if imp and not underlay:
+    flat_import = False                  # imported scene / blank flat place (flat stub heightmap): a plain flat sheet, no all-over shading PNG
+    blank = pj.get("kind") == "blank"
+    if (imp or blank) and not underlay:
         try:
             flat_import = json.load(open(os.path.join(REPO, "world", a.place, "terrain", "terrain_meta.json"), encoding="utf-8")).get("pipeline") == "flat_stub"
         except (OSError, ValueError):
             flat_import = False
-    try:                                 # a flat stub heightmap has nothing to contour (contouring a huge flat sheet takes minutes): skip contours for imports
-        if imp and json.load(open(os.path.join(REPO, "world", a.place, "terrain", "terrain_meta.json"), encoding="utf-8")).get("pipeline") == "flat_stub":
+    try:                                 # a flat stub heightmap has nothing to contour (contouring a huge flat sheet takes minutes): skip contours for imports and blank flat places
+        if (imp or blank) and json.load(open(os.path.join(REPO, "world", a.place, "terrain", "terrain_meta.json"), encoding="utf-8")).get("pipeline") == "flat_stub":
             a.no_contours = True
     except (OSError, ValueError):
         pass

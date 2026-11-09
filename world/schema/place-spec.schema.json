@@ -38,12 +38,12 @@
    "type": "array",
    "items": {
     "type": "number",
-    "minimum": 800,
+    "minimum": 200,
     "maximum": 12000
    },
    "minItems": 2,
    "maxItems": 2,
-   "description": "[width, height] of the place in feet. Default: from the population (about 2200 x 1400 for 600 people)."
+   "description": "[width, height] of the place in feet. Default: from the population (about 2200 x 1400 for 600 people; 400-700 ft for fewer than 20 people)."
   },
   "cell_ft": {
    "type": "number",
@@ -137,8 +137,20 @@
    "properties": {
     "population": {
      "type": "integer",
-     "minimum": 20,
-     "maximum": 12000
+     "minimum": 0,
+     "maximum": 12000,
+     "description": "0 = no settlement (terrain and water only); 1-19 = a tiny settlement (town_tiny.py: farmstead, cabin, lodge, inn or hamlet; see settlement); 20+ = the town generator"
+    },
+    "settlement": {
+     "enum": [
+      "auto",
+      "farmstead",
+      "cabin",
+      "lodge",
+      "inn",
+      "hamlet"
+     ],
+     "description": "tiny settlements only (population 1-19): auto (1-5 farmstead, 6-19 hamlet), farmstead (house, barn, shed, well, fields), cabin (hunter's cabin + woodshed on a path), lodge (hunter's lodge, stable, woodshed), inn (roadside inn on a through road, stables, well), hamlet (2-4 houses, barns, well round a yard, fields)"
     },
     "layout": {
      "enum": [

@@ -8,6 +8,8 @@
   python illustrator/generators/place_create.py regen --place ID [--terrain] [--no-town] [--meander straight|gentle|lazy] [--draft]
   python illustrator/generators/place_create.py import-image IMAGE --name "Base map" [--id ID] --ft-per-px 4.669 [--rotate DEG] [--grid-ft 100 | --no-grid] [--force] [--dry-run]
          # a place from a plain base-map image (no Foundry): flat stub terrain, the image as the UNDERLAY layer; origin = image top-left, up = north
+  python illustrator/generators/place_create.py create-blank --name N [--id ID] [--size-ft W H] [--recipe flat|rolling_hills|valley|highland_ridge] [--relief-ft R] [--cell-ft F] [--seed S]
+         [--scale-ft-per-in F] [--grid-ft G] [--underlay IMAGE] [--force] [--dry-run]   # an EMPTY place from scratch: terrain only, no town
   python illustrator/generators/place_create.py write-schema         # rewrite world/schema/place-spec.schema.json from the schema in this file
 
 Output (world/<id>/): place.json, terrain_spec.json, terrain/ (heightmap.npy, heightmap_16.png, terrain_meta.json), water.json, town_params.json,
@@ -62,8 +64,8 @@ SPEC_SCHEMA = {
         "name": {"type": "string", "description": "display name. Default: generated from the culture's name parts and the seed."},
         "seed": {"type": "integer", "description": "same spec + seed = same place. Default: derived from the id."},
         "culture": {"enum": list(CULTURES), "description": "naming set (streets, buildings, districts) from presets/naming/*.json, and default building styles"},
-        "size_ft": {"type": "array", "items": {"type": "number", "minimum": 800, "maximum": 12000}, "minItems": 2, "maxItems": 2,
-                    "description": "[width, height] of the place in feet. Default: from the population (about 2200 x 1400 for 600 people)."},
+        "size_ft": {"type": "array", "items": {"type": "number", "minimum": 200, "maximum": 12000}, "minItems": 2, "maxItems": 2,
+                    "description": "[width, height] of the place in feet. Default: from the population (about 2200 x 1400 for 600 people; 400-700 ft for fewer than 20 people)."},
         "cell_ft": {"type": "number", "minimum": 4, "maximum": 40, "description": "heightmap cell size, default 10"},
         "terrain": {
             "type": "object", "additionalProperties": False,
@@ -83,7 +85,10 @@ SPEC_SCHEMA = {
         "town": {
             "type": "object", "additionalProperties": False,
             "properties": {
-                "population": {"type": "integer", "minimum": 20, "maximum": 12000},
+                "population": {"type": "integer", "minimum": 0, "maximum": 12000,
+                               "description": "0 = no settlement (terrain and water only); 1-19 = a tiny settlement (town_tiny.py: farmstead, cabin, lodge, inn or hamlet; see settlement); 20+ = the town generator"},
+                "settlement": {"enum": ["auto", "farmstead", "cabin", "lodge", "inn", "hamlet"],
+                               "description": "tiny settlements only (population 1-19): auto (1-5 farmstead, 6-19 hamlet), farmstead (house, barn, shed, well, fields), cabin (hunter's cabin + woodshed on a path), lodge (hunter's lodge, stable, woodshed), inn (roadside inn on a through road, stables, well), hamlet (2-4 houses, barns, well round a yard, fields)"},
                 "layout": {"enum": list(LAYOUTS), "description": "street pattern: organic (default), radial (market town: spokes + ring lanes, town_layouts.py), grid, linear (linear / river village: high street, back lanes, cross lanes, river lane, town_layouts.py), walled (compact rings + wall and gates)"},
                 "districts": {"description": "'auto' or a list of 1-4 {name?, kind: civic|residential} from the centre outward; a farmland ring is always added last",
                               "oneOf": [{"const": "auto"}, {"type": "array", "minItems": 1, "maxItems": 4,
@@ -167,7 +172,16 @@ def load_naming(culture):
     return jload(os.path.join(NAMING_DIR, culture + ".json"))
 
 
+TINY_POP = 20          # below this the tiny-settlement generator (town_tiny.py) replaces town_gen; 0 = no settlement
+
+
 def category(pop):
+    if pop <= 0:
+        return "wilderness"
+    if pop < 6:
+        return "farmstead"
+    if pop < TINY_POP:
+        return "homestead"
     return "hamlet" if pop < 150 else "village" if pop < 450 else "town" if pop < 2500 else "city"
 
 
@@ -241,7 +255,7 @@ def validate(spec):
         return ["spec must be a JSON object"], []
     _check(SPEC_SCHEMA, spec, "spec", errs)
     if not spec.get("id") and not spec.get("name"):
-        errs.append("spec: give at least `name` or `id`")
+        warns.append("no name or id given: a name is generated from the culture's name parts (id = its slug)")
     t = spec.get("terrain") or {}
     if t.get("recipe") in ("coastal", "fjord") and not t.get("sea_side") and t.get("recipe") == "coastal":
         warns.append("terrain.sea_side not given: the sea is on the south edge")
@@ -250,7 +264,17 @@ def validate(spec):
     tw = spec.get("town") or {}
     if tw.get("layout") == "walled" and tw.get("wall") is False:
         warns.append("layout walled with wall false: no wall will be drawn")
-    if spec.get("size_ft") and tw.get("population"):
+    pop_ = tw.get("population")
+    if isinstance(pop_, int) and pop_ < TINY_POP:
+        if tw.get("layout") not in (None, "organic") or tw.get("wall") or tw.get("districts") not in (None, "auto") or tw.get("central_feature") not in (None, "none", "market", "green"):
+            warns.append(f"population {pop_}: below {TINY_POP} people the tiny-settlement generator is used (layout, wall, gates, districts and central feature are ignored)")
+        if pop_ == 0 and tw.get("settlement") not in (None, "auto"):
+            warns.append("population 0 means no settlement: town.settlement is ignored")
+        if spec.get("size_ft"):
+            W, H = spec["size_ft"]
+            if min(W, H) < 250 and pop_ > 0:
+                warns.append(f"size_ft {W}x{H} is very small for a settlement: buildings or fields may not fit (300-700 ft is usual)")
+    elif spec.get("size_ft") and pop_:
         W, H = spec["size_ft"]
         if W * H < tw["population"] * 1000 * 2.5:
             warns.append(f"size_ft {W}x{H} is small for {tw['population']} people: the town will fill most of the place (try {round(math.sqrt(tw['population'] * 1000 * 6 * 1.6), -2)} ft wide)")
@@ -276,6 +300,12 @@ def normalise(spec, strict=True):
     s = copy.deepcopy(spec)
     culture = s.setdefault("culture", "fantasy_generic")
     nm = load_naming(culture)
+    if not s.get("id") and not s.get("name"):         # an empty spec: generate a name first (seeded), the id follows from it
+        import random
+        r = random.Random(int(s.get("seed", 4242)))
+        tn = nm["town_names"]
+        nm0 = r.choice(tn["prefix"]) + r.choice(tn["suffix"])
+        s["name"] = nm0[0].upper() + nm0[1:]
     pid = s.get("id") or slug(s.get("name"))
     s["id"] = pid
     if "seed" not in s:
@@ -285,6 +315,11 @@ def normalise(spec, strict=True):
     t.setdefault("recipe", "rolling")
     tw = s.setdefault("town", {})
     tw.setdefault("population", 600)
+    tiny = int(tw["population"]) < TINY_POP
+    if tiny:
+        tw.setdefault("settlement", "auto")
+        t.setdefault("rivers", 0)                        # a brook only when asked for: a farmstead map is a few hundred feet across
+        tw.setdefault("central_feature", "none")
     tw.setdefault("layout", "organic")
     tw.setdefault("districts", "auto")
     tw.setdefault("centre", "auto")
@@ -306,6 +341,15 @@ def normalise(spec, strict=True):
         tn = nm["town_names"]
         s["name"] = r.choice(tn["prefix"]) + r.choice(tn["suffix"])
         s["name"] = s["name"][0].upper() + s["name"][1:]
+    if tiny:
+        import town_tiny
+        kind = town_tiny.pick_kind(pop, tw.get("settlement", "auto")) if pop > 0 else "none"
+        area = 6000.0 + pop * 2500.0
+        if "size_ft" not in s:
+            s["size_ft"] = town_tiny.default_size(pop, tw.get("settlement", "auto"))
+        est = {"none": 0, "cabin": 2, "lodge": 3, "farmstead": 3 + (pop >= 3) + (pop >= 5), "inn": 4}.get(kind, min(6, max(2, round(pop / 5.0)) + (1 if pop < 12 else 2)) + 1)
+        s["_derived"] = {"category": category(pop), "settlement": kind, "target_area_ft2": area, "est_buildings": est}
+        return s, warns
     area = max(pop * 1000.0, 60000.0)
     if "size_ft" not in s:
         W = max(1600, round(math.sqrt(area * 6 * 1.6), -2))
@@ -447,7 +491,7 @@ def choose_centre(h, cell, sea, water_polys, R, hint, W, H):
     d_hint = np.hypot(xx - hint[0], yy - hint[1]) / max(W, H)
     near_w = np.clip(1.0 - np.abs(dry - 250) / 600.0, 0, 1) * 0.08
     score = 1.5 * frac - 0.5 * d_hint + near_w
-    margin = max(R * 0.75, 200)
+    margin = min(max(R * 0.75, 200), 0.35 * min(W, H))      # small maps (tiny settlements): keep a usable middle band
     score[(xx < margin) | (xx > W - margin) | (yy < margin) | (yy > H - margin)] = -9
     i, j = np.unravel_index(int(np.argmax(score)), score.shape)
     return [float(j * cell), float(i * cell)], float(frac[i, j])
@@ -536,6 +580,8 @@ def assign_styles(place_dir, spec):
         p = os.path.join(bd, fn)
         b = jload(p)
         key = id2key.get(b["id"])
+        if b.get("kind") == "well":
+            continue
         if key:
             st = STYLE_BY_NAMEKEY.get(key)
         elif b["id"] == "bld_church":
@@ -563,8 +609,12 @@ def create(spec_in, out_root=None, force=False, no_town=False, draft=None, dry_r
     if problems:
         raise SystemExit("place too big for the safe limits:\n  " + "\n  ".join(problems) + "\n  (set limits.allow_large true to override, or use draft quality)")
     pid = spec["id"]
-    if out_root and not (no_town or only_terrain or dry_run):
-        raise SystemExit("--out-root works with --no-town / --dry-run only (the town generator and renderers read world/<id> from the repository)")
+    pop = int(spec["town"]["population"])
+    tiny = pop < TINY_POP
+    if pop <= 0:
+        no_town = True                                    # population 0: terrain and water only (no settlement)
+    if out_root and not (no_town or only_terrain or dry_run or tiny):
+        raise SystemExit("--out-root works with --no-town / --dry-run / tiny settlements only (the town generator reads world/<id> from the repository)")
     root = out_root or os.path.join(REPO, "world")
     pdir = os.path.join(root, pid)
     if dry_run:
@@ -614,11 +664,14 @@ def create(spec_in, out_root=None, force=False, no_town=False, draft=None, dry_r
     # place.json, view_settings
     town_fpi = nice_scale(max(2.5 * R * 1.2 / 15.5, 15))
     town_fpi = min(town_fpi, 250)
+    if tiny:                                              # a farmstead map is a few hundred feet: the town view shows the whole place
+        town_fpi = nice_scale(max(W, H * 1.4) / 14.0)
     bowl_fpi = nice_scale(max(W, H * 1.4) / 15.5)
     place = {"id": pid, "name": spec["name"], "kind": spec["_derived"]["category"], "status": "proposed", "units": "feet", "origin": "top-left, y down",
              "bounds": {"width_ft": W, "height_ft": H}, "population_estimate": spec["town"]["population"],
-             "notes": f"DRAFT generated by place_create.py ({tcfg['recipe']} terrain, {tw['layout']} layout, {spec['culture']} names, seed {seed}). Every entity is proposed.",
-             "files": {"districts": "districts.json", "streets": "streets.json", "water": "water.json", "buildings": "buildings/", "view_settings": "view_settings.json", "terrain": "terrain/", "params": "town_params.json"},
+             "notes": (f"DRAFT generated by place_create.py ({tcfg['recipe']} terrain, {tw['layout']} layout, {spec['culture']} names, seed {seed}). Every entity is proposed." if not tiny else
+                       f"DRAFT generated by place_create.py ({tcfg['recipe']} terrain, " + (f"{spec['_derived']['settlement']} for {pop} people" if pop > 0 else "no settlement") + f", seed {seed}). Every entity is proposed."),
+             "files": {"districts": "districts.json", "streets": "streets.json", "water": "water.json", "buildings": "buildings/", "view_settings": "view_settings.json", "terrain": "terrain/", **({} if tiny else {"params": "town_params.json"})},
              "view_focus": {"town": [round(centre[0]), round(centre[1])]}, "links": {"foundry_scene": None, "model3d": None, "ai_layer": None},
              "generated_by": "place_create.py", "sea_level_ft": sea, "phase_elevation": "percentile", "culture": spec["culture"],
              "skybox": {"rim_min_deg": 4.0 if tcfg["recipe"] in ("bowl", "valley", "pass", "mountain", "fjord") else 0.0, "far_scale": 1.0 if tcfg["recipe"] in ("bowl", "valley", "pass", "mountain", "fjord", "hills") else 0.35 if tcfg["recipe"] not in ("island", "coastal") else 0.0},
@@ -643,12 +696,31 @@ def create(spec_in, out_root=None, force=False, no_town=False, draft=None, dry_r
         if not os.path.exists(os.path.join(pdir, sub + ".json")):
             jsave(os.path.join(pdir, sub + ".json"), {sub: []})
     os.makedirs(os.path.join(pdir, "buildings"), exist_ok=True)
-    params = build_params(spec, centre, entry, [], nm, draft)
-    jsave(os.path.join(pdir, "town_params.json"), params)
+    if tiny:                                              # no town_gen: drop files a previous (bigger) run left behind
+        for fn in ("town_params.json", "walls.json"):
+            if os.path.exists(os.path.join(pdir, fn)):
+                os.remove(os.path.join(pdir, fn))
+        if no_town:
+            for sub in ("streets", "districts"):
+                jsave(os.path.join(pdir, sub + ".json"), {"place": pid, sub: []})
+            for fn in os.listdir(os.path.join(pdir, "buildings")):
+                if fn.endswith(".json"):
+                    os.remove(os.path.join(pdir, "buildings", fn))
+    else:
+        params = build_params(spec, centre, entry, [], nm, draft)
+        jsave(os.path.join(pdir, "town_params.json"), params)
     report = {"id": pid, "name": spec["name"], "seed": seed, "size_ft": [W, H], "cell_ft": cell, "draft": draft, "centre": [round(c) for c in centre], "centre_buildable_fraction": round(frac, 2),
               "entry": [round(entry[0]), round(entry[1])], "terrain": {"recipe": tcfg["recipe"], "elev_min": round(float(h.min()), 1), "elev_max": round(float(h.max()), 1), "sea": info["sea"]},
               "water": [e["kind"] for e in wents], "warnings": list(warns), "category": spec["_derived"]["category"]}
-    if not no_town and not only_terrain:
+    if tiny and not no_town and not only_terrain:
+        say(4, N, f"{spec['_derived']['settlement']} for {pop} people (track, yard, buildings, fields)")
+        import town_tiny
+        tr = town_tiny.generate(pdir, spec, h, cell, sea, wp, centre, entry)
+        report["town"] = {"counts": tr["counts"], "warnings": tr["warnings"][:8], "issues": [], "settlement": tr["kind"]}
+        say(5, N, "styles")
+        report["styled_buildings"] = assign_styles(pdir, spec)
+        say(6, N, "done")
+    elif not no_town and not only_terrain:
         say(4, N, "town (streets, lots, buildings)")
         import town_gen
         g = town_gen.generate(os.path.join(pdir, "town_params.json"), {}, verbose=False, place_dir=pdir)
@@ -663,6 +735,111 @@ def create(spec_in, out_root=None, force=False, no_town=False, draft=None, dry_r
     report["seconds"] = round(time.time() - t0, 1)
     jsave(os.path.join(pdir, "create_report.json"), report)
     return {"ok": True, "id": pid, "dir": pdir, "report": report}
+
+
+# ------------------------------------------------------------------ blank place (from scratch)
+BLANK_RECIPES = ("flat", "rolling_hills", "valley", "highland_ridge")
+
+
+def create_blank(name=None, pid=None, size_ft=(1000, 800), recipe="flat", cell_ft=None, seed=None, relief_ft=None, scale_ft_per_in=None, grid_ft=None,
+                 underlay=None, force=False, dry_run=False, out_root=None):
+    """An empty place: terrain only (flat, or terrain_basemap.py rolling_hills / valley / highland_ridge), no water, streets, districts or buildings.
+    Draw roads (Roads tab), buildings (Buildings tools) and paint terrain (Heightmap paint) yourself. Optional underlay image stretched over the place."""
+    import terrain as T
+    if not name and not pid:
+        raise ValueError("give the blank place a name or an id")
+    pid = pid or slug(name)
+    name = name or pid.replace("_", " ").title()
+    if not re.match(SPEC_SCHEMA["properties"]["id"]["pattern"], pid):
+        raise ValueError(f"id {pid!r}: lower-case letters, digits and underscore, 2-41 characters")
+    if recipe not in BLANK_RECIPES:
+        raise ValueError(f"recipe {recipe!r}: use one of {', '.join(BLANK_RECIPES)}")
+    W, H = [float(v) for v in size_ft]
+    if not (100 <= W <= LIMITS_DEFAULT["max_place_ft"] * 2 and 100 <= H <= LIMITS_DEFAULT["max_place_ft"] * 2):
+        raise ValueError(f"size {W:g} x {H:g} ft: each side must be 100-{LIMITS_DEFAULT['max_place_ft'] * 2} ft")
+    W, H = (int(W) if W == int(W) else W), (int(H) if H == int(H) else H)
+    cell = float(cell_ft or max(5.0, min(40.0, math.ceil(max(W, H) / 400.0))))
+    if (W / cell) * (H / cell) > 900 * 900:
+        cell = math.ceil(math.sqrt(W * H / (900 * 900)))
+    cell = snap_cell(W, H, cell)
+    seed = int(seed if seed is not None else int(hashlib.md5(pid.encode()).hexdigest()[:6], 16) % 9000 + 100)
+    if underlay and not os.path.isfile(underlay):
+        raise ValueError(f"underlay image not found: {underlay}")
+    fpi = float(scale_ft_per_in) if scale_ft_per_in else nice_scale(max(W, H * 1.4) / 14.0)
+    grid = float(grid_ft) if grid_ft else (100 if fpi >= 80 else 50 if fpi >= 40 else 20 if fpi >= 15 else 5)
+    root = out_root or os.path.join(REPO, "world")
+    pdir = os.path.join(root, pid)
+    res = {"ok": True, "id": pid, "name": name, "dir": pdir, "size_ft": [W, H], "cell_ft": cell, "recipe": recipe, "seed": seed, "scale_ft_per_in": fpi, "grid_ft": grid,
+           "underlay": bool(underlay), "heightmap_nodes": [int(round(W / cell)) + 1, int(round(H / cell)) + 1]}
+    if os.path.exists(os.path.join(pdir, "place.json")) and not force:
+        if dry_run:
+            res["warnings"] = [f"world/{pid} already exists: creating needs Overwrite (--force)"]
+            res["dry_run"] = True
+            return res
+        raise ValueError(f"world/{pid} already exists (use --force to replace it; everything in it is lost)")
+    if dry_run:
+        res["dry_run"] = True
+        return res
+    if os.path.exists(pdir) and force:
+        for sub in ("buildings",):
+            shutil.rmtree(os.path.join(pdir, sub), ignore_errors=True)
+        for fn in ("town_params.json", "walls.json", "place_spec.json", "town_gen_report.json"):
+            if os.path.exists(os.path.join(pdir, fn)):
+                os.remove(os.path.join(pdir, fn))
+    os.makedirs(os.path.join(pdir, "buildings"), exist_ok=True)
+    if recipe == "flat":
+        nx, ny = int(round(W / cell)) + 1, int(round(H / cell)) + 1
+        h = np.full((ny, nx), 100.0, dtype=np.float32)
+        meta = {"size_ft": [W, H], "cell_ft": cell, "nx": nx, "ny": ny, "seed": seed, "elev_min": 100.0, "elev_max": 100.0, "relief_ft": 0.0, "units": "feet",
+                "pipeline": "flat_stub", "node_convention": "h[i,j] at x=j*cell_ft, y=i*cell_ft (y down)", "sea_level_ft": -1000.0}
+        tspec = {"size_ft": [W, H], "cell_ft": cell, "seed": seed, "recipe": "flat", "base_elevation_ft": 100.0, "sea_level_ft": -1000.0,
+                 "_note": "Blank place: flat ground at 100 ft. To get relief, pick a Base terrain recipe on the Terrain tab, or paint it (Heightmap paint tab)."}
+    else:
+        rel = float(relief_ft) if relief_ft else None
+        tspec = {"size_ft": [W, H], "cell_ft": cell, "seed": seed, "recipe": recipe, "sea_level_ft": -1000.0}
+        if rel:
+            tspec["relief_ft"] = rel
+        import terrain_basemap as TB
+        tspec["base_elevation_ft"] = round(max(100.0, (rel or TB.default_relief(W, H)) * 0.75), 1)
+        h, meta = T.generate(tspec)
+        meta["sea_level_ft"] = -1000.0
+    T.save(h, meta, os.path.join(pdir, "terrain"))
+    jsave(os.path.join(pdir, "terrain_spec.json"), tspec)
+    for sub in ("streets", "districts", "water"):
+        jsave(os.path.join(pdir, sub + ".json"), {"place": pid, sub: []})
+    vs = {"_note": "Drawing scale and grid for this blank place (written by place_create.py create-blank). Feet are the model unit; only the drawing changes with scale.",
+          "units": "ft", "margin_in": 0.5, "min_street_width_ft": 6, "default_preset": "town", "contour_mask": {"enabled": True, "include": ["buildings", "streets", "plazas"]},
+          "presets": {"town": {"scale_ft_per_in": fpi, "grid_ft": grid, "grid_major_every": 5, "focus": "center", "scale_bar_ft": 5 * fpi},
+                      "bowl": {"scale_ft_per_in": nice_scale(fpi * 2), "grid_ft": grid * 2, "grid_major_every": 5, "focus": "center", "scale_bar_ft": 10 * fpi},
+                      "street": {"scale_ft_per_in": 20, "grid_ft": 20, "grid_major_every": 5, "focus": "entity", "scale_bar_ft": 100},
+                      "room": {"scale_ft_per_in": 5, "grid_ft": 5, "grid_major_every": 5, "focus": "entity", "scale_bar_ft": 25}}}
+    vs["page_in"] = [round(W / fpi + 1.0, 3), round(H / fpi + 1.0, 3)]
+    jsave(os.path.join(pdir, "view_settings.json"), vs)
+    place = {"id": pid, "name": name, "kind": "blank", "status": "blank", "units": "feet", "origin": "top-left, x right, y down (up = north)",
+             "bounds": {"width_ft": W, "height_ft": H}, "population_estimate": 0,
+             "notes": f"Blank place made from scratch by place_create.py create-blank ({recipe} terrain, seed {seed}). Nothing is generated: draw roads (Roads tab), "
+                      "buildings (Buildings tools) and paint the terrain (Heightmap paint).",
+             "files": {"districts": "districts.json", "streets": "streets.json", "water": "water.json", "buildings": "buildings/", "view_settings": "view_settings.json", "terrain": "terrain/"},
+             "view_focus": {"town": [round(W / 2), round(H / 2)]}, "links": {"foundry_scene": None, "model3d": None, "ai_layer": None},
+             "generated_by": "place_create.py create-blank", "sea_level_ft": -1000.0, "phase_elevation": "percentile", "culture": "fantasy_generic",
+             "defaults": {"shading_preset": PHASE_BY_CLIMATE["temperate"], "padding_preset": "flat-plain" if recipe == "flat" else "rolling-hills", "foliage_mix": FOLIAGE_BY_CLIMATE["temperate"],
+                          "season": "summer", "fills_style": "full_map", "label_preset": "working"},
+             "blank": {"recipe": recipe, "seed": seed, "cell_ft": cell, "created": time.strftime("%Y-%m-%dT%H:%M:%S")}}
+    if underlay:
+        from PIL import Image
+        Image.MAX_IMAGE_PIXELS = None
+        os.makedirs(os.path.join(pdir, "underlay"), exist_ok=True)
+        im = Image.open(underlay)
+        im.load()
+        im.convert("RGBA" if im.mode in ("RGBA", "LA", "P") else "RGB").save(os.path.join(pdir, "underlay", "background.png"))
+        place["import"] = {"source": "blank", "underlay": "underlay/background.png", "source_image": os.path.abspath(underlay), "rect_ft": [0, 0, W, H], "px": list(im.size),
+                           "note": "underlay stretched over the whole place (0,0)-(W,H)"}
+        res["underlay_png"] = os.path.join(pdir, "underlay", "background.png")
+    jsave(os.path.join(pdir, "place.json"), place)
+    jsave(os.path.join(pdir, "create_report.json"), {"id": pid, "blank": True, "size_ft": [W, H], "cell_ft": cell, "recipe": recipe, "seed": seed,
+                                                     "terrain": {"elev_min": round(float(h.min()), 1), "elev_max": round(float(h.max()), 1)}})
+    res["terrain"] = {"elev_min": round(float(h.min()), 1), "elev_max": round(float(h.max()), 1)}
+    return res
 
 
 # ------------------------------------------------------------------ prompt help, templates
@@ -695,7 +872,7 @@ def prompt_help():
     lines.append("  terrain.relief_ft: ridge/hill height (defaults: " + ", ".join(f"{k} {v}" for k, v in __import__("place_terrain").RELIEF.items()) + ")")
     lines.append("  culture        : " + " | ".join(CULTURES) + "   (street, building and district names; default building styles)")
     lines.append("  town.layout    : " + " | ".join(LAYOUTS) + "   town.central_feature: " + " | ".join(FEATURES))
-    lines.append("  town.population: 20..12000 (hamlet <150, village <450, town <2500, city)   town.wall true/false   town.gates 1-6   town.entry_side auto|north|south|east|west")
+    lines.append("  town.population: 0..12000 (0 = no settlement, 1-5 farmstead, 6-19 homestead / hamlet cluster [town.settlement auto|farmstead|cabin|lodge|inn|hamlet], hamlet <150, village <450, town <2500, city)   town.wall true/false   town.gates 1-6   town.entry_side auto|north|south|east|west")
     lines.append("  town.districts : 'auto' or [{\"name\": \"Harbour Ward\", \"kind\": \"civic\"|\"residential\"}, ...] centre outward (1-4); a farmland ring follows")
     lines.append("  climate        : " + " | ".join(CLIMATES) + "   season: " + " | ".join(SEASONS))
     lines.append("  styles         : 'auto' or {\"house\": [\"danish_fachwerk\"], \"civic\": [\"hanseatic_brick\"], ...} (ids in illustrator/presets/building_styles)")
@@ -742,6 +919,20 @@ def main(argv=None):
     ii.add_argument("--no-grid", action="store_true", help="draw no guide grid (view_settings.json grid_show=false)")
     ii.add_argument("--force", action="store_true")
     ii.add_argument("--dry-run", action="store_true")
+    cb = sp.add_parser("create-blank", help="an empty place from scratch: terrain only, no town (draw roads and buildings yourself)")
+    cb.add_argument("--name")
+    cb.add_argument("--id")
+    cb.add_argument("--size-ft", type=float, nargs=2, metavar=("W", "H"), default=[1000.0, 800.0], help="width and height in feet (default 1000 800)")
+    cb.add_argument("--recipe", choices=list(BLANK_RECIPES), default="flat", help="terrain: flat, or the base-terrain generator's rolling_hills / valley / highland_ridge")
+    cb.add_argument("--relief-ft", type=float, help="relief for the non-flat recipes (default: 3%% of the shorter side, 60-900 ft)")
+    cb.add_argument("--cell-ft", type=float, help="heightmap cell size in feet (default from the size: 5-40)")
+    cb.add_argument("--seed", type=int)
+    cb.add_argument("--scale-ft-per-in", type=float, help="drawing scale of the town view (default: the whole place on about 14 inches)")
+    cb.add_argument("--grid-ft", type=float, help="guide grid spacing in feet (default from the scale)")
+    cb.add_argument("--underlay", help="optional image stretched over the whole place as the locked UNDERLAY layer")
+    cb.add_argument("--force", action="store_true")
+    cb.add_argument("--dry-run", action="store_true")
+    cb.add_argument("--out-root", help="world root (default <repo>/world)")
     ft = sp.add_parser("from-text")
     ft.add_argument("text")
     ft.add_argument("--out")
@@ -778,6 +969,14 @@ def main(argv=None):
             print(json.dumps({"ok": False, "error": str(e)}))
             return 2
         r["ok"] = True
+        print(json.dumps(r))
+        return 0
+    if a.cmd == "create-blank":
+        try:
+            r = create_blank(a.name, a.id, a.size_ft, a.recipe, a.cell_ft, a.seed, a.relief_ft, a.scale_ft_per_in, a.grid_ft, a.underlay, a.force, a.dry_run, a.out_root)
+        except ValueError as e:
+            print(json.dumps({"ok": False, "error": str(e)}))
+            return 2
         print(json.dumps(r))
         return 0
     if a.cmd == "templates":
