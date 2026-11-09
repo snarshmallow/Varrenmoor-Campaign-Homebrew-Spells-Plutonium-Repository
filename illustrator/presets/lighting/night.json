@@ -10,12 +10,12 @@
  "sun": {
   "azimuth": 120,
   "altitude": 35,
-  "color": "#9db4ff",
-  "strength": 0.45
+  "color": "#a4b8ff",
+  "strength": 0.7
  },
  "ambient": {
-  "intensity": 0.06,
-  "color": "#4a5f9a"
+  "intensity": 0.14,
+  "color": "#5a72b8"
  },
  "shadows": {
   "on": true,

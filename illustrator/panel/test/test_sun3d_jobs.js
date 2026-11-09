@@ -29,7 +29,7 @@ const runner = R.createRunner({ root: ROOT, jobsDir: tmp + "/jobs", fs, path, sp
   const s = st.lighting.sun3d;
   check("one click sets everything (warm sunset)", s.preset === "warm_sunset" && s.altitude <= 8 && s.fog === "on" && s.shadows === "on" && /^#ff/.test(s.color) && s.ambient > 0);
   const night = presets.filter(p => p.id === "night")[0];
-  check("night is dim with a night sky", night.sun.strength < 0.6 && night.sky.preset === "night");
+  check("night is dim with a night sky", night.sun.strength < 0.8 && night.sky.preset === "night");
   // time of day slider
   const noon = VB.sunFromHour(presets, 12), mid = VB.sunFromHour(presets, 13.5), late = VB.sunFromHour(presets, 1);
   check("slider at noon = noon preset", noon.altitude === 65 && noon.azimuth === 180);

@@ -15,6 +15,7 @@
   function opts(map) { return Object.keys(map).map(function (k) { return '<option value="' + esc(k) + '">' + esc(map[k]) + "</option>"; }).join(""); }
   function html() {
     return '<details open id="sunBlock"><summary><b>Sun, shadows and fog (Foundry 3D)</b></summary>' +
+      '<div id="sunNotice" style="border:1px solid #e6b450;background:rgba(230,180,80,.12);padding:6px;margin:4px 0"><b>Shadow Quality needed.</b> Sun shadows only appear for a person whose Foundry setting <b>Configure Settings &gt; 3D Canvas &gt; Shadow Quality</b> is <b>4</b> (Medium). 3D Canvas reads it per browser, so every player and the GM must set it once; no scene flag or world setting can do it for them. <button data-act="sun_macro" title="Creates the world macro Set my shadow quality (everyone can run it; players need the Use Script Macros permission). Each person runs it once on their own browser.">Install the one-click macro</button></div>' +
       '<p class="note">One click on a preset sets every value below. Dry run first: Check shows the scene flags that would change. Needs an existing scene picked on the Foundry tab (Refresh from Foundry). Presets are editable JSON files in illustrator/presets/lighting.</p>' +
       '<div id="sunPresets" class="btns"></div><p class="note" id="sunPresetNote"></p>' +
       sl('data-s="lighting.sun3d.hour"', "Time of day (h)", 0, 24, 0.25, "Blends the presets that have an hour (dawn 6, morning 9, noon 12, afternoon 15, dusk 19, night 23.5): sun direction, colour, strength and ambient.") +
@@ -88,7 +89,8 @@
     sun_dry: function () { return runSet(false, false); },
     sun_apply: function () { return runSet(true, false); },
     sun_temp: function () { return runSet(true, false); },
-    sun_reset: function () { return runSet(true, true); }
+    sun_reset: function () { return runSet(true, true); },
+    sun_macro: function () { return ctx.startJob(VB.jobClickMacros()); }
   };
   function init(c) {
     ctx = c;

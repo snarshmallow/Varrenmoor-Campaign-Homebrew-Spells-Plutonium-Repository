@@ -26,7 +26,7 @@
  "fog": {
   "enabled": true,
   "color": "#dfe5ea",
-  "far_px": 7000
+  "far_px": 5000
  },
  "sky": {
   "preset": "overcast",

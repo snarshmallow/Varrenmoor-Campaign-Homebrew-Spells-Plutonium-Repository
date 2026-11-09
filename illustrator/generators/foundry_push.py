@@ -1369,7 +1369,8 @@ def cmd_install_roof_macros(br, a):
     return {"ok": True, "macros": [o.get("uuid") for o in out]}
 
 
-CLICK_MACROS = {"click_mode": "Click mode: roofs and doors (toggle)", **ROOF_MACROS}
+CLICK_MACROS = {"click_mode": "Click mode: roofs and doors (toggle)", **ROOF_MACROS, "shadow_quality": "Set my shadow quality (3D Canvas sun shadows)"}
+PLAYER_MACROS = {"shadow_quality"}          # every user may see and run these (ownership default OBSERVER); the 3D Canvas client setting is per browser
 
 
 def macro_docs(keys):
@@ -1377,7 +1378,7 @@ def macro_docs(keys):
     items = []
     for key in keys:
         with open(os.path.join(MACRO_DIR, key + ".js"), encoding="utf-8") as f:
-            items.append((f"macro:{key}", {"name": CLICK_MACROS[key], "type": "script", "img": "icons/svg/house.svg", "scope": "global", "command": f.read()}))
+            items.append((f"macro:{key}", {"name": CLICK_MACROS[key], "type": "script", "img": "icons/svg/house.svg", "scope": "global", "command": f.read(), **({"ownership": {"default": 2}} if key in PLAYER_MACROS else {})}))
     return items
 
 
@@ -1438,10 +1439,10 @@ def main(argv=None, bridge=None):
     if _av and _av[0] == "set-lighting":                          # light budget, lighting mode, time of day, ambient / global illumination (foundry_lightbudget.py)
         import foundry_lightbudget
         return foundry_lightbudget.main(_av, bridge)
-    if _av and _av[0] == "set-sun":                               # sun, shadows, fog, sky presets (foundry_sun.py)
     if _av and _av[0] == "set-streetlamps":                       # hide / show the street lamp tile + lights of a scene, retune the lamp lights (streetlamps.py)
         import streetlamps_scene
         return streetlamps_scene.main(_av, bridge)
+    if _av and _av[0] == "set-sun":                               # sun, shadows, fog, sky presets (foundry_sun.py)
         import foundry_sun
         return foundry_sun.main(_av, bridge)
     if _av and _av[0] in ("set-collision", "push-walls", "sync-doors", "install-door-sync"):       # collision flag per layer / sight+sound+light walls (foundry_collision.py)

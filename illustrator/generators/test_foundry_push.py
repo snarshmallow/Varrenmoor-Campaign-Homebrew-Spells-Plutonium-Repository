@@ -574,7 +574,7 @@ class ClickMacroInstallTests(unittest.TestCase):
     def test_installs_click_and_roof_macros_by_stable_id(self):
         r, calls = self.run_install()
         ups = [k for op, k in calls if op == "upsert_by_flag"]
-        self.assertEqual([k["id"] for k in ups], ["macro:click_mode", "macro:roofs_toggle_all", "macro:roofs_toggle_pick"])
+        self.assertEqual([k["id"] for k in ups], ["macro:click_mode", "macro:roofs_toggle_all", "macro:roofs_toggle_pick", "macro:shadow_quality"])
         for k in ups:
             self.assertEqual(k["documentName"], "Macro")
             self.assertEqual(k["data"]["type"], "script")

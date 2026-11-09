@@ -77,7 +77,7 @@ class T(unittest.TestCase):
 
     def test_night_and_fog_presets(self):
         n, fg = fs.preset_flags(fs.get_preset("night")), fs.preset_flags(fs.get_preset("foggy_morning"))
-        self.assertLess(n["exposure"], 0.6)
+        self.assertLess(n["exposure"], 0.8)
         self.assertEqual(fs.get_preset("night")["sky"]["preset"], "night")
         self.assertTrue(fg["enableFog"])
         self.assertLessEqual(fg["fogDistance"], 8000)

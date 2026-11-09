@@ -94,7 +94,8 @@
     },
     "install-click-macros": {
      "controls": [
-      "act:wp_click_macros"
+      "act:wp_click_macros",
+      "act:sun_macro"
      ]
     },
     "roofs": {
