@@ -212,12 +212,15 @@ What it does: sets the map scale, grid and page, and regenerates the guide layer
 | Scale (ft per inch) | How many feet one inch of page shows | Street maps 20; town maps larger numbers. Use Town tab **Fit scale and centre** to pick a good one |
 | Grid (ft) | Grid square size | 5 for street maps (matches the Foundry grid), 10 or more for town |
 | Major every | Heavier grid line every N squares | 5 or 10 |
+| Draw grid (off = no grid at all) | Saved as `grid_show` in view_settings.json (default on, so existing places are unchanged). Off: **Apply** empties the Grid layer, and previews, the open-in-Illustrator build and base-map imports draw no grid; the notes say "no grid". CLI: `render_world.py` / `place_render.py` / `panelio.py view` `--no-grid` (or `--grid 0`). The Foundry scene grid is separate (Hide Foundry grid, section 2.17) | On |
 | Page width / height (in) | Artboard size | Match your Illustrator document |
 | Units | ft or m | ft (feet are the model unit; this changes only the drawing) |
 | Shading dpi | Resolution of rendered shading | 30 to 600; check in panel for the default |
 | Link instead of embed | Smaller files; relink after a re-render | Optional |
 
 Buttons: **Apply (regenerate guides)**, **Redraw all GEN layers**, **New document + draw**, **Reload**, **Check images**, relink.
+
+Map text: the title, notes and the numbered key are word-wrapped to the map width and sit outside the map: notes in the top margin (the margin grows if a long title needs it, and scales up on sheets bigger than 17 x 11 in), the scale bar and north arrow in the bottom margin, the key in a band added below the page. Text sizes follow the sheet, not the map's feet, so a huge place (for example 11205 x 16005 ft) reads like a small one. Limit: **Apply** into an already open document does not resize its artboard, so the key band below can sit on the pasteboard until you extend the artboard or re-open with **Open selected in Illustrator**.
 
 Common mistakes: changing the scale and forgetting to press **Apply**; expecting Scale to change the world (it only changes the drawing).
 
@@ -521,6 +524,7 @@ This is the busiest tab. Top to bottom:
    |---|---|---|
    | Export dpi | Resolution of the exported map PNG | check in panel; Foundry's image limit is 8192 px |
    | Feet per grid square | Blank = the view's grid | Leave blank |
+   | Hide Foundry grid | Sets the scene grid opacity to 0 on push (CLI `push-scene --hide-grid`). Type, size and distance stay, so measuring and token movement still work. Separate from the Scale tab's Draw grid (Illustrator map only) | Off (unchanged) |
    | Walls from buildings / Road drawings / Water drawings | What to create in the scene | Walls on |
    | Overlay tile layers | For **Push tiles** | Optional |
 
@@ -804,6 +808,7 @@ Turns an oblique painted map (the Varrenmoor campaign map, seen from an angle) i
 
 | Symptom | Likely cause | Fix |
 |---|---|---|
+| Illustrator "Not Responding" for minutes after **Apply (regenerate guides)** on a big map (large embedded underlay, document open at high zoom); panel stuck on "replace layers" | Inferred, not reproduced: Illustrator redraws the big raster after each edit of the layer replace, on its single script thread | Wait: it recovers by itself, no restart or reboot. The panel now ends the job after 3 minutes (or on **Cancel**) with a message, shows "waiting for Illustrator N s" and refuses new Illustrator requests until it answers. The replace itself now hides UNDERLAY / ART layers once, copies new items in first and removes old ones in one pass. If it still stalls, zoom out or hide the underlay layer before **Apply**. |
 | Panel says "relay not checked" or cannot reach Foundry | Relay not running, wrong address, or Foundry PC firewall | On the Foundry PC start the relay (`start.bat`). In the panel **Find relay**, then **Connect**. Allow Node.js on Private networks. |
 | Relay running but "module not connected" | No GM tab open, wrong address (https), or module not paired | Open `http://<foundry-pc>:30000` as GM, set **Connect to relay** on, pair (section 3.3) |
 | Module bounces between connected and disconnected about once a second | Two GM tabs fighting (close code 4002) | Close the extra GM tab, then F5 in the one you want |

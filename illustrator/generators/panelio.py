@@ -44,9 +44,9 @@ def cmd_view(a):
     import render_world as rw
     model = rw.load_place(a.place)
     v, cfg, title, kind, ident = rw.compute_view(model, a.view, {"preset": a.preset, "scale": a.scale, "grid": a.grid,
-                                                                  "page": a.page, "major_every": a.major})
+                                                                  "page": a.page, "major_every": a.major, "grid_show": False if a.no_grid else None})
     return {"place": a.place, "view": a.view, "fpi": v.fpi, "k": v.k, "x0": v.x0, "y0": v.y0, "x1": v.x1, "y1": v.y1,
-            "margin_in": v.margin, "page_in": list(v.page), "grid_ft": cfg["grid_ft"], "grid_major_every": cfg["grid_major_every"],
+            "margin_in": v.margin, "page_in": list(v.page), "grid_ft": cfg["grid_ft"], "grid_show": cfg.get("grid_show", True), "grid_major_every": cfg["grid_major_every"],
             "units": cfg.get("units", "ft"), "bounds_ft": [model["place"]["bounds"]["width_ft"], model["place"]["bounds"]["height_ft"]],
             "title": title}
 
@@ -117,6 +117,7 @@ def main(argv=None):
     ap.add_argument("--scale", type=float)
     ap.add_argument("--grid", type=float)
     ap.add_argument("--major", type=int)
+    ap.add_argument("--no-grid", action="store_true")
     ap.add_argument("--page")
     ap.add_argument("--candidate")
     ap.add_argument("--what", choices=["buildings", "area", "all"])

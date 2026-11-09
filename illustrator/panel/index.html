@@ -111,6 +111,7 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
     <label>Scale (ft per inch) <input type="number" data-s="scale.scale_ft_per_in" min="1" step="any"></label>
     <label>Grid (ft) <input type="number" data-s="scale.grid_ft" min="0.5" step="any"></label>
     <label>Major every <input type="number" data-s="scale.grid_major_every" min="1" step="1"></label>
+    <label class="chk"><input type="checkbox" data-s="scale.grid_show" title="Off: the Grid layer is emptied on Apply and no grid is drawn in previews, base-map imports or the open-in-Illustrator job. Saved as grid_show in view_settings.json. The Foundry scene grid is a separate option (Foundry tab)."> Draw grid (off = no grid at all)</label>
     <label class="chk"><input type="checkbox" data-s="scale.grid_full_page"> Grid over the whole page (default: only inside the map)</label>
     <label>Page width (in) <input type="number" data-s="scale.page_w_in" min="1" step="any"></label>
     <label>Page height (in) <input type="number" data-s="scale.page_h_in" min="1" step="any"></label>
@@ -925,7 +926,8 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
     <label>Place id <input type="text" data-s="places.image.id" placeholder="auto from the name"></label>
     <label>Feet per pixel <input type="number" step="any" min="0" data-s="places.image.ft_per_px" placeholder="4.669" title="The map scale: how many feet one image pixel covers (both axes). place.json bounds = image px x this."></label>
     <label>Rotate (deg clockwise, optional) <input type="number" step="any" data-s="places.image.rotate" placeholder="0" title="Rotates the picture before import (canvas grows). Leave empty when up is already north."></label>
-    <label>Guide grid (ft, optional) <input type="number" step="any" min="0" data-s="places.image.grid_ft" placeholder="100"></label>
+    <label>Guide grid (ft, optional; 0 = none) <input type="number" step="any" min="0" data-s="places.image.grid_ft" placeholder="100"></label>
+    <label class="chk"><input type="checkbox" data-s="places.image.no_grid"> No guide grid (draw no grid)</label>
   </div>
   <div class="btns"><button data-act="pl_image_browse">Browse image</button><button data-act="pl_image_check">Check image import (dry run)</button><button class="primary" data-act="pl_image_import">Import base map image</button></div>
   <p class="note">Makes world/&lt;id&gt; with the image as the locked UNDERLAY (origin = image top-left, x right, y down, up in the picture = north; 1 px = Feet per pixel) and a flat terrain stub. No roads, buildings or terrain are generated: trace them yourself (Roads tab). The place then opens like any other (Preview selected, Open selected in Illustrator).</p>
@@ -997,6 +999,7 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
   <div class="grid">
     <label>Export dpi <input type="number" data-s="foundry.dpi" min="50" max="600" step="10"></label>
     <label>Feet per grid square <input type="number" data-s="foundry.ftPerGrid" min="1" step="any" placeholder="view grid"></label>
+    <label class="chk"><input type="checkbox" data-s="foundry.hideGrid" title="Sets the Foundry scene grid opacity to 0 on push. Grid type, size and distance stay, so measuring and token movement still work. Separate from 'Draw grid' in the Scale tab (that only affects the Illustrator map)."> Hide Foundry grid (opacity 0)</label>
     <label class="chk"><input type="checkbox" data-s="foundry.walls"> Walls from buildings</label>
     <label class="chk"><input type="checkbox" data-s="foundry.drawRoads"> Road drawings</label>
     <label class="chk"><input type="checkbox" data-s="foundry.drawWater"> Water drawings</label>

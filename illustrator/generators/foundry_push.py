@@ -10,7 +10,7 @@ Every command prints log lines, then ONE final JSON line on stdout ({"ok": true,
   list [--kinds scenes,actors,items,journals] [--scene-uuid U]      read-only pickers (name + uuid), tiles of a scene
   export-info  --place P --view V ...      page/view calibration (feet <-> page px) for the panel's export_view
   push-scene   --place P --image PNG (--scene-name N | --scene-uuid U) [--yes] [--walls/--no-walls] [--drawings roads,water]
-               [--tile-image PNG --tile-id layer] [--max-px 8192] [--ft-per-grid F] [--dry-run]
+               [--tile-image PNG --tile-id layer] [--max-px 8192] [--ft-per-grid F] [--hide-grid] [--dry-run]
   push-token   --scene-uuid U --actor-uuid A (--at bld_id|str_id|x,y | --px sx,sy) [--image F] [--size-ft 5] [--key K] [--yes]
   push-actor   (--spec npc.json | --actor-uuid U) [--image F] [--portrait F --token F] [--yes]
   push-item    (--spec item.json | --name N) [--description T] [--image F] [--item-uuid U] [--yes]
@@ -480,6 +480,9 @@ def cmd_push_scene(br, a):
     uuid = a.scene_uuid
     br.call("set_scene_background", uuid=uuid, src=src, width=c["width"], height=c["height"], padding=c["padding"])
     br.call("set_scene_grid", uuid=uuid, size=c["grid_px"], distance=c["grid_ft"], units="ft")
+    if getattr(a, "hide_grid", False):      # opt-in: the Foundry grid is drawn fully transparent; type, size and distance stay, so measuring, snapping and movement still work
+        br.call("update", uuid=uuid, data={"grid": {"alpha": 0}})
+        result["grid_hidden"] = True
     if a.walls:
         r = br.call("upsert_many", documentName="Wall", parentUuid=uuid, items=walls, prefix="wall:", prune=True)
         result["wall_ops"] = r
@@ -1284,6 +1287,7 @@ def parser():
     ap.add_argument("--token")
     ap.add_argument("--max-px", type=int, default=8192)
     ap.add_argument("--ft-per-grid", type=float)
+    ap.add_argument("--hide-grid", action="store_true", help="push-scene: set the Foundry scene grid opacity to 0 (grid hidden, measurement and movement unchanged). Default: grid untouched")
     ap.add_argument("--upscale", type=float, default=1.0, help="push-scene: resample the image up by this factor (low-dpi exports)")
     ap.add_argument("--padding", type=float, default=0.0)
     ap.add_argument("--walls", dest="walls", action="store_true", default=True)

@@ -27,6 +27,7 @@ import terrain as tr  # noqa: E402
 import label_offset as lbo  # noqa: E402
 import label_style as lst  # noqa: E402
 import label_declutter as ld  # noqa: E402
+import guide_text as gt  # noqa: E402
 import dataclasses as _dc  # noqa: E402
 import label_curve as lcv  # noqa: E402
 import region_draw as rdraw  # noqa: E402
@@ -350,10 +351,13 @@ def compute_view(model, view_arg, cfg_over=None):
         kind = "town"
         o["preset"] = o.get("preset") or "district"
     cfg = viewcfg.load(place["id"], o.get("preset") or kind, scale=o.get("scale"), grid=o.get("grid"),
-                       page=o.get("page"), major_every=o.get("major_every"), grid_extent=o.get("grid_extent"))
+                       page=o.get("page"), major_every=o.get("major_every"), grid_extent=o.get("grid_extent"), grid_show=o.get("grid_show"))
     fpi, grid_ft, major_n = cfg["scale_ft_per_in"], cfg["grid_ft"], cfg["grid_major_every"]
     pw, ph = cfg["page_in"]
     margin = cfg["margin_in"]
+    if gt.size_factor(pw, ph) > 1.0:                        # a sheet bigger than 17 x 11 in gets a proportionally bigger margin for the text blocks
+        margin = round(margin * gt.size_factor(pw, ph), 3)
+        cfg["margin_in"] = margin
     W, H = pw * 72.0, ph * 72.0
 
     focus = cfg.get("focus", "center")
@@ -392,9 +396,21 @@ def compute_view(model, view_arg, cfg_over=None):
         fx, fy = centroid(ent_poly)
     else:
         fx, fy = bw / 2, bh / 2
+    title += f"  (1 in = {fpi:g} ft, grid {grid_ft:g} ft)" if (cfg.get("grid_show", True) and grid_ft > 0) else f"  (1 in = {fpi:g} ft, no grid)"
+    gtf = gt.size_factor(pw, ph)
+    _, need_pt = gt.top_block(note_paras(title), pw * 72.0 - 2 * margin * 72.0, gtf, avail_pt=margin * 72.0)
+    if need_pt > margin * 72.0 + 1e-6:                      # the wrapped notes do not fit even shrunk: grow the margin (the notes stay outside the map)
+        margin = math.ceil(need_pt / 72.0 * 20) / 20.0
+        cfg["margin_in"] = margin
     v = View(fpi, fx, fy, (pw, ph), margin)
-    title += f"  (1 in = {fpi:g} ft, grid {grid_ft:g} ft)"
     return v, cfg, title, kind, ident
+
+
+def note_paras(title):
+    """The text notes written in the top margin (id, text, base pt size, bold); wrapped by guide_text.top_block."""
+    return [("note_title", title, 11, True),
+            ("note_status", "DRAFT - every entity is PROPOSED (no canon layout). * = proposed. Dashed strokes = proposed.", 7, False),
+            ("note_regen", "GEN layers are rewritten on regeneration; draw in ART layers.", 7, False)]
 
 
 def shading_luma(h, meta, phases="auto", ppf=0.4):
@@ -424,6 +440,8 @@ def render(model, view_arg, out_path, topts=None, cfg_over=None, lopts=None, lst
     ls = lambda base: round(base * lf, 1)
 
     lock_leaders = bool((lopts if lopts is not None else cfg.get("label_offset") or {}).get("lock_leaders", True))
+    gtf = gt.size_factor(pw, ph)
+    show_grid = bool(cfg.get("grid_show", True)) and grid_ft and grid_ft > 0
     t = LayerTree(SPEC, pw, ph, css=CSS, locked=["GUIDES", "Grid", "FOUNDRY MARKERS", "Scale bar", "North arrow", "Bounds"] + ([lbo.LAYER_LEADERS] if lock_leaders else []),
                   hidden=[ld.LAYER_HIDDEN])
 
@@ -767,18 +785,11 @@ def render(model, view_arg, out_path, topts=None, cfg_over=None, lopts=None, lst
         lsz = 7.0 * qf
         fs = lst.style_font_css(ls_)
         wof = lambda s_: lst.measure(s_, lsz, ls_)
-        rows_, lw_, lh_ = ld.legend_layout(legend_entries, lsz, wof, dc.get("legend_title") or "Key")
-        # free margin: the part of the page outside the place bounds, else the emptiest corner of the map (with a backing)
-        wf_ = place.get("window_ft") or [0, 0, bw, bh]
-        bx0, by0 = ft_to_pt((wf_[0], wf_[1])); bx1, by1 = ft_to_pt((wf_[2], wf_[3]))
-        spots = [(m_pt + 6, m_pt + 8, bx0 - m_pt - 12), (bx1 + 6, m_pt + 8, W - m_pt - bx1 - 12)]
-        sx = next(((x_, y_) for x_, y_, aw in spots if aw >= lw_ + 4 and H - 2 * m_pt - 60 >= lh_), None)
-        backing_ = None
-        if sx is None:
-            cands_ = [(m_pt + 8, m_pt + 8), (W - m_pt - lw_ - 8, m_pt + 8), (m_pt + 8, H - m_pt - lh_ - 8), (W - m_pt - lw_ - 8, H - m_pt - lh_ - 8)]
-            sx = min(cands_, key=lambda c_: placer.cost_of(_box(c_[0], c_[1], c_[0] + lw_, c_[1] + lh_)) + sum(1 for r_ in rows if r_["status"] == "placed" and r_["box"].intersects(_box(c_[0], c_[1], c_[0] + lw_, c_[1] + lh_))))
-            backing_ = ("#ffffff", 0.88)
-        for sv in ld.legend_svg(rows_, sx[0], sx[1], lsz, fs, backing_, w=lw_, h=lh_):
+        lsz *= gtf
+        # the key sits in a band BELOW the map (below the bottom margin; the page grows by the band height), wrapped to the map width
+        rows_, lw_, lh_ = gt.key_band(legend_entries, lsz, W - 2 * m_pt, dc.get("legend_title") or "Key")
+        t.h = H + lh_ + 14
+        for sv in ld.legend_svg(rows_, m_pt, H + 6, lsz, fs, None, w=lw_, h=lh_):
             t.add(ld.LAYER_LEGEND, sv)
         print(f"label legend: {len(legend_entries)} numbered callouts")
     if lp.enabled:
@@ -854,9 +865,9 @@ def render(model, view_arg, out_path, topts=None, cfg_over=None, lopts=None, lst
         gx0, gy0, gx1, gy1 = max(v.x0, wf0[0]), max(v.y0, wf0[1]), min(v.x1, wf0[2]), min(v.y1, wf0[3])
     px0, py0 = v.px((gx0, gy0)); px1, py1 = v.px((gx1, gy1))
     minor, major = [], []
-    major_ft = grid_ft * major_n
-    nlines = (gx1 - gx0) / grid_ft + (gy1 - gy0) / grid_ft
-    for axis, lo, hi in (("x", gx0, gx1), ("y", gy0, gy1)):
+    major_ft = (grid_ft or 0) * major_n
+    nlines = (gx1 - gx0) / grid_ft + (gy1 - gy0) / grid_ft if show_grid else 0
+    for axis, lo, hi in ((("x", gx0, gx1), ("y", gy0, gy1)) if show_grid else ()):
         g = math.ceil(lo / grid_ft)
         while g * grid_ft <= hi and gx1 > gx0 and gy1 > gy0:
             pos = g * grid_ft
@@ -869,6 +880,8 @@ def render(model, view_arg, out_path, topts=None, cfg_over=None, lopts=None, lst
             return cut_d(segs, cut, closed=False)[0]
         return " ".join("M" + " L".join(f"{x:.2f},{y:.2f}" for x, y in sg) for sg in segs)
 
+    if not show_grid:
+        minor, major = [], []
     if minor and nlines < 900:
         t.add("Grid", path(f"grid_{grid_ft:g}ft", grid_d(minor), "grid-minor"))
     if major:
@@ -876,7 +889,7 @@ def render(model, view_arg, out_path, topts=None, cfg_over=None, lopts=None, lst
 
     bar_ft = cfg["scale_bar_ft"]
     seg_ft = bar_ft / 5.0
-    bx, by, bh_pt = 36 + 4, H - 26, 5
+    bx, by, bh_pt = m_pt + 4, H - 26 * gtf, 5 * gtf
     even, odd = [], []
     for i in range(5):
         x0 = bx + seg_ft * i * k
@@ -886,12 +899,13 @@ def render(model, view_arg, out_path, topts=None, cfg_over=None, lopts=None, lst
     t.add("Scale bar", path("scalebar_a", " ".join(even), "wall"))
     t.add("Scale bar", path("scalebar_b", " ".join(odd), "guide-line"))
     for i in range(6):
-        t.add("Scale bar", text(f"scalebar_t{i}", bx + seg_ft * i * k, by + 16, f"{seg_ft * i:g}", 7))
-    t.add("Scale bar", text("scalebar_unit", bx + bar_ft * k + 10, by + 5, f"ft   (1 in = {fpi:g} ft)", 8, anchor="start"))
+        t.add("Scale bar", text(f"scalebar_t{i}", bx + seg_ft * i * k, by + 16 * gtf * 0.9, f"{seg_ft * i:g}", 7 * gtf))
+    t.add("Scale bar", text("scalebar_unit", bx + bar_ft * k + 10, by + 5 * gtf, f"ft   (1 in = {fpi:g} ft)", 8 * gtf, anchor="start"))
 
-    ax, ay = W - 60, H - 40
-    t.add("North arrow", path("north_arrow", f"M{ax:.2f},{ay - 28:.2f} L{ax + 7:.2f},{ay + 6:.2f} L{ax:.2f},{ay:.2f} L{ax - 7:.2f},{ay + 6:.2f} Z", "wall"))
-    t.add("North arrow", text("north_label", ax, ay - 33, "N", 9, bold=True))
+    ah = max(14.0, min(m_pt - 10.0, 26.0 * gtf))           # the north arrow sits in the bottom margin (outside the map)
+    ax, ay = W - 60, H - 8 - ah * 0.2
+    t.add("North arrow", path("north_arrow", f"M{ax:.2f},{ay - ah:.2f} L{ax + ah / 4:.2f},{ay:.2f} L{ax:.2f},{ay - ah * 0.2:.2f} L{ax - ah / 4:.2f},{ay:.2f} Z", "wall"))
+    t.add("North arrow", text("north_label", ax - ah / 4 - 6, ay - ah * 0.2, "N", min(9 * gtf, ah * 0.5), bold=True))
 
     n_det = rdraw.emit(t, v, model, path, model.get("_details_draw")) if (model.get("details") or model.get("markers")) else 0
     if n_det:
@@ -903,9 +917,9 @@ def render(model, view_arg, out_path, topts=None, cfg_over=None, lopts=None, lst
     t.add("Bounds", path("bounds_view", v.d([[(v.x0, v.y0), (v.x1, v.y0), (v.x1, v.y1), (v.x0, v.y1)]]), "wall"))
 
     # NOTES
-    t.add("NOTES", text("note_title", 36, 22, title, 11, bold=True, anchor="start"))
-    t.add("NOTES", text("note_status", 36, 34, "DRAFT - every entity is PROPOSED (no canon layout). * = proposed. Dashed strokes = proposed.", 7, anchor="start"))
-    t.add("NOTES", text("note_regen", W - 36, 22, "GEN layers are rewritten on regeneration; draw in ART layers.", 7, anchor="end"))
+    lines_, _ = gt.top_block(note_paras(title), W - 2 * m_pt, gtf, avail_pt=m_pt)
+    for pid_, ln_, sz_, bold_, y_ in lines_:
+        t.add("NOTES", text(pid_, m_pt, y_, ln_, sz_, bold=bold_, anchor="start"))
 
     os.makedirs(os.path.dirname(out_path), exist_ok=True)
     t.write(out_path)
@@ -945,6 +959,7 @@ if __name__ == "__main__":
     ap.add_argument("--grid", type=float, help="minor grid in feet")
     ap.add_argument("--grid-major", type=int, help="major grid every N minor lines")
     ap.add_argument("--page", help="page size in inches, e.g. 17x11")
+    ap.add_argument("--no-grid", action="store_true", help="draw no grid at all (also: view_settings.json grid_show=false, or --grid 0)")
     ap.add_argument("--grid-full-page", action="store_true", help="draw the grid over the whole page (default: only inside the map window / place bounds)")
     ap.add_argument("--out")
     ap.add_argument("--terrain", action="store_true", help="regenerate heightmap + hillshade preview, overlay contours")
@@ -1009,5 +1024,5 @@ if __name__ == "__main__":
     model_ = load_place(a.place, a.model_dir)
     model_["_details_draw"] = a.details
     render(model_, a.view, out, topts,
-           {"preset": a.preset, "scale": a.scale, "grid": a.grid, "page": a.page, "major_every": a.grid_major, "grid_extent": "page" if a.grid_full_page else None, "fit": a.fit, "fit_margin": a.fit_margin}, lopts,
+           {"preset": a.preset, "scale": a.scale, "grid": a.grid, "page": a.page, "major_every": a.grid_major, "grid_extent": "page" if a.grid_full_page else None, "grid_show": False if (a.no_grid or a.grid == 0) else None, "fit": a.fit, "fit_margin": a.fit_margin}, lopts,
            [pre.get("label_style"), lst.parse_cli(a.label_style), lst.decode_b64(a.label_style_b64)], dopts)

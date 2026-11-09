@@ -5,7 +5,11 @@
 
   function createRunner(o) {
     var fs = o.fs, path = o.path, spawn = o.spawn, root = o.root.replace(/\\/g, "/").replace(/\/+$/, "");
-    var state = { busy: false, cancelled: false, child: null, label: "", step: "" };
+    var state = { busy: false, cancelled: false, child: null, label: "", step: "", hostPending: null, wake: [] };
+    // Illustrator host calls run on its single ExtendScript thread: a script cannot be aborted from here, and a second call queued behind a slow one only makes
+    // the freeze longer. So: a call that does not answer within hostTimeoutMs (or that the user cancels) ENDS THE JOB with a clear message, but hostPending stays
+    // set until Illustrator really answers; nothing new is sent to Illustrator meanwhile. No restart is ever needed: when it recovers, the next job works.
+    var hostTimeoutMs = o.hostTimeoutMs || 180000;
     var log = o.log || function () {};
     var absPath = function (p) { return (path.isAbsolute(p) ? p : path.resolve(root, p)).replace(/\\/g, "/"); };
     var now = o.now || function () { return new Date(); };
@@ -53,6 +57,7 @@
 
     async function run(job) {
       if (state.busy) return { ok: false, error: "another job is running: wait or press Cancel" };
+      if (state.hostPending) return { ok: false, error: "Illustrator is still busy with the previous request (" + state.hostPending.action + "): wait until it responds. No restart is needed." };
       state.busy = true; state.cancelled = false; state.label = job.label; state.step = "";
       var started = now(), rec = { kind: job.kind, label: job.label, place: o.getPlace ? o.getPlace() : null, started: started.toISOString(), params: job.params, steps: [], ok: false };
       var warnings = [], res = { ok: true };
@@ -67,7 +72,23 @@
         host: async function (action, optional) {
           var a = JSON.parse(JSON.stringify(action));
           if (a.path) a.path = absPath(a.path);
-          var r = await o.host(a);
+          if (state.hostPending) throw new Error("Illustrator is still busy with the previous request (" + state.hostPending.action + "): wait until it responds, nothing was sent. No restart is needed.");
+          var tmo = a.timeout_ms || hostTimeoutMs, t0 = Date.now(), timer = null, tick = null, wakeFn = null;
+          var call = Promise.resolve(o.host(a)).then(function (v) { state.hostPending = null; return v; }, function (e) { state.hostPending = null; throw e; });
+          state.hostPending = { action: a.action, since: t0 };
+          var guard = new Promise(function (resolve) {
+            timer = setTimeout(function () { resolve({ __stuck: "timeout" }); }, tmo);
+            wakeFn = function () { resolve({ __stuck: "cancel" }); }; state.wake.push(wakeFn);
+            if (o.onStatus) tick = setInterval(function () { o.onStatus({ busy: true, label: job.label, step: state.step + " (waiting for Illustrator " + Math.round((Date.now() - t0) / 1000) + " s; it is working, do not click again)" }); }, 5000);
+          });
+          var r;
+          try { r = await Promise.race([call, guard]); }
+          finally { clearTimeout(timer); if (tick) clearInterval(tick); state.wake = state.wake.filter(function (w) { return w !== wakeFn; }); }
+          if (r && r.__stuck) {
+            var why = r.__stuck === "cancel" ? "cancelled while waiting for Illustrator" : "Illustrator did not answer within " + Math.round(tmo / 1000) + " s";
+            rec.steps.push({ t: "host", action: a, result: { ok: false, stuck: r.__stuck } });
+            throw new Error(why + " (" + a.action + "). Illustrator is probably still working on it and will respond by itself: wait for it, no restart is needed. New requests are refused until it answers.");
+          }
           rec.steps.push({ t: "host", action: a, result: r });
           if (!r || !r.ok) {
             var msg = "Illustrator: " + a.action + " failed: " + ((r && r.error) || "no reply");
@@ -127,7 +148,8 @@
     return {
       run: run, execPy: execPy, parseJsonOut: parseJsonOut,
       isBusy: function () { return state.busy; },
-      cancel: function () { if (!state.busy) return false; state.cancelled = true; killChild(); return true; }
+      hostPending: function () { return state.hostPending; },
+      cancel: function () { if (!state.busy) return false; state.cancelled = true; killChild(); state.wake.slice().forEach(function (w) { w(); }); return true; }
     };
   }
   var api = { createRunner: createRunner };

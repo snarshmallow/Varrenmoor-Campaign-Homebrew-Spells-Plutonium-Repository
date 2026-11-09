@@ -3,6 +3,7 @@
   cfg = viewcfg.load(place, preset="town", scale=None, grid=None, page=None)
   cfg -> dict: preset, scale_ft_per_in, grid_ft, grid_major_every, page_in, margin_in, focus, scale_bar_ft,
                units, min_street_width_ft, contour_mask, label_offset
+  grid_show = true (default) | false: draw no grid at all (guides, previews, imports); the Foundry scene grid is separate (foundry_push --hide-grid)
   grid_extent = "window" (default, the grid stays inside the place bounds so margins are clean paper) | "page" (full page)
   label_offset = {enabled, style: straight|elbow, stroke_width (pt), margin_pct, max_offset_pt (page pt), dot}; see label_offset.py
 Scale bar length defaults to 5 paper inches of ground. Feet are always the model unit; only drawing changes.
@@ -58,7 +59,7 @@ def parse_page(s):
     return [float(a), float(b)]
 
 
-def load(place, preset="town", scale=None, grid=None, page=None, major_every=None, grid_extent=None):
+def load(place, preset="town", scale=None, grid=None, page=None, major_every=None, grid_extent=None, grid_show=None):
     raw = load_raw(place)
     preset = VIEW_TO_PRESET.get(preset, preset)
     presets = raw.get("presets", FALLBACK["presets"])
@@ -72,6 +73,9 @@ def load(place, preset="town", scale=None, grid=None, page=None, major_every=Non
         c.pop("scale_bar_ft", None)
     if grid:
         c["grid_ft"] = float(grid)
+    if grid_show is not None:
+        c["grid_show"] = bool(grid_show)
+    c["grid_show"] = bool(c.get("grid_show", True))       # false = no grid drawn at all (view_settings.json file level, or --no-grid)
     if major_every:
         c["grid_major_every"] = int(major_every)
     if grid_extent:

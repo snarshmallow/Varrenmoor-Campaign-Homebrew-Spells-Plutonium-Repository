@@ -71,7 +71,7 @@
     return {
       v: 1, place: "bridgehollow",
       settings: { python: "python", dpi: 150, view: "town", link_images: false },
-      scale: { preset: "town", scale_ft_per_in: 100, grid_ft: 100, grid_major_every: 5, page_w_in: 17, page_h_in: 11, units: "ft", grid_full_page: false, loaded: false },
+      scale: { preset: "town", scale_ft_per_in: 100, grid_ft: 100, grid_major_every: 5, page_w_in: 17, page_h_in: 11, units: "ft", grid_full_page: false, grid_show: true, loaded: false },
       terrain: {
         spec: { seed: 1103, cell_ft: 10, base_elevation_ft: 660, ridged_amp_ft: 110, noise_scale_ft: 420, thermal_iterations: 60, smooth_sigma_cells: 1 },
         spec_loaded: false,
@@ -102,7 +102,7 @@
         fills: { full: true, style: "full_map", flat: true, dpi: 200, embed: false },
         style: { preset: "", streets: "", plazas: "", buildings: "", fields: "", water: "", stroke: "" }
       },
-      foundry: { target: "new", sceneName: "", sceneUuid: "", dpi: 150, ftPerGrid: null, walls: true, drawRoads: false, drawWater: false,
+      foundry: { target: "new", sceneName: "", sceneUuid: "", dpi: 150, ftPerGrid: null, hideGrid: false, walls: true, drawRoads: false, drawWater: false,
         tileLayers: "Labels - Districts,Labels - Streets,Labels - Buildings", actorUuid: "", itemUuid: "", spec: "", image: "", at: "", itemName: "", itemDesc: "",
         models: { split: "", preset: "layer", layers: "", lod: 0, compress: "none", roofMode: "none", interiorStyle: "auto", splitPreset: "default", carve: true, conform: true, prune: false, roofsHidden: false, sceneMode: "",
           collision: { terrain: true, roads: true, plazas: true, fields: true, fences: true, walls: true, bridges: true, buildings: true, props: true, roofs: false, foliage: false, water: false },   // = foundry_collision.COLLISION_DEFAULT
@@ -251,6 +251,7 @@
     pr.scale_ft_per_in = +sc.scale_ft_per_in; pr.grid_ft = +sc.grid_ft; pr.grid_major_every = Math.max(1, Math.round(+sc.grid_major_every));
     delete pr.scale_bar_ft;           // recomputed from the scale (5 paper inches of ground)
     o.page_in = [+sc.page_w_in, +sc.page_h_in]; o.units = sc.units;
+    o.grid_show = sc.grid_show !== false;          // false = no grid drawn at all (guides, previews, open jobs); file level, applies to every preset
     return o;
   };
   VB.viewToState = function (raw, sc) {
@@ -258,6 +259,7 @@
     if (pr) { sc.scale_ft_per_in = pr.scale_ft_per_in; sc.grid_ft = pr.grid_ft; sc.grid_major_every = pr.grid_major_every || 5; }
     if (raw.page_in) { sc.page_w_in = raw.page_in[0]; sc.page_h_in = raw.page_in[1]; }
     if (raw.units) sc.units = raw.units;
+    sc.grid_show = raw.grid_show !== false;
     sc.loaded = true; return sc;
   };
 
@@ -812,6 +814,7 @@
     a.push(f.walls ? "--walls" : "--no-walls");
     var dr = VB.foundryDrawings(f); a.push("--drawings", dr);
     if (f.ftPerGrid) a.push("--ft-per-grid", String(f.ftPerGrid));
+    if (f.hideGrid) a.push("--hide-grid");
     if (o.tileImage) a.push("--tile-image", o.tileImage, "--tile-id", "labels");
     return a.concat((VB.extraArgs ? VB.extraArgs(st, "push-scene") : []));   // TOOLS TAB: --upscale --padding --max-px --format --link
   };

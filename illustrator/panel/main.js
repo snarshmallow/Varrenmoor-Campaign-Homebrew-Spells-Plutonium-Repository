@@ -121,7 +121,7 @@
     var done = function () { liveBusy = false; setTimeout(liveTick, liveSkips > 2 ? 6000 : delay); };
     if (!state || !state.labels || state.labels.live_reroute === false || liveBusy || (runner && runner.isBusy())) { setTimeout(liveTick, delay); return; }
     liveBusy = true;
-    evalHost(VB.rerouteAction(state, true)).then(function (r) {
+    hostCall(VB.rerouteAction(state, true)).then(function (r) {
       if (!r || !r.ok || r.skipped) liveSkips++; else liveSkips = 0;
       if (r && r.ok && r.rerouted) logLine("re-routed " + r.rerouted + " leader(s): " + r.ids.join(", "));
       done();
@@ -210,6 +210,15 @@
         res(o);
       });
     });
+  }
+
+  // Host calls made outside a job (live label reroute, polling, document info, view export): refused while a job's host call is still pending in Illustrator
+  // (or another such call is), because Illustrator runs one script at a time and a queued call only prolongs a freeze.
+  var rawPending = 0;
+  function hostCall(a) {
+    if ((runner && runner.hostPending && runner.hostPending()) || rawPending > 0) return Promise.resolve({ ok: false, busy: true, error: "Illustrator is still busy with the previous request: wait until it responds (no restart needed)" });
+    rawPending++;
+    return evalHost(a).then(function (r) { rawPending--; return r; }, function (e) { rawPending--; throw e; });
   }
 
   // ------------------------------------------------------------ jobs
@@ -596,7 +605,7 @@
     fs.mkdirSync(path.dirname(png), { recursive: true });
     var dpi = state.foundry.dpi || 150, nat = ((readJson(d.world + "/place.json", {}) || {}).import || {}).native_export_dpi;   // a place imported from a Foundry scene knows the dpi that keeps the scene's own grid size (below it the grid would fall under Foundry's 50 px minimum)
     if (+nat > dpi && +nat <= 600) { logLine("export dpi raised from " + dpi + " to " + Math.round(nat) + " (this place was imported from a scene: keeps its native grid size)"); dpi = Math.round(nat); }
-    var r = await evalHost({ action: "export_view", path: png, dpi: dpi, only: only || [], transparent: !!transparent });
+    var r = await hostCall({ action: "export_view", path: png, dpi: dpi, only: only || [], transparent: !!transparent });
     if (!r.ok) throw new Error("Illustrator export failed: " + (r.error || "no reply") + " (is a document open? close and reopen the panel after updating host.jsx)");
     logLine("exported " + png + " (" + r.width_px + "x" + r.height_px + " px at " + r.dpi + " dpi)");
     return { png: png, info: r };
@@ -682,7 +691,7 @@
   // Auto-push on save: opt-in. CEP has no reliable Illustrator save event, so poll the open document's file time; push 6 s after the last change (debounce).
   function fAutoTick() {
     if (!state || !state.foundry.autoPush) return;
-    evalHost({ action: "get_doc_info" }).then(function (r) {
+    hostCall({ action: "get_doc_info" }).then(function (r) {
       if (!r.ok || !r.path) return;
       var m = 0; try { m = fs.statSync(r.path).mtimeMs; } catch (e) { return; }
       if (!autoMtime) { autoMtime = m; return; }
@@ -762,7 +771,7 @@
   // ------------------------------------------------------------ legacy job-file poller (illustrator/jobs/*.json)
   var pollBusy = false;
   async function pollJobs() {
-    if (pollBusy || (runner && runner.isBusy())) return; pollBusy = true;
+    if (pollBusy || rawPending > 0 || (runner && (runner.isBusy() || (runner.hostPending && runner.hostPending())))) return; pollBusy = true;
     try {
       var doneDir = path.join(jobsDir, "done"); fs.mkdirSync(doneDir, { recursive: true });
       var files = fs.readdirSync(jobsDir).filter(function (f) { return /\.json$/i.test(f); }).sort();
@@ -786,7 +795,7 @@
       try {
         if (a.path) a.path = (path.isAbsolute(a.path) ? a.path : path.resolve(root, a.path)).replace(/\\/g, "/");
         if (a.path && (a.action === "save_ai" || a.action === "export_png")) fs.mkdirSync(path.dirname(a.path), { recursive: true });
-        r = await evalHost(a);
+        r = await hostCall(a);
       } catch (e) { r = { ok: false, error: String(e) }; }
       r.action = a.action; results.push(r);
       if (!r.ok) { ok = false; if (!job.continue_on_error) break; }

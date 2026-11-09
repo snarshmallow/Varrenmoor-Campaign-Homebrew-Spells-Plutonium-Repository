@@ -362,11 +362,14 @@ def import_scene(sc, scene_uuid, place_id=None, include=("walls",), closed_as="l
     return summary
 
 
-def import_image(image, name, place_id=None, ft_per_px=1.0, rotate=0.0, grid_ft=100.0, force=False, dry_run=False, root=None, log=print):
+def import_image(image, name, place_id=None, ft_per_px=1.0, rotate=0.0, grid_ft=100.0, force=False, dry_run=False, root=None, log=print, no_grid=False):
     """Create a place from a plain 2D base-map image (no Foundry needed). Reuses import_scene with a synthetic scene whose single background is the image:
     1 image px = ft_per_px feet, origin = the image's top-left corner (x right, y down; up in the picture = north), flat terrain stub, image copied to
     underlay/ and used as the UNDERLAY layer exactly like an imported scene. rotate = degrees clockwise applied to the image first (canvas grows, corners white-transparent)."""
     from PIL import Image
+    if grid_ft is not None and float(grid_ft) <= 0:      # grid_ft 0 = no guide grid (same as no_grid)
+        no_grid, grid_ft = True, None
+    grid_ft = float(grid_ft) if grid_ft else 100.0      # the synthetic scene still needs a calibration grid; with no_grid nothing is drawn from it
     image = os.path.abspath(image)
     if not os.path.isfile(image):
         raise ValueError(f"image not found: {image}")
@@ -391,7 +394,7 @@ def import_image(image, name, place_id=None, ft_per_px=1.0, rotate=0.0, grid_ft=
     finally:
         if tmp:
             shutil.rmtree(os.path.dirname(tmp), ignore_errors=True)
-    res.update(source_image=image, ft_per_px=float(ft_per_px), rotate_deg=float(rotate or 0), image_px=[w, h])
+    res.update(source_image=image, ft_per_px=float(ft_per_px), rotate_deg=float(rotate or 0), image_px=[w, h], grid_show=not no_grid)
     if dry_run:
         return res
     pj_path = os.path.join(res["dir"], "place.json")
@@ -405,6 +408,11 @@ def import_image(image, name, place_id=None, ft_per_px=1.0, rotate=0.0, grid_ft=
     imp.pop("levels", None)
     imp["warnings"] = [x for x in imp.get("warnings", []) if "no background" not in x]
     jsave(pj_path, pj)
+    if no_grid:                                           # no guide grid: view_settings.json grid_show=false (every render / open job honours it)
+        vp = os.path.join(res["dir"], "view_settings.json")
+        vs_ = json.load(open(vp, encoding="utf-8"))
+        vs_["grid_show"] = False
+        jsave(vp, vs_)
     res["place_json"] = pj_path
     return res
 

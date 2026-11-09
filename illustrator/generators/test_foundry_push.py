@@ -187,6 +187,18 @@ class PushTests(unittest.TestCase):
         with self.assertRaises(fp.PushError):
             fp.calibrate(v, cfg, (340, 220))                  # grid under 50 px
 
+    def test_hide_grid_is_opt_in(self):
+        br = FakeBridge()
+        r, _ = self.push(br)
+        self.assertNotIn("grid_hidden", r)
+        self.assertNotIn("alpha", br._doc(r["scene_uuid"])["grid"])           # default: Foundry grid untouched
+        br2 = FakeBridge()
+        r2, _ = self.push(br2, "--hide-grid")
+        g = br2._doc(r2["scene_uuid"])["grid"]
+        self.assertTrue(r2["grid_hidden"])
+        self.assertEqual(g["alpha"], 0)
+        self.assertEqual((g["size"], g["distance"]), (60, 100))                # size / distance (measurement, snapping) unchanged
+
     def test_idempotent_push(self):
         br = FakeBridge()
         r1, _ = self.push(br, "--drawings", "roads,water")

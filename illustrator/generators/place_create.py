@@ -6,7 +6,7 @@
   python illustrator/generators/place_create.py from-text "walled coastal town of 800 people with a big river, Danish style, hilly" [--out spec.json] [--create]
   python illustrator/generators/place_create.py templates [--show NAME]   # the presets/places/*.json starting points
   python illustrator/generators/place_create.py regen --place ID [--terrain] [--no-town] [--meander straight|gentle|lazy] [--draft]
-  python illustrator/generators/place_create.py import-image IMAGE --name "Base map" [--id ID] --ft-per-px 4.669 [--rotate DEG] [--grid-ft 100] [--force] [--dry-run]
+  python illustrator/generators/place_create.py import-image IMAGE --name "Base map" [--id ID] --ft-per-px 4.669 [--rotate DEG] [--grid-ft 100 | --no-grid] [--force] [--dry-run]
          # a place from a plain base-map image (no Foundry): flat stub terrain, the image as the UNDERLAY layer; origin = image top-left, up = north
   python illustrator/generators/place_create.py write-schema         # rewrite world/schema/place-spec.schema.json from the schema in this file
 
@@ -738,7 +738,8 @@ def main(argv=None):
     ii.add_argument("--id")
     ii.add_argument("--ft-per-px", type=float, required=True, help="feet per image pixel")
     ii.add_argument("--rotate", type=float, default=0.0, help="degrees clockwise, applied to the image first")
-    ii.add_argument("--grid-ft", type=float, default=100.0, help="guide grid spacing in feet")
+    ii.add_argument("--grid-ft", type=float, default=100.0, help="guide grid spacing in feet (0 = no grid)")
+    ii.add_argument("--no-grid", action="store_true", help="draw no guide grid (view_settings.json grid_show=false)")
     ii.add_argument("--force", action="store_true")
     ii.add_argument("--dry-run", action="store_true")
     ft = sp.add_parser("from-text")
@@ -772,7 +773,7 @@ def main(argv=None):
     if a.cmd == "import-image":
         import foundry_import as fi
         try:
-            r = fi.import_image(a.image, a.name, a.id, a.ft_per_px, a.rotate, a.grid_ft, a.force, a.dry_run)
+            r = fi.import_image(a.image, a.name, a.id, a.ft_per_px, a.rotate, a.grid_ft, a.force, a.dry_run, no_grid=a.no_grid)
         except ValueError as e:
             print(json.dumps({"ok": False, "error": str(e)}))
             return 2

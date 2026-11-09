@@ -33,6 +33,7 @@ def main(argv=None):
     ap.add_argument("--shading")
     ap.add_argument("--style")
     ap.add_argument("--label-preset")
+    ap.add_argument("--no-grid", action="store_true", help="draw no grid at all (default: the place's view_settings.json grid_show)")
     ap.add_argument("--no-fills", action="store_true")
     ap.add_argument("--no-contours", action="store_true")
     ap.add_argument("--max-fill-px", type=float, default=30e6)
@@ -61,11 +62,11 @@ def main(argv=None):
     out = os.path.abspath(a.out_dir or os.path.join(REPO, "illustrator", "out", prefix + "_files"))
     os.makedirs(out, exist_ok=True)
     model = rw.load_place(a.place)
-    cfg = {"preset": None, "scale": a.scale, "grid": None, "page": None}
+    cfg = {"preset": None, "scale": a.scale, "grid": None, "page": None, "grid_show": False if a.no_grid else None}
     v, vcfg, title, kind, ident = rw.compute_view(model, a.view, cfg)
     vflags = ["--view", a.view] + (["--scale", str(a.scale)] if a.scale else [])
     svg = os.path.join(out, prefix + ".svg")
-    rargs = ["--place", a.place] + vflags + ["--out", svg, "--label-preset", a.label_preset or dfl.get("label_preset", "working")]
+    rargs = ["--place", a.place] + vflags + (["--no-grid"] if a.no_grid else []) + ["--out", svg, "--label-preset", a.label_preset or dfl.get("label_preset", "working")]
     if not a.no_contours:
         rargs += ["--contours"]
     rr.run("render_world.py", rargs)

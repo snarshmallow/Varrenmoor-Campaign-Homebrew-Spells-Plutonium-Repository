@@ -358,6 +358,21 @@ function VB_applyCurved(doc, svgPath) {
   }
   return res;
 }
+// Top-level raster-heavy layers (UNDERLAY, ART *) that are visible and not an ancestor of one of the target layers: hidden while a layer replace runs so
+// Illustrator does not redraw a big embedded image after every single edit. Returns [{l, v}] for VB_restoreHeavy.
+function VB_hideHeavy(doc, targetNames) {
+  var out = [];
+  for (var i = 0; i < doc.layers.length; i++) {
+    var l = doc.layers[i];
+    if (!(/^UNDERLAY$/i.test(l.name) || /^ART(\s|$|-)/i.test(l.name))) continue;
+    var anc = false;
+    for (var t = 0; t < targetNames.length; t++) { if (l.name === targetNames[t] || VB_find(l, targetNames[t])) { anc = true; break; } }
+    if (anc || !l.visible) continue;
+    try { l.visible = false; out.push({ l: l, v: true }); } catch (e) {}
+  }
+  return out;
+}
+function VB_restoreHeavy(list) { for (var i = 0; i < list.length; i++) { try { list[i].l.visible = list[i].v; } catch (e) {} } }
 // app.open with alerts off ("Text on Path will be Flattened", missing fonts ...): a modal dialog blocks the whole ExtendScript queue.
 function VB_openQuiet(f) {
   var old = app.userInteractionLevel;
@@ -403,6 +418,10 @@ function VB_run(json) {
       }
       case "replace_layer": {
         // Clear and redraw only the named GEN layers from an SVG; ART layers are never touched.
+        // Built to stay fast on a document with a big embedded underlay / raster ART layers (a screen redraw of the raster after EVERY edit froze Illustrator
+        // for minutes): raster-heavy top layers (UNDERLAY, ART *) are hidden once for the whole replace and restored, no layer is unlocked / shown / hidden
+        // unless it has to be, the old items go in one removeAll() call, the new ones are copied first and the SVG document is closed before the target
+        // document is touched again, and no clipboard is used.
         if (!a.path) throw new Error("path required");
         var names = a.names || [];
         if (!names.length) throw new Error("names required");
@@ -411,31 +430,44 @@ function VB_run(json) {
         var rf = new File(a.path);
         if (!rf.exists) throw new Error("file not found: " + a.path);
         var tdoc = app.activeDocument;
-        var rsvg = VB_openQuiet(rf);
-        var replaced = [], missing = [], moved = 0;
-        for (var ri = 0; ri < names.length; ri++) {
-          var sl2 = VB_find(rsvg, names[ri]);
-          if (!sl2) { missing.push(names[ri]); continue; }
-          var tl2 = VB_ensureLike(tdoc, sl2);
-          var wasLocked = tl2.locked, wasVisible = tl2.visible;
-          tl2.locked = false; tl2.visible = true;
-          var old = VB_direct(tl2);
-          for (var oi = old.length - 1; oi >= 0; oi--) {
-            try { old[oi].locked = false; old[oi].hidden = false; } catch (e) {}
-            old[oi].remove();
+        var hidden = VB_hideHeavy(tdoc, names);          // [{l, v}] layers hidden for the duration
+        var rsvg = null, replaced = [], missing = [], moved = 0;
+        try {
+          rsvg = VB_openQuiet(rf);
+          var plan = [];                                  // per name: target layer, its previous lock/visible state, new items already copied in
+          for (var ri = 0; ri < names.length; ri++) {
+            var sl2 = VB_find(rsvg, names[ri]);
+            if (!sl2) { missing.push(names[ri]); continue; }
+            var tl2 = VB_ensureLike(tdoc, sl2);
+            var wasLocked = tl2.locked, wasVisible = tl2.visible;
+            if (wasLocked) tl2.locked = false;
+            if (!wasVisible) tl2.visible = true;
+            var oldCount = tl2.pageItems.length, srcItems = VB_direct(sl2);
+            for (var si = srcItems.length - 1; si >= 0; si--) { srcItems[si].duplicate(tl2, ElementPlacement.PLACEATBEGINNING); moved++; }
+            plan.push({ l: tl2, name: names[ri], locked: wasLocked, visible: wasVisible, oldCount: oldCount, added: srcItems.length });
           }
-          var srcItems = VB_direct(sl2);
-          for (var si = srcItems.length - 1; si >= 0; si--) {
-            srcItems[si].duplicate(tl2, ElementPlacement.PLACEATBEGINNING); moved++;
+          try { rsvg.close(SaveOptions.DONOTSAVECHANGES); } catch (e) {}
+          rsvg = null;
+          app.activeDocument = tdoc;
+          for (var pi2 = 0; pi2 < plan.length; pi2++) {   // the old items are the ones after the freshly added ones (PLACEATBEGINNING)
+            var pl2 = plan[pi2], l2 = pl2.l;
+            if (l2.layers.length === 0 && l2.pageItems.length >= pl2.added) {
+              var tot = l2.pageItems.length, keep = pl2.added;
+              for (var ki = tot - 1; ki >= keep; ki--) { var it2 = l2.pageItems[ki]; try { it2.locked = false; it2.hidden = false; } catch (e) {} it2.remove(); }
+            } else {
+              var old = VB_direct(l2);                    // layer with sublayers: only its own items, skipping the new ones at the front
+              for (var oi = old.length - 1; oi >= pl2.added; oi--) { try { old[oi].locked = false; old[oi].hidden = false; } catch (e) {} old[oi].remove(); }
+            }
+            l2.locked = (a.restore_lock === false) ? false : pl2.locked;
+            if (!pl2.visible) l2.visible = false;
+            replaced.push(pl2.name);
           }
-          tl2.locked = (a.restore_lock === false) ? false : wasLocked;
-          tl2.visible = wasVisible;
-          replaced.push(names[ri]);
+        } finally {
+          if (rsvg) { try { rsvg.close(SaveOptions.DONOTSAVECHANGES); } catch (e) {} try { app.activeDocument = tdoc; } catch (e) {} }
+          VB_restoreHeavy(hidden);
         }
-        rsvg.close(SaveOptions.DONOTSAVECHANGES);
-        app.activeDocument = tdoc;
         out.curved = VB_applyCurved(tdoc, rf.fsName);
-        out.replaced = replaced; out.missing = missing; out.items = moved;
+        out.replaced = replaced; out.missing = missing; out.items = moved; out.hidden_heavy = hidden.length;
         if (missing.length && a.strict !== false) out.ok = false, out.error = "layers not in SVG: " + missing.join(", ");
         break;
       }

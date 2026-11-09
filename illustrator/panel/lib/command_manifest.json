@@ -280,26 +280,14 @@
     "--grid-major": {
      "cli_only": "the view flags come from the Scale tab and the View box; the panel always passes them"
     },
-    "--major": {
-     "cli_only": "the view flags come from the Scale tab and the View box; the panel always passes them"
-    },
-    "--page": {
-     "cli_only": "the view flags come from the Scale tab and the View box; the panel always passes them"
-    },
-    "--preset": {
-     "cli_only": "the view flags come from the Scale tab and the View box; the panel always passes them"
-    },
-    "--scale": {
-     "cli_only": "the view flags come from the Scale tab and the View box; the panel always passes them"
-    },
-    "--view": {
-     "controls": [
-      "s:settings.view"
-     ]
-    },
     "--hidden": {
      "controls": [
       "s:tools.tok.hidden"
+     ]
+    },
+    "--hide-grid": {
+     "controls": [
+      "s:foundry.hideGrid"
      ]
     },
     "--ids": {
@@ -368,6 +356,9 @@
       "s:tools.s3d.lod"
      ]
     },
+    "--major": {
+     "cli_only": "the view flags come from the Scale tab and the View box; the panel always passes them"
+    },
     "--max-px": {
      "controls": [
       "s:tools.scene.max_px"
@@ -399,11 +390,6 @@
       "s:foundry.walls"
      ]
     },
-    "--walls": {
-     "controls": [
-      "s:foundry.walls"
-     ]
-    },
     "--out-dir": {
      "controls": [
       "s:tools.bake.out_dir"
@@ -419,6 +405,9 @@
       "s:tools.s3d.padding_arg",
       "s:tools.s3d.use_padding_tab"
      ]
+    },
+    "--page": {
+     "cli_only": "the view flags come from the Scale tab and the View box; the panel always passes them"
     },
     "--parent-scene-name": {
      "controls": [
@@ -446,10 +435,8 @@
       "s:tools.tok.portrait"
      ]
     },
-    "--token": {
-     "controls": [
-      "s:tools.tok.token"
-     ]
+    "--preset": {
+     "cli_only": "the view flags come from the Scale tab and the View box; the panel always passes them"
     },
     "--prune": {
      "controls": [
@@ -489,6 +476,9 @@
       "s:foundry.models.roofsHidden"
      ]
     },
+    "--scale": {
+     "cli_only": "the view flags come from the Scale tab and the View box; the panel always passes them"
+    },
     "--scene-flag": {
      "controls": [
       "s:tools.push.scene_flags"
@@ -524,6 +514,11 @@
       "s:tools.push.set_name"
      ]
     },
+    "--sight": {
+     "controls": [
+      "s:foundry.models.sight.buildings"
+     ]
+    },
     "--size-ft": {
      "controls": [
       "s:foundry.sizeFt"
@@ -537,6 +532,11 @@
     "--spec": {
      "controls": [
       "s:foundry.spec"
+     ]
+    },
+    "--sun-preset": {
+     "controls": [
+      "s:lighting.sun3d.onPush"
      ]
     },
     "--table-texture": {
@@ -557,9 +557,24 @@
       "act:f_push_tiles"
      ]
     },
+    "--token": {
+     "controls": [
+      "s:tools.tok.token"
+     ]
+    },
     "--upscale": {
      "controls": [
       "s:tools.scene.upscale"
+     ]
+    },
+    "--view": {
+     "controls": [
+      "s:settings.view"
+     ]
+    },
+    "--walls": {
+     "controls": [
+      "s:foundry.walls"
      ]
     },
     "--window": {
@@ -575,16 +590,6 @@
     "--yes": {
      "controls": [
       "s:tools.push.yes"
-     ]
-    },
-    "--sight": {
-     "controls": [
-      "s:foundry.models.sight.buildings"
-     ]
-    },
-    "--sun-preset": {
-     "controls": [
-      "s:lighting.sun3d.onPush"
      ]
     }
    }
@@ -2206,15 +2211,17 @@
     "--meander-wavelength": {
      "cli_only": "regen option, covered by the Water tab Regenerate river + terrain"
     },
-    "--width-var": {
-     "cli_only": "regen option, covered by the Water tab Regenerate river + terrain"
+    "--name": {
+     "controls": [
+      "s:places.image.name"
+     ]
     },
     "--no-bars": {
      "cli_only": "regen option, covered by the Water tab Regenerate river + terrain"
     },
-    "--name": {
+    "--no-grid": {
      "controls": [
-      "s:places.image.name"
+      "s:places.image.no_grid"
      ]
     },
     "--no-town": {
@@ -2244,6 +2251,9 @@
     },
     "--terrain": {
      "cli_only": "regen --terrain flag; the panel regenerates through Regenerate (overwrite)"
+    },
+    "--width-var": {
+     "cli_only": "regen option, covered by the Water tab Regenerate river + terrain"
     }
    }
   }
