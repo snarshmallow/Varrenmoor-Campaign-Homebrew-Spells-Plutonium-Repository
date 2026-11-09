@@ -105,7 +105,7 @@
       },
       foundry: { target: "new", sceneName: "", sceneUuid: "", dpi: 150, ftPerGrid: null, hideGrid: false, walls: true, drawRoads: false, drawWater: false,
         tileLayers: "Labels - Districts,Labels - Streets,Labels - Buildings", actorUuid: "", itemUuid: "", spec: "", image: "", at: "", itemName: "", itemDesc: "",
-        models: { split: "", preset: "layer", layers: "", lod: 0, compress: "none", roofMode: "none", interiorStyle: "auto", splitPreset: "default", carve: true, conform: true, prune: false, roofsHidden: false, sceneMode: "",
+        models: { split: "", preset: "layer", layers: "", lod: 0, compress: "none", roofMode: "none", interiorStyle: "auto", splitPreset: "default", carve: true, conform: true, prune: true, roofsHidden: true, sceneMode: "3d",
           collision: { terrain: true, roads: true, plazas: true, fields: true, fences: true, walls: true, bridges: true, buildings: true, props: true, roofs: false, foliage: false, water: false },   // = foundry_collision.COLLISION_DEFAULT
           sight: { buildings: true, walls: true, foliage: true, terrain: false, roads: false, plazas: false, fields: false, fences: false, bridges: false, props: false, roofs: false, water: false },   // = foundry_collision.SIGHT_DEFAULT
           alsoWalls: false }, sizeFt: 5, autoPush: false, filter: { actors: "", items: "" }, cache: { fetched: null, lists: {} }, last: null },

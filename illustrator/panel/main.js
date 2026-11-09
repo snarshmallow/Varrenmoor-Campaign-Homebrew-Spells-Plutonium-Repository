@@ -43,7 +43,9 @@
     var s = null;
     var p = VB.dirs(root, place).state;
     try { s = JSON.parse(fs.readFileSync(p, "utf8")); } catch (e) { s = null; }
+    var fresh = !s;   // no panel_state.json yet: a NEW place, which gets the default profile (profiles_ui.js)
     s = VB.normalize(s); s.place = place;
+    if (fresh && window.VBProfilesUI) s = VBProfilesUI.applyDefaultToNew(s, root);
     s.foundry.cache = VB.fresherCache(s.foundry.cache, readJson(globalCachePath(), null));   // lists are global, not per place
     return s;
   }
@@ -474,7 +476,7 @@
     $("candTag").className = "tag" + (state.town.candidate ? " stale" : "");
     $("statePath").textContent = d.state;
   }
-  function refreshAll() { paintInputs(); if (window.VBRegionUI) VBRegionUI.paint(); if (window.VBLightUI) VBLightUI.paint(); if (window.VBStreetlampsUI) VBStreetlampsUI.paint(); if (window.VBSunUI) VBSunUI.paint(); if (window.VBStylesUI) VBStylesUI.paint(); if (window.VBObjectsUI) VBObjectsUI.paint(); if (window.VBFoliageUI) VBFoliageUI.paint(); if (window.VBPaddingUI) VBPaddingUI.paint(); if (window.VBHeightPaintUI) VBHeightPaintUI.paint(); if (window.VBSkyUI) VBSkyUI.paint(); if (window.VBWaterUI) VBWaterUI.paint(); if (window.VBBridgesUI) VBBridgesUI.paint(); if (window.VBPlacesUI) VBPlacesUI.paint(); if (window.VBToolsUI) VBToolsUI.paint(); if (window.VBLassoUI) VBLassoUI.paint(); paintTags(); paintStale(); paintPatchForm(); paintRings(); if (typeof fPaint === "function" && state) fPaint(); }
+  function refreshAll() { paintInputs(); if (window.VBRegionUI) VBRegionUI.paint(); if (window.VBLightUI) VBLightUI.paint(); if (window.VBStreetlampsUI) VBStreetlampsUI.paint(); if (window.VBSunUI) VBSunUI.paint(); if (window.VBStylesUI) VBStylesUI.paint(); if (window.VBObjectsUI) VBObjectsUI.paint(); if (window.VBFoliageUI) VBFoliageUI.paint(); if (window.VBPaddingUI) VBPaddingUI.paint(); if (window.VBHeightPaintUI) VBHeightPaintUI.paint(); if (window.VBSkyUI) VBSkyUI.paint(); if (window.VBWaterUI) VBWaterUI.paint(); if (window.VBBridgesUI) VBBridgesUI.paint(); if (window.VBPlacesUI) VBPlacesUI.paint(); if (window.VBToolsUI) VBToolsUI.paint(); if (window.VBLassoUI) VBLassoUI.paint(); if (window.VBExportUI) VBExportUI.paint(); if (window.VBProfilesUI) VBProfilesUI.paint(); paintTags(); paintStale(); paintPatchForm(); paintRings(); if (typeof fPaint === "function" && state) fPaint(); }
 
   function showCrossings() {
     var j = readJson(d.water + "/crossings.json", null), el = $("crossInfo");
@@ -827,7 +829,9 @@
       writeLastPlace: function (p) { try { fs.writeFileSync(path.join(root, "world", "panel_last_place.json"), JSON.stringify({ place: p })); } catch (e) { /* ignore */ } } }); // reload / version button (version_ui.js)
     window.addEventListener("error", function (e) { showError("panel error: " + e.message); });
     var cur = places.indexOf(readJson(path.join(root, "world", "panel_last_place.json"), {}).place) >= 0 ? readJson(path.join(root, "world", "panel_last_place.json"), {}).place : places[0];
+    if (window.VBProfilesUI) VBProfilesUI.init({ state: function () { return state; }, save: save, fs: fs, root: root, syncInputs: paintInputs, refreshAll: refreshAll, showTab: showTab }); // PROFILES (profiles_ui.js): before the first place loads so a new place gets the default profile
     await switchPlace(cur);
+    if (window.VBExportUI) VBExportUI.init({ state: function () { return state; }, dirs: function () { return d; }, save: save, fs: fs, startJob: startJob, showError: showError, refreshAll: refreshAll, acts: acts }); // EXPORT section of the Foundry tab (export_ui.js)
     VBLightUI.init({ state: function () { return state; }, dirs: function () { return d; }, save: save, startJob: startJob, startJobQueued: startJobQueued, isBusy: function () { return runner.isBusy(); }, syncInputs: paintInputs,
       placeCentre: function () { var p = readJson(d.world + "/place.json", {}), b = p.bounds || {}; return [Math.round((b.width_ft || 0) / 2), Math.round((b.height_ft || 0) / 2)]; } });
     if (window.VBSunUI) VBSunUI.init({ state: function () { return state; }, dirs: function () { return d; }, save: save, startJob: startJob, startJobQueued: startJobQueued, isBusy: function () { return runner.isBusy(); }, showError: showError }); // sun / shadows / fog block (Lighting tab)

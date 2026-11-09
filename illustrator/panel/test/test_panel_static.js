@@ -39,4 +39,32 @@ const hu = fs.readFileSync(P + "/heightpaint_ui.js", "utf8"), mj = fs.readFileSy
 check("paint shortcuts require Terrain tab on and section open", /code === "Space" && tabOn\(\) && isOpen\(\)/.test(hu) && /ctrlKey \|\| e\.metaKey\) && !e\.altKey && tabOn\(\) && isOpen\(\)/.test(hu));
 check("main.js showTab notifies the paint UI and maps the old hpaint tab", /VBHeightPaintUI\.shown\(\)/.test(mj) && /t === "hpaint"/.test(mj));
 check("startup jobs are queued", /startJobQueued/.test(fs.readFileSync(P + "/skybox_ui.js", "utf8")) && /function startJobQueued/.test(mj));
+// Export section + Profiles (export_ui.js, profiles_ui.js, lib/exportplan.js, lib/profiles.js)
+for (const f of ["lib/profiles.js", "lib/exportplan.js", "export_ui.js", "profiles_ui.js"]) {
+  check(f + " is in the loader after core.js and before main.js", srcs.indexOf(f) > srcs.indexOf("lib/core.js") && srcs.indexOf(f) < srcs.indexOf("main.js"));
+}
+check("profiles.js and exportplan.js publish on window even when module exists (CEP)", /window\.VBProfiles = P/.test(fs.readFileSync(P + "/lib/profiles.js", "utf8")) && /window\.VBExportPlan = X/.test(fs.readFileSync(P + "/lib/exportplan.js", "utf8")));
+for (const [f, g] of [["export_ui.js", "VBExportUI"], ["profiles_ui.js", "VBProfilesUI"]]) check(f + " publishes window." + g, new RegExp("window\." + g + " = ").test(fs.readFileSync(P + "/" + f, "utf8")));
+const exIds = ["exList", "exRun", "exDryAll", "exResume", "exPack", "exPrev", "exArm", "exDry", "exPreview", "exSummary", "exBlock", "exReset", "exRoofHint", "exArmRow", "exPushList", "exPushRun", "exPushAll", "exPushDry", "exPushResume", "exPushBlock", "exPushSummary", "exPushEvery", "exPushNone", "exLast", "exScene"];
+check("export section ids exist", exIds.every(i => ids.includes(i)), exIds.filter(i => !ids.includes(i)).join(", "));
+const pfIds = ["profQuick", "profInd", "pfList", "pfName", "pfDesc", "pfWhere", "pfScope", "pfLoad", "pfApply", "pfSaveAs", "pfUpdate", "pfRename", "pfDup", "pfDelete", "pfDefault", "pfReset", "pfDiff", "pfFile", "pfBrowse", "pfImport", "pfExport", "pfCopy", "pfMsg", "pfActive", "pfDefLine"];
+check("profile ids exist", pfIds.every(i => ids.includes(i)), pfIds.filter(i => !ids.includes(i)).join(", "));
+for (const f of ["export_ui.js", "profiles_ui.js"]) {
+  const t = fs.readFileSync(P + "/" + f, "utf8"), miss = [...t.matchAll(/\$\("([A-Za-z0-9_-]+)"\)/g)].map(m => m[1]).filter(i => !ids.includes(i) && i !== "exRoofUse");
+  check(f + ": static $(id) targets exist in index.html", !miss.length, [...new Set(miss)].join(", "));
+}
+check("export section is at the top of the Foundry tab (before the bridge section)", html.indexOf('id="exBox"') > html.indexOf('id="tab-foundry"') && html.indexOf('id="exBox"') < html.indexOf("<!-- BRIDGE SECTION"));
+check("profile indicator sits in the header next to the version label", html.indexOf('id="profInd"') > 0 && html.indexOf('id="profInd"') < html.indexOf('id="verText"') && html.indexOf('id="profInd"') < html.indexOf('id="err"'));
+check("Profiles manager lives in the Tools tab (still 18 static tab buttons; Buildings and Roads are added by script: 20 tabs)", html.indexOf('id="pfBox"') > html.indexOf('id="tab-tools"') && (html.match(/role="tab" data-tab=/g) || []).length === 18);
+check("main.js wires VBProfilesUI (before first place) and VBExportUI, default profile for fresh places", /VBProfilesUI\.init\(/.test(mj) && /VBExportUI\.init\(/.test(mj) && /applyDefaultToNew/.test(mj) && mj.indexOf("VBProfilesUI.init(") < mj.indexOf("await switchPlace(cur)") && /VBExportUI\.paint\(\)/.test(mj));
+check("real Foundry writes need an explicit arm (checkbox), default dry run", /id="exDry"/.test(html) && /data-s="exp\.dry"/.test(html) && !/id="exArm"[^>]*checked/.test(html));
+// defaults audit (what a normal export wants on by default)
+{
+  const VBc = require("../lib/core.js");
+  ["townarea", "regions", "styles", "objects", "lighting", "sun3d", "streetlamps", "foliage", "skybox", "water", "heightpaint", "padding", "bridges", "places", "tools", "bridge", "exportplan", "profiles"].forEach(f => require("../lib/" + f + ".js"));
+  const dd = VBc.defaults(), m = dd.foundry.models;
+  check("export defaults: prune on, roofs created hidden, scene mode 3d, no compression, merge by layer, lights with the 3D push", m.prune === true && m.roofsHidden === true && m.sceneMode === "3d" && m.compress === "none" && m.preset === "layer" && dd.tools.s3d.with_lights === true && dd.tools.s3d.dry_run === true);
+  check("collision on for ground/roads/buildings/fences/bridges, off for roofs/foliage/water; sight on for buildings/walls/foliage", ["terrain", "roads", "buildings", "fences", "bridges"].every(k => m.collision[k]) && !m.collision.roofs && !m.collision.foliage && !m.collision.water && m.sight.buildings && m.sight.walls && m.sight.foliage && !m.sight.roofs);
+  check("export checklist default: dry run on, all steps ticked", dd.exp && dd.exp.dry === true && Object.values(dd.exp.sel).every(Boolean) && dd.profile && dd.profile.name === "");
+}
 console.log(pass + " passed, " + fail + " failed"); process.exit(fail ? 1 : 0);

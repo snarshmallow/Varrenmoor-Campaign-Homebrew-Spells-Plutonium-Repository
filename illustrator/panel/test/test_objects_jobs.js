@@ -117,7 +117,7 @@ const thrown = f => { try { f(); return ""; } catch (e) { return String(e.messag
   // pack options (Foundry tab "More pack options", Roads (3D) cross slope / grading switch): defaults add no argument
   const d = VB.dirs(ROOT, place), sp = s => VB.jobWorldSplit(s, d).steps[0].args.join(" "), pa = s => VB.worldPushArgs(s, d, {}).join(" ");
   const st2 = VB.normalize(null); st2.place = place; st2.foundry.sceneName = "x";
-  check("pack defaults unchanged", !/--split-preset|--no-carve|--no-conform|--road-cross-deg|--road-grade/.test(sp(st2)) && !/--prune|--roofs-hidden|--scene-mode|--allow-quantized/.test(pa(st2)), sp(st2) + " | " + pa(st2));
+  check("pack defaults: split unchanged; push defaults prune + scene-mode 3d (roofs-hidden only with a roof mode), no quantized", !/--split-preset|--no-carve|--no-conform|--road-cross-deg|--road-grade/.test(sp(st2)) && /--prune/.test(pa(st2)) && /--scene-mode 3d/.test(pa(st2)) && !/--roofs-hidden|--allow-quantized/.test(pa(st2)), sp(st2) + " | " + pa(st2));
   Object.assign(st2.foundry.models, { splitPreset: "individual", carve: false, conform: false, prune: true, roofsHidden: true, sceneMode: "3d", compress: "quant", roofMode: "per_building" }); Object.assign(st2.roads, { cross_deg: 6, grade: false });
   check("pack options passed", /--split-preset individual/.test(sp(st2)) && /--no-carve/.test(sp(st2)) && /--no-conform/.test(sp(st2)) && /--road-cross-deg 6/.test(sp(st2)) && /--road-grade off/.test(sp(st2)) &&
     /--prune/.test(pa(st2)) && /--roofs-hidden/.test(pa(st2)) && /--scene-mode 3d/.test(pa(st2)) && /--allow-quantized/.test(pa(st2)), sp(st2) + " | " + pa(st2));

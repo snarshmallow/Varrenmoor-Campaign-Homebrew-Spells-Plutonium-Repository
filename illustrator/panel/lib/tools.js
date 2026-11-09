@@ -14,7 +14,7 @@
       audits: { bga_top: 12, bga_nomesh: false, rha_step: 4, rha_mesh: "", rha_smooth: "", rha_maxgrade: "", rha_cutfill: false, tc_minor: 10, tc_index: 50, ta_tag: "current", ta_padding: false, ta_raw: false },
       bake: { image: "", window: "", crop_margin_pt: "", dpi: "", px_per_ft: "", name: "", format: "webp", out_dir: "", table_texture_path: "", publish: false },
       del: { typed: "" },
-      s3d: { skybox_preset: "clear_day", no_skybox: false, no_padding: false, use_padding_tab: true, padding_arg: "", with_lights: false, prune_lights: false, foliage_placements: "", lights_placements: "", layers: "", lod: 0, dry_run: true },
+      s3d: { skybox_preset: "clear_day", no_skybox: false, no_padding: false, use_padding_tab: true, padding_arg: "", with_lights: true, prune_lights: false, foliage_placements: "", lights_placements: "", layers: "", lod: 0, dry_run: true },
       scene: { upscale: 1, padding: 0, max_px: 8192, format: "webp", link: false },
       push: { ids: "", serve_url: "", assets_dir: "", px_per_ft: "", set_name: "", table_texture: "", scene_flags: "", lighting: "", collision_lod: "", yes: false },
       lights: { animation: "", lighting: "", prune: false, placements: "" },

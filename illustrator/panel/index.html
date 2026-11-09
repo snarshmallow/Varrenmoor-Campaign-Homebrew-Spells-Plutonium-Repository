@@ -83,6 +83,7 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
     <span id="status">starting</span>
     <button id="cancel" disabled title="Stop the running job">Cancel</button>
     <button id="toggleLog" title="Show or hide the log">Log</button>
+    <select id="profQuick" title="Load a profile (opens Tools > Profiles with a preview; nothing changes until you press Apply)" style="width:86px"></select><span id="profInd" class="tag" title="Profile loaded for this place"></span>
     <span id="verText" title="loaded panel version"></span>
     <button id="reloadPanel" title="Reload panel (picks up pushed code; replaces close/reopen)" aria-label="Reload panel"><svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.5 8a5.5 5.5 0 1 1-1.8-4.1"/><path d="M13.6 1.8v3.2h-3.2"/></svg><i id="verDot" hidden></i></button>
   </div>
@@ -946,6 +947,35 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
 <!-- /PLACES TAB -->
 
 <section id="tab-foundry" role="tabpanel">
+  <!-- EXPORT SECTION (export_ui.js, lib/exportplan.js): one guided checklist for a normal export to Foundry -->
+  <style>#exBox{border:1px solid var(--acc);background:var(--bg2);padding:4px 6px;margin:4px 0}#exBox h4{margin:0 0 3px}.exrow{margin:3px 0;padding-bottom:2px;border-bottom:1px dotted var(--line)}.exrow.off{opacity:.6}.exrow .note{margin-left:20px}.exw{border-color:var(--warn);color:var(--warn)}#exPreview,#exSummary{white-space:pre-wrap;font:10px Consolas,monospace;color:var(--dim);margin:3px 0}#exSummary{color:var(--fg)}#exBlock{color:var(--warn)}button.danger.primary,#exRun.danger{background:var(--bad)}button.tiny{padding:0 4px;font-size:10px}</style>
+  <div id="exBox">
+    <h4>Export to Foundry <span class="note">(guided: tick, then run)</span></h4>
+    <div class="note">Steps run in the verified order, one after another, and stop at the first error. The defaults are what a normal first export needs. Foundry is only written when Dry run is off and you confirm.</div>
+    <div id="exList"></div>
+    <div id="exRoofHint" class="note"></div>
+    <label class="chk"><input type="checkbox" data-s="exp.dry" id="exDry"> Dry run first: Foundry steps only show what they would do (default: on)</label>
+    <div id="exArmRow" style="display:none"><label class="chk"><input type="checkbox" id="exArm"> I understand this writes to Foundry (scene tiles, flags, lights; cleared after each run)</label></div>
+    <div class="btns"><button class="primary" id="exRun">Run selected steps</button><button id="exDryAll" title="Runs every step with Foundry writes switched to dry run (no Foundry change)">Dry run everything (no Foundry writes)</button><button id="exResume" hidden></button></div>
+    <div id="exBlock" class="note"></div>
+    <div class="btns"><button id="exPack" title="Check terrain, export the world pack, validate it. Local files only.">Export world pack only</button><button id="exPrev" title="Export view: the map picture used for the Illustrator preview. No Foundry.">Export for Illustrator preview only</button><button id="exReset" title="Re-tick the recommended steps and clear the status marks">Reset checklist</button></div>
+    <details><summary class="note">What will happen</summary><pre id="exPreview"></pre></details>
+    <pre id="exSummary"></pre>
+    <h4 style="margin-top:8px">Push to Foundry <span class="note">(one item per thing that is pushed)</span></h4>
+    <div class="note">Target scene, shared by every item below (the same fields as in "Foundry" further down). Padding, skybox and foliage use this scene too.</div>
+    <div class="grid">
+      <label>Target <select data-s="foundry.target"><option value="new">New scene (create)</option><option value="existing">Existing scene</option></select></label>
+      <label>New scene name <input type="text" data-s="foundry.sceneName" placeholder="e.g. Town overview"></label>
+      <label>Existing scene <select id="exScene" data-s="foundry.sceneUuid"></select></label>
+    </div>
+    <div class="btns"><button id="exLast" title="Existing scene = the scene last pushed from this panel">Use last pushed scene</button></div>
+    <div id="exPushList"></div>
+    <div class="btns"><button class="primary" id="exPushRun">Push selected</button><button id="exPushAll" title="Ticks models, padding, skybox, sun, lighting, lights, collision, doors and foliage and runs them in the verified order (dry run first unless Dry run is off and confirmed)">Push everything (verified order)</button><button id="exPushDry" title="Runs every ticked item as a dry run: nothing is written to Foundry">Dry run everything (no Foundry writes)</button><button id="exPushResume" hidden></button></div>
+    <div id="exPushBlock" class="note"></div>
+    <div class="btns"><button id="exPushEvery" class="tiny">Tick the "everything" set</button><button id="exPushNone" class="tiny">Tick none</button></div>
+    <pre id="exPushSummary"></pre>
+  </div>
+  <!-- /EXPORT SECTION -->
   <!-- BRIDGE SECTION (bridge_ui.js, lib/bridge.js; foundry-bridge/bridgectl.mjs). Kept at the TOP of the Foundry tab. Everyday use: status, pairing requests, paired devices. Everything else is under Advanced. -->
   <style>.bgrow{margin:2px 0;display:flex;flex-wrap:wrap;gap:4px;align-items:center}.bgk{color:var(--dim)}.bgpend{border:1px solid var(--warn);padding:3px 5px;margin:3px 0;background:var(--bg2)}.bgcode{font-size:15px;letter-spacing:2px;color:var(--warn)}.bgbad{color:var(--bad)}.bgrow code{background:var(--bg3);padding:0 3px;overflow-wrap:anywhere}#bgWarn,#bgTwo{color:var(--bad);border:1px solid var(--bad);padding:3px 5px;margin:4px 0}#bgTwo{font-weight:bold;background:rgba(226,104,92,.12)}#bgWarn[hidden],#bgTwo[hidden],#bgLocalBox[hidden]{display:none}#bgLog{max-height:130px;overflow:auto;white-space:pre-wrap;background:var(--bg2);border:1px solid var(--line);padding:2px 4px;font:10px monospace}#bgModal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:50}#bgModal[hidden]{display:none}#bgModal .box{background:var(--bg2);border:1px solid var(--line);padding:10px;max-width:280px}.bgbox{border:1px solid var(--line);background:var(--bg2);padding:4px 6px;margin:5px 0}.bgbox.main{border-color:var(--acc)}.bgbox h5{margin:0 0 3px;font-size:12px}.bgbox .btns{margin:3px 0}#bgAttachSt.ok{color:var(--ok)}#bgAttachSt.no{color:var(--warn)}#bgClient.bad{color:var(--warn)}#bgCloseBtn{min-width:120px}.bgst{display:grid;grid-template-columns:auto minmax(0,1fr);gap:2px 8px;margin:3px 0}.bgst>span{min-width:0;overflow-wrap:anywhere}.bgst>.bgk{white-space:nowrap}.bgon{color:var(--ok)}.bgoff{color:var(--warn)}#bgAdv{margin:6px 0;border:1px solid var(--line);padding:2px 6px;background:var(--bg2)}#bgAdv>summary{cursor:pointer}#bgAdv h6{margin:8px 0 2px;font-size:11px;color:var(--dim);text-transform:uppercase}</style>
   <h4 id="bridgeRelayHead">Bridge relay <span class="tag" id="bgStatus">not checked</span></h4>
@@ -1215,6 +1245,26 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
 <!-- TOOLS TAB (tools_ui.js, lib/tools.js; command parity map lib/command_manifest.json). Audits + results viewer, texture baking, delete scene, push options, one-shot 3D scene, macro installers, advanced pack options. -->
 <section id="tab-tools" role="tabpanel">
   <style>#tlOut{white-space:pre-wrap;max-height:260px;overflow:auto;background:var(--bg3);border:1px solid var(--line);padding:4px;font:11px monospace}#tlConfirm{border:1px solid var(--warn);padding:4px;margin:4px 0;background:var(--bg2)}</style>
+  <!-- PROFILES (profiles_ui.js, lib/profiles.js): named, versioned settings bundles; never geometry or place identity -->
+  <details id="pfBox" open><summary><b>Profiles</b> <span class="note">(save and load plugin settings)</span></summary>
+    <div id="pfActive" class="note"></div><div id="pfDefLine" class="note"></div>
+    <div class="grid">
+      <label>Profile <select id="pfList"></select></label>
+      <label>Name (for Save as, Rename, Duplicate) <input type="text" id="pfName" placeholder="e.g. My night export"></label>
+      <label>Description <input type="text" id="pfDesc"></label>
+      <label>Save where <select id="pfWhere"><option value="user">Global (all places): presets/profiles</option><option value="place">This place only: world/&lt;place&gt;/profiles</option></select></label>
+    </div>
+    <div class="note">What to capture (Save as, Update current, Reset to defaults):</div>
+    <div id="pfScope" class="grid"></div>
+    <div class="btns"><button class="primary" id="pfLoad" title="Shows what would change; nothing is applied until you press Apply">Load (preview)</button><button id="pfSaveAs">Save as...</button><button id="pfUpdate" title="Overwrite the loaded profile with the current settings">Update current</button><button id="pfRename">Rename</button><button id="pfDup">Duplicate</button><button id="pfDelete" class="danger">Delete</button></div>
+    <div class="btns"><button id="pfDefault" title="Apply this profile automatically to every NEW place (toggle)">Default for new places</button><button id="pfReset" title="Preview resetting the ticked sections to the built-in defaults">Reset to defaults</button></div>
+    <div id="pfDiff"></div>
+    <div class="btns"><button class="primary" id="pfApply" hidden>Apply ticked sections</button></div>
+    <label>Profile file (Import reads it, Export writes it; a folder is fine) <input type="text" id="pfFile" placeholder="C:/path/profile.json"></label>
+    <div class="btns"><button id="pfBrowse">Browse...</button><button id="pfImport">Import</button><button id="pfExport">Export</button><button id="pfCopy" title="Copy the path of the selected profile file">Copy path</button></div>
+    <div id="pfMsg" class="note" style="white-space:pre-wrap"></div>
+  </details>
+  <!-- /PROFILES -->
   <div class="note">Everything the command line can do that has no home on another tab. Scene actions use the existing scene picked on the Foundry tab: <b id="tlScene"></b></div>
   <div id="tlConfirm" hidden><div id="tlConfirmText" class="note" style="white-space:pre-wrap"></div><div class="btns"><button class="primary" id="tlYes">Continue</button><button id="tlNo">Cancel</button></div></div>
   <h4>Result <span class="note" id="tlOutHead"></span></h4>
@@ -1414,6 +1464,10 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
   "lib/polyops.js",
   "lib/waypoint.js",
   "lasso_ui.js",
+  "lib/profiles.js",
+  "lib/exportplan.js",
+  "export_ui.js",
+  "profiles_ui.js",
   "lib/places.js",
   "places_ui.js",
   "lib/tools.js",
