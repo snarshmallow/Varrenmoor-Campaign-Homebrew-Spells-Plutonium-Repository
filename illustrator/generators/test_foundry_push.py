@@ -54,7 +54,7 @@ class FakeBridge:
     def op_get(self, uuid):
         d = json.loads(json.dumps(self._doc(uuid)))
         sid = d["_id"]
-        for kind, key in (("Wall", "walls"), ("Drawing", "drawings"), ("Tile", "tiles"), ("Token", "tokens")):
+        for kind, key in (("Wall", "walls"), ("Drawing", "drawings"), ("Tile", "tiles"), ("Token", "tokens"), ("AmbientLight", "lights")):
             if uuid.startswith("Scene"):
                 d[key] = list(self.emb.get(sid, {}).get(kind, {}).values())
         return d
@@ -511,6 +511,24 @@ class Scene3DTests(unittest.TestCase):
         r, _ = self.run_cmd(self.br, "push-lights", "--place", self.PLACE, "--scene-uuid", "Scene.s0", "--placements", self.pl, "--lights-placements", self.pl, "--prune-lights")
         self.assertTrue(r["ok"], r)
         self.assertEqual(["mine"], list(self.br.emb["s0"]["AmbientLight"]))      # only pipeline-flagged lights were removed
+
+    def test_push_lights_type_subset_never_prunes_other_types(self):
+        """--layers lamp must not delete the scene's hearth/window lights (a scene-wide prune once would have); only stale lamps go."""
+        self.br.emb.setdefault("s0", {}).setdefault("AmbientLight", {})
+        seed = {"h1": ("light:p:h1", "hearth"), "w1": ("light:p:w1", "window"), "old": ("light:p:lamp_old", "lamp"), "mine": (None, None)}
+        for i, (pid, typ) in seed.items():
+            self.br.emb["s0"]["AmbientLight"][i] = {"_id": i, "flags": {"varrenmoor": {"pipelineId": pid, "type": typ}} if pid else {}}
+        lp = os.path.join(self.tmp, "lamps.json")
+        with open(lp, "w", encoding="utf-8") as f:
+            json.dump({"place": "p", "frame": {"px_per_ft": 10, "z_origin_ft": 0.0}, "files": [], "lights": [
+                {"id": "lamp_new", "type": "lamp", "point": [1, 2], "z_abs_ft": 9},
+                {"id": "h_other", "type": "hearth", "point": [3, 4], "z_abs_ft": 2}]}, f)
+        r, _ = self.run_cmd(self.br, "push-lights", "--place", self.PLACE, "--scene-uuid", "Scene.s0", "--placements", lp, "--lights-placements", lp, "--layers", "lamp")
+        self.assertTrue(r["ok"], r)
+        self.assertEqual(["lamp"], r["light_ops"]["scoped_to_types"])
+        self.assertEqual(1, r["light_ops"]["deleted"])
+        pids = sorted(str(FakeBridge._pid(d)) for d in self.br.emb["s0"]["AmbientLight"].values())
+        self.assertEqual(["None", "light:p:h1", "light:p:lamp_new", "light:p:w1"], pids)     # other types and unflagged kept, stale lamp gone, hearth not pushed
 
     def test_bad_lighting_name_fails_before_writes(self):
         r, _ = self.go("--set-name", "t", "--lighting", "no_such_place_zz")

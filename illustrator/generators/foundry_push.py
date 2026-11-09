@@ -1069,8 +1069,23 @@ def cmd_push_lights(br, a):
     prune = bool(getattr(a, "prune_lights", False)) or (getattr(a, "light_budget_info", None) or {}).get("mode") == "global"      # global mode = no point lights: clearing the pipeline lights is the point
     if not items and not prune:
         raise PushError("the plan has 0 lights, nothing written and the scene's existing lights are kept; " + "; ".join(warns) + "; use --prune-lights to really clear the pipeline lights")
+    types = {x for x in (a.layers or "").split(",") if x}
     if a.dry_run:
-        return {"ok": True, "lights": len(items), "sample": items[:1], "warnings": warns}
+        return {"ok": True, "lights": len(items), "sample": items[:1], "warnings": warns, **({"scoped_to_types": sorted(types)} if types else {})}
+    if types:
+        # --layers = a subset of light types (e.g. lamp): a scene-wide prune would delete every pipeline light of the OTHER types (hearth, window, ...).
+        # Upsert without prune, then delete only stale pipeline lights whose type is one of the pushed types.
+        r = br.call("upsert_many", documentName="AmbientLight", parentUuid=a.scene_uuid, items=items, prefix="light:", prune=False)
+        keep = {it["id"] for it in items}
+        sc = br.call("get", uuid=a.scene_uuid)
+        stale = [lt for lt in sc.get("lights", []) or []
+                 if str(((lt.get("flags") or {}).get(FLAG) or {}).get("pipelineId", "")).startswith("light:")
+                 and ((lt.get("flags") or {}).get(FLAG) or {}).get("pipelineId") not in keep
+                 and ((lt.get("flags") or {}).get(FLAG) or {}).get("type") in types]
+        for lt in stale:
+            br.call("delete", uuid=f"{a.scene_uuid}.AmbientLight.{lt['_id']}")
+        r = {**(r or {}), "deleted": len(stale), "scoped_to_types": sorted(types)}
+        return {"ok": True, "scene_uuid": a.scene_uuid, "light_ops": r, "warnings": warns}
     # the bridge only ever deletes documents flagged by our pipeline (pipelineId prefix light:); never prune on an empty plan unless explicit
     r = br.call("upsert_many", documentName="AmbientLight", parentUuid=a.scene_uuid, items=items, prefix="light:", prune=bool(items) or prune)
     return {"ok": True, "scene_uuid": a.scene_uuid, "light_ops": r, "warnings": warns}
