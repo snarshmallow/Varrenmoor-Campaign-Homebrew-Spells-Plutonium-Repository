@@ -744,7 +744,10 @@
     }
     fillSelects(); renderPhases(); paintInputs();
   }
+  var placeEverLoaded = false;
   async function switchPlace(place) {
+    var keepTab = placeEverLoaded && state && state.ui && state.ui.tab;      // switching place must not move the user to another tab (the new place's saved tab is only used at startup)
+    placeEverLoaded = true;
     if (state) saveNow();
     d = VB.dirs(root, place); state = loadState(place);
     var sel = $("place");
@@ -753,7 +756,7 @@
       if (!Array.prototype.some.call(el.options, function (o) { return o.value === place; }) && (id === "place" || el.options.length)) { var o = document.createElement("option"); o.value = place; o.textContent = place; el.appendChild(o); }
     });
     sel.value = place; if ($("fPlace") && $("fPlace").options.length) $("fPlace").value = place;
-    loadFiles(); fillPresetList(); fillSelects(); paintInputs(); renderPhases(); refreshAll(); showTab(state.ui.tab || "scale"); refreshPatches(); showCrossings();
+    loadFiles(); fillPresetList(); fillSelects(); paintInputs(); renderPhases(); refreshAll(); showTab(keepTab || state.ui.tab || "scale"); refreshPatches(); showCrossings();
   }
 
   // ------------------------------------------------------------ legacy job-file poller (illustrator/jobs/*.json)
