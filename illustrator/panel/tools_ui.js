@@ -31,6 +31,11 @@
   }
   var A = {
     tl_scene_audit: function () { return run(function () { return VB.jobToolsSceneAudit(S(), ctx.dirs()); }); },
+    tl_rescale_dry: function () { return run(function () { return VB.jobToolsRescale(S(), false); }); },
+    tl_rescale: function () {
+      return ask(["Rescale the picked scene to a playable grid?", sceneLabel(), "Every tile, light, token, sound, note and drawing keeps its position in feet; the scene becomes the whole place at the chosen px/ft with 5 ft squares.",
+        "Pipeline walls are deleted (3D Canvas tile collision and sight replace them) unless unticked; the 2D background is cleared. Run the dry run first."]).then(function (ok) { if (ok) run(function () { return VB.jobToolsRescale(S(), true); }); });
+    },
     tl_bga: function () { return run(function () { return VB.jobToolsBuildingGround(S(), ctx.dirs()); }); },
     tl_rha: function () { return run(function () { return VB.jobToolsRoadHeight(S(), ctx.dirs()); }); },
     tl_terrain_check: function () { return run(function () { return VB.jobToolsTerrainCheck(S()); }); },

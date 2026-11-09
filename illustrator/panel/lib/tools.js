@@ -23,6 +23,7 @@
       imp: { no_image: false, force: false, scene_json: "" },
       tok: { hidden: false, key: "", px: "", portrait: "", token: "" },
       pad: { tex_px: "", no_level: false },
+      rescale: { px_per_ft: 10, grid_ft: 5, drop_walls: true, keep_background: false },
       objdry: false,
       out: { label: "", at: "", ok: true, text: "" }
     };
@@ -154,6 +155,18 @@
   VB.jobToolsSceneAudit = function (st, d) {
     var u = sceneOf(st);
     return { kind: "tools_scene_audit", label: "Audit scene tiles (read-only)", params: {}, steps: [py(VB.FOUNDRY_PY, ["scene-audit", "--scene-uuid", u, "--placements", VB.packDir(d) + "/placements.json"], "scene audit"), reportStep("Scene tile audit")] };
+  };
+  // playable scale for a pipeline scene: whole place at N px/ft with a 5 ft grid, everything kept in feet (foundry_push.py rescale-scene); dry run unless apply
+  VB.rescaleArgs = function (st, u, apply) {
+    var x = T(st).rescale || {}, a = ["rescale-scene", "--place", st.place, "--scene-uuid", u, "--px-per-ft", String(num(x.px_per_ft, 10)), "--grid-ft", String(num(x.grid_ft, 5))];
+    if (x.drop_walls !== false) a.push("--drop-walls");
+    if (x.keep_background) a.push("--keep-background");
+    if (apply) a.push("--apply");
+    return a;
+  };
+  VB.jobToolsRescale = function (st, apply) {
+    var u = sceneOf(st);
+    return { kind: "tools_rescale", label: apply ? "Rescale scene to a playable grid" : "Rescale scene (dry run)", params: {}, steps: [py(VB.FOUNDRY_PY, VB.rescaleArgs(st, u, apply), "foundry_push rescale-scene"), reportStep("Rescale scene")] };
   };
   VB.jobToolsFoundryRead = function (st, cmd) {   // places / export-info / list: read-only, shown in the viewer
     var a = [cmd, "--place", st.place]; if (cmd === "export-info") a.push.apply(a, VB.viewFlags ? VB.viewFlags(st) : []);

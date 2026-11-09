@@ -1290,6 +1290,18 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
     <button data-act="tl_pack_info" title="worldpack.py info: summary of the exported pack">World pack summary</button>
     <button data-act="tl_split_info" title="worldpack_split.py info: summary of the split and merged files">Split pack summary</button>
   </div>
+  <h4>Scene scale (playable grid)</h4>
+  <div class="note">A 3D scene pushed into a 2D overview scene (grid 100 ft) makes every token one 100 ft square: 100 ft wide and 89 ft tall in 3D Canvas. This moves the picked pipeline scene to the whole place at the chosen px per foot with 5 ft squares (10 px/ft = 50 px squares: a town stays zoomable; 20 px/ft = 100 px squares for small scenes). Positions are kept in feet. Uses the Tools settings tools.rescale (px_per_ft, grid_ft, drop_walls, keep_background).</div>
+  <div class="btns">
+    <label>Px per foot <input type="number" data-s="tools.rescale.px_per_ft" min="4" step="any" title="--px-per-ft (10 = 50 px squares; Foundry needs at least 20 px per square)"></label>
+    <label>Feet per square <input type="number" data-s="tools.rescale.grid_ft" min="1" step="any" title="--grid-ft (5 = battle grid)"></label>
+    <label class="chk"><input type="checkbox" data-s="tools.rescale.drop_walls" title="--drop-walls"> Delete pipeline walls</label>
+    <label class="chk"><input type="checkbox" data-s="tools.rescale.keep_background" title="--keep-background"> Keep the 2D background</label>
+  </div>
+  <div class="btns">
+    <button data-act="tl_rescale_dry" title="foundry_push.py rescale-scene (dry run): before / after size, grid and what moves">Rescale scene (dry run)</button>
+    <button data-act="tl_rescale" title="foundry_push.py rescale-scene --apply: writes to Foundry (asks first)">Rescale scene to 5 ft grid</button>
+  </div>
   <div class="grid">
     <label>Building ground: show worst N <input type="number" data-s="tools.audits.bga_top" min="1" step="1" title="building_ground_audit.py --top"></label>
     <label class="chk"><input type="checkbox" data-s="tools.audits.bga_nomesh" title="--no-mesh: skip the built-mesh check (faster)"> Skip mesh check</label>

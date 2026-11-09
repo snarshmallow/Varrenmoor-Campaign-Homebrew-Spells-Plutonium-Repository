@@ -175,6 +175,12 @@
     },
     "write-sign-models": {
      "cli_only": "Writes the sign glTF files into presets/signs/models for inspection and tests; the macro install always rebuilds them itself, so nothing in the panel needs it."
+    },
+    "rescale-scene": {
+     "controls": [
+      "act:tl_rescale",
+      "act:tl_rescale_dry"
+     ]
     }
    },
    "flags": {
@@ -245,6 +251,11 @@
       "s:foundry.drawWater"
      ]
     },
+    "--drop-walls": {
+     "controls": [
+      "s:tools.rescale.drop_walls"
+     ]
+    },
     "--dry-run": {
      "controls": [
       "act:wp_push_dry",
@@ -276,6 +287,11 @@
     },
     "--grid": {
      "cli_only": "the view flags come from the Scale tab and the View box; the panel always passes them"
+    },
+    "--grid-ft": {
+     "controls": [
+      "s:tools.rescale.grid_ft"
+     ]
     },
     "--grid-major": {
      "cli_only": "the view flags come from the Scale tab and the View box; the panel always passes them"
@@ -312,6 +328,11 @@
     "--item-uuid": {
      "controls": [
       "id:fItem"
+     ]
+    },
+    "--keep-background": {
+     "controls": [
+      "s:tools.rescale.keep_background"
      ]
     },
     "--key": {
@@ -497,6 +518,11 @@
     "--scene-name": {
      "controls": [
       "s:foundry.sceneName"
+     ]
+    },
+    "--scene-padding": {
+     "controls": [
+      "act:tl_rescale"
      ]
     },
     "--scene-uuid": {
