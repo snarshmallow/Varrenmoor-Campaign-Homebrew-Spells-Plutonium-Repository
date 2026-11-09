@@ -153,6 +153,19 @@ def set_roof_mode(root, mode):
             _jdump(mp, m)
 
 
+def set_interior_style(root, style):
+    """Record the scene's home interior style (auto | plain | rustic_cottage | ..., interior_styles.py) in manifest.foundry.interior_style. Applied at mesh time (split/merge)."""
+    import interior_styles as ist
+    style = ist.check(style)
+    mp = os.path.join(root, "manifest.json")
+    if os.path.exists(mp):
+        m = _jload(mp)
+        if m.setdefault("foundry", {}).get("interior_style", "auto") != style:
+            m["foundry"]["interior_style"] = style
+            _jdump(mp, m)
+    return style
+
+
 def refresh_manifest_files(root):
     """Re-hash manifest.files after something rewrote files inside the pack (worldpack_split): listed files that exist are re-hashed,
     listed files that vanished are dropped, and placements.json + models/**/*.glb are added. Returns (rehashed, added, dropped)."""
@@ -757,6 +770,8 @@ def export_world(place, out_dir=None, lod=(1, 4), world_root=None, terrain_sourc
                                                  "door_ids": [d.get("id") for d in b.get("doors", [])]},
                   "rooms": b.get("rooms", []), "doors": b.get("doors", []),
                   "derived": ["wall_height_ft", "height_ft", "roof", "wall", "skirt_depth_ft", "obb"]})
+        if b.get("interior_style"):
+            e["interior_style"] = b["interior_style"]            # per-building interior style override (interior_styles.py); absent = scene setting / kind default
         if b.get("style"):
             e["style"] = b["style"]                              # building style preset id or "auto" (building_styles.py)
         dr = [d for d in model.get("details", {}).get("doors", []) if d.get("building") == b["id"]]
@@ -1123,6 +1138,9 @@ def main(argv=None):
     e.add_argument("--no-textures", action="store_true", help="reference repo textures instead of copying them")
     e.add_argument("--roof-mode", dest="roof_mode", choices=["none", "per_building", "per_scene"], help="record the roof mode in the manifest (split/merge/push-models then use it): none = roofs merged "
                    "into each building (default), per_building = one toggle-able roof tile per building, per_scene = one merged roof tile (see WORLD_PACK.md)")
+    e.add_argument("--interior-style", dest="interior_style", choices=["auto", "plain", "rustic_cottage", "farmhouse", "burgher_townhouse", "poor_hovel"], help="record the home interior style "
+                   "in the manifest (split/merge use it): auto = by building kind (houses rustic_cottage, farmhouse, townhouses burgher_townhouse, tenements poor_hovel, other kinds plain); "
+                   "a building JSON key interior_style overrides it per building")
     v = sub.add_parser("validate", help="schema + integrity check")
     v.add_argument("--place", default="bridgehollow")
     v.add_argument("--path")
@@ -1137,6 +1155,8 @@ def main(argv=None):
         out = a.out or os.path.join(a.world_root or os.path.join(REPO, "world"), a.place, "export")
         if a.roof_mode:
             set_roof_mode(out, a.roof_mode)
+        if a.interior_style:
+            set_interior_style(out, a.interior_style)
         errs = validate_pack(out)
         print("validate:", "OK" if not errs else f"{len(errs)} problem(s)")
         for x in errs[:20]:

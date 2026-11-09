@@ -107,6 +107,10 @@ def build_building_detailed(cx, e):
     wt = pbr_tile(wmat, e["wall"]["surface"]["tile_ft"])
     D, N, Q = wall_geometry(P)
     storeys = max(1, int(e.get("floors", 1)))
+    inner_mat = "mat_plaster"                                # inside skin of the shell: the interior style's wall material (interior_styles.py) when the building has a layout
+    if e.get("layout"):
+        import interior_styles as ist
+        inner_mat = ist.get(ist.resolve_name(e, ist.scene_style(cx.pack)))["mats"]["wall"]
     edge_holes = plan_holes(P, door_hits(P, e.get("openings"), cx), storeys, zf)
     if e.get("layout"):                                      # interior layout owns the window positions (worldpack_interiors)
         import worldpack_interiors as wi
@@ -159,7 +163,7 @@ def build_building_detailed(cx, e):
         for h in holes:
             cols.setdefault((round(h["u0"], 6), round(h["u1"], 6)), []).append(h)
         keys = sorted(cols)
-        for v, lo_u, hi_u, zb, mat in ((0.0, 0.0, L, z0, wmat), (t, ua, ub, zf, "mat_plaster")):
+        for v, lo_u, hi_u, zb, mat in ((0.0, 0.0, L, z0, wmat), (t, ua, ub, zf, inner_mat)):
             cur = lo_u
             for (u0, u1) in keys:
                 rect(i, mat, v, cur, u0, zb, zt)

@@ -65,6 +65,16 @@ CATALOG = {
     "mat_tree_bark": dict(rough=0.95),
     "mat_glass": dict(rough=0.04, metal=0.25, alpha=0.32, color="#a9cbd9"),
     "mat_iron": dict(rough=0.5, metal=0.85, color="#3a3a3d"),
+    # interior styles (worldpack_interiors.py, presets/interiors/presets.json); own ids so a pack never depends on the exterior wall materials being present
+    "mat_int_plank": dict(gen="rplank", tile=6.0, rough=0.85, n=2.0),
+    "mat_int_flag": dict(src="stone_slab", tile=4.0, rough=0.82, n=3.0, mr=True),
+    "mat_int_earth": dict(src="packed_earth", tile=6.0, rough=0.97, n=1.2),
+    "mat_int_lime": dict(gen="lime", tile=6.0, rough=0.95, n=1.2),
+    "mat_int_frame": dict(gen="timberframe", tile=10.0, rough=0.9, n=2.4),
+    "mat_int_stone": dict(gen="rubble", tile=7.0, rough=0.85, n=4.0, mr=True),
+    "mat_int_boards": dict(gen="batten", tile=6.0, rough=0.88, n=2.6),
+    "mat_int_slab": dict(src="stone_slab", tile=4.0, rough=0.78, n=3.0, mr=True),
+    "mat_int_rug": dict(gen="rug", tile=6.0, rough=0.98, n=1.6),
 }
 GENERIC = dict(tile=8.0, rough=0.9, n=1.5)
 WALL_MATS = ("mat_plank", "mat_plaster", "mat_wall_frame", "mat_wall_stone", "mat_wall_batten")
@@ -370,7 +380,42 @@ def gen_trim(n=256):
     return col, 0.6 * streak + 0.4 * grain
 
 
-GENERATORS = {"rubble": gen_rubble, "plaster": gen_plaster, "timberframe": gen_timberframe, "batten": gen_batten, "door": gen_door, "trim": gen_trim}
+def gen_rplank(n=256):
+    """Wide worn dark floor / ceiling boards (5 across a 6 ft repeat)."""
+    cols = [hexrgb(c) for c in ("#6a5236", "#5c452c", "#745a3b", "#4f3b26")]
+    alb, h = _planks_vertical(n, 71, 5, cols, 4)
+    wear = fbm(n, 72, 2.4, 1)
+    alb = alb * (1 - 0.18 * np.clip(wear - 0.55, 0, 1)[..., None] * 2)
+    return alb, blur(h, 0.5)
+
+
+def gen_lime(n=256):
+    """Rough lime wash: warm off-white, brush patches and a few grey-brown stains."""
+    base = hexrgb("#e4dcc7")
+    low, mid, fine = fbm(n, 81, 3.0, 1), fbm(n, 82, 2.0, 4), fbm(n, 83, 1.0, 16)
+    col = base * (0.92 + 0.12 * low[..., None] + 0.05 * (mid[..., None] - 0.5))
+    col = lerp(col, hexrgb("#a8987a"), 0.3 * np.clip(low - 0.62, 0, 1) * 2)
+    return col * (0.97 + 0.06 * fine[..., None]), 0.55 * mid + 0.45 * fine
+
+
+def gen_rug(n=256):
+    """Rag rug: woven horizontal bands of faded red, ochre, cream and brown; fibre noise. Tileable in both directions."""
+    rng = np.random.RandomState(91)
+    cols = [hexrgb(c) for c in ("#8a3b3b", "#b58a3c", "#d6ccb0", "#5a4330", "#6d4f6a")]
+    alb = np.zeros((n, n, 3))
+    y = 0
+    while y < n:
+        hh = int(rng.randint(10, 34))
+        hh = min(hh, n - y)
+        alb[y:y + hh] = cols[int(rng.randint(len(cols)))] * rng.uniform(0.85, 1.1)
+        y += hh
+    fibre = fbm(n, 92, 1.0, 24)
+    weave = 0.5 + 0.5 * np.sin(np.arange(n)[None, :] * 2 * np.pi / 4.0)
+    alb = alb * (0.86 + 0.2 * fibre[..., None]) * (0.94 + 0.06 * weave[..., None])
+    return alb, 0.6 * fibre + 0.4 * weave * np.ones((n, 1))
+
+
+GENERATORS = {"rplank": gen_rplank, "lime": gen_lime, "rug": gen_rug, "rubble": gen_rubble, "plaster": gen_plaster, "timberframe": gen_timberframe, "batten": gen_batten, "door": gen_door, "trim": gen_trim}
 
 
 # ------------------------------------------------------------------ conditioning (seams, macro blotches, flat normals)

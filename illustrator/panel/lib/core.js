@@ -104,7 +104,7 @@
       },
       foundry: { target: "new", sceneName: "", sceneUuid: "", dpi: 150, ftPerGrid: null, walls: true, drawRoads: false, drawWater: false,
         tileLayers: "Labels - Districts,Labels - Streets,Labels - Buildings", actorUuid: "", itemUuid: "", spec: "", image: "", at: "", itemName: "", itemDesc: "",
-        models: { split: "", preset: "layer", layers: "", lod: 0, compress: "none", roofMode: "none" }, sizeFt: 5, autoPush: false, filter: { actors: "", items: "" }, cache: { fetched: null, lists: {} }, last: null },
+        models: { split: "", preset: "layer", layers: "", lod: 0, compress: "none", roofMode: "none", interiorStyle: "auto" }, sizeFt: 5, autoPush: false, filter: { actors: "", items: "" }, cache: { fetched: null, lists: {} }, last: null },
       roads: { smooth: 0.5, max_grade: 14, skirt: true, cutfill: false },   // ROAD GRADING (generators/road_grade.py), passed to worldpack_split.py split
       stale: { contours: false, shading: false, town: false },
       ui: { tab: "scale" }
@@ -679,15 +679,19 @@
   // Roof mode (generators/worldpack_roofs.py): none = roofs merged into each building; per_building = one hideable roof tile per building; per_scene = one roof tile for the whole scene.
   VB.ROOF_MODES = ["none", "per_building", "per_scene"];
   VB.roofMode = function (st) { var m = st && st.foundry && st.foundry.models && st.foundry.models.roofMode; return VB.ROOF_MODES.indexOf(m) >= 0 ? m : "none"; };
+  // Home interior style (generators/interior_styles.py, presets/interiors/presets.json): auto = by building kind (houses rustic_cottage, farmhouse, townhouses burgher_townhouse,
+  // tenements poor_hovel, everything else plain); a building JSON key interior_style overrides it per building.
+  VB.INTERIOR_STYLES = ["auto", "plain", "rustic_cottage", "farmhouse", "burgher_townhouse", "poor_hovel"];
+  VB.interiorStyle = function (st) { var m = st && st.foundry && st.foundry.models && st.foundry.models.interiorStyle; return VB.INTERIOR_STYLES.indexOf(m) >= 0 ? m : "auto"; };
   VB.jobWorldPack = function (st, d, out) {
-    return { kind: "worldpack_export", label: "Export world pack (3D)", params: { out: out || null, roof_mode: VB.roofMode(st) },
-      steps: [py(GEN + "worldpack.py", ["export", "--place", st.place].concat(out ? ["--out", out] : []).concat(["--roof-mode", VB.roofMode(st)]), "world pack export")] };
+    return { kind: "worldpack_export", label: "Export world pack (3D)", params: { out: out || null, roof_mode: VB.roofMode(st), interior_style: VB.interiorStyle(st) },
+      steps: [py(GEN + "worldpack.py", ["export", "--place", st.place].concat(out ? ["--out", out] : []).concat(["--roof-mode", VB.roofMode(st), "--interior-style", VB.interiorStyle(st)]), "world pack export")] };
   };
   VB.jobWorldSplit = function (st, d, pack) {
-    var m = st.foundry.models, a = ["split", "--place", st.place, "--pack", pack || VB.packDir(d), "--roof-mode", VB.roofMode(st)]; if (m.split) a.push("--split", m.split);
+    var m = st.foundry.models, a = ["split", "--place", st.place, "--pack", pack || VB.packDir(d), "--roof-mode", VB.roofMode(st), "--interior-style", VB.interiorStyle(st)]; if (m.split) a.push("--split", m.split);
     var rd = st.roads || {}; a.push("--road-smooth", String(isFinite(+rd.smooth) ? Math.min(1, Math.max(0, +rd.smooth)) : 0.5), "--road-max-grade", String(+rd.max_grade > 0 ? Math.min(60, Math.max(1, +rd.max_grade)) : 14));
     if (rd.skirt === false) a.push("--no-road-skirt"); if (rd.cutfill) a.push("--road-cutfill");
-    return { kind: "worldpack_split", label: "Export split models", params: { split: m.split, roads: rd, roof_mode: VB.roofMode(st) }, steps: [py(GEN + "worldpack_split.py", a, "split models")] };
+    return { kind: "worldpack_split", label: "Export split models", params: { split: m.split, roads: rd, roof_mode: VB.roofMode(st), interior_style: VB.interiorStyle(st) }, steps: [py(GEN + "worldpack_split.py", a, "split models")] };
   };
   VB.jobWorldMerge = function (st, d, pack) {
     var m = st.foundry.models;

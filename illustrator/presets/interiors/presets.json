@@ -1,0 +1,18 @@
+{
+  "_doc": "Home interior style presets (generators/worldpack_interiors.py, interior_styles.py). 'plain' = the original look. Per-building override: building JSON key interior_style; per-scene: worldpack.py export --interior-style (manifest foundry.interior_style); 'auto' = kind_map.",
+  "default_style": "auto",
+  "kind_map": {"house": "rustic_cottage", "cottage": "rustic_cottage", "default": "rustic_cottage", "farmhouse": "farmhouse", "farm": "farmhouse",
+               "manor": "burgher_townhouse", "townhouse": "burgher_townhouse", "tenement": "poor_hovel", "hovel": "poor_hovel", "shack": "poor_hovel"},
+  "styles": {
+    "plain": {"label": "Plain (original look)", "mats": {"floor": "mat_interior_floor", "wall": "mat_plaster", "ceiling": "mat_ceiling", "beam": "mat_joist", "wood": null, "stone": "mat_hearth_stone", "fabric": "mat_fabric"},
+              "beams": {"spacing_ft": 3.0, "w_ft": 0.4, "h_ft": 0.5}, "posts": false, "mantel": false, "rug": false, "stools": 0, "hanging": 0, "goods": false, "bed": "frame", "chest_bands": false, "drop_types": [], "thin": 0},
+    "rustic_cottage": {"label": "Rustic cottage", "mats": {"floor": "mat_int_plank", "wall": "mat_int_frame", "ceiling": "mat_int_plank", "beam": "mat_joist", "wood": "mat_furn_wood", "stone": "mat_int_stone", "fabric": "mat_fabric"},
+              "beams": {"spacing_ft": 4.0, "w_ft": 0.6, "h_ft": 0.85}, "posts": true, "mantel": true, "rug": true, "stools": 2, "hanging": 1, "goods": true, "bed": "straw", "chest_bands": true, "drop_types": [], "thin": 0},
+    "farmhouse": {"label": "Farmhouse", "mats": {"floor": "mat_int_flag", "wall": "mat_int_lime", "ceiling": "mat_int_plank", "beam": "mat_joist", "wood": "mat_furn_wood", "stone": "mat_int_stone", "fabric": "mat_fabric"},
+              "beams": {"spacing_ft": 3.5, "w_ft": 0.7, "h_ft": 0.9}, "posts": true, "mantel": true, "rug": true, "stools": 2, "hanging": 2, "goods": true, "bed": "straw", "chest_bands": true, "drop_types": [], "thin": 0},
+    "burgher_townhouse": {"label": "Burgher townhouse", "mats": {"floor": "mat_int_plank", "wall": "mat_int_lime", "ceiling": "mat_int_lime", "beam": "mat_joist", "wood": "mat_furn_wood", "stone": "mat_int_slab", "fabric": "mat_fabric"},
+              "beams": {"spacing_ft": 3.0, "w_ft": 0.45, "h_ft": 0.6}, "posts": false, "mantel": true, "rug": true, "stools": 0, "hanging": 0, "goods": true, "bed": "canopy", "chest_bands": true, "drop_types": [], "thin": 0},
+    "poor_hovel": {"label": "Poor hovel", "mats": {"floor": "mat_int_earth", "wall": "mat_int_boards", "ceiling": "mat_int_plank", "beam": "mat_joist", "wood": "mat_furn_wood", "stone": "mat_int_stone", "fabric": "mat_fabric"},
+              "beams": {"spacing_ft": 5.0, "w_ft": 0.45, "h_ft": 0.55}, "posts": false, "mantel": false, "rug": false, "stools": 1, "hanging": 0, "goods": false, "bed": "pallet", "chest_bands": false, "straw_patches": 3, "drop_types": ["shelf", "desk", "counter", "workbench"], "thin": 2}
+  }
+}

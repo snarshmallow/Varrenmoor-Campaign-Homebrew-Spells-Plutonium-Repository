@@ -381,6 +381,9 @@ This is the busiest tab. Top to bottom:
    | Roads (3D) Max grade (deg) | Steepest allowed road slope; steeper ground gets a warning and the road is raised clear | 14 |
    | Skirt | Apron down to the ground under raised roads | On |
    | Cut/fill terrain | Reshapes the ground under and beside roads | Off (it changes the terrain mesh; turn on only if roads float badly) |
+   | Home interior style | Furnishing and finish of the generated home interiors (needs buildings with doors): Auto (by kind: houses rustic_cottage, farmhouse, townhouses burgher_townhouse, tenements poor_hovel, inns/shops/barns/civic stay plain), Rustic cottage (plank floor, exposed beams and timber posts, timber-framed plaster walls, stone hearth with mantel, trestle table with stools, straw bed, rag rug, hanging herbs and pots), Farmhouse (flagstone floor, lime-washed walls), Burgher townhouse (plastered, canopy bed), Poor hovel (earth floor with straw, rough boards, sparse), Plain (the original look) | Auto |
+
+   Home interior style is recorded by Export world pack (`--interior-style`) and Export split models; changing it needs those two again, then Push models. One building can override the scene: add `"interior_style": "poor_hovel"` (or any style name) to its JSON in `world/<place>/buildings/`, then export again. A styled home costs about 800-1000 more triangles per storey than plain (merged geometry, existing material system, three small new procedural textures). Not yet checked live in Foundry's 3D Canvas.
 
    Buttons in order: **Export world pack (3D)**, **Export split models**, **Merge/compress**, **Push models**, **Publish (merge + push)**. Roof buttons: **Install roof macros** (once per world: creates the macros "Roofs: toggle all" and "Roofs: toggle selected / at token / pick"; drag them to the Foundry hotbar, for example slots 8 and 9), **Hide roofs** and **Show roofs** (every roof tile of the picked existing scene, no macro needed).
 

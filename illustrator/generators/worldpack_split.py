@@ -431,6 +431,8 @@ def main(argv=None):
             s.add_argument("--textures", choices=["external", "embed", "none"], default="external")
             s.add_argument("--roof-mode", dest="roof_mode", choices=["none", "per_building", "per_scene"], help="roofs: none = merged into each building (default), per_building = one toggle-able roof tile per building, "
                            "per_scene = one merged roof tile for the whole scene (worldpack_roofs.py); reexport keeps the mode of the existing pack unless given")
+            s.add_argument("--interior-style", dest="interior_style", choices=["auto", "plain", "rustic_cottage", "farmhouse", "burgher_townhouse", "poor_hovel"],
+                           help="home interior style for buildings with a generated interior (interior_styles.py); recorded in the manifest. Omitted = the manifest value (export --interior-style), else auto = by building kind")
             s.add_argument("--step", type=int, default=1, help="terrain mesh step in heightmap cells")
             s.add_argument("--no-carve", action="store_true")
             s.add_argument("--no-conform", action="store_true")
@@ -460,9 +462,13 @@ def main(argv=None):
     a = ap.parse_args(argv)
     pack = a.pack or os.path.join(wp.REPO, "world", a.place, "export")
     if a.cmd == "split":
+        if a.interior_style:
+            wp.set_interior_style(pack, a.interior_style)
         rm = a.roof_mode or wp.load_pack(pack).manifest.get("foundry", {}).get("roof_mode") or "none"       # the mode recorded by `worldpack.py export --roof-mode`
         split_export(pack, split=parse_split(a.split, a.split_preset, rm), roof_mode=rm, textures=a.textures, step=a.step, carve=not a.no_carve, conform=not a.no_conform, road_grade=_rg(a))
     elif a.cmd == "reexport":
+        if a.interior_style:
+            wp.set_interior_style(pack, a.interior_style)
         split_export(pack, split=wp._jload(os.path.join(pack, "placements.json"))["split"] if os.path.exists(os.path.join(pack, "placements.json")) else None,
                      textures=a.textures, step=a.step, carve=not a.no_carve, conform=not a.no_conform, only=a.id.split(","), road_grade=_rg(a), roof_mode=a.roof_mode)
     elif a.cmd in ("merge", "publish"):

@@ -1,0 +1,146 @@
+{
+ "plain": {
+  "total_tris": 2922,
+  "interior_tris": 1362,
+  "nodes": {
+   "bld_sample": 704,
+   "bld_sample_shell_f1": 674,
+   "bld_sample_int_f0": 214,
+   "bld_sample_int_f1": 272,
+   "bld_sample_roof": 182,
+   "bld_sample_props_f0": 492,
+   "bld_sample_props_f1": 384
+  },
+  "materials": {
+   "mat_trim": 926,
+   "mat_furn_wood": 752,
+   "mat_plaster": 442,
+   "mat_joist": 420,
+   "mat_plank": 160,
+   "mat_iron": 84,
+   "mat_ceiling": 57,
+   "mat_fabric": 30,
+   "mat_glass": 28,
+   "mat_interior_floor": 19,
+   "mat_shingle": 4
+  }
+ },
+ "rustic_cottage": {
+  "total_tris": 3864,
+  "interior_tris": 2344,
+  "nodes": {
+   "bld_sample": 704,
+   "bld_sample_shell_f1": 674,
+   "bld_sample_int_f0": 394,
+   "bld_sample_int_f1": 412,
+   "bld_sample_roof": 142,
+   "bld_sample_props_f0": 854,
+   "bld_sample_props_f1": 684
+  },
+  "materials": {
+   "mat_trim": 926,
+   "mat_furn_wood": 784,
+   "mat_joist": 700,
+   "mat_pottery": 360,
+   "mat_int_frame": 324,
+   "mat_iron": 164,
+   "mat_plank": 160,
+   "mat_herb": 160,
+   "mat_plaster": 118,
+   "mat_int_plank": 46,
+   "mat_straw": 30,
+   "mat_fabric": 30,
+   "mat_linen": 30,
+   "mat_glass": 28,
+   "mat_shingle": 4
+  }
+ },
+ "farmhouse": {
+  "total_tris": 3864,
+  "interior_tris": 2344,
+  "nodes": {
+   "bld_sample": 704,
+   "bld_sample_shell_f1": 674,
+   "bld_sample_int_f0": 394,
+   "bld_sample_int_f1": 412,
+   "bld_sample_roof": 142,
+   "bld_sample_props_f0": 854,
+   "bld_sample_props_f1": 684
+  },
+  "materials": {
+   "mat_trim": 926,
+   "mat_furn_wood": 784,
+   "mat_joist": 700,
+   "mat_pottery": 360,
+   "mat_int_lime": 324,
+   "mat_iron": 164,
+   "mat_plank": 160,
+   "mat_herb": 160,
+   "mat_plaster": 118,
+   "mat_straw": 30,
+   "mat_fabric": 30,
+   "mat_linen": 30,
+   "mat_glass": 28,
+   "mat_int_plank": 27,
+   "mat_int_flag": 19,
+   "mat_shingle": 4
+  }
+ },
+ "burgher_townhouse": {
+  "total_tris": 3542,
+  "interior_tris": 1982,
+  "nodes": {
+   "bld_sample": 704,
+   "bld_sample_shell_f1": 674,
+   "bld_sample_int_f0": 214,
+   "bld_sample_int_f1": 272,
+   "bld_sample_roof": 182,
+   "bld_sample_props_f0": 816,
+   "bld_sample_props_f1": 680
+  },
+  "materials": {
+   "mat_trim": 926,
+   "mat_furn_wood": 776,
+   "mat_joist": 420,
+   "mat_int_lime": 351,
+   "mat_pottery": 340,
+   "mat_iron": 164,
+   "mat_plank": 160,
+   "mat_herb": 160,
+   "mat_plaster": 118,
+   "mat_linen": 46,
+   "mat_fabric": 30,
+   "mat_glass": 28,
+   "mat_int_plank": 19,
+   "mat_shingle": 4
+  }
+ },
+ "poor_hovel": {
+  "total_tris": 2244,
+  "interior_tris": 744,
+  "nodes": {
+   "bld_sample": 704,
+   "bld_sample_shell_f1": 674,
+   "bld_sample_int_f0": 214,
+   "bld_sample_int_f1": 212,
+   "bld_sample_roof": 122,
+   "bld_sample_props_f0": 208,
+   "bld_sample_props_f1": 110
+  },
+  "materials": {
+   "mat_trim": 926,
+   "mat_int_boards": 324,
+   "mat_joist": 290,
+   "mat_furn_wood": 212,
+   "mat_plank": 160,
+   "mat_plaster": 118,
+   "mat_straw": 78,
+   "mat_fabric": 30,
+   "mat_glass": 28,
+   "mat_iron": 28,
+   "mat_int_plank": 27,
+   "mat_int_earth": 19,
+   "mat_shingle": 4
+  }
+ }
+}
