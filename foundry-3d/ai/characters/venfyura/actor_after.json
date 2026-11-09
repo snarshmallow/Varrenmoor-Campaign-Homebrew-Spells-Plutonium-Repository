@@ -1,0 +1,3499 @@
+{
+  "name": "Venfyura, Witch of the Market of Transients",
+  "type": "npc",
+  "_id": "afVUI68BonsDF1a7",
+  "img": "systems/dnd5e/icons/svg/actors/npc.svg",
+  "system": {
+    "currency": {
+      "pp": 0,
+      "gp": 0,
+      "ep": 0,
+      "sp": 0,
+      "cp": 0
+    },
+    "abilities": {
+      "str": {
+        "value": 8,
+        "proficient": 0,
+        "max": null,
+        "bonuses": {
+          "check": "",
+          "save": ""
+        },
+        "check": {
+          "roll": {
+            "min": null,
+            "max": null,
+            "mode": 0
+          }
+        },
+        "save": {
+          "roll": {
+            "min": null,
+            "max": null,
+            "mode": 0
+          }
+        }
+      },
+      "dex": {
+        "value": 14,
+        "proficient": 0,
+        "max": null,
+        "bonuses": {
+          "check": "",
+          "save": ""
+        },
+        "check": {
+          "roll": {
+            "min": null,
+            "max": null,
+            "mode": 0
+          }
+        },
+        "save": {
+          "roll": {
+            "min": null,
+            "max": null,
+            "mode": 0
+          }
+        }
+      },
+      "con": {
+        "value": 10,
+        "proficient": 0,
+        "max": null,
+        "bonuses": {
+          "check": "",
+          "save": ""
+        },
+        "check": {
+          "roll": {
+            "min": null,
+            "max": null,
+            "mode": 0
+          }
+        },
+        "save": {
+          "roll": {
+            "min": null,
+            "max": null,
+            "mode": 0
+          }
+        }
+      },
+      "int": {
+        "value": 16,
+        "proficient": 1,
+        "max": null,
+        "bonuses": {
+          "check": "",
+          "save": ""
+        },
+        "check": {
+          "roll": {
+            "min": null,
+            "max": null,
+            "mode": 0
+          }
+        },
+        "save": {
+          "roll": {
+            "min": null,
+            "max": null,
+            "mode": 0
+          }
+        }
+      },
+      "wis": {
+        "value": 18,
+        "proficient": 1,
+        "max": null,
+        "bonuses": {
+          "check": "",
+          "save": ""
+        },
+        "check": {
+          "roll": {
+            "min": null,
+            "max": null,
+            "mode": 0
+          }
+        },
+        "save": {
+          "roll": {
+            "min": null,
+            "max": null,
+            "mode": 0
+          }
+        }
+      },
+      "cha": {
+        "value": 13,
+        "proficient": 0,
+        "max": null,
+        "bonuses": {
+          "check": "",
+          "save": ""
+        },
+        "check": {
+          "roll": {
+            "min": null,
+            "max": null,
+            "mode": 0
+          }
+        },
+        "save": {
+          "roll": {
+            "min": null,
+            "max": null,
+            "mode": 0
+          }
+        }
+      }
+    },
+    "bonuses": {
+      "mwak": {
+        "attack": "",
+        "damage": ""
+      },
+      "rwak": {
+        "attack": "",
+        "damage": ""
+      },
+      "msak": {
+        "attack": "",
+        "damage": ""
+      },
+      "rsak": {
+        "attack": "",
+        "damage": ""
+      },
+      "abilities": {
+        "check": "",
+        "save": "",
+        "skill": ""
+      },
+      "spell": {
+        "dc": ""
+      }
+    },
+    "skills": {
+      "acr": {
+        "ability": "dex",
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        },
+        "value": 0,
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        }
+      },
+      "ani": {
+        "ability": "wis",
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        },
+        "value": 0,
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        }
+      },
+      "arc": {
+        "ability": "int",
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        },
+        "value": 1,
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        }
+      },
+      "ath": {
+        "ability": "str",
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        },
+        "value": 0,
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        }
+      },
+      "dec": {
+        "ability": "cha",
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        },
+        "value": 0,
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        }
+      },
+      "his": {
+        "ability": "int",
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        },
+        "value": 1,
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        }
+      },
+      "ins": {
+        "ability": "wis",
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        },
+        "value": 2,
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        }
+      },
+      "itm": {
+        "ability": "cha",
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        },
+        "value": 0,
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        }
+      },
+      "inv": {
+        "ability": "int",
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        },
+        "value": 0,
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        }
+      },
+      "med": {
+        "ability": "wis",
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        },
+        "value": 1,
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        }
+      },
+      "nat": {
+        "ability": "int",
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        },
+        "value": 0,
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        }
+      },
+      "prc": {
+        "ability": "wis",
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        },
+        "value": 0,
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        }
+      },
+      "prf": {
+        "ability": "cha",
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        },
+        "value": 0,
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        }
+      },
+      "per": {
+        "ability": "cha",
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        },
+        "value": 1,
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        }
+      },
+      "rel": {
+        "ability": "int",
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        },
+        "value": 0,
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        }
+      },
+      "slt": {
+        "ability": "dex",
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        },
+        "value": 0,
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        }
+      },
+      "ste": {
+        "ability": "dex",
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        },
+        "value": 0,
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        }
+      },
+      "sur": {
+        "ability": "wis",
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        },
+        "value": 0,
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        }
+      }
+    },
+    "tools": {
+      "herb": {
+        "value": 1,
+        "ability": "wis",
+        "bonuses": {
+          "check": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "weaver": {
+        "value": 1,
+        "ability": "dex",
+        "bonuses": {
+          "check": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      }
+    },
+    "spells": {
+      "spell1": {
+        "value": 0,
+        "override": null
+      },
+      "spell2": {
+        "value": 0,
+        "override": null
+      },
+      "spell3": {
+        "value": 0,
+        "override": null
+      },
+      "spell4": {
+        "value": 0,
+        "override": null
+      },
+      "spell5": {
+        "value": 0,
+        "override": null
+      },
+      "spell6": {
+        "value": 0,
+        "override": null
+      },
+      "spell7": {
+        "value": 0,
+        "override": null
+      },
+      "spell8": {
+        "value": 0,
+        "override": null
+      },
+      "spell9": {
+        "value": 0,
+        "override": null
+      },
+      "pact": {
+        "value": 0,
+        "override": null
+      },
+      "spell0": {
+        "value": 0,
+        "override": null
+      }
+    },
+    "attributes": {
+      "ac": {
+        "calc": "natural",
+        "flat": 12,
+        "formula": ""
+      },
+      "init": {
+        "ability": "",
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        },
+        "bonus": "0"
+      },
+      "movement": {
+        "units": "ft",
+        "hover": false,
+        "ignoredDifficultTerrain": [],
+        "walk": "30",
+        "burrow": "0",
+        "climb": "0",
+        "fly": "0",
+        "swim": "0"
+      },
+      "attunement": {
+        "max": 3
+      },
+      "senses": {
+        "ranges": {
+          "blindsight": 0,
+          "darkvision": 60,
+          "tremorsense": 0,
+          "truesight": 0
+        },
+        "units": "ft",
+        "special": ""
+      },
+      "spellcasting": "wis",
+      "exhaustion": 0,
+      "concentration": {
+        "ability": "",
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        },
+        "bonuses": {
+          "save": ""
+        },
+        "limit": 1
+      },
+      "loyalty": {},
+      "hd": {
+        "spent": 0
+      },
+      "hp": {
+        "max": 45,
+        "temp": 0,
+        "tempmax": 0,
+        "value": 45,
+        "formula": "10d8"
+      },
+      "death": {
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        },
+        "success": 0,
+        "failure": 0,
+        "bonuses": {
+          "save": ""
+        }
+      },
+      "price": {
+        "value": null,
+        "denomination": "gp"
+      },
+      "spell": {
+        "level": 0
+      }
+    },
+    "details": {
+      "biography": {
+        "value": "<p><strong>Venfyura</strong> is an ancient Eirwitch who travels the Wyrd: quiet, patient and deliberate, she speaks like someone choosing which truth to say today. The party met her at the Market of Transients, where she spoke of Bones, the four lost crafts, Violet's chart, the Seam-Wheel and the egg. She is Violet's grandmother, and calls her \"little one\".</p><p><em>Appearance:</em> old (\"ancient\"); no further description is recorded in canon.</p><section class=\"secret\" id=\"secret-36c9fca287c773cb\"><p><strong>GM note.</strong> Built from the GM Reference 'VENFYURA' section and Part 7. Not a combatant: knowledge and craft. SETTLED: she is the woman at the fire at the Eirwitch camp above Bridgehollow, the Thaw's far-side partner (\"V.\"); revealed at the camp in Session 15, never named by Pell or Quill in Session 14. [UNSETTLED] her reason for withdrawing/leaving (Mavis: desertion). [SECRET] Spring Queen is a later plan only. [SUGGESTED] she put Europa to sleep (\"Not yet, little one\").</p></section>",
+        "public": "<p>Venfyura: an ancient Eirwitch, quiet and deliberate. Met at the Market of Transients.</p>"
+      },
+      "alignment": "neutral",
+      "ideal": "Names are the only thing that cannot be taken; keep them.",
+      "bond": "Violet (\"little one\"), the four crafts, and the egg's safety.",
+      "flaw": "Withholds truths until she judges the question is asked properly.",
+      "race": null,
+      "type": {
+        "value": "humanoid",
+        "subtype": "elf (Eirwyn)",
+        "swarm": "",
+        "custom": ""
+      },
+      "habitat": {
+        "value": [],
+        "custom": "Market of Transients (Session 7); the Eirwitch camp above Bridgehollow (Session 14-15)"
+      },
+      "cr": 2,
+      "treasure": {
+        "value": []
+      }
+    },
+    "resources": {
+      "legact": {
+        "max": 0,
+        "spent": 0
+      },
+      "legres": {
+        "max": 0,
+        "spent": 0
+      },
+      "lair": {
+        "value": false,
+        "initiative": null,
+        "inside": false
+      }
+    },
+    "source": {
+      "revision": 1,
+      "rules": "2024",
+      "book": "",
+      "page": "",
+      "custom": "Varrenmoor DM Guide (NPC Reference: Venfyura; Part 7, Session 14)",
+      "license": ""
+    },
+    "traits": {
+      "size": "med",
+      "di": {
+        "value": [],
+        "custom": "",
+        "bypasses": []
+      },
+      "dr": {
+        "value": [],
+        "custom": "",
+        "bypasses": []
+      },
+      "dv": {
+        "value": [],
+        "custom": "",
+        "bypasses": []
+      },
+      "dm": {
+        "amount": {},
+        "bypasses": []
+      },
+      "ci": {
+        "value": [],
+        "custom": ""
+      },
+      "languages": {
+        "value": [
+          "common",
+          "elvish",
+          "sylvan"
+        ],
+        "custom": "Old Eirwyn script",
+        "communication": {}
+      },
+      "important": false
+    }
+  },
+  "prototypeToken": {
+    "name": "Venfyura",
+    "displayName": 20,
+    "actorLink": false,
+    "width": 1,
+    "height": 1,
+    "depth": 1,
+    "texture": {
+      "src": "systems/dnd5e/icons/svg/actors/npc.svg",
+      "anchorX": 0.5,
+      "anchorY": 0.5,
+      "fit": "contain",
+      "scaleX": 1,
+      "scaleY": 1,
+      "tint": "#ffffff",
+      "alphaThreshold": 0.75
+    },
+    "lockRotation": false,
+    "rotation": 0,
+    "alpha": 1,
+    "disposition": 1,
+    "displayBars": 20,
+    "bar1": {
+      "attribute": "attributes.hp"
+    },
+    "bar2": {
+      "attribute": null
+    },
+    "light": {
+      "negative": false,
+      "priority": 0,
+      "alpha": 0.5,
+      "angle": 360,
+      "bright": 0,
+      "color": null,
+      "coloration": 1,
+      "dim": 0,
+      "attenuation": 0.5,
+      "luminosity": 0.5,
+      "saturation": 0,
+      "contrast": 0,
+      "shadows": 0,
+      "animation": {
+        "type": null,
+        "speed": 5,
+        "intensity": 5,
+        "reverse": false
+      },
+      "darkness": {
+        "min": 0,
+        "max": 1
+      }
+    },
+    "sight": {
+      "enabled": true,
+      "range": 60,
+      "angle": 360,
+      "visionMode": "darkvision",
+      "color": null,
+      "attenuation": 0.1,
+      "brightness": 0,
+      "saturation": 0,
+      "contrast": 0
+    },
+    "detectionModes": {},
+    "occludable": {
+      "radius": 0
+    },
+    "ring": {
+      "enabled": false,
+      "colors": {
+        "ring": null,
+        "background": null
+      },
+      "effects": 0,
+      "subject": {
+        "scale": 1,
+        "texture": null
+      }
+    },
+    "turnMarker": {
+      "mode": 1,
+      "animation": null,
+      "src": null,
+      "disposition": false
+    },
+    "movementAction": null,
+    "flags": {
+      "wall-height": {
+        "tokenHeight": 0
+      },
+      "levels-3d-preview": {
+        "model3d": "modules/canvas3dtokencompendium/miniatures/_Colorized/Curse of Strahd/MZ4250 - Barovian Witch.glb",
+        "imageTexture": "",
+        "material": "none",
+        "color": "#ffffff",
+        "scale": 1,
+        "auraRange": 0,
+        "auraColor": "#ffffff",
+        "ParticleType": "none",
+        "ParticlePosition": "surface",
+        "enableParticleHidden": false,
+        "ParticleIntensity": 1,
+        "ParticleSprite": "modules/levels-3d-preview/assets/particles/emberssmall.png",
+        "ParticleRadius": 0,
+        "ParticleScale": 1,
+        "ParticleColor": "#ffffff",
+        "ParticleColor2": "#ffffff",
+        "baseColor": "",
+        "disableBase": false,
+        "removeBase": true,
+        "solidBaseMode": "default",
+        "stem": false,
+        "enableAnim": true,
+        "animIndex": 0,
+        "animSpeed": 1,
+        "flatTokenStyle": "default",
+        "forceFlyingMode": false,
+        "autoCenter": false,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "offsetX": 0,
+        "offsetY": 0,
+        "offsetZ": 0
+      }
+    },
+    "randomImg": false,
+    "appendNumber": false,
+    "prependAdjective": false
+  },
+  "items": [
+    {
+      "name": "Fey Ancestry",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": {
+          "value": "<p>Venfyura has advantage on saving throws she makes to avoid or end the <strong>charmed</strong> condition.</p>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide (NPC Reference: Venfyura; Part 7, Session 14)",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "uses": {
+          "max": "",
+          "recovery": [],
+          "spent": 0
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "requirements": "",
+        "properties": [],
+        "activities": {},
+        "enchant": {},
+        "prerequisites": {
+          "level": null,
+          "items": [],
+          "repeatable": false
+        },
+        "identifier": "e175b6ae4e",
+        "advancement": {},
+        "crewed": false
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 100000,
+      "ownership": {
+        "default": 0,
+        "KuhR2W92zhAUlxUe": 3
+      },
+      "flags": {
+        "varrenmoor": {
+          "pipelineId": "npc:ossuary:venfyura:fey-ancestry"
+        }
+      },
+      "_id": "0Okani1JuFXpcWl2",
+      "_stats": {
+        "coreVersion": "14.360",
+        "systemId": "dnd5e",
+        "systemVersion": "5.3.1",
+        "createdTime": 1794268216865,
+        "modifiedTime": 1794268216865,
+        "lastModifiedBy": "KuhR2W92zhAUlxUe",
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      }
+    },
+    {
+      "name": "Trance",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": {
+          "value": "<p>She doesn't need to sleep, and magic can't put her to sleep. She can finish a long rest in 4 hours in a meditative trance, during which she stays conscious.</p>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide (NPC Reference: Venfyura; Part 7, Session 14)",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "uses": {
+          "max": "",
+          "recovery": [],
+          "spent": 0
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "requirements": "",
+        "properties": [],
+        "activities": {},
+        "enchant": {},
+        "prerequisites": {
+          "level": null,
+          "items": [],
+          "repeatable": false
+        },
+        "identifier": "7c2ec8e4d5",
+        "advancement": {},
+        "crewed": false
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 200000,
+      "ownership": {
+        "default": 0,
+        "KuhR2W92zhAUlxUe": 3
+      },
+      "flags": {
+        "varrenmoor": {
+          "pipelineId": "npc:ossuary:venfyura:trance"
+        }
+      },
+      "_id": "ophgXJI20tKM4r1e",
+      "_stats": {
+        "coreVersion": "14.360",
+        "systemId": "dnd5e",
+        "systemVersion": "5.3.1",
+        "createdTime": 1794268217630,
+        "modifiedTime": 1794268217630,
+        "lastModifiedBy": "KuhR2W92zhAUlxUe",
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      }
+    },
+    {
+      "name": "Old Hands (tool feature)",
+      "type": "feat",
+      "img": "icons/svg/book.svg",
+      "system": {
+        "description": {
+          "value": "<p><strong>Herbalism kit and weaver's tools (proficient).</strong> The working tools of an Eirwyn witch: preparing, preserving and binding. Narrative use: she can identify, prepare and tie off the materials the party carries (restoration materials; the line's far end).</p>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide (NPC Reference: Venfyura; Part 7, Session 14)",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "uses": {
+          "max": "",
+          "recovery": [],
+          "spent": 0
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "requirements": "",
+        "properties": [],
+        "activities": {},
+        "enchant": {},
+        "prerequisites": {
+          "level": null,
+          "items": [],
+          "repeatable": false
+        },
+        "identifier": "786893ce3f",
+        "advancement": {},
+        "crewed": false
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 300000,
+      "ownership": {
+        "default": 0,
+        "KuhR2W92zhAUlxUe": 3
+      },
+      "flags": {
+        "varrenmoor": {
+          "pipelineId": "npc:ossuary:venfyura:old-hands-tool-feature"
+        }
+      },
+      "_id": "IolJc0KLFGcQAVQP",
+      "_stats": {
+        "coreVersion": "14.360",
+        "systemId": "dnd5e",
+        "systemVersion": "5.3.1",
+        "createdTime": 1794268218384,
+        "modifiedTime": 1794268218384,
+        "lastModifiedBy": "KuhR2W92zhAUlxUe",
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      }
+    },
+    {
+      "name": "Spellcasting",
+      "type": "feat",
+      "img": "icons/sundries/documents/document-sealed-red-yellow.webp",
+      "system": {
+        "description": {
+          "value": "<p>Venfyura casts one of the following spells, requiring no Material components and using <strong>Wisdom</strong> as the spellcasting ability (<strong>spell save DC 14</strong>, <strong>+6</strong> to hit with spell attacks):</p><ul><li><strong>At will:</strong> @UUID[Actor.afVUI68BonsDF1a7.Item.3SumbLRuVRHMp6sd]{Detect Magic}, @UUID[Actor.afVUI68BonsDF1a7.Item.fRD87qYRo9pWlUbM]{Light}, @UUID[Actor.afVUI68BonsDF1a7.Item.bO9t3t8tgltGuSSp]{Mending}, @UUID[Actor.afVUI68BonsDF1a7.Item.2SDMmzy0PeKORMc1]{Starry Wisp}</li><li><strong>2/day each:</strong> @UUID[Actor.afVUI68BonsDF1a7.Item.sWmObu99HcnR1jTI]{Gentle Repose}, @UUID[Actor.afVUI68BonsDF1a7.Item.cievufkxLOcuADD0]{Lesser Restoration}, @UUID[Actor.afVUI68BonsDF1a7.Item.Vj8DZoQxVOhgFLA9]{Sanctuary}</li><li><strong>1/day each:</strong> @UUID[Actor.afVUI68BonsDF1a7.Item.kAyS2g3GDoubG0wf]{Calm Emotions}, @UUID[Actor.afVUI68BonsDF1a7.Item.manfhlKI9yDTPqWK]{Locate Object}</li></ul><p><em>Theme (Eirwyn: water, ice, light; weaving, healing, preservation. Root runes Preserve, Mend, Reveal, Threshold):</em> light and mending, keeping the dead whole (Gentle Repose), healing, finding what is lost, and a guarded threshold (Sanctuary). The list is a build choice, not canon.</p><section class=\"secret\" id=\"secret-86faacddffacafa3\"><p><strong>GM note.</strong> Spells are real dnd5e 2024 spell items on this sheet (method at will / innate with per-day uses). Her one damaging option is Starry Wisp (1d8 radiant, +6, 60 ft). She is not a combatant: she shields, calms, mends and leaves.</p></section>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide (NPC Reference: Venfyura; Part 7, Session 14)",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "uses": {
+          "max": "",
+          "recovery": [],
+          "spent": 0
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "requirements": "",
+        "properties": [],
+        "activities": {},
+        "enchant": {},
+        "prerequisites": {
+          "level": null,
+          "items": [],
+          "repeatable": false
+        },
+        "identifier": "7a00a5ebff",
+        "advancement": {},
+        "crewed": false
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 400000,
+      "ownership": {
+        "default": 0,
+        "KuhR2W92zhAUlxUe": 3
+      },
+      "flags": {
+        "varrenmoor": {
+          "pipelineId": "npc:ossuary:venfyura:spellcasting"
+        }
+      },
+      "_id": "ry5eA2EQXMaI7wtg",
+      "_stats": {
+        "coreVersion": "14.360",
+        "systemId": "dnd5e",
+        "systemVersion": "5.3.1",
+        "createdTime": 1794268219127,
+        "modifiedTime": 1794268270533,
+        "lastModifiedBy": "KuhR2W92zhAUlxUe",
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      }
+    },
+    {
+      "name": "GM Reference: Venfyura, Voice and Barks",
+      "type": "feat",
+      "img": "icons/sundries/documents/document-sealed-red-yellow.webp",
+      "system": {
+        "description": {
+          "value": "<h2>Venfyura, Eirwitch (Violet's grandmother)</h2><p><em>\"Names are the only thing I carry that cannot be taken.\"</em></p><p><strong>Snapshot.</strong> An Eirwitch who travels the Wyrd. Knows the four lost crafts, the true nature of Mwooreth, Violet's grandmother's story, and how to preserve names and souls. Watches the egg closely.</p><p><strong>Voice.</strong> Quiet, patient, deliberate. Speaks like someone <em>choosing which truth to say today</em>. Says \"little one\" to Violet and rarely uses a name.</p><p><strong>Wants / fears.</strong> Wants the four crafts rediscovered and the egg safe. Fears what she withdrew from.</p><h3>Barks</h3><ul><li>\"Slowly. Truths keep.\"</li><li>\"You are all carrying pieces of something unfinished.\"</li><li>\"That one is important. Do not lose it.\"</li><li>\"Ask the question you actually mean.\"</li><li><em>(to Stellan)</em> \"The egg has a use for you. It does not say what.\"</li></ul><p><strong>At the table:</strong> she is not a combatant. Her value is knowledge and craft. If a fight starts she shields (Sanctuary), calms (Calm Emotions) or simply is not there.</p><p><strong>What others say about her:</strong> Mavis [ASK] <em>\"I recognize the line. Violet's line. Her contempt is about desertion, not skill. Do not mistake the two.\"</em> (Mavis's contempt concerns desertion and moral choices, not Venfyura's magical skill.)</p>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide (NPC Reference: Venfyura; Part 7, Session 14)",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "uses": {
+          "max": "",
+          "recovery": [],
+          "spent": 0
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "requirements": "",
+        "properties": [],
+        "activities": {},
+        "enchant": {},
+        "prerequisites": {
+          "level": null,
+          "items": [],
+          "repeatable": false
+        },
+        "identifier": "e360b055ac",
+        "advancement": {},
+        "crewed": false
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 500000,
+      "ownership": {
+        "default": 0,
+        "KuhR2W92zhAUlxUe": 3
+      },
+      "flags": {
+        "varrenmoor": {
+          "pipelineId": "npc:ossuary:venfyura:gm-reference-venfyura-voice-and-barks"
+        }
+      },
+      "_id": "ITqefZ0QTAprO058",
+      "_stats": {
+        "coreVersion": "14.360",
+        "systemId": "dnd5e",
+        "systemVersion": "5.3.1",
+        "createdTime": 1794268219880,
+        "modifiedTime": 1794268219881,
+        "lastModifiedBy": "KuhR2W92zhAUlxUe",
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      }
+    },
+    {
+      "name": "GM Reference: Venfyura, Questions and Answers",
+      "type": "feat",
+      "img": "icons/sundries/documents/document-sealed-red-yellow.webp",
+      "system": {
+        "description": {
+          "value": "<h2>Questions and Answers (by tag)</h2><ul><li><strong>Are you Violet's grandmother?</strong> [ASK] \"Yes. It is not the whole truth. It is <em>true</em>.\"</li><li><strong>What are the four crafts?</strong> [ASK] Lists them simply (see <em>Lore Reference: The Four Lost Crafts</em>).</li><li><strong>What is Mwooreth, really?</strong> [ASK] \"Severance. It is a craft. The cutting was not the sin. The <em>using</em> was.\"</li><li><strong>What's the Seam-Wheel?</strong> [ASK] \"A diagram. Not a door. It is a key for reading the Wyrd.\"</li><li><strong>Can Bones be restored?</strong> [ASK] \"Yes, if his name and some of him survive. Linen, water, a seed of life, a rune of boundary, needle, anchors. I can list them again.\"</li><li><strong>What's the egg?</strong> [EARN] \"It will have a use for 'the son of Håkon.' I will not say more until he asks me properly.\"</li><li><strong>The war, the Old Ways</strong> [EARN] She was <em>there for the truth of the Old Ways</em>. She knows the four lost crafts and the true nature of Mwooreth: <strong>severance is a craft, not a sin.</strong></li><li><strong>Why did you leave?</strong> [EARN] <strong>[UNSETTLED]</strong> Mavis's contempt concerns <em>desertion</em>. Decide Venfyura's reason before she answers.</li><li><strong>Is Violet a Spring Queen?</strong> [SECRET] A <strong>later plan</strong> and not settled. Don't assert it.</li></ul><p><strong>Quick finder:</strong> Who restores a skeleton? Pringus, Venfyura (ASK). What is Mwooreth? Venfyura, Quill (ASK). What is the egg? Venfyura (EARN).</p><p><strong>Not hers to answer:</strong> who hanged the Allfather, who cut the missing sentence, Stellan's family's role, the Great Tangle (SECRET; never told directly).</p>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide (NPC Reference: Venfyura; Part 7, Session 14)",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "uses": {
+          "max": "",
+          "recovery": [],
+          "spent": 0
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "requirements": "",
+        "properties": [],
+        "activities": {},
+        "enchant": {},
+        "prerequisites": {
+          "level": null,
+          "items": [],
+          "repeatable": false
+        },
+        "identifier": "f5257b8ec9",
+        "advancement": {},
+        "crewed": false
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 600000,
+      "ownership": {
+        "default": 0,
+        "KuhR2W92zhAUlxUe": 3
+      },
+      "flags": {
+        "varrenmoor": {
+          "pipelineId": "npc:ossuary:venfyura:gm-reference-venfyura-questions-and-answers"
+        }
+      },
+      "_id": "QAv8RHzf9HWkCc4u",
+      "_stats": {
+        "coreVersion": "14.360",
+        "systemId": "dnd5e",
+        "systemVersion": "5.3.1",
+        "createdTime": 1794268220644,
+        "modifiedTime": 1794268220644,
+        "lastModifiedBy": "KuhR2W92zhAUlxUe",
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      }
+    },
+    {
+      "name": "Lore Reference: The Four Lost Crafts",
+      "type": "feat",
+      "img": "icons/sundries/documents/document-sealed-red-yellow.webp",
+      "system": {
+        "description": {
+          "value": "<h2>The Four Lost Crafts (Part 1.6)</h2><p>Each craft is a blend of two relationships. <strong>Venfyura knows all four</strong>; the trainers know their own and only recognize the others.</p><ul><li><strong>Stellan: Runecraft</strong> (Mwooreth + Ikkander). <em>Mwooreth makes the cut. Ikkander gives the order.</em> A carved rune can influence the Wyrd.</li><li><strong>Betsy: Splicing</strong> (Ikkander + Vaelweyr). It chooses a viable biological continuation drawn from adjacent strands.</li><li><strong>Violet: Starweaving / Lifeweaving</strong> (Vaelweyr + Eirwyn). It guides life-force through plants and fungi only.</li><li><strong>Dale: Essencecraft</strong> (Eirwyn + Mwooreth). It separates, preserves and recombines the essence a thing actually has.</li></ul><p>[ASK] She lists them simply. <strong>Rule:</strong> trainers teach what the PC's sheet already has and grant no extra charges; Venfyura explains, she does not grant.</p><p><strong>Eirwyn</strong> (her own relationship): water, ice, light; weaving, healing, preservation (identity and preservation). Root runes: Preserve, Mend, Reveal, Threshold.</p>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide (NPC Reference: Venfyura; Part 7, Session 14)",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "uses": {
+          "max": "",
+          "recovery": [],
+          "spent": 0
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "requirements": "",
+        "properties": [],
+        "activities": {},
+        "enchant": {},
+        "prerequisites": {
+          "level": null,
+          "items": [],
+          "repeatable": false
+        },
+        "identifier": "225f76ed66",
+        "advancement": {},
+        "crewed": false
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 700000,
+      "ownership": {
+        "default": 0,
+        "KuhR2W92zhAUlxUe": 3
+      },
+      "flags": {
+        "varrenmoor": {
+          "pipelineId": "npc:ossuary:venfyura:lore-reference-the-four-lost-crafts"
+        }
+      },
+      "_id": "nqpKpr8whqoeUZmz",
+      "_stats": {
+        "coreVersion": "14.360",
+        "systemId": "dnd5e",
+        "systemVersion": "5.3.1",
+        "createdTime": 1794268221381,
+        "modifiedTime": 1794268221381,
+        "lastModifiedBy": "KuhR2W92zhAUlxUe",
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      }
+    },
+    {
+      "name": "Lore Reference: Mwooreth and the Old Ways",
+      "type": "feat",
+      "img": "icons/sundries/documents/document-sealed-red-yellow.webp",
+      "system": {
+        "description": {
+          "value": "<h2>Mwooreth and the Old Ways</h2><p>[ASK] <em>\"Severance. It is a craft. The cutting was not the sin. The using was.\"</em></p><p>[EARN] She was <em>there for the truth of the Old Ways</em>. Where villagers repeat the cover story literally (\"Old church stuff. Bad times.\") and Pringus has only custody records, she knows the four lost crafts and the true nature of Mwooreth: <strong>severance is a craft, not a sin.</strong></p><p><strong>Graveyards (Part 1.5):</strong> all three traditions were active at the same time; they were <em>concealed</em>, not replaced.</p><section class=\"secret\" id=\"secret-5c17c37c2b4eaadb\"><p><strong>GM note.</strong> Cladis's war against Nior is not placed on the history chart [UNSETTLED]. Who made the Mwooreth cut, why, and Stellan's family's role are SECRET and not defined: she does not answer them.</p></section>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide (NPC Reference: Venfyura; Part 7, Session 14)",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "uses": {
+          "max": "",
+          "recovery": [],
+          "spent": 0
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "requirements": "",
+        "properties": [],
+        "activities": {},
+        "enchant": {},
+        "prerequisites": {
+          "level": null,
+          "items": [],
+          "repeatable": false
+        },
+        "identifier": "88f3681708",
+        "advancement": {},
+        "crewed": false
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 800000,
+      "ownership": {
+        "default": 0,
+        "KuhR2W92zhAUlxUe": 3
+      },
+      "flags": {
+        "varrenmoor": {
+          "pipelineId": "npc:ossuary:venfyura:lore-reference-mwooreth-and-the-old-ways"
+        }
+      },
+      "_id": "l6MSxJ1QvZJ9oa3U",
+      "_stats": {
+        "coreVersion": "14.360",
+        "systemId": "dnd5e",
+        "systemVersion": "5.3.1",
+        "createdTime": 1794268222130,
+        "modifiedTime": 1794268222130,
+        "lastModifiedBy": "KuhR2W92zhAUlxUe",
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      }
+    },
+    {
+      "name": "Lore Reference: Restoring Bones",
+      "type": "feat",
+      "img": "icons/sundries/documents/document-sealed-red-yellow.webp",
+      "system": {
+        "description": {
+          "value": "<h2>Restoring Private / Sergeant Bones</h2><p>[ASK] <em>\"Yes, if his name and some of him survive. Linen, water, a seed of life, a rune of boundary, needle, anchors. I can list them again.\"</em></p><ul><li>Burial linen</li><li>Water (distilled)</li><li>A seed of life</li><li>A rune of boundary</li><li>Needle (and thread)</li><li>Anchors (identity anchors)</li></ul><p><strong>Session 7 (Market of Transients):</strong> she discussed Bones and the restoration materials. Bones was counted and inventoried, including marrow and name; at least one toe/remnant serves the claim. Kenko holds a recovered remnant as evidence and anchor, not ownership.</p><p><strong>Who restores a skeleton?</strong> Pringus, Venfyura (ASK). The Exchange's claim process (Pringus) stays separate from restoration; Ysolde Harrowgate takes Bones's restoration at cost once the Thaw's operation is done (Session 14).</p>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide (NPC Reference: Venfyura; Part 7, Session 14)",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "uses": {
+          "max": "",
+          "recovery": [],
+          "spent": 0
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "requirements": "",
+        "properties": [],
+        "activities": {},
+        "enchant": {},
+        "prerequisites": {
+          "level": null,
+          "items": [],
+          "repeatable": false
+        },
+        "identifier": "eb4d49caa3",
+        "advancement": {},
+        "crewed": false
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 900000,
+      "ownership": {
+        "default": 0,
+        "KuhR2W92zhAUlxUe": 3
+      },
+      "flags": {
+        "varrenmoor": {
+          "pipelineId": "npc:ossuary:venfyura:lore-reference-restoring-bones"
+        }
+      },
+      "_id": "y7gWvqMnjrahP3LJ",
+      "_stats": {
+        "coreVersion": "14.360",
+        "systemId": "dnd5e",
+        "systemVersion": "5.3.1",
+        "createdTime": 1794268222928,
+        "modifiedTime": 1794268222929,
+        "lastModifiedBy": "KuhR2W92zhAUlxUe",
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      }
+    },
+    {
+      "name": "Lore Reference: The Seam-Wheel",
+      "type": "feat",
+      "img": "icons/sundries/documents/document-sealed-red-yellow.webp",
+      "system": {
+        "description": {
+          "value": "<h2>The Seam-Wheel</h2><p>[ASK] <em>\"A diagram. Not a door. It is a key for reading the Wyrd.\"</em></p><p>A carving that diagrams how the four relationships and the four crafts relate. It is a <em>key to the Wyrd</em>, <strong>not</strong> the entrance to the Ragged Mile (Part 1.5).</p><section class=\"secret\" id=\"secret-eb6b592bceee2990\"><p><strong>GM note.</strong> The Great Tangle is a multi-plane mystery and the PCs hold four inherited pieces of an unfinished solution. Never tell them this directly. Her bark \"You are all carrying pieces of something unfinished\" is as close as she goes.</p></section>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide (NPC Reference: Venfyura; Part 7, Session 14)",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "uses": {
+          "max": "",
+          "recovery": [],
+          "spent": 0
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "requirements": "",
+        "properties": [],
+        "activities": {},
+        "enchant": {},
+        "prerequisites": {
+          "level": null,
+          "items": [],
+          "repeatable": false
+        },
+        "identifier": "d526972548",
+        "advancement": {},
+        "crewed": false
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 1000000,
+      "ownership": {
+        "default": 0,
+        "KuhR2W92zhAUlxUe": 3
+      },
+      "flags": {
+        "varrenmoor": {
+          "pipelineId": "npc:ossuary:venfyura:lore-reference-the-seam-wheel"
+        }
+      },
+      "_id": "GixXPRfCFkYS7GUV",
+      "_stats": {
+        "coreVersion": "14.360",
+        "systemId": "dnd5e",
+        "systemVersion": "5.3.1",
+        "createdTime": 1794268223681,
+        "modifiedTime": 1794268223681,
+        "lastModifiedBy": "KuhR2W92zhAUlxUe",
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      }
+    },
+    {
+      "name": "Lore Reference: The Egg and the Son of Håkon",
+      "type": "feat",
+      "img": "icons/sundries/documents/document-sealed-red-yellow.webp",
+      "system": {
+        "description": {
+          "value": "<h2>The Egg</h2><p>[EARN] <em>\"It will have a use for 'the son of Håkon.' I will not say more until he asks me properly.\"</em></p><p><em>(to Stellan)</em> \"The egg has a use for you. It does not say what.\"</p><p>The unknown warm egg came from the marble/brass chest (Session 5) with Maerwyn's Diary and a map fragment. In Session 7 she discussed its significance for the \"son of Håkon\" (Stellan Håkonsson) and <strong>watches the egg closely</strong>. She wants the egg safe. Mavis wants it (leverage).</p><section class=\"secret\" id=\"secret-20b351b171c4fb2f\"><p><strong>GM note.</strong> The egg's nature and use are unresolved story threads. \"Asks me properly\" is the gate; what she says then is not written yet.</p></section>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide (NPC Reference: Venfyura; Part 7, Session 14)",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "uses": {
+          "max": "",
+          "recovery": [],
+          "spent": 0
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "requirements": "",
+        "properties": [],
+        "activities": {},
+        "enchant": {},
+        "prerequisites": {
+          "level": null,
+          "items": [],
+          "repeatable": false
+        },
+        "identifier": "bfab38a1ab",
+        "advancement": {},
+        "crewed": false
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 1100000,
+      "ownership": {
+        "default": 0,
+        "KuhR2W92zhAUlxUe": 3
+      },
+      "flags": {
+        "varrenmoor": {
+          "pipelineId": "npc:ossuary:venfyura:lore-reference-the-egg-and-the-son-of-h-kon"
+        }
+      },
+      "_id": "DKoVJ7F3ya7GNmDT",
+      "_stats": {
+        "coreVersion": "14.360",
+        "systemId": "dnd5e",
+        "systemVersion": "5.3.1",
+        "createdTime": 1794268224472,
+        "modifiedTime": 1794268224472,
+        "lastModifiedBy": "KuhR2W92zhAUlxUe",
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      }
+    },
+    {
+      "name": "Lore Reference: Violet, the Amulet and the Chart",
+      "type": "feat",
+      "img": "icons/sundries/documents/document-sealed-red-yellow.webp",
+      "system": {
+        "description": {
+          "value": "<h2>Violet, the Amulet and the Chart</h2><p>[ASK] <em>\"Yes. It is not the whole truth. It is true.\"</em> She calls Violet \"little one\".</p><ul><li>Violet's breadcrumbs: her <strong>grandmother's amulet and chart</strong>, ancestral stars (Session 5: touching Kenko and the amulet, Violet alone saw a nighttime meadow and ancestral stars).</li><li>Session 7: Venfyura discussed <strong>Violet's chart</strong>.</li><li>Mavis knew the family and the wedding, and recognizes Venfyura's line (Session 13).</li><li>Violet's craft, Starweaving / Lifeweaving, is half Eirwyn: her grandmother's relationship.</li></ul><section class=\"secret\" id=\"secret-331b500f1cdce146\"><p><strong>GM note.</strong> Venfyura is Violet's grandmother and an Eirwitch (later correction; older 'separate from grandmother' notes are superseded). Possible Spring office and the consequences of her withdrawal are a later plan, not settled. <strong>Is Violet a Spring Queen?</strong> [SECRET] Don't assert it. <strong>Why did she leave?</strong> [UNSETTLED] Mavis's contempt concerns desertion. Decide the reason before she answers.</p></section>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide (NPC Reference: Venfyura; Part 7, Session 14)",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "uses": {
+          "max": "",
+          "recovery": [],
+          "spent": 0
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "requirements": "",
+        "properties": [],
+        "activities": {},
+        "enchant": {},
+        "prerequisites": {
+          "level": null,
+          "items": [],
+          "repeatable": false
+        },
+        "identifier": "68e653e977",
+        "advancement": {},
+        "crewed": false
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 1200000,
+      "ownership": {
+        "default": 0,
+        "KuhR2W92zhAUlxUe": 3
+      },
+      "flags": {
+        "varrenmoor": {
+          "pipelineId": "npc:ossuary:venfyura:lore-reference-violet-the-amulet-and-the-chart"
+        }
+      },
+      "_id": "izOn4fbpMJGb3ilb",
+      "_stats": {
+        "coreVersion": "14.360",
+        "systemId": "dnd5e",
+        "systemVersion": "5.3.1",
+        "createdTime": 1794268225290,
+        "modifiedTime": 1794268225290,
+        "lastModifiedBy": "KuhR2W92zhAUlxUe",
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      }
+    },
+    {
+      "name": "GM Reference: The Woman at the Fire (Sessions 14-15)",
+      "type": "feat",
+      "img": "icons/sundries/documents/document-sealed-red-yellow.webp",
+      "system": {
+        "description": {
+          "value": "<h2>The Woman at the Fire (Sessions 14-15)</h2><p><strong>SETTLED:</strong> she is the \"lone ancient Eirwitch\" at the Eirwitch camp above Bridgehollow: a single campfire in a mountain clearing by a tall, narrow stave church, beside a deep river gorge where some frost never melts. She keeps the <strong>fire</strong> and the <strong>bell</strong>, and is the Thaw's partner on the far side. She keeps the fire burning by the stave church because a fire is the opposite of the palace: it is always changing.</p><ul><li><strong>Session 14 (off stage).</strong> The Thaw call her \"V.\" in writing and \"the woman at the fire\" aloud. Pell Ostry's old loyalty is to her; she uses his cold door. She grew the fungal culture Violet works with (Pell: \"the woman at the fire\"). Her word via Pell: the Goddess has noticed (\"She's looking\").</li><li><strong>Not revealed in Session 14.</strong> Pell and Quill never name her. Clues: Europa's memory (\"Not yet, little one\"), and Violet's Read Green Pattern on the culture (the same careful hand as her grandmother's chart, if Violet has met Venfyura). Revealed at the camp (Session 15).</li><li><strong>The far knot (Session 15).</strong> The party carries the far end out, recovers the bell's clapper (seized by the Bridgehollow authorities; Customs House), gets Venfyura's help, rings the Bell knock (four slow), lowers the line on its sinker, and ties it off at the gorge, <strong>with Venfyura</strong>.</li><li><strong>Settled canon around her:</strong> Cladis, the ancient Eirwitch Winter Queen, was banished outside the Wyrd, broke and shredded her own thread and re-tied it at the Rhime Goddess's Ice Palace. The Rhime Goddess has noticed; her name is <strong>Lakkar, Lady of Eternal Hunger</strong> (the Goddess writes it on the Stolen Shard in Session 14, Scene 7).</li></ul><section class=\"secret\" id=\"secret-eabee185dddd4207\"><p><strong>GM note.</strong> [SUGGESTED, not settled] Venfyura put Europa to sleep at the camp (\"Not yet, little one\") and Europa's brother carried her through the cold door. Why Venfyura did it is the GM's call. \"Little one\" is her canon address: don't confirm it early; Violet's player may recognize it. [UNSETTLED] How her role at the camp fits her canon withdrawal (Mavis: desertion). Don't resolve it at the camp unless decided. Whether the re-tie works and what Lakkar asks in return: Session 15 or later.</p></section>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide (NPC Reference: Venfyura; Part 7, Session 14)",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "uses": {
+          "max": "",
+          "recovery": [],
+          "spent": 0
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "requirements": "",
+        "properties": [],
+        "activities": {},
+        "enchant": {},
+        "prerequisites": {
+          "level": null,
+          "items": [],
+          "repeatable": false
+        },
+        "identifier": "a25b72dc9a",
+        "advancement": {},
+        "crewed": false
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 1300000,
+      "ownership": {
+        "default": 0,
+        "KuhR2W92zhAUlxUe": 3
+      },
+      "flags": {
+        "varrenmoor": {
+          "pipelineId": "npc:ossuary:venfyura:gm-reference-the-woman-at-the-fire-sessions-14-15"
+        }
+      },
+      "_id": "cF5uewoIDwoYjNwO",
+      "_stats": {
+        "coreVersion": "14.360",
+        "systemId": "dnd5e",
+        "systemVersion": "5.3.1",
+        "createdTime": 1794268226110,
+        "modifiedTime": 1794268226110,
+        "lastModifiedBy": "KuhR2W92zhAUlxUe",
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      }
+    },
+    {
+      "name": "GM Reference: Session 7, the Market of Transients",
+      "type": "feat",
+      "img": "icons/sundries/documents/document-sealed-red-yellow.webp",
+      "system": {
+        "description": {
+          "value": "<h2>Session 7: the Market of Transients</h2><p>Where the party met her (as the market's \"Fortune Teller\"). In the same session: Gfefk Kfefg, <em>The Lantern Lad and the Road of Teeth</em>, and Betsy's animal-holding music box and iron-bell trade (not Venfyura's).</p><ul><li>She discussed <strong>Bones</strong> and the <strong>restoration materials</strong>.</li><li>The <strong>four lost crafts</strong>.</li><li><strong>Violet's chart</strong>.</li><li>The <strong>Seam-Wheel</strong>.</li><li>The <strong>egg's significance for the \"son of Håkon\"</strong>; she watches the egg closely.</li><li>Full moon in two nights; Bones counted and inventoried, including marrow and name.</li></ul><section class=\"secret\" id=\"secret-8c5abed12c92e6b1\"><p><strong>GM note.</strong> No stock list for her is recorded in canon, so this actor has no Merchant Reference and no shop loot. Add one if she sold anything at the table.</p></section>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide (NPC Reference: Venfyura; Part 7, Session 14)",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "uses": {
+          "max": "",
+          "recovery": [],
+          "spent": 0
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "requirements": "",
+        "properties": [],
+        "activities": {},
+        "enchant": {},
+        "prerequisites": {
+          "level": null,
+          "items": [],
+          "repeatable": false
+        },
+        "identifier": "e17132bf54",
+        "advancement": {},
+        "crewed": false
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 1400000,
+      "ownership": {
+        "default": 0,
+        "KuhR2W92zhAUlxUe": 3
+      },
+      "flags": {
+        "varrenmoor": {
+          "pipelineId": "npc:ossuary:venfyura:gm-reference-session-7-the-market-of-transients"
+        }
+      },
+      "_id": "k1xKrxTwpRsR39qq",
+      "_stats": {
+        "coreVersion": "14.360",
+        "systemId": "dnd5e",
+        "systemVersion": "5.3.1",
+        "createdTime": 1794268226929,
+        "modifiedTime": 1794268226929,
+        "lastModifiedBy": "KuhR2W92zhAUlxUe",
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      }
+    },
+    {
+      "name": "Light",
+      "type": "spell",
+      "system": {
+        "source": {
+          "custom": "",
+          "book": "PHB 2024",
+          "page": "292",
+          "license": "",
+          "rules": "2024",
+          "revision": 1
+        },
+        "description": {
+          "value": "<div class=\"rd__b  rd__b--3\"><p>You touch one Large or smaller object that isn't being worn or carried by someone else. Until the spell ends, the object sheds @variantrule[Bright Light|XPHB] in a 20-foot radius and @variantrule[Dim Light|XPHB] for an additional 20 feet. The light can be colored as you like.</p><p>Covering the object with something opaque blocks the light. The spell ends if you cast it again.</p></div>",
+          "chat": ""
+        },
+        "level": 0,
+        "school": "evo",
+        "properties": [
+          "vocal"
+        ],
+        "ability": "wis",
+        "materials": {
+          "value": "",
+          "consumed": false,
+          "cost": 0,
+          "supply": 0
+        },
+        "target": {
+          "template": {
+            "count": "",
+            "contiguous": false,
+            "type": "radius",
+            "size": "20",
+            "width": "",
+            "height": "",
+            "units": "ft",
+            "stationary": false
+          },
+          "affects": {
+            "count": "",
+            "type": "",
+            "choice": false,
+            "special": ""
+          }
+        },
+        "range": {
+          "value": "0",
+          "units": "touch"
+        },
+        "activation": {
+          "type": "action",
+          "value": 1,
+          "condition": ""
+        },
+        "duration": {
+          "value": "1",
+          "units": "hour"
+        },
+        "uses": {
+          "max": "",
+          "spent": 0,
+          "recovery": []
+        },
+        "method": "spell",
+        "prepared": 1,
+        "activities": {
+          "dnd5eactivity006": {
+            "_id": "dnd5eactivity006",
+            "type": "utility",
+            "name": "Cast",
+            "activation": {
+              "type": "action",
+              "override": false
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": []
+            },
+            "description": {},
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "units": "self",
+              "override": false
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "stationary": false
+              },
+              "affects": {
+                "choice": false
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": []
+            },
+            "roll": {
+              "prompt": false,
+              "visible": false
+            },
+            "sort": 0,
+            "flags": {},
+            "visibility": {
+              "level": {},
+              "requireAttunement": false,
+              "requireIdentification": false,
+              "requireMagic": false
+            },
+            "img": null
+          }
+        },
+        "identifier": "light"
+      },
+      "ownership": {
+        "default": 0,
+        "KuhR2W92zhAUlxUe": 3
+      },
+      "img": "icons/magic/light/explosion-star-small-blue-yellow.webp",
+      "flags": {
+        "varrenmoor": {
+          "pipelineId": "npc:ossuary:venfyura:spell:light"
+        }
+      },
+      "effects": [],
+      "sort": 2000000,
+      "_id": "fRD87qYRo9pWlUbM",
+      "folder": null,
+      "_stats": {
+        "coreVersion": "14.360",
+        "systemId": "dnd5e",
+        "systemVersion": "5.3.1",
+        "createdTime": 1794268228180,
+        "modifiedTime": 1794268228181,
+        "lastModifiedBy": "KuhR2W92zhAUlxUe",
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      }
+    },
+    {
+      "name": "Mending",
+      "type": "spell",
+      "system": {
+        "source": {
+          "custom": "",
+          "book": "PHB 2024",
+          "page": "297",
+          "license": "",
+          "rules": "2024",
+          "revision": 1
+        },
+        "description": {
+          "value": "<div class=\"ve-rd__b  ve-rd__b--3\"><p>This spell repairs a single break or tear in an object you touch, such as a broken chain link, two halves of a broken key, a torn cloak, or a leaking wineskin. As long as the break or tear is no larger than 1 foot in any dimension, you mend it, leaving no trace of the former damage.</p><p>This spell can physically repair a magic item, but it can't restore magic to such an object.</p></div>",
+          "chat": ""
+        },
+        "level": 0,
+        "school": "trs",
+        "properties": [
+          "vocal",
+          "somatic"
+        ],
+        "ability": "wis",
+        "materials": {
+          "value": "",
+          "consumed": false,
+          "cost": 0,
+          "supply": 0
+        },
+        "target": {
+          "template": {
+            "count": "",
+            "contiguous": false,
+            "type": "",
+            "size": "",
+            "width": "",
+            "height": "",
+            "units": "ft",
+            "stationary": false
+          },
+          "affects": {
+            "count": "",
+            "type": "",
+            "choice": false,
+            "special": ""
+          }
+        },
+        "range": {
+          "value": "0",
+          "units": "touch"
+        },
+        "activation": {
+          "type": "minute",
+          "value": 1,
+          "condition": ""
+        },
+        "duration": {
+          "value": "0",
+          "units": "inst"
+        },
+        "uses": {
+          "max": "",
+          "spent": 0,
+          "recovery": []
+        },
+        "method": "spell",
+        "prepared": 1,
+        "activities": {
+          "dnd5eactivity006": {
+            "_id": "dnd5eactivity006",
+            "type": "utility",
+            "name": "Cast",
+            "activation": {
+              "type": "action",
+              "override": false
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": []
+            },
+            "description": {},
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "range": {
+              "units": "self",
+              "override": false
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "stationary": false,
+                "units": "ft"
+              },
+              "affects": {
+                "choice": false
+              },
+              "prompt": true,
+              "override": false
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": []
+            },
+            "roll": {
+              "prompt": false,
+              "visible": false
+            },
+            "img": null,
+            "sort": 0,
+            "effects": [],
+            "flags": {},
+            "visibility": {
+              "level": {},
+              "requireAttunement": false,
+              "requireIdentification": false,
+              "requireMagic": false
+            }
+          }
+        },
+        "identifier": "mending"
+      },
+      "ownership": {
+        "default": 0,
+        "KuhR2W92zhAUlxUe": 3
+      },
+      "img": "icons/skills/melee/hand-grip-staff-yellow-brown.webp",
+      "flags": {
+        "varrenmoor": {
+          "pipelineId": "npc:ossuary:venfyura:spell:mending"
+        }
+      },
+      "effects": [],
+      "sort": 2001000,
+      "_id": "bO9t3t8tgltGuSSp",
+      "folder": null,
+      "_stats": {
+        "coreVersion": "14.360",
+        "systemId": "dnd5e",
+        "systemVersion": "5.3.1",
+        "createdTime": 1794268229413,
+        "modifiedTime": 1794268229413,
+        "lastModifiedBy": "KuhR2W92zhAUlxUe",
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      }
+    },
+    {
+      "name": "Starry Wisp",
+      "type": "spell",
+      "system": {
+        "source": {
+          "custom": "",
+          "book": "PHB 2024",
+          "page": "320",
+          "license": "",
+          "rules": "2024",
+          "revision": 1
+        },
+        "description": {
+          "value": "<div class=\"ve-rd__b  ve-rd__b--3\"><p>You launch a mote of light at one creature or object within range. Make a ranged spell attack against the target. On a hit, the target takes [[/damage 1d8 type=radiant]] damage, and until the end of your next turn, it emits @variantrule[Dim Light|XPHB] in a 10-foot radius and can't benefit from the &amp;Reference[condition=Invisible] condition.</p></div><div class=\"ve-rd__b  ve-rd__b--3\"><p></p><div data-roll-name-ancestor=\"Cantrip Upgrade\" class=\"ve-rd__b  ve-rd__b--3\"><p><span class=\"ve-rd__h ve-rd__h--3\" data-title-index=\"1\"> <span class=\"entry-title-inner \">Cantrip Upgrade.</span></span> The damage increases by [[/damage 1d8]] when you reach levels 5 ([[/damage 2d8]]), 11 ([[/damage 3d8]]), and 17 ([[/damage 4d8]]).</p></div></div>",
+          "chat": ""
+        },
+        "level": 0,
+        "school": "evo",
+        "properties": [
+          "vocal",
+          "somatic"
+        ],
+        "materials": {
+          "value": "",
+          "consumed": false,
+          "cost": 0,
+          "supply": 0
+        },
+        "target": {
+          "template": {
+            "count": "",
+            "contiguous": false,
+            "type": "",
+            "size": "",
+            "width": "",
+            "height": "",
+            "units": "ft",
+            "stationary": false
+          },
+          "affects": {
+            "count": "1",
+            "type": "creatureOrObject",
+            "choice": false,
+            "special": ""
+          }
+        },
+        "range": {
+          "value": "60",
+          "units": "ft",
+          "special": ""
+        },
+        "activation": {
+          "type": "action",
+          "value": 1,
+          "condition": ""
+        },
+        "duration": {
+          "value": "0",
+          "units": "inst"
+        },
+        "uses": {
+          "max": "",
+          "spent": 0,
+          "recovery": []
+        },
+        "method": "spell",
+        "prepared": 1,
+        "activities": {
+          "dnd5eactivity000": {
+            "type": "attack",
+            "activation": {
+              "type": "action",
+              "override": false
+            },
+            "attack": {
+              "type": {
+                "value": "ranged"
+              },
+              "critical": {},
+              "flat": false
+            },
+            "damage": {
+              "includeBase": true,
+              "parts": [
+                {
+                  "number": 1,
+                  "denomination": 8,
+                  "types": [
+                    "radiant"
+                  ],
+                  "scaling": {
+                    "mode": "whole",
+                    "number": 1
+                  },
+                  "custom": {
+                    "enabled": false
+                  }
+                }
+              ],
+              "critical": {}
+            },
+            "effects": [
+              {
+                "_id": "starryWispxxxxxx",
+                "level": {}
+              }
+            ],
+            "_id": "dnd5eactivity000",
+            "target": {
+              "prompt": true,
+              "template": {
+                "contiguous": false,
+                "stationary": false,
+                "units": "ft"
+              },
+              "affects": {
+                "choice": false
+              },
+              "override": false
+            },
+            "img": null,
+            "sort": 0,
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": []
+            },
+            "description": {},
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "flags": {},
+            "range": {
+              "units": "self",
+              "override": false
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": []
+            },
+            "visibility": {
+              "level": {},
+              "requireAttunement": false,
+              "requireIdentification": false,
+              "requireMagic": false
+            }
+          }
+        },
+        "identifier": "starry-wisp",
+        "ability": "wis"
+      },
+      "ownership": {
+        "default": 0,
+        "KuhR2W92zhAUlxUe": 3
+      },
+      "img": "icons/magic/fire/projectile-fireball-orange-yellow.webp",
+      "flags": {
+        "varrenmoor": {
+          "pipelineId": "npc:ossuary:venfyura:spell:starry-wisp"
+        }
+      },
+      "effects": [
+        {
+          "_id": "starryWispxxxxxx",
+          "name": "Illuminated",
+          "img": "icons/magic/fire/projectile-fireball-orange-yellow.webp",
+          "description": "Until the end of your next turn, it emits Dim Light in a 10-foot radius and can't benefit from the &amp;Reference[Invisible] condition.",
+          "system": {
+            "changes": []
+          },
+          "statuses": [],
+          "disabled": false,
+          "duration": {
+            "value": 1,
+            "units": "rounds",
+            "expiry": "turnStart",
+            "expired": false
+          },
+          "origin": null,
+          "transfer": false,
+          "flags": {
+            "plutonium": {
+              "dedupeId": "illuminated"
+            }
+          },
+          "type": "base",
+          "start": null,
+          "tint": "#ffffff",
+          "showIcon": 1,
+          "folder": null,
+          "sort": 0,
+          "_stats": {
+            "coreVersion": "14.360",
+            "systemId": "dnd5e",
+            "systemVersion": "5.3.1",
+            "createdTime": 1794268262510,
+            "modifiedTime": 1794268262510,
+            "lastModifiedBy": "KuhR2W92zhAUlxUe",
+            "compendiumSource": null,
+            "duplicateSource": null,
+            "exportSource": null
+          }
+        }
+      ],
+      "sort": 2002000,
+      "_id": "2SDMmzy0PeKORMc1",
+      "folder": null,
+      "_stats": {
+        "coreVersion": "14.360",
+        "systemId": "dnd5e",
+        "systemVersion": "5.3.1",
+        "createdTime": 1794268230579,
+        "modifiedTime": 1794268262510,
+        "lastModifiedBy": "KuhR2W92zhAUlxUe",
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      }
+    },
+    {
+      "name": "Detect Magic",
+      "type": "spell",
+      "system": {
+        "source": {
+          "custom": "",
+          "book": "PHB 2024",
+          "page": "262",
+          "license": "",
+          "rules": "2024",
+          "revision": 1
+        },
+        "description": {
+          "value": "<div class=\"rd__b  rd__b--3\"><p>For the duration, you sense the presence of magical effects within 30 feet of yourself. If you sense such effects, you can take the @action[Magic|XPHB] action to see a faint aura around any visible creature or object in the area that bears the magic, and if an effect was created by a spell, you learn the spell's <a href=\"https://5e.tools/book.html#xphb,7,schools%20of%20magic,0\">school of magic</a>.</p><p>The spell is blocked by 1 foot of stone, dirt, or wood; 1 inch of metal; or a thin sheet of lead.</p></div>",
+          "chat": ""
+        },
+        "level": 1,
+        "school": "div",
+        "properties": [
+          "vocal",
+          "somatic",
+          "ritual",
+          "concentration"
+        ],
+        "ability": "wis",
+        "materials": {
+          "value": "",
+          "consumed": false,
+          "cost": 0,
+          "supply": 0
+        },
+        "target": {
+          "template": {
+            "count": "",
+            "contiguous": false,
+            "type": "sphere",
+            "size": "30",
+            "width": "",
+            "height": "",
+            "units": "ft",
+            "stationary": false
+          },
+          "affects": {
+            "count": "",
+            "type": "creatureOrObject",
+            "choice": false,
+            "special": ""
+          }
+        },
+        "range": {
+          "value": "0",
+          "units": "self"
+        },
+        "activation": {
+          "type": "action",
+          "value": 1,
+          "condition": ""
+        },
+        "duration": {
+          "value": "10",
+          "units": "minute"
+        },
+        "uses": {
+          "max": "",
+          "spent": 0,
+          "recovery": []
+        },
+        "method": "atwill",
+        "prepared": 1,
+        "activities": {
+          "dnd5eactivity000": {
+            "type": "utility",
+            "activation": {
+              "type": "action",
+              "override": false
+            },
+            "effects": [
+              {
+                "_id": "detectMagicxxxxx",
+                "level": {}
+              }
+            ],
+            "_id": "dnd5eactivity000",
+            "target": {
+              "prompt": true,
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "stationary": false
+              },
+              "affects": {
+                "choice": false
+              },
+              "override": false
+            },
+            "sort": 0,
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": []
+            },
+            "description": {},
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "flags": {},
+            "range": {
+              "units": "self",
+              "override": false
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": []
+            },
+            "visibility": {
+              "level": {},
+              "requireAttunement": false,
+              "requireIdentification": false,
+              "requireMagic": false
+            },
+            "roll": {
+              "prompt": false,
+              "visible": false
+            },
+            "img": null
+          }
+        },
+        "identifier": "detect-magic"
+      },
+      "ownership": {
+        "default": 0,
+        "KuhR2W92zhAUlxUe": 3
+      },
+      "img": "icons/magic/symbols/rune-sigil-black-pink.webp",
+      "flags": {
+        "varrenmoor": {
+          "pipelineId": "npc:ossuary:venfyura:spell:detect-magic"
+        }
+      },
+      "effects": [
+        {
+          "_id": "detectMagicxxxxx",
+          "name": "Detect Magic",
+          "img": "icons/magic/symbols/rune-sigil-black-pink.webp",
+          "description": "",
+          "statuses": [],
+          "disabled": false,
+          "duration": {
+            "value": 600,
+            "units": "seconds",
+            "expiry": "turnStart",
+            "expired": false
+          },
+          "origin": null,
+          "transfer": false,
+          "flags": {
+            "plutonium": {
+              "dedupeId": "detect-magic"
+            }
+          },
+          "type": "base",
+          "system": {
+            "changes": []
+          },
+          "tint": "#ffffff",
+          "sort": 0,
+          "_stats": {
+            "compendiumSource": null,
+            "duplicateSource": null,
+            "exportSource": null,
+            "coreVersion": "14.360",
+            "systemId": "dnd5e",
+            "systemVersion": "5.3.1",
+            "lastModifiedBy": "KuhR2W92zhAUlxUe",
+            "createdTime": 1794268263758,
+            "modifiedTime": 1794268263758
+          },
+          "start": null,
+          "showIcon": 1,
+          "folder": null
+        }
+      ],
+      "sort": 2003000,
+      "_id": "3SumbLRuVRHMp6sd",
+      "folder": null,
+      "_stats": {
+        "coreVersion": "14.360",
+        "systemId": "dnd5e",
+        "systemVersion": "5.3.1",
+        "createdTime": 1794268231829,
+        "modifiedTime": 1794268263758,
+        "lastModifiedBy": "KuhR2W92zhAUlxUe",
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      }
+    },
+    {
+      "name": "Gentle Repose",
+      "type": "spell",
+      "system": {
+        "source": {
+          "custom": "",
+          "book": "PHB 2024",
+          "page": "278",
+          "license": "",
+          "rules": "2024",
+          "revision": 1
+        },
+        "description": {
+          "value": "<div class=\"ve-rd__b  ve-rd__b--3\"><p>You touch a corpse or other remains. For the duration, the target is protected from decay and can't become Undead.</p><p>The spell also effectively extends the time limit on raising the target from the dead, since days spent under the influence of this spell don't count against the time limit of spells such as @spell[Raise Dead|XPHB].</p></div>",
+          "chat": ""
+        },
+        "level": 2,
+        "school": "nec",
+        "properties": [
+          "vocal",
+          "somatic",
+          "ritual"
+        ],
+        "ability": "wis",
+        "materials": {
+          "value": "",
+          "consumed": false,
+          "cost": 0,
+          "supply": 0
+        },
+        "target": {
+          "template": {
+            "count": "",
+            "contiguous": false,
+            "type": "",
+            "size": "",
+            "width": "",
+            "height": "",
+            "units": "ft",
+            "stationary": false
+          },
+          "affects": {
+            "count": "1",
+            "type": "",
+            "choice": false,
+            "special": ""
+          }
+        },
+        "range": {
+          "value": "0",
+          "units": "touch"
+        },
+        "activation": {
+          "type": "action",
+          "value": 1,
+          "condition": ""
+        },
+        "duration": {
+          "value": "10",
+          "units": "day"
+        },
+        "uses": {
+          "max": "2",
+          "recovery": [
+            {
+              "period": "day",
+              "type": "recoverAll"
+            }
+          ],
+          "spent": 0
+        },
+        "method": "innate",
+        "prepared": 1,
+        "activities": {
+          "dnd5eactivity006": {
+            "_id": "dnd5eactivity006",
+            "type": "utility",
+            "name": "Cast",
+            "activation": {
+              "type": "action",
+              "override": false
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "target": "",
+                  "value": "1",
+                  "type": "itemUses",
+                  "scaling": {}
+                }
+              ]
+            },
+            "description": {},
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "range": {
+              "units": "self",
+              "override": false
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "stationary": false,
+                "units": "ft"
+              },
+              "affects": {
+                "choice": false
+              },
+              "prompt": true,
+              "override": false
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": []
+            },
+            "roll": {
+              "prompt": false,
+              "visible": false
+            },
+            "img": null,
+            "sort": 0,
+            "effects": [],
+            "flags": {},
+            "visibility": {
+              "level": {},
+              "requireAttunement": false,
+              "requireIdentification": false,
+              "requireMagic": false
+            }
+          }
+        },
+        "identifier": "gentle-repose"
+      },
+      "ownership": {
+        "default": 0,
+        "KuhR2W92zhAUlxUe": 3
+      },
+      "img": "icons/magic/air/air-smoke-casting.webp",
+      "flags": {
+        "varrenmoor": {
+          "pipelineId": "npc:ossuary:venfyura:spell:gentle-repose"
+        }
+      },
+      "effects": [],
+      "sort": 2004000,
+      "_id": "sWmObu99HcnR1jTI",
+      "folder": null,
+      "_stats": {
+        "coreVersion": "14.360",
+        "systemId": "dnd5e",
+        "systemVersion": "5.3.1",
+        "createdTime": 1794268232995,
+        "modifiedTime": 1794268232996,
+        "lastModifiedBy": "KuhR2W92zhAUlxUe",
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      }
+    },
+    {
+      "name": "Lesser Restoration",
+      "type": "spell",
+      "system": {
+        "source": {
+          "custom": "",
+          "book": "PHB 2024",
+          "page": "291",
+          "license": "",
+          "rules": "2024",
+          "revision": 1
+        },
+        "description": {
+          "value": "<div class=\"ve-rd__b  ve-rd__b--3\"><p>You touch a creature and end one condition on it: &amp;Reference[condition=Blinded], &amp;Reference[condition=Deafened], &amp;Reference[condition=Paralyzed], or &amp;Reference[condition=Poisoned].</p></div>",
+          "chat": ""
+        },
+        "level": 2,
+        "school": "abj",
+        "properties": [
+          "vocal",
+          "somatic"
+        ],
+        "ability": "wis",
+        "materials": {
+          "value": "",
+          "consumed": false,
+          "cost": 0,
+          "supply": 0
+        },
+        "target": {
+          "template": {
+            "count": "",
+            "contiguous": false,
+            "type": "",
+            "size": "",
+            "width": "",
+            "height": "",
+            "units": "ft",
+            "stationary": false
+          },
+          "affects": {
+            "count": "",
+            "type": "creature",
+            "choice": false,
+            "special": ""
+          }
+        },
+        "range": {
+          "value": "0",
+          "units": "touch"
+        },
+        "activation": {
+          "type": "bonus",
+          "value": 1,
+          "condition": ""
+        },
+        "duration": {
+          "value": "0",
+          "units": "inst"
+        },
+        "uses": {
+          "max": "2",
+          "recovery": [
+            {
+              "period": "day",
+              "type": "recoverAll"
+            }
+          ],
+          "spent": 0
+        },
+        "method": "innate",
+        "prepared": 1,
+        "activities": {
+          "dnd5eactivity006": {
+            "_id": "dnd5eactivity006",
+            "type": "utility",
+            "name": "Cast",
+            "activation": {
+              "type": "action",
+              "override": false
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "target": "",
+                  "value": "1",
+                  "type": "itemUses",
+                  "scaling": {}
+                }
+              ]
+            },
+            "description": {},
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "range": {
+              "units": "self",
+              "override": false
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "stationary": false,
+                "units": "ft"
+              },
+              "affects": {
+                "choice": false
+              },
+              "prompt": true,
+              "override": false
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": []
+            },
+            "roll": {
+              "prompt": false,
+              "visible": false
+            },
+            "img": null,
+            "sort": 0,
+            "effects": [],
+            "flags": {},
+            "visibility": {
+              "level": {},
+              "requireAttunement": false,
+              "requireIdentification": false,
+              "requireMagic": false
+            }
+          }
+        },
+        "identifier": "lesser-restoration"
+      },
+      "ownership": {
+        "default": 0,
+        "KuhR2W92zhAUlxUe": 3
+      },
+      "img": "icons/magic/life/heart-cross-blue.webp",
+      "flags": {
+        "varrenmoor": {
+          "pipelineId": "npc:ossuary:venfyura:spell:lesser-restoration"
+        }
+      },
+      "effects": [],
+      "sort": 2005000,
+      "_id": "cievufkxLOcuADD0",
+      "folder": null,
+      "_stats": {
+        "coreVersion": "14.360",
+        "systemId": "dnd5e",
+        "systemVersion": "5.3.1",
+        "createdTime": 1794268234179,
+        "modifiedTime": 1794268234179,
+        "lastModifiedBy": "KuhR2W92zhAUlxUe",
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      }
+    },
+    {
+      "name": "Sanctuary",
+      "type": "spell",
+      "system": {
+        "source": {
+          "custom": "",
+          "book": "PHB 2024",
+          "page": "313",
+          "license": "",
+          "rules": "2024",
+          "revision": 1
+        },
+        "description": {
+          "value": "<div class=\"rd__b  rd__b--3\"><p>You ward a creature within range. Until the spell ends, any creature who targets the warded creature with an attack roll or a damaging spell must succeed on a Wisdom saving throw or either choose a new target or lose the attack or spell. This spell doesn't protect the warded creature from areas of effect.</p><p>The spell ends if the warded creature makes an attack roll, casts a spell, or deals damage.</p></div>",
+          "chat": ""
+        },
+        "level": 1,
+        "school": "abj",
+        "properties": [
+          "vocal",
+          "somatic"
+        ],
+        "ability": "wis",
+        "materials": {
+          "value": "",
+          "consumed": false,
+          "cost": 0,
+          "supply": 0
+        },
+        "target": {
+          "template": {
+            "count": "",
+            "contiguous": false,
+            "type": "",
+            "size": "",
+            "width": "",
+            "height": "",
+            "units": "ft",
+            "stationary": false
+          },
+          "affects": {
+            "count": "1",
+            "type": "creature",
+            "choice": false,
+            "special": ""
+          }
+        },
+        "range": {
+          "value": "30",
+          "units": "ft"
+        },
+        "activation": {
+          "type": "bonus",
+          "value": 1,
+          "condition": ""
+        },
+        "duration": {
+          "value": "1",
+          "units": "minute"
+        },
+        "uses": {
+          "max": "2",
+          "recovery": [
+            {
+              "period": "day",
+              "type": "recoverAll"
+            }
+          ],
+          "spent": 0
+        },
+        "method": "innate",
+        "prepared": 1,
+        "activities": {
+          "dnd5eactivity000": {
+            "name": "Cast",
+            "type": "utility",
+            "activation": {
+              "type": "action",
+              "override": false
+            },
+            "effects": [
+              {
+                "_id": "sanctuaryxxxxxxx",
+                "level": {}
+              }
+            ],
+            "_id": "dnd5eactivity000",
+            "target": {
+              "prompt": true,
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "stationary": false
+              },
+              "affects": {
+                "choice": false
+              },
+              "override": false
+            },
+            "sort": 0,
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "target": "",
+                  "value": "1",
+                  "type": "itemUses",
+                  "scaling": {}
+                }
+              ]
+            },
+            "description": {},
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "flags": {},
+            "range": {
+              "units": "self",
+              "override": false
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": []
+            },
+            "visibility": {
+              "level": {},
+              "requireAttunement": false,
+              "requireIdentification": false,
+              "requireMagic": false
+            },
+            "roll": {
+              "prompt": false,
+              "visible": false
+            },
+            "img": null
+          },
+          "dnd5eactivity001": {
+            "name": "Save on Target",
+            "type": "save",
+            "activation": {
+              "type": "",
+              "override": false
+            },
+            "range": {
+              "units": "any",
+              "override": false
+            },
+            "damage": {
+              "onSave": "none",
+              "parts": []
+            },
+            "save": {
+              "ability": [
+                "wis"
+              ],
+              "dc": {
+                "calculation": "spellcasting"
+              }
+            },
+            "_id": "dnd5eactivity001",
+            "target": {
+              "prompt": true,
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "stationary": false
+              },
+              "affects": {
+                "choice": false
+              },
+              "override": false
+            },
+            "sort": 0,
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "target": "",
+                  "value": "1",
+                  "type": "itemUses",
+                  "scaling": {}
+                }
+              ]
+            },
+            "description": {},
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "effects": [],
+            "flags": {},
+            "uses": {
+              "spent": 0,
+              "recovery": []
+            },
+            "visibility": {
+              "level": {},
+              "requireAttunement": false,
+              "requireIdentification": false,
+              "requireMagic": false
+            },
+            "img": null
+          }
+        },
+        "identifier": "sanctuary"
+      },
+      "ownership": {
+        "default": 0,
+        "KuhR2W92zhAUlxUe": 3
+      },
+      "img": "icons/magic/defensive/shield-barrier-glowing-blue.webp",
+      "flags": {
+        "varrenmoor": {
+          "pipelineId": "npc:ossuary:venfyura:spell:sanctuary"
+        }
+      },
+      "effects": [
+        {
+          "_id": "sanctuaryxxxxxxx",
+          "name": "Warded",
+          "img": "icons/magic/defensive/shield-barrier-glowing-blue.webp",
+          "description": "Until the spell ends, any creature who targets the warded creature with an attack roll or a damaging spell must succeed on a [[/save ability=wis format=long]] or either choose a new target or lose the attack or spell. The spell ends if the warded creature makes an attack roll, casts a spell, or deals damage.",
+          "statuses": [],
+          "disabled": false,
+          "duration": {
+            "value": 60,
+            "units": "seconds",
+            "expiry": "turnStart",
+            "expired": false
+          },
+          "origin": null,
+          "transfer": false,
+          "flags": {
+            "plutonium": {
+              "dedupeId": "warded"
+            }
+          },
+          "type": "base",
+          "system": {
+            "changes": []
+          },
+          "tint": "#ffffff",
+          "sort": 0,
+          "_stats": {
+            "compendiumSource": null,
+            "duplicateSource": null,
+            "exportSource": null,
+            "coreVersion": "14.360",
+            "systemId": "dnd5e",
+            "systemVersion": "5.3.1",
+            "lastModifiedBy": "KuhR2W92zhAUlxUe",
+            "createdTime": 1794268267284,
+            "modifiedTime": 1794268267284
+          },
+          "start": null,
+          "showIcon": 1,
+          "folder": null
+        }
+      ],
+      "sort": 2006000,
+      "_id": "Vj8DZoQxVOhgFLA9",
+      "folder": null,
+      "_stats": {
+        "coreVersion": "14.360",
+        "systemId": "dnd5e",
+        "systemVersion": "5.3.1",
+        "createdTime": 1794268235406,
+        "modifiedTime": 1794268267283,
+        "lastModifiedBy": "KuhR2W92zhAUlxUe",
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      }
+    },
+    {
+      "name": "Calm Emotions",
+      "type": "spell",
+      "system": {
+        "source": {
+          "custom": "",
+          "book": "PHB 2024",
+          "page": "249",
+          "license": "",
+          "rules": "2024",
+          "revision": 1
+        },
+        "description": {
+          "value": "<div class=\"ve-rd__b  ve-rd__b--3\"><p>Each Humanoid in a 20-foot-radius @variantrule[Sphere [Area of Effect]|XPHB|Sphere] centered on a point you choose within range must succeed on a Charisma saving throw or be affected by one of the following effects (choose for each creature):</p><ul class=\"ve-rd__list\"><li class=\"ve-rd__li \">The creature has @variantrule[Immunity|XPHB] to the &amp;Reference[condition=Charmed] and &amp;Reference[condition=Frightened] conditions until the spell ends. If the creature was already &amp;Reference[condition=Charmed] or &amp;Reference[condition=Frightened], those conditions are suppressed for the duration.</li><li class=\"ve-rd__li \">The creature becomes @variantrule[Indifferent [Attitude]|XPHB|Indifferent] about creatures of your choice that it's @variantrule[Hostile [Attitude]|XPHB|Hostile] toward. This indifference ends if the target takes damage or witnesses its allies taking damage. When the spell ends, the creature's attitude returns to normal.</li></ul></div>",
+          "chat": ""
+        },
+        "level": 2,
+        "school": "enc",
+        "properties": [
+          "vocal",
+          "somatic",
+          "concentration"
+        ],
+        "ability": "wis",
+        "materials": {
+          "value": "",
+          "consumed": false,
+          "cost": 0,
+          "supply": 0
+        },
+        "target": {
+          "template": {
+            "count": "",
+            "contiguous": false,
+            "type": "sphere",
+            "size": "20",
+            "width": "",
+            "height": "",
+            "units": "ft",
+            "stationary": false
+          },
+          "affects": {
+            "count": "",
+            "type": "creature",
+            "choice": false,
+            "special": ""
+          }
+        },
+        "range": {
+          "value": "60",
+          "units": "ft"
+        },
+        "activation": {
+          "type": "action",
+          "value": 1,
+          "condition": ""
+        },
+        "duration": {
+          "value": "1",
+          "units": "minute"
+        },
+        "uses": {
+          "max": "1",
+          "recovery": [
+            {
+              "period": "day",
+              "type": "recoverAll"
+            }
+          ],
+          "spent": 0
+        },
+        "method": "innate",
+        "prepared": 1,
+        "activities": {
+          "dnd5eactivity000": {
+            "type": "save",
+            "activation": {
+              "type": "action",
+              "override": false
+            },
+            "damage": {
+              "onSave": "half",
+              "parts": []
+            },
+            "save": {
+              "ability": [
+                "cha"
+              ],
+              "dc": {
+                "calculation": "spellcasting"
+              }
+            },
+            "effects": [
+              {
+                "_id": "calmEmotionsxxxx",
+                "level": {},
+                "onSave": false
+              },
+              {
+                "_id": "calmEmotions1xxx",
+                "level": {},
+                "onSave": false
+              }
+            ],
+            "_id": "dnd5eactivity000",
+            "target": {
+              "prompt": true,
+              "template": {
+                "contiguous": false,
+                "stationary": false,
+                "units": "ft"
+              },
+              "affects": {
+                "choice": false
+              },
+              "override": false
+            },
+            "img": null,
+            "sort": 0,
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "target": "",
+                  "value": "1",
+                  "type": "itemUses",
+                  "scaling": {}
+                }
+              ]
+            },
+            "description": {},
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "flags": {},
+            "range": {
+              "units": "self",
+              "override": false
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": []
+            },
+            "visibility": {
+              "level": {},
+              "requireAttunement": false,
+              "requireIdentification": false,
+              "requireMagic": false
+            }
+          }
+        },
+        "identifier": "calm-emotions"
+      },
+      "ownership": {
+        "default": 0,
+        "KuhR2W92zhAUlxUe": 3
+      },
+      "img": "icons/magic/control/buff-luck-fortune-rainbow.webp",
+      "flags": {
+        "varrenmoor": {
+          "pipelineId": "npc:ossuary:venfyura:spell:calm-emotions"
+        }
+      },
+      "effects": [
+        {
+          "_id": "calmEmotionsxxxx",
+          "name": "Calmed",
+          "img": "icons/magic/control/buff-luck-fortune-rainbow.webp",
+          "description": "The creature has Immunity to the Charmed and Frightened conditions until the spell ends. If the creature was already Charmed or Frightened, those conditions are suppressed for the duration.",
+          "system": {
+            "changes": [
+              {
+                "key": "system.traits.ci.value",
+                "type": "add",
+                "value": "charmed",
+                "priority": 7,
+                "phase": "initial"
+              },
+              {
+                "key": "system.traits.ci.value",
+                "type": "add",
+                "value": "frightened",
+                "priority": 7,
+                "phase": "initial"
+              }
+            ]
+          },
+          "statuses": [],
+          "disabled": false,
+          "duration": {
+            "value": 60,
+            "units": "seconds",
+            "expiry": "turnStart",
+            "expired": false
+          },
+          "origin": null,
+          "transfer": false,
+          "flags": {
+            "plutonium": {
+              "dedupeId": "calmed"
+            }
+          },
+          "type": "base",
+          "start": null,
+          "tint": "#ffffff",
+          "showIcon": 1,
+          "folder": null,
+          "sort": 0,
+          "_stats": {
+            "coreVersion": "14.360",
+            "systemId": "dnd5e",
+            "systemVersion": "5.3.1",
+            "createdTime": 1794268268517,
+            "modifiedTime": 1794268268517,
+            "lastModifiedBy": "KuhR2W92zhAUlxUe",
+            "compendiumSource": null,
+            "duplicateSource": null,
+            "exportSource": null
+          }
+        },
+        {
+          "_id": "calmEmotions1xxx",
+          "name": "Indifference",
+          "img": "icons/magic/control/buff-luck-fortune-rainbow.webp",
+          "description": "The creature becomes Indifferent about creatures of your choice that it's Hostile toward. This indifference ends if the target takes damage or witnesses its allies taking damage. When the spell ends, the creature's attitude returns to normal.",
+          "system": {
+            "changes": []
+          },
+          "statuses": [],
+          "disabled": false,
+          "duration": {
+            "value": 60,
+            "units": "seconds",
+            "expiry": "turnStart",
+            "expired": false
+          },
+          "origin": null,
+          "transfer": false,
+          "flags": {
+            "plutonium": {
+              "dedupeId": "indifference"
+            }
+          },
+          "type": "base",
+          "start": null,
+          "tint": "#ffffff",
+          "showIcon": 1,
+          "folder": null,
+          "sort": 0,
+          "_stats": {
+            "coreVersion": "14.360",
+            "systemId": "dnd5e",
+            "systemVersion": "5.3.1",
+            "createdTime": 1794268268517,
+            "modifiedTime": 1794268268517,
+            "lastModifiedBy": "KuhR2W92zhAUlxUe",
+            "compendiumSource": null,
+            "duplicateSource": null,
+            "exportSource": null
+          }
+        }
+      ],
+      "sort": 2007000,
+      "_id": "kAyS2g3GDoubG0wf",
+      "folder": null,
+      "_stats": {
+        "coreVersion": "14.360",
+        "systemId": "dnd5e",
+        "systemVersion": "5.3.1",
+        "createdTime": 1794268236613,
+        "modifiedTime": 1794268268517,
+        "lastModifiedBy": "KuhR2W92zhAUlxUe",
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      }
+    },
+    {
+      "name": "Locate Object",
+      "type": "spell",
+      "system": {
+        "source": {
+          "custom": "",
+          "book": "PHB 2024",
+          "page": "293",
+          "license": "",
+          "rules": "2024",
+          "revision": 1
+        },
+        "description": {
+          "value": "<div class=\"ve-rd__b  ve-rd__b--3\"><p>Describe or name an object that is familiar to you. You sense the direction to the object's location if that object is within 1,000 feet of you. If the object is in motion, you know the direction of its movement.</p><p>The spell can locate a specific object known to you if you have seen it up close—within 30 feet—at least once. Alternatively, the spell can locate the nearest object of a particular kind, such as a certain kind of apparel, jewelry, furniture, tool, or weapon.</p><p>This spell can't locate an object if any thickness of lead blocks a direct path between you and the object.</p></div>",
+          "chat": ""
+        },
+        "level": 2,
+        "school": "div",
+        "properties": [
+          "vocal",
+          "somatic",
+          "concentration"
+        ],
+        "ability": "wis",
+        "materials": {
+          "value": "",
+          "consumed": false,
+          "cost": 0,
+          "supply": 0
+        },
+        "target": {
+          "template": {
+            "count": "",
+            "contiguous": false,
+            "type": "",
+            "size": "",
+            "width": "",
+            "height": "",
+            "units": "ft",
+            "stationary": false
+          },
+          "affects": {
+            "count": "",
+            "type": "",
+            "choice": false,
+            "special": ""
+          }
+        },
+        "range": {
+          "value": "0",
+          "units": "self"
+        },
+        "activation": {
+          "type": "action",
+          "value": 1,
+          "condition": ""
+        },
+        "duration": {
+          "value": "10",
+          "units": "minute"
+        },
+        "uses": {
+          "max": "1",
+          "recovery": [
+            {
+              "period": "day",
+              "type": "recoverAll"
+            }
+          ],
+          "spent": 0
+        },
+        "method": "innate",
+        "prepared": 1,
+        "activities": {
+          "dnd5eactivity006": {
+            "_id": "dnd5eactivity006",
+            "type": "utility",
+            "name": "Cast",
+            "activation": {
+              "type": "action",
+              "override": false
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "target": "",
+                  "value": "1",
+                  "type": "itemUses",
+                  "scaling": {}
+                }
+              ]
+            },
+            "description": {},
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "range": {
+              "units": "self",
+              "override": false
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "stationary": false,
+                "units": "ft"
+              },
+              "affects": {
+                "choice": false
+              },
+              "prompt": true,
+              "override": false
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": []
+            },
+            "roll": {
+              "prompt": false,
+              "visible": false
+            },
+            "img": null,
+            "sort": 0,
+            "effects": [],
+            "flags": {},
+            "visibility": {
+              "level": {},
+              "requireAttunement": false,
+              "requireIdentification": false,
+              "requireMagic": false
+            }
+          }
+        },
+        "identifier": "locate-object"
+      },
+      "ownership": {
+        "default": 0,
+        "KuhR2W92zhAUlxUe": 3
+      },
+      "img": "icons/sundries/books/book-red-exclamation.webp",
+      "flags": {
+        "varrenmoor": {
+          "pipelineId": "npc:ossuary:venfyura:spell:locate-object"
+        }
+      },
+      "effects": [],
+      "sort": 2008000,
+      "_id": "manfhlKI9yDTPqWK",
+      "folder": null,
+      "_stats": {
+        "coreVersion": "14.360",
+        "systemId": "dnd5e",
+        "systemVersion": "5.3.1",
+        "createdTime": 1794268237875,
+        "modifiedTime": 1794268237875,
+        "lastModifiedBy": "KuhR2W92zhAUlxUe",
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      }
+    }
+  ],
+  "effects": [],
+  "folder": "OLuefHiZMZYoeS5z",
+  "sort": 150000,
+  "ownership": {
+    "default": 0,
+    "KuhR2W92zhAUlxUe": 3
+  },
+  "flags": {
+    "varrenmoor": {
+      "pipelineId": "npc:ossuary:venfyura"
+    }
+  },
+  "_stats": {
+    "coreVersion": "14.360",
+    "systemId": "dnd5e",
+    "systemVersion": "5.3.1",
+    "createdTime": 1783359160299,
+    "modifiedTime": 1794268247789,
+    "lastModifiedBy": "KuhR2W92zhAUlxUe",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  }
+}

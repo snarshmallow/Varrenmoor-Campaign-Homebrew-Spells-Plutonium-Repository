@@ -1,0 +1,1325 @@
+{
+  "name": "Venfyura, Witch of the Market of Transients",
+  "type": "npc",
+  "img": "systems/dnd5e/icons/svg/actors/npc.svg",
+  "system": {
+    "abilities": {
+      "str": {
+        "value": 8,
+        "proficient": 0,
+        "bonuses": {
+          "check": "",
+          "save": ""
+        },
+        "max": null
+      },
+      "dex": {
+        "value": 14,
+        "proficient": 0,
+        "bonuses": {
+          "check": "",
+          "save": ""
+        },
+        "max": null
+      },
+      "con": {
+        "value": 10,
+        "proficient": 0,
+        "bonuses": {
+          "check": "",
+          "save": ""
+        },
+        "max": null
+      },
+      "int": {
+        "value": 16,
+        "proficient": 1,
+        "bonuses": {
+          "check": "",
+          "save": ""
+        },
+        "max": null
+      },
+      "wis": {
+        "value": 18,
+        "proficient": 1,
+        "bonuses": {
+          "check": "",
+          "save": ""
+        },
+        "max": null
+      },
+      "cha": {
+        "value": 13,
+        "proficient": 0,
+        "bonuses": {
+          "check": "",
+          "save": ""
+        },
+        "max": null
+      }
+    },
+    "attributes": {
+      "ac": {
+        "flat": 12,
+        "calc": "natural",
+        "formula": ""
+      },
+      "hp": {
+        "value": 45,
+        "max": 45,
+        "temp": 0,
+        "tempmax": 0,
+        "formula": "10d8"
+      },
+      "init": {
+        "ability": "",
+        "bonus": "0",
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "movement": {
+        "burrow": 0,
+        "climb": 0,
+        "fly": 0,
+        "swim": 0,
+        "walk": 30,
+        "units": "ft",
+        "hover": false
+      },
+      "attunement": {
+        "max": 3
+      },
+      "senses": {
+        "units": "ft",
+        "special": "",
+        "ranges": {
+          "darkvision": 60,
+          "blindsight": 0,
+          "tremorsense": 0,
+          "truesight": 0
+        }
+      },
+      "spellcasting": "wis",
+      "exhaustion": 0,
+      "concentration": {
+        "ability": "",
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        },
+        "bonuses": {
+          "save": ""
+        },
+        "limit": 1
+      },
+      "hd": {
+        "spent": 0
+      },
+      "death": {
+        "ability": "",
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        },
+        "success": 0,
+        "failure": 0
+      },
+      "spell": {
+        "level": 0
+      }
+    },
+    "details": {
+      "biography": {
+        "value": "<p><strong>Venfyura</strong> is an ancient Eirwitch who travels the Wyrd: quiet, patient and deliberate, she speaks like someone choosing which truth to say today. The party met her at the Market of Transients, where she spoke of Bones, the four lost crafts, Violet's chart, the Seam-Wheel and the egg. She is Violet's grandmother, and calls her \"little one\".</p><p><em>Appearance:</em> old (\"ancient\"); no further description is recorded in canon.</p><section class=\"secret\" id=\"secret-36c9fca287c773cb\"><p><strong>GM note.</strong> Built from the GM Reference 'VENFYURA' section and Part 7. Not a combatant: knowledge and craft. SETTLED: she is the woman at the fire at the Eirwitch camp above Bridgehollow, the Thaw's far-side partner (\"V.\"); revealed at the camp in Session 15, never named by Pell or Quill in Session 14. [UNSETTLED] her reason for withdrawing/leaving (Mavis: desertion). [SECRET] Spring Queen is a later plan only. [SUGGESTED] she put Europa to sleep (\"Not yet, little one\").</p></section>",
+        "public": "<p>Venfyura: an ancient Eirwitch, quiet and deliberate. Met at the Market of Transients.</p>"
+      },
+      "alignment": "neutral",
+      "race": null,
+      "type": {
+        "value": "humanoid",
+        "subtype": "elf (Eirwyn)",
+        "swarm": "",
+        "custom": ""
+      },
+      "cr": 2,
+      "ideal": "Names are the only thing that cannot be taken; keep them.",
+      "bond": "Violet (\"little one\"), the four crafts, and the egg's safety.",
+      "flaw": "Withholds truths until she judges the question is asked properly.",
+      "habitat": {
+        "custom": "Market of Transients (Session 7); the Eirwitch camp above Bridgehollow (Session 14-15)",
+        "value": []
+      },
+      "treasure": {
+        "value": []
+      }
+    },
+    "traits": {
+      "size": "med",
+      "di": {
+        "value": [],
+        "bypasses": [],
+        "custom": ""
+      },
+      "dr": {
+        "value": [],
+        "bypasses": [],
+        "custom": ""
+      },
+      "dv": {
+        "value": [],
+        "bypasses": [],
+        "custom": ""
+      },
+      "ci": {
+        "value": [],
+        "custom": ""
+      },
+      "languages": {
+        "value": [
+          "common",
+          "elvish",
+          "sylvan"
+        ],
+        "custom": "Old Eirwyn script"
+      },
+      "dm": {
+        "amount": {},
+        "bypasses": []
+      }
+    },
+    "currency": {
+      "pp": 0,
+      "gp": 0,
+      "ep": 0,
+      "sp": 0,
+      "cp": 0
+    },
+    "skills": {
+      "acr": {
+        "value": 0,
+        "ability": "dex",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "ani": {
+        "value": 0,
+        "ability": "wis",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "arc": {
+        "value": 1,
+        "ability": "int",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "ath": {
+        "value": 0,
+        "ability": "str",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "dec": {
+        "value": 0,
+        "ability": "cha",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "his": {
+        "value": 1,
+        "ability": "int",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "ins": {
+        "value": 2,
+        "ability": "wis",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "itm": {
+        "value": 0,
+        "ability": "cha",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "inv": {
+        "value": 0,
+        "ability": "int",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "med": {
+        "value": 1,
+        "ability": "wis",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "nat": {
+        "value": 0,
+        "ability": "int",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "prc": {
+        "value": 0,
+        "ability": "wis",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "prf": {
+        "value": 0,
+        "ability": "cha",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "per": {
+        "value": 1,
+        "ability": "cha",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "rel": {
+        "value": 0,
+        "ability": "int",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "slt": {
+        "value": 0,
+        "ability": "dex",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "ste": {
+        "value": 0,
+        "ability": "dex",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "sur": {
+        "value": 0,
+        "ability": "wis",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      }
+    },
+    "spells": {
+      "spell0": {
+        "value": 0,
+        "override": null
+      },
+      "spell1": {
+        "value": 0,
+        "override": null
+      },
+      "spell2": {
+        "value": 0,
+        "override": null
+      },
+      "spell3": {
+        "value": 0,
+        "override": null
+      },
+      "spell4": {
+        "value": 0,
+        "override": null
+      },
+      "spell5": {
+        "value": 0,
+        "override": null
+      },
+      "spell6": {
+        "value": 0,
+        "override": null
+      },
+      "spell7": {
+        "value": 0,
+        "override": null
+      },
+      "spell8": {
+        "value": 0,
+        "override": null
+      },
+      "spell9": {
+        "value": 0,
+        "override": null
+      },
+      "pact": {
+        "value": 0,
+        "override": null
+      }
+    },
+    "bonuses": {
+      "mwak": {
+        "attack": "",
+        "damage": ""
+      },
+      "rwak": {
+        "attack": "",
+        "damage": ""
+      },
+      "msak": {
+        "attack": "",
+        "damage": ""
+      },
+      "rsak": {
+        "attack": "",
+        "damage": ""
+      },
+      "abilities": {
+        "check": "",
+        "save": "",
+        "skill": ""
+      },
+      "spell": {
+        "dc": ""
+      }
+    },
+    "resources": {
+      "legact": {
+        "value": 0,
+        "max": 0
+      },
+      "legres": {
+        "value": 0,
+        "max": 0
+      },
+      "lair": {
+        "value": false,
+        "initiative": null
+      }
+    },
+    "tools": {
+      "herb": {
+        "value": 1,
+        "ability": "wis",
+        "bonuses": {
+          "check": ""
+        }
+      },
+      "weaver": {
+        "value": 1,
+        "ability": "dex",
+        "bonuses": {
+          "check": ""
+        }
+      }
+    },
+    "source": {
+      "custom": "Varrenmoor DM Guide (NPC Reference: Venfyura; Part 7, Session 14)",
+      "book": "",
+      "page": "",
+      "license": "",
+      "rules": "2024",
+      "revision": 1
+    }
+  },
+  "prototypeToken": {
+    "name": "Venfyura",
+    "displayName": 30,
+    "actorLink": false,
+    "width": 1,
+    "height": 1,
+    "lockRotation": false,
+    "rotation": 0,
+    "disposition": 1,
+    "displayBars": 20,
+    "bar1": {
+      "attribute": "attributes.hp"
+    },
+    "bar2": {
+      "attribute": null
+    },
+    "flags": {},
+    "randomImg": false,
+    "alpha": 1,
+    "light": {
+      "alpha": 1,
+      "angle": 360,
+      "bright": 0,
+      "coloration": 1,
+      "dim": 0,
+      "luminosity": 0.5,
+      "saturation": 0,
+      "contrast": 0,
+      "shadows": 0,
+      "animation": {
+        "speed": 5,
+        "intensity": 5,
+        "type": null,
+        "reverse": false
+      },
+      "darkness": {
+        "min": 0,
+        "max": 1
+      },
+      "attenuation": 0.5,
+      "color": null,
+      "negative": false,
+      "priority": 0
+    },
+    "texture": {
+      "src": "systems/dnd5e/icons/svg/actors/npc.svg",
+      "tint": "#ffffff",
+      "scaleX": 1,
+      "scaleY": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "rotation": 0,
+      "anchorX": 0.5,
+      "anchorY": 0.5,
+      "fit": "contain",
+      "alphaThreshold": 0.75
+    },
+    "sight": {
+      "angle": 360,
+      "enabled": true,
+      "range": 60,
+      "brightness": 1,
+      "visionMode": "darkvision",
+      "color": null,
+      "attenuation": 0.1,
+      "saturation": 0,
+      "contrast": 0
+    },
+    "detectionModes": [],
+    "appendNumber": false,
+    "prependAdjective": false,
+    "occludable": {
+      "radius": 0
+    },
+    "ring": {
+      "enabled": false,
+      "colors": {
+        "ring": null,
+        "background": null
+      },
+      "effects": 1,
+      "subject": {
+        "scale": 1,
+        "texture": null
+      }
+    },
+    "turnMarker": {
+      "mode": 1,
+      "animation": null,
+      "src": null,
+      "disposition": false
+    },
+    "movementAction": null
+  },
+  "items": [
+    {
+      "_id": "208ec3ab3a40d262",
+      "name": "Fey Ancestry",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": {
+          "value": "<p>Venfyura has advantage on saving throws she makes to avoid or end the <strong>charmed</strong> condition.</p>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide (NPC Reference: Venfyura; Part 7, Session 14)",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "uses": {
+          "max": "",
+          "recovery": [],
+          "spent": 0
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "requirements": "",
+        "properties": [],
+        "activities": {},
+        "enchant": {},
+        "prerequisites": {
+          "level": null
+        },
+        "identifier": "e175b6ae4e"
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 100000,
+      "ownership": {
+        "default": 0
+      },
+      "flags": {
+        "varrenmoor": {
+          "pipelineId": "npc:ossuary:venfyura:fey-ancestry"
+        }
+      }
+    },
+    {
+      "_id": "6cc0a92f7be3ff68",
+      "name": "Trance",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": {
+          "value": "<p>She doesn't need to sleep, and magic can't put her to sleep. She can finish a long rest in 4 hours in a meditative trance, during which she stays conscious.</p>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide (NPC Reference: Venfyura; Part 7, Session 14)",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "uses": {
+          "max": "",
+          "recovery": [],
+          "spent": 0
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "requirements": "",
+        "properties": [],
+        "activities": {},
+        "enchant": {},
+        "prerequisites": {
+          "level": null
+        },
+        "identifier": "7c2ec8e4d5"
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 200000,
+      "ownership": {
+        "default": 0
+      },
+      "flags": {
+        "varrenmoor": {
+          "pipelineId": "npc:ossuary:venfyura:trance"
+        }
+      }
+    },
+    {
+      "_id": "0463a71082157f40",
+      "name": "Old Hands (tool feature)",
+      "type": "feat",
+      "img": "icons/svg/book.svg",
+      "system": {
+        "description": {
+          "value": "<p><strong>Herbalism kit and weaver's tools (proficient).</strong> The working tools of an Eirwyn witch: preparing, preserving and binding. Narrative use: she can identify, prepare and tie off the materials the party carries (restoration materials; the line's far end).</p>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide (NPC Reference: Venfyura; Part 7, Session 14)",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "uses": {
+          "max": "",
+          "recovery": [],
+          "spent": 0
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "requirements": "",
+        "properties": [],
+        "activities": {},
+        "enchant": {},
+        "prerequisites": {
+          "level": null
+        },
+        "identifier": "786893ce3f"
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 300000,
+      "ownership": {
+        "default": 0
+      },
+      "flags": {
+        "varrenmoor": {
+          "pipelineId": "npc:ossuary:venfyura:old-hands-tool-feature"
+        }
+      }
+    },
+    {
+      "_id": "75e4544f64112561",
+      "name": "Spellcasting",
+      "type": "feat",
+      "img": "icons/sundries/documents/document-sealed-red-yellow.webp",
+      "system": {
+        "description": {
+          "value": "<p>Venfyura casts one of the following spells, requiring no Material components and using <strong>Wisdom</strong> as the spellcasting ability (<strong>spell save DC 14</strong>, <strong>+6</strong> to hit with spell attacks):</p><ul><li><strong>At will:</strong> <em>Detect Magic</em>, <em>Light</em>, <em>Mending</em>, <em>Starry Wisp</em></li><li><strong>2/day each:</strong> <em>Gentle Repose</em>, <em>Lesser Restoration</em>, <em>Sanctuary</em></li><li><strong>1/day each:</strong> <em>Calm Emotions</em>, <em>Locate Object</em></li></ul><p><em>Theme (Eirwyn: water, ice, light; weaving, healing, preservation. Root runes Preserve, Mend, Reveal, Threshold):</em> light and mending, keeping the dead whole (Gentle Repose), healing, finding what is lost, and a guarded threshold (Sanctuary). The list is a build choice, not canon.</p><section class=\"secret\" id=\"secret-86faacddffacafa3\"><p><strong>GM note.</strong> Spells are real dnd5e 2024 spell items on this sheet (method at will / innate with per-day uses). Her one damaging option is Starry Wisp (1d8 radiant, +6, 60 ft). She is not a combatant: she shields, calms, mends and leaves.</p></section>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide (NPC Reference: Venfyura; Part 7, Session 14)",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "uses": {
+          "max": "",
+          "recovery": [],
+          "spent": 0
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "requirements": "",
+        "properties": [],
+        "activities": {},
+        "enchant": {},
+        "prerequisites": {
+          "level": null
+        },
+        "identifier": "7a00a5ebff"
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 400000,
+      "ownership": {
+        "default": 0
+      },
+      "flags": {
+        "varrenmoor": {
+          "pipelineId": "npc:ossuary:venfyura:spellcasting"
+        }
+      }
+    },
+    {
+      "_id": "5b4b95fc8e499eea",
+      "name": "GM Reference: Venfyura, Voice and Barks",
+      "type": "feat",
+      "img": "icons/sundries/documents/document-sealed-red-yellow.webp",
+      "system": {
+        "description": {
+          "value": "<h2>Venfyura, Eirwitch (Violet's grandmother)</h2><p><em>\"Names are the only thing I carry that cannot be taken.\"</em></p><p><strong>Snapshot.</strong> An Eirwitch who travels the Wyrd. Knows the four lost crafts, the true nature of Mwooreth, Violet's grandmother's story, and how to preserve names and souls. Watches the egg closely.</p><p><strong>Voice.</strong> Quiet, patient, deliberate. Speaks like someone <em>choosing which truth to say today</em>. Says \"little one\" to Violet and rarely uses a name.</p><p><strong>Wants / fears.</strong> Wants the four crafts rediscovered and the egg safe. Fears what she withdrew from.</p><h3>Barks</h3><ul><li>\"Slowly. Truths keep.\"</li><li>\"You are all carrying pieces of something unfinished.\"</li><li>\"That one is important. Do not lose it.\"</li><li>\"Ask the question you actually mean.\"</li><li><em>(to Stellan)</em> \"The egg has a use for you. It does not say what.\"</li></ul><p><strong>At the table:</strong> she is not a combatant. Her value is knowledge and craft. If a fight starts she shields (Sanctuary), calms (Calm Emotions) or simply is not there.</p><p><strong>What others say about her:</strong> Mavis [ASK] <em>\"I recognize the line. Violet's line. Her contempt is about desertion, not skill. Do not mistake the two.\"</em> (Mavis's contempt concerns desertion and moral choices, not Venfyura's magical skill.)</p>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide (NPC Reference: Venfyura; Part 7, Session 14)",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "uses": {
+          "max": "",
+          "recovery": [],
+          "spent": 0
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "requirements": "",
+        "properties": [],
+        "activities": {},
+        "enchant": {},
+        "prerequisites": {
+          "level": null
+        },
+        "identifier": "e360b055ac"
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 500000,
+      "ownership": {
+        "default": 0
+      },
+      "flags": {
+        "varrenmoor": {
+          "pipelineId": "npc:ossuary:venfyura:gm-reference-venfyura-voice-and-barks"
+        }
+      }
+    },
+    {
+      "_id": "4cb8c0e2306b9a8a",
+      "name": "GM Reference: Venfyura, Questions and Answers",
+      "type": "feat",
+      "img": "icons/sundries/documents/document-sealed-red-yellow.webp",
+      "system": {
+        "description": {
+          "value": "<h2>Questions and Answers (by tag)</h2><ul><li><strong>Are you Violet's grandmother?</strong> [ASK] \"Yes. It is not the whole truth. It is <em>true</em>.\"</li><li><strong>What are the four crafts?</strong> [ASK] Lists them simply (see <em>Lore Reference: The Four Lost Crafts</em>).</li><li><strong>What is Mwooreth, really?</strong> [ASK] \"Severance. It is a craft. The cutting was not the sin. The <em>using</em> was.\"</li><li><strong>What's the Seam-Wheel?</strong> [ASK] \"A diagram. Not a door. It is a key for reading the Wyrd.\"</li><li><strong>Can Bones be restored?</strong> [ASK] \"Yes, if his name and some of him survive. Linen, water, a seed of life, a rune of boundary, needle, anchors. I can list them again.\"</li><li><strong>What's the egg?</strong> [EARN] \"It will have a use for 'the son of Håkon.' I will not say more until he asks me properly.\"</li><li><strong>The war, the Old Ways</strong> [EARN] She was <em>there for the truth of the Old Ways</em>. She knows the four lost crafts and the true nature of Mwooreth: <strong>severance is a craft, not a sin.</strong></li><li><strong>Why did you leave?</strong> [EARN] <strong>[UNSETTLED]</strong> Mavis's contempt concerns <em>desertion</em>. Decide Venfyura's reason before she answers.</li><li><strong>Is Violet a Spring Queen?</strong> [SECRET] A <strong>later plan</strong> and not settled. Don't assert it.</li></ul><p><strong>Quick finder:</strong> Who restores a skeleton? Pringus, Venfyura (ASK). What is Mwooreth? Venfyura, Quill (ASK). What is the egg? Venfyura (EARN).</p><p><strong>Not hers to answer:</strong> who hanged the Allfather, who cut the missing sentence, Stellan's family's role, the Great Tangle (SECRET; never told directly).</p>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide (NPC Reference: Venfyura; Part 7, Session 14)",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "uses": {
+          "max": "",
+          "recovery": [],
+          "spent": 0
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "requirements": "",
+        "properties": [],
+        "activities": {},
+        "enchant": {},
+        "prerequisites": {
+          "level": null
+        },
+        "identifier": "f5257b8ec9"
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 600000,
+      "ownership": {
+        "default": 0
+      },
+      "flags": {
+        "varrenmoor": {
+          "pipelineId": "npc:ossuary:venfyura:gm-reference-venfyura-questions-and-answers"
+        }
+      }
+    },
+    {
+      "_id": "d1a2fe6b3fa7f6a5",
+      "name": "Lore Reference: The Four Lost Crafts",
+      "type": "feat",
+      "img": "icons/sundries/documents/document-sealed-red-yellow.webp",
+      "system": {
+        "description": {
+          "value": "<h2>The Four Lost Crafts (Part 1.6)</h2><p>Each craft is a blend of two relationships. <strong>Venfyura knows all four</strong>; the trainers know their own and only recognize the others.</p><ul><li><strong>Stellan: Runecraft</strong> (Mwooreth + Ikkander). <em>Mwooreth makes the cut. Ikkander gives the order.</em> A carved rune can influence the Wyrd.</li><li><strong>Betsy: Splicing</strong> (Ikkander + Vaelweyr). It chooses a viable biological continuation drawn from adjacent strands.</li><li><strong>Violet: Starweaving / Lifeweaving</strong> (Vaelweyr + Eirwyn). It guides life-force through plants and fungi only.</li><li><strong>Dale: Essencecraft</strong> (Eirwyn + Mwooreth). It separates, preserves and recombines the essence a thing actually has.</li></ul><p>[ASK] She lists them simply. <strong>Rule:</strong> trainers teach what the PC's sheet already has and grant no extra charges; Venfyura explains, she does not grant.</p><p><strong>Eirwyn</strong> (her own relationship): water, ice, light; weaving, healing, preservation (identity and preservation). Root runes: Preserve, Mend, Reveal, Threshold.</p>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide (NPC Reference: Venfyura; Part 7, Session 14)",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "uses": {
+          "max": "",
+          "recovery": [],
+          "spent": 0
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "requirements": "",
+        "properties": [],
+        "activities": {},
+        "enchant": {},
+        "prerequisites": {
+          "level": null
+        },
+        "identifier": "225f76ed66"
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 700000,
+      "ownership": {
+        "default": 0
+      },
+      "flags": {
+        "varrenmoor": {
+          "pipelineId": "npc:ossuary:venfyura:lore-reference-the-four-lost-crafts"
+        }
+      }
+    },
+    {
+      "_id": "93db964b918ef032",
+      "name": "Lore Reference: Mwooreth and the Old Ways",
+      "type": "feat",
+      "img": "icons/sundries/documents/document-sealed-red-yellow.webp",
+      "system": {
+        "description": {
+          "value": "<h2>Mwooreth and the Old Ways</h2><p>[ASK] <em>\"Severance. It is a craft. The cutting was not the sin. The using was.\"</em></p><p>[EARN] She was <em>there for the truth of the Old Ways</em>. Where villagers repeat the cover story literally (\"Old church stuff. Bad times.\") and Pringus has only custody records, she knows the four lost crafts and the true nature of Mwooreth: <strong>severance is a craft, not a sin.</strong></p><p><strong>Graveyards (Part 1.5):</strong> all three traditions were active at the same time; they were <em>concealed</em>, not replaced.</p><section class=\"secret\" id=\"secret-5c17c37c2b4eaadb\"><p><strong>GM note.</strong> Cladis's war against Nior is not placed on the history chart [UNSETTLED]. Who made the Mwooreth cut, why, and Stellan's family's role are SECRET and not defined: she does not answer them.</p></section>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide (NPC Reference: Venfyura; Part 7, Session 14)",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "uses": {
+          "max": "",
+          "recovery": [],
+          "spent": 0
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "requirements": "",
+        "properties": [],
+        "activities": {},
+        "enchant": {},
+        "prerequisites": {
+          "level": null
+        },
+        "identifier": "88f3681708"
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 800000,
+      "ownership": {
+        "default": 0
+      },
+      "flags": {
+        "varrenmoor": {
+          "pipelineId": "npc:ossuary:venfyura:lore-reference-mwooreth-and-the-old-ways"
+        }
+      }
+    },
+    {
+      "_id": "692b7c899650cc28",
+      "name": "Lore Reference: Restoring Bones",
+      "type": "feat",
+      "img": "icons/sundries/documents/document-sealed-red-yellow.webp",
+      "system": {
+        "description": {
+          "value": "<h2>Restoring Private / Sergeant Bones</h2><p>[ASK] <em>\"Yes, if his name and some of him survive. Linen, water, a seed of life, a rune of boundary, needle, anchors. I can list them again.\"</em></p><ul><li>Burial linen</li><li>Water (distilled)</li><li>A seed of life</li><li>A rune of boundary</li><li>Needle (and thread)</li><li>Anchors (identity anchors)</li></ul><p><strong>Session 7 (Market of Transients):</strong> she discussed Bones and the restoration materials. Bones was counted and inventoried, including marrow and name; at least one toe/remnant serves the claim. Kenko holds a recovered remnant as evidence and anchor, not ownership.</p><p><strong>Who restores a skeleton?</strong> Pringus, Venfyura (ASK). The Exchange's claim process (Pringus) stays separate from restoration; Ysolde Harrowgate takes Bones's restoration at cost once the Thaw's operation is done (Session 14).</p>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide (NPC Reference: Venfyura; Part 7, Session 14)",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "uses": {
+          "max": "",
+          "recovery": [],
+          "spent": 0
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "requirements": "",
+        "properties": [],
+        "activities": {},
+        "enchant": {},
+        "prerequisites": {
+          "level": null
+        },
+        "identifier": "eb4d49caa3"
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 900000,
+      "ownership": {
+        "default": 0
+      },
+      "flags": {
+        "varrenmoor": {
+          "pipelineId": "npc:ossuary:venfyura:lore-reference-restoring-bones"
+        }
+      }
+    },
+    {
+      "_id": "afcb6042a3935157",
+      "name": "Lore Reference: The Seam-Wheel",
+      "type": "feat",
+      "img": "icons/sundries/documents/document-sealed-red-yellow.webp",
+      "system": {
+        "description": {
+          "value": "<h2>The Seam-Wheel</h2><p>[ASK] <em>\"A diagram. Not a door. It is a key for reading the Wyrd.\"</em></p><p>A carving that diagrams how the four relationships and the four crafts relate. It is a <em>key to the Wyrd</em>, <strong>not</strong> the entrance to the Ragged Mile (Part 1.5).</p><section class=\"secret\" id=\"secret-eb6b592bceee2990\"><p><strong>GM note.</strong> The Great Tangle is a multi-plane mystery and the PCs hold four inherited pieces of an unfinished solution. Never tell them this directly. Her bark \"You are all carrying pieces of something unfinished\" is as close as she goes.</p></section>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide (NPC Reference: Venfyura; Part 7, Session 14)",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "uses": {
+          "max": "",
+          "recovery": [],
+          "spent": 0
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "requirements": "",
+        "properties": [],
+        "activities": {},
+        "enchant": {},
+        "prerequisites": {
+          "level": null
+        },
+        "identifier": "d526972548"
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 1000000,
+      "ownership": {
+        "default": 0
+      },
+      "flags": {
+        "varrenmoor": {
+          "pipelineId": "npc:ossuary:venfyura:lore-reference-the-seam-wheel"
+        }
+      }
+    },
+    {
+      "_id": "97b0cf43024e43bf",
+      "name": "Lore Reference: The Egg and the Son of Håkon",
+      "type": "feat",
+      "img": "icons/sundries/documents/document-sealed-red-yellow.webp",
+      "system": {
+        "description": {
+          "value": "<h2>The Egg</h2><p>[EARN] <em>\"It will have a use for 'the son of Håkon.' I will not say more until he asks me properly.\"</em></p><p><em>(to Stellan)</em> \"The egg has a use for you. It does not say what.\"</p><p>The unknown warm egg came from the marble/brass chest (Session 5) with Maerwyn's Diary and a map fragment. In Session 7 she discussed its significance for the \"son of Håkon\" (Stellan Håkonsson) and <strong>watches the egg closely</strong>. She wants the egg safe. Mavis wants it (leverage).</p><section class=\"secret\" id=\"secret-20b351b171c4fb2f\"><p><strong>GM note.</strong> The egg's nature and use are unresolved story threads. \"Asks me properly\" is the gate; what she says then is not written yet.</p></section>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide (NPC Reference: Venfyura; Part 7, Session 14)",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "uses": {
+          "max": "",
+          "recovery": [],
+          "spent": 0
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "requirements": "",
+        "properties": [],
+        "activities": {},
+        "enchant": {},
+        "prerequisites": {
+          "level": null
+        },
+        "identifier": "bfab38a1ab"
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 1100000,
+      "ownership": {
+        "default": 0
+      },
+      "flags": {
+        "varrenmoor": {
+          "pipelineId": "npc:ossuary:venfyura:lore-reference-the-egg-and-the-son-of-h-kon"
+        }
+      }
+    },
+    {
+      "_id": "084fc115d93dcb56",
+      "name": "Lore Reference: Violet, the Amulet and the Chart",
+      "type": "feat",
+      "img": "icons/sundries/documents/document-sealed-red-yellow.webp",
+      "system": {
+        "description": {
+          "value": "<h2>Violet, the Amulet and the Chart</h2><p>[ASK] <em>\"Yes. It is not the whole truth. It is true.\"</em> She calls Violet \"little one\".</p><ul><li>Violet's breadcrumbs: her <strong>grandmother's amulet and chart</strong>, ancestral stars (Session 5: touching Kenko and the amulet, Violet alone saw a nighttime meadow and ancestral stars).</li><li>Session 7: Venfyura discussed <strong>Violet's chart</strong>.</li><li>Mavis knew the family and the wedding, and recognizes Venfyura's line (Session 13).</li><li>Violet's craft, Starweaving / Lifeweaving, is half Eirwyn: her grandmother's relationship.</li></ul><section class=\"secret\" id=\"secret-331b500f1cdce146\"><p><strong>GM note.</strong> Venfyura is Violet's grandmother and an Eirwitch (later correction; older 'separate from grandmother' notes are superseded). Possible Spring office and the consequences of her withdrawal are a later plan, not settled. <strong>Is Violet a Spring Queen?</strong> [SECRET] Don't assert it. <strong>Why did she leave?</strong> [UNSETTLED] Mavis's contempt concerns desertion. Decide the reason before she answers.</p></section>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide (NPC Reference: Venfyura; Part 7, Session 14)",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "uses": {
+          "max": "",
+          "recovery": [],
+          "spent": 0
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "requirements": "",
+        "properties": [],
+        "activities": {},
+        "enchant": {},
+        "prerequisites": {
+          "level": null
+        },
+        "identifier": "68e653e977"
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 1200000,
+      "ownership": {
+        "default": 0
+      },
+      "flags": {
+        "varrenmoor": {
+          "pipelineId": "npc:ossuary:venfyura:lore-reference-violet-the-amulet-and-the-chart"
+        }
+      }
+    },
+    {
+      "_id": "6b7ada1de8ce0f76",
+      "name": "GM Reference: The Woman at the Fire (Sessions 14-15)",
+      "type": "feat",
+      "img": "icons/sundries/documents/document-sealed-red-yellow.webp",
+      "system": {
+        "description": {
+          "value": "<h2>The Woman at the Fire (Sessions 14-15)</h2><p><strong>SETTLED:</strong> she is the \"lone ancient Eirwitch\" at the Eirwitch camp above Bridgehollow: a single campfire in a mountain clearing by a tall, narrow stave church, beside a deep river gorge where some frost never melts. She keeps the <strong>fire</strong> and the <strong>bell</strong>, and is the Thaw's partner on the far side. She keeps the fire burning by the stave church because a fire is the opposite of the palace: it is always changing.</p><ul><li><strong>Session 14 (off stage).</strong> The Thaw call her \"V.\" in writing and \"the woman at the fire\" aloud. Pell Ostry's old loyalty is to her; she uses his cold door. She grew the fungal culture Violet works with (Pell: \"the woman at the fire\"). Her word via Pell: the Goddess has noticed (\"She's looking\").</li><li><strong>Not revealed in Session 14.</strong> Pell and Quill never name her. Clues: Europa's memory (\"Not yet, little one\"), and Violet's Read Green Pattern on the culture (the same careful hand as her grandmother's chart, if Violet has met Venfyura). Revealed at the camp (Session 15).</li><li><strong>The far knot (Session 15).</strong> The party carries the far end out, recovers the bell's clapper (seized by the Bridgehollow authorities; Customs House), gets Venfyura's help, rings the Bell knock (four slow), lowers the line on its sinker, and ties it off at the gorge, <strong>with Venfyura</strong>.</li><li><strong>Settled canon around her:</strong> Cladis, the ancient Eirwitch Winter Queen, was banished outside the Wyrd, broke and shredded her own thread and re-tied it at the Rhime Goddess's Ice Palace. The Rhime Goddess has noticed; her name is <strong>Lakkar, Lady of Eternal Hunger</strong> (the Goddess writes it on the Stolen Shard in Session 14, Scene 7).</li></ul><section class=\"secret\" id=\"secret-eabee185dddd4207\"><p><strong>GM note.</strong> [SUGGESTED, not settled] Venfyura put Europa to sleep at the camp (\"Not yet, little one\") and Europa's brother carried her through the cold door. Why Venfyura did it is the GM's call. \"Little one\" is her canon address: don't confirm it early; Violet's player may recognize it. [UNSETTLED] How her role at the camp fits her canon withdrawal (Mavis: desertion). Don't resolve it at the camp unless decided. Whether the re-tie works and what Lakkar asks in return: Session 15 or later.</p></section>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide (NPC Reference: Venfyura; Part 7, Session 14)",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "uses": {
+          "max": "",
+          "recovery": [],
+          "spent": 0
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "requirements": "",
+        "properties": [],
+        "activities": {},
+        "enchant": {},
+        "prerequisites": {
+          "level": null
+        },
+        "identifier": "a25b72dc9a"
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 1300000,
+      "ownership": {
+        "default": 0
+      },
+      "flags": {
+        "varrenmoor": {
+          "pipelineId": "npc:ossuary:venfyura:gm-reference-the-woman-at-the-fire-sessions-14-15"
+        }
+      }
+    },
+    {
+      "_id": "0a277814098ab33c",
+      "name": "GM Reference: Session 7, the Market of Transients",
+      "type": "feat",
+      "img": "icons/sundries/documents/document-sealed-red-yellow.webp",
+      "system": {
+        "description": {
+          "value": "<h2>Session 7: the Market of Transients</h2><p>Where the party met her (as the market's \"Fortune Teller\"). In the same session: Gfefk Kfefg, <em>The Lantern Lad and the Road of Teeth</em>, and Betsy's animal-holding music box and iron-bell trade (not Venfyura's).</p><ul><li>She discussed <strong>Bones</strong> and the <strong>restoration materials</strong>.</li><li>The <strong>four lost crafts</strong>.</li><li><strong>Violet's chart</strong>.</li><li>The <strong>Seam-Wheel</strong>.</li><li>The <strong>egg's significance for the \"son of Håkon\"</strong>; she watches the egg closely.</li><li>Full moon in two nights; Bones counted and inventoried, including marrow and name.</li></ul><section class=\"secret\" id=\"secret-8c5abed12c92e6b1\"><p><strong>GM note.</strong> No stock list for her is recorded in canon, so this actor has no Merchant Reference and no shop loot. Add one if she sold anything at the table.</p></section>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide (NPC Reference: Venfyura; Part 7, Session 14)",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "uses": {
+          "max": "",
+          "recovery": [],
+          "spent": 0
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "requirements": "",
+        "properties": [],
+        "activities": {},
+        "enchant": {},
+        "prerequisites": {
+          "level": null
+        },
+        "identifier": "e17132bf54"
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 1400000,
+      "ownership": {
+        "default": 0
+      },
+      "flags": {
+        "varrenmoor": {
+          "pipelineId": "npc:ossuary:venfyura:gm-reference-session-7-the-market-of-transients"
+        }
+      }
+    }
+  ],
+  "effects": [],
+  "folder": "OLuefHiZMZYoeS5z",
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {}
+}
