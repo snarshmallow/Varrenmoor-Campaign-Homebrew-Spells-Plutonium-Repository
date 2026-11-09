@@ -1,0 +1,48 @@
+{
+ "id": "varrenmoor__town_center",
+ "name": "Varrenmoor - Varrenmoor Town Center",
+ "kind": "district",
+ "status": "proposed",
+ "units": "feet",
+ "origin": "top-left, y down",
+ "bounds": {
+  "width_ft": 4654.0,
+  "height_ft": 3961.0
+ },
+ "window_ft": [
+  1729.0,
+  2113.0,
+  4654.0,
+  3961.0
+ ],
+ "parent": {
+  "place": "varrenmoor",
+  "region": "region.json"
+ },
+ "notes": "Zoom-in child of varrenmoor (region Varrenmoor Town Center). Same ids and foot coordinates as the parent. See region.json; details.json is generated, not canon.",
+ "files": {
+  "districts": "districts.json",
+  "streets": "streets.json",
+  "water": "water.json",
+  "buildings": "buildings/",
+  "view_settings": "view_settings.json",
+  "terrain": "terrain/",
+  "region": "region.json",
+  "details": "details.json",
+  "markers": "markers.json"
+ },
+ "view_focus": {
+  "district": [
+   3191.5,
+   3037.0
+  ]
+ },
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null,
+  "parent_place": "varrenmoor"
+ },
+ "generated_by": "region_extract.py",
+ "sea_level_ft": 0.0
+}

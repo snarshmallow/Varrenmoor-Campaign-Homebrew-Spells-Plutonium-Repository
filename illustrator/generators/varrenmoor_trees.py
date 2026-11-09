@@ -88,7 +88,7 @@ def scatter(place, target=6000, seed=208, rect=None):
         nearw = (not water.is_empty) and water.distance(cell) < 150
         dens = rel * scale
         for k, g in enumerate(parts):
-            zone = f"m_{bx}_{by}_{k}"
+            zone = "mz" + "".join(chr(97 + int(ch)) for ch in f"{bx:04d}{by:04d}{k}")           # letters only: ids like fol_mzabcd_0001 (digits and underscores in a zone confused the push duplicate guard)
             pts = [[round(x, 1), round(y, 1)] for x, y in list(g.exterior.coords)[:-1]]
             r = fol.run_scatter(doc, env, lib, {"zone": zone, "name": f"map canopy {c:.2f}", "polygon": pts, "mix": mix_for(cx, zr, nearw), "density_per_ha": round(dens, 3),
                                                 "seed": seed + bx * 7 + by, "pattern": "cluster", "cluster_size": 6, "cluster_radius_ft": 90, "clearance_building_ft": 60,

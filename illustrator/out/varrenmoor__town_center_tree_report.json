@@ -1,0 +1,368 @@
+{
+ "summary": {
+  "place": "varrenmoor__town_center",
+  "trees": 289,
+  "blocks": 35,
+  "scale_density_per_ha_at_full_canopy": 21.499,
+  "per_species": {
+   "beech": 37,
+   "birch": 73,
+   "fir": 15,
+   "oak": 38,
+   "scots_pine": 75,
+   "spruce": 52
+  }
+ },
+ "blocks": [
+  {
+   "block_px": [
+    192,
+    416
+   ],
+   "canopy": 0.71,
+   "density_per_ha": 9.98,
+   "zr": 0.7,
+   "added": 8
+  },
+  {
+   "block_px": [
+    192,
+    480
+   ],
+   "canopy": 0.86,
+   "density_per_ha": 16.85,
+   "zr": 1.01,
+   "added": 19
+  },
+  {
+   "block_px": [
+    192,
+    544
+   ],
+   "canopy": 0.86,
+   "density_per_ha": 16.66,
+   "zr": 0.92,
+   "added": 19
+  },
+  {
+   "block_px": [
+    192,
+    608
+   ],
+   "canopy": 0.72,
+   "density_per_ha": 10.28,
+   "zr": 0.87,
+   "added": 11
+  },
+  {
+   "block_px": [
+    192,
+    672
+   ],
+   "canopy": 0.71,
+   "density_per_ha": 10.13,
+   "zr": 0.88,
+   "added": 0
+  },
+  {
+   "block_px": [
+    256,
+    416
+   ],
+   "canopy": 0.86,
+   "density_per_ha": 16.78,
+   "zr": 0.39,
+   "added": 27
+  },
+  {
+   "block_px": [
+    256,
+    480
+   ],
+   "canopy": 0.69,
+   "density_per_ha": 9.36,
+   "zr": 0.53,
+   "added": 19
+  },
+  {
+   "block_px": [
+    256,
+    544
+   ],
+   "canopy": 0.7,
+   "density_per_ha": 9.7,
+   "zr": 0.59,
+   "added": 19
+  },
+  {
+   "block_px": [
+    256,
+    608
+   ],
+   "canopy": 0.65,
+   "density_per_ha": 7.6,
+   "zr": 0.61,
+   "added": 9
+  },
+  {
+   "block_px": [
+    256,
+    672
+   ],
+   "canopy": 0.57,
+   "density_per_ha": 4.9,
+   "zr": 0.42,
+   "added": 0
+  },
+  {
+   "block_px": [
+    320,
+    416
+   ],
+   "canopy": 0.78,
+   "density_per_ha": 12.87,
+   "zr": 0.08,
+   "added": 16
+  },
+  {
+   "block_px": [
+    320,
+    480
+   ],
+   "canopy": 0.57,
+   "density_per_ha": 4.79,
+   "zr": 0.33,
+   "added": 9
+  },
+  {
+   "block_px": [
+    320,
+    544
+   ],
+   "canopy": 0.61,
+   "density_per_ha": 6.02,
+   "zr": 0.31,
+   "added": 12
+  },
+  {
+   "block_px": [
+    320,
+    608
+   ],
+   "canopy": 0.55,
+   "density_per_ha": 4.17,
+   "zr": 0.36,
+   "added": 9
+  },
+  {
+   "block_px": [
+    320,
+    672
+   ],
+   "canopy": 0.79,
+   "density_per_ha": 13.39,
+   "zr": 0.34,
+   "added": 0
+  },
+  {
+   "block_px": [
+    384,
+    416
+   ],
+   "canopy": 0.81,
+   "density_per_ha": 14.29,
+   "zr": 0.09,
+   "added": 19
+  },
+  {
+   "block_px": [
+    384,
+    480
+   ],
+   "canopy": 0.53,
+   "density_per_ha": 3.63,
+   "zr": 0.2,
+   "added": 7
+  },
+  {
+   "block_px": [
+    384,
+    544
+   ],
+   "canopy": 0.45,
+   "density_per_ha": 1.45,
+   "zr": 0.06,
+   "added": 3
+  },
+  {
+   "block_px": [
+    384,
+    608
+   ],
+   "canopy": 0.46,
+   "density_per_ha": 1.59,
+   "zr": 0.23,
+   "added": 3
+  },
+  {
+   "block_px": [
+    384,
+    672
+   ],
+   "canopy": 0.8,
+   "density_per_ha": 13.9,
+   "zr": 0.12,
+   "added": 1
+  },
+  {
+   "block_px": [
+    448,
+    416
+   ],
+   "canopy": 0.74,
+   "density_per_ha": 11.44,
+   "zr": 0.18,
+   "added": 11
+  },
+  {
+   "block_px": [
+    448,
+    480
+   ],
+   "canopy": 0.47,
+   "density_per_ha": 1.96,
+   "zr": 0.11,
+   "added": 0
+  },
+  {
+   "block_px": [
+    448,
+    544
+   ],
+   "canopy": 0.39,
+   "density_per_ha": 0.33,
+   "zr": 0.07,
+   "added": 0
+  },
+  {
+   "block_px": [
+    448,
+    608
+   ],
+   "canopy": 0.67,
+   "density_per_ha": 8.43,
+   "zr": 0.14,
+   "added": 16
+  },
+  {
+   "block_px": [
+    448,
+    672
+   ],
+   "canopy": 0.9,
+   "density_per_ha": 18.93,
+   "zr": -0.08,
+   "added": 1
+  },
+  {
+   "block_px": [
+    512,
+    416
+   ],
+   "canopy": 0.51,
+   "density_per_ha": 2.87,
+   "zr": 0.26,
+   "added": 3
+  },
+  {
+   "block_px": [
+    512,
+    480
+   ],
+   "canopy": 0.43,
+   "density_per_ha": 1.06,
+   "zr": -0.14,
+   "added": 1
+  },
+  {
+   "block_px": [
+    512,
+    544
+   ],
+   "canopy": 0.51,
+   "density_per_ha": 2.84,
+   "zr": 0.03,
+   "added": 5
+  },
+  {
+   "block_px": [
+    512,
+    608
+   ],
+   "canopy": 0.59,
+   "density_per_ha": 5.33,
+   "zr": 0.04,
+   "added": 8
+  },
+  {
+   "block_px": [
+    512,
+    672
+   ],
+   "canopy": 0.86,
+   "density_per_ha": 17.1,
+   "zr": -0.24,
+   "added": 1
+  },
+  {
+   "block_px": [
+    576,
+    416
+   ],
+   "canopy": 0.69,
+   "density_per_ha": 9.0,
+   "zr": -0.5,
+   "added": 5
+  },
+  {
+   "block_px": [
+    576,
+    480
+   ],
+   "canopy": 0.81,
+   "density_per_ha": 14.67,
+   "zr": 0.02,
+   "added": 12
+  },
+  {
+   "block_px": [
+    576,
+    544
+   ],
+   "canopy": 0.72,
+   "density_per_ha": 10.25,
+   "zr": -0.11,
+   "added": 8
+  },
+  {
+   "block_px": [
+    576,
+    608
+   ],
+   "canopy": 0.68,
+   "density_per_ha": 8.69,
+   "zr": 1.17,
+   "added": 8
+  },
+  {
+   "block_px": [
+    576,
+    672
+   ],
+   "canopy": 0.8,
+   "density_per_ha": 14.05,
+   "zr": 0.56,
+   "added": 0
+  }
+ ]
+}

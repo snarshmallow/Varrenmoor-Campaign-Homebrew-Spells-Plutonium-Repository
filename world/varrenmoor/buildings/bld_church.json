@@ -1,0 +1,43 @@
+{
+ "id": "bld_church",
+ "name": "Varrenmoor Church",
+ "kind": "church",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    5353.3,
+    1345.9
+   ],
+   [
+    5345.5,
+    1319.0
+   ],
+   [
+    5412.7,
+    1299.5
+   ],
+   [
+    5420.5,
+    1326.4
+   ]
+  ]
+ },
+ "notes": "Churchyard on the map: spired church inside a round wall.",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 2,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 711.1,
+ "style": "parish_church",
+ "map_px": [
+  700,
+  332
+ ],
+ "angle_deg": 163.8
+}

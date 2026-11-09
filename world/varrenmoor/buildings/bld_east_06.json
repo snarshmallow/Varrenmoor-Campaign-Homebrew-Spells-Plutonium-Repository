@@ -1,0 +1,44 @@
+{
+ "id": "bld_east_06",
+ "name": "East Hollow house 6",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    4262.9,
+    3292.1
+   ],
+   [
+    4251.1,
+    3308.2
+   ],
+   [
+    4226.9,
+    3290.5
+   ],
+   [
+    4238.7,
+    3274.4
+   ]
+  ]
+ },
+ "notes": "Placed at a roof symbol of the campaign map.",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 700.4,
+ "style": "moorland_cottage",
+ "map_px": [
+  552,
+  588
+ ],
+ "angle_deg": 36.2,
+ "interior_style": "rustic_cottage"
+}

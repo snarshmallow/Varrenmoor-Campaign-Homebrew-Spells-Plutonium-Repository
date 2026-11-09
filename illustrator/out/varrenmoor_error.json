@@ -1,0 +1,37 @@
+{
+ "ft_per_map_px": 7.69,
+ "buildings_n": 36,
+ "building_centre_offset_ft": {
+  "mean": 3.1,
+  "p90": 12.0,
+  "max": 36.0
+ },
+ "building_centre_offset_map_px": {
+  "mean": 0.4,
+  "max": 4.68
+ },
+ "river_centreline_vs_map_ft": {
+  "mean": 26.6,
+  "max": 42.4
+ },
+ "river_centreline_vs_map_px": {
+  "mean": 3.45,
+  "max": 5.52
+ },
+ "road_vertex_to_model_road_max_ft": {
+  "str_pilgrim_road": 1.68,
+  "str_oak_ring": 0.0,
+  "str_oak_link": 0.0,
+  "str_hollow_east": 0.0,
+  "str_church_path": 0.0,
+  "str_church_ring": 0.0,
+  "str_stables_path": 0.0,
+  "str_mill_path": 0.0,
+  "str_hakon_path": 0.0,
+  "str_west_lane": 0.0,
+  "str_west_loop": 0.0,
+  "str_west_link": 0.0,
+  "str_thorne_lane": 0.0,
+  "str_fenn_lane": 0.0
+ }
+}

@@ -1,0 +1,318 @@
+{
+ "place": "varrenmoor__town_center",
+ "districts": [
+  {
+   "id": "dis_varrenmoor",
+   "name": "Varrenmoor village",
+   "kind": "district",
+   "status": "proposed",
+   "geometry": {
+    "type": "polygon",
+    "points": [
+     [
+      4487.3,
+      2697.8
+     ],
+     [
+      4341.3,
+      2345.4
+     ],
+     [
+      4163.04,
+      2113.0
+     ],
+     [
+      1988.97,
+      2113.0
+     ],
+     [
+      1810.7,
+      2345.5
+     ],
+     [
+      1729.0,
+      2542.64
+     ],
+     [
+      1729.0,
+      3609.4
+     ],
+     [
+      1810.7,
+      3806.6
+     ],
+     [
+      1929.13,
+      3961.0
+     ],
+     [
+      4222.87,
+      3961.0
+     ],
+     [
+      4341.3,
+      3806.6
+     ],
+     [
+      4487.3,
+      3454.2
+     ],
+     [
+      4537.1,
+      3076.0
+     ]
+    ]
+   },
+   "notes": "Digitised from the campaign map.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "elevation_ft": 701.0,
+   "ring": "core",
+   "label_point": [
+    3076.0,
+    3076.0
+   ],
+   "region": {
+    "parent_id": "dis_varrenmoor",
+    "clipped": true,
+    "inside_frac": 0.739,
+    "part": 1
+   }
+  },
+  {
+   "id": "sqr_hollow_oak",
+   "name": "Hollow Oak green",
+   "kind": "square",
+   "status": "proposed",
+   "geometry": {
+    "type": "polygon",
+    "points": [
+     [
+      4036.0,
+      2546.9
+     ],
+     [
+      4009.9,
+      2483.9
+     ],
+     [
+      3968.4,
+      2429.7
+     ],
+     [
+      3914.2,
+      2388.2
+     ],
+     [
+      3851.2,
+      2362.0
+     ],
+     [
+      3783.5,
+      2353.1
+     ],
+     [
+      3715.8,
+      2362.0
+     ],
+     [
+      3652.8,
+      2388.2
+     ],
+     [
+      3598.6,
+      2429.7
+     ],
+     [
+      3557.0,
+      2483.9
+     ],
+     [
+      3530.9,
+      2546.9
+     ],
+     [
+      3522.0,
+      2614.6
+     ],
+     [
+      3530.9,
+      2682.3
+     ],
+     [
+      3557.0,
+      2745.3
+     ],
+     [
+      3598.6,
+      2799.5
+     ],
+     [
+      3652.8,
+      2841.0
+     ],
+     [
+      3715.8,
+      2867.2
+     ],
+     [
+      3783.5,
+      2876.1
+     ],
+     [
+      3851.2,
+      2867.2
+     ],
+     [
+      3914.2,
+      2841.0
+     ],
+     [
+      3968.4,
+      2799.5
+     ],
+     [
+      4009.9,
+      2745.3
+     ],
+     [
+      4036.0,
+      2682.3
+     ],
+     [
+      4044.9,
+      2614.6
+     ]
+    ]
+   },
+   "notes": "Digitised from the campaign map.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "elevation_ft": 700.2,
+   "label_point": [
+    3783.5,
+    2614.6
+   ],
+   "region": {
+    "parent_id": "sqr_hollow_oak",
+    "clipped": false,
+    "inside_frac": 1.0,
+    "part": 1
+   }
+  },
+  {
+   "id": "sqr_meeting_green",
+   "name": "Big hall green",
+   "kind": "square",
+   "status": "proposed",
+   "geometry": {
+    "type": "polygon",
+    "points": [
+     [
+      2421.0,
+      3495.7
+     ],
+     [
+      2394.8,
+      3444.3
+     ],
+     [
+      2354.0,
+      3403.5
+     ],
+     [
+      2302.5,
+      3377.3
+     ],
+     [
+      2245.5,
+      3368.2
+     ],
+     [
+      2188.4,
+      3377.3
+     ],
+     [
+      2137.0,
+      3403.5
+     ],
+     [
+      2096.2,
+      3444.3
+     ],
+     [
+      2070.0,
+      3495.7
+     ],
+     [
+      2060.9,
+      3552.8
+     ],
+     [
+      2070.0,
+      3609.8
+     ],
+     [
+      2096.2,
+      3661.3
+     ],
+     [
+      2137.0,
+      3702.1
+     ],
+     [
+      2188.4,
+      3728.3
+     ],
+     [
+      2245.5,
+      3737.3
+     ],
+     [
+      2302.5,
+      3728.3
+     ],
+     [
+      2354.0,
+      3702.1
+     ],
+     [
+      2394.8,
+      3661.3
+     ],
+     [
+      2421.0,
+      3609.8
+     ],
+     [
+      2430.0,
+      3552.8
+     ]
+    ]
+   },
+   "notes": "Digitised from the campaign map.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "elevation_ft": 701.7,
+   "label_point": [
+    2245.5,
+    3552.8
+   ],
+   "region": {
+    "parent_id": "sqr_meeting_green",
+    "clipped": false,
+    "inside_frac": 1.0,
+    "part": 1
+   }
+  }
+ ]
+}

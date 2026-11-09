@@ -1,0 +1,51 @@
+{
+ "id": "bld_hollow_02",
+ "name": "Hollow house 2",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    3386.4,
+    3070.7
+   ],
+   [
+    3368.2,
+    3062.3
+   ],
+   [
+    3380.8,
+    3035.1
+   ],
+   [
+    3399.0,
+    3043.5
+   ]
+  ]
+ },
+ "notes": "Placed at a roof symbol of the campaign map.",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 699.8,
+ "style": "moorland_cottage",
+ "map_px": [
+  440,
+  557
+ ],
+ "angle_deg": 114.8,
+ "interior_style": "rustic_cottage",
+ "region": {
+  "parent_id": "bld_hollow_02",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

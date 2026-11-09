@@ -1,0 +1,79 @@
+{
+ "units": "ft",
+ "page_in": [
+  19.5,
+  13.0
+ ],
+ "margin_in": 0.5,
+ "min_street_width_ft": 10,
+ "default_preset": "district",
+ "contour_mask": {
+  "enabled": true,
+  "include": [
+   "buildings",
+   "streets",
+   "plazas"
+  ]
+ },
+ "_note": "District child map: preset 'district' is the zoomed-in view (scale, grid, page fit to the region). Overrides: --scale/--grid/--page.",
+ "presets": {
+  "town": {
+   "scale_ft_per_in": 160,
+   "grid_ft": 50,
+   "grid_major_every": 5,
+   "focus": [
+    3191.5,
+    3037.0
+   ],
+   "scale_bar_ft": 800
+  },
+  "bowl": {
+   "scale_ft_per_in": 600,
+   "grid_ft": 200,
+   "grid_major_every": 5,
+   "focus": [
+    3191.5,
+    3037.0
+   ],
+   "scale_bar_ft": 3000
+  },
+  "street": {
+   "scale_ft_per_in": 20,
+   "grid_ft": 20,
+   "grid_major_every": 5,
+   "focus": "entity",
+   "scale_bar_ft": 100
+  },
+  "room": {
+   "scale_ft_per_in": 5,
+   "grid_ft": 5,
+   "grid_major_every": 5,
+   "focus": "entity",
+   "scale_bar_ft": 25
+  },
+  "whole": {
+   "scale_ft_per_in": 640,
+   "grid_ft": 100,
+   "grid_major_every": 5,
+   "focus": [
+    3191.5,
+    3037.0
+   ],
+   "scale_bar_ft": 3200
+  },
+  "district": {
+   "scale_ft_per_in": 160.0,
+   "grid_ft": 50.0,
+   "grid_major_every": 4,
+   "focus": [
+    3191.5,
+    3037.0
+   ],
+   "scale_bar_ft": 1000,
+   "page_in": [
+    19.5,
+    13.0
+   ]
+  }
+ }
+}

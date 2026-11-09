@@ -1,0 +1,40 @@
+{
+ "_note": "Varrenmoor village base: terrain and river only; streets, buildings and districts are placed from the campaign map by generators/varrenmoor_build.py",
+ "id": "varrenmoor",
+ "name": "Varrenmoor",
+ "seed": 208,
+ "culture": "scandinavian",
+ "size_ft": [
+  6300,
+  6150
+ ],
+ "cell_ft": 10,
+ "terrain": {
+  "recipe": "valley",
+  "relief_ft": 300,
+  "rivers": 1,
+  "river_width_ft": 40,
+  "river_meander": "gentle"
+ },
+ "town": {
+  "population": 140,
+  "layout": "organic",
+  "central_feature": "green",
+  "wall": false,
+  "gates": 1,
+  "districts": "auto",
+  "centre": "auto",
+  "entry_side": "auto",
+  "farmland": true
+ },
+ "climate": "cold",
+ "season": "autumn",
+ "styles": "auto",
+ "limits": {
+  "max_buildings": 1200,
+  "max_area_ft2": 3000000,
+  "max_place_ft": 9000,
+  "allow_large": false,
+  "draft": false
+ }
+}

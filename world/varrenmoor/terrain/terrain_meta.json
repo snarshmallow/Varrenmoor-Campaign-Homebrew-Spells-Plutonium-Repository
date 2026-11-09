@@ -1,0 +1,17 @@
+{
+ "size_ft": [
+  8460.0,
+  6150.0
+ ],
+ "cell_ft": 15.0,
+ "nx": 565,
+ "ny": 411,
+ "seed": 208,
+ "elev_min": 694.254638671875,
+ "elev_max": 1195.3338623046875,
+ "relief_ft": 501.0792236328125,
+ "units": "feet",
+ "pipeline": "natural_v2",
+ "node_convention": "h[i,j] at x=j*cell_ft, y=i*cell_ft (y down)",
+ "sea_level_ft": 0.0
+}

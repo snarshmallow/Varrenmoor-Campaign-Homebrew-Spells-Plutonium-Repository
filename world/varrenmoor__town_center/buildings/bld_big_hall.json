@@ -1,0 +1,50 @@
+{
+ "id": "bld_big_hall",
+ "name": "Big hall (west)",
+ "kind": "hall",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    2288.2,
+    3471.4
+   ],
+   [
+    2258.3,
+    3469.3
+   ],
+   [
+    2262.7,
+    3407.5
+   ],
+   [
+    2292.6,
+    3409.6
+   ]
+  ]
+ },
+ "notes": "Largest building of the west cluster on the map. DM guide / project sources: formal name and function not in sources, so it is NOT labelled inn or meeting house.",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 2,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 701.7,
+ "style": "long_timber_hall",
+ "map_px": [
+  292,
+  607
+ ],
+ "angle_deg": 94.1,
+ "region": {
+  "parent_id": "bld_big_hall",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

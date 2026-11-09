@@ -1,0 +1,44 @@
+{
+ "id": "bld_thorne_farmhouse",
+ "name": "Thorne Farmhouse",
+ "kind": "farmhouse",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    4888.0,
+    5616.3
+   ],
+   [
+    4881.7,
+    5591.0
+   ],
+   [
+    4924.4,
+    5580.3
+   ],
+   [
+    4930.7,
+    5605.6
+   ]
+  ]
+ },
+ "notes": "Thorne Farm on the map.",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 2,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 750.4,
+ "style": "farm_longhouse",
+ "map_px": [
+  638,
+  888
+ ],
+ "angle_deg": 165.9,
+ "interior_style": "farmhouse"
+}

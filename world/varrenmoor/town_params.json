@@ -1,0 +1,186 @@
+{
+ "_note": "Written by place_create.py for varrenmoor (seed 208, layout organic). Feet, y down. Edit and re-run town_gen.py.",
+ "place": "varrenmoor",
+ "seed": 208,
+ "detail": 1,
+ "view_preset": "town",
+ "naming_set": "scandinavian",
+ "area_mode": "auto",
+ "area_ft": null,
+ "area_auto": {
+  "seed": 208,
+  "slope_limit": 0.15,
+  "smoothing_ft": 45,
+  "target_area_ft2": 140000.0,
+  "centre": [
+   2955,
+   3225
+  ]
+ },
+ "output": {
+  "streets": true,
+  "plazas": true,
+  "blocks": false,
+  "buildings": true,
+  "fields": true,
+  "districts": true
+ },
+ "limits": {
+  "max_street_grade": 0.09,
+  "max_main_grade": 0.06,
+  "max_build_slope": 0.19,
+  "max_build_relief_ft": 6.0,
+  "max_field_slope": 0.13,
+  "water_margin_ft": 14,
+  "below_datum_is_water": true,
+  "bank_fill_ft": 24,
+  "field_smooth_cells": 1.0
+ },
+ "entry": {
+  "point": [
+   3150,
+   6150
+  ],
+  "via": [],
+  "name": "Kongevegen",
+  "id": "main_road",
+  "width_ft": 28,
+  "bridge_width_ft": 24,
+  "grade_weight": 4.0,
+  "grade_exp": 2.5
+ },
+ "ring_spec": {
+  "centre": [
+   2955,
+   3225
+  ],
+  "aspect": [
+   0.85,
+   0.95
+  ],
+  "noise": 0.2,
+  "noise_period_ft": 320,
+  "feather_ft": 100,
+  "rings": [
+   {
+    "id": "core",
+    "name": "Havna",
+    "kind": "residential",
+    "r_max": 232,
+    "street_width": 16,
+    "dsep": [
+     75,
+     95
+    ],
+    "lot_area": [
+     700,
+     1700
+    ],
+    "build_prob": 0.9
+   },
+   {
+    "id": "farm",
+    "name": "Utmarka",
+    "kind": "farm",
+    "r_max": 1000000000,
+    "street_width": 13,
+    "dsep": [
+     150,
+     200
+    ],
+    "lot_area": [
+     16000,
+     48000
+    ],
+    "build_prob": 0.3
+   }
+  ],
+  "mode": "terrain"
+ },
+ "plazas": {
+  "enabled": true,
+  "min_area_ft2": 42000,
+  "per_area_ft2": 400000,
+  "max": 1,
+  "radius_ft": [
+   30,
+   48
+  ],
+  "min_sep_ft": 260,
+  "anchors": [
+   {
+    "id": "sqr_market",
+    "name": "Bygdatunet",
+    "type": "road",
+    "near": [
+     2957,
+     3260
+    ]
+   }
+  ],
+  "extra_radius_ft": [
+   30,
+   42
+  ]
+ },
+ "named": {
+  "market_plaza": "sqr_market",
+  "court_plaza": "sqr_court",
+  "skip": [
+   "court",
+   "gate",
+   "hall",
+   "lockup",
+   "stables",
+   "tax"
+  ],
+  "smithy": {
+   "size": [
+    40,
+    30
+   ],
+   "ring_ft": 139
+  },
+  "mill": {
+   "size": [
+    44,
+    32
+   ],
+   "downstream_ft": 190
+  },
+  "extra_civic": []
+ },
+ "streets": {
+  "trace_grade_margin": 0.6,
+  "stub_min_ft": 110,
+  "loop_max_area_ft2": 5000,
+  "loop_compact": 0.3,
+  "split_steep_factor": 1.0,
+  "smooth_sigma_ft": 12,
+  "edge_inset": true
+ },
+ "lots": {
+  "min_frontage_ft": 10,
+  "house_fill_w": [
+   0.7,
+   0.92
+  ],
+  "house_fill_d": [
+   0.55,
+   0.85
+  ],
+  "min_house_ft": [
+   14,
+   12
+  ],
+  "shed_detail": 2,
+  "shed_min_area_ft2": 700,
+  "shed_prob": 0.5,
+  "max_house_ft": [
+   46,
+   38
+  ],
+  "backland_ft": 0,
+  "edge_fade_ft": 12
+ }
+}

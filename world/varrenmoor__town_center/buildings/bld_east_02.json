@@ -1,0 +1,51 @@
+{
+ "id": "bld_east_02",
+ "name": "East Hollow house 2",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    4004.2,
+    3166.5
+   ],
+   [
+    4016.8,
+    3182.1
+   ],
+   [
+    3993.4,
+    3200.9
+   ],
+   [
+    3980.8,
+    3185.3
+   ]
+  ]
+ },
+ "notes": "Placed at a roof symbol of the campaign map.",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 699.8,
+ "style": "moorland_cottage",
+ "map_px": [
+  520,
+  574
+ ],
+ "angle_deg": -38.9,
+ "interior_style": "rustic_cottage",
+ "region": {
+  "parent_id": "bld_east_02",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

@@ -1,0 +1,63 @@
+{
+ "id": "varrenmoor",
+ "name": "Varrenmoor",
+ "kind": "hamlet",
+ "status": "proposed",
+ "units": "feet",
+ "origin": "top-left, y down",
+ "bounds": {
+  "width_ft": 8460.0,
+  "height_ft": 6150.0
+ },
+ "population_estimate": 140,
+ "notes": "Varrenmoor, placed from the campaign map (Foundry scene 'Map', assets/map v2.png): 7.69 ft per map pixel (map scale bar), window origin = map px (0,160). Streets, buildings, plazas and fields are digitised from the map; terrain is generated to suit it. No paved roads: dirt tracks, grass green. All entities proposed.",
+ "files": {
+  "districts": "districts.json",
+  "streets": "streets.json",
+  "water": "water.json",
+  "buildings": "buildings/",
+  "view_settings": "view_settings.json",
+  "terrain": "terrain/",
+  "params": "town_params.json"
+ },
+ "view_focus": {
+  "town": [
+   3783.5,
+   2614.6
+  ]
+ },
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "generated_by": "varrenmoor_build.py",
+ "sea_level_ft": 0.0,
+ "phase_elevation": "percentile",
+ "culture": "scandinavian",
+ "skybox": {
+  "rim_min_deg": 4.0,
+  "far_scale": 1.0
+ },
+ "defaults": {
+  "shading_preset": "alpine_steep_calm",
+  "padding_preset": "bowl-ridge",
+  "foliage_mix": "spruce_forest",
+  "season": "autumn",
+  "fills_style": "varrenmoor",
+  "label_preset": "working",
+  "interior_style": "rustic_cottage"
+ },
+ "map_calibration": {
+  "source": "illustrator/out/foundry_screens/varrenmoor_original_map.png",
+  "ft_per_px": 7.69,
+  "origin_px": [
+   0.0,
+   160.0
+  ],
+  "size_px": [
+   1448,
+   1086
+  ]
+ }
+}

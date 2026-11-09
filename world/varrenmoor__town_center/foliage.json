@@ -1,0 +1,6772 @@
+{
+ "format": "varrenmoor-foliage",
+ "version": 1,
+ "place": "varrenmoor__town_center",
+ "units": "ft",
+ "frame": "world feet: x east, y south, z up (elevation)",
+ "counters": {
+  "hero": 1,
+  "m_192_416_0": 8,
+  "m_192_480_0": 19,
+  "m_192_544_0": 19,
+  "m_192_608_0": 11,
+  "m_256_416_0": 27,
+  "m_256_480_0": 19,
+  "m_256_544_0": 19,
+  "m_256_608_0": 9,
+  "m_320_416_0": 16,
+  "m_320_480_0": 9,
+  "m_320_544_0": 12,
+  "m_320_608_0": 9,
+  "m_384_416_0": 19,
+  "m_384_480_0": 7,
+  "m_384_544_0": 3,
+  "m_384_608_0": 3,
+  "m_384_672_0": 1,
+  "m_448_416_0": 11,
+  "m_448_608_0": 16,
+  "m_448_672_0": 1,
+  "m_512_416_0": 3,
+  "m_512_480_0": 1,
+  "m_512_544_0": 5,
+  "m_512_608_0": 8,
+  "m_512_672_0": 1,
+  "m_576_416_0": 5,
+  "m_576_480_0": 12,
+  "m_576_544_0": 8,
+  "m_576_608_0": 8,
+  "mzabjcaebga": 8,
+  "mzabjcaeiaa": 19,
+  "mzabjcafeea": 19,
+  "mzabjcagaia": 11,
+  "mzacfgaebga": 27,
+  "mzacfgaeiaa": 19,
+  "mzacfgafeea": 19,
+  "mzacfgagaia": 9,
+  "mzadcaaebga": 16,
+  "mzadcaaeiaa": 9,
+  "mzadcaafeea": 12,
+  "mzadcaagaia": 9,
+  "mzadieaebga": 19,
+  "mzadieaeiaa": 7,
+  "mzadieafeea": 3,
+  "mzadieagaia": 3,
+  "mzadieaghca": 1,
+  "mzaeeiaebga": 11,
+  "mzaeeiagaia": 16,
+  "mzaeeiaghca": 1,
+  "mzafbcaebga": 3,
+  "mzafbcaeiaa": 1,
+  "mzafbcafeea": 5,
+  "mzafbcagaia": 8,
+  "mzafbcaghca": 1,
+  "mzafhgaebga": 5,
+  "mzafhgaeiaa": 12,
+  "mzafhgafeea": 8,
+  "mzafhgagaia": 8
+ },
+ "zones": [
+  {
+   "id": "mzabjcaebga",
+   "name": "map canopy 0.71",
+   "params": {
+    "zone": "mzabjcaebga",
+    "mix": [
+     {
+      "species": "spruce",
+      "weight": 4
+     },
+     {
+      "species": "scots_pine",
+      "weight": 4
+     },
+     {
+      "species": "fir",
+      "weight": 2
+     },
+     {
+      "species": "birch",
+      "weight": 1
+     }
+    ],
+    "density_per_ha": 9.98,
+    "size_var": 0.5,
+    "seed": 1968,
+    "pattern": "cluster",
+    "cluster_radius_ft": 90,
+    "cluster_size": 6,
+    "edge_ft": 40,
+    "row_spacing_ft": 0,
+    "row_angle_deg": 0,
+    "line_spacing_ft": 0,
+    "line_jitter": 0.15,
+    "avoid_buildings": true,
+    "avoid_roads": true,
+    "avoid_water": true,
+    "clearance_building_ft": 60,
+    "clearance_road_ft": 14,
+    "slope_max_deg": 40,
+    "elev_min_ft": null,
+    "elev_max_ft": null,
+    "moisture_bias": 0.0,
+    "max_instances": 4000,
+    "replace_zone": true,
+    "name": "map canopy 0.71"
+   },
+   "polygon": [
+    [
+     1968.6,
+     2113.0
+    ],
+    [
+     1729.0,
+     2113.0
+    ],
+    [
+     1729.0,
+     2460.8
+    ],
+    [
+     1968.6,
+     2460.8
+    ]
+   ],
+   "path": null,
+   "count": 8
+  },
+  {
+   "id": "mzabjcaeiaa",
+   "name": "map canopy 0.86",
+   "params": {
+    "zone": "mzabjcaeiaa",
+    "mix": [
+     {
+      "species": "spruce",
+      "weight": 4
+     },
+     {
+      "species": "scots_pine",
+      "weight": 4
+     },
+     {
+      "species": "fir",
+      "weight": 2
+     },
+     {
+      "species": "birch",
+      "weight": 1
+     }
+    ],
+    "density_per_ha": 16.853,
+    "size_var": 0.5,
+    "seed": 2032,
+    "pattern": "cluster",
+    "cluster_radius_ft": 90,
+    "cluster_size": 6,
+    "edge_ft": 40,
+    "row_spacing_ft": 0,
+    "row_angle_deg": 0,
+    "line_spacing_ft": 0,
+    "line_jitter": 0.15,
+    "avoid_buildings": true,
+    "avoid_roads": true,
+    "avoid_water": true,
+    "clearance_building_ft": 60,
+    "clearance_road_ft": 14,
+    "slope_max_deg": 40,
+    "elev_min_ft": null,
+    "elev_max_ft": null,
+    "moisture_bias": 0.0,
+    "max_instances": 4000,
+    "replace_zone": true,
+    "name": "map canopy 0.86"
+   },
+   "polygon": [
+    [
+     1968.6,
+     2460.8
+    ],
+    [
+     1729.0,
+     2460.8
+    ],
+    [
+     1729.0,
+     2953.0
+    ],
+    [
+     1968.6,
+     2953.0
+    ]
+   ],
+   "path": null,
+   "count": 19
+  },
+  {
+   "id": "mzabjcafeea",
+   "name": "map canopy 0.86",
+   "params": {
+    "zone": "mzabjcafeea",
+    "mix": [
+     {
+      "species": "spruce",
+      "weight": 4
+     },
+     {
+      "species": "scots_pine",
+      "weight": 4
+     },
+     {
+      "species": "fir",
+      "weight": 2
+     },
+     {
+      "species": "birch",
+      "weight": 1
+     }
+    ],
+    "density_per_ha": 16.66,
+    "size_var": 0.5,
+    "seed": 2096,
+    "pattern": "cluster",
+    "cluster_radius_ft": 90,
+    "cluster_size": 6,
+    "edge_ft": 40,
+    "row_spacing_ft": 0,
+    "row_angle_deg": 0,
+    "line_spacing_ft": 0,
+    "line_jitter": 0.15,
+    "avoid_buildings": true,
+    "avoid_roads": true,
+    "avoid_water": true,
+    "clearance_building_ft": 60,
+    "clearance_road_ft": 14,
+    "slope_max_deg": 40,
+    "elev_min_ft": null,
+    "elev_max_ft": null,
+    "moisture_bias": 0.0,
+    "max_instances": 4000,
+    "replace_zone": true,
+    "name": "map canopy 0.86"
+   },
+   "polygon": [
+    [
+     1968.6,
+     2953.0
+    ],
+    [
+     1729.0,
+     2953.0
+    ],
+    [
+     1729.0,
+     3445.1
+    ],
+    [
+     1968.6,
+     3445.1
+    ]
+   ],
+   "path": null,
+   "count": 19
+  },
+  {
+   "id": "mzabjcagaia",
+   "name": "map canopy 0.72",
+   "params": {
+    "zone": "mzabjcagaia",
+    "mix": [
+     {
+      "species": "spruce",
+      "weight": 4
+     },
+     {
+      "species": "scots_pine",
+      "weight": 4
+     },
+     {
+      "species": "fir",
+      "weight": 2
+     },
+     {
+      "species": "birch",
+      "weight": 1
+     }
+    ],
+    "density_per_ha": 10.276,
+    "size_var": 0.5,
+    "seed": 2160,
+    "pattern": "cluster",
+    "cluster_radius_ft": 90,
+    "cluster_size": 6,
+    "edge_ft": 40,
+    "row_spacing_ft": 0,
+    "row_angle_deg": 0,
+    "line_spacing_ft": 0,
+    "line_jitter": 0.15,
+    "avoid_buildings": true,
+    "avoid_roads": true,
+    "avoid_water": true,
+    "clearance_building_ft": 60,
+    "clearance_road_ft": 14,
+    "slope_max_deg": 40,
+    "elev_min_ft": null,
+    "elev_max_ft": null,
+    "moisture_bias": 0.0,
+    "max_instances": 4000,
+    "replace_zone": true,
+    "name": "map canopy 0.72"
+   },
+   "polygon": [
+    [
+     1968.6,
+     3445.1
+    ],
+    [
+     1729.0,
+     3445.1
+    ],
+    [
+     1729.0,
+     3937.3
+    ],
+    [
+     1968.6,
+     3937.3
+    ]
+   ],
+   "path": null,
+   "count": 11
+  },
+  {
+   "id": "mzabjcaghca",
+   "name": "map canopy 0.71",
+   "params": {
+    "zone": "mzabjcaghca",
+    "mix": [
+     {
+      "species": "spruce",
+      "weight": 4
+     },
+     {
+      "species": "scots_pine",
+      "weight": 4
+     },
+     {
+      "species": "fir",
+      "weight": 2
+     },
+     {
+      "species": "birch",
+      "weight": 1
+     }
+    ],
+    "density_per_ha": 10.133,
+    "size_var": 0.5,
+    "seed": 2224,
+    "pattern": "cluster",
+    "cluster_radius_ft": 90,
+    "cluster_size": 6,
+    "edge_ft": 40,
+    "row_spacing_ft": 0,
+    "row_angle_deg": 0,
+    "line_spacing_ft": 0,
+    "line_jitter": 0.15,
+    "avoid_buildings": true,
+    "avoid_roads": true,
+    "avoid_water": true,
+    "clearance_building_ft": 60,
+    "clearance_road_ft": 14,
+    "slope_max_deg": 40,
+    "elev_min_ft": null,
+    "elev_max_ft": null,
+    "moisture_bias": 0.0,
+    "max_instances": 4000,
+    "replace_zone": true,
+    "name": "map canopy 0.71"
+   },
+   "polygon": [
+    [
+     1729.0,
+     3937.3
+    ],
+    [
+     1729.0,
+     3961.0
+    ],
+    [
+     1968.6,
+     3961.0
+    ],
+    [
+     1968.6,
+     3937.3
+    ]
+   ],
+   "path": null,
+   "count": 0
+  },
+  {
+   "id": "mzacfgaebga",
+   "name": "map canopy 0.86",
+   "params": {
+    "zone": "mzacfgaebga",
+    "mix": [
+     {
+      "species": "scots_pine",
+      "weight": 3
+     },
+     {
+      "species": "spruce",
+      "weight": 2
+     },
+     {
+      "species": "birch",
+      "weight": 2
+     },
+     {
+      "species": "beech",
+      "weight": 1
+     },
+     {
+      "species": "oak",
+      "weight": 1
+     }
+    ],
+    "density_per_ha": 16.781,
+    "size_var": 0.5,
+    "seed": 2416,
+    "pattern": "cluster",
+    "cluster_radius_ft": 90,
+    "cluster_size": 6,
+    "edge_ft": 40,
+    "row_spacing_ft": 0,
+    "row_angle_deg": 0,
+    "line_spacing_ft": 0,
+    "line_jitter": 0.15,
+    "avoid_buildings": true,
+    "avoid_roads": true,
+    "avoid_water": true,
+    "clearance_building_ft": 60,
+    "clearance_road_ft": 14,
+    "slope_max_deg": 40,
+    "elev_min_ft": null,
+    "elev_max_ft": null,
+    "moisture_bias": 0.0,
+    "max_instances": 4000,
+    "replace_zone": true,
+    "name": "map canopy 0.86"
+   },
+   "polygon": [
+    [
+     2460.8,
+     2460.8
+    ],
+    [
+     2460.8,
+     2113.0
+    ],
+    [
+     1968.6,
+     2113.0
+    ],
+    [
+     1968.6,
+     2460.8
+    ]
+   ],
+   "path": null,
+   "count": 27
+  },
+  {
+   "id": "mzacfgaeiaa",
+   "name": "map canopy 0.69",
+   "params": {
+    "zone": "mzacfgaeiaa",
+    "mix": [
+     {
+      "species": "scots_pine",
+      "weight": 3
+     },
+     {
+      "species": "spruce",
+      "weight": 2
+     },
+     {
+      "species": "birch",
+      "weight": 2
+     },
+     {
+      "species": "beech",
+      "weight": 1
+     },
+     {
+      "species": "oak",
+      "weight": 1
+     }
+    ],
+    "density_per_ha": 9.357,
+    "size_var": 0.5,
+    "seed": 2480,
+    "pattern": "cluster",
+    "cluster_radius_ft": 90,
+    "cluster_size": 6,
+    "edge_ft": 40,
+    "row_spacing_ft": 0,
+    "row_angle_deg": 0,
+    "line_spacing_ft": 0,
+    "line_jitter": 0.15,
+    "avoid_buildings": true,
+    "avoid_roads": true,
+    "avoid_water": true,
+    "clearance_building_ft": 60,
+    "clearance_road_ft": 14,
+    "slope_max_deg": 40,
+    "elev_min_ft": null,
+    "elev_max_ft": null,
+    "moisture_bias": 0.0,
+    "max_instances": 4000,
+    "replace_zone": true,
+    "name": "map canopy 0.69"
+   },
+   "polygon": [
+    [
+     1968.6,
+     2953.0
+    ],
+    [
+     2460.8,
+     2953.0
+    ],
+    [
+     2460.8,
+     2460.8
+    ],
+    [
+     1968.6,
+     2460.8
+    ]
+   ],
+   "path": null,
+   "count": 19
+  },
+  {
+   "id": "mzacfgafeea",
+   "name": "map canopy 0.70",
+   "params": {
+    "zone": "mzacfgafeea",
+    "mix": [
+     {
+      "species": "spruce",
+      "weight": 4
+     },
+     {
+      "species": "scots_pine",
+      "weight": 4
+     },
+     {
+      "species": "fir",
+      "weight": 2
+     },
+     {
+      "species": "birch",
+      "weight": 1
+     }
+    ],
+    "density_per_ha": 9.697,
+    "size_var": 0.5,
+    "seed": 2544,
+    "pattern": "cluster",
+    "cluster_radius_ft": 90,
+    "cluster_size": 6,
+    "edge_ft": 40,
+    "row_spacing_ft": 0,
+    "row_angle_deg": 0,
+    "line_spacing_ft": 0,
+    "line_jitter": 0.15,
+    "avoid_buildings": true,
+    "avoid_roads": true,
+    "avoid_water": true,
+    "clearance_building_ft": 60,
+    "clearance_road_ft": 14,
+    "slope_max_deg": 40,
+    "elev_min_ft": null,
+    "elev_max_ft": null,
+    "moisture_bias": 0.0,
+    "max_instances": 4000,
+    "replace_zone": true,
+    "name": "map canopy 0.70"
+   },
+   "polygon": [
+    [
+     1968.6,
+     3445.1
+    ],
+    [
+     2067.7,
+     3445.1
+    ],
+    [
+     2073.9,
+     3432.9
+    ],
+    [
+     2075.2,
+     3430.7
+    ],
+    [
+     2076.8,
+     3428.6
+    ],
+    [
+     2078.5,
+     3426.6
+    ],
+    [
+     2119.3,
+     3385.8
+    ],
+    [
+     2121.3,
+     3384.1
+    ],
+    [
+     2123.4,
+     3382.5
+    ],
+    [
+     2125.6,
+     3381.2
+    ],
+    [
+     2177.0,
+     3355.0
+    ],
+    [
+     2179.4,
+     3354.0
+    ],
+    [
+     2181.9,
+     3353.2
+    ],
+    [
+     2184.5,
+     3352.6
+    ],
+    [
+     2241.6,
+     3343.5
+    ],
+    [
+     2244.2,
+     3343.2
+    ],
+    [
+     2246.8,
+     3343.2
+    ],
+    [
+     2249.4,
+     3343.5
+    ],
+    [
+     2306.4,
+     3352.6
+    ],
+    [
+     2309.0,
+     3353.2
+    ],
+    [
+     2311.5,
+     3354.0
+    ],
+    [
+     2313.8,
+     3355.0
+    ],
+    [
+     2365.3,
+     3381.2
+    ],
+    [
+     2367.6,
+     3382.5
+    ],
+    [
+     2369.7,
+     3384.1
+    ],
+    [
+     2371.7,
+     3385.8
+    ],
+    [
+     2412.5,
+     3426.6
+    ],
+    [
+     2414.2,
+     3428.6
+    ],
+    [
+     2415.8,
+     3430.7
+    ],
+    [
+     2417.1,
+     3432.9
+    ],
+    [
+     2423.3,
+     3445.1
+    ],
+    [
+     2460.8,
+     3445.1
+    ],
+    [
+     2460.8,
+     2953.0
+    ],
+    [
+     1968.6,
+     2953.0
+    ]
+   ],
+   "path": null,
+   "count": 19
+  },
+  {
+   "id": "mzacfgagaia",
+   "name": "map canopy 0.65",
+   "params": {
+    "zone": "mzacfgagaia",
+    "mix": [
+     {
+      "species": "spruce",
+      "weight": 4
+     },
+     {
+      "species": "scots_pine",
+      "weight": 4
+     },
+     {
+      "species": "fir",
+      "weight": 2
+     },
+     {
+      "species": "birch",
+      "weight": 1
+     }
+    ],
+    "density_per_ha": 7.597,
+    "size_var": 0.5,
+    "seed": 2608,
+    "pattern": "cluster",
+    "cluster_radius_ft": 90,
+    "cluster_size": 6,
+    "edge_ft": 40,
+    "row_spacing_ft": 0,
+    "row_angle_deg": 0,
+    "line_spacing_ft": 0,
+    "line_jitter": 0.15,
+    "avoid_buildings": true,
+    "avoid_roads": true,
+    "avoid_water": true,
+    "clearance_building_ft": 60,
+    "clearance_road_ft": 14,
+    "slope_max_deg": 40,
+    "elev_min_ft": null,
+    "elev_max_ft": null,
+    "moisture_bias": 0.0,
+    "max_instances": 4000,
+    "replace_zone": true,
+    "name": "map canopy 0.65"
+   },
+   "polygon": [
+    [
+     1968.6,
+     3937.3
+    ],
+    [
+     2460.8,
+     3937.3
+    ],
+    [
+     2460.8,
+     3445.1
+    ],
+    [
+     2423.3,
+     3445.1
+    ],
+    [
+     2443.3,
+     3484.3
+    ],
+    [
+     2444.3,
+     3486.7
+    ],
+    [
+     2445.2,
+     3489.2
+    ],
+    [
+     2445.7,
+     3491.8
+    ],
+    [
+     2454.7,
+     3548.9
+    ],
+    [
+     2455.0,
+     3551.5
+    ],
+    [
+     2455.0,
+     3554.1
+    ],
+    [
+     2454.7,
+     3556.7
+    ],
+    [
+     2445.7,
+     3613.7
+    ],
+    [
+     2445.2,
+     3616.3
+    ],
+    [
+     2444.3,
+     3618.7
+    ],
+    [
+     2443.3,
+     3621.1
+    ],
+    [
+     2417.1,
+     3672.6
+    ],
+    [
+     2415.8,
+     3674.9
+    ],
+    [
+     2414.2,
+     3677.0
+    ],
+    [
+     2412.5,
+     3679.0
+    ],
+    [
+     2371.7,
+     3719.8
+    ],
+    [
+     2369.7,
+     3721.5
+    ],
+    [
+     2367.6,
+     3723.1
+    ],
+    [
+     2365.3,
+     3724.4
+    ],
+    [
+     2313.8,
+     3750.6
+    ],
+    [
+     2311.4,
+     3751.6
+    ],
+    [
+     2309.0,
+     3752.5
+    ],
+    [
+     2306.4,
+     3753.0
+    ],
+    [
+     2249.4,
+     3762.0
+    ],
+    [
+     2246.8,
+     3762.3
+    ],
+    [
+     2244.2,
+     3762.3
+    ],
+    [
+     2241.6,
+     3762.0
+    ],
+    [
+     2184.5,
+     3753.0
+    ],
+    [
+     2181.9,
+     3752.5
+    ],
+    [
+     2179.4,
+     3751.6
+    ],
+    [
+     2177.0,
+     3750.6
+    ],
+    [
+     2125.6,
+     3724.4
+    ],
+    [
+     2123.4,
+     3723.1
+    ],
+    [
+     2121.3,
+     3721.5
+    ],
+    [
+     2119.3,
+     3719.8
+    ],
+    [
+     2078.5,
+     3679.0
+    ],
+    [
+     2076.8,
+     3677.0
+    ],
+    [
+     2075.2,
+     3674.9
+    ],
+    [
+     2073.9,
+     3672.6
+    ],
+    [
+     2047.7,
+     3621.1
+    ],
+    [
+     2046.7,
+     3618.8
+    ],
+    [
+     2045.9,
+     3616.3
+    ],
+    [
+     2045.3,
+     3613.7
+    ],
+    [
+     2036.2,
+     3556.7
+    ],
+    [
+     2035.9,
+     3554.1
+    ],
+    [
+     2035.9,
+     3551.5
+    ],
+    [
+     2036.2,
+     3548.9
+    ],
+    [
+     2045.3,
+     3491.8
+    ],
+    [
+     2045.9,
+     3489.2
+    ],
+    [
+     2046.7,
+     3486.7
+    ],
+    [
+     2047.7,
+     3484.3
+    ],
+    [
+     2067.7,
+     3445.1
+    ],
+    [
+     1968.6,
+     3445.1
+    ]
+   ],
+   "path": null,
+   "count": 9
+  },
+  {
+   "id": "mzacfgaghca",
+   "name": "map canopy 0.57",
+   "params": {
+    "zone": "mzacfgaghca",
+    "mix": [
+     {
+      "species": "scots_pine",
+      "weight": 3
+     },
+     {
+      "species": "spruce",
+      "weight": 2
+     },
+     {
+      "species": "birch",
+      "weight": 2
+     },
+     {
+      "species": "beech",
+      "weight": 1
+     },
+     {
+      "species": "oak",
+      "weight": 1
+     }
+    ],
+    "density_per_ha": 4.903,
+    "size_var": 0.5,
+    "seed": 2672,
+    "pattern": "cluster",
+    "cluster_radius_ft": 90,
+    "cluster_size": 6,
+    "edge_ft": 40,
+    "row_spacing_ft": 0,
+    "row_angle_deg": 0,
+    "line_spacing_ft": 0,
+    "line_jitter": 0.15,
+    "avoid_buildings": true,
+    "avoid_roads": true,
+    "avoid_water": true,
+    "clearance_building_ft": 60,
+    "clearance_road_ft": 14,
+    "slope_max_deg": 40,
+    "elev_min_ft": null,
+    "elev_max_ft": null,
+    "moisture_bias": 0.0,
+    "max_instances": 4000,
+    "replace_zone": true,
+    "name": "map canopy 0.57"
+   },
+   "polygon": [
+    [
+     1968.6,
+     3937.3
+    ],
+    [
+     1968.6,
+     3961.0
+    ],
+    [
+     2460.8,
+     3961.0
+    ],
+    [
+     2460.8,
+     3937.3
+    ]
+   ],
+   "path": null,
+   "count": 0
+  },
+  {
+   "id": "mzadcaaebga",
+   "name": "map canopy 0.78",
+   "params": {
+    "zone": "mzadcaaebga",
+    "mix": [
+     {
+      "species": "birch",
+      "weight": 3
+     },
+     {
+      "species": "oak",
+      "weight": 2
+     },
+     {
+      "species": "beech",
+      "weight": 2
+     },
+     {
+      "species": "alder",
+      "weight": 2
+     },
+     {
+      "species": "scots_pine",
+      "weight": 1
+     }
+    ],
+    "density_per_ha": 12.868,
+    "size_var": 0.5,
+    "seed": 2864,
+    "pattern": "cluster",
+    "cluster_radius_ft": 90,
+    "cluster_size": 6,
+    "edge_ft": 40,
+    "row_spacing_ft": 0,
+    "row_angle_deg": 0,
+    "line_spacing_ft": 0,
+    "line_jitter": 0.15,
+    "avoid_buildings": true,
+    "avoid_roads": true,
+    "avoid_water": true,
+    "clearance_building_ft": 60,
+    "clearance_road_ft": 14,
+    "slope_max_deg": 40,
+    "elev_min_ft": null,
+    "elev_max_ft": null,
+    "moisture_bias": 0.0,
+    "max_instances": 4000,
+    "replace_zone": true,
+    "name": "map canopy 0.78"
+   },
+   "polygon": [
+    [
+     2953.0,
+     2460.8
+    ],
+    [
+     2953.0,
+     2113.0
+    ],
+    [
+     2460.8,
+     2113.0
+    ],
+    [
+     2460.8,
+     2460.8
+    ]
+   ],
+   "path": null,
+   "count": 16
+  },
+  {
+   "id": "mzadcaaeiaa",
+   "name": "map canopy 0.57",
+   "params": {
+    "zone": "mzadcaaeiaa",
+    "mix": [
+     {
+      "species": "scots_pine",
+      "weight": 3
+     },
+     {
+      "species": "spruce",
+      "weight": 2
+     },
+     {
+      "species": "birch",
+      "weight": 2
+     },
+     {
+      "species": "beech",
+      "weight": 1
+     },
+     {
+      "species": "oak",
+      "weight": 1
+     }
+    ],
+    "density_per_ha": 4.792,
+    "size_var": 0.5,
+    "seed": 2928,
+    "pattern": "cluster",
+    "cluster_radius_ft": 90,
+    "cluster_size": 6,
+    "edge_ft": 40,
+    "row_spacing_ft": 0,
+    "row_angle_deg": 0,
+    "line_spacing_ft": 0,
+    "line_jitter": 0.15,
+    "avoid_buildings": true,
+    "avoid_roads": true,
+    "avoid_water": true,
+    "clearance_building_ft": 60,
+    "clearance_road_ft": 14,
+    "slope_max_deg": 40,
+    "elev_min_ft": null,
+    "elev_max_ft": null,
+    "moisture_bias": 0.0,
+    "max_instances": 4000,
+    "replace_zone": true,
+    "name": "map canopy 0.57"
+   },
+   "polygon": [
+    [
+     2460.8,
+     2953.0
+    ],
+    [
+     2953.0,
+     2953.0
+    ],
+    [
+     2953.0,
+     2460.8
+    ],
+    [
+     2460.8,
+     2460.8
+    ]
+   ],
+   "path": null,
+   "count": 9
+  },
+  {
+   "id": "mzadcaafeea",
+   "name": "map canopy 0.61",
+   "params": {
+    "zone": "mzadcaafeea",
+    "mix": [
+     {
+      "species": "scots_pine",
+      "weight": 3
+     },
+     {
+      "species": "spruce",
+      "weight": 2
+     },
+     {
+      "species": "birch",
+      "weight": 2
+     },
+     {
+      "species": "beech",
+      "weight": 1
+     },
+     {
+      "species": "oak",
+      "weight": 1
+     }
+    ],
+    "density_per_ha": 6.025,
+    "size_var": 0.5,
+    "seed": 2992,
+    "pattern": "cluster",
+    "cluster_radius_ft": 90,
+    "cluster_size": 6,
+    "edge_ft": 40,
+    "row_spacing_ft": 0,
+    "row_angle_deg": 0,
+    "line_spacing_ft": 0,
+    "line_jitter": 0.15,
+    "avoid_buildings": true,
+    "avoid_roads": true,
+    "avoid_water": true,
+    "clearance_building_ft": 60,
+    "clearance_road_ft": 14,
+    "slope_max_deg": 40,
+    "elev_min_ft": null,
+    "elev_max_ft": null,
+    "moisture_bias": 0.0,
+    "max_instances": 4000,
+    "replace_zone": true,
+    "name": "map canopy 0.61"
+   },
+   "polygon": [
+    [
+     2460.8,
+     3445.1
+    ],
+    [
+     2953.0,
+     3445.1
+    ],
+    [
+     2953.0,
+     2953.0
+    ],
+    [
+     2460.8,
+     2953.0
+    ]
+   ],
+   "path": null,
+   "count": 12
+  },
+  {
+   "id": "mzadcaagaia",
+   "name": "map canopy 0.55",
+   "params": {
+    "zone": "mzadcaagaia",
+    "mix": [
+     {
+      "species": "scots_pine",
+      "weight": 3
+     },
+     {
+      "species": "spruce",
+      "weight": 2
+     },
+     {
+      "species": "birch",
+      "weight": 2
+     },
+     {
+      "species": "beech",
+      "weight": 1
+     },
+     {
+      "species": "oak",
+      "weight": 1
+     }
+    ],
+    "density_per_ha": 4.169,
+    "size_var": 0.5,
+    "seed": 3056,
+    "pattern": "cluster",
+    "cluster_radius_ft": 90,
+    "cluster_size": 6,
+    "edge_ft": 40,
+    "row_spacing_ft": 0,
+    "row_angle_deg": 0,
+    "line_spacing_ft": 0,
+    "line_jitter": 0.15,
+    "avoid_buildings": true,
+    "avoid_roads": true,
+    "avoid_water": true,
+    "clearance_building_ft": 60,
+    "clearance_road_ft": 14,
+    "slope_max_deg": 40,
+    "elev_min_ft": null,
+    "elev_max_ft": null,
+    "moisture_bias": 0.0,
+    "max_instances": 4000,
+    "replace_zone": true,
+    "name": "map canopy 0.55"
+   },
+   "polygon": [
+    [
+     2460.8,
+     3937.3
+    ],
+    [
+     2953.0,
+     3937.3
+    ],
+    [
+     2953.0,
+     3445.1
+    ],
+    [
+     2460.8,
+     3445.1
+    ]
+   ],
+   "path": null,
+   "count": 9
+  },
+  {
+   "id": "mzadcaaghca",
+   "name": "map canopy 0.79",
+   "params": {
+    "zone": "mzadcaaghca",
+    "mix": [
+     {
+      "species": "scots_pine",
+      "weight": 3
+     },
+     {
+      "species": "spruce",
+      "weight": 2
+     },
+     {
+      "species": "birch",
+      "weight": 2
+     },
+     {
+      "species": "beech",
+      "weight": 1
+     },
+     {
+      "species": "oak",
+      "weight": 1
+     }
+    ],
+    "density_per_ha": 13.391,
+    "size_var": 0.5,
+    "seed": 3120,
+    "pattern": "cluster",
+    "cluster_radius_ft": 90,
+    "cluster_size": 6,
+    "edge_ft": 40,
+    "row_spacing_ft": 0,
+    "row_angle_deg": 0,
+    "line_spacing_ft": 0,
+    "line_jitter": 0.15,
+    "avoid_buildings": true,
+    "avoid_roads": true,
+    "avoid_water": true,
+    "clearance_building_ft": 60,
+    "clearance_road_ft": 14,
+    "slope_max_deg": 40,
+    "elev_min_ft": null,
+    "elev_max_ft": null,
+    "moisture_bias": 0.0,
+    "max_instances": 4000,
+    "replace_zone": true,
+    "name": "map canopy 0.79"
+   },
+   "polygon": [
+    [
+     2460.8,
+     3937.3
+    ],
+    [
+     2460.8,
+     3961.0
+    ],
+    [
+     2953.0,
+     3961.0
+    ],
+    [
+     2953.0,
+     3937.3
+    ]
+   ],
+   "path": null,
+   "count": 0
+  },
+  {
+   "id": "mzadieaebga",
+   "name": "map canopy 0.81",
+   "params": {
+    "zone": "mzadieaebga",
+    "mix": [
+     {
+      "species": "birch",
+      "weight": 3
+     },
+     {
+      "species": "oak",
+      "weight": 2
+     },
+     {
+      "species": "beech",
+      "weight": 2
+     },
+     {
+      "species": "alder",
+      "weight": 2
+     },
+     {
+      "species": "scots_pine",
+      "weight": 1
+     }
+    ],
+    "density_per_ha": 14.286,
+    "size_var": 0.5,
+    "seed": 3312,
+    "pattern": "cluster",
+    "cluster_radius_ft": 90,
+    "cluster_size": 6,
+    "edge_ft": 40,
+    "row_spacing_ft": 0,
+    "row_angle_deg": 0,
+    "line_spacing_ft": 0,
+    "line_jitter": 0.15,
+    "avoid_buildings": true,
+    "avoid_roads": true,
+    "avoid_water": true,
+    "clearance_building_ft": 60,
+    "clearance_road_ft": 14,
+    "slope_max_deg": 40,
+    "elev_min_ft": null,
+    "elev_max_ft": null,
+    "moisture_bias": 0.0,
+    "max_instances": 4000,
+    "replace_zone": true,
+    "name": "map canopy 0.81"
+   },
+   "polygon": [
+    [
+     3445.1,
+     2460.8
+    ],
+    [
+     3445.1,
+     2113.0
+    ],
+    [
+     2953.0,
+     2113.0
+    ],
+    [
+     2953.0,
+     2460.8
+    ]
+   ],
+   "path": null,
+   "count": 19
+  },
+  {
+   "id": "mzadieaeiaa",
+   "name": "map canopy 0.53",
+   "params": {
+    "zone": "mzadieaeiaa",
+    "mix": [
+     {
+      "species": "birch",
+      "weight": 3
+     },
+     {
+      "species": "oak",
+      "weight": 2
+     },
+     {
+      "species": "beech",
+      "weight": 2
+     },
+     {
+      "species": "alder",
+      "weight": 2
+     },
+     {
+      "species": "scots_pine",
+      "weight": 1
+     }
+    ],
+    "density_per_ha": 3.627,
+    "size_var": 0.5,
+    "seed": 3376,
+    "pattern": "cluster",
+    "cluster_radius_ft": 90,
+    "cluster_size": 6,
+    "edge_ft": 40,
+    "row_spacing_ft": 0,
+    "row_angle_deg": 0,
+    "line_spacing_ft": 0,
+    "line_jitter": 0.15,
+    "avoid_buildings": true,
+    "avoid_roads": true,
+    "avoid_water": true,
+    "clearance_building_ft": 60,
+    "clearance_road_ft": 14,
+    "slope_max_deg": 40,
+    "elev_min_ft": null,
+    "elev_max_ft": null,
+    "moisture_bias": 0.0,
+    "max_instances": 4000,
+    "replace_zone": true,
+    "name": "map canopy 0.53"
+   },
+   "polygon": [
+    [
+     2953.0,
+     2953.0
+    ],
+    [
+     3445.1,
+     2953.0
+    ],
+    [
+     3445.1,
+     2460.8
+    ],
+    [
+     2953.0,
+     2460.8
+    ]
+   ],
+   "path": null,
+   "count": 7
+  },
+  {
+   "id": "mzadieafeea",
+   "name": "map canopy 0.45",
+   "params": {
+    "zone": "mzadieafeea",
+    "mix": [
+     {
+      "species": "birch",
+      "weight": 3
+     },
+     {
+      "species": "oak",
+      "weight": 2
+     },
+     {
+      "species": "beech",
+      "weight": 2
+     },
+     {
+      "species": "alder",
+      "weight": 2
+     },
+     {
+      "species": "scots_pine",
+      "weight": 1
+     }
+    ],
+    "density_per_ha": 1.451,
+    "size_var": 0.5,
+    "seed": 3440,
+    "pattern": "cluster",
+    "cluster_radius_ft": 90,
+    "cluster_size": 6,
+    "edge_ft": 40,
+    "row_spacing_ft": 0,
+    "row_angle_deg": 0,
+    "line_spacing_ft": 0,
+    "line_jitter": 0.15,
+    "avoid_buildings": true,
+    "avoid_roads": true,
+    "avoid_water": true,
+    "clearance_building_ft": 60,
+    "clearance_road_ft": 14,
+    "slope_max_deg": 40,
+    "elev_min_ft": null,
+    "elev_max_ft": null,
+    "moisture_bias": 0.0,
+    "max_instances": 4000,
+    "replace_zone": true,
+    "name": "map canopy 0.45"
+   },
+   "polygon": [
+    [
+     2953.0,
+     3445.1
+    ],
+    [
+     3445.1,
+     3445.1
+    ],
+    [
+     3445.1,
+     2953.0
+    ],
+    [
+     2953.0,
+     2953.0
+    ]
+   ],
+   "path": null,
+   "count": 3
+  },
+  {
+   "id": "mzadieagaia",
+   "name": "map canopy 0.46",
+   "params": {
+    "zone": "mzadieagaia",
+    "mix": [
+     {
+      "species": "birch",
+      "weight": 3
+     },
+     {
+      "species": "oak",
+      "weight": 2
+     },
+     {
+      "species": "beech",
+      "weight": 2
+     },
+     {
+      "species": "alder",
+      "weight": 2
+     },
+     {
+      "species": "scots_pine",
+      "weight": 1
+     }
+    ],
+    "density_per_ha": 1.592,
+    "size_var": 0.5,
+    "seed": 3504,
+    "pattern": "cluster",
+    "cluster_radius_ft": 90,
+    "cluster_size": 6,
+    "edge_ft": 40,
+    "row_spacing_ft": 0,
+    "row_angle_deg": 0,
+    "line_spacing_ft": 0,
+    "line_jitter": 0.15,
+    "avoid_buildings": true,
+    "avoid_roads": true,
+    "avoid_water": true,
+    "clearance_building_ft": 60,
+    "clearance_road_ft": 14,
+    "slope_max_deg": 40,
+    "elev_min_ft": null,
+    "elev_max_ft": null,
+    "moisture_bias": 0.0,
+    "max_instances": 4000,
+    "replace_zone": true,
+    "name": "map canopy 0.46"
+   },
+   "polygon": [
+    [
+     2953.0,
+     3937.3
+    ],
+    [
+     3445.1,
+     3937.3
+    ],
+    [
+     3445.1,
+     3445.1
+    ],
+    [
+     2953.0,
+     3445.1
+    ]
+   ],
+   "path": null,
+   "count": 3
+  },
+  {
+   "id": "mzadieaghca",
+   "name": "map canopy 0.80",
+   "params": {
+    "zone": "mzadieaghca",
+    "mix": [
+     {
+      "species": "birch",
+      "weight": 3
+     },
+     {
+      "species": "oak",
+      "weight": 2
+     },
+     {
+      "species": "beech",
+      "weight": 2
+     },
+     {
+      "species": "alder",
+      "weight": 2
+     },
+     {
+      "species": "scots_pine",
+      "weight": 1
+     }
+    ],
+    "density_per_ha": 13.898,
+    "size_var": 0.5,
+    "seed": 3568,
+    "pattern": "cluster",
+    "cluster_radius_ft": 90,
+    "cluster_size": 6,
+    "edge_ft": 40,
+    "row_spacing_ft": 0,
+    "row_angle_deg": 0,
+    "line_spacing_ft": 0,
+    "line_jitter": 0.15,
+    "avoid_buildings": true,
+    "avoid_roads": true,
+    "avoid_water": true,
+    "clearance_building_ft": 60,
+    "clearance_road_ft": 14,
+    "slope_max_deg": 40,
+    "elev_min_ft": null,
+    "elev_max_ft": null,
+    "moisture_bias": 0.0,
+    "max_instances": 4000,
+    "replace_zone": true,
+    "name": "map canopy 0.80"
+   },
+   "polygon": [
+    [
+     2953.0,
+     3937.3
+    ],
+    [
+     2953.0,
+     3961.0
+    ],
+    [
+     3445.1,
+     3961.0
+    ],
+    [
+     3445.1,
+     3937.3
+    ]
+   ],
+   "path": null,
+   "count": 1
+  },
+  {
+   "id": "mzaeeiaebga",
+   "name": "map canopy 0.74",
+   "params": {
+    "zone": "mzaeeiaebga",
+    "mix": [
+     {
+      "species": "birch",
+      "weight": 3
+     },
+     {
+      "species": "oak",
+      "weight": 2
+     },
+     {
+      "species": "beech",
+      "weight": 2
+     },
+     {
+      "species": "alder",
+      "weight": 2
+     },
+     {
+      "species": "scots_pine",
+      "weight": 1
+     }
+    ],
+    "density_per_ha": 11.436,
+    "size_var": 0.5,
+    "seed": 3760,
+    "pattern": "cluster",
+    "cluster_radius_ft": 90,
+    "cluster_size": 6,
+    "edge_ft": 40,
+    "row_spacing_ft": 0,
+    "row_angle_deg": 0,
+    "line_spacing_ft": 0,
+    "line_jitter": 0.15,
+    "avoid_buildings": true,
+    "avoid_roads": true,
+    "avoid_water": true,
+    "clearance_building_ft": 60,
+    "clearance_road_ft": 14,
+    "slope_max_deg": 40,
+    "elev_min_ft": null,
+    "elev_max_ft": null,
+    "moisture_bias": 0.0,
+    "max_instances": 4000,
+    "replace_zone": true,
+    "name": "map canopy 0.74"
+   },
+   "polygon": [
+    [
+     3543.2,
+     2460.8
+    ],
+    [
+     3578.8,
+     2414.5
+    ],
+    [
+     3580.2,
+     2412.8
+    ],
+    [
+     3581.7,
+     2411.3
+    ],
+    [
+     3583.4,
+     2409.9
+    ],
+    [
+     3637.6,
+     2368.4
+    ],
+    [
+     3639.4,
+     2367.1
+    ],
+    [
+     3641.2,
+     2366.0
+    ],
+    [
+     3643.2,
+     2365.1
+    ],
+    [
+     3706.2,
+     2338.9
+    ],
+    [
+     3708.3,
+     2338.2
+    ],
+    [
+     3710.4,
+     2337.6
+    ],
+    [
+     3712.5,
+     2337.2
+    ],
+    [
+     3780.2,
+     2328.3
+    ],
+    [
+     3782.4,
+     2328.1
+    ],
+    [
+     3784.6,
+     2328.1
+    ],
+    [
+     3786.8,
+     2328.3
+    ],
+    [
+     3854.5,
+     2337.2
+    ],
+    [
+     3856.6,
+     2337.6
+    ],
+    [
+     3858.7,
+     2338.2
+    ],
+    [
+     3860.8,
+     2338.9
+    ],
+    [
+     3923.8,
+     2365.1
+    ],
+    [
+     3925.8,
+     2366.0
+    ],
+    [
+     3927.6,
+     2367.1
+    ],
+    [
+     3929.4,
+     2368.4
+    ],
+    [
+     3937.3,
+     2374.4
+    ],
+    [
+     3937.3,
+     2113.0
+    ],
+    [
+     3445.1,
+     2113.0
+    ],
+    [
+     3445.1,
+     2460.8
+    ]
+   ],
+   "path": null,
+   "count": 11
+  },
+  {
+   "id": "mzaeeiaeiaa",
+   "name": "map canopy 0.47",
+   "params": {
+    "zone": "mzaeeiaeiaa",
+    "mix": [
+     {
+      "species": "birch",
+      "weight": 3
+     },
+     {
+      "species": "oak",
+      "weight": 2
+     },
+     {
+      "species": "beech",
+      "weight": 2
+     },
+     {
+      "species": "alder",
+      "weight": 2
+     },
+     {
+      "species": "scots_pine",
+      "weight": 1
+     }
+    ],
+    "density_per_ha": 1.958,
+    "size_var": 0.5,
+    "seed": 3824,
+    "pattern": "cluster",
+    "cluster_radius_ft": 90,
+    "cluster_size": 6,
+    "edge_ft": 40,
+    "row_spacing_ft": 0,
+    "row_angle_deg": 0,
+    "line_spacing_ft": 0,
+    "line_jitter": 0.15,
+    "avoid_buildings": true,
+    "avoid_roads": true,
+    "avoid_water": true,
+    "clearance_building_ft": 60,
+    "clearance_road_ft": 14,
+    "slope_max_deg": 40,
+    "elev_min_ft": null,
+    "elev_max_ft": null,
+    "moisture_bias": 0.0,
+    "max_instances": 4000,
+    "replace_zone": true,
+    "name": "map canopy 0.47"
+   },
+   "polygon": [
+    [
+     3445.1,
+     2953.0
+    ],
+    [
+     3937.3,
+     2953.0
+    ],
+    [
+     3937.3,
+     2854.8
+    ],
+    [
+     3929.4,
+     2860.8
+    ],
+    [
+     3927.6,
+     2862.1
+    ],
+    [
+     3925.8,
+     2863.2
+    ],
+    [
+     3923.8,
+     2864.1
+    ],
+    [
+     3860.8,
+     2890.3
+    ],
+    [
+     3858.7,
+     2891.0
+    ],
+    [
+     3856.6,
+     2891.6
+    ],
+    [
+     3854.5,
+     2892.0
+    ],
+    [
+     3786.8,
+     2900.9
+    ],
+    [
+     3784.6,
+     2901.1
+    ],
+    [
+     3782.4,
+     2901.1
+    ],
+    [
+     3780.2,
+     2900.9
+    ],
+    [
+     3712.5,
+     2892.0
+    ],
+    [
+     3710.4,
+     2891.6
+    ],
+    [
+     3708.3,
+     2891.0
+    ],
+    [
+     3706.2,
+     2890.3
+    ],
+    [
+     3643.2,
+     2864.1
+    ],
+    [
+     3641.2,
+     2863.2
+    ],
+    [
+     3639.4,
+     2862.1
+    ],
+    [
+     3637.6,
+     2860.8
+    ],
+    [
+     3583.4,
+     2819.3
+    ],
+    [
+     3581.7,
+     2817.9
+    ],
+    [
+     3580.2,
+     2816.4
+    ],
+    [
+     3578.8,
+     2814.7
+    ],
+    [
+     3537.2,
+     2760.5
+    ],
+    [
+     3535.9,
+     2758.7
+    ],
+    [
+     3534.8,
+     2756.8
+    ],
+    [
+     3533.9,
+     2754.9
+    ],
+    [
+     3507.8,
+     2691.9
+    ],
+    [
+     3507.1,
+     2689.8
+    ],
+    [
+     3506.5,
+     2687.7
+    ],
+    [
+     3506.1,
+     2685.6
+    ],
+    [
+     3497.2,
+     2617.9
+    ],
+    [
+     3497.0,
+     2615.7
+    ],
+    [
+     3497.0,
+     2613.5
+    ],
+    [
+     3497.2,
+     2611.3
+    ],
+    [
+     3506.1,
+     2543.6
+    ],
+    [
+     3506.5,
+     2541.5
+    ],
+    [
+     3507.1,
+     2539.4
+    ],
+    [
+     3507.8,
+     2537.3
+    ],
+    [
+     3533.9,
+     2474.3
+    ],
+    [
+     3534.8,
+     2472.4
+    ],
+    [
+     3535.9,
+     2470.5
+    ],
+    [
+     3537.2,
+     2468.7
+    ],
+    [
+     3543.2,
+     2460.8
+    ],
+    [
+     3445.1,
+     2460.8
+    ]
+   ],
+   "path": null,
+   "count": 0
+  },
+  {
+   "id": "mzaeeiafeea",
+   "name": "map canopy 0.39",
+   "params": {
+    "zone": "mzaeeiafeea",
+    "mix": [
+     {
+      "species": "birch",
+      "weight": 3
+     },
+     {
+      "species": "oak",
+      "weight": 2
+     },
+     {
+      "species": "beech",
+      "weight": 2
+     },
+     {
+      "species": "alder",
+      "weight": 2
+     },
+     {
+      "species": "scots_pine",
+      "weight": 1
+     }
+    ],
+    "density_per_ha": 0.325,
+    "size_var": 0.5,
+    "seed": 3888,
+    "pattern": "cluster",
+    "cluster_radius_ft": 90,
+    "cluster_size": 6,
+    "edge_ft": 40,
+    "row_spacing_ft": 0,
+    "row_angle_deg": 0,
+    "line_spacing_ft": 0,
+    "line_jitter": 0.15,
+    "avoid_buildings": true,
+    "avoid_roads": true,
+    "avoid_water": true,
+    "clearance_building_ft": 60,
+    "clearance_road_ft": 14,
+    "slope_max_deg": 40,
+    "elev_min_ft": null,
+    "elev_max_ft": null,
+    "moisture_bias": 0.0,
+    "max_instances": 4000,
+    "replace_zone": true,
+    "name": "map canopy 0.39"
+   },
+   "polygon": [
+    [
+     3445.1,
+     3445.1
+    ],
+    [
+     3937.3,
+     3445.1
+    ],
+    [
+     3937.3,
+     2953.0
+    ],
+    [
+     3445.1,
+     2953.0
+    ]
+   ],
+   "path": null,
+   "count": 0
+  },
+  {
+   "id": "mzaeeiagaia",
+   "name": "map canopy 0.67",
+   "params": {
+    "zone": "mzaeeiagaia",
+    "mix": [
+     {
+      "species": "birch",
+      "weight": 3
+     },
+     {
+      "species": "oak",
+      "weight": 2
+     },
+     {
+      "species": "beech",
+      "weight": 2
+     },
+     {
+      "species": "alder",
+      "weight": 2
+     },
+     {
+      "species": "scots_pine",
+      "weight": 1
+     }
+    ],
+    "density_per_ha": 8.428,
+    "size_var": 0.5,
+    "seed": 3952,
+    "pattern": "cluster",
+    "cluster_radius_ft": 90,
+    "cluster_size": 6,
+    "edge_ft": 40,
+    "row_spacing_ft": 0,
+    "row_angle_deg": 0,
+    "line_spacing_ft": 0,
+    "line_jitter": 0.15,
+    "avoid_buildings": true,
+    "avoid_roads": true,
+    "avoid_water": true,
+    "clearance_building_ft": 60,
+    "clearance_road_ft": 14,
+    "slope_max_deg": 40,
+    "elev_min_ft": null,
+    "elev_max_ft": null,
+    "moisture_bias": 0.0,
+    "max_instances": 4000,
+    "replace_zone": true,
+    "name": "map canopy 0.67"
+   },
+   "polygon": [
+    [
+     3445.1,
+     3937.3
+    ],
+    [
+     3937.3,
+     3937.3
+    ],
+    [
+     3937.3,
+     3445.1
+    ],
+    [
+     3445.1,
+     3445.1
+    ]
+   ],
+   "path": null,
+   "count": 16
+  },
+  {
+   "id": "mzaeeiaghca",
+   "name": "map canopy 0.90",
+   "params": {
+    "zone": "mzaeeiaghca",
+    "mix": [
+     {
+      "species": "birch",
+      "weight": 3
+     },
+     {
+      "species": "oak",
+      "weight": 2
+     },
+     {
+      "species": "beech",
+      "weight": 2
+     },
+     {
+      "species": "alder",
+      "weight": 2
+     },
+     {
+      "species": "scots_pine",
+      "weight": 1
+     }
+    ],
+    "density_per_ha": 18.926,
+    "size_var": 0.5,
+    "seed": 4016,
+    "pattern": "cluster",
+    "cluster_radius_ft": 90,
+    "cluster_size": 6,
+    "edge_ft": 40,
+    "row_spacing_ft": 0,
+    "row_angle_deg": 0,
+    "line_spacing_ft": 0,
+    "line_jitter": 0.15,
+    "avoid_buildings": true,
+    "avoid_roads": true,
+    "avoid_water": true,
+    "clearance_building_ft": 60,
+    "clearance_road_ft": 14,
+    "slope_max_deg": 40,
+    "elev_min_ft": null,
+    "elev_max_ft": null,
+    "moisture_bias": 0.0,
+    "max_instances": 4000,
+    "replace_zone": true,
+    "name": "map canopy 0.90"
+   },
+   "polygon": [
+    [
+     3445.1,
+     3937.3
+    ],
+    [
+     3445.1,
+     3961.0
+    ],
+    [
+     3937.3,
+     3961.0
+    ],
+    [
+     3937.3,
+     3937.3
+    ]
+   ],
+   "path": null,
+   "count": 1
+  },
+  {
+   "id": "mzafbcaebga",
+   "name": "map canopy 0.51",
+   "params": {
+    "zone": "mzafbcaebga",
+    "mix": [
+     {
+      "species": "scots_pine",
+      "weight": 3
+     },
+     {
+      "species": "spruce",
+      "weight": 2
+     },
+     {
+      "species": "birch",
+      "weight": 2
+     },
+     {
+      "species": "beech",
+      "weight": 1
+     },
+     {
+      "species": "oak",
+      "weight": 1
+     }
+    ],
+    "density_per_ha": 2.866,
+    "size_var": 0.5,
+    "seed": 4208,
+    "pattern": "cluster",
+    "cluster_radius_ft": 90,
+    "cluster_size": 6,
+    "edge_ft": 40,
+    "row_spacing_ft": 0,
+    "row_angle_deg": 0,
+    "line_spacing_ft": 0,
+    "line_jitter": 0.15,
+    "avoid_buildings": true,
+    "avoid_roads": true,
+    "avoid_water": true,
+    "clearance_building_ft": 60,
+    "clearance_road_ft": 14,
+    "slope_max_deg": 40,
+    "elev_min_ft": null,
+    "elev_max_ft": null,
+    "moisture_bias": 0.0,
+    "max_instances": 4000,
+    "replace_zone": true,
+    "name": "map canopy 0.51"
+   },
+   "polygon": [
+    [
+     4429.4,
+     2460.8
+    ],
+    [
+     4429.4,
+     2113.0
+    ],
+    [
+     3937.3,
+     2113.0
+    ],
+    [
+     3937.3,
+     2374.4
+    ],
+    [
+     3983.6,
+     2409.9
+    ],
+    [
+     3985.3,
+     2411.3
+    ],
+    [
+     3986.8,
+     2412.8
+    ],
+    [
+     3988.2,
+     2414.5
+    ],
+    [
+     4023.7,
+     2460.8
+    ]
+   ],
+   "path": null,
+   "count": 3
+  },
+  {
+   "id": "mzafbcaeiaa",
+   "name": "map canopy 0.43",
+   "params": {
+    "zone": "mzafbcaeiaa",
+    "mix": [
+     {
+      "species": "birch",
+      "weight": 3
+     },
+     {
+      "species": "oak",
+      "weight": 2
+     },
+     {
+      "species": "beech",
+      "weight": 2
+     },
+     {
+      "species": "alder",
+      "weight": 2
+     },
+     {
+      "species": "scots_pine",
+      "weight": 1
+     }
+    ],
+    "density_per_ha": 1.065,
+    "size_var": 0.5,
+    "seed": 4272,
+    "pattern": "cluster",
+    "cluster_radius_ft": 90,
+    "cluster_size": 6,
+    "edge_ft": 40,
+    "row_spacing_ft": 0,
+    "row_angle_deg": 0,
+    "line_spacing_ft": 0,
+    "line_jitter": 0.15,
+    "avoid_buildings": true,
+    "avoid_roads": true,
+    "avoid_water": true,
+    "clearance_building_ft": 60,
+    "clearance_road_ft": 14,
+    "slope_max_deg": 40,
+    "elev_min_ft": null,
+    "elev_max_ft": null,
+    "moisture_bias": 0.0,
+    "max_instances": 4000,
+    "replace_zone": true,
+    "name": "map canopy 0.43"
+   },
+   "polygon": [
+    [
+     3937.3,
+     2953.0
+    ],
+    [
+     4429.4,
+     2953.0
+    ],
+    [
+     4429.4,
+     2460.8
+    ],
+    [
+     4023.7,
+     2460.8
+    ],
+    [
+     4029.7,
+     2468.7
+    ],
+    [
+     4031.0,
+     2470.5
+    ],
+    [
+     4032.1,
+     2472.4
+    ],
+    [
+     4033.0,
+     2474.3
+    ],
+    [
+     4059.1,
+     2537.3
+    ],
+    [
+     4059.8,
+     2539.4
+    ],
+    [
+     4060.4,
+     2541.5
+    ],
+    [
+     4060.8,
+     2543.6
+    ],
+    [
+     4069.7,
+     2611.3
+    ],
+    [
+     4069.9,
+     2613.5
+    ],
+    [
+     4069.9,
+     2615.7
+    ],
+    [
+     4069.7,
+     2617.9
+    ],
+    [
+     4060.8,
+     2685.6
+    ],
+    [
+     4060.4,
+     2687.7
+    ],
+    [
+     4059.8,
+     2689.8
+    ],
+    [
+     4059.1,
+     2691.9
+    ],
+    [
+     4033.0,
+     2754.9
+    ],
+    [
+     4032.1,
+     2756.8
+    ],
+    [
+     4031.0,
+     2758.7
+    ],
+    [
+     4029.7,
+     2760.5
+    ],
+    [
+     3988.2,
+     2814.7
+    ],
+    [
+     3986.8,
+     2816.4
+    ],
+    [
+     3985.3,
+     2817.9
+    ],
+    [
+     3983.6,
+     2819.3
+    ],
+    [
+     3937.3,
+     2854.8
+    ]
+   ],
+   "path": null,
+   "count": 1
+  },
+  {
+   "id": "mzafbcafeea",
+   "name": "map canopy 0.51",
+   "params": {
+    "zone": "mzafbcafeea",
+    "mix": [
+     {
+      "species": "birch",
+      "weight": 3
+     },
+     {
+      "species": "oak",
+      "weight": 2
+     },
+     {
+      "species": "beech",
+      "weight": 2
+     },
+     {
+      "species": "alder",
+      "weight": 2
+     },
+     {
+      "species": "scots_pine",
+      "weight": 1
+     }
+    ],
+    "density_per_ha": 2.84,
+    "size_var": 0.5,
+    "seed": 4336,
+    "pattern": "cluster",
+    "cluster_radius_ft": 90,
+    "cluster_size": 6,
+    "edge_ft": 40,
+    "row_spacing_ft": 0,
+    "row_angle_deg": 0,
+    "line_spacing_ft": 0,
+    "line_jitter": 0.15,
+    "avoid_buildings": true,
+    "avoid_roads": true,
+    "avoid_water": true,
+    "clearance_building_ft": 60,
+    "clearance_road_ft": 14,
+    "slope_max_deg": 40,
+    "elev_min_ft": null,
+    "elev_max_ft": null,
+    "moisture_bias": 0.0,
+    "max_instances": 4000,
+    "replace_zone": true,
+    "name": "map canopy 0.51"
+   },
+   "polygon": [
+    [
+     3937.3,
+     3445.1
+    ],
+    [
+     4429.4,
+     3445.1
+    ],
+    [
+     4429.4,
+     2953.0
+    ],
+    [
+     3937.3,
+     2953.0
+    ]
+   ],
+   "path": null,
+   "count": 5
+  },
+  {
+   "id": "mzafbcagaia",
+   "name": "map canopy 0.59",
+   "params": {
+    "zone": "mzafbcagaia",
+    "mix": [
+     {
+      "species": "birch",
+      "weight": 3
+     },
+     {
+      "species": "oak",
+      "weight": 2
+     },
+     {
+      "species": "beech",
+      "weight": 2
+     },
+     {
+      "species": "alder",
+      "weight": 2
+     },
+     {
+      "species": "scots_pine",
+      "weight": 1
+     }
+    ],
+    "density_per_ha": 5.334,
+    "size_var": 0.5,
+    "seed": 4400,
+    "pattern": "cluster",
+    "cluster_radius_ft": 90,
+    "cluster_size": 6,
+    "edge_ft": 40,
+    "row_spacing_ft": 0,
+    "row_angle_deg": 0,
+    "line_spacing_ft": 0,
+    "line_jitter": 0.15,
+    "avoid_buildings": true,
+    "avoid_roads": true,
+    "avoid_water": true,
+    "clearance_building_ft": 60,
+    "clearance_road_ft": 14,
+    "slope_max_deg": 40,
+    "elev_min_ft": null,
+    "elev_max_ft": null,
+    "moisture_bias": 0.0,
+    "max_instances": 4000,
+    "replace_zone": true,
+    "name": "map canopy 0.59"
+   },
+   "polygon": [
+    [
+     3937.3,
+     3937.3
+    ],
+    [
+     4429.4,
+     3937.3
+    ],
+    [
+     4429.4,
+     3445.1
+    ],
+    [
+     3937.3,
+     3445.1
+    ]
+   ],
+   "path": null,
+   "count": 8
+  },
+  {
+   "id": "mzafbcaghca",
+   "name": "map canopy 0.86",
+   "params": {
+    "zone": "mzafbcaghca",
+    "mix": [
+     {
+      "species": "birch",
+      "weight": 3
+     },
+     {
+      "species": "oak",
+      "weight": 2
+     },
+     {
+      "species": "beech",
+      "weight": 2
+     },
+     {
+      "species": "alder",
+      "weight": 2
+     },
+     {
+      "species": "scots_pine",
+      "weight": 1
+     }
+    ],
+    "density_per_ha": 17.096,
+    "size_var": 0.5,
+    "seed": 4464,
+    "pattern": "cluster",
+    "cluster_radius_ft": 90,
+    "cluster_size": 6,
+    "edge_ft": 40,
+    "row_spacing_ft": 0,
+    "row_angle_deg": 0,
+    "line_spacing_ft": 0,
+    "line_jitter": 0.15,
+    "avoid_buildings": true,
+    "avoid_roads": true,
+    "avoid_water": true,
+    "clearance_building_ft": 60,
+    "clearance_road_ft": 14,
+    "slope_max_deg": 40,
+    "elev_min_ft": null,
+    "elev_max_ft": null,
+    "moisture_bias": 0.0,
+    "max_instances": 4000,
+    "replace_zone": true,
+    "name": "map canopy 0.86"
+   },
+   "polygon": [
+    [
+     3937.3,
+     3937.3
+    ],
+    [
+     3937.3,
+     3961.0
+    ],
+    [
+     4429.4,
+     3961.0
+    ],
+    [
+     4429.4,
+     3937.3
+    ]
+   ],
+   "path": null,
+   "count": 1
+  },
+  {
+   "id": "mzafhgaebga",
+   "name": "map canopy 0.69",
+   "params": {
+    "zone": "mzafhgaebga",
+    "mix": [
+     {
+      "species": "birch",
+      "weight": 3
+     },
+     {
+      "species": "oak",
+      "weight": 2
+     },
+     {
+      "species": "beech",
+      "weight": 2
+     },
+     {
+      "species": "alder",
+      "weight": 2
+     },
+     {
+      "species": "scots_pine",
+      "weight": 1
+     }
+    ],
+    "density_per_ha": 9.001,
+    "size_var": 0.5,
+    "seed": 4656,
+    "pattern": "cluster",
+    "cluster_radius_ft": 90,
+    "cluster_size": 6,
+    "edge_ft": 40,
+    "row_spacing_ft": 0,
+    "row_angle_deg": 0,
+    "line_spacing_ft": 0,
+    "line_jitter": 0.15,
+    "avoid_buildings": true,
+    "avoid_roads": true,
+    "avoid_water": true,
+    "clearance_building_ft": 60,
+    "clearance_road_ft": 14,
+    "slope_max_deg": 40,
+    "elev_min_ft": null,
+    "elev_max_ft": null,
+    "moisture_bias": 0.0,
+    "max_instances": 4000,
+    "replace_zone": true,
+    "name": "map canopy 0.69"
+   },
+   "polygon": [
+    [
+     4654.0,
+     2460.8
+    ],
+    [
+     4654.0,
+     2113.0
+    ],
+    [
+     4429.4,
+     2113.0
+    ],
+    [
+     4429.4,
+     2460.8
+    ]
+   ],
+   "path": null,
+   "count": 5
+  },
+  {
+   "id": "mzafhgaeiaa",
+   "name": "map canopy 0.81",
+   "params": {
+    "zone": "mzafhgaeiaa",
+    "mix": [
+     {
+      "species": "birch",
+      "weight": 3
+     },
+     {
+      "species": "oak",
+      "weight": 2
+     },
+     {
+      "species": "beech",
+      "weight": 2
+     },
+     {
+      "species": "alder",
+      "weight": 2
+     },
+     {
+      "species": "scots_pine",
+      "weight": 1
+     }
+    ],
+    "density_per_ha": 14.665,
+    "size_var": 0.5,
+    "seed": 4720,
+    "pattern": "cluster",
+    "cluster_radius_ft": 90,
+    "cluster_size": 6,
+    "edge_ft": 40,
+    "row_spacing_ft": 0,
+    "row_angle_deg": 0,
+    "line_spacing_ft": 0,
+    "line_jitter": 0.15,
+    "avoid_buildings": true,
+    "avoid_roads": true,
+    "avoid_water": true,
+    "clearance_building_ft": 60,
+    "clearance_road_ft": 14,
+    "slope_max_deg": 40,
+    "elev_min_ft": null,
+    "elev_max_ft": null,
+    "moisture_bias": 0.0,
+    "max_instances": 4000,
+    "replace_zone": true,
+    "name": "map canopy 0.81"
+   },
+   "polygon": [
+    [
+     4429.4,
+     2953.0
+    ],
+    [
+     4654.0,
+     2953.0
+    ],
+    [
+     4654.0,
+     2460.8
+    ],
+    [
+     4429.4,
+     2460.8
+    ]
+   ],
+   "path": null,
+   "count": 12
+  },
+  {
+   "id": "mzafhgafeea",
+   "name": "map canopy 0.72",
+   "params": {
+    "zone": "mzafhgafeea",
+    "mix": [
+     {
+      "species": "birch",
+      "weight": 3
+     },
+     {
+      "species": "oak",
+      "weight": 2
+     },
+     {
+      "species": "beech",
+      "weight": 2
+     },
+     {
+      "species": "alder",
+      "weight": 2
+     },
+     {
+      "species": "scots_pine",
+      "weight": 1
+     }
+    ],
+    "density_per_ha": 10.245,
+    "size_var": 0.5,
+    "seed": 4784,
+    "pattern": "cluster",
+    "cluster_radius_ft": 90,
+    "cluster_size": 6,
+    "edge_ft": 40,
+    "row_spacing_ft": 0,
+    "row_angle_deg": 0,
+    "line_spacing_ft": 0,
+    "line_jitter": 0.15,
+    "avoid_buildings": true,
+    "avoid_roads": true,
+    "avoid_water": true,
+    "clearance_building_ft": 60,
+    "clearance_road_ft": 14,
+    "slope_max_deg": 40,
+    "elev_min_ft": null,
+    "elev_max_ft": null,
+    "moisture_bias": 0.0,
+    "max_instances": 4000,
+    "replace_zone": true,
+    "name": "map canopy 0.72"
+   },
+   "polygon": [
+    [
+     4429.4,
+     3445.1
+    ],
+    [
+     4654.0,
+     3445.1
+    ],
+    [
+     4654.0,
+     2953.0
+    ],
+    [
+     4429.4,
+     2953.0
+    ]
+   ],
+   "path": null,
+   "count": 8
+  },
+  {
+   "id": "mzafhgagaia",
+   "name": "map canopy 0.68",
+   "params": {
+    "zone": "mzafhgagaia",
+    "mix": [
+     {
+      "species": "spruce",
+      "weight": 4
+     },
+     {
+      "species": "scots_pine",
+      "weight": 4
+     },
+     {
+      "species": "fir",
+      "weight": 2
+     },
+     {
+      "species": "birch",
+      "weight": 1
+     }
+    ],
+    "density_per_ha": 8.689,
+    "size_var": 0.5,
+    "seed": 4848,
+    "pattern": "cluster",
+    "cluster_radius_ft": 90,
+    "cluster_size": 6,
+    "edge_ft": 40,
+    "row_spacing_ft": 0,
+    "row_angle_deg": 0,
+    "line_spacing_ft": 0,
+    "line_jitter": 0.15,
+    "avoid_buildings": true,
+    "avoid_roads": true,
+    "avoid_water": true,
+    "clearance_building_ft": 60,
+    "clearance_road_ft": 14,
+    "slope_max_deg": 40,
+    "elev_min_ft": null,
+    "elev_max_ft": null,
+    "moisture_bias": 0.0,
+    "max_instances": 4000,
+    "replace_zone": true,
+    "name": "map canopy 0.68"
+   },
+   "polygon": [
+    [
+     4429.4,
+     3937.3
+    ],
+    [
+     4654.0,
+     3937.3
+    ],
+    [
+     4654.0,
+     3445.1
+    ],
+    [
+     4429.4,
+     3445.1
+    ]
+   ],
+   "path": null,
+   "count": 8
+  },
+  {
+   "id": "mzafhgaghca",
+   "name": "map canopy 0.80",
+   "params": {
+    "zone": "mzafhgaghca",
+    "mix": [
+     {
+      "species": "spruce",
+      "weight": 4
+     },
+     {
+      "species": "scots_pine",
+      "weight": 4
+     },
+     {
+      "species": "fir",
+      "weight": 2
+     },
+     {
+      "species": "birch",
+      "weight": 1
+     }
+    ],
+    "density_per_ha": 14.046,
+    "size_var": 0.5,
+    "seed": 4912,
+    "pattern": "cluster",
+    "cluster_radius_ft": 90,
+    "cluster_size": 6,
+    "edge_ft": 40,
+    "row_spacing_ft": 0,
+    "row_angle_deg": 0,
+    "line_spacing_ft": 0,
+    "line_jitter": 0.15,
+    "avoid_buildings": true,
+    "avoid_roads": true,
+    "avoid_water": true,
+    "clearance_building_ft": 60,
+    "clearance_road_ft": 14,
+    "slope_max_deg": 40,
+    "elev_min_ft": null,
+    "elev_max_ft": null,
+    "moisture_bias": 0.0,
+    "max_instances": 4000,
+    "replace_zone": true,
+    "name": "map canopy 0.80"
+   },
+   "polygon": [
+    [
+     4429.4,
+     3961.0
+    ],
+    [
+     4654.0,
+     3961.0
+    ],
+    [
+     4654.0,
+     3937.3
+    ],
+    [
+     4429.4,
+     3937.3
+    ]
+   ],
+   "path": null,
+   "count": 0
+  }
+ ],
+ "items": [
+  {
+   "species": "oak",
+   "x": 3784.0,
+   "y": 2614.0,
+   "z": 700.17,
+   "scale": 3.2,
+   "rot": 40.0,
+   "variant": 1,
+   "id": "fol_hero_0001",
+   "zone": "hero",
+   "src": "hand"
+  },
+  {
+   "species": "spruce",
+   "x": 1925.77,
+   "y": 2434.67,
+   "z": 701.74,
+   "scale": 1.144,
+   "rot": 358.3,
+   "variant": 0,
+   "id": "fol_mzabjcaebga_0001",
+   "zone": "mzabjcaebga",
+   "src": "generated"
+  },
+  {
+   "species": "spruce",
+   "x": 1946.13,
+   "y": 2340.97,
+   "z": 701.37,
+   "scale": 1.082,
+   "rot": 16.4,
+   "variant": 0,
+   "id": "fol_mzabjcaebga_0002",
+   "zone": "mzabjcaebga",
+   "src": "generated"
+  },
+  {
+   "species": "spruce",
+   "x": 1939.7,
+   "y": 2454.65,
+   "z": 701.61,
+   "scale": 0.758,
+   "rot": 6.5,
+   "variant": 1,
+   "id": "fol_mzabjcaebga_0003",
+   "zone": "mzabjcaebga",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 1907.34,
+   "y": 2401.34,
+   "z": 702.0,
+   "scale": 1.159,
+   "rot": 287.1,
+   "variant": 1,
+   "id": "fol_mzabjcaebga_0004",
+   "zone": "mzabjcaebga",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 1941.03,
+   "y": 2358.64,
+   "z": 701.53,
+   "scale": 0.915,
+   "rot": 338.0,
+   "variant": 0,
+   "id": "fol_mzabjcaebga_0005",
+   "zone": "mzabjcaebga",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 1907.09,
+   "y": 2354.11,
+   "z": 701.66,
+   "scale": 0.862,
+   "rot": 143.5,
+   "variant": 1,
+   "id": "fol_mzabjcaebga_0006",
+   "zone": "mzabjcaebga",
+   "src": "generated"
+  },
+  {
+   "species": "fir",
+   "x": 1956.53,
+   "y": 2424.61,
+   "z": 701.78,
+   "scale": 1.234,
+   "rot": 102.5,
+   "variant": 1,
+   "id": "fol_mzabjcaebga_0007",
+   "zone": "mzabjcaebga",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 1873.8,
+   "y": 2405.57,
+   "z": 702.5,
+   "scale": 1.206,
+   "rot": 300.1,
+   "variant": 1,
+   "id": "fol_mzabjcaebga_0008",
+   "zone": "mzabjcaebga",
+   "src": "generated"
+  },
+  {
+   "species": "spruce",
+   "x": 1874.25,
+   "y": 2726.01,
+   "z": 701.4,
+   "scale": 1.134,
+   "rot": 334.7,
+   "variant": 1,
+   "id": "fol_mzabjcaeiaa_0001",
+   "zone": "mzabjcaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "spruce",
+   "x": 1826.83,
+   "y": 2735.01,
+   "z": 701.28,
+   "scale": 1.219,
+   "rot": 307.5,
+   "variant": 0,
+   "id": "fol_mzabjcaeiaa_0002",
+   "zone": "mzabjcaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "spruce",
+   "x": 1786.19,
+   "y": 2648.26,
+   "z": 702.19,
+   "scale": 1.112,
+   "rot": 196.5,
+   "variant": 1,
+   "id": "fol_mzabjcaeiaa_0003",
+   "zone": "mzabjcaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "spruce",
+   "x": 1899.86,
+   "y": 2723.99,
+   "z": 701.46,
+   "scale": 0.888,
+   "rot": 13.1,
+   "variant": 0,
+   "id": "fol_mzabjcaeiaa_0004",
+   "zone": "mzabjcaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "spruce",
+   "x": 1839.71,
+   "y": 2602.89,
+   "z": 701.65,
+   "scale": 1.13,
+   "rot": 179.3,
+   "variant": 0,
+   "id": "fol_mzabjcaeiaa_0005",
+   "zone": "mzabjcaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "spruce",
+   "x": 1797.62,
+   "y": 2818.35,
+   "z": 702.05,
+   "scale": 1.214,
+   "rot": 26.6,
+   "variant": 1,
+   "id": "fol_mzabjcaeiaa_0006",
+   "zone": "mzabjcaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "spruce",
+   "x": 1831.7,
+   "y": 2830.68,
+   "z": 702.13,
+   "scale": 0.897,
+   "rot": 342.4,
+   "variant": 0,
+   "id": "fol_mzabjcaeiaa_0007",
+   "zone": "mzabjcaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 1893.53,
+   "y": 2630.01,
+   "z": 701.17,
+   "scale": 1.112,
+   "rot": 73.6,
+   "variant": 0,
+   "id": "fol_mzabjcaeiaa_0008",
+   "zone": "mzabjcaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 1847.38,
+   "y": 2823.25,
+   "z": 702.14,
+   "scale": 1.042,
+   "rot": 29.2,
+   "variant": 1,
+   "id": "fol_mzabjcaeiaa_0009",
+   "zone": "mzabjcaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 1918.55,
+   "y": 2620.4,
+   "z": 701.13,
+   "scale": 1.265,
+   "rot": 119.4,
+   "variant": 0,
+   "id": "fol_mzabjcaeiaa_0010",
+   "zone": "mzabjcaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 1889.81,
+   "y": 2738.76,
+   "z": 701.5,
+   "scale": 0.944,
+   "rot": 126.0,
+   "variant": 0,
+   "id": "fol_mzabjcaeiaa_0011",
+   "zone": "mzabjcaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 1909.93,
+   "y": 2768.4,
+   "z": 701.9,
+   "scale": 0.83,
+   "rot": 76.0,
+   "variant": 1,
+   "id": "fol_mzabjcaeiaa_0012",
+   "zone": "mzabjcaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 1814.87,
+   "y": 2633.62,
+   "z": 701.8,
+   "scale": 0.768,
+   "rot": 353.8,
+   "variant": 1,
+   "id": "fol_mzabjcaeiaa_0013",
+   "zone": "mzabjcaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 1874.04,
+   "y": 2536.08,
+   "z": 701.87,
+   "scale": 0.755,
+   "rot": 294.0,
+   "variant": 0,
+   "id": "fol_mzabjcaeiaa_0014",
+   "zone": "mzabjcaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "fir",
+   "x": 1823.7,
+   "y": 2622.44,
+   "z": 701.69,
+   "scale": 1.11,
+   "rot": 67.0,
+   "variant": 1,
+   "id": "fol_mzabjcaeiaa_0015",
+   "zone": "mzabjcaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "fir",
+   "x": 1797.44,
+   "y": 2678.04,
+   "z": 702.03,
+   "scale": 0.847,
+   "rot": 30.6,
+   "variant": 1,
+   "id": "fol_mzabjcaeiaa_0016",
+   "zone": "mzabjcaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "fir",
+   "x": 1852.73,
+   "y": 2600.74,
+   "z": 701.57,
+   "scale": 1.075,
+   "rot": 327.0,
+   "variant": 1,
+   "id": "fol_mzabjcaeiaa_0017",
+   "zone": "mzabjcaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 1783.88,
+   "y": 2732.06,
+   "z": 701.99,
+   "scale": 1.155,
+   "rot": 303.6,
+   "variant": 0,
+   "id": "fol_mzabjcaeiaa_0018",
+   "zone": "mzabjcaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 1824.41,
+   "y": 2595.32,
+   "z": 701.76,
+   "scale": 0.895,
+   "rot": 347.1,
+   "variant": 1,
+   "id": "fol_mzabjcaeiaa_0019",
+   "zone": "mzabjcaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "spruce",
+   "x": 1780.51,
+   "y": 3164.08,
+   "z": 703.09,
+   "scale": 1.164,
+   "rot": 164.3,
+   "variant": 0,
+   "id": "fol_mzabjcafeea_0001",
+   "zone": "mzabjcafeea",
+   "src": "generated"
+  },
+  {
+   "species": "spruce",
+   "x": 1787.49,
+   "y": 3311.75,
+   "z": 701.77,
+   "scale": 0.804,
+   "rot": 79.1,
+   "variant": 1,
+   "id": "fol_mzabjcafeea_0002",
+   "zone": "mzabjcafeea",
+   "src": "generated"
+  },
+  {
+   "species": "spruce",
+   "x": 1812.09,
+   "y": 3210.62,
+   "z": 702.73,
+   "scale": 0.896,
+   "rot": 22.7,
+   "variant": 0,
+   "id": "fol_mzabjcafeea_0003",
+   "zone": "mzabjcafeea",
+   "src": "generated"
+  },
+  {
+   "species": "spruce",
+   "x": 1789.8,
+   "y": 3226.36,
+   "z": 702.91,
+   "scale": 1.243,
+   "rot": 205.9,
+   "variant": 1,
+   "id": "fol_mzabjcafeea_0004",
+   "zone": "mzabjcafeea",
+   "src": "generated"
+  },
+  {
+   "species": "spruce",
+   "x": 1800.08,
+   "y": 3189.9,
+   "z": 702.93,
+   "scale": 1.028,
+   "rot": 351.1,
+   "variant": 1,
+   "id": "fol_mzabjcafeea_0005",
+   "zone": "mzabjcafeea",
+   "src": "generated"
+  },
+  {
+   "species": "spruce",
+   "x": 1847.45,
+   "y": 3246.08,
+   "z": 702.12,
+   "scale": 0.886,
+   "rot": 51.1,
+   "variant": 0,
+   "id": "fol_mzabjcafeea_0006",
+   "zone": "mzabjcafeea",
+   "src": "generated"
+  },
+  {
+   "species": "spruce",
+   "x": 1736.5,
+   "y": 3386.15,
+   "z": 701.54,
+   "scale": 0.875,
+   "rot": 247.0,
+   "variant": 0,
+   "id": "fol_mzabjcafeea_0007",
+   "zone": "mzabjcafeea",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 1951.31,
+   "y": 3315.9,
+   "z": 701.7,
+   "scale": 1.087,
+   "rot": 327.5,
+   "variant": 0,
+   "id": "fol_mzabjcafeea_0008",
+   "zone": "mzabjcafeea",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 1842.03,
+   "y": 3184.86,
+   "z": 702.56,
+   "scale": 1.064,
+   "rot": 31.9,
+   "variant": 0,
+   "id": "fol_mzabjcafeea_0009",
+   "zone": "mzabjcafeea",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 1890.06,
+   "y": 3214.8,
+   "z": 702.19,
+   "scale": 1.277,
+   "rot": 173.6,
+   "variant": 0,
+   "id": "fol_mzabjcafeea_0010",
+   "zone": "mzabjcafeea",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 1896.26,
+   "y": 3195.79,
+   "z": 702.23,
+   "scale": 0.83,
+   "rot": 328.0,
+   "variant": 0,
+   "id": "fol_mzabjcafeea_0011",
+   "zone": "mzabjcafeea",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 1829.23,
+   "y": 3196.96,
+   "z": 702.63,
+   "scale": 0.808,
+   "rot": 353.0,
+   "variant": 0,
+   "id": "fol_mzabjcafeea_0012",
+   "zone": "mzabjcafeea",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 1857.82,
+   "y": 3169.11,
+   "z": 702.51,
+   "scale": 1.154,
+   "rot": 85.6,
+   "variant": 1,
+   "id": "fol_mzabjcafeea_0013",
+   "zone": "mzabjcafeea",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 1818.72,
+   "y": 3127.55,
+   "z": 702.89,
+   "scale": 0.88,
+   "rot": 280.9,
+   "variant": 1,
+   "id": "fol_mzabjcafeea_0014",
+   "zone": "mzabjcafeea",
+   "src": "generated"
+  },
+  {
+   "species": "fir",
+   "x": 1777.46,
+   "y": 3287.0,
+   "z": 702.28,
+   "scale": 0.885,
+   "rot": 276.8,
+   "variant": 1,
+   "id": "fol_mzabjcafeea_0015",
+   "zone": "mzabjcafeea",
+   "src": "generated"
+  },
+  {
+   "species": "fir",
+   "x": 1830.67,
+   "y": 3394.63,
+   "z": 701.29,
+   "scale": 0.894,
+   "rot": 339.7,
+   "variant": 0,
+   "id": "fol_mzabjcafeea_0016",
+   "zone": "mzabjcafeea",
+   "src": "generated"
+  },
+  {
+   "species": "fir",
+   "x": 1798.49,
+   "y": 3237.52,
+   "z": 702.73,
+   "scale": 0.989,
+   "rot": 113.5,
+   "variant": 0,
+   "id": "fol_mzabjcafeea_0017",
+   "zone": "mzabjcafeea",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 1909.24,
+   "y": 3178.41,
+   "z": 702.19,
+   "scale": 0.925,
+   "rot": 162.9,
+   "variant": 1,
+   "id": "fol_mzabjcafeea_0018",
+   "zone": "mzabjcafeea",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 1936.92,
+   "y": 3293.44,
+   "z": 701.71,
+   "scale": 1.123,
+   "rot": 224.7,
+   "variant": 0,
+   "id": "fol_mzabjcafeea_0019",
+   "zone": "mzabjcafeea",
+   "src": "generated"
+  },
+  {
+   "species": "spruce",
+   "x": 1855.76,
+   "y": 3583.58,
+   "z": 701.77,
+   "scale": 1.123,
+   "rot": 307.2,
+   "variant": 0,
+   "id": "fol_mzabjcagaia_0001",
+   "zone": "mzabjcagaia",
+   "src": "generated"
+  },
+  {
+   "species": "spruce",
+   "x": 1881.51,
+   "y": 3629.35,
+   "z": 702.17,
+   "scale": 1.0,
+   "rot": 305.7,
+   "variant": 1,
+   "id": "fol_mzabjcagaia_0002",
+   "zone": "mzabjcagaia",
+   "src": "generated"
+  },
+  {
+   "species": "spruce",
+   "x": 1851.61,
+   "y": 3615.3,
+   "z": 702.12,
+   "scale": 1.116,
+   "rot": 333.7,
+   "variant": 1,
+   "id": "fol_mzabjcagaia_0003",
+   "zone": "mzabjcagaia",
+   "src": "generated"
+  },
+  {
+   "species": "spruce",
+   "x": 1823.83,
+   "y": 3499.84,
+   "z": 701.54,
+   "scale": 0.844,
+   "rot": 38.8,
+   "variant": 0,
+   "id": "fol_mzabjcagaia_0004",
+   "zone": "mzabjcagaia",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 1873.5,
+   "y": 3556.32,
+   "z": 701.46,
+   "scale": 1.237,
+   "rot": 214.7,
+   "variant": 0,
+   "id": "fol_mzabjcagaia_0005",
+   "zone": "mzabjcagaia",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 1876.27,
+   "y": 3749.92,
+   "z": 701.82,
+   "scale": 1.164,
+   "rot": 353.2,
+   "variant": 0,
+   "id": "fol_mzabjcagaia_0006",
+   "zone": "mzabjcagaia",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 1835.46,
+   "y": 3732.61,
+   "z": 701.99,
+   "scale": 0.992,
+   "rot": 194.1,
+   "variant": 1,
+   "id": "fol_mzabjcagaia_0007",
+   "zone": "mzabjcagaia",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 1823.96,
+   "y": 3697.48,
+   "z": 702.42,
+   "scale": 1.135,
+   "rot": 140.7,
+   "variant": 0,
+   "id": "fol_mzabjcagaia_0008",
+   "zone": "mzabjcagaia",
+   "src": "generated"
+  },
+  {
+   "species": "fir",
+   "x": 1840.89,
+   "y": 3703.6,
+   "z": 702.13,
+   "scale": 0.947,
+   "rot": 225.6,
+   "variant": 1,
+   "id": "fol_mzabjcagaia_0009",
+   "zone": "mzabjcagaia",
+   "src": "generated"
+  },
+  {
+   "species": "fir",
+   "x": 1954.1,
+   "y": 3596.78,
+   "z": 701.64,
+   "scale": 1.009,
+   "rot": 354.2,
+   "variant": 0,
+   "id": "fol_mzabjcagaia_0010",
+   "zone": "mzabjcagaia",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 1784.99,
+   "y": 3688.92,
+   "z": 702.94,
+   "scale": 0.799,
+   "rot": 196.7,
+   "variant": 1,
+   "id": "fol_mzabjcagaia_0011",
+   "zone": "mzabjcagaia",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 2299.02,
+   "y": 2390.01,
+   "z": 700.62,
+   "scale": 1.244,
+   "rot": 76.9,
+   "variant": 1,
+   "id": "fol_mzacfgaebga_0001",
+   "zone": "mzacfgaebga",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 1990.45,
+   "y": 2431.63,
+   "z": 701.81,
+   "scale": 1.128,
+   "rot": 49.7,
+   "variant": 1,
+   "id": "fol_mzacfgaebga_0002",
+   "zone": "mzacfgaebga",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 2139.0,
+   "y": 2235.97,
+   "z": 701.07,
+   "scale": 1.077,
+   "rot": 120.8,
+   "variant": 1,
+   "id": "fol_mzacfgaebga_0003",
+   "zone": "mzacfgaebga",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 2229.65,
+   "y": 2376.89,
+   "z": 700.74,
+   "scale": 0.883,
+   "rot": 307.9,
+   "variant": 0,
+   "id": "fol_mzacfgaebga_0004",
+   "zone": "mzacfgaebga",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 2214.41,
+   "y": 2259.14,
+   "z": 700.97,
+   "scale": 0.765,
+   "rot": 25.1,
+   "variant": 0,
+   "id": "fol_mzacfgaebga_0005",
+   "zone": "mzacfgaebga",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 2358.75,
+   "y": 2343.63,
+   "z": 700.54,
+   "scale": 1.066,
+   "rot": 92.8,
+   "variant": 0,
+   "id": "fol_mzacfgaebga_0006",
+   "zone": "mzacfgaebga",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 2083.04,
+   "y": 2191.22,
+   "z": 701.03,
+   "scale": 0.992,
+   "rot": 123.6,
+   "variant": 0,
+   "id": "fol_mzacfgaebga_0007",
+   "zone": "mzacfgaebga",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 2381.52,
+   "y": 2325.13,
+   "z": 700.46,
+   "scale": 0.902,
+   "rot": 186.0,
+   "variant": 0,
+   "id": "fol_mzacfgaebga_0008",
+   "zone": "mzacfgaebga",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 1974.78,
+   "y": 2407.74,
+   "z": 701.87,
+   "scale": 0.951,
+   "rot": 271.4,
+   "variant": 0,
+   "id": "fol_mzacfgaebga_0009",
+   "zone": "mzacfgaebga",
+   "src": "generated"
+  },
+  {
+   "species": "spruce",
+   "x": 2072.73,
+   "y": 2245.15,
+   "z": 700.72,
+   "scale": 1.041,
+   "rot": 194.0,
+   "variant": 0,
+   "id": "fol_mzacfgaebga_0010",
+   "zone": "mzacfgaebga",
+   "src": "generated"
+  },
+  {
+   "species": "spruce",
+   "x": 2121.39,
+   "y": 2249.73,
+   "z": 700.92,
+   "scale": 0.837,
+   "rot": 0.6,
+   "variant": 1,
+   "id": "fol_mzacfgaebga_0011",
+   "zone": "mzacfgaebga",
+   "src": "generated"
+  },
+  {
+   "species": "spruce",
+   "x": 2231.86,
+   "y": 2317.61,
+   "z": 700.98,
+   "scale": 0.817,
+   "rot": 327.0,
+   "variant": 1,
+   "id": "fol_mzacfgaebga_0012",
+   "zone": "mzacfgaebga",
+   "src": "generated"
+  },
+  {
+   "species": "spruce",
+   "x": 2030.36,
+   "y": 2247.19,
+   "z": 700.52,
+   "scale": 0.851,
+   "rot": 91.0,
+   "variant": 1,
+   "id": "fol_mzacfgaebga_0013",
+   "zone": "mzacfgaebga",
+   "src": "generated"
+  },
+  {
+   "species": "spruce",
+   "x": 2308.71,
+   "y": 2184.34,
+   "z": 700.53,
+   "scale": 0.967,
+   "rot": 209.5,
+   "variant": 1,
+   "id": "fol_mzacfgaebga_0014",
+   "zone": "mzacfgaebga",
+   "src": "generated"
+  },
+  {
+   "species": "spruce",
+   "x": 2080.28,
+   "y": 2268.27,
+   "z": 700.64,
+   "scale": 1.102,
+   "rot": 92.3,
+   "variant": 0,
+   "id": "fol_mzacfgaebga_0015",
+   "zone": "mzacfgaebga",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 2402.94,
+   "y": 2127.62,
+   "z": 700.94,
+   "scale": 0.965,
+   "rot": 237.6,
+   "variant": 0,
+   "id": "fol_mzacfgaebga_0016",
+   "zone": "mzacfgaebga",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 2357.35,
+   "y": 2119.97,
+   "z": 701.08,
+   "scale": 0.916,
+   "rot": 21.1,
+   "variant": 0,
+   "id": "fol_mzacfgaebga_0017",
+   "zone": "mzacfgaebga",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 2068.39,
+   "y": 2288.29,
+   "z": 700.45,
+   "scale": 1.113,
+   "rot": 261.9,
+   "variant": 0,
+   "id": "fol_mzacfgaebga_0018",
+   "zone": "mzacfgaebga",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 2101.51,
+   "y": 2317.16,
+   "z": 700.64,
+   "scale": 0.936,
+   "rot": 46.3,
+   "variant": 0,
+   "id": "fol_mzacfgaebga_0019",
+   "zone": "mzacfgaebga",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 2036.7,
+   "y": 2276.04,
+   "z": 700.34,
+   "scale": 0.897,
+   "rot": 91.2,
+   "variant": 1,
+   "id": "fol_mzacfgaebga_0020",
+   "zone": "mzacfgaebga",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 1989.16,
+   "y": 2347.83,
+   "z": 701.53,
+   "scale": 0.808,
+   "rot": 113.6,
+   "variant": 1,
+   "id": "fol_mzacfgaebga_0021",
+   "zone": "mzacfgaebga",
+   "src": "generated"
+  },
+  {
+   "species": "beech",
+   "x": 2381.65,
+   "y": 2407.49,
+   "z": 700.93,
+   "scale": 1.125,
+   "rot": 219.8,
+   "variant": 1,
+   "id": "fol_mzacfgaebga_0022",
+   "zone": "mzacfgaebga",
+   "src": "generated"
+  },
+  {
+   "species": "beech",
+   "x": 2245.6,
+   "y": 2383.94,
+   "z": 700.66,
+   "scale": 0.986,
+   "rot": 53.1,
+   "variant": 1,
+   "id": "fol_mzacfgaebga_0023",
+   "zone": "mzacfgaebga",
+   "src": "generated"
+  },
+  {
+   "species": "beech",
+   "x": 2127.22,
+   "y": 2174.42,
+   "z": 701.24,
+   "scale": 1.086,
+   "rot": 314.3,
+   "variant": 0,
+   "id": "fol_mzacfgaebga_0024",
+   "zone": "mzacfgaebga",
+   "src": "generated"
+  },
+  {
+   "species": "oak",
+   "x": 2343.08,
+   "y": 2303.56,
+   "z": 700.62,
+   "scale": 1.076,
+   "rot": 299.5,
+   "variant": 1,
+   "id": "fol_mzacfgaebga_0025",
+   "zone": "mzacfgaebga",
+   "src": "generated"
+  },
+  {
+   "species": "oak",
+   "x": 2082.21,
+   "y": 2302.91,
+   "z": 700.53,
+   "scale": 0.986,
+   "rot": 39.5,
+   "variant": 0,
+   "id": "fol_mzacfgaebga_0026",
+   "zone": "mzacfgaebga",
+   "src": "generated"
+  },
+  {
+   "species": "oak",
+   "x": 2176.88,
+   "y": 2225.33,
+   "z": 701.18,
+   "scale": 1.178,
+   "rot": 120.6,
+   "variant": 0,
+   "id": "fol_mzacfgaebga_0027",
+   "zone": "mzacfgaebga",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 2218.54,
+   "y": 2915.82,
+   "z": 701.41,
+   "scale": 0.773,
+   "rot": 313.7,
+   "variant": 0,
+   "id": "fol_mzacfgaeiaa_0001",
+   "zone": "mzacfgaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 2422.77,
+   "y": 2786.25,
+   "z": 701.14,
+   "scale": 0.724,
+   "rot": 123.4,
+   "variant": 0,
+   "id": "fol_mzacfgaeiaa_0002",
+   "zone": "mzacfgaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 2127.72,
+   "y": 2906.39,
+   "z": 701.83,
+   "scale": 1.203,
+   "rot": 15.2,
+   "variant": 1,
+   "id": "fol_mzacfgaeiaa_0003",
+   "zone": "mzacfgaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 2042.71,
+   "y": 2938.96,
+   "z": 702.41,
+   "scale": 1.243,
+   "rot": 18.6,
+   "variant": 1,
+   "id": "fol_mzacfgaeiaa_0004",
+   "zone": "mzacfgaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 2309.25,
+   "y": 2760.12,
+   "z": 701.05,
+   "scale": 0.962,
+   "rot": 9.9,
+   "variant": 0,
+   "id": "fol_mzacfgaeiaa_0005",
+   "zone": "mzacfgaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 2126.87,
+   "y": 2732.87,
+   "z": 701.71,
+   "scale": 1.192,
+   "rot": 318.3,
+   "variant": 0,
+   "id": "fol_mzacfgaeiaa_0006",
+   "zone": "mzacfgaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 2229.32,
+   "y": 2799.94,
+   "z": 701.31,
+   "scale": 1.119,
+   "rot": 277.7,
+   "variant": 0,
+   "id": "fol_mzacfgaeiaa_0007",
+   "zone": "mzacfgaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "spruce",
+   "x": 2307.71,
+   "y": 2688.3,
+   "z": 701.23,
+   "scale": 1.222,
+   "rot": 36.0,
+   "variant": 1,
+   "id": "fol_mzacfgaeiaa_0008",
+   "zone": "mzacfgaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "spruce",
+   "x": 2261.16,
+   "y": 2899.88,
+   "z": 701.24,
+   "scale": 1.125,
+   "rot": 196.3,
+   "variant": 0,
+   "id": "fol_mzacfgaeiaa_0009",
+   "zone": "mzacfgaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "spruce",
+   "x": 2208.56,
+   "y": 2819.18,
+   "z": 701.39,
+   "scale": 0.904,
+   "rot": 184.4,
+   "variant": 1,
+   "id": "fol_mzacfgaeiaa_0010",
+   "zone": "mzacfgaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "spruce",
+   "x": 2198.2,
+   "y": 2866.87,
+   "z": 701.43,
+   "scale": 1.003,
+   "rot": 202.2,
+   "variant": 1,
+   "id": "fol_mzacfgaeiaa_0011",
+   "zone": "mzacfgaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 2376.93,
+   "y": 2783.59,
+   "z": 701.06,
+   "scale": 0.943,
+   "rot": 168.1,
+   "variant": 0,
+   "id": "fol_mzacfgaeiaa_0012",
+   "zone": "mzacfgaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 1995.3,
+   "y": 2925.68,
+   "z": 702.58,
+   "scale": 1.188,
+   "rot": 3.2,
+   "variant": 0,
+   "id": "fol_mzacfgaeiaa_0013",
+   "zone": "mzacfgaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 2201.59,
+   "y": 2801.89,
+   "z": 701.49,
+   "scale": 1.188,
+   "rot": 52.0,
+   "variant": 0,
+   "id": "fol_mzacfgaeiaa_0014",
+   "zone": "mzacfgaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 2327.08,
+   "y": 2693.5,
+   "z": 701.21,
+   "scale": 1.198,
+   "rot": 145.9,
+   "variant": 0,
+   "id": "fol_mzacfgaeiaa_0015",
+   "zone": "mzacfgaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "beech",
+   "x": 2010.31,
+   "y": 2923.83,
+   "z": 702.54,
+   "scale": 0.903,
+   "rot": 220.0,
+   "variant": 0,
+   "id": "fol_mzacfgaeiaa_0016",
+   "zone": "mzacfgaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "beech",
+   "x": 2243.14,
+   "y": 2742.33,
+   "z": 701.5,
+   "scale": 1.167,
+   "rot": 324.3,
+   "variant": 0,
+   "id": "fol_mzacfgaeiaa_0017",
+   "zone": "mzacfgaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "oak",
+   "x": 2091.7,
+   "y": 2901.18,
+   "z": 702.08,
+   "scale": 0.926,
+   "rot": 348.1,
+   "variant": 0,
+   "id": "fol_mzacfgaeiaa_0018",
+   "zone": "mzacfgaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "oak",
+   "x": 2369.18,
+   "y": 2700.88,
+   "z": 701.13,
+   "scale": 0.966,
+   "rot": 59.7,
+   "variant": 1,
+   "id": "fol_mzacfgaeiaa_0019",
+   "zone": "mzacfgaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "spruce",
+   "x": 2244.19,
+   "y": 3008.46,
+   "z": 701.49,
+   "scale": 0.987,
+   "rot": 196.0,
+   "variant": 0,
+   "id": "fol_mzacfgafeea_0001",
+   "zone": "mzacfgafeea",
+   "src": "generated"
+  },
+  {
+   "species": "spruce",
+   "x": 2038.21,
+   "y": 3075.07,
+   "z": 702.22,
+   "scale": 1.088,
+   "rot": 45.0,
+   "variant": 0,
+   "id": "fol_mzacfgafeea_0002",
+   "zone": "mzacfgafeea",
+   "src": "generated"
+  },
+  {
+   "species": "spruce",
+   "x": 1984.41,
+   "y": 3102.88,
+   "z": 701.97,
+   "scale": 1.058,
+   "rot": 24.9,
+   "variant": 1,
+   "id": "fol_mzacfgafeea_0003",
+   "zone": "mzacfgafeea",
+   "src": "generated"
+  },
+  {
+   "species": "spruce",
+   "x": 2066.89,
+   "y": 3015.21,
+   "z": 702.38,
+   "scale": 1.089,
+   "rot": 217.2,
+   "variant": 0,
+   "id": "fol_mzacfgafeea_0004",
+   "zone": "mzacfgafeea",
+   "src": "generated"
+  },
+  {
+   "species": "spruce",
+   "x": 2190.56,
+   "y": 3087.82,
+   "z": 701.97,
+   "scale": 0.817,
+   "rot": 93.8,
+   "variant": 0,
+   "id": "fol_mzacfgafeea_0005",
+   "zone": "mzacfgafeea",
+   "src": "generated"
+  },
+  {
+   "species": "spruce",
+   "x": 1977.31,
+   "y": 3076.93,
+   "z": 702.02,
+   "scale": 0.837,
+   "rot": 144.1,
+   "variant": 1,
+   "id": "fol_mzacfgafeea_0006",
+   "zone": "mzacfgafeea",
+   "src": "generated"
+  },
+  {
+   "species": "spruce",
+   "x": 2238.17,
+   "y": 2988.9,
+   "z": 701.5,
+   "scale": 0.812,
+   "rot": 220.7,
+   "variant": 0,
+   "id": "fol_mzacfgafeea_0007",
+   "zone": "mzacfgafeea",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 2351.71,
+   "y": 3321.82,
+   "z": 701.43,
+   "scale": 0.81,
+   "rot": 223.8,
+   "variant": 1,
+   "id": "fol_mzacfgafeea_0008",
+   "zone": "mzacfgafeea",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 2335.97,
+   "y": 3272.89,
+   "z": 701.63,
+   "scale": 0.985,
+   "rot": 182.2,
+   "variant": 0,
+   "id": "fol_mzacfgafeea_0009",
+   "zone": "mzacfgafeea",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 2123.05,
+   "y": 3017.08,
+   "z": 702.02,
+   "scale": 1.203,
+   "rot": 325.2,
+   "variant": 0,
+   "id": "fol_mzacfgafeea_0010",
+   "zone": "mzacfgafeea",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 2240.34,
+   "y": 3110.98,
+   "z": 701.95,
+   "scale": 0.796,
+   "rot": 89.2,
+   "variant": 0,
+   "id": "fol_mzacfgafeea_0011",
+   "zone": "mzacfgafeea",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 2000.3,
+   "y": 3081.01,
+   "z": 702.08,
+   "scale": 1.064,
+   "rot": 349.9,
+   "variant": 1,
+   "id": "fol_mzacfgafeea_0012",
+   "zone": "mzacfgafeea",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 2300.69,
+   "y": 3246.04,
+   "z": 701.85,
+   "scale": 0.736,
+   "rot": 157.2,
+   "variant": 1,
+   "id": "fol_mzacfgafeea_0013",
+   "zone": "mzacfgafeea",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 2158.38,
+   "y": 3015.49,
+   "z": 701.94,
+   "scale": 1.117,
+   "rot": 60.3,
+   "variant": 0,
+   "id": "fol_mzacfgafeea_0014",
+   "zone": "mzacfgafeea",
+   "src": "generated"
+  },
+  {
+   "species": "fir",
+   "x": 1987.63,
+   "y": 3118.51,
+   "z": 701.94,
+   "scale": 1.128,
+   "rot": 144.2,
+   "variant": 0,
+   "id": "fol_mzacfgafeea_0015",
+   "zone": "mzacfgafeea",
+   "src": "generated"
+  },
+  {
+   "species": "fir",
+   "x": 2421.79,
+   "y": 3351.47,
+   "z": 701.13,
+   "scale": 0.858,
+   "rot": 124.4,
+   "variant": 0,
+   "id": "fol_mzacfgafeea_0016",
+   "zone": "mzacfgafeea",
+   "src": "generated"
+  },
+  {
+   "species": "fir",
+   "x": 2001.13,
+   "y": 3110.17,
+   "z": 701.96,
+   "scale": 0.965,
+   "rot": 181.1,
+   "variant": 1,
+   "id": "fol_mzacfgafeea_0017",
+   "zone": "mzacfgafeea",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 2182.08,
+   "y": 3059.72,
+   "z": 701.92,
+   "scale": 0.982,
+   "rot": 242.2,
+   "variant": 0,
+   "id": "fol_mzacfgafeea_0018",
+   "zone": "mzacfgafeea",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 2054.85,
+   "y": 3032.29,
+   "z": 702.38,
+   "scale": 0.798,
+   "rot": 278.6,
+   "variant": 0,
+   "id": "fol_mzacfgafeea_0019",
+   "zone": "mzacfgafeea",
+   "src": "generated"
+  },
+  {
+   "species": "spruce",
+   "x": 2098.65,
+   "y": 3836.39,
+   "z": 701.07,
+   "scale": 1.046,
+   "rot": 76.4,
+   "variant": 0,
+   "id": "fol_mzacfgagaia_0001",
+   "zone": "mzacfgagaia",
+   "src": "generated"
+  },
+  {
+   "species": "spruce",
+   "x": 2022.36,
+   "y": 3777.84,
+   "z": 701.44,
+   "scale": 1.165,
+   "rot": 325.5,
+   "variant": 0,
+   "id": "fol_mzacfgagaia_0002",
+   "zone": "mzacfgagaia",
+   "src": "generated"
+  },
+  {
+   "species": "spruce",
+   "x": 2086.44,
+   "y": 3752.28,
+   "z": 701.14,
+   "scale": 0.98,
+   "rot": 138.4,
+   "variant": 1,
+   "id": "fol_mzacfgagaia_0003",
+   "zone": "mzacfgagaia",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 2040.23,
+   "y": 3800.94,
+   "z": 701.27,
+   "scale": 0.83,
+   "rot": 359.7,
+   "variant": 1,
+   "id": "fol_mzacfgagaia_0004",
+   "zone": "mzacfgagaia",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 2016.46,
+   "y": 3883.83,
+   "z": 702.04,
+   "scale": 0.831,
+   "rot": 203.4,
+   "variant": 1,
+   "id": "fol_mzacfgagaia_0005",
+   "zone": "mzacfgagaia",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 2101.09,
+   "y": 3758.36,
+   "z": 701.11,
+   "scale": 0.933,
+   "rot": 305.7,
+   "variant": 0,
+   "id": "fol_mzacfgagaia_0006",
+   "zone": "mzacfgagaia",
+   "src": "generated"
+  },
+  {
+   "species": "fir",
+   "x": 2000.85,
+   "y": 3881.47,
+   "z": 702.05,
+   "scale": 1.181,
+   "rot": 50.0,
+   "variant": 1,
+   "id": "fol_mzacfgagaia_0007",
+   "zone": "mzacfgagaia",
+   "src": "generated"
+  },
+  {
+   "species": "fir",
+   "x": 2128.59,
+   "y": 3751.22,
+   "z": 701.11,
+   "scale": 1.167,
+   "rot": 75.4,
+   "variant": 0,
+   "id": "fol_mzacfgagaia_0008",
+   "zone": "mzacfgagaia",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 2047.1,
+   "y": 3874.67,
+   "z": 701.73,
+   "scale": 1.031,
+   "rot": 229.3,
+   "variant": 0,
+   "id": "fol_mzacfgagaia_0009",
+   "zone": "mzacfgagaia",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 2786.42,
+   "y": 2357.53,
+   "z": 699.92,
+   "scale": 1.064,
+   "rot": 84.6,
+   "variant": 0,
+   "id": "fol_mzadcaaebga_0001",
+   "zone": "mzadcaaebga",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 2727.57,
+   "y": 2364.05,
+   "z": 699.98,
+   "scale": 0.8,
+   "rot": 103.0,
+   "variant": 0,
+   "id": "fol_mzadcaaebga_0002",
+   "zone": "mzadcaaebga",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 2765.25,
+   "y": 2371.02,
+   "z": 699.94,
+   "scale": 0.87,
+   "rot": 87.7,
+   "variant": 1,
+   "id": "fol_mzadcaaebga_0003",
+   "zone": "mzadcaaebga",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 2603.95,
+   "y": 2308.92,
+   "z": 700.17,
+   "scale": 1.19,
+   "rot": 10.9,
+   "variant": 1,
+   "id": "fol_mzadcaaebga_0004",
+   "zone": "mzadcaaebga",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 2840.32,
+   "y": 2370.7,
+   "z": 700.22,
+   "scale": 0.801,
+   "rot": 280.3,
+   "variant": 1,
+   "id": "fol_mzadcaaebga_0005",
+   "zone": "mzadcaaebga",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 2632.0,
+   "y": 2315.87,
+   "z": 700.11,
+   "scale": 1.093,
+   "rot": 98.2,
+   "variant": 1,
+   "id": "fol_mzadcaaebga_0006",
+   "zone": "mzadcaaebga",
+   "src": "generated"
+  },
+  {
+   "species": "oak",
+   "x": 2640.45,
+   "y": 2386.08,
+   "z": 700.26,
+   "scale": 0.859,
+   "rot": 8.1,
+   "variant": 1,
+   "id": "fol_mzadcaaebga_0007",
+   "zone": "mzadcaaebga",
+   "src": "generated"
+  },
+  {
+   "species": "oak",
+   "x": 2770.13,
+   "y": 2406.81,
+   "z": 699.91,
+   "scale": 0.855,
+   "rot": 355.3,
+   "variant": 1,
+   "id": "fol_mzadcaaebga_0008",
+   "zone": "mzadcaaebga",
+   "src": "generated"
+  },
+  {
+   "species": "oak",
+   "x": 2683.64,
+   "y": 2404.1,
+   "z": 700.12,
+   "scale": 0.924,
+   "rot": 169.0,
+   "variant": 0,
+   "id": "fol_mzadcaaebga_0009",
+   "zone": "mzadcaaebga",
+   "src": "generated"
+  },
+  {
+   "species": "oak",
+   "x": 2880.99,
+   "y": 2377.77,
+   "z": 700.33,
+   "scale": 0.965,
+   "rot": 127.4,
+   "variant": 0,
+   "id": "fol_mzadcaaebga_0010",
+   "zone": "mzadcaaebga",
+   "src": "generated"
+  },
+  {
+   "species": "beech",
+   "x": 2542.24,
+   "y": 2403.2,
+   "z": 700.52,
+   "scale": 0.956,
+   "rot": 233.1,
+   "variant": 0,
+   "id": "fol_mzadcaaebga_0011",
+   "zone": "mzadcaaebga",
+   "src": "generated"
+  },
+  {
+   "species": "beech",
+   "x": 2475.63,
+   "y": 2385.96,
+   "z": 700.65,
+   "scale": 1.143,
+   "rot": 274.4,
+   "variant": 0,
+   "id": "fol_mzadcaaebga_0012",
+   "zone": "mzadcaaebga",
+   "src": "generated"
+  },
+  {
+   "species": "beech",
+   "x": 2865.65,
+   "y": 2408.48,
+   "z": 700.24,
+   "scale": 1.08,
+   "rot": 210.5,
+   "variant": 1,
+   "id": "fol_mzadcaaebga_0013",
+   "zone": "mzadcaaebga",
+   "src": "generated"
+  },
+  {
+   "species": "beech",
+   "x": 2614.99,
+   "y": 2330.74,
+   "z": 700.19,
+   "scale": 1.087,
+   "rot": 153.0,
+   "variant": 1,
+   "id": "fol_mzadcaaebga_0014",
+   "zone": "mzadcaaebga",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 2633.04,
+   "y": 2360.73,
+   "z": 700.22,
+   "scale": 0.964,
+   "rot": 100.8,
+   "variant": 0,
+   "id": "fol_mzadcaaebga_0015",
+   "zone": "mzadcaaebga",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 2678.98,
+   "y": 2347.61,
+   "z": 700.04,
+   "scale": 0.746,
+   "rot": 135.4,
+   "variant": 0,
+   "id": "fol_mzadcaaebga_0016",
+   "zone": "mzadcaaebga",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 2508.83,
+   "y": 2721.67,
+   "z": 700.84,
+   "scale": 1.038,
+   "rot": 171.5,
+   "variant": 1,
+   "id": "fol_mzadcaaeiaa_0001",
+   "zone": "mzadcaaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 2517.36,
+   "y": 2711.55,
+   "z": 700.82,
+   "scale": 1.215,
+   "rot": 184.7,
+   "variant": 0,
+   "id": "fol_mzadcaaeiaa_0002",
+   "zone": "mzadcaaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 2510.46,
+   "y": 2607.88,
+   "z": 701.03,
+   "scale": 1.143,
+   "rot": 162.9,
+   "variant": 1,
+   "id": "fol_mzadcaaeiaa_0003",
+   "zone": "mzadcaaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "spruce",
+   "x": 2537.8,
+   "y": 2833.3,
+   "z": 701.11,
+   "scale": 1.19,
+   "rot": 81.2,
+   "variant": 0,
+   "id": "fol_mzadcaaeiaa_0004",
+   "zone": "mzadcaaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "spruce",
+   "x": 2474.56,
+   "y": 2553.22,
+   "z": 700.99,
+   "scale": 1.011,
+   "rot": 61.5,
+   "variant": 1,
+   "id": "fol_mzadcaaeiaa_0005",
+   "zone": "mzadcaaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 2506.43,
+   "y": 2734.65,
+   "z": 700.76,
+   "scale": 1.109,
+   "rot": 23.5,
+   "variant": 0,
+   "id": "fol_mzadcaaeiaa_0006",
+   "zone": "mzadcaaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 2590.58,
+   "y": 2732.76,
+   "z": 700.57,
+   "scale": 1.147,
+   "rot": 333.6,
+   "variant": 0,
+   "id": "fol_mzadcaaeiaa_0007",
+   "zone": "mzadcaaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "beech",
+   "x": 2502.4,
+   "y": 2648.86,
+   "z": 700.98,
+   "scale": 1.153,
+   "rot": 21.3,
+   "variant": 0,
+   "id": "fol_mzadcaaeiaa_0008",
+   "zone": "mzadcaaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "oak",
+   "x": 2574.79,
+   "y": 2658.57,
+   "z": 700.74,
+   "scale": 0.971,
+   "rot": 159.1,
+   "variant": 0,
+   "id": "fol_mzadcaaeiaa_0009",
+   "zone": "mzadcaaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 2911.49,
+   "y": 3232.02,
+   "z": 700.35,
+   "scale": 0.996,
+   "rot": 156.9,
+   "variant": 0,
+   "id": "fol_mzadcaafeea_0001",
+   "zone": "mzadcaafeea",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 2914.65,
+   "y": 3260.66,
+   "z": 700.46,
+   "scale": 1.143,
+   "rot": 58.8,
+   "variant": 1,
+   "id": "fol_mzadcaafeea_0002",
+   "zone": "mzadcaafeea",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 2947.38,
+   "y": 3229.34,
+   "z": 700.12,
+   "scale": 1.125,
+   "rot": 259.7,
+   "variant": 0,
+   "id": "fol_mzadcaafeea_0003",
+   "zone": "mzadcaafeea",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 2861.04,
+   "y": 3099.34,
+   "z": 700.56,
+   "scale": 1.071,
+   "rot": 232.2,
+   "variant": 0,
+   "id": "fol_mzadcaafeea_0004",
+   "zone": "mzadcaafeea",
+   "src": "generated"
+  },
+  {
+   "species": "spruce",
+   "x": 2487.26,
+   "y": 3189.18,
+   "z": 700.82,
+   "scale": 0.8,
+   "rot": 191.3,
+   "variant": 1,
+   "id": "fol_mzadcaafeea_0005",
+   "zone": "mzadcaafeea",
+   "src": "generated"
+  },
+  {
+   "species": "spruce",
+   "x": 2912.94,
+   "y": 3180.57,
+   "z": 700.1,
+   "scale": 0.833,
+   "rot": 230.7,
+   "variant": 1,
+   "id": "fol_mzadcaafeea_0006",
+   "zone": "mzadcaafeea",
+   "src": "generated"
+  },
+  {
+   "species": "spruce",
+   "x": 2528.23,
+   "y": 3313.61,
+   "z": 701.08,
+   "scale": 1.243,
+   "rot": 147.3,
+   "variant": 1,
+   "id": "fol_mzadcaafeea_0007",
+   "zone": "mzadcaafeea",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 2527.54,
+   "y": 3192.25,
+   "z": 700.64,
+   "scale": 0.944,
+   "rot": 120.1,
+   "variant": 0,
+   "id": "fol_mzadcaafeea_0008",
+   "zone": "mzadcaafeea",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 2608.28,
+   "y": 3221.92,
+   "z": 700.8,
+   "scale": 1.172,
+   "rot": 8.5,
+   "variant": 0,
+   "id": "fol_mzadcaafeea_0009",
+   "zone": "mzadcaafeea",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 2911.6,
+   "y": 3211.69,
+   "z": 700.25,
+   "scale": 1.106,
+   "rot": 305.2,
+   "variant": 1,
+   "id": "fol_mzadcaafeea_0010",
+   "zone": "mzadcaafeea",
+   "src": "generated"
+  },
+  {
+   "species": "beech",
+   "x": 2847.08,
+   "y": 3246.15,
+   "z": 700.72,
+   "scale": 1.129,
+   "rot": 280.1,
+   "variant": 0,
+   "id": "fol_mzadcaafeea_0011",
+   "zone": "mzadcaafeea",
+   "src": "generated"
+  },
+  {
+   "species": "oak",
+   "x": 2890.4,
+   "y": 3199.9,
+   "z": 700.37,
+   "scale": 0.974,
+   "rot": 332.8,
+   "variant": 0,
+   "id": "fol_mzadcaafeea_0012",
+   "zone": "mzadcaafeea",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 2696.86,
+   "y": 3534.3,
+   "z": 701.38,
+   "scale": 0.751,
+   "rot": 49.0,
+   "variant": 1,
+   "id": "fol_mzadcaagaia_0001",
+   "zone": "mzadcaagaia",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 2558.9,
+   "y": 3475.69,
+   "z": 701.5,
+   "scale": 0.95,
+   "rot": 32.6,
+   "variant": 0,
+   "id": "fol_mzadcaagaia_0002",
+   "zone": "mzadcaagaia",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 2551.75,
+   "y": 3461.1,
+   "z": 701.48,
+   "scale": 0.858,
+   "rot": 254.4,
+   "variant": 0,
+   "id": "fol_mzadcaagaia_0003",
+   "zone": "mzadcaagaia",
+   "src": "generated"
+  },
+  {
+   "species": "spruce",
+   "x": 2664.02,
+   "y": 3650.38,
+   "z": 701.2,
+   "scale": 0.946,
+   "rot": 224.7,
+   "variant": 1,
+   "id": "fol_mzadcaagaia_0004",
+   "zone": "mzadcaagaia",
+   "src": "generated"
+  },
+  {
+   "species": "spruce",
+   "x": 2543.15,
+   "y": 3480.7,
+   "z": 701.5,
+   "scale": 1.221,
+   "rot": 184.4,
+   "variant": 1,
+   "id": "fol_mzadcaagaia_0005",
+   "zone": "mzadcaagaia",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 2657.45,
+   "y": 3457.71,
+   "z": 701.54,
+   "scale": 0.783,
+   "rot": 44.6,
+   "variant": 1,
+   "id": "fol_mzadcaagaia_0006",
+   "zone": "mzadcaagaia",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 2503.29,
+   "y": 3463.01,
+   "z": 701.45,
+   "scale": 1.134,
+   "rot": 355.9,
+   "variant": 0,
+   "id": "fol_mzadcaagaia_0007",
+   "zone": "mzadcaagaia",
+   "src": "generated"
+  },
+  {
+   "species": "beech",
+   "x": 2726.89,
+   "y": 3511.27,
+   "z": 701.27,
+   "scale": 0.849,
+   "rot": 261.5,
+   "variant": 1,
+   "id": "fol_mzadcaagaia_0008",
+   "zone": "mzadcaagaia",
+   "src": "generated"
+  },
+  {
+   "species": "oak",
+   "x": 2785.56,
+   "y": 3470.15,
+   "z": 701.32,
+   "scale": 0.797,
+   "rot": 265.1,
+   "variant": 0,
+   "id": "fol_mzadcaagaia_0009",
+   "zone": "mzadcaagaia",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 3104.39,
+   "y": 2317.21,
+   "z": 700.53,
+   "scale": 1.179,
+   "rot": 147.9,
+   "variant": 1,
+   "id": "fol_mzadieaebga_0001",
+   "zone": "mzadieaebga",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 3124.75,
+   "y": 2223.62,
+   "z": 700.29,
+   "scale": 0.905,
+   "rot": 137.7,
+   "variant": 0,
+   "id": "fol_mzadieaebga_0002",
+   "zone": "mzadieaebga",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 3130.03,
+   "y": 2205.13,
+   "z": 700.28,
+   "scale": 1.211,
+   "rot": 202.2,
+   "variant": 1,
+   "id": "fol_mzadieaebga_0003",
+   "zone": "mzadieaebga",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 3173.9,
+   "y": 2335.26,
+   "z": 700.59,
+   "scale": 0.837,
+   "rot": 36.5,
+   "variant": 1,
+   "id": "fol_mzadieaebga_0004",
+   "zone": "mzadieaebga",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 3215.18,
+   "y": 2248.88,
+   "z": 700.23,
+   "scale": 0.843,
+   "rot": 28.1,
+   "variant": 0,
+   "id": "fol_mzadieaebga_0005",
+   "zone": "mzadieaebga",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 3123.21,
+   "y": 2193.39,
+   "z": 700.25,
+   "scale": 0.918,
+   "rot": 181.7,
+   "variant": 1,
+   "id": "fol_mzadieaebga_0006",
+   "zone": "mzadieaebga",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 3212.31,
+   "y": 2327.79,
+   "z": 700.52,
+   "scale": 1.098,
+   "rot": 347.7,
+   "variant": 1,
+   "id": "fol_mzadieaebga_0007",
+   "zone": "mzadieaebga",
+   "src": "generated"
+  },
+  {
+   "species": "oak",
+   "x": 3191.27,
+   "y": 2321.6,
+   "z": 700.55,
+   "scale": 0.871,
+   "rot": 100.3,
+   "variant": 0,
+   "id": "fol_mzadieaebga_0008",
+   "zone": "mzadieaebga",
+   "src": "generated"
+  },
+  {
+   "species": "oak",
+   "x": 3063.62,
+   "y": 2248.68,
+   "z": 700.01,
+   "scale": 1.025,
+   "rot": 256.3,
+   "variant": 1,
+   "id": "fol_mzadieaebga_0009",
+   "zone": "mzadieaebga",
+   "src": "generated"
+  },
+  {
+   "species": "oak",
+   "x": 3151.52,
+   "y": 2284.04,
+   "z": 700.5,
+   "scale": 1.092,
+   "rot": 170.9,
+   "variant": 0,
+   "id": "fol_mzadieaebga_0010",
+   "zone": "mzadieaebga",
+   "src": "generated"
+  },
+  {
+   "species": "oak",
+   "x": 3249.06,
+   "y": 2308.48,
+   "z": 700.35,
+   "scale": 1.108,
+   "rot": 13.3,
+   "variant": 1,
+   "id": "fol_mzadieaebga_0011",
+   "zone": "mzadieaebga",
+   "src": "generated"
+  },
+  {
+   "species": "oak",
+   "x": 3133.81,
+   "y": 2261.17,
+   "z": 700.4,
+   "scale": 1.085,
+   "rot": 135.4,
+   "variant": 0,
+   "id": "fol_mzadieaebga_0012",
+   "zone": "mzadieaebga",
+   "src": "generated"
+  },
+  {
+   "species": "beech",
+   "x": 3184.47,
+   "y": 2232.83,
+   "z": 700.21,
+   "scale": 0.985,
+   "rot": 47.4,
+   "variant": 0,
+   "id": "fol_mzadieaebga_0013",
+   "zone": "mzadieaebga",
+   "src": "generated"
+  },
+  {
+   "species": "beech",
+   "x": 3162.33,
+   "y": 2322.96,
+   "z": 700.59,
+   "scale": 1.15,
+   "rot": 254.2,
+   "variant": 0,
+   "id": "fol_mzadieaebga_0014",
+   "zone": "mzadieaebga",
+   "src": "generated"
+  },
+  {
+   "species": "beech",
+   "x": 3020.9,
+   "y": 2405.24,
+   "z": 700.51,
+   "scale": 1.039,
+   "rot": 102.0,
+   "variant": 0,
+   "id": "fol_mzadieaebga_0015",
+   "zone": "mzadieaebga",
+   "src": "generated"
+  },
+  {
+   "species": "beech",
+   "x": 3226.65,
+   "y": 2388.86,
+   "z": 700.64,
+   "scale": 1.076,
+   "rot": 77.9,
+   "variant": 0,
+   "id": "fol_mzadieaebga_0016",
+   "zone": "mzadieaebga",
+   "src": "generated"
+  },
+  {
+   "species": "beech",
+   "x": 3090.69,
+   "y": 2216.09,
+   "z": 700.1,
+   "scale": 1.128,
+   "rot": 356.6,
+   "variant": 0,
+   "id": "fol_mzadieaebga_0017",
+   "zone": "mzadieaebga",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 2992.1,
+   "y": 2375.72,
+   "z": 700.39,
+   "scale": 1.181,
+   "rot": 315.9,
+   "variant": 1,
+   "id": "fol_mzadieaebga_0018",
+   "zone": "mzadieaebga",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 2991.56,
+   "y": 2398.55,
+   "z": 700.47,
+   "scale": 0.861,
+   "rot": 196.2,
+   "variant": 0,
+   "id": "fol_mzadieaebga_0019",
+   "zone": "mzadieaebga",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 3329.04,
+   "y": 2900.13,
+   "z": 700.02,
+   "scale": 0.978,
+   "rot": 150.6,
+   "variant": 1,
+   "id": "fol_mzadieaeiaa_0001",
+   "zone": "mzadieaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 3314.54,
+   "y": 2916.65,
+   "z": 699.91,
+   "scale": 0.995,
+   "rot": 304.2,
+   "variant": 0,
+   "id": "fol_mzadieaeiaa_0002",
+   "zone": "mzadieaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "oak",
+   "x": 3260.08,
+   "y": 2941.56,
+   "z": 699.97,
+   "scale": 1.021,
+   "rot": 4.4,
+   "variant": 1,
+   "id": "fol_mzadieaeiaa_0003",
+   "zone": "mzadieaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "oak",
+   "x": 3343.76,
+   "y": 2931.65,
+   "z": 699.79,
+   "scale": 1.178,
+   "rot": 112.8,
+   "variant": 1,
+   "id": "fol_mzadieaeiaa_0004",
+   "zone": "mzadieaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "beech",
+   "x": 3320.22,
+   "y": 2877.0,
+   "z": 700.17,
+   "scale": 1.092,
+   "rot": 31.3,
+   "variant": 1,
+   "id": "fol_mzadieaeiaa_0005",
+   "zone": "mzadieaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "beech",
+   "x": 3296.69,
+   "y": 2899.93,
+   "z": 700.07,
+   "scale": 0.84,
+   "rot": 67.2,
+   "variant": 1,
+   "id": "fol_mzadieaeiaa_0006",
+   "zone": "mzadieaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 3320.32,
+   "y": 2943.91,
+   "z": 699.77,
+   "scale": 1.063,
+   "rot": 269.4,
+   "variant": 1,
+   "id": "fol_mzadieaeiaa_0007",
+   "zone": "mzadieaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 3185.47,
+   "y": 3056.78,
+   "z": 700.16,
+   "scale": 0.838,
+   "rot": 16.6,
+   "variant": 1,
+   "id": "fol_mzadieafeea_0001",
+   "zone": "mzadieafeea",
+   "src": "generated"
+  },
+  {
+   "species": "oak",
+   "x": 3102.42,
+   "y": 3086.96,
+   "z": 700.12,
+   "scale": 0.807,
+   "rot": 101.8,
+   "variant": 1,
+   "id": "fol_mzadieafeea_0002",
+   "zone": "mzadieafeea",
+   "src": "generated"
+  },
+  {
+   "species": "beech",
+   "x": 3233.29,
+   "y": 3068.35,
+   "z": 700.02,
+   "scale": 0.845,
+   "rot": 234.9,
+   "variant": 0,
+   "id": "fol_mzadieafeea_0003",
+   "zone": "mzadieafeea",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 3307.04,
+   "y": 3570.05,
+   "z": 700.59,
+   "scale": 0.859,
+   "rot": 329.3,
+   "variant": 0,
+   "id": "fol_mzadieagaia_0001",
+   "zone": "mzadieagaia",
+   "src": "generated"
+  },
+  {
+   "species": "oak",
+   "x": 3317.81,
+   "y": 3459.12,
+   "z": 700.45,
+   "scale": 0.97,
+   "rot": 49.0,
+   "variant": 0,
+   "id": "fol_mzadieagaia_0002",
+   "zone": "mzadieagaia",
+   "src": "generated"
+  },
+  {
+   "species": "beech",
+   "x": 3201.57,
+   "y": 3540.59,
+   "z": 700.33,
+   "scale": 1.133,
+   "rot": 265.6,
+   "variant": 0,
+   "id": "fol_mzadieagaia_0003",
+   "zone": "mzadieagaia",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 3357.34,
+   "y": 3951.32,
+   "z": 700.1,
+   "scale": 1.168,
+   "rot": 23.3,
+   "variant": 1,
+   "id": "fol_mzadieaghca_0001",
+   "zone": "mzadieaghca",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 3748.95,
+   "y": 2264.63,
+   "z": 700.42,
+   "scale": 0.813,
+   "rot": 12.3,
+   "variant": 0,
+   "id": "fol_mzaeeiaebga_0001",
+   "zone": "mzaeeiaebga",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 3525.19,
+   "y": 2246.92,
+   "z": 700.49,
+   "scale": 1.116,
+   "rot": 247.9,
+   "variant": 1,
+   "id": "fol_mzaeeiaebga_0002",
+   "zone": "mzaeeiaebga",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 3806.7,
+   "y": 2318.49,
+   "z": 700.55,
+   "scale": 0.884,
+   "rot": 109.9,
+   "variant": 0,
+   "id": "fol_mzaeeiaebga_0003",
+   "zone": "mzaeeiaebga",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 3482.45,
+   "y": 2143.41,
+   "z": 700.07,
+   "scale": 1.021,
+   "rot": 328.4,
+   "variant": 1,
+   "id": "fol_mzaeeiaebga_0004",
+   "zone": "mzaeeiaebga",
+   "src": "generated"
+  },
+  {
+   "species": "oak",
+   "x": 3453.52,
+   "y": 2207.35,
+   "z": 700.59,
+   "scale": 0.858,
+   "rot": 228.3,
+   "variant": 1,
+   "id": "fol_mzaeeiaebga_0005",
+   "zone": "mzaeeiaebga",
+   "src": "generated"
+  },
+  {
+   "species": "oak",
+   "x": 3751.3,
+   "y": 2325.63,
+   "z": 700.55,
+   "scale": 1.188,
+   "rot": 338.8,
+   "variant": 1,
+   "id": "fol_mzaeeiaebga_0006",
+   "zone": "mzaeeiaebga",
+   "src": "generated"
+  },
+  {
+   "species": "oak",
+   "x": 3475.19,
+   "y": 2281.35,
+   "z": 700.7,
+   "scale": 0.977,
+   "rot": 48.3,
+   "variant": 0,
+   "id": "fol_mzaeeiaebga_0007",
+   "zone": "mzaeeiaebga",
+   "src": "generated"
+  },
+  {
+   "species": "beech",
+   "x": 3466.95,
+   "y": 2179.57,
+   "z": 700.37,
+   "scale": 1.133,
+   "rot": 28.7,
+   "variant": 0,
+   "id": "fol_mzaeeiaebga_0008",
+   "zone": "mzaeeiaebga",
+   "src": "generated"
+  },
+  {
+   "species": "beech",
+   "x": 3454.09,
+   "y": 2294.77,
+   "z": 700.7,
+   "scale": 0.91,
+   "rot": 125.6,
+   "variant": 0,
+   "id": "fol_mzaeeiaebga_0009",
+   "zone": "mzaeeiaebga",
+   "src": "generated"
+  },
+  {
+   "species": "beech",
+   "x": 3692.81,
+   "y": 2280.95,
+   "z": 700.38,
+   "scale": 1.166,
+   "rot": 174.7,
+   "variant": 1,
+   "id": "fol_mzaeeiaebga_0010",
+   "zone": "mzaeeiaebga",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 3534.51,
+   "y": 2152.28,
+   "z": 699.94,
+   "scale": 1.148,
+   "rot": 102.9,
+   "variant": 0,
+   "id": "fol_mzaeeiaebga_0011",
+   "zone": "mzaeeiaebga",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 3600.89,
+   "y": 3604.97,
+   "z": 700.27,
+   "scale": 0.953,
+   "rot": 13.2,
+   "variant": 1,
+   "id": "fol_mzaeeiagaia_0001",
+   "zone": "mzaeeiagaia",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 3924.6,
+   "y": 3911.96,
+   "z": 700.57,
+   "scale": 0.907,
+   "rot": 359.0,
+   "variant": 1,
+   "id": "fol_mzaeeiagaia_0002",
+   "zone": "mzaeeiagaia",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 3913.44,
+   "y": 3632.77,
+   "z": 700.35,
+   "scale": 0.81,
+   "rot": 160.1,
+   "variant": 0,
+   "id": "fol_mzaeeiagaia_0003",
+   "zone": "mzaeeiagaia",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 3915.99,
+   "y": 3658.36,
+   "z": 700.5,
+   "scale": 0.974,
+   "rot": 269.3,
+   "variant": 0,
+   "id": "fol_mzaeeiagaia_0004",
+   "zone": "mzaeeiagaia",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 3596.42,
+   "y": 3719.07,
+   "z": 700.33,
+   "scale": 1.115,
+   "rot": 332.2,
+   "variant": 0,
+   "id": "fol_mzaeeiagaia_0005",
+   "zone": "mzaeeiagaia",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 3861.82,
+   "y": 3741.58,
+   "z": 700.5,
+   "scale": 0.812,
+   "rot": 313.4,
+   "variant": 1,
+   "id": "fol_mzaeeiagaia_0006",
+   "zone": "mzaeeiagaia",
+   "src": "generated"
+  },
+  {
+   "species": "oak",
+   "x": 3857.76,
+   "y": 3860.27,
+   "z": 700.43,
+   "scale": 0.982,
+   "rot": 89.0,
+   "variant": 1,
+   "id": "fol_mzaeeiagaia_0007",
+   "zone": "mzaeeiagaia",
+   "src": "generated"
+  },
+  {
+   "species": "oak",
+   "x": 3882.88,
+   "y": 3854.14,
+   "z": 700.51,
+   "scale": 0.972,
+   "rot": 256.7,
+   "variant": 1,
+   "id": "fol_mzaeeiagaia_0008",
+   "zone": "mzaeeiagaia",
+   "src": "generated"
+  },
+  {
+   "species": "oak",
+   "x": 3583.32,
+   "y": 3600.14,
+   "z": 700.23,
+   "scale": 1.159,
+   "rot": 142.8,
+   "variant": 1,
+   "id": "fol_mzaeeiagaia_0009",
+   "zone": "mzaeeiagaia",
+   "src": "generated"
+  },
+  {
+   "species": "oak",
+   "x": 3858.05,
+   "y": 3918.59,
+   "z": 700.45,
+   "scale": 1.126,
+   "rot": 222.2,
+   "variant": 1,
+   "id": "fol_mzaeeiagaia_0010",
+   "zone": "mzaeeiagaia",
+   "src": "generated"
+  },
+  {
+   "species": "beech",
+   "x": 3548.95,
+   "y": 3605.36,
+   "z": 700.2,
+   "scale": 1.053,
+   "rot": 12.9,
+   "variant": 0,
+   "id": "fol_mzaeeiagaia_0011",
+   "zone": "mzaeeiagaia",
+   "src": "generated"
+  },
+  {
+   "species": "beech",
+   "x": 3550.17,
+   "y": 3546.24,
+   "z": 700.03,
+   "scale": 1.093,
+   "rot": 198.9,
+   "variant": 1,
+   "id": "fol_mzaeeiagaia_0012",
+   "zone": "mzaeeiagaia",
+   "src": "generated"
+  },
+  {
+   "species": "beech",
+   "x": 3646.21,
+   "y": 3682.3,
+   "z": 700.32,
+   "scale": 0.938,
+   "rot": 327.3,
+   "variant": 0,
+   "id": "fol_mzaeeiagaia_0013",
+   "zone": "mzaeeiagaia",
+   "src": "generated"
+  },
+  {
+   "species": "beech",
+   "x": 3873.29,
+   "y": 3648.86,
+   "z": 700.31,
+   "scale": 1.117,
+   "rot": 210.8,
+   "variant": 1,
+   "id": "fol_mzaeeiagaia_0014",
+   "zone": "mzaeeiagaia",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 3866.65,
+   "y": 3892.41,
+   "z": 700.52,
+   "scale": 1.048,
+   "rot": 244.7,
+   "variant": 0,
+   "id": "fol_mzaeeiagaia_0015",
+   "zone": "mzaeeiagaia",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 3624.11,
+   "y": 3579.01,
+   "z": 700.07,
+   "scale": 0.853,
+   "rot": 346.0,
+   "variant": 0,
+   "id": "fol_mzaeeiagaia_0016",
+   "zone": "mzaeeiagaia",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 3552.49,
+   "y": 3953.87,
+   "z": 699.74,
+   "scale": 1.214,
+   "rot": 144.4,
+   "variant": 1,
+   "id": "fol_mzaeeiaghca_0001",
+   "zone": "mzaeeiaghca",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 3983.73,
+   "y": 2258.16,
+   "z": 701.44,
+   "scale": 0.815,
+   "rot": 290.0,
+   "variant": 1,
+   "id": "fol_mzafbcaebga_0001",
+   "zone": "mzafbcaebga",
+   "src": "generated"
+  },
+  {
+   "species": "spruce",
+   "x": 4156.21,
+   "y": 2369.36,
+   "z": 699.73,
+   "scale": 0.772,
+   "rot": 4.8,
+   "variant": 0,
+   "id": "fol_mzafbcaebga_0002",
+   "zone": "mzafbcaebga",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 3961.37,
+   "y": 2302.43,
+   "z": 701.18,
+   "scale": 0.952,
+   "rot": 260.9,
+   "variant": 0,
+   "id": "fol_mzafbcaebga_0003",
+   "zone": "mzafbcaebga",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 4105.25,
+   "y": 2772.34,
+   "z": 699.93,
+   "scale": 1.208,
+   "rot": 147.1,
+   "variant": 1,
+   "id": "fol_mzafbcaeiaa_0001",
+   "zone": "mzafbcaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 4411.74,
+   "y": 3027.98,
+   "z": 699.05,
+   "scale": 1.208,
+   "rot": 170.3,
+   "variant": 0,
+   "id": "fol_mzafbcafeea_0001",
+   "zone": "mzafbcafeea",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 4350.19,
+   "y": 2978.19,
+   "z": 699.44,
+   "scale": 0.984,
+   "rot": 181.2,
+   "variant": 1,
+   "id": "fol_mzafbcafeea_0002",
+   "zone": "mzafbcafeea",
+   "src": "generated"
+  },
+  {
+   "species": "oak",
+   "x": 4303.16,
+   "y": 3040.88,
+   "z": 699.98,
+   "scale": 1.209,
+   "rot": 275.7,
+   "variant": 1,
+   "id": "fol_mzafbcafeea_0003",
+   "zone": "mzafbcafeea",
+   "src": "generated"
+  },
+  {
+   "species": "beech",
+   "x": 4306.31,
+   "y": 2973.6,
+   "z": 699.77,
+   "scale": 0.95,
+   "rot": 357.2,
+   "variant": 1,
+   "id": "fol_mzafbcafeea_0004",
+   "zone": "mzafbcafeea",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 4369.79,
+   "y": 3048.29,
+   "z": 699.79,
+   "scale": 0.913,
+   "rot": 125.2,
+   "variant": 1,
+   "id": "fol_mzafbcafeea_0005",
+   "zone": "mzafbcafeea",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 4180.06,
+   "y": 3840.1,
+   "z": 700.01,
+   "scale": 1.026,
+   "rot": 253.2,
+   "variant": 1,
+   "id": "fol_mzafbcagaia_0001",
+   "zone": "mzafbcagaia",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 4311.39,
+   "y": 3736.6,
+   "z": 700.45,
+   "scale": 0.994,
+   "rot": 288.6,
+   "variant": 0,
+   "id": "fol_mzafbcagaia_0002",
+   "zone": "mzafbcagaia",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 3964.05,
+   "y": 3854.82,
+   "z": 700.46,
+   "scale": 1.042,
+   "rot": 28.4,
+   "variant": 0,
+   "id": "fol_mzafbcagaia_0003",
+   "zone": "mzafbcagaia",
+   "src": "generated"
+  },
+  {
+   "species": "oak",
+   "x": 4275.77,
+   "y": 3809.96,
+   "z": 699.73,
+   "scale": 1.006,
+   "rot": 149.6,
+   "variant": 1,
+   "id": "fol_mzafbcagaia_0004",
+   "zone": "mzafbcagaia",
+   "src": "generated"
+  },
+  {
+   "species": "oak",
+   "x": 4352.78,
+   "y": 3789.93,
+   "z": 700.87,
+   "scale": 0.985,
+   "rot": 243.2,
+   "variant": 0,
+   "id": "fol_mzafbcagaia_0005",
+   "zone": "mzafbcagaia",
+   "src": "generated"
+  },
+  {
+   "species": "beech",
+   "x": 3986.73,
+   "y": 3819.15,
+   "z": 700.39,
+   "scale": 0.966,
+   "rot": 289.2,
+   "variant": 0,
+   "id": "fol_mzafbcagaia_0006",
+   "zone": "mzafbcagaia",
+   "src": "generated"
+  },
+  {
+   "species": "beech",
+   "x": 4320.02,
+   "y": 3826.26,
+   "z": 700.14,
+   "scale": 0.862,
+   "rot": 15.8,
+   "variant": 1,
+   "id": "fol_mzafbcagaia_0007",
+   "zone": "mzafbcagaia",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 4342.15,
+   "y": 3826.44,
+   "z": 700.45,
+   "scale": 1.012,
+   "rot": 261.2,
+   "variant": 0,
+   "id": "fol_mzafbcagaia_0008",
+   "zone": "mzafbcagaia",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 4064.98,
+   "y": 3950.11,
+   "z": 699.91,
+   "scale": 1.21,
+   "rot": 295.9,
+   "variant": 1,
+   "id": "fol_mzafbcaghca_0001",
+   "zone": "mzafbcaghca",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 4598.43,
+   "y": 2122.13,
+   "z": 699.01,
+   "scale": 1.183,
+   "rot": 87.2,
+   "variant": 1,
+   "id": "fol_mzafhgaebga_0001",
+   "zone": "mzafhgaebga",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 4513.26,
+   "y": 2148.28,
+   "z": 698.78,
+   "scale": 0.789,
+   "rot": 91.3,
+   "variant": 0,
+   "id": "fol_mzafhgaebga_0002",
+   "zone": "mzafhgaebga",
+   "src": "generated"
+  },
+  {
+   "species": "oak",
+   "x": 4544.51,
+   "y": 2166.73,
+   "z": 698.58,
+   "scale": 1.197,
+   "rot": 282.8,
+   "variant": 1,
+   "id": "fol_mzafhgaebga_0003",
+   "zone": "mzafhgaebga",
+   "src": "generated"
+  },
+  {
+   "species": "beech",
+   "x": 4554.38,
+   "y": 2132.3,
+   "z": 698.64,
+   "scale": 0.977,
+   "rot": 184.8,
+   "variant": 0,
+   "id": "fol_mzafhgaebga_0004",
+   "zone": "mzafhgaebga",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 4497.29,
+   "y": 2171.63,
+   "z": 698.8,
+   "scale": 1.257,
+   "rot": 119.2,
+   "variant": 1,
+   "id": "fol_mzafhgaebga_0005",
+   "zone": "mzafhgaebga",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 4623.16,
+   "y": 2641.76,
+   "z": 700.7,
+   "scale": 1.07,
+   "rot": 181.7,
+   "variant": 0,
+   "id": "fol_mzafhgaeiaa_0001",
+   "zone": "mzafhgaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 4528.4,
+   "y": 2725.88,
+   "z": 699.68,
+   "scale": 1.219,
+   "rot": 317.8,
+   "variant": 1,
+   "id": "fol_mzafhgaeiaa_0002",
+   "zone": "mzafhgaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 4633.65,
+   "y": 2673.55,
+   "z": 700.41,
+   "scale": 1.175,
+   "rot": 151.6,
+   "variant": 1,
+   "id": "fol_mzafhgaeiaa_0003",
+   "zone": "mzafhgaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 4614.34,
+   "y": 2668.21,
+   "z": 700.56,
+   "scale": 1.072,
+   "rot": 204.2,
+   "variant": 1,
+   "id": "fol_mzafhgaeiaa_0004",
+   "zone": "mzafhgaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "oak",
+   "x": 4445.04,
+   "y": 2718.33,
+   "z": 698.81,
+   "scale": 0.788,
+   "rot": 199.0,
+   "variant": 0,
+   "id": "fol_mzafhgaeiaa_0005",
+   "zone": "mzafhgaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "oak",
+   "x": 4487.96,
+   "y": 2768.52,
+   "z": 699.19,
+   "scale": 1.018,
+   "rot": 68.8,
+   "variant": 1,
+   "id": "fol_mzafhgaeiaa_0006",
+   "zone": "mzafhgaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "oak",
+   "x": 4476.9,
+   "y": 2728.8,
+   "z": 699.35,
+   "scale": 1.217,
+   "rot": 147.8,
+   "variant": 1,
+   "id": "fol_mzafhgaeiaa_0007",
+   "zone": "mzafhgaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "beech",
+   "x": 4519.21,
+   "y": 2677.24,
+   "z": 700.08,
+   "scale": 1.134,
+   "rot": 312.1,
+   "variant": 0,
+   "id": "fol_mzafhgaeiaa_0008",
+   "zone": "mzafhgaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "beech",
+   "x": 4636.88,
+   "y": 2650.49,
+   "z": 700.6,
+   "scale": 1.157,
+   "rot": 257.5,
+   "variant": 1,
+   "id": "fol_mzafhgaeiaa_0009",
+   "zone": "mzafhgaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "beech",
+   "x": 4652.41,
+   "y": 2605.46,
+   "z": 700.74,
+   "scale": 1.169,
+   "rot": 238.3,
+   "variant": 1,
+   "id": "fol_mzafhgaeiaa_0010",
+   "zone": "mzafhgaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 4432.81,
+   "y": 2646.97,
+   "z": 700.0,
+   "scale": 0.748,
+   "rot": 107.7,
+   "variant": 0,
+   "id": "fol_mzafhgaeiaa_0011",
+   "zone": "mzafhgaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 4449.84,
+   "y": 2739.67,
+   "z": 698.98,
+   "scale": 0.999,
+   "rot": 154.9,
+   "variant": 0,
+   "id": "fol_mzafhgaeiaa_0012",
+   "zone": "mzafhgaeiaa",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 4552.33,
+   "y": 3206.16,
+   "z": 699.49,
+   "scale": 1.067,
+   "rot": 306.7,
+   "variant": 0,
+   "id": "fol_mzafhgafeea_0001",
+   "zone": "mzafhgafeea",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 4502.31,
+   "y": 3184.67,
+   "z": 700.09,
+   "scale": 1.12,
+   "rot": 263.4,
+   "variant": 0,
+   "id": "fol_mzafhgafeea_0002",
+   "zone": "mzafhgafeea",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 4463.33,
+   "y": 3189.58,
+   "z": 700.14,
+   "scale": 1.102,
+   "rot": 282.5,
+   "variant": 0,
+   "id": "fol_mzafhgafeea_0003",
+   "zone": "mzafhgafeea",
+   "src": "generated"
+  },
+  {
+   "species": "oak",
+   "x": 4463.44,
+   "y": 3399.91,
+   "z": 701.22,
+   "scale": 1.08,
+   "rot": 238.3,
+   "variant": 0,
+   "id": "fol_mzafhgafeea_0004",
+   "zone": "mzafhgafeea",
+   "src": "generated"
+  },
+  {
+   "species": "oak",
+   "x": 4542.78,
+   "y": 3257.87,
+   "z": 700.25,
+   "scale": 0.952,
+   "rot": 302.8,
+   "variant": 0,
+   "id": "fol_mzafhgafeea_0005",
+   "zone": "mzafhgafeea",
+   "src": "generated"
+  },
+  {
+   "species": "beech",
+   "x": 4525.31,
+   "y": 3180.59,
+   "z": 699.81,
+   "scale": 1.006,
+   "rot": 159.4,
+   "variant": 0,
+   "id": "fol_mzafhgafeea_0006",
+   "zone": "mzafhgafeea",
+   "src": "generated"
+  },
+  {
+   "species": "beech",
+   "x": 4544.77,
+   "y": 3149.55,
+   "z": 699.09,
+   "scale": 0.84,
+   "rot": 45.1,
+   "variant": 1,
+   "id": "fol_mzafhgafeea_0007",
+   "zone": "mzafhgafeea",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 4452.26,
+   "y": 3172.55,
+   "z": 700.18,
+   "scale": 0.836,
+   "rot": 42.2,
+   "variant": 1,
+   "id": "fol_mzafhgafeea_0008",
+   "zone": "mzafhgafeea",
+   "src": "generated"
+  },
+  {
+   "species": "spruce",
+   "x": 4579.56,
+   "y": 3762.31,
+   "z": 703.3,
+   "scale": 0.891,
+   "rot": 46.3,
+   "variant": 1,
+   "id": "fol_mzafhgagaia_0001",
+   "zone": "mzafhgagaia",
+   "src": "generated"
+  },
+  {
+   "species": "spruce",
+   "x": 4567.31,
+   "y": 3713.96,
+   "z": 702.75,
+   "scale": 1.262,
+   "rot": 88.2,
+   "variant": 1,
+   "id": "fol_mzafhgagaia_0002",
+   "zone": "mzafhgagaia",
+   "src": "generated"
+  },
+  {
+   "species": "spruce",
+   "x": 4593.61,
+   "y": 3751.8,
+   "z": 703.36,
+   "scale": 0.779,
+   "rot": 38.4,
+   "variant": 0,
+   "id": "fol_mzafhgagaia_0003",
+   "zone": "mzafhgagaia",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 4611.09,
+   "y": 3762.51,
+   "z": 703.65,
+   "scale": 1.197,
+   "rot": 177.4,
+   "variant": 1,
+   "id": "fol_mzafhgagaia_0004",
+   "zone": "mzafhgagaia",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 4560.92,
+   "y": 3745.4,
+   "z": 702.97,
+   "scale": 1.104,
+   "rot": 294.6,
+   "variant": 0,
+   "id": "fol_mzafhgagaia_0005",
+   "zone": "mzafhgagaia",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 4625.64,
+   "y": 3825.99,
+   "z": 704.38,
+   "scale": 1.263,
+   "rot": 288.8,
+   "variant": 1,
+   "id": "fol_mzafhgagaia_0006",
+   "zone": "mzafhgagaia",
+   "src": "generated"
+  },
+  {
+   "species": "fir",
+   "x": 4564.56,
+   "y": 3826.07,
+   "z": 703.28,
+   "scale": 1.201,
+   "rot": 98.2,
+   "variant": 0,
+   "id": "fol_mzafhgagaia_0007",
+   "zone": "mzafhgagaia",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 4596.82,
+   "y": 3812.28,
+   "z": 703.94,
+   "scale": 1.127,
+   "rot": 9.8,
+   "variant": 1,
+   "id": "fol_mzafhgagaia_0008",
+   "zone": "mzafhgagaia",
+   "src": "generated"
+  }
+ ]
+}

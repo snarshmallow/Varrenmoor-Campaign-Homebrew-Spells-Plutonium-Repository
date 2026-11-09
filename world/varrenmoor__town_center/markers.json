@@ -1,0 +1,70 @@
+{
+ "region_outline": [
+  [
+   4614.0,
+   2153.0
+  ],
+  [
+   4614.0,
+   3921.0
+  ],
+  [
+   1769.0,
+   3921.0
+  ],
+  [
+   1769.0,
+   2153.0
+  ]
+ ],
+ "markers": [
+  {
+   "id": "mk_str_pilgrim_road_start",
+   "kind": "continues_off_map",
+   "street": "str_pilgrim_road",
+   "parent_street": "str_pilgrim_road",
+   "point": [
+    1729.0,
+    2421.7
+   ],
+   "dir": [
+    -0.93,
+    -0.368
+   ],
+   "width_ft": 20,
+   "label": "Pilgrim's Road continues"
+  },
+  {
+   "id": "mk_str_pilgrim_road_end",
+   "kind": "continues_off_map",
+   "street": "str_pilgrim_road",
+   "parent_street": "str_pilgrim_road",
+   "point": [
+    4654.0,
+    3731.45
+   ],
+   "dir": [
+    0.885,
+    0.465
+   ],
+   "width_ft": 20,
+   "label": "Pilgrim's Road continues"
+  },
+  {
+   "id": "mk_str_church_path_end",
+   "kind": "continues_off_map",
+   "street": "str_church_path",
+   "parent_street": "str_church_path",
+   "point": [
+    4274.61,
+    2113.0
+   ],
+   "dir": [
+    0.165,
+    -0.986
+   ],
+   "width_ft": 10,
+   "label": "Churchyard path continues"
+  }
+ ]
+}

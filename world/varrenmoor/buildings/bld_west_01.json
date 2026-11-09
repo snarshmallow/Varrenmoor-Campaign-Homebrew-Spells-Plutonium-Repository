@@ -1,0 +1,44 @@
+{
+ "id": "bld_west_01",
+ "name": "West house 1",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    2021.1,
+    3243.7
+   ],
+   [
+    2032.8,
+    3259.9
+   ],
+   [
+    2008.5,
+    3277.5
+   ],
+   [
+    1996.8,
+    3261.3
+   ]
+  ]
+ },
+ "notes": "Placed at a roof symbol of the campaign map.",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 701.8,
+ "style": "moorland_cottage",
+ "map_px": [
+  262,
+  584
+ ],
+ "angle_deg": -35.9,
+ "interior_style": "rustic_cottage"
+}

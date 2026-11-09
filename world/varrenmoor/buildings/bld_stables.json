@@ -1,0 +1,43 @@
+{
+ "id": "bld_stables",
+ "name": "Stables",
+ "kind": "stable",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    3971.2,
+    1024.6
+   ],
+   [
+    3963.1,
+    1002.0
+   ],
+   [
+    4019.6,
+    981.7
+   ],
+   [
+    4027.7,
+    1004.3
+   ]
+  ]
+ },
+ "notes": "Labelled on the map.",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 718.4,
+ "style": "town_barn",
+ "map_px": [
+  521,
+  286
+ ],
+ "angle_deg": 160.3
+}

@@ -1,0 +1,43 @@
+{
+ "id": "bld_granary_mill",
+ "name": "Granary Mill",
+ "kind": "mill",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    5866.8,
+    177.2
+   ],
+   [
+    5900.8,
+    178.6
+   ],
+   [
+    5899.0,
+    222.6
+   ],
+   [
+    5865.0,
+    221.2
+   ]
+  ]
+ },
+ "notes": "Labelled on the map; stands beside a mill stream (stream not modelled).",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 2,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 825.3,
+ "style": "town_mill",
+ "map_px": [
+  765,
+  186
+ ],
+ "angle_deg": -87.6
+}

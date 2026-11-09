@@ -1,0 +1,43 @@
+{
+ "id": "bld_hollow_06",
+ "name": "Hollow outbuilding 6",
+ "kind": "shed",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    3438.1,
+    2372.5
+   ],
+   [
+    3448.6,
+    2381.8
+   ],
+   [
+    3436.7,
+    2395.3
+   ],
+   [
+    3426.2,
+    2386.0
+   ]
+  ]
+ },
+ "notes": "Placed at a roof symbol of the campaign map.",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 700.5,
+ "style": "moorland_cottage",
+ "map_px": [
+  447,
+  470
+ ],
+ "angle_deg": -48.6
+}

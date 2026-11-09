@@ -1,0 +1,44 @@
+{
+ "id": "bld_hakon_house",
+ "name": "Father Hakon's House",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    6437.6,
+    2640.1
+   ],
+   [
+    6460.7,
+    2646.7
+   ],
+   [
+    6450.8,
+    2681.3
+   ],
+   [
+    6427.7,
+    2674.7
+   ]
+  ]
+ },
+ "notes": "Labelled on the map.",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 2,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 715.1,
+ "style": "norse_log",
+ "map_px": [
+  838,
+  506
+ ],
+ "angle_deg": -74.1,
+ "interior_style": "rustic_cottage"
+}

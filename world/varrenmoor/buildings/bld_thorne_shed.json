@@ -1,0 +1,43 @@
+{
+ "id": "bld_thorne_shed",
+ "name": "Thorne Shed",
+ "kind": "shed",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    5467.5,
+    5640.3
+   ],
+   [
+    5462.3,
+    5625.2
+   ],
+   [
+    5483.1,
+    5617.9
+   ],
+   [
+    5488.3,
+    5633.0
+   ]
+  ]
+ },
+ "notes": "Placed at a roof symbol of the campaign map.",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 735.5,
+ "style": "norse_log",
+ "map_px": [
+  712,
+  892
+ ],
+ "angle_deg": 160.8
+}

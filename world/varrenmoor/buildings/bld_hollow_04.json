@@ -1,0 +1,44 @@
+{
+ "id": "bld_hollow_04",
+ "name": "Hollow house 4",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    3515.8,
+    3315.5
+   ],
+   [
+    3511.6,
+    3335.0
+   ],
+   [
+    3482.2,
+    3328.7
+   ],
+   [
+    3486.4,
+    3309.2
+   ]
+  ]
+ },
+ "notes": "Placed at a roof symbol of the campaign map.",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 700.5,
+ "style": "moorland_cottage",
+ "map_px": [
+  455,
+  592
+ ],
+ "angle_deg": 12.0,
+ "interior_style": "rustic_cottage"
+}

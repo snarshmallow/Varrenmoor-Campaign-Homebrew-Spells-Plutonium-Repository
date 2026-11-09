@@ -1,0 +1,28 @@
+{
+ "size_ft": [
+  4695.0,
+  4005.0
+ ],
+ "cell_ft": 7.5,
+ "nx": 401,
+ "ny": 259,
+ "origin_ft": [
+  1695.0,
+  2070.0
+ ],
+ "seed": 1797044,
+ "elev_min": 697.8441772460938,
+ "elev_max": 704.4998168945312,
+ "relief_ft": 6.6556396484375,
+ "units": "feet",
+ "pipeline": "region_upres_v1",
+ "parent_cell_ft": 15.0,
+ "upres_factor": 2,
+ "detail_ft": 0.45,
+ "max_node_dev_ft": 0.3688,
+ "max_node_dev_outside_pads_ft": 0.0,
+ "flattened_pads": true,
+ "node_convention": "h[i,j] at x=origin_x+j*cell_ft, y=origin_y+i*cell_ft (y down); worldio pads the crop to the full frame",
+ "sea_level_ft": 0.0,
+ "parent_source": "base"
+}

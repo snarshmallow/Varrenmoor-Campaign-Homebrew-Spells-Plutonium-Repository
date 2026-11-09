@@ -1,0 +1,2280 @@
+{
+ "summary": {
+  "place": "varrenmoor",
+  "trees": 4642,
+  "blocks": 226,
+  "scale_density_per_ha_at_full_canopy": 21.499,
+  "per_species": {
+   "alder": 140,
+   "beech": 774,
+   "birch": 1401,
+   "fir": 115,
+   "oak": 775,
+   "scots_pine": 885,
+   "spruce": 516,
+   "willow": 37
+  }
+ },
+ "blocks": [
+  {
+   "block_px": [
+    0,
+    160
+   ],
+   "canopy": 0.96,
+   "density_per_ha": 21.84,
+   "zr": 0.69,
+   "added": 49
+  },
+  {
+   "block_px": [
+    0,
+    224
+   ],
+   "canopy": 0.95,
+   "density_per_ha": 21.55,
+   "zr": 0.7,
+   "added": 47
+  },
+  {
+   "block_px": [
+    0,
+    288
+   ],
+   "canopy": 0.94,
+   "density_per_ha": 20.71,
+   "zr": 0.38,
+   "added": 46
+  },
+  {
+   "block_px": [
+    0,
+    352
+   ],
+   "canopy": 0.78,
+   "density_per_ha": 13.09,
+   "zr": 0.4,
+   "added": 27
+  },
+  {
+   "block_px": [
+    0,
+    416
+   ],
+   "canopy": 0.87,
+   "density_per_ha": 17.25,
+   "zr": 0.38,
+   "added": 39
+  },
+  {
+   "block_px": [
+    0,
+    480
+   ],
+   "canopy": 0.74,
+   "density_per_ha": 11.41,
+   "zr": 0.01,
+   "added": 23
+  },
+  {
+   "block_px": [
+    0,
+    544
+   ],
+   "canopy": 0.68,
+   "density_per_ha": 8.77,
+   "zr": 0.01,
+   "added": 19
+  },
+  {
+   "block_px": [
+    0,
+    608
+   ],
+   "canopy": 0.87,
+   "density_per_ha": 17.56,
+   "zr": 0.24,
+   "added": 25
+  },
+  {
+   "block_px": [
+    0,
+    672
+   ],
+   "canopy": 0.95,
+   "density_per_ha": 21.58,
+   "zr": 0.52,
+   "added": 48
+  },
+  {
+   "block_px": [
+    0,
+    736
+   ],
+   "canopy": 0.97,
+   "density_per_ha": 22.85,
+   "zr": 0.46,
+   "added": 51
+  },
+  {
+   "block_px": [
+    0,
+    800
+   ],
+   "canopy": 0.92,
+   "density_per_ha": 19.72,
+   "zr": 0.48,
+   "added": 45
+  },
+  {
+   "block_px": [
+    0,
+    864
+   ],
+   "canopy": 0.61,
+   "density_per_ha": 6.04,
+   "zr": 0.58,
+   "added": 14
+  },
+  {
+   "block_px": [
+    0,
+    928
+   ],
+   "canopy": 0.7,
+   "density_per_ha": 9.57,
+   "zr": 0.46,
+   "added": 10
+  },
+  {
+   "block_px": [
+    64,
+    160
+   ],
+   "canopy": 0.88,
+   "density_per_ha": 18.08,
+   "zr": 0.49,
+   "added": 42
+  },
+  {
+   "block_px": [
+    64,
+    224
+   ],
+   "canopy": 0.9,
+   "density_per_ha": 19.01,
+   "zr": 0.45,
+   "added": 44
+  },
+  {
+   "block_px": [
+    64,
+    288
+   ],
+   "canopy": 0.93,
+   "density_per_ha": 20.29,
+   "zr": 0.4,
+   "added": 45
+  },
+  {
+   "block_px": [
+    64,
+    352
+   ],
+   "canopy": 0.76,
+   "density_per_ha": 12.34,
+   "zr": 0.42,
+   "added": 27
+  },
+  {
+   "block_px": [
+    64,
+    416
+   ],
+   "canopy": 0.75,
+   "density_per_ha": 11.73,
+   "zr": 0.04,
+   "added": 26
+  },
+  {
+   "block_px": [
+    64,
+    480
+   ],
+   "canopy": 0.69,
+   "density_per_ha": 9.36,
+   "zr": 0.04,
+   "added": 21
+  },
+  {
+   "block_px": [
+    64,
+    544
+   ],
+   "canopy": 0.84,
+   "density_per_ha": 16.04,
+   "zr": 0.37,
+   "added": 36
+  },
+  {
+   "block_px": [
+    64,
+    608
+   ],
+   "canopy": 0.98,
+   "density_per_ha": 23.08,
+   "zr": 0.35,
+   "added": 53
+  },
+  {
+   "block_px": [
+    64,
+    672
+   ],
+   "canopy": 0.93,
+   "density_per_ha": 20.62,
+   "zr": 0.37,
+   "added": 45
+  },
+  {
+   "block_px": [
+    64,
+    736
+   ],
+   "canopy": 0.92,
+   "density_per_ha": 20.07,
+   "zr": 0.43,
+   "added": 45
+  },
+  {
+   "block_px": [
+    64,
+    800
+   ],
+   "canopy": 0.87,
+   "density_per_ha": 17.38,
+   "zr": 0.42,
+   "added": 39
+  },
+  {
+   "block_px": [
+    128,
+    160
+   ],
+   "canopy": 0.88,
+   "density_per_ha": 17.62,
+   "zr": 0.06,
+   "added": 32
+  },
+  {
+   "block_px": [
+    128,
+    224
+   ],
+   "canopy": 0.87,
+   "density_per_ha": 17.13,
+   "zr": 0.13,
+   "added": 17
+  },
+  {
+   "block_px": [
+    128,
+    288
+   ],
+   "canopy": 0.72,
+   "density_per_ha": 10.26,
+   "zr": 0.02,
+   "added": 21
+  },
+  {
+   "block_px": [
+    128,
+    352
+   ],
+   "canopy": 0.73,
+   "density_per_ha": 10.71,
+   "zr": 0.06,
+   "added": 21
+  },
+  {
+   "block_px": [
+    128,
+    416
+   ],
+   "canopy": 0.61,
+   "density_per_ha": 6.21,
+   "zr": -0.01,
+   "added": 12
+  },
+  {
+   "block_px": [
+    128,
+    480
+   ],
+   "canopy": 0.94,
+   "density_per_ha": 21.2,
+   "zr": 0.15,
+   "added": 39
+  },
+  {
+   "block_px": [
+    128,
+    544
+   ],
+   "canopy": 0.96,
+   "density_per_ha": 21.9,
+   "zr": 0.15,
+   "added": 40
+  },
+  {
+   "block_px": [
+    128,
+    608
+   ],
+   "canopy": 0.96,
+   "density_per_ha": 22.28,
+   "zr": 0.14,
+   "added": 40
+  },
+  {
+   "block_px": [
+    128,
+    672
+   ],
+   "canopy": 0.91,
+   "density_per_ha": 19.39,
+   "zr": 0.1,
+   "added": 35
+  },
+  {
+   "block_px": [
+    128,
+    736
+   ],
+   "canopy": 0.82,
+   "density_per_ha": 15.02,
+   "zr": 0.1,
+   "added": 27
+  },
+  {
+   "block_px": [
+    128,
+    800
+   ],
+   "canopy": 0.92,
+   "density_per_ha": 19.99,
+   "zr": 0.19,
+   "added": 36
+  },
+  {
+   "block_px": [
+    192,
+    160
+   ],
+   "canopy": 0.92,
+   "density_per_ha": 19.88,
+   "zr": 0.04,
+   "added": 42
+  },
+  {
+   "block_px": [
+    192,
+    224
+   ],
+   "canopy": 0.76,
+   "density_per_ha": 12.2,
+   "zr": 0.0,
+   "added": 23
+  },
+  {
+   "block_px": [
+    192,
+    288
+   ],
+   "canopy": 0.76,
+   "density_per_ha": 12.14,
+   "zr": 0.01,
+   "added": 12
+  },
+  {
+   "block_px": [
+    192,
+    352
+   ],
+   "canopy": 0.71,
+   "density_per_ha": 10.09,
+   "zr": 0.01,
+   "added": 23
+  },
+  {
+   "block_px": [
+    192,
+    416
+   ],
+   "canopy": 0.71,
+   "density_per_ha": 9.98,
+   "zr": 0.02,
+   "added": 9
+  },
+  {
+   "block_px": [
+    192,
+    480
+   ],
+   "canopy": 0.86,
+   "density_per_ha": 16.85,
+   "zr": 0.03,
+   "added": 29
+  },
+  {
+   "block_px": [
+    192,
+    544
+   ],
+   "canopy": 0.86,
+   "density_per_ha": 16.66,
+   "zr": 0.03,
+   "added": 29
+  },
+  {
+   "block_px": [
+    192,
+    608
+   ],
+   "canopy": 0.72,
+   "density_per_ha": 10.28,
+   "zr": 0.02,
+   "added": 19
+  },
+  {
+   "block_px": [
+    192,
+    672
+   ],
+   "canopy": 0.71,
+   "density_per_ha": 10.13,
+   "zr": 0.03,
+   "added": 19
+  },
+  {
+   "block_px": [
+    192,
+    736
+   ],
+   "canopy": 0.77,
+   "density_per_ha": 12.49,
+   "zr": 0.02,
+   "added": 23
+  },
+  {
+   "block_px": [
+    192,
+    800
+   ],
+   "canopy": 0.98,
+   "density_per_ha": 23.09,
+   "zr": 0.13,
+   "added": 41
+  },
+  {
+   "block_px": [
+    256,
+    160
+   ],
+   "canopy": 0.92,
+   "density_per_ha": 19.66,
+   "zr": -0.02,
+   "added": 40
+  },
+  {
+   "block_px": [
+    256,
+    224
+   ],
+   "canopy": 0.82,
+   "density_per_ha": 15.13,
+   "zr": 0.04,
+   "added": 15
+  },
+  {
+   "block_px": [
+    256,
+    288
+   ],
+   "canopy": 0.83,
+   "density_per_ha": 15.55,
+   "zr": 0.02,
+   "added": 28
+  },
+  {
+   "block_px": [
+    256,
+    352
+   ],
+   "canopy": 0.83,
+   "density_per_ha": 15.42,
+   "zr": 0.02,
+   "added": 28
+  },
+  {
+   "block_px": [
+    256,
+    416
+   ],
+   "canopy": 0.86,
+   "density_per_ha": 16.78,
+   "zr": 0.01,
+   "added": 31
+  },
+  {
+   "block_px": [
+    256,
+    480
+   ],
+   "canopy": 0.69,
+   "density_per_ha": 9.36,
+   "zr": 0.02,
+   "added": 16
+  },
+  {
+   "block_px": [
+    256,
+    544
+   ],
+   "canopy": 0.7,
+   "density_per_ha": 9.7,
+   "zr": 0.02,
+   "added": 16
+  },
+  {
+   "block_px": [
+    256,
+    608
+   ],
+   "canopy": 0.65,
+   "density_per_ha": 7.6,
+   "zr": 0.02,
+   "added": 8
+  },
+  {
+   "block_px": [
+    256,
+    672
+   ],
+   "canopy": 0.57,
+   "density_per_ha": 4.9,
+   "zr": 0.01,
+   "added": 8
+  },
+  {
+   "block_px": [
+    256,
+    736
+   ],
+   "canopy": 0.77,
+   "density_per_ha": 12.69,
+   "zr": 0.01,
+   "added": 24
+  },
+  {
+   "block_px": [
+    256,
+    800
+   ],
+   "canopy": 0.95,
+   "density_per_ha": 21.68,
+   "zr": 0.13,
+   "added": 40
+  },
+  {
+   "block_px": [
+    320,
+    160
+   ],
+   "canopy": 0.65,
+   "density_per_ha": 7.76,
+   "zr": 0.03,
+   "added": 7
+  },
+  {
+   "block_px": [
+    320,
+    224
+   ],
+   "canopy": 0.77,
+   "density_per_ha": 12.46,
+   "zr": -0.0,
+   "added": 23
+  },
+  {
+   "block_px": [
+    320,
+    288
+   ],
+   "canopy": 0.61,
+   "density_per_ha": 6.27,
+   "zr": 0.0,
+   "added": 11
+  },
+  {
+   "block_px": [
+    320,
+    352
+   ],
+   "canopy": 0.67,
+   "density_per_ha": 8.34,
+   "zr": 0.01,
+   "added": 16
+  },
+  {
+   "block_px": [
+    320,
+    416
+   ],
+   "canopy": 0.78,
+   "density_per_ha": 12.87,
+   "zr": 0.01,
+   "added": 24
+  },
+  {
+   "block_px": [
+    320,
+    480
+   ],
+   "canopy": 0.57,
+   "density_per_ha": 4.79,
+   "zr": 0.01,
+   "added": 8
+  },
+  {
+   "block_px": [
+    320,
+    544
+   ],
+   "canopy": 0.61,
+   "density_per_ha": 6.02,
+   "zr": 0.01,
+   "added": 11
+  },
+  {
+   "block_px": [
+    320,
+    608
+   ],
+   "canopy": 0.55,
+   "density_per_ha": 4.17,
+   "zr": 0.01,
+   "added": 8
+  },
+  {
+   "block_px": [
+    320,
+    672
+   ],
+   "canopy": 0.79,
+   "density_per_ha": 13.39,
+   "zr": 0.01,
+   "added": 24
+  },
+  {
+   "block_px": [
+    320,
+    736
+   ],
+   "canopy": 0.89,
+   "density_per_ha": 18.14,
+   "zr": 0.0,
+   "added": 32
+  },
+  {
+   "block_px": [
+    320,
+    800
+   ],
+   "canopy": 0.95,
+   "density_per_ha": 21.29,
+   "zr": 0.1,
+   "added": 39
+  },
+  {
+   "block_px": [
+    384,
+    160
+   ],
+   "canopy": 0.68,
+   "density_per_ha": 8.57,
+   "zr": 0.01,
+   "added": 16
+  },
+  {
+   "block_px": [
+    384,
+    224
+   ],
+   "canopy": 0.75,
+   "density_per_ha": 11.72,
+   "zr": 0.01,
+   "added": 21
+  },
+  {
+   "block_px": [
+    384,
+    288
+   ],
+   "canopy": 0.7,
+   "density_per_ha": 9.76,
+   "zr": 0.01,
+   "added": 17
+  },
+  {
+   "block_px": [
+    384,
+    352
+   ],
+   "canopy": 0.8,
+   "density_per_ha": 14.06,
+   "zr": 0.01,
+   "added": 25
+  },
+  {
+   "block_px": [
+    384,
+    416
+   ],
+   "canopy": 0.81,
+   "density_per_ha": 14.29,
+   "zr": 0.01,
+   "added": 25
+  },
+  {
+   "block_px": [
+    384,
+    480
+   ],
+   "canopy": 0.53,
+   "density_per_ha": 3.63,
+   "zr": 0.01,
+   "added": 7
+  },
+  {
+   "block_px": [
+    384,
+    544
+   ],
+   "canopy": 0.45,
+   "density_per_ha": 1.45,
+   "zr": 0.01,
+   "added": 3
+  },
+  {
+   "block_px": [
+    384,
+    608
+   ],
+   "canopy": 0.46,
+   "density_per_ha": 1.59,
+   "zr": 0.01,
+   "added": 3
+  },
+  {
+   "block_px": [
+    384,
+    672
+   ],
+   "canopy": 0.8,
+   "density_per_ha": 13.9,
+   "zr": 0.01,
+   "added": 24
+  },
+  {
+   "block_px": [
+    384,
+    736
+   ],
+   "canopy": 0.94,
+   "density_per_ha": 20.77,
+   "zr": 0.01,
+   "added": 37
+  },
+  {
+   "block_px": [
+    384,
+    800
+   ],
+   "canopy": 0.96,
+   "density_per_ha": 21.89,
+   "zr": 0.13,
+   "added": 40
+  },
+  {
+   "block_px": [
+    384,
+    864
+   ],
+   "canopy": 0.68,
+   "density_per_ha": 8.59,
+   "zr": 0.47,
+   "added": 18
+  },
+  {
+   "block_px": [
+    384,
+    928
+   ],
+   "canopy": 0.66,
+   "density_per_ha": 7.85,
+   "zr": 0.61,
+   "added": 9
+  },
+  {
+   "block_px": [
+    448,
+    160
+   ],
+   "canopy": 0.45,
+   "density_per_ha": 1.38,
+   "zr": 0.15,
+   "added": 3
+  },
+  {
+   "block_px": [
+    448,
+    224
+   ],
+   "canopy": 0.61,
+   "density_per_ha": 6.29,
+   "zr": 0.2,
+   "added": 11
+  },
+  {
+   "block_px": [
+    448,
+    288
+   ],
+   "canopy": 0.89,
+   "density_per_ha": 18.53,
+   "zr": 0.01,
+   "added": 33
+  },
+  {
+   "block_px": [
+    448,
+    352
+   ],
+   "canopy": 0.93,
+   "density_per_ha": 20.44,
+   "zr": 0.0,
+   "added": 37
+  },
+  {
+   "block_px": [
+    448,
+    416
+   ],
+   "canopy": 0.74,
+   "density_per_ha": 11.44,
+   "zr": 0.01,
+   "added": 16
+  },
+  {
+   "block_px": [
+    448,
+    480
+   ],
+   "canopy": 0.47,
+   "density_per_ha": 1.96,
+   "zr": 0.01,
+   "added": 0
+  },
+  {
+   "block_px": [
+    448,
+    544
+   ],
+   "canopy": 0.39,
+   "density_per_ha": 0.33,
+   "zr": 0.01,
+   "added": 0
+  },
+  {
+   "block_px": [
+    448,
+    608
+   ],
+   "canopy": 0.67,
+   "density_per_ha": 8.43,
+   "zr": 0.01,
+   "added": 16
+  },
+  {
+   "block_px": [
+    448,
+    672
+   ],
+   "canopy": 0.9,
+   "density_per_ha": 18.93,
+   "zr": -0.0,
+   "added": 35
+  },
+  {
+   "block_px": [
+    448,
+    736
+   ],
+   "canopy": 0.97,
+   "density_per_ha": 22.55,
+   "zr": 0.0,
+   "added": 40
+  },
+  {
+   "block_px": [
+    448,
+    800
+   ],
+   "canopy": 0.86,
+   "density_per_ha": 16.62,
+   "zr": 0.1,
+   "added": 29
+  },
+  {
+   "block_px": [
+    448,
+    864
+   ],
+   "canopy": 0.95,
+   "density_per_ha": 21.44,
+   "zr": 0.46,
+   "added": 48
+  },
+  {
+   "block_px": [
+    448,
+    928
+   ],
+   "canopy": 0.8,
+   "density_per_ha": 13.97,
+   "zr": 0.75,
+   "added": 16
+  },
+  {
+   "block_px": [
+    512,
+    160
+   ],
+   "canopy": 0.68,
+   "density_per_ha": 8.57,
+   "zr": 0.23,
+   "added": 16
+  },
+  {
+   "block_px": [
+    512,
+    224
+   ],
+   "canopy": 0.73,
+   "density_per_ha": 10.87,
+   "zr": 0.27,
+   "added": 24
+  },
+  {
+   "block_px": [
+    512,
+    288
+   ],
+   "canopy": 0.74,
+   "density_per_ha": 11.24,
+   "zr": 0.01,
+   "added": 20
+  },
+  {
+   "block_px": [
+    512,
+    352
+   ],
+   "canopy": 0.68,
+   "density_per_ha": 8.66,
+   "zr": 0.01,
+   "added": 16
+  },
+  {
+   "block_px": [
+    512,
+    416
+   ],
+   "canopy": 0.51,
+   "density_per_ha": 2.87,
+   "zr": 0.01,
+   "added": 5
+  },
+  {
+   "block_px": [
+    512,
+    480
+   ],
+   "canopy": 0.43,
+   "density_per_ha": 1.06,
+   "zr": 0.0,
+   "added": 1
+  },
+  {
+   "block_px": [
+    512,
+    544
+   ],
+   "canopy": 0.51,
+   "density_per_ha": 2.84,
+   "zr": 0.01,
+   "added": 5
+  },
+  {
+   "block_px": [
+    512,
+    608
+   ],
+   "canopy": 0.59,
+   "density_per_ha": 5.33,
+   "zr": 0.01,
+   "added": 8
+  },
+  {
+   "block_px": [
+    512,
+    672
+   ],
+   "canopy": 0.86,
+   "density_per_ha": 17.1,
+   "zr": 0.01,
+   "added": 31
+  },
+  {
+   "block_px": [
+    512,
+    736
+   ],
+   "canopy": 0.83,
+   "density_per_ha": 15.48,
+   "zr": -0.0,
+   "added": 28
+  },
+  {
+   "block_px": [
+    512,
+    800
+   ],
+   "canopy": 0.82,
+   "density_per_ha": 14.91,
+   "zr": 0.06,
+   "added": 27
+  },
+  {
+   "block_px": [
+    512,
+    864
+   ],
+   "canopy": 0.75,
+   "density_per_ha": 11.67,
+   "zr": 0.45,
+   "added": 27
+  },
+  {
+   "block_px": [
+    512,
+    928
+   ],
+   "canopy": 0.76,
+   "density_per_ha": 12.33,
+   "zr": 0.75,
+   "added": 14
+  },
+  {
+   "block_px": [
+    576,
+    160
+   ],
+   "canopy": 0.86,
+   "density_per_ha": 16.88,
+   "zr": 0.2,
+   "added": 31
+  },
+  {
+   "block_px": [
+    576,
+    224
+   ],
+   "canopy": 0.83,
+   "density_per_ha": 15.32,
+   "zr": -0.01,
+   "added": 27
+  },
+  {
+   "block_px": [
+    576,
+    288
+   ],
+   "canopy": 0.71,
+   "density_per_ha": 9.96,
+   "zr": 0.01,
+   "added": 16
+  },
+  {
+   "block_px": [
+    576,
+    352
+   ],
+   "canopy": 0.56,
+   "density_per_ha": 4.33,
+   "zr": 0.0,
+   "added": 8
+  },
+  {
+   "block_px": [
+    576,
+    416
+   ],
+   "canopy": 0.69,
+   "density_per_ha": 9.0,
+   "zr": -0.01,
+   "added": 16
+  },
+  {
+   "block_px": [
+    576,
+    480
+   ],
+   "canopy": 0.81,
+   "density_per_ha": 14.67,
+   "zr": 0.01,
+   "added": 27
+  },
+  {
+   "block_px": [
+    576,
+    544
+   ],
+   "canopy": 0.72,
+   "density_per_ha": 10.25,
+   "zr": 0.0,
+   "added": 19
+  },
+  {
+   "block_px": [
+    576,
+    608
+   ],
+   "canopy": 0.68,
+   "density_per_ha": 8.69,
+   "zr": 0.03,
+   "added": 16
+  },
+  {
+   "block_px": [
+    576,
+    672
+   ],
+   "canopy": 0.8,
+   "density_per_ha": 14.05,
+   "zr": 0.01,
+   "added": 25
+  },
+  {
+   "block_px": [
+    576,
+    736
+   ],
+   "canopy": 0.82,
+   "density_per_ha": 14.72,
+   "zr": -0.01,
+   "added": 27
+  },
+  {
+   "block_px": [
+    576,
+    800
+   ],
+   "canopy": 0.48,
+   "density_per_ha": 2.19,
+   "zr": 0.04,
+   "added": 3
+  },
+  {
+   "block_px": [
+    576,
+    864
+   ],
+   "canopy": 0.47,
+   "density_per_ha": 1.9,
+   "zr": 0.38,
+   "added": 3
+  },
+  {
+   "block_px": [
+    576,
+    928
+   ],
+   "canopy": 0.81,
+   "density_per_ha": 14.27,
+   "zr": 0.53,
+   "added": 17
+  },
+  {
+   "block_px": [
+    640,
+    160
+   ],
+   "canopy": 0.9,
+   "density_per_ha": 19.05,
+   "zr": 0.44,
+   "added": 44
+  },
+  {
+   "block_px": [
+    640,
+    224
+   ],
+   "canopy": 0.69,
+   "density_per_ha": 9.21,
+   "zr": 0.0,
+   "added": 16
+  },
+  {
+   "block_px": [
+    640,
+    288
+   ],
+   "canopy": 0.49,
+   "density_per_ha": 2.45,
+   "zr": 0.04,
+   "added": 0
+  },
+  {
+   "block_px": [
+    640,
+    352
+   ],
+   "canopy": 0.51,
+   "density_per_ha": 2.87,
+   "zr": 0.01,
+   "added": 3
+  },
+  {
+   "block_px": [
+    640,
+    416
+   ],
+   "canopy": 0.68,
+   "density_per_ha": 8.61,
+   "zr": 0.02,
+   "added": 16
+  },
+  {
+   "block_px": [
+    640,
+    480
+   ],
+   "canopy": 0.78,
+   "density_per_ha": 13.17,
+   "zr": -0.01,
+   "added": 24
+  },
+  {
+   "block_px": [
+    640,
+    544
+   ],
+   "canopy": 0.8,
+   "density_per_ha": 13.81,
+   "zr": 0.02,
+   "added": 24
+  },
+  {
+   "block_px": [
+    640,
+    608
+   ],
+   "canopy": 0.78,
+   "density_per_ha": 12.83,
+   "zr": 0.01,
+   "added": 24
+  },
+  {
+   "block_px": [
+    640,
+    672
+   ],
+   "canopy": 0.5,
+   "density_per_ha": 2.73,
+   "zr": 0.01,
+   "added": 5
+  },
+  {
+   "block_px": [
+    640,
+    736
+   ],
+   "canopy": 0.64,
+   "density_per_ha": 7.38,
+   "zr": 0.0,
+   "added": 13
+  },
+  {
+   "block_px": [
+    640,
+    800
+   ],
+   "canopy": 0.54,
+   "density_per_ha": 3.96,
+   "zr": 0.03,
+   "added": 4
+  },
+  {
+   "block_px": [
+    640,
+    864
+   ],
+   "canopy": 0.5,
+   "density_per_ha": 2.74,
+   "zr": 0.32,
+   "added": 1
+  },
+  {
+   "block_px": [
+    640,
+    928
+   ],
+   "canopy": 0.65,
+   "density_per_ha": 7.75,
+   "zr": 0.49,
+   "added": 9
+  },
+  {
+   "block_px": [
+    704,
+    160
+   ],
+   "canopy": 0.65,
+   "density_per_ha": 7.64,
+   "zr": 0.67,
+   "added": 17
+  },
+  {
+   "block_px": [
+    704,
+    224
+   ],
+   "canopy": 0.76,
+   "density_per_ha": 12.05,
+   "zr": 0.02,
+   "added": 21
+  },
+  {
+   "block_px": [
+    704,
+    288
+   ],
+   "canopy": 0.62,
+   "density_per_ha": 6.53,
+   "zr": 0.04,
+   "added": 4
+  },
+  {
+   "block_px": [
+    704,
+    352
+   ],
+   "canopy": 0.68,
+   "density_per_ha": 8.64,
+   "zr": 0.01,
+   "added": 11
+  },
+  {
+   "block_px": [
+    704,
+    416
+   ],
+   "canopy": 0.84,
+   "density_per_ha": 16.04,
+   "zr": 0.02,
+   "added": 29
+  },
+  {
+   "block_px": [
+    704,
+    480
+   ],
+   "canopy": 0.85,
+   "density_per_ha": 16.5,
+   "zr": 0.01,
+   "added": 29
+  },
+  {
+   "block_px": [
+    704,
+    544
+   ],
+   "canopy": 0.95,
+   "density_per_ha": 21.71,
+   "zr": -0.01,
+   "added": 40
+  },
+  {
+   "block_px": [
+    704,
+    608
+   ],
+   "canopy": 0.59,
+   "density_per_ha": 5.55,
+   "zr": 0.02,
+   "added": 9
+  },
+  {
+   "block_px": [
+    704,
+    672
+   ],
+   "canopy": 0.53,
+   "density_per_ha": 3.53,
+   "zr": 0.01,
+   "added": 5
+  },
+  {
+   "block_px": [
+    704,
+    736
+   ],
+   "canopy": 0.61,
+   "density_per_ha": 6.2,
+   "zr": 0.03,
+   "added": 11
+  },
+  {
+   "block_px": [
+    704,
+    800
+   ],
+   "canopy": 0.6,
+   "density_per_ha": 5.74,
+   "zr": 0.01,
+   "added": 5
+  },
+  {
+   "block_px": [
+    704,
+    864
+   ],
+   "canopy": 0.44,
+   "density_per_ha": 1.27,
+   "zr": 0.19,
+   "added": 0
+  },
+  {
+   "block_px": [
+    704,
+    928
+   ],
+   "canopy": 0.7,
+   "density_per_ha": 9.71,
+   "zr": 0.27,
+   "added": 10
+  },
+  {
+   "block_px": [
+    768,
+    160
+   ],
+   "canopy": 0.64,
+   "density_per_ha": 7.17,
+   "zr": 0.79,
+   "added": 16
+  },
+  {
+   "block_px": [
+    768,
+    224
+   ],
+   "canopy": 0.81,
+   "density_per_ha": 14.46,
+   "zr": 0.14,
+   "added": 27
+  },
+  {
+   "block_px": [
+    768,
+    288
+   ],
+   "canopy": 0.81,
+   "density_per_ha": 14.38,
+   "zr": 0.02,
+   "added": 25
+  },
+  {
+   "block_px": [
+    768,
+    352
+   ],
+   "canopy": 0.67,
+   "density_per_ha": 8.38,
+   "zr": 0.0,
+   "added": 16
+  },
+  {
+   "block_px": [
+    768,
+    416
+   ],
+   "canopy": 0.88,
+   "density_per_ha": 17.65,
+   "zr": 0.03,
+   "added": 32
+  },
+  {
+   "block_px": [
+    768,
+    480
+   ],
+   "canopy": 0.67,
+   "density_per_ha": 8.48,
+   "zr": 0.02,
+   "added": 16
+  },
+  {
+   "block_px": [
+    768,
+    544
+   ],
+   "canopy": 0.83,
+   "density_per_ha": 15.59,
+   "zr": 0.02,
+   "added": 27
+  },
+  {
+   "block_px": [
+    768,
+    608
+   ],
+   "canopy": 0.8,
+   "density_per_ha": 13.93,
+   "zr": 0.02,
+   "added": 24
+  },
+  {
+   "block_px": [
+    768,
+    672
+   ],
+   "canopy": 0.64,
+   "density_per_ha": 7.21,
+   "zr": 0.02,
+   "added": 8
+  },
+  {
+   "block_px": [
+    768,
+    736
+   ],
+   "canopy": 0.63,
+   "density_per_ha": 6.98,
+   "zr": 0.01,
+   "added": 9
+  },
+  {
+   "block_px": [
+    768,
+    800
+   ],
+   "canopy": 0.64,
+   "density_per_ha": 7.08,
+   "zr": 0.03,
+   "added": 12
+  },
+  {
+   "block_px": [
+    768,
+    864
+   ],
+   "canopy": 0.66,
+   "density_per_ha": 8.02,
+   "zr": 0.02,
+   "added": 15
+  },
+  {
+   "block_px": [
+    768,
+    928
+   ],
+   "canopy": 0.81,
+   "density_per_ha": 14.25,
+   "zr": 0.08,
+   "added": 13
+  },
+  {
+   "block_px": [
+    832,
+    160
+   ],
+   "canopy": 0.81,
+   "density_per_ha": 14.57,
+   "zr": 0.87,
+   "added": 33
+  },
+  {
+   "block_px": [
+    832,
+    224
+   ],
+   "canopy": 0.82,
+   "density_per_ha": 14.93,
+   "zr": 0.34,
+   "added": 35
+  },
+  {
+   "block_px": [
+    832,
+    288
+   ],
+   "canopy": 0.78,
+   "density_per_ha": 13.15,
+   "zr": 0.0,
+   "added": 24
+  },
+  {
+   "block_px": [
+    832,
+    352
+   ],
+   "canopy": 0.74,
+   "density_per_ha": 11.4,
+   "zr": 0.02,
+   "added": 21
+  },
+  {
+   "block_px": [
+    832,
+    416
+   ],
+   "canopy": 0.63,
+   "density_per_ha": 6.87,
+   "zr": 0.08,
+   "added": 12
+  },
+  {
+   "block_px": [
+    832,
+    480
+   ],
+   "canopy": 0.56,
+   "density_per_ha": 4.53,
+   "zr": 0.04,
+   "added": 8
+  },
+  {
+   "block_px": [
+    832,
+    544
+   ],
+   "canopy": 0.68,
+   "density_per_ha": 8.57,
+   "zr": 0.02,
+   "added": 16
+  },
+  {
+   "block_px": [
+    832,
+    608
+   ],
+   "canopy": 0.81,
+   "density_per_ha": 14.33,
+   "zr": 0.01,
+   "added": 25
+  },
+  {
+   "block_px": [
+    832,
+    672
+   ],
+   "canopy": 0.58,
+   "density_per_ha": 5.11,
+   "zr": 0.01,
+   "added": 4
+  },
+  {
+   "block_px": [
+    832,
+    736
+   ],
+   "canopy": 0.66,
+   "density_per_ha": 7.87,
+   "zr": 0.02,
+   "added": 11
+  },
+  {
+   "block_px": [
+    832,
+    800
+   ],
+   "canopy": 0.58,
+   "density_per_ha": 5.0,
+   "zr": 0.02,
+   "added": 5
+  },
+  {
+   "block_px": [
+    832,
+    864
+   ],
+   "canopy": 0.61,
+   "density_per_ha": 6.18,
+   "zr": 0.03,
+   "added": 11
+  },
+  {
+   "block_px": [
+    832,
+    928
+   ],
+   "canopy": 0.68,
+   "density_per_ha": 8.82,
+   "zr": 0.02,
+   "added": 8
+  },
+  {
+   "block_px": [
+    896,
+    160
+   ],
+   "canopy": 0.85,
+   "density_per_ha": 16.29,
+   "zr": 1.98,
+   "added": 36
+  },
+  {
+   "block_px": [
+    896,
+    224
+   ],
+   "canopy": 0.76,
+   "density_per_ha": 12.31,
+   "zr": 0.6,
+   "added": 28
+  },
+  {
+   "block_px": [
+    896,
+    288
+   ],
+   "canopy": 0.72,
+   "density_per_ha": 10.4,
+   "zr": 0.33,
+   "added": 24
+  },
+  {
+   "block_px": [
+    896,
+    352
+   ],
+   "canopy": 0.82,
+   "density_per_ha": 14.68,
+   "zr": 0.08,
+   "added": 34
+  },
+  {
+   "block_px": [
+    896,
+    416
+   ],
+   "canopy": 0.64,
+   "density_per_ha": 7.25,
+   "zr": 0.02,
+   "added": 13
+  },
+  {
+   "block_px": [
+    896,
+    480
+   ],
+   "canopy": 0.81,
+   "density_per_ha": 14.25,
+   "zr": 0.0,
+   "added": 25
+  },
+  {
+   "block_px": [
+    896,
+    544
+   ],
+   "canopy": 0.81,
+   "density_per_ha": 14.3,
+   "zr": 0.03,
+   "added": 25
+  },
+  {
+   "block_px": [
+    896,
+    608
+   ],
+   "canopy": 0.89,
+   "density_per_ha": 18.43,
+   "zr": 0.02,
+   "added": 32
+  },
+  {
+   "block_px": [
+    896,
+    672
+   ],
+   "canopy": 0.62,
+   "density_per_ha": 6.43,
+   "zr": 0.01,
+   "added": 11
+  },
+  {
+   "block_px": [
+    896,
+    736
+   ],
+   "canopy": 0.6,
+   "density_per_ha": 5.64,
+   "zr": 0.02,
+   "added": 9
+  },
+  {
+   "block_px": [
+    896,
+    800
+   ],
+   "canopy": 0.6,
+   "density_per_ha": 5.85,
+   "zr": 0.02,
+   "added": 3
+  },
+  {
+   "block_px": [
+    896,
+    800
+   ],
+   "canopy": 0.6,
+   "density_per_ha": 5.85,
+   "zr": 0.02,
+   "added": 0
+  },
+  {
+   "block_px": [
+    896,
+    864
+   ],
+   "canopy": 0.85,
+   "density_per_ha": 16.38,
+   "zr": 0.04,
+   "added": 24
+  },
+  {
+   "block_px": [
+    896,
+    928
+   ],
+   "canopy": 0.78,
+   "density_per_ha": 12.9,
+   "zr": 0.04,
+   "added": 11
+  },
+  {
+   "block_px": [
+    960,
+    160
+   ],
+   "canopy": 0.89,
+   "density_per_ha": 18.13,
+   "zr": 1.95,
+   "added": 41
+  },
+  {
+   "block_px": [
+    960,
+    224
+   ],
+   "canopy": 0.75,
+   "density_per_ha": 11.58,
+   "zr": 1.17,
+   "added": 25
+  },
+  {
+   "block_px": [
+    960,
+    288
+   ],
+   "canopy": 0.61,
+   "density_per_ha": 6.21,
+   "zr": 1.48,
+   "added": 14
+  },
+  {
+   "block_px": [
+    960,
+    352
+   ],
+   "canopy": 0.67,
+   "density_per_ha": 8.5,
+   "zr": 1.27,
+   "added": 19
+  },
+  {
+   "block_px": [
+    960,
+    416
+   ],
+   "canopy": 0.69,
+   "density_per_ha": 9.32,
+   "zr": 0.97,
+   "added": 22
+  },
+  {
+   "block_px": [
+    960,
+    480
+   ],
+   "canopy": 0.83,
+   "density_per_ha": 15.28,
+   "zr": 0.33,
+   "added": 35
+  },
+  {
+   "block_px": [
+    960,
+    544
+   ],
+   "canopy": 0.9,
+   "density_per_ha": 18.86,
+   "zr": 0.03,
+   "added": 40
+  },
+  {
+   "block_px": [
+    960,
+    608
+   ],
+   "canopy": 0.86,
+   "density_per_ha": 16.97,
+   "zr": 0.02,
+   "added": 31
+  },
+  {
+   "block_px": [
+    960,
+    672
+   ],
+   "canopy": 0.71,
+   "density_per_ha": 10.09,
+   "zr": 0.03,
+   "added": 17
+  },
+  {
+   "block_px": [
+    960,
+    736
+   ],
+   "canopy": 0.56,
+   "density_per_ha": 4.34,
+   "zr": 0.03,
+   "added": 8
+  },
+  {
+   "block_px": [
+    960,
+    800
+   ],
+   "canopy": 0.72,
+   "density_per_ha": 10.25,
+   "zr": 0.04,
+   "added": 16
+  },
+  {
+   "block_px": [
+    960,
+    864
+   ],
+   "canopy": 0.79,
+   "density_per_ha": 13.42,
+   "zr": 0.05,
+   "added": 1
+  },
+  {
+   "block_px": [
+    960,
+    928
+   ],
+   "canopy": 0.94,
+   "density_per_ha": 20.9,
+   "zr": 0.05,
+   "added": 16
+  },
+  {
+   "block_px": [
+    1024,
+    160
+   ],
+   "canopy": 0.73,
+   "density_per_ha": 10.75,
+   "zr": 2.38,
+   "added": 24
+  },
+  {
+   "block_px": [
+    1024,
+    224
+   ],
+   "canopy": 0.92,
+   "density_per_ha": 20.02,
+   "zr": 1.75,
+   "added": 44
+  },
+  {
+   "block_px": [
+    1024,
+    288
+   ],
+   "canopy": 0.82,
+   "density_per_ha": 14.98,
+   "zr": 0.34,
+   "added": 35
+  },
+  {
+   "block_px": [
+    1024,
+    352
+   ],
+   "canopy": 0.76,
+   "density_per_ha": 12.13,
+   "zr": 1.15,
+   "added": 27
+  },
+  {
+   "block_px": [
+    1024,
+    416
+   ],
+   "canopy": 0.77,
+   "density_per_ha": 12.79,
+   "zr": 1.27,
+   "added": 30
+  },
+  {
+   "block_px": [
+    1024,
+    480
+   ],
+   "canopy": 0.81,
+   "density_per_ha": 14.26,
+   "zr": 1.05,
+   "added": 33
+  },
+  {
+   "block_px": [
+    1024,
+    544
+   ],
+   "canopy": 0.85,
+   "density_per_ha": 16.58,
+   "zr": 0.81,
+   "added": 36
+  },
+  {
+   "block_px": [
+    1024,
+    608
+   ],
+   "canopy": 0.9,
+   "density_per_ha": 18.81,
+   "zr": 0.54,
+   "added": 42
+  },
+  {
+   "block_px": [
+    1024,
+    672
+   ],
+   "canopy": 0.52,
+   "density_per_ha": 3.29,
+   "zr": 0.04,
+   "added": 5
+  },
+  {
+   "block_px": [
+    1024,
+    736
+   ],
+   "canopy": 0.45,
+   "density_per_ha": 1.53,
+   "zr": 0.04,
+   "added": 3
+  },
+  {
+   "block_px": [
+    1024,
+    800
+   ],
+   "canopy": 0.53,
+   "density_per_ha": 3.49,
+   "zr": 0.04,
+   "added": 7
+  },
+  {
+   "block_px": [
+    1024,
+    864
+   ],
+   "canopy": 0.75,
+   "density_per_ha": 11.6,
+   "zr": 0.04,
+   "added": 3
+  },
+  {
+   "block_px": [
+    1024,
+    864
+   ],
+   "canopy": 0.75,
+   "density_per_ha": 11.6,
+   "zr": 0.04,
+   "added": 4
+  },
+  {
+   "block_px": [
+    1024,
+    928
+   ],
+   "canopy": 0.88,
+   "density_per_ha": 18.07,
+   "zr": 0.04,
+   "added": 16
+  },
+  {
+   "block_px": [
+    1088,
+    160
+   ],
+   "canopy": 0.45,
+   "density_per_ha": 1.36,
+   "zr": 2.8,
+   "added": 0
+  },
+  {
+   "block_px": [
+    1088,
+    224
+   ],
+   "canopy": 0.92,
+   "density_per_ha": 20.1,
+   "zr": 1.34,
+   "added": 9
+  },
+  {
+   "block_px": [
+    1088,
+    288
+   ],
+   "canopy": 0.87,
+   "density_per_ha": 17.47,
+   "zr": 0.09,
+   "added": 5
+  },
+  {
+   "block_px": [
+    1088,
+    352
+   ],
+   "canopy": 0.71,
+   "density_per_ha": 9.89,
+   "zr": 0.19,
+   "added": 4
+  },
+  {
+   "block_px": [
+    1088,
+    416
+   ],
+   "canopy": 0.76,
+   "density_per_ha": 11.97,
+   "zr": 0.54,
+   "added": 6
+  },
+  {
+   "block_px": [
+    1088,
+    480
+   ],
+   "canopy": 0.9,
+   "density_per_ha": 18.9,
+   "zr": 0.67,
+   "added": 8
+  },
+  {
+   "block_px": [
+    1088,
+    544
+   ],
+   "canopy": 0.67,
+   "density_per_ha": 8.51,
+   "zr": 1.34,
+   "added": 3
+  },
+  {
+   "block_px": [
+    1088,
+    608
+   ],
+   "canopy": 0.61,
+   "density_per_ha": 6.13,
+   "zr": 1.11,
+   "added": 3
+  },
+  {
+   "block_px": [
+    1088,
+    672
+   ],
+   "canopy": 0.52,
+   "density_per_ha": 3.22,
+   "zr": 0.05,
+   "added": 0
+  },
+  {
+   "block_px": [
+    1088,
+    736
+   ],
+   "canopy": 0.63,
+   "density_per_ha": 6.98,
+   "zr": 0.05,
+   "added": 3
+  },
+  {
+   "block_px": [
+    1088,
+    800
+   ],
+   "canopy": 0.51,
+   "density_per_ha": 2.97,
+   "zr": 0.04,
+   "added": 0
+  },
+  {
+   "block_px": [
+    1088,
+    864
+   ],
+   "canopy": 0.81,
+   "density_per_ha": 14.45,
+   "zr": 0.03,
+   "added": 4
+  },
+  {
+   "block_px": [
+    1088,
+    928
+   ],
+   "canopy": 0.83,
+   "density_per_ha": 15.59,
+   "zr": 0.06,
+   "added": 3
+  }
+ ]
+}

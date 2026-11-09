@@ -1,0 +1,1202 @@
+{
+ "canon": false,
+ "note": "detail: generated at district scale (not canon, safe to regenerate)",
+ "seed": 1797044,
+ "kinds": [
+  "chimneys",
+  "doors",
+  "roofs"
+ ],
+ "doors": [
+  {
+   "id": "bld_big_hall_door1",
+   "building": "bld_big_hall",
+   "edge": 2,
+   "point": [
+    2260.5,
+    3438.4
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    -0.997,
+    -0.071
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_east_01_door1",
+   "building": "bld_east_01",
+   "edge": 3,
+   "point": [
+    3881.55,
+    3128.75
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    0.895,
+    0.445
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_east_02_door1",
+   "building": "bld_east_02",
+   "edge": 2,
+   "point": [
+    4005.1,
+    3191.5
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    0.626,
+    0.78
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_east_03_door1",
+   "building": "bld_east_03",
+   "edge": 0,
+   "point": [
+    4130.05,
+    3115.1
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    -0.715,
+    -0.699
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_east_04_door1",
+   "building": "bld_east_04",
+   "edge": 0,
+   "point": [
+    3930.45,
+    3314.8
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    -0.685,
+    -0.728
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_east_05_door1",
+   "building": "bld_east_05",
+   "edge": 2,
+   "point": [
+    4082.0,
+    3357.2
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    0.981,
+    -0.194
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_east_06_door1",
+   "building": "bld_east_06",
+   "edge": 1,
+   "point": [
+    4232.8,
+    3282.45
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    -0.807,
+    -0.591
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_hollow_01_door1",
+   "building": "bld_hollow_01",
+   "edge": 2,
+   "point": [
+    2953.55,
+    3021.45
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    -0.717,
+    0.697
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_hollow_02_door1",
+   "building": "bld_hollow_02",
+   "edge": 0,
+   "point": [
+    3392.7,
+    3057.1
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    0.907,
+    0.42
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_hollow_03_door1",
+   "building": "bld_hollow_03",
+   "edge": 0,
+   "point": [
+    3116.05,
+    3235.3
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    0.153,
+    -0.988
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_hollow_04_door1",
+   "building": "bld_hollow_04",
+   "edge": 0,
+   "point": [
+    3501.1,
+    3312.35
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    0.21,
+    -0.978
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_hollow_05_door1",
+   "building": "bld_hollow_05",
+   "edge": 3,
+   "point": [
+    3682.75,
+    3212.3
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    0.461,
+    0.887
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_hollow_06_door1",
+   "building": "bld_hollow_06",
+   "edge": 2,
+   "point": [
+    3442.65,
+    2388.55
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    0.75,
+    0.661
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_hollow_07_door1",
+   "building": "bld_hollow_07",
+   "edge": 2,
+   "point": [
+    3611.65,
+    2321.9
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    0.502,
+    0.865
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_hollow_08_door1",
+   "building": "bld_hollow_08",
+   "edge": 2,
+   "point": [
+    4006.0,
+    2364.5
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    -0.667,
+    0.745
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_hollow_09_door1",
+   "building": "bld_hollow_09",
+   "edge": 2,
+   "point": [
+    4181.1,
+    2614.6
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    -1.0,
+    0.0
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_hollow_longhouse_door1",
+   "building": "bld_hollow_longhouse",
+   "edge": 3,
+   "point": [
+    3178.15,
+    2974.2
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    0.073,
+    0.997
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_west_01_door1",
+   "building": "bld_west_01",
+   "edge": 0,
+   "point": [
+    2008.95,
+    3252.5
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    -0.587,
+    -0.81
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_west_02_door1",
+   "building": "bld_west_02",
+   "edge": 1,
+   "point": [
+    2432.45,
+    3268.35
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    -0.864,
+    -0.504
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_west_03_door1",
+   "building": "bld_west_03",
+   "edge": 0,
+   "point": [
+    2600.4,
+    3578.1
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    0.12,
+    0.993
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_west_04_door1",
+   "building": "bld_west_04",
+   "edge": 0,
+   "point": [
+    1928.35,
+    3694.05
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    -0.959,
+    0.284
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_west_05_door1",
+   "building": "bld_west_05",
+   "edge": 0,
+   "point": [
+    2308.7,
+    3804.35
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    0.17,
+    -0.985
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_west_06_door1",
+   "building": "bld_west_06",
+   "edge": 3,
+   "point": [
+    2686.75,
+    3378.8
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    0.71,
+    0.705
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_west_07_door1",
+   "building": "bld_west_07",
+   "edge": 0,
+   "point": [
+    2132.25,
+    3120.55
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    0.988,
+    -0.156
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_west_08_door1",
+   "building": "bld_west_08",
+   "edge": 2,
+   "point": [
+    1739.35,
+    3480.0
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    0.912,
+    0.41
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_west_09_door1",
+   "building": "bld_west_09",
+   "edge": 2,
+   "point": [
+    2867.65,
+    3521.45
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    0.697,
+    0.717
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_west_10_door1",
+   "building": "bld_west_10",
+   "edge": 0,
+   "point": [
+    3029.4,
+    3362.5
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    -0.82,
+    -0.573
+   ],
+   "detail": true
+  }
+ ],
+ "roofs": [
+  {
+   "id": "bld_big_hall_roof",
+   "building": "bld_big_hall",
+   "type": "gable",
+   "ridge": [
+    [
+     2273.78,
+     3462.94
+    ],
+    [
+     2277.12,
+     3415.96
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_east_01_roof",
+   "building": "bld_east_01",
+   "type": "gable",
+   "ridge": [
+    [
+     3878.34,
+     3127.16
+    ],
+    [
+     3857.86,
+     3117.04
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_east_02_roof",
+   "building": "bld_east_02",
+   "type": "gable",
+   "ridge": [
+    [
+     4007.71,
+     3176.54
+    ],
+    [
+     3989.89,
+     3190.86
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_east_03_roof",
+   "building": "bld_east_03",
+   "type": "gable",
+   "ridge": [
+    [
+     4129.25,
+     3130.24
+    ],
+    [
+     4145.15,
+     3113.96
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_east_04_roof",
+   "building": "bld_east_04",
+   "type": "gable",
+   "ridge": [
+    [
+     3945.63,
+     3314.27
+    ],
+    [
+     3928.97,
+     3329.93
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_east_05_roof",
+   "building": "bld_east_05",
+   "type": "gable",
+   "ridge": [
+    [
+     4074.35,
+     3370.33
+    ],
+    [
+     4069.95,
+     3347.97
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_east_06_roof",
+   "building": "bld_east_06",
+   "type": "gable",
+   "ridge": [
+    [
+     4235.7,
+     3284.57
+    ],
+    [
+     4254.1,
+     3298.03
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_hollow_01_roof",
+   "building": "bld_hollow_01",
+   "type": "gable",
+   "ridge": [
+    [
+     2952.76,
+     3006.33
+    ],
+    [
+     2968.64,
+     3022.67
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_hollow_02_roof",
+   "building": "bld_hollow_02",
+   "type": "gable",
+   "ridge": [
+    [
+     3378.81,
+     3063.25
+    ],
+    [
+     3388.39,
+     3042.55
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_hollow_03_roof",
+   "building": "bld_hollow_03",
+   "type": "gable",
+   "ridge": [
+    [
+     3103.2,
+     3243.45
+    ],
+    [
+     3125.8,
+     3246.95
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_hollow_04_roof",
+   "building": "bld_hollow_04",
+   "type": "gable",
+   "ridge": [
+    [
+     3487.82,
+     3319.7
+    ],
+    [
+     3510.18,
+     3324.5
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_hollow_05_roof",
+   "building": "bld_hollow_05",
+   "type": "gable",
+   "ridge": [
+    [
+     3670.51,
+     3188.88
+    ],
+    [
+     3681.09,
+     3209.12
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_hollow_06_roof",
+   "building": "bld_hollow_06",
+   "type": "gable",
+   "ridge": [
+    [
+     3441.93,
+     2378.76
+    ],
+    [
+     3432.87,
+     2389.04
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_hollow_07_roof",
+   "building": "bld_hollow_07",
+   "type": "gable",
+   "ridge": [
+    [
+     3614.05,
+     2312.43
+    ],
+    [
+     3602.25,
+     2319.27
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_hollow_08_roof",
+   "building": "bld_hollow_08",
+   "type": "gable",
+   "ridge": [
+    [
+     4005.56,
+     2354.74
+    ],
+    [
+     4015.74,
+     2363.86
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_hollow_09_roof",
+   "building": "bld_hollow_09",
+   "type": "gable",
+   "ridge": [
+    [
+     4191.1,
+     2603.2
+    ],
+    [
+     4191.1,
+     2626.0
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_hollow_longhouse_roof",
+   "building": "bld_hollow_longhouse",
+   "type": "gable",
+   "ridge": [
+    [
+     3174.37,
+     2923.33
+    ],
+    [
+     3177.63,
+     2967.27
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_west_01_roof",
+   "building": "bld_west_01",
+   "type": "gable",
+   "ridge": [
+    [
+     2005.56,
+     3267.29
+    ],
+    [
+     2024.04,
+     3253.91
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_west_02_roof",
+   "building": "bld_west_02",
+   "type": "gable",
+   "ridge": [
+    [
+     2455.25,
+     3281.64
+    ],
+    [
+     2435.55,
+     3270.16
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_west_03_roof",
+   "building": "bld_west_03",
+   "type": "gable",
+   "ridge": [
+    [
+     2610.53,
+     3566.83
+    ],
+    [
+     2587.87,
+     3569.57
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_west_04_roof",
+   "building": "bld_west_04",
+   "type": "gable",
+   "ridge": [
+    [
+     1941.13,
+     3702.12
+    ],
+    [
+     1934.67,
+     3680.28
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_west_05_roof",
+   "building": "bld_west_05",
+   "type": "gable",
+   "ridge": [
+    [
+     2295.75,
+     3812.26
+    ],
+    [
+     2318.25,
+     3816.14
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_west_06_roof",
+   "building": "bld_west_06",
+   "type": "gable",
+   "ridge": [
+    [
+     2668.0,
+     3360.14
+    ],
+    [
+     2684.2,
+     3376.26
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_west_07_roof",
+   "building": "bld_west_07",
+   "type": "gable",
+   "ridge": [
+    [
+     2120.61,
+     3110.81
+    ],
+    [
+     2124.19,
+     3133.39
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_west_08_roof",
+   "building": "bld_west_08",
+   "type": "gable",
+   "ridge": [
+    [
+     1734.88,
+     3465.48
+    ],
+    [
+     1725.52,
+     3486.32
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_west_09_roof",
+   "building": "bld_west_09",
+   "type": "gable",
+   "ridge": [
+    [
+     2868.87,
+     3506.36
+    ],
+    [
+     2852.53,
+     3522.24
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_west_10_roof",
+   "building": "bld_west_10",
+   "type": "gable",
+   "ridge": [
+    [
+     3044.15,
+     3358.83
+    ],
+    [
+     3031.05,
+     3377.57
+    ]
+   ],
+   "detail": true
+  }
+ ],
+ "chimneys": [
+  {
+   "id": "bld_east_01_chimney",
+   "building": "bld_east_01",
+   "geometry": [
+    [
+     3876.33,
+     3127.29
+    ],
+    [
+     3874.54,
+     3126.4
+    ],
+    [
+     3875.43,
+     3124.61
+    ],
+    [
+     3877.22,
+     3125.49
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_east_03_chimney",
+   "building": "bld_east_03",
+   "geometry": [
+    [
+     4141.83,
+     3115.93
+    ],
+    [
+     4143.22,
+     3114.5
+    ],
+    [
+     4144.65,
+     3115.9
+    ],
+    [
+     4143.26,
+     3117.33
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_east_04_chimney",
+   "building": "bld_east_04",
+   "geometry": [
+    [
+     3945.04,
+     3316.19
+    ],
+    [
+     3943.59,
+     3317.56
+    ],
+    [
+     3942.22,
+     3316.1
+    ],
+    [
+     3943.67,
+     3314.73
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_east_06_chimney",
+   "building": "bld_east_06",
+   "geometry": [
+    [
+     4251.68,
+     3295.02
+    ],
+    [
+     4253.29,
+     3296.2
+    ],
+    [
+     4252.11,
+     3297.81
+    ],
+    [
+     4250.5,
+     3296.63
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_hollow_02_chimney",
+   "building": "bld_hollow_02",
+   "geometry": [
+    [
+     3385.91,
+     3045.52
+    ],
+    [
+     3386.76,
+     3043.71
+    ],
+    [
+     3388.57,
+     3044.55
+    ],
+    [
+     3387.73,
+     3046.36
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_hollow_03_chimney",
+   "building": "bld_hollow_03",
+   "geometry": [
+    [
+     3122.25,
+     3245.39
+    ],
+    [
+     3124.23,
+     3245.69
+    ],
+    [
+     3123.92,
+     3247.67
+    ],
+    [
+     3121.95,
+     3247.37
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_hollow_04_chimney",
+   "building": "bld_hollow_04",
+   "geometry": [
+    [
+     3506.73,
+     3322.73
+    ],
+    [
+     3508.68,
+     3323.15
+    ],
+    [
+     3508.26,
+     3325.11
+    ],
+    [
+     3506.31,
+     3324.69
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_hollow_09_chimney",
+   "building": "bld_hollow_09",
+   "geometry": [
+    [
+     4192.1,
+     2622.26
+    ],
+    [
+     4192.1,
+     2624.26
+    ],
+    [
+     4190.1,
+     2624.26
+    ],
+    [
+     4190.1,
+     2622.26
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_west_01_chimney",
+   "building": "bld_west_01",
+   "geometry": [
+    [
+     2006.38,
+     3265.46
+    ],
+    [
+     2008.0,
+     3264.29
+    ],
+    [
+     2009.17,
+     3265.91
+    ],
+    [
+     2007.55,
+     3267.08
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_west_03_chimney",
+   "building": "bld_west_03",
+   "geometry": [
+    [
+     2591.7,
+     3570.11
+    ],
+    [
+     2589.72,
+     3570.35
+    ],
+    [
+     2589.48,
+     3568.37
+    ],
+    [
+     2591.46,
+     3568.13
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_west_05_chimney",
+   "building": "bld_west_05",
+   "geometry": [
+    [
+     2314.73,
+     3814.52
+    ],
+    [
+     2316.71,
+     3814.86
+    ],
+    [
+     2316.37,
+     3816.83
+    ],
+    [
+     2314.39,
+     3816.49
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_west_07_chimney",
+   "building": "bld_west_07",
+   "geometry": [
+    [
+     2121.87,
+     3112.37
+    ],
+    [
+     2122.19,
+     3114.35
+    ],
+    [
+     2120.21,
+     3114.66
+    ],
+    [
+     2119.9,
+     3112.69
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_west_08_chimney",
+   "building": "bld_west_08",
+   "geometry": [
+    [
+     1735.08,
+     3467.48
+    ],
+    [
+     1734.26,
+     3469.31
+    ],
+    [
+     1732.43,
+     3468.49
+    ],
+    [
+     1733.25,
+     3466.66
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_west_09_chimney",
+   "building": "bld_west_09",
+   "geometry": [
+    [
+     2868.32,
+     3508.28
+    ],
+    [
+     2866.89,
+     3509.68
+    ],
+    [
+     2865.5,
+     3508.24
+    ],
+    [
+     2866.93,
+     3506.85
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_west_10_chimney",
+   "building": "bld_west_10",
+   "geometry": [
+    [
+     3043.97,
+     3360.84
+    ],
+    [
+     3042.82,
+     3362.48
+    ],
+    [
+     3041.18,
+     3361.33
+    ],
+    [
+     3042.33,
+     3359.69
+    ]
+   ],
+   "detail": true
+  }
+ ],
+ "lots": [],
+ "fences": [],
+ "kerbs": [],
+ "trees": []
+}

@@ -1,0 +1,44 @@
+{
+ "id": "bld_fenn_farmhouse",
+ "name": "Fenn Farmhouse",
+ "kind": "farmhouse",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    7723.0,
+    4748.0
+   ],
+   [
+    7697.6,
+    4753.7
+   ],
+   [
+    7687.8,
+    4710.8
+   ],
+   [
+    7713.2,
+    4705.1
+   ]
+  ]
+ },
+ "notes": "Fenn Family Farm label on the map; the farmstead itself is not drawn. Location approximate.",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 2,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 703.5,
+ "style": "farm_longhouse",
+ "map_px": [
+  1002,
+  775
+ ],
+ "angle_deg": 77.2,
+ "interior_style": "farmhouse"
+}

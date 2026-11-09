@@ -1,0 +1,32 @@
+{
+ "id": "varrenmoor",
+ "name": "Varrenmoor",
+ "seed": 208,
+ "size_ft": [
+  6300,
+  6150
+ ],
+ "cell_ft": 15.0,
+ "draft": true,
+ "centre": [
+  2955,
+  3225
+ ],
+ "centre_buildable_fraction": 1.0,
+ "entry": [
+  3150,
+  6150
+ ],
+ "terrain": {
+  "recipe": "valley",
+  "elev_min": 399.8,
+  "elev_max": 1003.8,
+  "sea": false
+ },
+ "water": [
+  "river"
+ ],
+ "warnings": [],
+ "category": "hamlet",
+ "seconds": 7.6
+}

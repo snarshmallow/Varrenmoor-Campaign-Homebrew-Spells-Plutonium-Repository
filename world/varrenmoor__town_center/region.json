@@ -1,0 +1,585 @@
+{
+ "schema": 1,
+ "child": "varrenmoor__town_center",
+ "parent": "varrenmoor",
+ "name": "Varrenmoor Town Center",
+ "region": {
+  "kind": "rect",
+  "rect": [
+   1769.0,
+   2153.0,
+   4614.0,
+   3921.0
+  ],
+  "name": "Varrenmoor Town Center",
+  "polygon_parent_ft": [
+   [
+    4614.0,
+    2153.0
+   ],
+   [
+    4614.0,
+    3921.0
+   ],
+   [
+    1769.0,
+    3921.0
+   ],
+   [
+    1769.0,
+    2153.0
+   ]
+  ],
+  "area_ft2": 5029960.0
+ },
+ "work_area_polygon_parent_ft": [
+  [
+   4614.0,
+   2113.0
+  ],
+  [
+   1769.0,
+   2113.0
+  ],
+  [
+   1765.08,
+   2113.19
+  ],
+  [
+   1761.2,
+   2113.77
+  ],
+  [
+   1757.39,
+   2114.72
+  ],
+  [
+   1753.69,
+   2116.04
+  ],
+  [
+   1750.14,
+   2117.72
+  ],
+  [
+   1746.78,
+   2119.74
+  ],
+  [
+   1743.62,
+   2122.08
+  ],
+  [
+   1740.72,
+   2124.72
+  ],
+  [
+   1738.08,
+   2127.62
+  ],
+  [
+   1735.74,
+   2130.78
+  ],
+  [
+   1733.72,
+   2134.14
+  ],
+  [
+   1732.04,
+   2137.69
+  ],
+  [
+   1730.72,
+   2141.39
+  ],
+  [
+   1729.77,
+   2145.2
+  ],
+  [
+   1729.19,
+   2149.08
+  ],
+  [
+   1729.0,
+   2153.0
+  ],
+  [
+   1729.0,
+   3921.0
+  ],
+  [
+   1729.19,
+   3924.92
+  ],
+  [
+   1729.77,
+   3928.8
+  ],
+  [
+   1730.72,
+   3932.61
+  ],
+  [
+   1732.04,
+   3936.31
+  ],
+  [
+   1733.72,
+   3939.86
+  ],
+  [
+   1735.74,
+   3943.22
+  ],
+  [
+   1738.08,
+   3946.38
+  ],
+  [
+   1740.72,
+   3949.28
+  ],
+  [
+   1743.62,
+   3951.92
+  ],
+  [
+   1746.78,
+   3954.26
+  ],
+  [
+   1750.14,
+   3956.28
+  ],
+  [
+   1753.69,
+   3957.96
+  ],
+  [
+   1757.39,
+   3959.28
+  ],
+  [
+   1761.2,
+   3960.23
+  ],
+  [
+   1765.08,
+   3960.81
+  ],
+  [
+   1769.0,
+   3961.0
+  ],
+  [
+   4614.0,
+   3961.0
+  ],
+  [
+   4617.92,
+   3960.81
+  ],
+  [
+   4621.8,
+   3960.23
+  ],
+  [
+   4625.61,
+   3959.28
+  ],
+  [
+   4629.31,
+   3957.96
+  ],
+  [
+   4632.86,
+   3956.28
+  ],
+  [
+   4636.22,
+   3954.26
+  ],
+  [
+   4639.38,
+   3951.92
+  ],
+  [
+   4642.28,
+   3949.28
+  ],
+  [
+   4644.92,
+   3946.38
+  ],
+  [
+   4647.26,
+   3943.22
+  ],
+  [
+   4649.28,
+   3939.86
+  ],
+  [
+   4650.96,
+   3936.31
+  ],
+  [
+   4652.28,
+   3932.61
+  ],
+  [
+   4653.23,
+   3928.8
+  ],
+  [
+   4653.81,
+   3924.92
+  ],
+  [
+   4654.0,
+   3921.0
+  ],
+  [
+   4654.0,
+   2153.0
+  ],
+  [
+   4653.81,
+   2149.08
+  ],
+  [
+   4653.23,
+   2145.2
+  ],
+  [
+   4652.28,
+   2141.39
+  ],
+  [
+   4650.96,
+   2137.69
+  ],
+  [
+   4649.28,
+   2134.14
+  ],
+  [
+   4647.26,
+   2130.78
+  ],
+  [
+   4644.92,
+   2127.62
+  ],
+  [
+   4642.28,
+   2124.72
+  ],
+  [
+   4639.38,
+   2122.08
+  ],
+  [
+   4636.22,
+   2119.74
+  ],
+  [
+   4632.86,
+   2117.72
+  ],
+  [
+   4629.31,
+   2116.04
+  ],
+  [
+   4625.61,
+   2114.72
+  ],
+  [
+   4621.8,
+   2113.77
+  ],
+  [
+   4617.92,
+   2113.19
+  ]
+ ],
+ "margin_ft": 40.0,
+ "transform": {
+  "type": "translate",
+  "origin_ft": [
+   0.0,
+   0.0
+  ],
+  "scale": 1.0,
+  "note": "child = parent - origin_ft (feet, y down); zoom is the view scale only"
+ },
+ "window_parent_ft": [
+  1729.0,
+  2113.0,
+  4654.0,
+  3961.0
+ ],
+ "parent_source": {
+  "git_commit": "aafc292d4ced61caeb011121d8501453f67bfed1",
+  "parent_dirty": true,
+  "content_sha1": "bcdbdb433bfd8ac6aedd83b3a5ddf19c9152228c"
+ },
+ "extracted_at": "2026-11-09T04:24:43+00:00",
+ "params": {
+  "margin": 40.0,
+  "terrain_cell_ft": 7.5,
+  "seed": 1797044,
+  "scale": 160.0,
+  "grid": 50.0,
+  "detail": "doors,roofs,chimneys",
+  "detail_params": {},
+  "clip_buildings": false,
+  "local_origin": false,
+  "detail_ft": 0.45,
+  "flatten_pads": true,
+  "terrain": true,
+  "parent_root": null
+ },
+ "id_map": {
+  "bld_big_hall": [
+   "bld_big_hall"
+  ],
+  "bld_east_01": [
+   "bld_east_01"
+  ],
+  "bld_east_02": [
+   "bld_east_02"
+  ],
+  "bld_east_03": [
+   "bld_east_03"
+  ],
+  "bld_east_04": [
+   "bld_east_04"
+  ],
+  "bld_east_05": [
+   "bld_east_05"
+  ],
+  "bld_east_06": [
+   "bld_east_06"
+  ],
+  "bld_hollow_01": [
+   "bld_hollow_01"
+  ],
+  "bld_hollow_02": [
+   "bld_hollow_02"
+  ],
+  "bld_hollow_03": [
+   "bld_hollow_03"
+  ],
+  "bld_hollow_04": [
+   "bld_hollow_04"
+  ],
+  "bld_hollow_05": [
+   "bld_hollow_05"
+  ],
+  "bld_hollow_06": [
+   "bld_hollow_06"
+  ],
+  "bld_hollow_07": [
+   "bld_hollow_07"
+  ],
+  "bld_hollow_08": [
+   "bld_hollow_08"
+  ],
+  "bld_hollow_09": [
+   "bld_hollow_09"
+  ],
+  "bld_hollow_longhouse": [
+   "bld_hollow_longhouse"
+  ],
+  "bld_west_01": [
+   "bld_west_01"
+  ],
+  "bld_west_02": [
+   "bld_west_02"
+  ],
+  "bld_west_03": [
+   "bld_west_03"
+  ],
+  "bld_west_04": [
+   "bld_west_04"
+  ],
+  "bld_west_05": [
+   "bld_west_05"
+  ],
+  "bld_west_06": [
+   "bld_west_06"
+  ],
+  "bld_west_07": [
+   "bld_west_07"
+  ],
+  "bld_west_08": [
+   "bld_west_08"
+  ],
+  "bld_west_09": [
+   "bld_west_09"
+  ],
+  "bld_west_10": [
+   "bld_west_10"
+  ],
+  "str_pilgrim_road": [
+   "str_pilgrim_road"
+  ],
+  "str_oak_ring": [
+   "str_oak_ring"
+  ],
+  "str_oak_link": [
+   "str_oak_link"
+  ],
+  "str_hollow_east": [
+   "str_hollow_east"
+  ],
+  "str_church_path": [
+   "str_church_path"
+  ],
+  "str_west_lane": [
+   "str_west_lane"
+  ],
+  "str_west_loop": [
+   "str_west_loop"
+  ],
+  "str_west_link": [
+   "str_west_link"
+  ],
+  "dis_varrenmoor": [
+   "dis_varrenmoor"
+  ],
+  "sqr_hollow_oak": [
+   "sqr_hollow_oak"
+  ],
+  "sqr_meeting_green": [
+   "sqr_meeting_green"
+  ]
+ },
+ "dropped": [
+  {
+   "id": "bld_church",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_fenn_barn",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_fenn_farmhouse",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_granary_mill",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_hakon_house",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_stables",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_thorne_barn",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_thorne_farmhouse",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_thorne_shed",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  }
+ ],
+ "counts": {
+  "buildings": 27,
+  "streets": 8,
+  "water": 0,
+  "districts": 3
+ },
+ "snapshot": {
+  "bld_big_hall": "f5d98560b271",
+  "bld_east_01": "3287ab1c068c",
+  "bld_east_02": "445c0cbd2022",
+  "bld_east_03": "13d1579112fa",
+  "bld_east_04": "0143970d02b2",
+  "bld_east_05": "d7f4427f239f",
+  "bld_east_06": "8f85caea16a8",
+  "bld_hollow_01": "d3af58232a3f",
+  "bld_hollow_02": "25d06d18fdfe",
+  "bld_hollow_03": "103c9884990d",
+  "bld_hollow_04": "ad1ba656272b",
+  "bld_hollow_05": "e59d8f226d6d",
+  "bld_hollow_06": "efc859a7e9c3",
+  "bld_hollow_07": "022ea16bc900",
+  "bld_hollow_08": "03d5f6040a8d",
+  "bld_hollow_09": "6455fa0df359",
+  "bld_hollow_longhouse": "722579ab5bf9",
+  "bld_west_01": "2c3f20c4498e",
+  "bld_west_02": "3d734228e222",
+  "bld_west_03": "12ffbc5708f2",
+  "bld_west_04": "92c131f1c939",
+  "bld_west_05": "ebf16c099f59",
+  "bld_west_06": "952ca4d31262",
+  "bld_west_07": "c82f6295e030",
+  "bld_west_08": "a13a0a8388f0",
+  "bld_west_09": "531f9c1e728f",
+  "bld_west_10": "e8efa8849438",
+  "str_pilgrim_road": "7ef29c4c99e9",
+  "str_oak_ring": "b6a9bce6797f",
+  "str_oak_link": "4bf713c5de73",
+  "str_hollow_east": "08f4bbe3bfcd",
+  "str_church_path": "8b347f7ea9e7",
+  "str_west_lane": "58c5afcac9da",
+  "str_west_loop": "f6d581c783c5",
+  "str_west_link": "ff73ed863675",
+  "dis_varrenmoor": "8b99dfe20527",
+  "sqr_hollow_oak": "78bc6d2f370e",
+  "sqr_meeting_green": "0b33ddb61658"
+ },
+ "interiors": {},
+ "terrain": {
+  "cell_ft": 7.5,
+  "parent_cell_ft": 15.0,
+  "upres_factor": 2,
+  "nx": 401,
+  "ny": 259,
+  "elev_min": 697.8441772460938,
+  "elev_max": 704.4998168945312,
+  "max_node_dev_ft": 0.3688,
+  "max_node_dev_outside_pads_ft": 0.0,
+  "origin_ft": [
+   1695.0,
+   2070.0
+  ],
+  "detail_ft": 0.45,
+  "seed": 1797044
+ },
+ "sync": {
+  "shared_attrs": [
+   "name",
+   "kind",
+   "status",
+   "notes",
+   "floors",
+   "links",
+   "geometry (unclipped, unshifted-aware)"
+  ],
+  "rule": "child -> parent only through `region_extract.py sync --child ID --apply` (diff first)"
+ }
+}

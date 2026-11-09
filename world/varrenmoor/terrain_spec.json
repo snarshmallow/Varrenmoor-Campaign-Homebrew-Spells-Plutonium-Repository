@@ -1,0 +1,310 @@
+{
+ "_note": "Written by place_create.py from the place spec (terrain recipe valley). Heights are feet above sea level; ridge heights above the base plane.",
+ "size_ft": [
+  8460.0,
+  6150.0
+ ],
+ "cell_ft": 15.0,
+ "seed": 208,
+ "base_elevation_ft": 700.0,
+ "base_tilt": [
+  0.0,
+  0.0
+ ],
+ "ridges": [
+  {
+   "name": "Greyspine massif (north-east)",
+   "width_ft": 1200,
+   "sharpness": 1.4,
+   "points": [
+    [
+     4921.6,
+     -769.0,
+     120
+    ],
+    [
+     6536.5,
+     -538.3,
+     240
+    ],
+    [
+     8459.0,
+     76.9,
+     420
+    ]
+   ],
+   "spurs": true
+  },
+  {
+   "name": "Eastern Ridge (cliffs)",
+   "width_ft": 600,
+   "sharpness": 2.0,
+   "points": [
+    [
+     7536.2,
+     1076.6,
+     200
+    ],
+    [
+     8074.5,
+     2383.9,
+     210
+    ],
+    [
+     8459.0,
+     3691.2,
+     170
+    ]
+   ],
+   "spurs": true
+  },
+  {
+   "name": "west hills",
+   "width_ft": 900,
+   "sharpness": 1.2,
+   "points": [
+    [
+     153.8,
+     307.6,
+     120
+    ],
+    [
+     461.4,
+     1307.3,
+     60
+    ],
+    [
+     307.6,
+     4614.0,
+     70
+    ],
+    [
+     615.2,
+     6075.1,
+     90
+    ]
+   ],
+   "spurs": true
+  },
+  {
+   "name": "south hills",
+   "width_ft": 900,
+   "sharpness": 1.2,
+   "points": [
+    [
+     1538.0,
+     5998.2,
+     60
+    ],
+    [
+     3998.8,
+     6152.0,
+     90
+    ],
+    [
+     5383.0,
+     6152.0,
+     60
+    ]
+   ],
+   "spurs": true
+  }
+ ],
+ "peaks": [
+  {
+   "name": "stables hill",
+   "x": 3998.8,
+   "y": 538.3,
+   "height": 60,
+   "radius_ft": 700,
+   "mode": "add"
+  },
+  {
+   "name": "churchyard rise",
+   "x": 5383.0,
+   "y": 1345.8,
+   "height": 10,
+   "radius_ft": 500,
+   "mode": "add"
+  },
+  {
+   "name": "Hakon's knoll",
+   "x": 6444.2,
+   "y": 2460.8,
+   "height": 30,
+   "radius_ft": 400,
+   "mode": "add"
+  }
+ ],
+ "valleys": [
+  {
+   "name": "river (map: stream from the Greyspine foothills down the west side)",
+   "core_ft": 25,
+   "side_slope": 0.22,
+   "points": [
+    [
+     3306.7,
+     -1076.6,
+     64.0,
+     0.22
+    ],
+    [
+     2922.2,
+     -769.0,
+     56.1,
+     0.22
+    ],
+    [
+     2691.5,
+     -384.5,
+     48.5,
+     0.22
+    ],
+    [
+     2383.9,
+     115.4,
+     41.2,
+     0.22
+    ],
+    [
+     1961.0,
+     461.4,
+     34.3,
+     0.22
+    ],
+    [
+     1576.5,
+     807.5,
+     27.8,
+     0.22
+    ],
+    [
+     1368.8,
+     1230.4,
+     21.7,
+     0.22
+    ],
+    [
+     1399.6,
+     1614.9,
+     15.9,
+     0.22
+    ],
+    [
+     1422.7,
+     1884.1,
+     10.7,
+     0.22
+    ],
+    [
+     1153.5,
+     2153.2,
+     5.9,
+     0.22
+    ],
+    [
+     653.6,
+     2537.7,
+     1.8,
+     0.22
+    ],
+    [
+     269.2,
+     2883.8,
+     -1.8,
+     0.22
+    ],
+    [
+     61.5,
+     3306.7,
+     -4.5,
+     0.22
+    ],
+    [
+     -230.7,
+     3768.1,
+     -6.0,
+     0.22
+    ]
+   ],
+   "river": true,
+   "meander": {
+    "preset": "gentle",
+    "seed": 208,
+    "width_floor_ft": 40.0,
+    "width_gorge_ft": 28.0
+   }
+  }
+ ],
+ "passes": [],
+ "noise": {
+  "scale_ft": 420,
+  "octaves": 5,
+  "lacunarity": 2.0,
+  "gain": 0.5,
+  "ridged_amp_ft": 90.0,
+  "base_amp_ft": 3,
+  "warp_ft": 120,
+  "warp_scale_ft": 700,
+  "feature_warp_ft": 160,
+  "feature_warp_scale_ft": 750
+ },
+ "erosion": {
+  "thermal_iterations": 30,
+  "talus_slope": 1.0,
+  "rate": 0.5,
+  "smooth_sigma_cells": 1.0
+ },
+ "natural": {
+  "defaults_version": 2,
+  "rough_ft": 4.0,
+  "final_smooth_cells": 0.8,
+  "rugged": {
+   "scale_ft": 330,
+   "amp_ft": 120.0,
+   "octaves": 6
+  },
+  "spurs": {
+   "clear_points": [
+    [
+     3076.0,
+     3076.0,
+     700
+    ],
+    [
+     5383.0,
+     1345.8,
+     700
+    ],
+    [
+     6444.2,
+     2653.1,
+     700
+    ]
+   ]
+  },
+  "keep_clear": [
+   [
+    3076.0,
+    3076.0,
+    1500
+   ],
+   [
+    5383.0,
+    1345.8,
+    550
+   ],
+   [
+    6444.2,
+    2653.1,
+    350
+   ]
+  ],
+  "hydraulic": {
+   "iterations": 24,
+   "K": 0.08,
+   "max_incise_ft": 40
+  }
+ },
+ "sea_level_ft": 0.0
+}
