@@ -540,5 +540,35 @@ class FoliageOnlyPruneTests(unittest.TestCase):
         self.assertEqual(fp.prune_stale_roofs(Br(), "Scene.x", items, argparse.Namespace()), 0)
 
 
+class ClickMacroInstallTests(unittest.TestCase):
+    def run_install(self, dry=False):
+        import foundry_push as fp
+        calls = []
+
+        class Br:
+            def call(self, op, **k):
+                calls.append((op, k))
+                return {"version": "9.9.9", "protocol": 99} if op == "version" else {"uuid": "Macro." + k.get("id", "x")}
+        return fp.cmd_install_click_macros(Br(), argparse.Namespace(dry_run=dry)), calls
+
+    def test_installs_click_and_roof_macros_by_stable_id(self):
+        r, calls = self.run_install()
+        ups = [k for op, k in calls if op == "upsert_by_flag"]
+        self.assertEqual([k["id"] for k in ups], ["macro:click_mode", "macro:roofs_toggle_all", "macro:roofs_toggle_pick"])
+        for k in ups:
+            self.assertEqual(k["documentName"], "Macro")
+            self.assertEqual(k["data"]["type"], "script")
+            self.assertTrue(k["data"]["command"].strip())
+        self.assertIn("__vbClickMode", ups[0]["data"]["command"])
+        r2, calls2 = self.run_install()                       # idempotent: same ids, same payload
+        self.assertEqual([k for op, k in calls2 if op == "upsert_by_flag"], ups)
+        self.assertFalse({op for op, _ in calls} - {"version", "upsert_by_flag"})
+
+    def test_dry_run_writes_nothing(self):
+        r, calls = self.run_install(dry=True)
+        self.assertTrue(r["dry_run"]); self.assertEqual(calls, [])
+        self.assertIn("macro:click_mode", r["macros"])
+
+
 if __name__ == "__main__":
     unittest.main()

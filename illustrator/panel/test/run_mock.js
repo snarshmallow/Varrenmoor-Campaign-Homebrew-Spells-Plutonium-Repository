@@ -282,6 +282,7 @@ const actions = () => hostLog.map(h => h.action);
     { const pj = JSON.parse(fs.readFileSync(`${ROOT}/illustrator/presets/interiors/presets.json`, "utf8")); check("panel interior styles match presets/interiors/presets.json", JSON.stringify(VB.INTERIOR_STYLES) === JSON.stringify(["auto"].concat(Object.keys(pj.styles)))); }
     check("roof jobs need an existing scene", (() => { try { VB.jobRoofs(st, "hide"); return false; } catch (e) { return /existing scene/.test(e.message); } })());
     st.foundry.target = "existing"; st.foundry.sceneUuid = "Scene.x"; check("roofs job args", VB.jobRoofs(st, "hide").steps[0].args.join(" ").includes("roofs --scene-uuid Scene.x --roof-state hide") && VB.jobRoofMacros().steps[0].args[0] === "install-roof-macros");
+    check("click macros job", VB.jobClickMacros().steps[0].args[0] === "install-click-macros");
     st.foundry.target = "new"; st.foundry.models.roofMode = "none";
     st.foundry.sceneName = "ZZ Model Push Test"; st.foundry.models.layers = "buildings"; st.foundry.models.lod = "1";
     const a = VB.worldPushArgs(st, d, { dry: true, placements: `${out}/placements.json` });

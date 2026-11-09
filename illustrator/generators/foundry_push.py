@@ -19,6 +19,7 @@ Every command prints log lines, then ONE final JSON line on stdout ({"ok": true,
                one 3D Canvas tile per model of a world pack (worldpack_split.py), upserted by pipelineId model:<place>:<id>
   install-water / set-water --scene-uuid U [--place P] [--preset river|pond|lake|ocean] [--force] [--set key=value]     3D water shader on the scene's water tiles (foundry_water.py)
   roofs        --scene-uuid U [--roof-state hide|show|toggle] [--ids bld_a,bld_b]      show/hide the roof tiles (pack built with --roof-mode per_building|per_scene)
+  install-click-macros                     create/update the 'Click mode' macro (click a roof to hide/show it, click a door to open it) and the roof macros (idempotent)
   install-roof-macros                      create the 'Roofs: toggle all' and 'Roofs: toggle selected / at token / pick' macros in the world (foundry_macros/*.js)
   import-scene --scene-uuid U [--place-id ID] [--include walls,tiles,regions,lights,tokens,notes] [--no-image] [--closed-as lines|buildings] [--force] [--dry-run] [--scene-json F]
                READ-ONLY on Foundry: create a place from an existing scene (calibration from the grid, background as underlay, walls as WALLS lines / building
@@ -1218,7 +1219,7 @@ def cmd_push_scene_3d(br, a):
 
 def parser():
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
-    ap.add_argument("cmd", choices=["status", "places", "list", "export-info", "push-scene", "push-token", "push-actor", "push-item", "push-models", "delete-scene", "link-region", "bake-texture", "push-lights", "import-scene", "push-scene-3d", "install-roof-macros", "roofs", "scene-audit"])
+    ap.add_argument("cmd", choices=["status", "places", "list", "export-info", "push-scene", "push-token", "push-actor", "push-item", "push-models", "delete-scene", "link-region", "bake-texture", "push-lights", "import-scene", "push-scene-3d", "install-roof-macros", "install-click-macros", "roofs", "scene-audit"])
     ap.add_argument("--place", default="bridgehollow")
     ap.add_argument("--view", default="town")
     ap.add_argument("--preset")
@@ -1340,6 +1341,30 @@ def cmd_install_roof_macros(br, a):
     return {"ok": True, "macros": [o.get("uuid") for o in out]}
 
 
+CLICK_MACROS = {"click_mode": "Click mode: roofs and doors (toggle)", **ROOF_MACROS}
+
+
+def macro_docs(keys):
+    """[(pipeline id, macro data)] for macro source files foundry_macros/<key>.js; the id is macro:<key> so a re-run updates in place (idempotent)."""
+    items = []
+    for key in keys:
+        with open(os.path.join(MACRO_DIR, key + ".js"), encoding="utf-8") as f:
+            items.append((f"macro:{key}", {"name": CLICK_MACROS[key], "type": "script", "img": "icons/svg/house.svg", "scope": "global", "command": f.read()}))
+    return items
+
+
+def cmd_install_click_macros(br, a):
+    """install-click-macros: create or update in place the 'Click mode' Script macro (one toggle: click a roof -> hide/show that roof, click a door -> open/close) plus the two roof macros.
+    Only Macro documents are written (upsert_by_flag, id macro:<key>). Drag 'Click mode' to the hotbar; run it once to switch on, again to switch off."""
+    items = macro_docs(list(CLICK_MACROS))
+    if a.dry_run:
+        return {"ok": True, "dry_run": True, "macros": [i for i, _ in items]}
+    require_module(br)
+    out = [br.call("upsert_by_flag", documentName="Macro", id=i, data=d) for i, d in items]
+    LOG(f"macros: {[o.get('uuid') for o in out]}")
+    return {"ok": True, "macros": [o.get("uuid") for o in out]}
+
+
 def roof_tile_updates(scene, state, ids=None):
     """Tile updates [(uuid, {"hidden": bool})] for the roof tiles of a scene document: state hide|show|toggle; ids = only roofs of these building ids."""
     tiles = [t for t in scene.get("tiles", []) if (t.get("flags", {}).get(FLAG) or {}).get("roof")]
@@ -1369,7 +1394,7 @@ def cmd_roofs(br, a):
 CMDS = {"status": cmd_status, "places": cmd_places, "list": cmd_list, "export-info": cmd_export_info, "push-scene": cmd_push_scene,
         "push-token": cmd_push_token, "push-actor": cmd_push_actor, "push-item": cmd_push_item, "push-models": cmd_push_models, "delete-scene": cmd_delete_scene,
         "link-region": cmd_link_region, "bake-texture": cmd_bake_texture, "push-lights": cmd_push_lights, "import-scene": cmd_import_scene, "push-scene-3d": cmd_push_scene_3d,
-        "install-roof-macros": cmd_install_roof_macros, "roofs": cmd_roofs, "scene-audit": cmd_scene_audit}
+        "install-roof-macros": cmd_install_roof_macros, "install-click-macros": cmd_install_click_macros, "roofs": cmd_roofs, "scene-audit": cmd_scene_audit}
 
 
 def main(argv=None, bridge=None):

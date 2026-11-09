@@ -724,6 +724,9 @@
   VB.jobRoofMacros = function () {
     return { kind: "roof_macros", label: "Install roof macros", params: {}, steps: [py(VB.FOUNDRY_PY || "illustrator/generators/foundry_push.py", ["install-roof-macros"], "install roof macros")] };
   };
+  VB.jobClickMacros = function () {
+    return { kind: "click_macros", label: "Install click macros", params: {}, steps: [py(VB.FOUNDRY_PY || "illustrator/generators/foundry_push.py", ["install-click-macros"], "install click macros")] };
+  };
   VB.jobRoofs = function (st, state) {
     var f = st.foundry; if (f.target !== "existing" || !f.sceneUuid) throw new Error("pick an existing scene (Refresh from Foundry first)");
     return { kind: "roofs_" + state, label: "Roofs: " + state, params: { state: state },

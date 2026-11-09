@@ -532,6 +532,9 @@ Measure in Foundry (the module has a `perf_sample` op for frame rate while you m
 
 ---
 
+### 2.17b Click mode (Foundry tab: Install click macros)
+Button "Install click macros" runs `foundry_push.py install-click-macros`: creates or updates the world macros "Click mode: roofs and doors (toggle)", "Roofs: toggle all" and "Roofs: toggle selected / at token / pick". Put Click mode on the hotbar, run it once to switch on, again to switch off. While on, a GM click on a roof hides/shows only that roof (per_building scenes, saved) or hides it on the GM's screen only (per_scene scenes; Shift+click = whole roof tile for everyone); a click on a door opens/closes it from any layer. Details and limits: WORLD_PACK.md, Roof modes.
+
 ### 2.18 Editing a single building / road
 
 Use this when one building or one road must differ from the rest (a hip roof on one house, a lane that is cobbled and kerbed, a steep road that may cut into the hill). Everything is stored in the place's own files, so it survives re-exports; nothing is written until you press **Apply edits**. A new place has no overrides: the exporter behaves exactly as before.

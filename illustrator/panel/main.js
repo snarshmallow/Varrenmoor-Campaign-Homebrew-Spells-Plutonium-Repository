@@ -520,6 +520,7 @@
     town_reject: function () { return startJob(VB.jobTownReject(state, d)); },
     wp_export: function () { return startJob(VB.jobWorldPack(state, d)); },
     wp_split: function () { return startJob(VB.jobWorldSplit(state, d)); },
+    wp_click_macros: function () { return startJob(VB.jobClickMacros()); },
     wp_roof_macros: function () { return startJob(VB.jobRoofMacros()); },
     wp_roofs_hide: function () { try { return startJob(VB.jobRoofs(state, "hide")); } catch (e) { showError(String(e.message || e)); } },
     wp_roofs_show: function () { try { return startJob(VB.jobRoofs(state, "show")); } catch (e) { showError(String(e.message || e)); } },
