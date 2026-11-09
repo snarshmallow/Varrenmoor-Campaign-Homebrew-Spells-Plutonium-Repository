@@ -399,6 +399,9 @@ How to use: pick a style in the gallery or dropdown, choose **Apply to** (ticked
 
 The style is stored in each building's file. It only shows in 3D after you export the world pack and split models again (step 7).
 
+Bridgehollow ring tiers (8 more styles, `bh_*`, each with a `_winter` twin that adds snow on the roof and dormers): `bh_warden_house` (Warden's Ring = Authority Ward: stone ground storey with quoins and a string course, timber-framed upper storey and gables, steep slate roof with dormers both sides, two chimneys, finials, arched stone doorway), `bh_warden_civic` (Warden's Ring civic buildings: dressed stone, storey bands, hipped slate roof with dormers), `bh_inner_house` (inner Commoners' Ring: oak frame on limewash or ochre, stone plinth, steep shingle roof, shutters, some dormers) and `bh_ring_outbuilding` (sheds and stables in those rings). They are not picked by **Auto**; one command assigns them by tier and leaves every other building as it is:
+`python illustrator/generators/bridgehollow_styles.py --dry` (preview), then without `--dry`; `--season winter` for the snow variants, `--clear` to remove them, `--inner-ft 60` = how far (ft) from the Authority Ward edge the inner ring reaches. Previews: `illustrator/out/building_styles_look/` (`building_styles_look.py` renders any pack building with any style).
+
 Common mistakes: expecting the 2D map to change (it does not); forgetting to re-export. Gatehouses have a carriage arch and no door. The rose window on a parish church is a real opening; try `special.rose.foil` of `trefoil` or `quatrefoil` in the preset only if you edit presets (see section 8).
 
 ### 2.11 Regions

@@ -89,7 +89,8 @@
    "#2f4a3c",
    "#2e3e52"
   ],
-  "shutter_d_ft": 0.12
+  "shutter_d_ft": 0.12,
+  "shutter_clear": true
  },
  "door": {
   "colors": [

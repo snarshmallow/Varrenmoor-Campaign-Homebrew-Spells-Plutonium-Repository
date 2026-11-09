@@ -527,5 +527,188 @@ class TimberStaysUnderRoof(unittest.TestCase):
         self.assertGreaterEqual(checked, 12)
 
 
+BH_PACK = os.path.join(HERE, "..", "..", "world", "bridgehollow", "export")
+BH_PRESETS = ("bh_inner_house", "bh_warden_house", "bh_warden_civic", "bh_ring_outbuilding")
+BH_TRI_BUDGET = {"bh_inner_house": 3500, "bh_warden_house": 5000, "bh_warden_civic": 6500, "bh_ring_outbuilding": 1800}     # per building, snow included
+
+
+def _read(p):
+    with open(p, encoding="utf-8") as f:
+        return f.read()
+
+
+def coplanar_pairs(m, mats, min_area=2e-4):
+    """Pairs of triangles in the same plane with overlapping area (m^2), where at least one triangle uses one of `mats`."""
+    from shapely.geometry import Polygon
+    V = m.V
+    groups = {}
+    for mat, F in m.subs.items():
+        for f in np.asarray(F):
+            a, b, c = V[f]
+            n = np.cross(b - a, c - a)
+            ln = np.linalg.norm(n)
+            if ln < 1e-10:
+                continue
+            n = n / ln
+            if n[np.argmax(np.abs(n))] < 0:
+                n = -n
+            groups.setdefault((tuple(np.round(n, 3)), round(float(n @ a), 3)), []).append((mat, V[f], n, float(n @ a)))
+    bad = []
+    for G in groups.values():
+        if len(G) < 2 or not any(t[0] in mats for t in G):
+            continue
+        n = G[0][2]
+        u = np.cross(n, [1.0, 0, 0] if abs(n[0]) < 0.9 else [0, 1.0, 0])
+        u /= np.linalg.norm(u)
+        v = np.cross(n, u)
+        P = [Polygon([(p @ u, p @ v) for p in t[1]]) for t in G]
+        for i in range(len(G)):
+            for j in range(i + 1, len(G)):
+                if (G[i][0] in mats or G[j][0] in mats) and abs(G[i][3] - G[j][3]) < 2e-4 and P[i].intersection(P[j]).area > min_area:
+                    bad.append((G[i][0], G[j][0]))
+    return bad
+
+
+class BridgehollowTiers(unittest.TestCase):
+    """Ring-tier styles of Bridgehollow (bridgehollow_styles.py, bh_* presets): presets, winter variants, budgets, no poke-through, no coplanar new geometry,
+    every one of the 148 buildings gets a valid style (or stays legacy), tier counts."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.bh = None
+        if os.path.exists(os.path.join(BH_PACK, "manifest.json")):
+            cls.bh = wp.load_pack(BH_PACK)
+            pbr.prepare(cls.bh.materials)
+
+    def test_presets_and_winter_variants(self):
+        ps = bs.load_presets()
+        for pid in BH_PRESETS:
+            self.assertIn(pid, ps)
+            w = ps[pid + "_winter"]
+            self.assertEqual(w["special"]["snow"]["depth_ft"], 0.42)
+            self.assertEqual(w["wall"], ps[pid]["wall"])                      # "extends": everything but the snow comes from the base preset
+            self.assertNotIn("extends", w)
+            self.assertEqual(ps[pid]["kinds"], {})                            # never picked by "auto": only the tier script assigns them
+            self.assertTrue(os.path.exists(os.path.join(HERE, "..", "..", ps[pid]["preview"])), pid)
+        S = bs.resolve("bh_warden_house", "bld_x")
+        self.assertTrue(S["upper"] and S["quoins"] and S["string_course"] and S["finials"] and S["dormers"] and S["chimney"]["both"])
+        self.assertEqual(S["door"]["shape"], "round_arch")
+        self.assertTrue(bs.resolve("bh_warden_house_winter", "bld_x")["special"]["snow"])
+
+    def _real(self, n_per_style=None):
+        """[(entity with style applied, mesh)] for Bridgehollow buildings of every tier (one per style and floors count, or all with n_per_style=None)."""
+        import bridgehollow_styles as bhs
+        T = bhs.tiers("bridgehollow")
+        cx = wm.Ctx(self.bh)
+        seen, out = set(), []
+        for e0 in self.bh.list("buildings"):
+            if e0["id"] not in T:
+                continue
+            tier, kind = T[e0["id"]]
+            st = bhs.style_for(tier, kind, "winter")
+            if not st:
+                continue
+            key = (st, e0.get("floors", 1), e0["roof"]["type"])
+            if n_per_style and key in seen:
+                continue
+            seen.add(key)
+            e = dict(e0, style=st)
+            e = bs.apply_style(e)
+            m, dn = wd.build_building_detailed(cx, e)
+            out.append((e, m, dn))
+        return out
+
+    def test_real_buildings_budget_roof_and_coplanar(self):
+        if self.bh is None:
+            self.skipTest("no Bridgehollow pack")
+        cx = wm.Ctx(self.bh)
+        rows = self._real(n_per_style=1)
+        self.assertGreaterEqual(len(rows), 5)
+        for e, m, dn in rows:
+            S = e["_style"]
+            base = S["id"].replace("_winter", "")
+            self.assertLess(m.tri_count, BH_TRI_BUDGET[base], e["id"])
+            self.assertEqual(len(dn), 1, e["id"])
+            zt = (e["base_elevation_ft"] - cx.fr.z_origin_ft + e["wall_height_ft"]) * FT
+            R = bsg.Roof(cx, e).zt(zt)
+            # timber never pokes through the roof (gable studs, collar rails, rafters, frame)
+            F = m.subs.get(S.get("beam_mat"))
+            if F is not None and len(F):
+                Vb = np.unique(m.V[np.asarray(F).ravel()], axis=0)
+                for x, y, z in Vb[Vb[:, 2] > zt + 1e-4]:
+                    l, w = (x - R.cxm) * R.ex[0] + (y - R.cym) * R.ex[1], (x - R.cxm) * R.ey[0] + (y - R.cym) * R.ey[1]
+                    self.assertLessEqual(z - R.roof_z(l, w), 0.05, e["id"])
+            # the snow sheet lies above the roof surface (never in it) and only up there
+            Fs = m.subs.get(S.get("snow_mat"))
+            self.assertTrue(Fs is not None and len(Fs), e["id"])
+            Vs = np.unique(m.V[np.asarray(Fs).ravel()], axis=0)
+            self.assertGreater(Vs[:, 2].min(), R.ze - 0.05)
+            # no new geometry shares a plane with anything (skin, quoins, bands, dormers, snow)
+            new = {S.get(k) for k in ("upper_mat", "quoin_mat", "snow_mat", "band_mat", "shutter_mat")} - {None}
+            self.assertEqual(coplanar_pairs(m, new), [], e["id"])
+
+    def test_tier_counts_and_every_building_valid(self):
+        import bridgehollow_styles as bhs
+        T = bhs.tiers("bridgehollow")
+        self.assertEqual(len(T), len(os.listdir(os.path.join(WORLD, "bridgehollow", "buildings"))))
+        cnt = {}
+        for t, k in T.values():
+            cnt[t] = cnt.get(t, 0) + 1
+        self.assertEqual(cnt, {"warden": 19, "inner": 39, "other": 90})
+        ps = bs.load_presets()
+        for bid, (t, k) in T.items():
+            st = bhs.style_for(t, k)
+            if t == "other":
+                self.assertIsNone(st)
+            else:
+                self.assertIn(st, ps, (bid, t, k))
+                self.assertIn(bhs.style_for(t, k, "winter"), ps)
+        self.assertEqual(T["bld_warden_hall"][0], "warden")
+        self.assertEqual(T["bld_wardens_barracks"][0], "warden")
+
+    def test_assign_dry_idempotent_season_clear(self):
+        import bridgehollow_styles as bhs
+        tmp = tempfile.mkdtemp()
+        try:
+            src = os.path.join(WORLD, "bridgehollow")
+            os.makedirs(os.path.join(tmp, "bridgehollow", "buildings"))
+            shutil.copy(os.path.join(src, "districts.json"), os.path.join(tmp, "bridgehollow", "districts.json"))
+            for f in os.listdir(os.path.join(src, "buildings")):
+                b = _load(os.path.join(src, "buildings", f))
+                b.pop("style", None)
+                with open(os.path.join(tmp, "bridgehollow", "buildings", f), "w", encoding="utf-8") as fh:
+                    json.dump(b, fh, indent=1)
+            os.environ["VB_WORLD_ROOT"] = tmp
+            snap = lambda: {f: _read(os.path.join(tmp, "bridgehollow", "buildings", f)) for f in os.listdir(os.path.join(tmp, "bridgehollow", "buildings"))}
+            before = snap()
+            r = bhs.apply(dry=True)
+            self.assertEqual(r["count"], 58)
+            self.assertEqual(before, snap())                                                  # dry run writes nothing
+            self.assertEqual(r["styles"], {"bh_warden_civic": 8, "bh_warden_house": 7, "bh_ring_outbuilding": 6, "bh_inner_house": 37})
+            self.assertEqual(bhs.apply()["count"], 58)
+            self.assertEqual(bhs.apply()["count"], 0)                                        # idempotent
+            b = _load(os.path.join(tmp, "bridgehollow", "buildings", "bld_house_058.json"))
+            b0 = _load(os.path.join(src, "buildings", "bld_house_058.json"))
+            b0.pop("style", None)
+            self.assertEqual({k: v for k, v in b.items() if k != "style"}, b0)                # only the style key is written
+            self.assertEqual(b["style"], "bh_warden_house")
+            # a hand-picked style is kept; winter swaps to the snow variants; clear removes only bh_* styles
+            p = os.path.join(tmp, "bridgehollow", "buildings", "bld_house_101.json")
+            b = _load(p)
+            b["style"] = "tudor"
+            with open(p, "w", encoding="utf-8") as fh:
+                json.dump(b, fh, indent=1)
+            r = bhs.apply(season="winter")
+            self.assertEqual(r["count"], 57)
+            self.assertEqual(_load(p)["style"], "tudor")
+            self.assertEqual(_load(os.path.join(tmp, "bridgehollow", "buildings", "bld_inn.json"))["style"], "bh_warden_house_winter")
+            self.assertEqual(bhs.apply(clear=True)["count"], 57)
+            self.assertEqual(_load(p)["style"], "tudor")
+            self.assertNotIn("style", _load(os.path.join(tmp, "bridgehollow", "buildings", "bld_inn.json")))
+        finally:
+            os.environ.pop("VB_WORLD_ROOT", None)
+            shutil.rmtree(tmp, ignore_errors=True)
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=1)
