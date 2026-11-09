@@ -114,7 +114,8 @@ class ExtractHelpers(unittest.TestCase):
     def test_select(self):
         plan = bs.scene_plan()
         self.assertEqual({p["part_key"] for p in bs.select(plan, "warden_street")}, {"warden_street_part_1", "warden_street_part_2"})
-        self.assertEqual(len(bs.select(plan, "all")), len(plan))
+        self.assertEqual(len(bs.select(plan, "every")), len(plan))
+        self.assertEqual(sorted(p["part_key"] for p in bs.select(plan, "all")), sorted(bs.KEEP_SCENES))     # "all" = the districts that are kept, not every road
         with self.assertRaises(SystemExit):
             bs.select(plan, "nope")
 

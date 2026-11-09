@@ -212,9 +212,17 @@ def scene_plan(root=None):
     return out
 
 
+# 2026-11-09: the user does not want a submap per road: only the districts larger than the recommended size, and overlapping duplicates were deleted.
+# 'all' therefore means this KEEP set (these still cover every Bridgehollow building); name any other street explicitly with --scenes KEY, or use 'every'.
+KEEP_SCENES = ["market_square", "court_square", "warden_street_part_1", "pilgrim_road_part_1", "pilgrim_road_part_2", "cobbler_row",
+               "weavers_walk_south_part_2", "thatchers_way"]
+
+
 def select(plan, which):
-    if which in (None, "", "all"):
+    if which == "every":
         return plan
+    if which in (None, "", "all"):
+        return [p for p in plan if p["part_key"] in KEEP_SCENES or p["key"] in KEEP_SCENES]
     want = [w.strip() for w in which.split(",") if w.strip()]
     sel = [p for p in plan if p["key"] in want or p["part_key"] in want or p["child"] in want]
     if not sel:
