@@ -31,11 +31,14 @@
     ["grade.smooth", "grade.smooth", "num", 0, 1, 0.05, "Grading: smoothing", "0 follows the raw ground, 1 fully smoothed along the road. Empty = the Roads (3D) setting on the Foundry tab."],
     ["grade.max_grade_deg", "grade.max_grade_deg", "num", 1, 60, 1, "Grading: max grade (deg)", "Steepest slope for this road. Empty = the global value."],
     ["grade.cross_deg", "grade.cross_deg", "num", 0, 45, 1, "Grading: max cross slope (deg)", "Steepest side-to-side tilt of the road surface. Empty = the global value."],
+    ["lamps.on", "lamps.on", "bool3", 0, 0, 0, "Street lamps on this road", "yes = lamps on this road even when its class is not ticked on the Streetlamps tab, no = never on this road, (default) = the Streetlamps tab decides."],
+    ["lamps.style", "lamps.style", "lampstyle", 0, 0, 0, "Street lamps: style", "Lamp style for this road only. (default) = the Streetlamps tab style."],
+    ["lamps.spacing_ft", "lamps.spacing_ft", "num", 8, 400, 5, "Street lamps: spacing (ft)", "Distance between lamps along this road. Empty = the Streetlamps tab spacing."],
     ["grade.cutfill", "grade.cutfill", "bool3", 0, 0, 0, "Grading: cut/fill terrain", "yes = cut/fill the ground under this road only, no = never for this road, (default) = the global Cut/fill switch."]
   ];
   VB.objectsDefaults = function () {
     var b = { floors: F(1), interior_style: F(""), roof_type: F("gable"), roof_pitch: F(0.6), roof_overhang_ft: F(1), roof_material: F(""), wall_material: F(""), no_windows: F("true"), keep_individual: F("true") };
-    var r = { "class": F("lane"), width_ft: F(16), surface: F(""), kerb: F("true"), "grade.smooth": F(0.5), "grade.max_grade_deg": F(14), "grade.cross_deg": F(10), "grade.cutfill": F("true") };
+    var r = { "class": F("lane"), width_ft: F(16), surface: F(""), kerb: F("true"), "grade.smooth": F(0.5), "grade.max_grade_deg": F(14), "grade.cross_deg": F(10), "grade.cutfill": F("true"), "lamps.on": F("true"), "lamps.style": F(""), "lamps.spacing_ft": F(60) };
     return { b: b, r: r, rids: [], rids_src: "", rfilter: "", last: null };
   };
   var baseDefaults = VB.defaults;

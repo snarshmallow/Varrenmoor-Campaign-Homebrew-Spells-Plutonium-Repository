@@ -160,6 +160,13 @@
       "act:sun_dry",
       "act:sun_apply"
      ]
+    },
+    "set-streetlamps": {
+     "controls": [
+      "act:sl_scene_on",
+      "act:sl_scene_off",
+      "act:sl_scene_lights"
+     ]
     }
    },
    "flags": {
@@ -1629,6 +1636,207 @@
    "flags": {
     "--out": {
      "cli_only": "the panel writes the preview to illustrator/out/sun_preview/live_<place>.png and shows it in the block"
+    }
+   }
+  },
+  "streetlamps.py": {
+   "commands": {
+    "styles": {
+     "cli_only": "the panel reads presets/streetlamps/styles.json directly for the style picker"
+    },
+    "plan": {
+     "controls": [
+      "act:sl_plan"
+     ]
+    },
+    "apply": {
+     "controls": [
+      "act:sl_apply"
+     ]
+    },
+    "preview": {
+     "controls": [
+      "act:sl_thumbs"
+     ]
+    }
+   },
+   "flags": {
+    "--place": {
+     "cli_only": "the panel always passes the open place"
+    },
+    "--pack": {
+     "cli_only": "the panel always passes the exported pack folder"
+    },
+    "--config": {
+     "cli_only": "the panel writes the config file from the Streetlamps tab controls and passes it"
+    },
+    "--enabled": {
+     "controls": [
+      "s:streetlamps.enabled"
+     ]
+    },
+    "--style": {
+     "controls": [
+      "s:streetlamps.style"
+     ]
+    },
+    "--spacing": {
+     "controls": [
+      "s:streetlamps.spacing_ft"
+     ]
+    },
+    "--side": {
+     "controls": [
+      "s:streetlamps.side"
+     ]
+    },
+    "--offset": {
+     "controls": [
+      "s:streetlamps.offset_ft"
+     ]
+    },
+    "--height": {
+     "controls": [
+      "s:streetlamps.height_ft"
+     ]
+    },
+    "--classes": {
+     "controls": [
+      "s:streetlamps.classes.main",
+      "s:streetlamps.classes.side",
+      "s:streetlamps.classes.dirt"
+     ]
+    },
+    "--skip-junction": {
+     "controls": [
+      "s:streetlamps.skip_junction_ft"
+     ]
+    },
+    "--skip-doors": {
+     "controls": [
+      "s:streetlamps.skip_doors_ft"
+     ]
+    },
+    "--jitter": {
+     "controls": [
+      "s:streetlamps.jitter_ft"
+     ]
+    },
+    "--seed": {
+     "controls": [
+      "s:streetlamps.seed"
+     ]
+    },
+    "--min-lamps": {
+     "controls": [
+      "s:streetlamps.min_lamps"
+     ]
+    },
+    "--kelvin": {
+     "controls": [
+      "s:streetlamps.light.kelvin"
+     ]
+    },
+    "--dim": {
+     "controls": [
+      "s:streetlamps.light.dim_ft"
+     ]
+    },
+    "--bright": {
+     "controls": [
+      "s:streetlamps.light.bright_ft"
+     ]
+    },
+    "--intensity": {
+     "controls": [
+      "s:streetlamps.light.intensity"
+     ]
+    },
+    "--flicker": {
+     "controls": [
+      "s:streetlamps.light.flicker"
+     ]
+    },
+    "--shadows": {
+     "controls": [
+      "s:streetlamps.light.shadows"
+     ]
+    },
+    "--placements": {
+     "controls": [
+      "s:streetlamps.extra"
+     ]
+    },
+    "--out": {
+     "cli_only": "thumbnail folder: the panel uses the default presets/streetlamps/thumbs"
+    }
+   }
+  },
+  "streetlamps_scene.py": {
+   "commands": {
+    "set-streetlamps": {
+     "controls": [
+      "act:sl_scene_on",
+      "act:sl_scene_off",
+      "act:sl_scene_lights"
+     ]
+    }
+   },
+   "flags": {
+    "--scene-uuid": {
+     "controls": [
+      "id:slScene"
+     ]
+    },
+    "--on": {
+     "controls": [
+      "act:sl_scene_on"
+     ]
+    },
+    "--off": {
+     "controls": [
+      "act:sl_scene_off"
+     ]
+    },
+    "--light-config": {
+     "controls": [
+      "act:sl_scene_lights"
+     ]
+    },
+    "--kelvin": {
+     "controls": [
+      "s:streetlamps.light.kelvin"
+     ]
+    },
+    "--dim": {
+     "controls": [
+      "s:streetlamps.light.dim_ft"
+     ]
+    },
+    "--bright": {
+     "controls": [
+      "s:streetlamps.light.bright_ft"
+     ]
+    },
+    "--intensity": {
+     "controls": [
+      "s:streetlamps.light.intensity"
+     ]
+    },
+    "--flicker": {
+     "controls": [
+      "s:streetlamps.light.flicker"
+     ]
+    },
+    "--shadows": {
+     "controls": [
+      "s:streetlamps.light.shadows"
+     ]
+    },
+    "--apply": {
+     "controls": [
+      "s:streetlamps.dry"
+     ]
     }
    }
   }

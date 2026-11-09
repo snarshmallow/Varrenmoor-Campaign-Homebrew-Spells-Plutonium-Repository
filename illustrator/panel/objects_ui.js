@@ -60,11 +60,17 @@
     var j = ctx.readJson(ctx.root + "/illustrator/presets/interiors/presets.json", { styles: {} });
     cache.is = ["auto"].concat(Object.keys(j.styles || {})); return cache.is;
   }
+  function lampStyles() {      // [[id, name]] from presets/streetlamps/styles.json
+    if (cache.ls) return cache.ls;
+    var j = ctx.readJson(ctx.root + "/illustrator/presets/streetlamps/styles.json", { styles: {} });
+    cache.ls = Object.keys(j.styles || {}).map(function (k) { return [k, j.styles[k].name || k]; }); return cache.ls;
+  }
   function options(kind) {
     var leave = '<option value="">(default: clear the override)</option>';
     if (kind === "interior") return leave + interiorStyles().map(function (x) { return '<option value="' + x + '">' + esc(x) + "</option>"; }).join("");
     if (kind === "roof") return leave + ["gable", "hip"].map(function (x) { return '<option value="' + x + '">' + x + "</option>"; }).join("");
     if (kind === "texture") return leave + textures().map(function (x) { return '<option value="' + esc(x) + '">' + esc(x) + "</option>"; }).join("");
+    if (kind === "lampstyle") return leave + lampStyles().map(function (x) { return '<option value="' + esc(x[0]) + '">' + esc(x[1]) + "</option>"; }).join("");
     if (kind === "roadclass") return leave + CLASSES.map(function (x) { return '<option value="' + x + '">' + x + "</option>"; }).join("");
     if (kind === "bool") return leave + '<option value="true">yes</option>';
     return leave + '<option value="true">yes</option><option value="false">no</option>';
@@ -91,7 +97,7 @@
   }
   function summary(e) {
     if (!e) return "";
-    var p = []; Object.keys(e).forEach(function (k) { if (k === "grade") Object.keys(e.grade).forEach(function (g) { p.push("grade." + g + "=" + e.grade[g]); }); else p.push(k + "=" + e[k]); });
+    var p = []; Object.keys(e).forEach(function (k) { if (e[k] && typeof e[k] === "object") Object.keys(e[k]).forEach(function (g) { p.push(k + "." + g + "=" + e[k][g]); }); else p.push(k + "=" + e[k]); });
     return p.join(", ");
   }
   function paint() {
@@ -122,6 +128,7 @@
       o.b.no_windows.v = e.no_windows ? "true" : ""; o.b.keep_individual.v = e.keep_individual ? "true" : "";
     } else {
       var r = roads().filter(function (x) { return x.id === first; })[0] || {}, d = r.edit || {}, g = d.grade || {};
+      var lp = d.lamps || {}; o.r["lamps.on"].v = lp.on == null ? "" : String(lp.on); o.r["lamps.style"].v = lp.style || ""; o.r["lamps.spacing_ft"].v = lp.spacing_ft == null ? "" : lp.spacing_ft;
       o.r.width_ft.v = r.width || 16; o.r["class"].v = d["class"] || ""; o.r.surface.v = d.surface || ""; o.r.kerb.v = d.kerb == null ? "" : String(d.kerb);
       ["smooth", "max_grade_deg", "cross_deg"].forEach(function (k) { o.r["grade." + k].v = g[k] == null ? "" : g[k]; });
       o.r["grade.cutfill"].v = g.cutfill == null ? "" : String(g.cutfill);

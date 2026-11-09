@@ -39,6 +39,7 @@ const sources = {
   "scene_audit.py": GEN + "/scene_audit.py", "textures_audit.py": GEN + "/textures_audit.py", "building_ground_audit.py": GEN + "/building_ground_audit.py",
   "road_height_audit.py": GEN + "/road_height_audit.py", "terrain_check.py": GEN + "/terrain_check.py", "tile_rotation_inspect.py": GEN + "/tile_rotation_inspect.py",
   "padding_heightmap.py": GEN + "/padding_heightmap.py", "foundry_lightbudget.py": GEN + "/foundry_lightbudget.py",
+  "streetlamps.py": GEN + "/streetlamps.py", "streetlamps_scene.py": GEN + "/streetlamps_scene.py",
   "foundry_sun.py": GEN + "/foundry_sun.py", "sun_preview.py": GEN + "/sun_preview.py"
 };
 const extracted = {};

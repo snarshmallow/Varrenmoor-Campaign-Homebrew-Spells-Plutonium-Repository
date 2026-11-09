@@ -89,6 +89,7 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
   <button role="tab" data-tab="labels">Labels</button>
   <button role="tab" data-tab="shading">Shading</button>
   <button role="tab" data-tab="lighting">Lighting</button>
+  <button role="tab" data-tab="streetlamps">Streetlamps</button><!-- STREETLAMPS (streetlamps_ui.js) -->
   <button role="tab" data-tab="skybox">Skybox</button><!-- SKYBOX (skybox_ui.js) -->
   <button role="tab" data-tab="water">Water</button>
   <button role="tab" data-tab="town">Town</button>
@@ -406,6 +407,47 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
 </section>
 
 <!-- SKYBOX TAB (skybox_ui.js, lib/skybox.js; python generators/skybox.py, foundry_push.py list) -->
+<section id="tab-streetlamps" role="tabpanel">
+  <h4>Streetlamps (3D props along the roads, each with a lamp light)</h4>
+  <p class="note">Places lamp posts along the exported roads of this place as one props tile (layer <code>streetlamps</code>: collision on, sight off) plus one AmbientLight per lamp (kind <code>lamp</code>, priority 80 in the light budget). Steps: set up, Preview (dry run) to count, Generate (writes the pack), then Push layer + lights. Re-export the world pack and Split first so the roads exist.</p>
+  <label class="chk"><input type="checkbox" data-s="streetlamps.enabled" title="Per-scene switch: off + Generate removes the lamp layer and every lamp light from the pack"> Street lamps enabled for this place</label>
+  <h4>Style</h4>
+  <div id="slStyleGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:6px"></div>
+  <label>Style <select data-s="streetlamps.style" id="slStyle"><option value="wrought_iron">Wrought-iron post and lantern</option><option value="wooden_oil">Wooden post, hanging oil lantern</option><option value="stone_pillar">Stone pillar lantern</option><option value="bracket_wall">Wall bracket lamp</option><option value="torch_post">Torch post</option><option value="shepherd_crook">Shepherd crook lamp</option></select></label>
+  <div class="note" id="slStyleNote"></div>
+  <div class="btns"><button data-act="sl_thumbs" title="Re-render the style thumbnails (streetlamps.py preview)">Refresh thumbnails</button></div>
+  <h4>Placement</h4>
+  <div class="sl"><span>Spacing</span><input type="range" data-s="streetlamps.spacing_ft" min="15" max="200" step="5" title="Distance between lamps along the road"><span class="nb"><input type="number" data-s="streetlamps.spacing_ft" min="8" max="400" step="5"><span class="un">ft</span></span></div>
+  <div class="sl"><span>Offset from road edge</span><input type="range" data-s="streetlamps.offset_ft" min="0" max="10" step="0.5" title="How far outside the road edge the post stands"><span class="nb"><input type="number" data-s="streetlamps.offset_ft" min="0" max="20" step="0.5"><span class="un">ft</span></span></div>
+  <div class="sl"><span>Height (0 = style)</span><input type="range" data-s="streetlamps.height_ft" min="0" max="25" step="0.5" title="Post height; wall bracket: mounting height. 0 = the style's own height"><span class="nb"><input type="number" data-s="streetlamps.height_ft" min="0" max="40" step="0.5"><span class="un">ft</span></span></div>
+  <label>Side <select data-s="streetlamps.side"><option value="alternating">Alternating</option><option value="left">Left of travel</option><option value="right">Right of travel</option><option value="both">Both sides</option></select></label>
+  <div class="btns"><label class="chk"><input type="checkbox" data-s="streetlamps.classes.main" title="Roads and streets on paved or gravel surfaces"> Main</label><label class="chk"><input type="checkbox" data-s="streetlamps.classes.side" title="Lanes and alleys"> Side</label><label class="chk"><input type="checkbox" data-s="streetlamps.classes.dirt" title="Packed earth, dirt, mud, sand surfaces"> Dirt</label></div>
+  <div class="sl"><span>Skip near junctions</span><input type="range" data-s="streetlamps.skip_junction_ft" min="0" max="80" step="1"><span class="nb"><input type="number" data-s="streetlamps.skip_junction_ft" min="0" max="200" step="1"><span class="un">ft</span></span></div>
+  <div class="sl"><span>Skip near doors</span><input type="range" data-s="streetlamps.skip_doors_ft" min="0" max="30" step="1" title="0 = lamps may stand at doors"><span class="nb"><input type="number" data-s="streetlamps.skip_doors_ft" min="0" max="60" step="1"><span class="un">ft</span></span></div>
+  <label class="chk"><input type="checkbox" data-s="streetlamps.skip_bridges" title="No lamps on bridges or within the junction distance of them"> Skip bridges</label>
+  <div class="sl"><span>Jitter</span><input type="range" data-s="streetlamps.jitter_ft" min="0" max="15" step="0.5" title="Random shift along the road, deterministic per seed"><span class="nb"><input type="number" data-s="streetlamps.jitter_ft" min="0" max="40" step="0.5"><span class="un">ft</span></span></div>
+  <label>Seed <input type="number" data-s="streetlamps.seed" step="1"></label>
+  <label>Minimum lamps per road <input type="number" data-s="streetlamps.min_lamps" min="0" max="50" step="1" title="A road that fits fewer lamps than this gets none"></label>
+  <h4>Lamp light</h4>
+  <label class="chk"><input type="checkbox" data-s="streetlamps.light.enabled"> Create a light for every lamp</label>
+  <div class="sl"><span>Colour temperature (0 = style)</span><input type="range" data-s="streetlamps.light.kelvin" min="0" max="6500" step="100" title="1800 K torch, 2000 K oil flame, 2700 K bulb, 6500 K daylight"><span class="nb"><input type="number" data-s="streetlamps.light.kelvin" min="0" max="10000" step="100"><span class="un">K</span></span></div>
+  <label>Colour override <input type="text" data-s="streetlamps.light.color" placeholder="#ffb25a (empty = from temperature)"></label> <span id="slSwatch" style="display:inline-block;width:16px;height:16px;border:1px solid #888;vertical-align:middle"></span>
+  <div class="sl"><span>Dim radius (0 = style)</span><input type="range" data-s="streetlamps.light.dim_ft" min="0" max="120" step="1"><span class="nb"><input type="number" data-s="streetlamps.light.dim_ft" min="0" max="300" step="1"><span class="un">ft</span></span></div>
+  <div class="sl"><span>Bright radius (0 = style)</span><input type="range" data-s="streetlamps.light.bright_ft" min="0" max="60" step="1"><span class="nb"><input type="number" data-s="streetlamps.light.bright_ft" min="0" max="200" step="1"><span class="un">ft</span></span></div>
+  <div class="sl"><span>Intensity (0 = style)</span><input type="range" data-s="streetlamps.light.intensity" min="0" max="1" step="0.05"><span class="nb"><input type="number" data-s="streetlamps.light.intensity" min="0" max="1" step="0.05"></span></div>
+  <label class="chk"><input type="checkbox" data-s="streetlamps.light.flicker" title="Foundry light animation torch"> Flame flicker</label>
+  <label class="chk"><input type="checkbox" data-s="streetlamps.light.shadows" title="Off by default: every shadow-casting light renders the scene 6 more times"> Light shadows (costly, off)</label>
+  <h4>Count and light budget</h4>
+  <pre class="note" id="slReadout" style="white-space:pre-wrap"></pre>
+  <div class="btns"><button data-act="sl_plan" title="Counts lamps and lights without writing anything">Preview (dry run)</button><button class="primary" data-act="sl_apply" title="Writes (or, when switched off, removes) the lamp layer and lamp lights in the pack placements.json">Generate</button><button data-act="sl_push" title="Pushes the streetlamps tile and the pack lights to the scene picked on the Foundry tab">Push layer + lights</button></div>
+  <label>Also write into these placements.json (one path per line, e.g. the merged optimized set) <textarea data-s="streetlamps.extra" rows="2"></textarea></label>
+  <h4>Picked scene: <span id="slScene" class="note"></span></h4>
+  <label class="chk"><input type="checkbox" data-s="streetlamps.dry" title="Scene buttons only report what they would change"> Dry run (preview only)</label>
+  <div class="btns"><button data-act="sl_scene_on" title="Show the lamp tile and lamp lights (set-streetlamps --on)">Show lamps in scene</button><button data-act="sl_scene_off" title="Hide the lamp tile and lamp lights (set-streetlamps --off)">Hide lamps in scene</button><button data-act="sl_scene_lights" title="Write colour, radius, intensity, flicker and shadows to the lamp lights of the scene (set-streetlamps --light-config)">Retune lamp lights in scene</button></div>
+  <div class="note" id="slSceneOut"></div>
+  <p class="note">One road only: Roads tab, "Street lamps on this road" / style / spacing. Notes: PLUGIN_GUIDE.md 2.20.</p>
+</section>
+
 <section id="tab-skybox" role="tabpanel">
   <style>#skyPreview{max-width:100%;border:1px solid var(--line);margin-top:4px}#skyOut{white-space:pre-wrap;word-break:break-word}</style>
   <h4>Sky for this place (mountain ring from the real terrain)</h4>
@@ -1267,6 +1309,8 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
 <script src="lighting_ui.js"></script>
 <script src="lib/sun3d.js"></script><!-- SUN3D -->
 <script src="sun3d_ui.js"></script><!-- SUN3D -->
+<script src="lib/streetlamps.js"></script><!-- STREETLAMPS -->
+<script src="streetlamps_ui.js"></script><!-- STREETLAMPS -->
 <script src="lib/foliage.js"></script>
 <script src="foliage_ui.js"></script>
 <script src="lib/skybox.js"></script><!-- SKYBOX -->
