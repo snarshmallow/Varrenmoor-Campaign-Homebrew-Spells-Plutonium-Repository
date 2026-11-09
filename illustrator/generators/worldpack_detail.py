@@ -21,7 +21,8 @@ TRIM_W_FT, TRIM_OUT_FT = 0.4, 0.15
 LEAF_T_FT = 0.15
 END_MARGIN_FT = 1.5
 DETAIL_MATS = {"mat_door_wood": ("#6b4a2b", 0.8, None), "mat_trim": ("#d8d0bc", 0.8, None), "mat_glass": ("#9fc4d6", 0.2, 0.45),
-               "mat_plaster": ("#cbbfa6", 0.95, None), "mat_interior_floor": ("#7a5f40", 0.9, None), "mat_iron": ("#3a3a3d", 0.6, None)}
+               "mat_plaster": ("#cbbfa6", 0.95, None), "mat_interior_floor": ("#7a5f40", 0.9, None), "mat_iron": ("#3a3a3d", 0.6, None),
+               "mat_wall_stone": ("#8a857a", 0.85, None)}
 
 
 def door_hits(P, openings, cx):
@@ -144,6 +145,16 @@ def build_building_detailed(cx, e):
         if u1 - u0 > 1e-6 and zc - zb > 1e-6:
             face(mat, [X(i, u0, v, zb), X(i, u1, v, zb), X(i, u1, v, zc), X(i, u0, v, zc)])
 
+    fmat = S["plinth_mat"] if (S and S.get("plinth") and S.get("plinth_mat")) else "mat_wall_stone"   # foundation skirt: the style's plinth material, else fieldstone
+
+    def wrect(i, mat, v, u0, u1, zb, zc):
+        """Outer-skin wall rect; the part below the floor line (the buried foundation skirt) is the stone foundation material, never the wall finish."""
+        if v == 0.0 and mat == wmat and zb < zf - 1e-6:
+            zs = min(zc, zf)
+            rect(i, fmat, v, u0, u1, zb, zs)
+            zb = zs
+        rect(i, mat, v, u0, u1, zb, zc)
+
     def box(i, mat, u0, u1, v0, v1, za, zb_, skip=()):
         c = lambda u, v, z: X(i, u, v, z)
         faces = {"v0": [c(u0, v0, za), c(u1, v0, za), c(u1, v0, zb_), c(u0, v0, zb_)], "v1": [c(u0, v1, za), c(u1, v1, za), c(u1, v1, zb_), c(u0, v1, zb_)],
@@ -166,14 +177,14 @@ def build_building_detailed(cx, e):
         for v, lo_u, hi_u, zb, mat in ((0.0, 0.0, L, z0, wmat), (t, ua, ub, zf, inner_mat)):
             cur = lo_u
             for (u0, u1) in keys:
-                rect(i, mat, v, cur, u0, zb, zt)
+                wrect(i, mat, v, cur, u0, zb, zt)
                 z = zb
                 for h in sorted(cols[(u0, u1)], key=lambda h: h["z0"]):
-                    rect(i, mat, v, u0, u1, z, h["z0"])
+                    wrect(i, mat, v, u0, u1, z, h["z0"])
                     z = h["z1"]
-                rect(i, mat, v, u0, u1, z, zt)
+                wrect(i, mat, v, u0, u1, z, zt)
                 cur = u1
-            rect(i, mat, v, cur, hi_u, zb, zt)
+            wrect(i, mat, v, cur, hi_u, zb, zt)
             for h in holes:
                 if h.get("shape"):
                     bsa.infill(face, X_i(i), h, v, mat, -1.0 if v == 0.0 else t + 1.0)
