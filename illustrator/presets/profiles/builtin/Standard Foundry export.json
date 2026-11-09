@@ -1,0 +1,67 @@
+{
+ "format": "varrenmoor-profile",
+ "version": 1,
+ "name": "Standard Foundry export",
+ "description": "What a normal first 3D export to Foundry needs: merge by layer, no compression (doors work), roofs per building and created hidden, prune stale pipeline tiles, 3D scene mode, lights with the 3D push, default collision and sight table.",
+ "created": "2026-11-09T00:00:00.000Z",
+ "updated": "2026-11-09T00:00:00.000Z",
+ "builtin": true,
+ "scope": [
+  "export",
+  "collision",
+  "lighting"
+ ],
+ "sections": {
+  "export": {
+   "foundry.models.preset": "layer",
+   "foundry.models.compress": "none",
+   "foundry.models.lod": 0,
+   "foundry.models.roofMode": "per_building",
+   "foundry.models.roofsHidden": true,
+   "foundry.models.prune": true,
+   "foundry.models.sceneMode": "3d",
+   "foundry.models.interiorStyle": "auto",
+   "foundry.models.carve": true,
+   "foundry.models.conform": true,
+   "tools.s3d.with_lights": true,
+   "tools.s3d.no_padding": false,
+   "tools.s3d.no_skybox": false,
+   "tools.s3d.use_padding_tab": true,
+   "roads.smooth": 0.5,
+   "roads.max_grade": 14,
+   "roads.skirt": true,
+   "roads.cutfill": false
+  },
+  "collision": {
+   "foundry.models.alsoWalls": false,
+   "foundry.models.collision.terrain": true,
+   "foundry.models.collision.roads": true,
+   "foundry.models.collision.plazas": true,
+   "foundry.models.collision.fields": true,
+   "foundry.models.collision.fences": true,
+   "foundry.models.collision.walls": true,
+   "foundry.models.collision.bridges": true,
+   "foundry.models.collision.buildings": true,
+   "foundry.models.collision.props": true,
+   "foundry.models.collision.roofs": false,
+   "foundry.models.collision.foliage": false,
+   "foundry.models.collision.water": false,
+   "foundry.models.sight.buildings": true,
+   "foundry.models.sight.walls": true,
+   "foundry.models.sight.foliage": true,
+   "foundry.models.sight.terrain": false,
+   "foundry.models.sight.roads": false,
+   "foundry.models.sight.plazas": false,
+   "foundry.models.sight.fields": false,
+   "foundry.models.sight.fences": false,
+   "foundry.models.sight.bridges": false,
+   "foundry.models.sight.props": false,
+   "foundry.models.sight.roofs": false,
+   "foundry.models.sight.water": false
+  },
+  "lighting": {
+   "skybox.preset": "clear_day",
+   "skybox.width": 2048
+  }
+ }
+}

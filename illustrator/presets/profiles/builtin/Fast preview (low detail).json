@@ -1,0 +1,28 @@
+{
+ "format": "varrenmoor-profile",
+ "version": 1,
+ "name": "Fast preview (low detail)",
+ "description": "Quick look in Foundry: LOD 2, everything merged into few tiles, roofs merged into buildings, small sky, global lighting only. Not for play.",
+ "created": "2026-11-09T00:00:00.000Z",
+ "updated": "2026-11-09T00:00:00.000Z",
+ "builtin": true,
+ "scope": [
+  "export",
+  "lighting"
+ ],
+ "sections": {
+  "export": {
+   "foundry.models.lod": 2,
+   "foundry.models.preset": "all",
+   "foundry.models.roofMode": "none",
+   "foundry.models.compress": "none",
+   "foundry.models.prune": true
+  },
+  "lighting": {
+   "skybox.width": 1024,
+   "lighting.f3d.mode": "global",
+   "lighting.f3d.shadows": "off",
+   "lighting.sun3d.shadowQuality": 2
+  }
+ }
+}

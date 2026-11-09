@@ -1,0 +1,37 @@
+{
+ "format": "varrenmoor-profile",
+ "version": 1,
+ "name": "Dungeon / interior",
+ "description": "Indoor or underground: roofs per building and hidden, dim sun, higher ambient, fog on, every light is a point light with shadows for the 4 most important, no streetlamps.",
+ "created": "2026-11-09T00:00:00.000Z",
+ "updated": "2026-11-09T00:00:00.000Z",
+ "builtin": true,
+ "scope": [
+  "export",
+  "lighting",
+  "streetlamps"
+ ],
+ "sections": {
+  "export": {
+   "foundry.models.roofMode": "per_building",
+   "foundry.models.roofsHidden": true,
+   "foundry.models.interiorStyle": "auto",
+   "foundry.models.preset": "doors"
+  },
+  "lighting": {
+   "lighting.sun3d.strength": 0.15,
+   "lighting.sun3d.ambient": 0.3,
+   "lighting.sun3d.fog": "on",
+   "lighting.sun3d.fogColor": "#1a1a22",
+   "lighting.sun3d.fogFar": 6000,
+   "lighting.sun3d.shadows": "on",
+   "lighting.f3d.mode": "lights",
+   "lighting.f3d.shadows": "4",
+   "lighting.f3d.hearths": true,
+   "lighting.f3d.windows": true
+  },
+  "streetlamps": {
+   "streetlamps.enabled": false
+  }
+ }
+}

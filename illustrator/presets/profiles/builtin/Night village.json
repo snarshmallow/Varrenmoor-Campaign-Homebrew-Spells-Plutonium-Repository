@@ -1,0 +1,45 @@
+{
+ "format": "varrenmoor-profile",
+ "version": 1,
+ "name": "Night village",
+ "description": "Moonlit village: night sun and sky, streetlamps on, interior hearth and window lights, light shadows for the 4 most important lights.",
+ "created": "2026-11-09T00:00:00.000Z",
+ "updated": "2026-11-09T00:00:00.000Z",
+ "builtin": true,
+ "scope": [
+  "lighting",
+  "export",
+  "streetlamps"
+ ],
+ "sections": {
+  "lighting": {
+   "lighting.sun3d.preset": "night",
+   "lighting.sun3d.hour": 23.5,
+   "lighting.sun3d.azimuth": 120,
+   "lighting.sun3d.altitude": 35,
+   "lighting.sun3d.strength": 0.7,
+   "lighting.sun3d.color": "#a4b8ff",
+   "lighting.sun3d.ambient": 0.14,
+   "lighting.sun3d.ambientColor": "#5a72b8",
+   "lighting.sun3d.shadows": "on",
+   "lighting.sun3d.shadowQuality": 2,
+   "lighting.sun3d.fog": "off",
+   "lighting.sun3d.onPush": true,
+   "skybox.preset": "night",
+   "lighting.f3d.mode": "auto",
+   "lighting.f3d.hearths": true,
+   "lighting.f3d.windows": true,
+   "lighting.f3d.shadows": "4"
+  },
+  "export": {
+   "tools.s3d.skybox_preset": "night",
+   "tools.s3d.with_lights": true
+  },
+  "streetlamps": {
+   "streetlamps.enabled": true,
+   "streetlamps.style": "wooden_oil",
+   "streetlamps.spacing_ft": 60,
+   "streetlamps.side": "alternating"
+  }
+ }
+}

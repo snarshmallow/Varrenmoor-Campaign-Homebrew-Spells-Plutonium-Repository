@@ -1,0 +1,30 @@
+{
+ "format": "varrenmoor-profile",
+ "version": 1,
+ "name": "Big map (heavy)",
+ "description": "Large place: one roof tile for the whole scene, buildings grouped, LOD 1, hybrid lights with no light shadows, medium shadow map. Split and merge need a lot of RAM.",
+ "created": "2026-11-09T00:00:00.000Z",
+ "updated": "2026-11-09T00:00:00.000Z",
+ "builtin": true,
+ "scope": [
+  "export",
+  "lighting"
+ ],
+ "sections": {
+  "export": {
+   "foundry.models.roofMode": "per_scene",
+   "foundry.models.roofsHidden": true,
+   "foundry.models.lod": 1,
+   "foundry.models.preset": "layer",
+   "foundry.models.split": "buildings=group,roads=layer",
+   "foundry.models.compress": "none",
+   "foundry.models.prune": true
+  },
+  "lighting": {
+   "lighting.f3d.mode": "hybrid",
+   "lighting.f3d.shadows": "off",
+   "lighting.sun3d.shadowQuality": 2,
+   "skybox.width": 2048
+  }
+ }
+}
