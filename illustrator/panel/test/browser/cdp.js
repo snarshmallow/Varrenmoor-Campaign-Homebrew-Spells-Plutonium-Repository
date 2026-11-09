@@ -16,7 +16,8 @@ async function connect(){
   const mod=a=>(a||[]).reduce((s,k)=>s|MOD[k],0);
   const mouse=(type,x,y,o={})=>send("Input.dispatchMouseEvent",Object.assign({type,x,y,button:"none",buttons:0,modifiers:mod(o.mods)},o.extra||{}));
   // canvas-relative -> page coords
-  const rect=async()=>ev(`(function(){var r=document.getElementById('hpCanvas').getBoundingClientRect();return {x:r.left,y:r.top,w:r.width,h:r.height,cw:document.getElementById('hpCanvas').width}})()`);
+  const rect=async()=>{await ev(`(function(){var e=document.getElementById('hpCanvas'),r=e.getBoundingClientRect();if(r.top<0||r.bottom>innerHeight)e.scrollIntoView({block:'center',behavior:'instant'})})()`);await sleep(60);return rect0();};
+  const rect0=()=>ev(`(function(){var r=document.getElementById('hpCanvas').getBoundingClientRect();return {x:r.left,y:r.top,w:r.width,h:r.height,cw:document.getElementById('hpCanvas').width}})()`);
   const drag=async(pts,o={})=>{ // pts in canvas css px
     const r=await rect(); const P=pts.map(p=>[r.x+p[0],r.y+p[1]]);
     const btn=o.button||"left", bits={left:1,right:2,middle:4}[btn];
@@ -29,9 +30,9 @@ async function connect(){
   const wheel=async(x,y,dy,o={})=>{const r=await rect();await send("Input.dispatchMouseEvent",{type:"mouseWheel",x:r.x+x,y:r.y+y,deltaX:0,deltaY:dy,modifiers:mod(o.mods)});};
   const key=async(k,code,o={})=>{const m=mod(o.mods);await send("Input.dispatchKeyEvent",{type:"keyDown",key:k,code,modifiers:m,windowsVirtualKeyCode:o.vk||0,text:o.text});await send("Input.dispatchKeyEvent",{type:"keyUp",key:k,code,modifiers:m,windowsVirtualKeyCode:o.vk||0});};
   const click=async(x,y)=>{await mouse("mouseMoved",x,y);await mouse("mousePressed",x,y,{extra:{button:"left",buttons:1,clickCount:1}});await mouse("mouseReleased",x,y,{extra:{button:"left",buttons:0,clickCount:1}});};
-  const shot=async(name,clipEl)=>{const dir="D:/Varrenmoor-Campaign-Homebrew-Spells-Plutonium-Repository/illustrator/out/paint_tab_test";fs.mkdirSync(dir,{recursive:true});
+  const shot=async(name,clipEl)=>{const dir=(process.env.VB_SHOT_DIR||(process.env.VB_REPO||"D:/Varrenmoor-Campaign-Homebrew-Spells-Plutonium-Repository")+"/illustrator/out/paint_tab_test");fs.mkdirSync(dir,{recursive:true});
     let params={format:"png"}; if(clipEl!==false){const r=await ev(`(function(){var e=document.getElementById('hpCanvas');e.scrollIntoView({block:'center'});var r=e.getBoundingClientRect();return {x:r.left+scrollX,y:r.top+scrollY,width:r.width,height:r.height}})()`);params.clip=Object.assign({scale:1},r);}
-    const d=await send("Page.captureScreenshot",params);fs.writeFileSync(dir+"/"+name+".png",Buffer.from(d.data,"base64"));return dir+"/"+name+".png";};
+    const d=await send("Page.captureScreenshot",params);name=name.startsWith("terrain_")?name:"terrain_"+name;fs.writeFileSync(dir+"/"+name+".png",Buffer.from(d.data,"base64"));return dir+"/"+name+".png";};
   const hash=()=>ev(`(function(){var c=document.getElementById('hpCanvas'),d=c.getContext('2d').getImageData(0,0,c.width,c.height).data,h=0;for(var i=0;i<d.length;i+=4){h=(h*31+d[i]+d[i+1]*3+d[i+2]*7)|0}return h})()`);
   const state=()=>ev(`(function(){var s=document.querySelector('#hpOut').textContent;return {out:s,status:document.getElementById('hpStatus').textContent,err:document.getElementById('err').textContent}})()`);
   const waitIdle=async()=>{for(let i=0;i<200;i++){const s=await ev(`document.getElementById('hpStatus').textContent+'|'+document.getElementById('status').textContent`);if(/\|idle$/.test(s)&&!/\.\.\./.test(s))return;await sleep(100);}throw new Error("busy timeout");};

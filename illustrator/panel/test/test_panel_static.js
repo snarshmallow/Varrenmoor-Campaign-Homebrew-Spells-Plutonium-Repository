@@ -22,4 +22,12 @@ for (const f of files.filter(f => f.endsWith(".js"))) {
   const t = fs.readFileSync(f, "utf8").replace(/\/\/.*$/gm, "");
   check("no confirm/alert/prompt in " + path.relative(P, f), !/\b(window\.)?(confirm|alert|prompt)\(/.test(t));
 }
+// Paint heightmap lives inside the Terrain tab (no tab of its own)
+check("no standalone Paint tab button or section", !/data-tab="hpaint"|id="tab-hpaint"/.test(html));
+const terr = html.slice(html.indexOf('<section id="tab-terrain"'), html.indexOf("</section>", html.indexOf('<section id="tab-terrain"')));
+check("Paint heightmap is a <details id=hpDetails> inside the Terrain tab", /<details id="hpDetails"/.test(terr) && /id="hpCanvas"/.test(terr) && /data-act="hp_save"/.test(terr));
+const hu = fs.readFileSync(P + "/heightpaint_ui.js", "utf8"), mj = fs.readFileSync(P + "/main.js", "utf8");
+check("paint shortcuts require Terrain tab on and section open", /code === "Space" && tabOn\(\) && isOpen\(\)/.test(hu) && /ctrlKey \|\| e\.metaKey\) && !e\.altKey && tabOn\(\) && isOpen\(\)/.test(hu));
+check("main.js showTab notifies the paint UI and maps the old hpaint tab", /VBHeightPaintUI\.shown\(\)/.test(mj) && /t === "hpaint"/.test(mj));
+check("startup jobs are queued", /startJobQueued/.test(fs.readFileSync(P + "/skybox_ui.js", "utf8")) && /function startJobQueued/.test(mj));
 console.log(pass + " passed, " + fail + " failed"); process.exit(fail ? 1 : 0);

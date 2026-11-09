@@ -158,11 +158,12 @@
 
   // ------------------------------------------------------------ tabs
   function showTab(t) {
+    if (t === "hpaint") t = "terrain";   // the Paint tab moved under Terrain (saved panel_state may still name it)
     try {
       $$("#tabs button").forEach(function (b) { b.setAttribute("aria-selected", b.getAttribute("data-tab") === t ? "true" : "false"); b.tabIndex = b.getAttribute("data-tab") === t ? 0 : -1; });
       $$("main section").forEach(function (s) { s.classList.toggle("on", s.id === "tab-" + t); });
       state.ui.tab = t; save();
-      if (t === "terrain") refreshPatches();
+      if (t === "terrain") { refreshPatches(); if (window.VBHeightPaintUI) VBHeightPaintUI.shown(); }
     } catch (e) { showError("tab " + t + ": " + (e && e.stack || e)); }
   }
   function bindTabs() {
@@ -243,6 +244,17 @@
     return res;
   }
 
+  // Startup / background jobs (skybox list, bridge probe) go through one chain: each waits for the runner to be idle and a second job of the same kind
+  // that is still queued or running is dropped, so first load never shows "another job is running".
+  var startupChain = Promise.resolve(), startupKinds = {};
+  function startJobQueued(job, after) {
+    if (startupKinds[job.kind]) return startupKinds[job.kind];
+    var p = startupChain.then(function () {
+      return new Promise(function (res) { var t = function () { if (!runner.isBusy()) res(); else setTimeout(t, 150); }; t(); });
+    }).then(function () { return startJob(job, after); }).catch(function (e) { showError(String((e && e.message) || e)); return null; })
+      .then(function (r) { delete startupKinds[job.kind]; return r; });
+    startupKinds[job.kind] = p; startupChain = p; return p;
+  }
   // ------------------------------------------------------------ terrain tab
   function paintPatchForm() {
     var sel = $("patchType"); if (!sel.options.length) {
@@ -789,28 +801,28 @@
     state = VB.normalize(null); d = VB.dirs(root, state.place);
     makeRunner(); bindTabs(); loadLabelPresets(); bindInputs(); bindLabelStyle();
     $$("[data-act]").forEach(function (b) { b.addEventListener("click", function () { act(b.getAttribute("data-act")); }); });
-    if (window.VBRegionUI) VBRegionUI.init({ state: function () { return state; }, dirs: function () { return d; }, save: save, startJob: startJob, syncInputs: paintInputs, readJson: readJson, fs: fs, path: path,
+    if (window.VBRegionUI) VBRegionUI.init({ state: function () { return state; }, dirs: function () { return d; }, save: save, startJob: startJob, startJobQueued: startJobQueued, syncInputs: paintInputs, readJson: readJson, fs: fs, path: path,
       root: root, acts: acts, switchPlace: switchPlace });
-    if (window.VBStylesUI) VBStylesUI.init({ state: function () { return state; }, dirs: function () { return d; }, save: save, startJob: startJob, readJson: readJson, fs: fs, path: path, root: root, acts: acts }); // buildings tab (styles_ui.js)
-    if (window.VBObjectsUI) VBObjectsUI.init({ state: function () { return state; }, dirs: function () { return d; }, save: save, startJob: startJob, readJson: readJson, fs: fs, path: path, root: root, acts: acts, showError: showError }); // per-object editors: Buildings tab block + Roads tab (objects_ui.js)
+    if (window.VBStylesUI) VBStylesUI.init({ state: function () { return state; }, dirs: function () { return d; }, save: save, startJob: startJob, startJobQueued: startJobQueued, readJson: readJson, fs: fs, path: path, root: root, acts: acts }); // buildings tab (styles_ui.js)
+    if (window.VBObjectsUI) VBObjectsUI.init({ state: function () { return state; }, dirs: function () { return d; }, save: save, startJob: startJob, startJobQueued: startJobQueued, readJson: readJson, fs: fs, path: path, root: root, acts: acts, showError: showError }); // per-object editors: Buildings tab block + Roads tab (objects_ui.js)
     $("cancel").addEventListener("click", function () { if (runner.cancel()) logLine("cancel requested"); });
     $("toggleLog").addEventListener("click", function () { var l = $("log"); l.hidden = !l.hidden; });
     window.addEventListener("error", function (e) { showError("panel error: " + e.message); });
     var cur = places.indexOf(readJson(path.join(root, "world", "panel_last_place.json"), {}).place) >= 0 ? readJson(path.join(root, "world", "panel_last_place.json"), {}).place : places[0];
     await switchPlace(cur);
-    VBLightUI.init({ state: function () { return state; }, dirs: function () { return d; }, save: save, startJob: startJob, isBusy: function () { return runner.isBusy(); }, syncInputs: paintInputs,
+    VBLightUI.init({ state: function () { return state; }, dirs: function () { return d; }, save: save, startJob: startJob, startJobQueued: startJobQueued, isBusy: function () { return runner.isBusy(); }, syncInputs: paintInputs,
       placeCentre: function () { var p = readJson(d.world + "/place.json", {}), b = p.bounds || {}; return [Math.round((b.width_ft || 0) / 2), Math.round((b.height_ft || 0) / 2)]; } });
-    if (window.VBSunUI) VBSunUI.init({ state: function () { return state; }, dirs: function () { return d; }, save: save, startJob: startJob, isBusy: function () { return runner.isBusy(); }, showError: showError }); // sun / shadows / fog block (Lighting tab)
-    if (window.VBFoliageUI) VBFoliageUI.init({ state: function () { return state; }, dirs: function () { return d; }, save: save, startJob: startJob, syncInputs: paintInputs, readJson: readJson, fs: fs, path: path, root: root, acts: acts }); // foliage tab
-    if (window.VBSkyUI) VBSkyUI.init({ state: function () { return state; }, dirs: function () { return d; }, save: save, startJob: startJob, syncInputs: paintInputs, readJson: readJson, fs: fs, path: path, root: root, acts: acts, refreshAll: refreshAll }); // SKYBOX tab (skybox_ui.js)
-    if (window.VBWaterUI) VBWaterUI.init({ state: function () { return state; }, dirs: function () { return d; }, save: save, startJob: startJob, syncInputs: paintInputs, readJson: readJson, fs: fs, path: path, root: root, acts: acts, refreshAll: refreshAll }); // 3D water group of the Water tab (water_ui.js)
-    if (window.VBStreetlampsUI) VBStreetlampsUI.init({ state: function () { return state; }, dirs: function () { return d; }, save: save, startJob: startJob, syncInputs: paintInputs, readJson: readJson, fs: fs, path: path, root: root, acts: acts, showError: showError }); // STREETLAMPS tab
-    if (window.VBHeightPaintUI) VBHeightPaintUI.init({ state: function () { return state; }, dirs: function () { return d; }, save: save, startJob: startJob, run: function (j) { return runner.run(j); }, isBusy: function () { return runner.isBusy(); }, syncInputs: paintInputs, readJson: readJson, fs: fs, path: path, root: root, acts: acts, showError: showError }); // HEIGHTMAP PAINT tab (heightpaint_ui.js)
-    if (window.VBPaddingUI) VBPaddingUI.init({ state: function () { return state; }, dirs: function () { return d; }, save: save, startJob: startJob, syncInputs: paintInputs, readJson: readJson, fs: fs, path: path, root: root, acts: acts }); // padding tab (padding_ui.js)
-    if (window.VBBridgesUI) VBBridgesUI.init({ state: function () { return state; }, dirs: function () { return d; }, save: save, startJob: startJob, syncInputs: paintInputs, readJson: readJson, fs: fs, path: path, root: root, acts: acts }); // BRIDGES tab (bridges_ui.js)
-    if (window.VBPlacesUI) VBPlacesUI.init({ state: function () { return state; }, dirs: function () { return d; }, save: save, startJob: startJob, syncInputs: paintInputs, readJson: readJson, fs: fs, path: path, root: root, acts: acts, switchPlace: switchPlace, showError: showError }); // PLACES tab (places_ui.js)
-    if (window.VBToolsUI) VBToolsUI.init({ state: function () { return state; }, dirs: function () { return d; }, save: save, startJob: startJob, syncInputs: paintInputs, readJson: readJson, fs: fs, path: path, root: root, acts: acts, refreshAll: refreshAll, showError: showError }); // TOOLS tab (tools_ui.js)
-    if (window.VBBridgeUI) VBBridgeUI.init({ state: function () { return state; }, save: save, startJob: startJob, syncInputs: paintInputs, fs: fs, root: root, acts: acts }); // BRIDGE section of the Foundry tab (bridge_ui.js)
+    if (window.VBSunUI) VBSunUI.init({ state: function () { return state; }, dirs: function () { return d; }, save: save, startJob: startJob, startJobQueued: startJobQueued, isBusy: function () { return runner.isBusy(); }, showError: showError }); // sun / shadows / fog block (Lighting tab)
+    if (window.VBFoliageUI) VBFoliageUI.init({ state: function () { return state; }, dirs: function () { return d; }, save: save, startJob: startJob, startJobQueued: startJobQueued, syncInputs: paintInputs, readJson: readJson, fs: fs, path: path, root: root, acts: acts }); // foliage tab
+    if (window.VBSkyUI) VBSkyUI.init({ state: function () { return state; }, dirs: function () { return d; }, save: save, startJob: startJob, startJobQueued: startJobQueued, syncInputs: paintInputs, readJson: readJson, fs: fs, path: path, root: root, acts: acts, refreshAll: refreshAll }); // SKYBOX tab (skybox_ui.js)
+    if (window.VBWaterUI) VBWaterUI.init({ state: function () { return state; }, dirs: function () { return d; }, save: save, startJob: startJob, startJobQueued: startJobQueued, syncInputs: paintInputs, readJson: readJson, fs: fs, path: path, root: root, acts: acts, refreshAll: refreshAll }); // 3D water group of the Water tab (water_ui.js)
+    if (window.VBStreetlampsUI) VBStreetlampsUI.init({ state: function () { return state; }, dirs: function () { return d; }, save: save, startJob: startJob, startJobQueued: startJobQueued, syncInputs: paintInputs, readJson: readJson, fs: fs, path: path, root: root, acts: acts, showError: showError }); // STREETLAMPS tab
+    if (window.VBHeightPaintUI) VBHeightPaintUI.init({ state: function () { return state; }, dirs: function () { return d; }, save: save, startJob: startJob, startJobQueued: startJobQueued, run: function (j) { return runner.run(j); }, isBusy: function () { return runner.isBusy(); }, syncInputs: paintInputs, readJson: readJson, fs: fs, path: path, root: root, acts: acts, showError: showError }); // HEIGHTMAP PAINT tab (heightpaint_ui.js)
+    if (window.VBPaddingUI) VBPaddingUI.init({ state: function () { return state; }, dirs: function () { return d; }, save: save, startJob: startJob, startJobQueued: startJobQueued, syncInputs: paintInputs, readJson: readJson, fs: fs, path: path, root: root, acts: acts }); // padding tab (padding_ui.js)
+    if (window.VBBridgesUI) VBBridgesUI.init({ state: function () { return state; }, dirs: function () { return d; }, save: save, startJob: startJob, startJobQueued: startJobQueued, syncInputs: paintInputs, readJson: readJson, fs: fs, path: path, root: root, acts: acts }); // BRIDGES tab (bridges_ui.js)
+    if (window.VBPlacesUI) VBPlacesUI.init({ state: function () { return state; }, dirs: function () { return d; }, save: save, startJob: startJob, startJobQueued: startJobQueued, syncInputs: paintInputs, readJson: readJson, fs: fs, path: path, root: root, acts: acts, switchPlace: switchPlace, showError: showError }); // PLACES tab (places_ui.js)
+    if (window.VBToolsUI) VBToolsUI.init({ state: function () { return state; }, dirs: function () { return d; }, save: save, startJob: startJob, startJobQueued: startJobQueued, syncInputs: paintInputs, readJson: readJson, fs: fs, path: path, root: root, acts: acts, refreshAll: refreshAll, showError: showError }); // TOOLS tab (tools_ui.js)
+    if (window.VBBridgeUI) VBBridgeUI.init({ state: function () { return state; }, save: save, startJob: startJob, startJobQueued: startJobQueued, syncInputs: paintInputs, fs: fs, root: root, acts: acts }); // BRIDGE section of the Foundry tab (bridge_ui.js)
     sel.addEventListener("change", function () { try { fs.writeFileSync(path.join(root, "world", "panel_last_place.json"), JSON.stringify({ place: sel.value })); } catch (e) { /* ignore */ } });
     $("fPlace").addEventListener("change", function () { sel.value = $("fPlace").value; switchPlace($("fPlace").value); try { fs.writeFileSync(path.join(root, "world", "panel_last_place.json"), JSON.stringify({ place: sel.value })); } catch (e) { /* ignore */ } });
     ["foundry.filter.actors", "foundry.filter.items"].forEach(function (k) { var el = document.querySelector('[data-s="' + k + '"]'); if (el) el.addEventListener("input", fPaint); });

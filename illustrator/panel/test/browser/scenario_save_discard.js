@@ -34,7 +34,8 @@ const L=require("./lib.js"),fs=require("fs");
  await c.btn("hp_apply");await c.settle();
  rec("apply commits stroke",L.diff(h0.h,L.snap().h).changed>0&&await nS()===n5+1,await nS());rec("pending counter cleared",await c.ev(`document.getElementById('hpApplyN').textContent`)==="");await c.shot("44_applied");
  // re-enable
- await c.click(p[0],p[1]);await c.sleep(300);
+ await c.ev(`document.querySelector('[data-s="hp.auto_apply"]').scrollIntoView({block:'center',behavior:'instant'})`);await c.sleep(250);{const q=await c.ev(`(function(){var r=document.querySelector('[data-s="hp.auto_apply"]').getBoundingClientRect();return [r.left+r.width/2,r.top+r.height/2]})()`);await c.click(q[0],q[1]);await c.sleep(300);}
+ rec("auto_apply re-enabled",await c.ev(`document.querySelector('[data-s="hp.auto_apply"]').checked`)===true);
  // reset removes saved layer too
  await c.btn("hp_reset");await c.sleep(500);await c.btn("hp_reset");await c.settle();
  rec("reset removes saved layer files",saved().length===0,saved().join(","));rec("preview back to base",Math.max(...L.snap().d.map(Math.abs))===0);await c.shot("45_reset");

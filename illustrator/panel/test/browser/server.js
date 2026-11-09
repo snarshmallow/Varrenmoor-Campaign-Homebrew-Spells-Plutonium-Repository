@@ -1,11 +1,11 @@
-// Browser harness for the Paint tab (NOT part of the node test run; needs Edge/Chrome). It serves illustrator/panel/index.html over http://127.0.0.1:8765 with CEP stubbed
+// Browser harness for the Paint heightmap section (Terrain tab) (NOT part of the node test run; needs Edge/Chrome). It serves illustrator/panel/index.html over http://127.0.0.1:8765 with CEP stubbed
 // (stub.js: require/fs via sync XHR, child_process.spawn -> real python), redirecting world/ and illustrator/out/ to a TEMP copy so real data is never touched.
 // Setup: copy world/<place> (without export/) to $PAINT_TMP/world/<place>; node server.js $PAINT_TMP 8765; start Edge with --remote-debugging-port=9333
 // --remote-allow-origins=* and open the page; then node scenario_*.js. cdp.js sends real mouse/key/wheel events over CDP (Input.dispatchMouseEvent, pointer capture needs button:"left" on moves).
 const http=require("http"),fs=require("fs"),path=require("path"),cp=require("child_process");
-const REPO="D:/Varrenmoor-Campaign-Homebrew-Spells-Plutonium-Repository";
+const REPO=(process.env.VB_REPO||"D:/Varrenmoor-Campaign-Homebrew-Spells-Plutonium-Repository").split(String.fromCharCode(92)).join("/");
 const TMP=process.argv[2].split(String.fromCharCode(92)).join("/"), PORT=+process.argv[3]||8765;
-const PLACE="bridgehollow__dyers_walk_local";
+const PLACE=process.env.VB_PLACE||"bridgehollow__dyers_walk_local";
 function map(p){p=p.split(String.fromCharCode(92)).join("/");
  if(!p.startsWith("/vroot")) return p;
  let r=p.slice(6);

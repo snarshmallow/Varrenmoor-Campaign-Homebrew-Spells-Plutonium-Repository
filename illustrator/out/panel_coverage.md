@@ -117,3 +117,9 @@ Remaining CLI-only, with reasons (all recorded in the manifest): `--placements /
 Pending, tracked by the test: `set-lighting` and the light budget flags (`--max-lights --lighting-mode --exclude-types --light-radius-scale --light-intensity-scale --light-shadows --time-of-day --ambient --ambient-color --sun-strength --sun-color --render-scene-lights`) belong to the Lighting block being added in parallel; add their control ids to the manifest when it lands.
 Still missing (no generator support, unchanged): per-building door on/off and storey height, road sidewalks.
 Verified: node tests only (`test_command_parity.js`, `test_tools_jobs.js`, plus the existing objects / places / water job tests). Not verified in the real panel: DOM wiring of the Tools tab, the typed-name arming of Delete, the in-panel confirms, the results viewer layout, and any live Foundry call (nothing was pushed or deleted).
+
+## Heightmap paint (2026-11)
+
+| Feature | CLI | Panel control | Status |
+|---|---|---|---|
+| Paint strokes, undo/redo, save, discard, reset, stats, preview | `generators/heightmap_paint.py apply-strokes/export-preview/save/discard/reset/stats` | Terrain tab > Paint heightmap (collapsible section, was a separate Paint tab) | OK |

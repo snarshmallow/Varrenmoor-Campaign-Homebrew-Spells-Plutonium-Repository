@@ -29,6 +29,7 @@ const stdev=(h,idx)=>{let s=0,s2=0;idx.forEach(i=>{s+=h[i];s2+=h[i]*h[i]});const
  await c.ev("document.activeElement&&document.activeElement.blur()");
  for(let i=total;i>=1;i--){await c.key("z","KeyZ",{mods:["ctrl"],vk:90});await c.sleep(300);await c.waitIdle();await c.sleep(200);const s=L.snap();{const dd=L.diff(snaps[i-1].h,s.h);rec("undo to "+(i-1)+" exact",dd.changed===0,JSON.stringify(dd))};if(i==total)await c.shot("12_undo_one");}
  await c.shot("13_undo_all");console.log(await st());
+ {const o=(await c.state()).out;rec("no UNSAVED after undoing back to zero strokes",!/UNSAVED/.test(o),o.split(String.fromCharCode(10))[0]);}
  // redo with ctrl+y x3 then ctrl+shift+z
  for(let i=1;i<=3;i++){await c.key("y","KeyY",{mods:["ctrl"],vk:89});await c.sleep(300);await c.waitIdle();await c.sleep(200);const s=L.snap();rec("redo (ctrl+y) to "+i+" exact",L.eq(s.h,snaps[i].h));}
  await c.key("Z","KeyZ",{mods:["ctrl","shift"],vk:90});await c.sleep(300);await c.waitIdle();await c.sleep(200);rec("redo (ctrl+shift+z) to 4 exact",L.eq(L.snap().h,snaps[4].h));

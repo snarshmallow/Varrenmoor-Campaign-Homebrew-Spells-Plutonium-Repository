@@ -95,7 +95,6 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
   <button role="tab" data-tab="town">Town</button>
   <button role="tab" data-tab="regions">Regions</button>
   <button role="tab" data-tab="foliage">Foliage</button>
-  <button role="tab" data-tab="hpaint">Paint</button><!-- HEIGHTMAP PAINT (heightpaint_ui.js) -->
   <button role="tab" data-tab="padding">Padding</button><!-- padding tab (padding_ui.js) -->
   <button role="tab" data-tab="bridges">Bridges</button><!-- BRIDGES tab (bridges_ui.js) -->
   <button role="tab" data-tab="places">Places</button><!-- PLACES tab (places_ui.js) -->
@@ -177,6 +176,51 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
   </div>
   <div id="patchInfo"></div>
   <img id="patchPrev" alt="patch preview (hillshade)">
+<!-- HEIGHTMAP PAINT (heightpaint_ui.js, lib/heightpaint.js; python generators/heightmap_paint.py): a collapsible section at the end of the Terrain tab -->
+<details id="hpDetails"><summary><b>Paint heightmap</b> <span class="note">(edit layer on top of the generated terrain)</span></summary>
+  <style>#hpCanvas{width:100%;border:1px solid var(--line);background:#202020;display:block}#hpTools{display:flex;flex-wrap:wrap;gap:3px;margin:3px 0}#hpReadout,#hpOut,#hpStatus{white-space:pre-wrap;font:11px monospace;margin:3px 0}#hpReadout,#hpStatus{min-height:15px}#hpStatus{color:var(--warn)}#hpDetails [hidden]{display:none!important}</style>
+    <p class="note">Edits go into a separate layer (world/&lt;place&gt;/heightmap_edits.*) that is added on top of the generated terrain every time it is loaded, so regenerating the terrain keeps them. Nothing reaches the pipeline until you Save. Drag to paint; wheel zooms; Shift, Space or right / middle drag pans; Alt + wheel changes the brush radius; Ctrl+Z / Ctrl+Y undo / redo.</p>
+  <div class="btns">
+    <button data-act="hp_refresh" title="Read the terrain and the working edits again and redraw">Load / refresh</button>
+    <button data-act="hp_fit">Fit view</button>
+    <button id="hpUndo" data-act="hp_undo" title="Ctrl+Z: remove the last stroke">Undo</button>
+    <button id="hpRedo" data-act="hp_redo" title="Ctrl+Y">Redo</button>
+    <button data-act="hp_apply" title="Apply the strokes drawn so far (only needed when Apply on release is off)">Apply drawn strokes<span id="hpApplyN"></span></button>
+    <label class="chk"><input type="checkbox" data-s="hp.auto_apply"> Apply on release</label>
+  </div>
+  <div id="hpTools" role="group" aria-label="Brush"></div>
+  <canvas id="hpCanvas" width="320" height="260" aria-label="Heightmap relief"></canvas>
+  <div id="hpReadout"></div><div id="hpStatus"></div>
+  <div class="grid">
+    <label>Brush <select data-s="hp.tool" data-act-change="hp_tool_changed"><option value="raise">raise</option><option value="lower">lower</option><option value="smooth">smooth</option><option value="flatten">flatten</option><option value="set">set height</option><option value="noise">roughen</option><option value="ridge">ridge</option><option value="valley">valley</option><option value="river">river carve</option></select></label>
+    <label>Radius (ft) <input type="number" data-s="hp.radius_ft" min="1" step="1"></label>
+    <label>Strength (0..1) <input type="number" data-s="hp.strength" min="0" max="1" step="0.05"></label>
+    <label>Hardness (0..1: solid core) <input type="number" data-s="hp.hardness" min="0" max="1" step="0.05"></label>
+    <label>Falloff <select data-s="hp.falloff"><option>smooth</option><option>linear</option><option>sharp</option><option>round</option><option>constant</option></select></label>
+  </div>
+  <div class="grid" id="hpRowRate"><label>Rate (ft per dab at full strength) <input type="number" data-s="hp.rate_ft" step="0.5"></label></div>
+  <div class="grid" id="hpRowHeight"><label><span id="hpHeightLabel">Height (ft)</span> <input type="number" data-s="hp.height_ft" step="1" placeholder="blank"></label></div>
+  <div class="grid" id="hpRowRiver"><label>River depth below the ground (ft) <input type="number" data-s="hp.depth_ft" min="0" step="0.5"></label><label>Bank slope (ft rise per ft) <input type="number" data-s="hp.bank_slope" min="0" step="0.1"></label></div>
+  <div class="grid" id="hpRowNoise"><label>Noise size (ft, blank = radius / 2) <input type="number" data-s="hp.noise_scale_ft" min="1" step="1"></label><label>Noise seed <input type="number" data-s="hp.seed" step="1"></label></div>
+  <details><summary class="note">View</summary>
+    <div class="grid">
+      <label>Contour every (ft, 0 = off) <input id="hpContour" type="number" data-s="hp.contour_ft" min="0" step="1"></label>
+      <label>Relief exaggeration <input id="hpExag" type="number" data-s="hp.exag" min="0.1" step="0.5"></label>
+      <label>Light azimuth (deg) <input id="hpAz" type="number" data-s="hp.light_az" min="0" max="360" step="15"></label>
+      <label>Preview size (px, long edge) <input type="number" data-s="hp.max_px" min="64" max="2048" step="64" title="Larger previews paint more detail but take longer per stroke"></label>
+    </div>
+    <label class="chk"><input id="hpShowDelta" type="checkbox" data-s="hp.show_delta"> Tint the edits (red = raised, blue = lowered)</label>
+  </details>
+  <div class="btns">
+    <button class="pri" data-act="hp_save" title="Copy the working edits into world/&lt;place&gt;/heightmap_edits.* (the layer the pipeline reads)">Save edits</button>
+    <button data-act="hp_save_pack" title="Save, then run Export world pack so the 3D terrain picks the edits up">Save + export world pack</button>
+    <button data-act="hp_discard" title="Throw away the unsaved working edits (back to the last saved layer)">Discard unsaved</button>
+    <button data-act="hp_reset" title="Remove all edits, saved ones too">Reset to generated terrain</button>
+    <button data-act="hp_stats">Statistics</button>
+  </div>
+  <div id="hpOut"></div>
+  <p class="note">The canvas shows a downsampled preview; every stroke is computed on the full-resolution grid in python. After Save, re-run Terrain / Contours / Shading and the world pack export for the edits to appear in them (regenerating terrain keeps them). Reset brings the generated terrain back. CLI: <code>python illustrator/generators/heightmap_paint.py apply-strokes|export-preview|stats|save|discard|reset --place P</code>.</p>
+</details>
 </section>
 
 <section id="tab-contours" role="tabpanel">
@@ -1100,53 +1144,6 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
   <img id="brPreview" hidden alt="bridge preview (Blender)">
   <div id="brOut" class="note"></div>
   <p class="note">The deck keeps the road level at both ends unless terrain rises above it there: then the deck is lifted just clear (max 6 ft) and a short approach ramp joins it to the road. Piers, piles, posts and rocks always end at least 1.5 ft below the lowest ground under them. Openings are sized from the clearance below (water surface + banks + freeboard, or the road/path passing under, default 8 ft x 12 ft); piers and abutments stay outside them, the road ribbon is removed over the span and the terrain under it is left as it is. The map symbol (outline, parapets, piers) appears on the next Render. Needs a Pack export and Split (Foundry tab) to reach the 3D scene. Notes: illustrator/out/bridges_notes.md.</p>
-</section>
-
-<!-- HEIGHTMAP PAINT TAB (heightpaint_ui.js, lib/heightpaint.js; python generators/heightmap_paint.py) -->
-<section id="tab-hpaint" role="tabpanel">
-  <style>#hpCanvas{width:100%;border:1px solid var(--line);background:#202020;display:block}#hpTools{display:flex;flex-wrap:wrap;gap:3px;margin:3px 0}#hpReadout,#hpOut,#hpStatus{white-space:pre-wrap;font:11px monospace;margin:3px 0}#hpStatus{color:var(--warn)}#tab-hpaint [hidden]{display:none!important}</style>
-  <h4>Paint the heightmap</h4>
-  <p class="note">Edits go into a separate layer (world/&lt;place&gt;/heightmap_edits.*) that is added on top of the generated terrain every time it is loaded, so regenerating the terrain keeps them. Nothing reaches the pipeline until you Save. Drag to paint; wheel zooms; Shift, Space or right / middle drag pans; Alt + wheel changes the brush radius; Ctrl+Z / Ctrl+Y undo / redo.</p>
-  <div class="btns">
-    <button data-act="hp_refresh" title="Read the terrain and the working edits again and redraw">Load / refresh</button>
-    <button data-act="hp_fit">Fit view</button>
-    <button id="hpUndo" data-act="hp_undo" title="Ctrl+Z: remove the last stroke">Undo</button>
-    <button id="hpRedo" data-act="hp_redo" title="Ctrl+Y">Redo</button>
-    <button data-act="hp_apply" title="Apply the strokes drawn so far (only needed when Apply on release is off)">Apply drawn strokes<span id="hpApplyN"></span></button>
-    <label class="chk"><input type="checkbox" data-s="hp.auto_apply"> Apply on release</label>
-  </div>
-  <div id="hpTools" role="group" aria-label="Brush"></div>
-  <canvas id="hpCanvas" width="320" height="260" aria-label="Heightmap relief"></canvas>
-  <div id="hpReadout"></div><div id="hpStatus"></div>
-  <div class="grid">
-    <label>Brush <select data-s="hp.tool" data-act-change="hp_tool_changed"><option value="raise">raise</option><option value="lower">lower</option><option value="smooth">smooth</option><option value="flatten">flatten</option><option value="set">set height</option><option value="noise">roughen</option><option value="ridge">ridge</option><option value="valley">valley</option><option value="river">river carve</option></select></label>
-    <label>Radius (ft) <input type="number" data-s="hp.radius_ft" min="1" step="1"></label>
-    <label>Strength (0..1) <input type="number" data-s="hp.strength" min="0" max="1" step="0.05"></label>
-    <label>Hardness (0..1: solid core) <input type="number" data-s="hp.hardness" min="0" max="1" step="0.05"></label>
-    <label>Falloff <select data-s="hp.falloff"><option>smooth</option><option>linear</option><option>sharp</option><option>round</option><option>constant</option></select></label>
-  </div>
-  <div class="grid" id="hpRowRate"><label>Rate (ft per dab at full strength) <input type="number" data-s="hp.rate_ft" step="0.5"></label></div>
-  <div class="grid" id="hpRowHeight"><label><span id="hpHeightLabel">Height (ft)</span> <input type="number" data-s="hp.height_ft" step="1" placeholder="blank"></label></div>
-  <div class="grid" id="hpRowRiver"><label>River depth below the ground (ft) <input type="number" data-s="hp.depth_ft" min="0" step="0.5"></label><label>Bank slope (ft rise per ft) <input type="number" data-s="hp.bank_slope" min="0" step="0.1"></label></div>
-  <div class="grid" id="hpRowNoise"><label>Noise size (ft, blank = radius / 2) <input type="number" data-s="hp.noise_scale_ft" min="1" step="1"></label><label>Noise seed <input type="number" data-s="hp.seed" step="1"></label></div>
-  <details><summary class="note">View</summary>
-    <div class="grid">
-      <label>Contour every (ft, 0 = off) <input id="hpContour" type="number" data-s="hp.contour_ft" min="0" step="1"></label>
-      <label>Relief exaggeration <input id="hpExag" type="number" data-s="hp.exag" min="0.1" step="0.5"></label>
-      <label>Light azimuth (deg) <input id="hpAz" type="number" data-s="hp.light_az" min="0" max="360" step="15"></label>
-      <label>Preview size (px, long edge) <input type="number" data-s="hp.max_px" min="64" max="2048" step="64" title="Larger previews paint more detail but take longer per stroke"></label>
-    </div>
-    <label class="chk"><input id="hpShowDelta" type="checkbox" data-s="hp.show_delta"> Tint the edits (red = raised, blue = lowered)</label>
-  </details>
-  <div class="btns">
-    <button class="pri" data-act="hp_save" title="Copy the working edits into world/&lt;place&gt;/heightmap_edits.* (the layer the pipeline reads)">Save edits</button>
-    <button data-act="hp_save_pack" title="Save, then run Export world pack so the 3D terrain picks the edits up">Save + export world pack</button>
-    <button data-act="hp_discard" title="Throw away the unsaved working edits (back to the last saved layer)">Discard unsaved</button>
-    <button data-act="hp_reset" title="Remove all edits, saved ones too">Reset to generated terrain</button>
-    <button data-act="hp_stats">Statistics</button>
-  </div>
-  <div id="hpOut"></div>
-  <p class="note">The canvas shows a downsampled preview; every stroke is computed on the full-resolution grid in python. After Save, re-run Terrain / Contours / Shading and the world pack export for the edits to appear in them (regenerating terrain keeps them). Reset brings the generated terrain back. CLI: <code>python illustrator/generators/heightmap_paint.py apply-strokes|export-preview|stats|save|discard|reset --place P</code>.</p>
 </section>
 
 <!-- PADDING TAB (padding_ui.js, lib/padding.js; python generators/padding_heightmap.py, foundry_push.py push-padding) -->

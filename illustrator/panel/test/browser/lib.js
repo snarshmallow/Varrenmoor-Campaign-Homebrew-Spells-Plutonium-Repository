@@ -1,5 +1,5 @@
 const fs=require("fs"),{connect}=require("./cdp.js");
-const PLACE="bridgehollow__dyers_walk_local",TMP=(process.env.PAINT_TMP||require("os").tmpdir()+"/vb_paint_test").split(String.fromCharCode(92)).join("/");
+const PLACE=process.env.VB_PLACE||"bridgehollow__dyers_walk_local",TMP=(process.env.PAINT_TMP||require("os").tmpdir()+"/vb_paint_test").split(String.fromCharCode(92)).join("/");
 const PV=TMP+"/out/panel/"+PLACE+"/heightmap_paint/preview";
 const WK=TMP+"/out/panel/"+PLACE+"/heightmap_paint";
 const rb=f=>{const b=fs.readFileSync(f);const a=new Float32Array(b.length/4);for(let i=0;i<a.length;i++)a[i]=b.readFloatLE(i*4);return a;};
@@ -8,6 +8,14 @@ const snap=()=>({h:rb(PV+"/preview_h.bin"),d:rb(PV+"/preview_d.bin"),m:meta()});
 function diff(a,b){let n=0,mx=0,sum=0;for(let i=0;i<a.length;i++){const e=b[i]-a[i];if(Math.abs(e)>1e-5){n++;mx=Math.max(mx,Math.abs(e));sum+=e;}}return {changed:n,maxAbs:+mx.toFixed(3),sum:+sum.toFixed(2)};}
 function eq(a,b){for(let i=0;i<a.length;i++)if(a[i]!==b[i])return false;return true;}
 async function setup(){const c=await connect();
+ // navigate: Terrain tab -> expand the "Paint heightmap" section (click the real tab button and the summary), wait for the canvas to size and the preview to load
+ await c.ev(`(function(){var b=document.querySelector('#tabs button[data-tab="terrain"]');b.click();var d=document.getElementById('hpDetails');if(!d.open)d.querySelector('summary').click();return d.open})()`);
+ for(let i=0;i<100;i++){const ok=await c.ev(`(function(){var v=document.getElementById('hpCanvas');return v.clientWidth>0&&!/No heightmap/.test(document.getElementById('hpStatus').textContent)&&document.getElementById('hpOut').textContent.length>0})()`);if(ok)break;await c.sleep(200);}
+ await c.waitIdle();
+ await c.ev(`document.querySelector('[data-act="hp_fit"]').click()`);await c.sleep(400);
+ await c.ev(`(function(){var e=document.querySelector('[data-s="hp.auto_apply"]');if(!e.checked){e.checked=true;e.dispatchEvent(new Event('input',{bubbles:true}));e.dispatchEvent(new Event('change',{bubbles:true}));}})()`);
+ // every scenario starts from the generated terrain (reset arms on the first click, confirms on the second)
+ await c.ev(`document.querySelector('[data-act="hp_reset"]').click()`);await c.sleep(300);await c.ev(`document.querySelector('[data-act="hp_reset"]').click()`);await c.sleep(500);await c.waitIdle();await c.sleep(300);
  c.set=async(key,val)=>c.ev(`(function(){var e=document.querySelector('[data-s="${key}"]');if(e.type==='checkbox'){e.checked=${JSON.stringify(val)};}else e.value=${JSON.stringify(String(val))};e.dispatchEvent(new Event('input',{bubbles:true}));e.dispatchEvent(new Event('change',{bubbles:true}));return e.value})()`);
  c.tool=async(id)=>{const p=await c.ev(`(function(){var e=document.querySelector('[data-hp-tool="${id}"]');e.scrollIntoView({block:'center',behavior:'instant'});var r=e.getBoundingClientRect();return [r.left+r.width/2,r.top+r.height/2]})()`);await c.sleep(250);const p2=await c.ev(`(function(){var r=document.querySelector('[data-hp-tool="${id}"]').getBoundingClientRect();return [r.left+r.width/2,r.top+r.height/2]})()`);await c.click(p2[0],p2[1]);await c.sleep(100);return c.ev(`document.querySelector('[data-s="hp.tool"]').value`);};
  c.btn=async(act)=>{await c.ev(`document.querySelector('[data-act="${act}"]').scrollIntoView({block:'center',behavior:'instant'})`);await c.sleep(300);const p=await c.ev(`(function(){var e=document.querySelector('[data-act="${act}"]');var r=e.getBoundingClientRect();return [r.left+r.width/2,r.top+r.height/2]})()`);await c.click(p[0],p[1]);};

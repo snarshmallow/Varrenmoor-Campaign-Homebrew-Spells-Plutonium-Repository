@@ -269,7 +269,7 @@
     loadClient().then(function () {   // the address is prefilled from client.json (what the tools use), else discovered by a read-only probe; both editable and remembered
       if (String(S().target || "").trim()) return;
       var c = VB.bridgeMem.client; if (c && c.url) { S().target = c.url; if (ctx.save) ctx.save(); if (ctx.syncInputs) ctx.syncInputs(); paint(); return; }
-      return ctx.startJob(VB.jobBridgeProbe(ctx.state()), null).then(function () { useFirstFound(false); paint(); });
+      return (ctx.startJobQueued || ctx.startJob)(VB.jobBridgeProbe(ctx.state()), null).then(function () { useFirstFound(false); paint(); });
     });
     var cf = $("bgClientFile"); if (cf) cf.addEventListener("change", function () { setTimeout(loadClient, 50); });
     var sm = $("bgSummary");

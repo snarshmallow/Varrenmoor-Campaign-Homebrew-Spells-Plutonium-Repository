@@ -59,7 +59,7 @@
     Object.keys(A).forEach(function (k) { if (ctx.acts) ctx.acts[k] = A[k]; });
     var bind = function (id, key) { var el = $(id); if (el) el.addEventListener("change", function () { S()[key] = el.value; if (key === "preset") S().preview_png = previewFor(el.value) || ""; ctx.save(); paint(); }); };
     bind("skyPreset", "preset"); bind("skyScene", "scene_uuid"); bind("skyImpScene", "import_scene");
-    A.sky_list();
+    ctx.startJobQueued ? ctx.startJobQueued(VB.jobSkyList(ctx.state()), paint) : A.sky_list();   // startup read: queued behind other startup jobs
     paint();
   }
   window.VBSkyUI = { init: init, paint: paint, actions: A };

@@ -1,4 +1,4 @@
-// Paint tab UI: shaded-relief canvas of the place's heightmap with pan / zoom, brushes, undo / redo, save / reset. Loaded before main.js; main.js calls
+// Paint heightmap UI (a collapsible section at the end of the Terrain tab, #hpDetails): shaded-relief canvas of the place's heightmap with pan / zoom, brushes, undo / redo, save / reset. Loaded before main.js; main.js calls
 // VBHeightPaintUI.init(ctx) / paint(). Logic (stroke building, jobs, renderer) is in lib/heightpaint.js; the brush maths and the edit layer are python
 // (generators/heightmap_paint.py): the canvas shows the downsampled preview python writes after every stroke.
 (function () {
@@ -13,6 +13,14 @@
     var b = document.querySelector('[data-act="hp_reset"]'); if (b && b.dataset.label) b.textContent = b.dataset.label;
   }
   function P() { return ctx.state().hp; }
+  // the canvas can only be measured / drawn while the Terrain tab is shown and the Paint section is open
+  function tabOn() { var t = $("tab-terrain"); return !!(t && t.classList.contains("on")); }
+  function isOpen() { var d = $("hpDetails"); return !!(d && d.open); }
+  function visible() { return !!(cv && cv.parentNode && cv.parentNode.clientWidth > 0 && tabOn() && isOpen()); }
+  function ensureView() {
+    var st = ctx.state(); if (!meta) return;
+    if (!P().view || !(P().view.zoom > 0) || P().view.fitFor !== st.place) P().view = Object.assign(VB.hpFit(meta, cv.width, cv.height), { fitFor: st.place });
+  }
   function busyMsg(t) { var el = $("hpStatus"); if (el) el.textContent = t || ""; }
 
   function readPreview() {
@@ -24,7 +32,7 @@
     } catch (e) { H = D = meta = null; return false; }
     if (H.length !== m.pw * m.ph) { H = D = meta = null; return false; }
     meta = m; loaded.place = st.place; loaded.stamp = P().stamp; dirtyImage = true;
-    if (!P().view || !(P().view.zoom > 0) || P().view.fitFor !== st.place) { var w = cv.width, h = cv.height; P().view = Object.assign(VB.hpFit(m, w, h), { fitFor: st.place }); }
+    if (visible()) { size(); ensureView(); }   // hidden: fit later, when the canvas has a real size (draw)
     return true;
   }
   function renderImage() {
@@ -35,14 +43,14 @@
     var id = new ImageData(new Uint8ClampedArray(px), meta.pw, meta.ph); off.getContext("2d").putImageData(id, 0, 0); dirtyImage = false;
   }
   function size() {
-    if (!cv) return; var w = Math.max(cv.parentNode.clientWidth - 2, 200);
+    if (!cv || !cv.parentNode.clientWidth) return; var w = Math.max(cv.parentNode.clientWidth - 2, 200);
     if (cv.width !== w) { cv.width = w; cv.height = Math.round(Math.min(w * 0.85, 520)); }
   }
   function toScreen(x, y) { var v = P().view, q = VB.hpFeetToPx(meta, x, y); return [q[0] * v.zoom + v.ox, q[1] * v.zoom + v.oy]; }
   function draw() {
-    if (!cv) return; size(); g = cv.getContext("2d"); g.fillStyle = "#202020"; g.fillRect(0, 0, cv.width, cv.height);
+    if (!cv || !visible()) return; size(); g = cv.getContext("2d"); g.fillStyle = "#202020"; g.fillRect(0, 0, cv.width, cv.height);
     if (!meta || !H) { g.fillStyle = "#aaa"; g.font = "12px sans-serif"; g.fillText("No heightmap loaded: press Load / refresh.", 10, 20); return; }
-    if (dirtyImage) renderImage();
+    ensureView(); if (dirtyImage) renderImage();
     var v = P().view; g.imageSmoothingEnabled = v.zoom < 3; g.setTransform(v.zoom, 0, 0, v.zoom, v.ox, v.oy); g.drawImage(off, 0, 0); g.setTransform(1, 0, 0, 1, 0, 0);
     g.strokeStyle = "#000"; g.lineWidth = 1; g.strokeRect(v.ox - 0.5, v.oy - 0.5, meta.pw * v.zoom + 1, meta.ph * v.zoom + 1);
     var p = P(), rpx = (Number(p.radius_ft) || 30) / (meta.cell_ft * meta.factor) * v.zoom;
@@ -73,7 +81,7 @@
     var s = P().stats, el = $("hpOut"); if (!el) return;
     if (!s) { el.textContent = ""; return; }
     var m = s.summary || {}, t = [];
-    t.push("Strokes in the edit layer: " + s.strokes + (P().unsaved || s.unsaved ? "  (UNSAVED: the pipeline does not see them yet)" : (s.has_saved ? "  (saved)" : "")));
+    t.push("Strokes in the edit layer: " + s.strokes + (s.unsaved ? "  (UNSAVED: the pipeline does not see them yet)" : (s.has_saved ? "  (saved)" : "")));
     t.push("Edited cells: " + m.changed_cells + ", max raise " + m.max_raise_ft + " ft, max cut " + m.max_lower_ft + " ft");
     t.push("Terrain " + s.shape[1] + " x " + s.shape[0] + " nodes, " + s.cell_ft + " ft cells, source " + s.source + "; generated " + s.base_min_ft + " .. " + s.base_max_ft + " ft, with edits " + s.final_min_ft + " .. " + s.final_max_ft + " ft");
     if (meta) t.push("Preview 1:" + meta.factor + " (" + meta.pw + " x " + meta.ph + " px). Edits are computed at full resolution in python.");
@@ -151,8 +159,8 @@
     }, { passive: false });
     window.addEventListener("keydown", function (e) {
       var tag = (e.target && e.target.tagName) || ""; if (/INPUT|SELECT|TEXTAREA/.test(tag)) return;
-      if (e.code === "Space" && $("tab-hpaint") && $("tab-hpaint").classList.contains("on")) { spaceDown = true; e.preventDefault(); }
-      if ((e.ctrlKey || e.metaKey) && !e.altKey && $("tab-hpaint") && $("tab-hpaint").classList.contains("on")) {
+      if (e.code === "Space" && tabOn() && isOpen()) { spaceDown = true; e.preventDefault(); }
+      if ((e.ctrlKey || e.metaKey) && !e.altKey && tabOn() && isOpen()) {
         if (e.key === "z" || e.key === "Z") { e.preventDefault(); (e.shiftKey ? A.hp_redo : A.hp_undo)(); }
         else if (e.key === "y") { e.preventDefault(); A.hp_redo(); }
       }
@@ -192,7 +200,11 @@
     hp_stats: function () { return enqueue(VB.jobHpStats(ctx.state(), ctx.dirs())); }
   };
 
-  var lastTab = null;
+  // the Terrain tab was shown or the Paint section was opened: size the canvas, draw, and load the preview the first time
+  function shown() {
+    if (!ctx || !visible()) return;
+    setTimeout(function () { if (!visible()) return; paint(); if (!meta && !ctx.isBusy()) A.hp_refresh(); }, 30);
+  }
   function paint() {
     if (!ctx || !$("hpCanvas")) return;
     cv = $("hpCanvas"); var st = ctx.state(); paintTools(); summary();
@@ -205,10 +217,9 @@
     Object.keys(A).forEach(function (k) { if (ctx.acts) ctx.acts[k] = A[k]; });
     bind(); cv.style.cursor = "crosshair"; cv.style.touchAction = "none";
     ["hpContour", "hpExag", "hpShowDelta", "hpAz"].forEach(function (id) { var e = $(id); if (e) e.addEventListener("input", function () { schedule(true); }); });
-    var nav = document.querySelector('#tabs button[data-tab="hpaint"]');
-    if (nav) nav.addEventListener("click", function () { setTimeout(function () { paint(); if (!meta && !ctx.isBusy()) A.hp_refresh(); }, 60); });
+    var det = $("hpDetails"); if (det) det.addEventListener("toggle", function () { if (det.open) shown(); else { spaceDown = false; disarmReset(); } });
     window.addEventListener("resize", function () { schedule(false); });
     paint();
   }
-  window.VBHeightPaintUI = { init: init, paint: paint, actions: A };
+  window.VBHeightPaintUI = { init: init, paint: paint, shown: shown, actions: A };
 })();
