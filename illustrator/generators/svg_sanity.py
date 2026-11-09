@@ -45,6 +45,7 @@ LIMITS = {
 
 NUM = re.compile(r"[-+]?(?:\d+\.?\d*|\.\d+)(?:[eE][-+]?\d+)?")
 BAD_NUM = re.compile(r"(?<![A-Za-z#])(?:nan|inf|infinity)(?![A-Za-z])", re.I)
+BAD_NUM_ATTR = re.compile(r"nan|inf", re.I)
 FONT_FAM = re.compile(r"font-family\s*:\s*([^;\"]+)")
 STROKE = re.compile(r"(?:^|;)\s*stroke\s*:\s*(?!none)[^;]+")
 NUM_ATTRS = ("x", "y", "cx", "cy", "r", "rx", "ry", "width", "height", "x1", "y1", "x2", "y2", "dx", "dy", "font-size", "transform", "points", "d")
@@ -140,7 +141,7 @@ def check(src, limits=None, page=None):
             v = el.get(a)
             if v is None:
                 continue
-            if BAD_NUM.search(v):
+            if BAD_NUM_ATTR.search(v):          # numeric attributes hold no words: any nan / inf is a broken number (also 'Lnan,3')
                 tot["nan"] += 1
                 if len(bad_coord_examples) < 5:
                     bad_coord_examples.append(f"{eid or tg} {a}={v[:60]}")

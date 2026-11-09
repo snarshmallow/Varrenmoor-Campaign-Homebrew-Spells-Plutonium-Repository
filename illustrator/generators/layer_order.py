@@ -16,8 +16,8 @@ BACKING = "Label Backing"
 HIDDEN = "Labels - Hidden"
 
 # sublayers of LABELS, top to bottom. Label Backing must stay LAST (bottom).
-LABEL_LAYERS = ["Legend", "Callout Markers", "Leader Anchors", "Leaders", HIDDEN, "Labels - Districts", "Labels - Streets",
-                "Labels - Buildings", "Labels - Rooms", "Labels - Elevation", BACKING]
+LABEL_LAYERS = ["Legend", "Callout Markers", "Leader Anchors", "Leaders", "Labels - Districts", "Labels - Streets",
+                "Labels - Buildings", "Labels - Rooms", HIDDEN, "Labels - Elevation", BACKING]
 # layers whose items are label text (the backing must be under all of them)
 LABEL_TEXT_LAYERS = ["Labels - Districts", "Labels - Streets", "Labels - Buildings", "Labels - Rooms", "Labels - Elevation", HIDDEN]
 

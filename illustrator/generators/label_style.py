@@ -65,6 +65,7 @@ CATEGORY_DEFAULT = {
 GLOBAL_DEFAULT = {"backing_layer": True, "mask_targets": ["contours", "streets", "buildings", "blocks", "grid"]}
 CASES = ("auto", "asis", "upper", "title")
 MODES = ("none", "halo", "box", "mask")
+HALO_MAX = 8.0          # pt: halo_width is clamped to this (the stroke of the halo copy is twice that)
 
 
 def defaults():
@@ -148,12 +149,22 @@ def resolve(cfg, cat):
     for k in Style.__dataclass_fields__:
         kw[k] = d[k]
     s = Style(**kw)
+    for k in ("size", "letter_spacing", "wrap_width", "line_spacing", "halo_width", "halo_opacity", "box_pad", "box_radius", "box_opacity", "knockout_pad",
+              "min_width", "max_width", "fit_ratio"):
+        try:                                            # NaN / inf / junk from a hand-edited preset -> the default (never into the SVG)
+            ok = getattr(s, k) is None or math.isfinite(float(getattr(s, k)))
+        except (TypeError, ValueError):
+            ok = False
+        if not ok:
+            setattr(s, k, Style.__dataclass_fields__[k].default)
     s.size = float(s.size) if s.size not in (None, "", 0) else None
+    if s.size is not None:
+        s.size = min(max(s.size, 1.0), 200.0)
     s.letter_spacing = float(s.letter_spacing or 0)
     s.wrap_width = max(float(s.wrap_width or 0), 1.0)
     s.max_lines = max(int(s.max_lines or 1), 1)
     s.line_spacing = max(float(s.line_spacing or 1.0), 0.5)
-    s.halo_width = max(float(s.halo_width or 0), 0.0)
+    s.halo_width = min(max(float(s.halo_width or 0), 0.0), HALO_MAX)    # a 40 pt halo would bury the neighbours (and is never meant)
     s.knockout_pad = max(float(s.knockout_pad or 0), 0.0)
     s.box_pad = max(float(s.box_pad or 0), 0.0)
     s.box_radius = max(float(s.box_radius or 0), 0.0)
