@@ -62,8 +62,10 @@ SCENE_MODES = {
     "3d": {"auto3d": True, "enablePlayers": True, "object3dSight": True, "enableGameCamera": True, "enableFogOfWar": True, "enableRuler": True,
            "renderBackground": False, "renderTable": "matcustom", "tableTex": "baileywiki-content/assets/modules/baileywiki-3d/models/black-tone-pure.webp",
            "tableColor": "#341f0f", "exr": "assets/ossuary-exchange-skybox3.webp", "skybox": "", "maxElevation": 100000, "timeSync": "darkness", "sunPosition": 9,
-           "ambientLightIntensity": 0, "showSceneWalls": True, "showSceneDoors": True, "showSceneFloors": True, "renderSceneLights": True, "mirrorLevels": True},
+           "ambientLightIntensity": 0, "showSceneWalls": True, "showSceneDoors": True, "showSceneFloors": True, "renderSceneLights": True, "mirrorLevels": True,
+           "shadowBias": -0.0003},       # 3D Canvas' default -1.8e-05 draws shadow acne (regular pale / blue-grey stripes over the whole terrain) on a town-size scene (foundry_sun preset default)
 }
+ACNE_BIAS = -1e-4             # a scene shadowBias closer to 0 than this stripes big terrain tiles (Bridgehollow 2026-11: -1.8e-05 striped, -1.5e-04 clean at 4096 px shadow maps)
 
 
 def scene_mode_flags(mode, overrides=None):
@@ -1286,12 +1288,17 @@ def cmd_rescale_scene(br, a):
            "after": {"width": new["width"], "height": new["height"], "padding": pad, "grid": {"size": new["grid_px"], "distance": new["grid_ft"]}, "ppf": new["ppf"],
                      "window_ft": [0.0, 0.0, fr["width_ft"], fr["height_ft"]]},
            "moves": {kk: len(v) for kk, v in plan.items()}, "walls_deleted": len(drop_walls), "background_cleared": not a.keep_background}
+    sb = ((sc.get("flags") or {}).get(L3D) or {}).get("shadowBias")
+    if sb is None or float(sb) > ACNE_BIAS:
+        res["shadow_bias"] = {"before": sb, "after": SCENE_MODES["3d"]["shadowBias"]}
     if not a.apply or a.dry_run:
         res["note"] = "dry run: nothing written, repeat with --apply"
         return res
     require_module(br)
     upd = {"width": new["width"], "height": new["height"], "padding": pad, "grid": {"size": new["grid_px"], "distance": new["grid_ft"], "units": "ft"},
            "flags": {FLAG: {"calib": calib}}}
+    if "shadow_bias" in res:                                 # the module default stripes the terrain with shadow acne
+        upd["flags"][L3D] = {"shadowBias": SCENE_MODES["3d"]["shadowBias"]}
     br.call("update", uuid=a.scene_uuid, data=upd)          # no autoReposition: the bridge never asks Foundry to move objects; done below in feet
     if not a.keep_background:
         br.call("set_scene_background", uuid=a.scene_uuid, src=None)

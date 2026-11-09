@@ -172,6 +172,30 @@ def write_back_skirts(pack_dir, parts):
     return n
 
 
+def install_style_textures(parts, tex_dir, log=print):
+    """Dynamic building-style materials (mat_s_*, building_styles.py) are not in the pack's materials.json, so pbr.install never wrote their PNGs while the
+    GLBs reference textures/mat_s_<kind>_<hex>.png (push-models then refused every building: 'image ... not found next to the file'). Write the ones used."""
+    import worldpack_pbr as pbr
+    used = set()
+    for p in parts:
+        m = p.get("mesh")
+        for mid in (getattr(m, "subs", None) or {}):
+            if str(mid).startswith("mat_s_"):
+                used.add(mid)
+        for dn in p.get("door_nodes", []) or []:
+            dm = dn.get("mesh") if isinstance(dn, dict) else None
+            for mid in (getattr(dm, "subs", None) or {}):
+                if str(mid).startswith("mat_s_"):
+                    used.add(mid)
+    n = 0
+    for mid in sorted(used):
+        if not os.path.exists(os.path.join(tex_dir, mid + ".png")):
+            n += len(pbr.write_material_textures(mid, tex_dir, overwrite_base=True))
+    if used:
+        log(f"style textures: {len(used)} building-style material(s), {n} file(s) written")
+    return sorted(used)
+
+
 def split_export(pack_dir, out_dir=None, split=None, textures="external", step=1, carve=True, conform=True, only=None, log=print, road_grade=True, roof_mode=None):
     """Write per-model GLBs and placements.json. `only`: ids -> rebuild just the files containing them and keep every other entry.
     roof_mode none|per_building|per_scene (worldpack_roofs.py); None = keep the mode of the existing placements.json (reexport) else none."""
@@ -214,6 +238,7 @@ def split_export(pack_dir, out_dir=None, split=None, textures="external", step=1
                 shutil.copyfile(pack.path(r["texture"]), os.path.join(out, "models", "textures", mid + ".png"))
         import worldpack_pbr as pbr
         pbr.install(pack, os.path.join(out, "models", "textures"))         # normal / metallicRoughness maps, new surfaces, detailed terrain albedo
+        install_style_textures(parts, os.path.join(out, "models", "textures"), log)
     if not only:                                                  # a mode change must not leave the old roof files behind
         shutil.rmtree(os.path.join(out, "models", "roofs"), ignore_errors=True)
         if os.path.exists(os.path.join(out, "models", "roofs.glb")):
