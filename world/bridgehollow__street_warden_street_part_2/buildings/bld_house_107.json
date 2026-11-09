@@ -1,0 +1,46 @@
+{
+ "id": "bld_house_107",
+ "name": "House 107",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    120.7,
+    209.2
+   ],
+   [
+    140.7,
+    222.3
+   ],
+   [
+    148.8,
+    210.0
+   ],
+   [
+    128.8,
+    196.8
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 646.6,
+ "site_slope": 0.066,
+ "site_relief_ft": 1.5,
+ "region": {
+  "parent_id": "bld_house_107",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

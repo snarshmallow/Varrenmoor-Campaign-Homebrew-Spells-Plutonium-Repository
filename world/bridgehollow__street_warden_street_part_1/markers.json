@@ -1,0 +1,182 @@
+{
+ "region_outline": [
+  [
+   409.6,
+   9.1
+  ],
+  [
+   409.6,
+   604.0
+  ],
+  [
+   3.3,
+   604.0
+  ],
+  [
+   3.3,
+   9.1
+  ]
+ ],
+ "markers": [
+  {
+   "id": "mk_str_pilgrim_road_1_start",
+   "kind": "continues_off_map",
+   "street": "str_pilgrim_road_1",
+   "parent_street": "str_pilgrim_road_1",
+   "point": [
+    409.6,
+    468.49
+   ],
+   "dir": [
+    0.631,
+    0.776
+   ],
+   "width_ft": 30,
+   "label": "Pilgrim Road continues"
+  },
+  {
+   "id": "mk_str_006_end",
+   "kind": "continues_off_map",
+   "street": "str_006",
+   "parent_street": "str_006",
+   "point": [
+    409.6,
+    242.47
+   ],
+   "dir": [
+    0.85,
+    -0.526
+   ],
+   "width_ft": 17.9,
+   "label": "Weavers Walk continues"
+  },
+  {
+   "id": "mk_str_008_start",
+   "kind": "continues_off_map",
+   "street": "str_008",
+   "parent_street": "str_008",
+   "point": [
+    3.3,
+    287.53
+   ],
+   "dir": [
+    -0.913,
+    0.409
+   ],
+   "width_ft": 20.4,
+   "label": "Hollow Way continues"
+  },
+  {
+   "id": "mk_str_010_end",
+   "kind": "continues_off_map",
+   "street": "str_010",
+   "parent_street": "str_010",
+   "point": [
+    409.6,
+    236.85
+   ],
+   "dir": [
+    0.525,
+    0.851
+   ],
+   "width_ft": 21.0,
+   "label": "Chandler Row continues"
+  },
+  {
+   "id": "mk_str_011_start",
+   "kind": "continues_off_map",
+   "street": "str_011",
+   "parent_street": "str_011",
+   "point": [
+    3.3,
+    266.92
+   ],
+   "dir": [
+    -0.56,
+    -0.828
+   ],
+   "width_ft": 20.7,
+   "label": "Cobbler Row continues"
+  },
+  {
+   "id": "mk_str_014_end",
+   "kind": "continues_off_map",
+   "street": "str_014",
+   "parent_street": "str_014",
+   "point": [
+    87.47,
+    604.0
+   ],
+   "dir": [
+    -0.438,
+    0.899
+   ],
+   "width_ft": 24.0,
+   "label": "Warden Street continues"
+  },
+  {
+   "id": "mk_str_016_start",
+   "kind": "continues_off_map",
+   "street": "str_016",
+   "parent_street": "str_016",
+   "point": [
+    3.3,
+    440.0
+   ],
+   "dir": [
+    -0.727,
+    -0.687
+   ],
+   "width_ft": 18.0,
+   "label": "Dyers Walk continues"
+  },
+  {
+   "id": "mk_str_021_end",
+   "kind": "continues_off_map",
+   "street": "str_021",
+   "parent_street": "str_021",
+   "point": [
+    409.6,
+    569.39
+   ],
+   "dir": [
+    0.633,
+    0.774
+   ],
+   "width_ft": 22.8,
+   "label": "Cartwright Lane 2 continues"
+  },
+  {
+   "id": "mk_str_023_end",
+   "kind": "continues_off_map",
+   "street": "str_023",
+   "parent_street": "str_023",
+   "point": [
+    20.25,
+    604.0
+   ],
+   "dir": [
+    0.195,
+    0.981
+   ],
+   "width_ft": 18.0,
+   "label": "Alley 23 continues"
+  },
+  {
+   "id": "mk_str_024_end",
+   "kind": "continues_off_map",
+   "street": "str_024",
+   "parent_street": "str_024",
+   "point": [
+    151.86,
+    604.0
+   ],
+   "dir": [
+    -0.433,
+    0.902
+   ],
+   "width_ft": 24.0,
+   "label": "Weavers Walk 2 continues"
+  }
+ ]
+}

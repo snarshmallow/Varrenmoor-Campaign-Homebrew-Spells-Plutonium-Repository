@@ -1,0 +1,47 @@
+{
+ "id": "bld_house_098",
+ "name": "House 98",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    213.4,
+    163.5
+   ],
+   [
+    209.1,
+    175.9
+   ],
+   [
+    229.7,
+    182.9
+   ],
+   [
+    233.9,
+    170.5
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 645.3,
+ "site_slope": 0.088,
+ "site_relief_ft": 2.0,
+ "style": "bh_inner_house_winter",
+ "region": {
+  "parent_id": "bld_house_098",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

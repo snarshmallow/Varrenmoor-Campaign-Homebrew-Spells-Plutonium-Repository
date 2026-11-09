@@ -1,0 +1,46 @@
+{
+ "id": "bld_house_123",
+ "name": "House 123",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    171.0,
+    271.8
+   ],
+   [
+    161.5,
+    289.7
+   ],
+   [
+    172.5,
+    295.5
+   ],
+   [
+    182.0,
+    277.6
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 641.3,
+ "site_slope": 0.056,
+ "site_relief_ft": 0.9,
+ "region": {
+  "parent_id": "bld_house_123",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

@@ -1,0 +1,47 @@
+{
+ "id": "bld_house_035",
+ "name": "House 35",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    104.5,
+    239.8
+   ],
+   [
+    81.1,
+    235.6
+   ],
+   [
+    78.7,
+    249.4
+   ],
+   [
+    102.1,
+    253.5
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 659.2,
+ "site_slope": 0.069,
+ "site_relief_ft": 1.7,
+ "style": "bh_inner_house_winter",
+ "region": {
+  "parent_id": "bld_house_035",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

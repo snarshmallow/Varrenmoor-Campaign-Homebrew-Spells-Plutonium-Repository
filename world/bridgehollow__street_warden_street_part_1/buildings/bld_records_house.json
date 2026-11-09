@@ -1,0 +1,47 @@
+{
+ "id": "bld_records_house",
+ "name": "Records House",
+ "kind": "civic",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    172.0,
+    366.9
+   ],
+   [
+    173.0,
+    344.5
+   ],
+   [
+    142.8,
+    343.2
+   ],
+   [
+    141.8,
+    365.6
+   ]
+  ]
+ },
+ "notes": "Registers, deeds and court papers.",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 2,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 652.0,
+ "site_slope": 0.084,
+ "site_relief_ft": 2.8,
+ "style": "bh_warden_civic_winter",
+ "region": {
+  "parent_id": "bld_records_house",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

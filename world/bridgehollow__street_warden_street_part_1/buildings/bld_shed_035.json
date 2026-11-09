@@ -1,0 +1,47 @@
+{
+ "id": "bld_shed_035",
+ "name": "Shed 35",
+ "kind": "shed",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    118.0,
+    241.6
+   ],
+   [
+    110.8,
+    240.3
+   ],
+   [
+    109.8,
+    246.4
+   ],
+   [
+    116.9,
+    247.7
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 658.0,
+ "site_slope": 0.075,
+ "site_relief_ft": 0.6,
+ "style": "bh_ring_outbuilding_winter",
+ "region": {
+  "parent_id": "bld_shed_035",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

@@ -1,0 +1,47 @@
+{
+ "id": "bld_house_058",
+ "name": "House 58",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    162.5,
+    17.5
+   ],
+   [
+    162.3,
+    -7.3
+   ],
+   [
+    138.6,
+    -7.1
+   ],
+   [
+    138.8,
+    17.7
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 655.3,
+ "site_slope": 0.068,
+ "site_relief_ft": 1.8,
+ "style": "bh_warden_house_winter",
+ "region": {
+  "parent_id": "bld_house_058",
+  "clipped": false,
+  "edge": true,
+  "inside_frac": 0.536,
+  "in_region_frac": 0.536
+ }
+}

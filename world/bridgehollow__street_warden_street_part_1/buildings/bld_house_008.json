@@ -1,0 +1,47 @@
+{
+ "id": "bld_house_008",
+ "name": "House 8",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    175.8,
+    135.3
+   ],
+   [
+    165.6,
+    142.1
+   ],
+   [
+    172.5,
+    152.6
+   ],
+   [
+    182.8,
+    145.8
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 2,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 660.8,
+ "site_slope": 0.128,
+ "site_relief_ft": 1.6,
+ "style": "bh_inner_house_winter",
+ "region": {
+  "parent_id": "bld_house_008",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

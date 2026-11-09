@@ -1,0 +1,46 @@
+{
+ "id": "bld_house_030",
+ "name": "House 30",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    17.0,
+    234.1
+   ],
+   [
+    6.6,
+    224.7
+   ],
+   [
+    -4.1,
+    236.7
+   ],
+   [
+    6.4,
+    246.0
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 662.3,
+ "site_slope": 0.056,
+ "site_relief_ft": 1.0,
+ "region": {
+  "parent_id": "bld_house_030",
+  "clipped": false,
+  "edge": true,
+  "inside_frac": 0.755,
+  "in_region_frac": 0.755
+ }
+}

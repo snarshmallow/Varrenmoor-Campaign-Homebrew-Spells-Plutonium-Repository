@@ -1,0 +1,81 @@
+{
+ "instances": [
+  {
+   "id": "fol_w_river_2_0007",
+   "species": "alder",
+   "x": 256.65,
+   "y": 452.25,
+   "z": 625.18,
+   "scale": 1.122,
+   "rotation": 102.6,
+   "height_ft": 50.49,
+   "kind": "tree"
+  },
+  {
+   "id": "fol_w_town_1_0008",
+   "species": "oak",
+   "x": 161.16,
+   "y": 257.75,
+   "z": 642.77,
+   "scale": 1.169,
+   "rotation": 123.5,
+   "height_ft": 67.22,
+   "kind": "tree"
+  },
+  {
+   "id": "fol_w_town_1_0011",
+   "species": "oak",
+   "x": 232.71,
+   "y": 291.46,
+   "z": 638.0,
+   "scale": 0.852,
+   "rotation": 74.7,
+   "height_ft": 48.99,
+   "kind": "tree"
+  },
+  {
+   "id": "fol_w_town_1_0016",
+   "species": "birch",
+   "x": 300.7,
+   "y": 275.05,
+   "z": 632.63,
+   "scale": 0.991,
+   "rotation": 234.8,
+   "height_ft": 44.59,
+   "kind": "tree"
+  },
+  {
+   "id": "fol_w_town_1_0018",
+   "species": "rowan",
+   "x": 72.73,
+   "y": 190.56,
+   "z": 647.43,
+   "scale": 1.184,
+   "rotation": 138.5,
+   "height_ft": 28.42,
+   "kind": "tree"
+  },
+  {
+   "id": "fol_w_town_1_0024",
+   "species": "maple",
+   "x": 281.09,
+   "y": 46.35,
+   "z": 644.92,
+   "scale": 1.123,
+   "rotation": 2.4,
+   "height_ft": 50.53,
+   "kind": "tree"
+  },
+  {
+   "id": "fol_w_town_1_0025",
+   "species": "maple",
+   "x": 262.1,
+   "y": 198.59,
+   "z": 641.13,
+   "scale": 1.036,
+   "rotation": 92.4,
+   "height_ft": 46.62,
+   "kind": "tree"
+  }
+ ]
+}

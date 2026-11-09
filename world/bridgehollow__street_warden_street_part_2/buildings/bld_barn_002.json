@@ -1,0 +1,46 @@
+{
+ "id": "bld_barn_002",
+ "name": "Barn 2",
+ "kind": "barn",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    188.6,
+    367.1
+   ],
+   [
+    204.0,
+    351.4
+   ],
+   [
+    184.3,
+    332.0
+   ],
+   [
+    168.8,
+    347.8
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 635.8,
+ "site_slope": 0.14,
+ "site_relief_ft": 2.8,
+ "region": {
+  "parent_id": "bld_barn_002",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

@@ -1,0 +1,47 @@
+{
+ "id": "bld_house_073",
+ "name": "House 73",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    171.8,
+    80.8
+   ],
+   [
+    169.4,
+    42.2
+   ],
+   [
+    155.7,
+    43.1
+   ],
+   [
+    158.1,
+    81.6
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 652.0,
+ "site_slope": 0.073,
+ "site_relief_ft": 2.5,
+ "style": "bh_warden_house_winter",
+ "region": {
+  "parent_id": "bld_house_073",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

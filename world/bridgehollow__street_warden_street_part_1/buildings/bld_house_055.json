@@ -1,0 +1,47 @@
+{
+ "id": "bld_house_055",
+ "name": "House 55",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    -2.0,
+    357.9
+   ],
+   [
+    6.6,
+    370.5
+   ],
+   [
+    22.7,
+    359.5
+   ],
+   [
+    14.1,
+    346.9
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 656.6,
+ "site_slope": 0.044,
+ "site_relief_ft": 1.0,
+ "style": "bh_inner_house_winter",
+ "region": {
+  "parent_id": "bld_house_055",
+  "clipped": false,
+  "edge": true,
+  "inside_frac": 0.899,
+  "in_region_frac": 0.899
+ }
+}

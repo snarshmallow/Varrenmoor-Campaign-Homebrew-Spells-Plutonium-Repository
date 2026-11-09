@@ -1,0 +1,47 @@
+{
+ "id": "bld_house_078",
+ "name": "House 78",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    38.7,
+    436.4
+   ],
+   [
+    23.9,
+    420.3
+   ],
+   [
+    13.2,
+    430.1
+   ],
+   [
+    28.0,
+    446.2
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 652.8,
+ "site_slope": 0.066,
+ "site_relief_ft": 1.4,
+ "style": "bh_inner_house_winter",
+ "region": {
+  "parent_id": "bld_house_078",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

@@ -1,0 +1,47 @@
+{
+ "id": "bld_house_048",
+ "name": "House 48",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    0.6,
+    322.9
+   ],
+   [
+    12.6,
+    340.5
+   ],
+   [
+    25.6,
+    331.6
+   ],
+   [
+    13.6,
+    314.0
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 657.8,
+ "site_slope": 0.045,
+ "site_relief_ft": 1.0,
+ "style": "bh_inner_house_winter",
+ "region": {
+  "parent_id": "bld_house_048",
+  "clipped": false,
+  "edge": true,
+  "inside_frac": 0.977,
+  "in_region_frac": 0.977
+ }
+}

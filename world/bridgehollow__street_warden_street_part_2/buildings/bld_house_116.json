@@ -1,0 +1,46 @@
+{
+ "id": "bld_house_116",
+ "name": "House 116",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    230.2,
+    266.9
+   ],
+   [
+    233.7,
+    250.7
+   ],
+   [
+    224.7,
+    248.8
+   ],
+   [
+    221.3,
+    265.0
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 639.6,
+ "site_slope": 0.08,
+ "site_relief_ft": 1.0,
+ "region": {
+  "parent_id": "bld_house_116",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

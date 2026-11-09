@@ -1,0 +1,47 @@
+{
+ "id": "bld_house_007",
+ "name": "House 7",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    306.3,
+    153.4
+   ],
+   [
+    316.5,
+    139.0
+   ],
+   [
+    303.5,
+    129.8
+   ],
+   [
+    293.3,
+    144.2
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 655.6,
+ "site_slope": 0.121,
+ "site_relief_ft": 2.4,
+ "style": "bh_inner_house_winter",
+ "region": {
+  "parent_id": "bld_house_007",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

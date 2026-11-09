@@ -1,0 +1,53 @@
+{
+ "warden_street_part_1": {
+  "scene_name": "Bridgehollow - Warden Street Part 1 (Winter)",
+  "child": "bridgehollow__street_warden_street_part_1",
+  "size_ft": [
+   406,
+   595
+  ],
+  "rect": [
+   883.3,
+   459.1,
+   1289.6,
+   1054.0
+  ],
+  "buildings": 73,
+  "trees": 9,
+  "status": "verified",
+  "updated": "2026-11-09T16:40:34",
+  "tris": 298249,
+  "lamps": 8,
+  "scene_uuid": "Scene.bseT6oQjhcePl4o8",
+  "tiles": 87,
+  "foliage_tiles": 7,
+  "lights": 32,
+  "audit": {
+   "clean": true,
+   "counts": {},
+   "missing": 0
+  },
+  "light_types": {
+   "lamp": 8,
+   "hearth": 24
+  }
+ },
+ "warden_street_part_2": {
+  "scene_name": "Bridgehollow - Warden Street Part 2 (Winter)",
+  "child": "bridgehollow__street_warden_street_part_2",
+  "size_ft": [
+   314,
+   459
+  ],
+  "rect": [
+   823.7,
+   814.3,
+   1137.6,
+   1273.4
+  ],
+  "buildings": 42,
+  "trees": 7,
+  "status": "extracted",
+  "updated": "2026-11-09T16:38:06"
+ }
+}

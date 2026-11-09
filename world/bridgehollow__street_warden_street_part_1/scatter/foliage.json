@@ -1,0 +1,103 @@
+{
+ "instances": [
+  {
+   "id": "fol_w_town_1_0009",
+   "species": "oak",
+   "x": 395.79,
+   "y": 335.48,
+   "z": 653.06,
+   "scale": 1.017,
+   "rotation": 356.5,
+   "height_ft": 58.48,
+   "kind": "tree"
+  },
+  {
+   "id": "fol_w_town_1_0010",
+   "species": "oak",
+   "x": 407.1,
+   "y": 359.08,
+   "z": 652.94,
+   "scale": 1.163,
+   "rotation": 190.5,
+   "height_ft": 66.87,
+   "kind": "tree"
+  },
+  {
+   "id": "fol_w_town_1_0017",
+   "species": "birch",
+   "x": 105.9,
+   "y": 140.42,
+   "z": 665.1,
+   "scale": 1.135,
+   "rotation": 116.0,
+   "height_ft": 51.08,
+   "kind": "tree"
+  },
+  {
+   "id": "fol_w_town_1_0018",
+   "species": "rowan",
+   "x": 12.73,
+   "y": 550.56,
+   "z": 647.43,
+   "scale": 1.184,
+   "rotation": 138.5,
+   "height_ft": 28.42,
+   "kind": "tree"
+  },
+  {
+   "id": "fol_w_town_1_0019",
+   "species": "rowan",
+   "x": 328.54,
+   "y": 588.74,
+   "z": 635.4,
+   "scale": 1.027,
+   "rotation": 328.6,
+   "height_ft": 24.65,
+   "kind": "tree"
+  },
+  {
+   "id": "fol_w_town_1_0022",
+   "species": "rowan",
+   "x": 223.36,
+   "y": 313.86,
+   "z": 647.95,
+   "scale": 0.968,
+   "rotation": 182.5,
+   "height_ft": 23.23,
+   "kind": "tree"
+  },
+  {
+   "id": "fol_w_town_1_0023",
+   "species": "maple",
+   "x": 253.09,
+   "y": 210.58,
+   "z": 651.49,
+   "scale": 1.089,
+   "rotation": 328.2,
+   "height_ft": 49.0,
+   "kind": "tree"
+  },
+  {
+   "id": "fol_w_town_1_0024",
+   "species": "maple",
+   "x": 221.09,
+   "y": 406.35,
+   "z": 644.92,
+   "scale": 1.123,
+   "rotation": 2.4,
+   "height_ft": 50.53,
+   "kind": "tree"
+  },
+  {
+   "id": "fol_w_town_1_0025",
+   "species": "maple",
+   "x": 202.1,
+   "y": 558.59,
+   "z": 641.13,
+   "scale": 1.036,
+   "rotation": 92.4,
+   "height_ft": 46.62,
+   "kind": "tree"
+  }
+ ]
+}

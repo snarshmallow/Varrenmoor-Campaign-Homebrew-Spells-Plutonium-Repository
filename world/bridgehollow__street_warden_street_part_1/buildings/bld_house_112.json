@@ -1,0 +1,46 @@
+{
+ "id": "bld_house_112",
+ "name": "House 112",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    376.9,
+    586.4
+   ],
+   [
+    391.0,
+    610.5
+   ],
+   [
+    401.5,
+    604.3
+   ],
+   [
+    387.4,
+    580.2
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 639.0,
+ "site_slope": 0.148,
+ "site_relief_ft": 3.6,
+ "region": {
+  "parent_id": "bld_house_112",
+  "clipped": false,
+  "edge": true,
+  "inside_frac": 0.859,
+  "in_region_frac": 0.859
+ }
+}

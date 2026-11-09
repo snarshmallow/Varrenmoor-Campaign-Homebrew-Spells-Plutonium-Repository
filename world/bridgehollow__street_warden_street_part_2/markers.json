@@ -1,0 +1,86 @@
+{
+ "region_outline": [
+  [
+   317.6,
+   4.3
+  ],
+  [
+   317.6,
+   463.4
+  ],
+  [
+   3.7,
+   463.4
+  ],
+  [
+   3.7,
+   4.3
+  ]
+ ],
+ "markers": [
+  {
+   "id": "mk_str_011_start",
+   "kind": "continues_off_map",
+   "street": "str_011",
+   "parent_street": "str_011",
+   "point": [
+    115.82,
+    4.3
+   ],
+   "dir": [
+    -0.513,
+    -0.858
+   ],
+   "width_ft": 20.7,
+   "label": "Cobbler Row continues"
+  },
+  {
+   "id": "mk_str_014_start",
+   "kind": "continues_off_map",
+   "street": "str_014",
+   "parent_street": "str_014",
+   "point": [
+    186.02,
+    4.3
+   ],
+   "dir": [
+    -0.005,
+    -1.0
+   ],
+   "width_ft": 24.0,
+   "label": "Warden Street continues"
+  },
+  {
+   "id": "mk_str_016_start",
+   "kind": "continues_off_map",
+   "street": "str_016",
+   "parent_street": "str_016",
+   "point": [
+    3.7,
+    14.3
+   ],
+   "dir": [
+    -0.506,
+    -0.862
+   ],
+   "width_ft": 18.0,
+   "label": "Dyers Walk continues"
+  },
+  {
+   "id": "mk_str_024_end",
+   "kind": "continues_off_map",
+   "street": "str_024",
+   "parent_street": "str_024",
+   "point": [
+    76.7,
+    463.4
+   ],
+   "dir": [
+    -0.336,
+    0.942
+   ],
+   "width_ft": 24.0,
+   "label": "Weavers Walk 2 continues"
+  }
+ ]
+}

@@ -1,0 +1,46 @@
+{
+ "id": "bld_house_094",
+ "name": "House 94",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    80.6,
+    136.4
+   ],
+   [
+    98.0,
+    158.7
+   ],
+   [
+    107.3,
+    151.4
+   ],
+   [
+    89.8,
+    129.1
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 649.3,
+ "site_slope": 0.057,
+ "site_relief_ft": 1.4,
+ "region": {
+  "parent_id": "bld_house_094",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

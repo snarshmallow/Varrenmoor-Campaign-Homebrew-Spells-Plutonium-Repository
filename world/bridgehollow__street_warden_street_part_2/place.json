@@ -1,0 +1,59 @@
+{
+ "id": "bridgehollow__street_warden_street_part_2",
+ "name": "Bridgehollow (draft) - Warden Street Part 2",
+ "kind": "district",
+ "status": "proposed",
+ "units": "feet",
+ "origin": "top-left, y down",
+ "bounds": {
+  "width_ft": 317.6,
+  "height_ft": 463.4
+ },
+ "window_ft": [
+  3.7,
+  4.3,
+  317.6,
+  463.4
+ ],
+ "parent": {
+  "place": "bridgehollow",
+  "region": "region.json"
+ },
+ "notes": "Zoom-in child of bridgehollow (region Warden Street Part 2). Same ids and foot coordinates as the parent shifted by origin_ft 820.0,810.0. See region.json; details.json is generated, not canon.",
+ "files": {
+  "districts": "districts.json",
+  "streets": "streets.json",
+  "water": "water.json",
+  "buildings": "buildings/",
+  "view_settings": "view_settings.json",
+  "terrain": "terrain/",
+  "region": "region.json",
+  "details": "details.json",
+  "markers": "markers.json"
+ },
+ "view_focus": {
+  "district": [
+   160.6,
+   233.9
+  ]
+ },
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null,
+  "parent_place": "bridgehollow",
+  "scene_name": "Bridgehollow - Warden Street Part 2 (Winter)"
+ },
+ "generated_by": "region_extract.py",
+ "sea_level_ft": 0.0,
+ "season": "winter",
+ "street": {
+  "key": "warden_street",
+  "part": 2,
+  "parts": 2,
+  "street_ids": [
+   "str_014"
+  ],
+  "generated_by": "bridgehollow_streets.py"
+ }
+}
