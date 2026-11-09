@@ -27,4 +27,4 @@
 - **Portraits:** not generated (the GPU was busy with another job). The art prompts are in the spec; `foundry-3d/ai/characters.py` is the generator used for the other quest NPCs.
 - **Token display name:** the checklist asks for `displayName: 30` (hover). This world sets it to 20 (owner hover) on create and on update, like every other NPC; it stayed at 20.
 - **Schema notes:** weapon damage leaves the ability modifier to dnd5e (for example Rope Hook = 1d6 + Str). Pen Jab and Signal Flag Swat use a custom flat formula "1"; check in play that dnd5e does not add the modifier on top.
-- Optional Session 14 quest items (folder "Quest Items (Session 14)") were not built: they were optional and not part of this task.
+- Optional Session 14 quest items (folder "Quest Items (Session 14)") were not built in this pass. **Update:** they are now built as 14 world items in the Item folder `Quest Items (Side Quests) / Session 14: The Thaw`; see `Session_14_Foundry_Items_Built.md`. No actor was changed for them.

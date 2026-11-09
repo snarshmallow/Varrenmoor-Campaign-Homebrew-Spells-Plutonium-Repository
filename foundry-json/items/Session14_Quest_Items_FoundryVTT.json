@@ -1,0 +1,650 @@
+[
+  {
+    "pipelineId": "item:ossuary:s14:copied_custody_page",
+    "name": "Copied Custody Page",
+    "type": "loot",
+    "img": "icons/sundries/documents/document-sealed-signatures-red.webp",
+    "system": {
+      "description": {
+        "value": "<p>A certified copy of a custody ledger page. One entry: Named. Held: the place where even time cannot leave. Tag: outstanding.</p><section class=\"secret\" id=\"secret-02590d8ce2f28a3e\"><p><strong>GM note.</strong> Sabeline shows it at Table Seven [ASK] (Scene 3, Clue E), or Pringus finds the line during an audit. Anyone who has read the Stolen Shard sees the same words. It is the custody record for T5: the intake ledger and this page agree, the physical tag is the third record. Sabeline's sheet also carries a copy (Copied Open-Claim Page); hand out this one if the party keeps it.</p></section>",
+        "chat": ""
+      },
+      "source": {
+        "custom": "Varrenmoor DM Guide, Part 7 (Session 14)",
+        "book": "",
+        "page": "",
+        "license": "",
+        "rules": "2014",
+        "revision": 1
+      },
+      "quantity": 1,
+      "weight": {
+        "value": 0,
+        "units": "lb"
+      },
+      "price": {
+        "value": 0,
+        "denomination": "gp"
+      },
+      "rarity": "",
+      "identified": true,
+      "type": {
+        "value": "gear",
+        "subtype": ""
+      },
+      "properties": [],
+      "container": null,
+      "unidentified": {
+        "description": ""
+      }
+    },
+    "effects": [],
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {}
+  },
+  {
+    "pipelineId": "item:ossuary:s14:outstanding_intake_tag",
+    "name": "Outstanding Intake Tag",
+    "type": "loot",
+    "img": "icons/commodities/treasure/token-runed-os-grey.webp",
+    "system": {
+      "description": {
+        "value": "<p>An old intake tag stamped with a crown mark. The number is very low.</p><section class=\"secret\" id=\"secret-d6449c1b4d6c64b2\"><p><strong>GM note.</strong> T5, the third record. The party's sheets hold no Session 12 intake tags (checked in the live world when this item was built), so by the guide it is still in the passage under the Cladis memorial: History DC 12 to read the old numbering (Investigation DC 12 to pick it out if they took the tags after all). Second path: Rite of the Remaining Bone (Expose Claim, 10 minutes, a copper coin, no charges) shows the claim it belongs to. A party member with custody presents it to Pringus for a Reconciliation Audit. The audit is public: Tallis reads audits.</p></section>",
+        "chat": ""
+      },
+      "source": {
+        "custom": "Varrenmoor DM Guide, Part 7 (Session 14)",
+        "book": "",
+        "page": "",
+        "license": "",
+        "rules": "2014",
+        "revision": 1
+      },
+      "quantity": 1,
+      "weight": {
+        "value": 0,
+        "units": "lb"
+      },
+      "price": {
+        "value": 0,
+        "denomination": "gp"
+      },
+      "rarity": "",
+      "identified": true,
+      "type": {
+        "value": "gear",
+        "subtype": ""
+      },
+      "properties": [],
+      "container": null,
+      "unidentified": {
+        "description": ""
+      }
+    },
+    "effects": [],
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {}
+  },
+  {
+    "pipelineId": "item:ossuary:s14:mottles_receipt_room_208",
+    "name": "Mottle's Receipt (Room 208)",
+    "type": "loot",
+    "img": "icons/sundries/documents/document-writing-brown.webp",
+    "system": {
+      "description": {
+        "value": "<p>Paid in advance. Three nights. Instead of a signature, someone drew a bell.</p><section class=\"secret\" id=\"secret-3afa5595cecb35a7\"><p><strong>GM note.</strong> Scene 1, Clue B: Mottle's ledger entry for Europa's room (\"He did not sign. He drew a bell. I have not agreed to that.\"). The man who paid was tall, with frost in his hair. Put to Pell together with Europa's frost: Insight DC 13 and he admits the far end is up at the camp.</p></section>",
+        "chat": ""
+      },
+      "source": {
+        "custom": "Varrenmoor DM Guide, Part 7 (Session 14)",
+        "book": "",
+        "page": "",
+        "license": "",
+        "rules": "2014",
+        "revision": 1
+      },
+      "quantity": 1,
+      "weight": {
+        "value": 0,
+        "units": "lb"
+      },
+      "price": {
+        "value": 0,
+        "denomination": "gp"
+      },
+      "rarity": "",
+      "identified": true,
+      "type": {
+        "value": "gear",
+        "subtype": ""
+      },
+      "properties": [],
+      "container": null,
+      "unidentified": {
+        "description": ""
+      }
+    },
+    "effects": [],
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {}
+  },
+  {
+    "pipelineId": "item:ossuary:s14:capsule_bell_silent",
+    "name": "Capsule: Bell Silent",
+    "type": "loot",
+    "img": "icons/commodities/tech/pipe-tube-glass-brass.webp",
+    "system": {
+      "description": {
+        "value": "<p>A capsule with a bone-style tag. The letter reads: Bell silent. Clapper taken to the Customs House. Bailiffs on the road. V. keeps the fire.</p><section class=\"secret\" id=\"secret-1222e9f39258492c\"><p><strong>GM note.</strong> Scene 7, Clue H: drops into the dusty terminal when the cold door opens (T6 success), same single clunk as the Part 6 notes. If the party refuses the Thaw, Pell brings it to them anyway (\"You should know anyway\"). Nobody in the Thaw explains who V. is this session.</p></section>",
+        "chat": ""
+      },
+      "source": {
+        "custom": "Varrenmoor DM Guide, Part 7 (Session 14)",
+        "book": "",
+        "page": "",
+        "license": "",
+        "rules": "2014",
+        "revision": 1
+      },
+      "quantity": 1,
+      "weight": {
+        "value": 0,
+        "units": "lb"
+      },
+      "price": {
+        "value": 0,
+        "denomination": "gp"
+      },
+      "rarity": "",
+      "identified": true,
+      "type": {
+        "value": "gear",
+        "subtype": ""
+      },
+      "properties": [],
+      "container": null,
+      "unidentified": {
+        "description": ""
+      }
+    },
+    "effects": [],
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "levels-3d-preview": {
+        "model3d": "assets/varrenmoor-3d/Act 2 Road to Bridgehollow/Ossuary Exchange/Items/item_capsule.glb"
+      }
+    }
+  },
+  {
+    "pipelineId": "item:ossuary:s14:iron_bars_haddos_stock",
+    "name": "Iron Bars (Haddo's Stock)",
+    "type": "loot",
+    "img": "icons/commodities/metal/ingot-worn-iron.webp",
+    "system": {
+      "description": {
+        "value": "<p>Four bars of old iron, bought off a salvage cart. They look alike.</p><section class=\"secret\" id=\"secret-570b147c6421d90b\"><p><strong>GM note.</strong> T2 at Brokka's forge (Scenes spec: on the anvil bench). Analyze, free, one careful 10 minutes covers all four, DC 12 sorts them; the results are in Session 14 T2 and in Haddo's Lore Reference: Three Strands. Do not say which bar is which before the roll. Haddo sells bar stock at 5 sp each.</p></section>",
+        "chat": ""
+      },
+      "source": {
+        "custom": "Varrenmoor DM Guide, Part 7 (Session 14)",
+        "book": "",
+        "page": "",
+        "license": "",
+        "rules": "2014",
+        "revision": 1
+      },
+      "quantity": 4,
+      "weight": {
+        "value": 2,
+        "units": "lb"
+      },
+      "price": {
+        "value": 5,
+        "denomination": "sp"
+      },
+      "rarity": "",
+      "identified": true,
+      "type": {
+        "value": "gear",
+        "subtype": ""
+      },
+      "properties": [],
+      "container": null,
+      "unidentified": {
+        "description": ""
+      }
+    },
+    "effects": [],
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {}
+  },
+  {
+    "pipelineId": "item:ossuary:s14:iron_rune_wire",
+    "name": "Iron Rune-Wire",
+    "type": "loot",
+    "img": "icons/commodities/tech/wire-spool-steel.webp",
+    "system": {
+      "description": {
+        "value": "<p>A coil of fine iron wire, freshly drawn from a single bar at Brokka's forge.</p><section class=\"secret\" id=\"secret-931a21f53a8a39ee\"><p><strong>GM note.</strong> T2 product: draw the clean bar into wire, smith's tools DC 12 (Dale or anyone; Brokka's help gives advantage). Counts as suitable material for Stellan's Repair Line on the anchor (T1); with the old wire T1 is at disadvantage. The rest is the wire strand of the braid (T6). If the wrong bar was drawn, it looks the same: T1 is at disadvantage until someone notices.</p></section>",
+        "chat": ""
+      },
+      "source": {
+        "custom": "Varrenmoor DM Guide, Part 7 (Session 14)",
+        "book": "",
+        "page": "",
+        "license": "",
+        "rules": "2014",
+        "revision": 1
+      },
+      "quantity": 1,
+      "weight": {
+        "value": 1,
+        "units": "lb"
+      },
+      "price": {
+        "value": 0,
+        "denomination": "gp"
+      },
+      "rarity": "",
+      "identified": true,
+      "type": {
+        "value": "gear",
+        "subtype": ""
+      },
+      "properties": [],
+      "container": null,
+      "unidentified": {
+        "description": ""
+      }
+    },
+    "effects": [],
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {}
+  },
+  {
+    "pipelineId": "item:ossuary:s14:jar_of_gorge_frost",
+    "name": "Jar of Gorge Frost",
+    "type": "loot",
+    "img": "icons/consumables/potions/potion-jar-capped-teal.webp",
+    "system": {
+      "description": {
+        "value": "<p>A stoppered jar of frost that never fully melts.</p><section class=\"secret\" id=\"secret-cfc99ee21c38a83a\"><p><strong>GM note.</strong> Pell's jar (his sheet carries one too: use either, not both). T2 frost match: Analyze this and the frost on the Stolen Shard, DC 14. Extract one Rime dose (Stable, automatic, 10 minutes; free at rest, otherwise 1 charge); then the jar is empty. It can also be the slow sinker on the real night.</p></section>",
+        "chat": ""
+      },
+      "source": {
+        "custom": "Varrenmoor DM Guide, Part 7 (Session 14)",
+        "book": "",
+        "page": "",
+        "license": "",
+        "rules": "2014",
+        "revision": 1
+      },
+      "quantity": 1,
+      "weight": {
+        "value": 1,
+        "units": "lb"
+      },
+      "price": {
+        "value": 0,
+        "denomination": "gp"
+      },
+      "rarity": "",
+      "identified": true,
+      "type": {
+        "value": "gear",
+        "subtype": ""
+      },
+      "properties": [],
+      "container": null,
+      "unidentified": {
+        "description": ""
+      }
+    },
+    "effects": [],
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {}
+  },
+  {
+    "pipelineId": "item:ossuary:s14:rime_dose",
+    "name": "Rime Dose (Gorge Frost)",
+    "type": "loot",
+    "img": "icons/consumables/potions/vial-cork-blue.webp",
+    "system": {
+      "description": {
+        "value": "<p>A prepared dose of rime drawn from the gorge frost. It is cold to hold and never fully melts.</p><section class=\"secret\" id=\"secret-d7bdfd817702f2ab\"><p><strong>GM note.</strong> Created by Dale's Extract Dose from the Jar of Gorge Frost (T2). Use Dale's Essencecrafting sheet for it: Apply Essence (1 charge plus this dose) to the braid preserves organic matter for 24 hours, so the linen and the fungal strand survive the cold. Without it the fungal strand freezes within an hour (T3). 7.9 lets Dale keep one extra Rime dose as a reward; the jar's yield is finite. No time essence.</p></section>",
+        "chat": ""
+      },
+      "source": {
+        "custom": "Varrenmoor DM Guide, Part 7 (Session 14)",
+        "book": "",
+        "page": "",
+        "license": "",
+        "rules": "2014",
+        "revision": 1
+      },
+      "quantity": 1,
+      "weight": {
+        "value": 0,
+        "units": "lb"
+      },
+      "price": {
+        "value": 0,
+        "denomination": "gp"
+      },
+      "rarity": "",
+      "identified": true,
+      "type": {
+        "value": "gear",
+        "subtype": ""
+      },
+      "properties": [],
+      "container": null,
+      "unidentified": {
+        "description": ""
+      }
+    },
+    "effects": [],
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {}
+  },
+  {
+    "pipelineId": "item:ossuary:s14:burial_linen_strand",
+    "name": "Burial Linen Strand (30 ft)",
+    "type": "loot",
+    "img": "icons/commodities/cloth/thread-spindle-white.webp",
+    "system": {
+      "description": {
+        "value": "<p>Clean white burial linen, cut and twisted into a thirty-foot strand for braiding.</p><section class=\"secret\" id=\"secret-f6fd011d37660bf0\"><p><strong>GM note.</strong> From Harrowgate's Counter (burial linen, 5 sp per yard; this is ten yards). The linen strand of the braid: it holds shape and carries nothing. Needs the Rime dose applied (T2) to last in the cold.</p></section>",
+        "chat": ""
+      },
+      "source": {
+        "custom": "Varrenmoor DM Guide, Part 7 (Session 14)",
+        "book": "",
+        "page": "",
+        "license": "",
+        "rules": "2014",
+        "revision": 1
+      },
+      "quantity": 1,
+      "weight": {
+        "value": 1,
+        "units": "lb"
+      },
+      "price": {
+        "value": 5,
+        "denomination": "gp"
+      },
+      "rarity": "",
+      "identified": true,
+      "type": {
+        "value": "gear",
+        "subtype": ""
+      },
+      "properties": [],
+      "container": null,
+      "unidentified": {
+        "description": ""
+      }
+    },
+    "effects": [],
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {}
+  },
+  {
+    "pipelineId": "item:ossuary:s14:living_fungal_strand",
+    "name": "Living Fungal Strand (30 ft)",
+    "type": "loot",
+    "img": "icons/commodities/cloth/thread-spindle-grey-green.webp",
+    "system": {
+      "description": {
+        "value": "<p>A thirty-foot strand of pale, living fungal thread, grown from a culture kept in a glass case. It is faintly cool to the touch.</p><section class=\"secret\" id=\"secret-5f433f0885a7b3e5\"><p><strong>GM note.</strong> T3 at Ysolde's: Read Green Pattern (free, DC 12), then Quickening (1 charge) DC 13 grows the 30-ft strand (failure: 10 ft; a second Quickening finishes it). Tie Green Thread (1 charge, 10 minutes) links it to the culture case, which stays at the near knot: that is the signal. It freezes within an hour without the Rime dose. Violet's craft reads the fungus only.</p></section>",
+        "chat": ""
+      },
+      "source": {
+        "custom": "Varrenmoor DM Guide, Part 7 (Session 14)",
+        "book": "",
+        "page": "",
+        "license": "",
+        "rules": "2014",
+        "revision": 1
+      },
+      "quantity": 1,
+      "weight": {
+        "value": 1,
+        "units": "lb"
+      },
+      "price": {
+        "value": 0,
+        "denomination": "gp"
+      },
+      "rarity": "",
+      "identified": true,
+      "type": {
+        "value": "gear",
+        "subtype": ""
+      },
+      "properties": [],
+      "container": null,
+      "unidentified": {
+        "description": ""
+      }
+    },
+    "effects": [],
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {}
+  },
+  {
+    "pipelineId": "item:ossuary:s14:braided_line_30ft",
+    "name": "Braided Line (30 ft)",
+    "type": "loot",
+    "img": "icons/sundries/survival/rope-coil-white.webp",
+    "system": {
+      "description": {
+        "value": "<p>Three strands braided together: white linen, fine iron wire, and a pale living fungal thread.</p><section class=\"secret\" id=\"secret-c276b8cd81dd894f\"><p><strong>GM note.</strong> T6 at Haddo's ropewalk: needs T1, T2 and T3. Someone holds tension while Haddo braids: Dexterity (weaver's tools or Sleight of Hand) DC 12; failure is a kink and 20 minutes lost. Then the test pull at the cold door (the Bell knock, Performance or Wisdom DC 12). The party carries the far end out through the cold door. Narrative object: it is rope, with no other property.</p></section>",
+        "chat": ""
+      },
+      "source": {
+        "custom": "Varrenmoor DM Guide, Part 7 (Session 14)",
+        "book": "",
+        "page": "",
+        "license": "",
+        "rules": "2014",
+        "revision": 1
+      },
+      "quantity": 1,
+      "weight": {
+        "value": 5,
+        "units": "lb"
+      },
+      "price": {
+        "value": 0,
+        "denomination": "gp"
+      },
+      "rarity": "",
+      "identified": true,
+      "type": {
+        "value": "gear",
+        "subtype": ""
+      },
+      "properties": [],
+      "container": null,
+      "unidentified": {
+        "description": ""
+      }
+    },
+    "effects": [],
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {}
+  },
+  {
+    "pipelineId": "item:ossuary:s14:anchor_rune_stone",
+    "name": "Anchor Rune-Stone (Cold Door)",
+    "type": "loot",
+    "img": "icons/commodities/stone/engraved-symbol-water-grey.webp",
+    "system": {
+      "description": {
+        "value": "<p>A palm-wide stone set in the right-hand jamb of an old iron service door, cut with two worn runes. It looks like ordinary masonry until you look closely.</p><section class=\"secret\" id=\"secret-affa54ae6af01b98\"><p><strong>GM note.</strong> Not portable: a fixture of the cold door (Scene 7 map object Anchor_Stone). This item is a reference card for T1; do not give it to a player sheet. Perception DC 13 or Read Inscription (free, DC 13) to notice and read it; properties in the order given in Session 14 T1. Repair Line twice (1 charge, 1 minute, DC 14 each): Fraying, Strained, Stable. Clean wire from T2 or disadvantage. Success: it hums faintly when anyone taps four slow near it.</p></section>",
+        "chat": ""
+      },
+      "source": {
+        "custom": "Varrenmoor DM Guide, Part 7 (Session 14)",
+        "book": "",
+        "page": "",
+        "license": "",
+        "rules": "2014",
+        "revision": 1
+      },
+      "quantity": 1,
+      "weight": {
+        "value": 0,
+        "units": "lb"
+      },
+      "price": {
+        "value": 0,
+        "denomination": "gp"
+      },
+      "rarity": "",
+      "identified": true,
+      "type": {
+        "value": "gear",
+        "subtype": ""
+      },
+      "properties": [],
+      "container": null,
+      "unidentified": {
+        "description": ""
+      }
+    },
+    "effects": [],
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {}
+  },
+  {
+    "pipelineId": "item:ossuary:s14:seized_bell_clapper",
+    "name": "Seized Bell Clapper",
+    "type": "loot",
+    "img": "icons/tools/instruments/bell-brass-brown.webp",
+    "system": {
+      "description": {
+        "value": "<p>A heavy iron bell clapper, wrapped in sacking and tied with a Customs House seizure tag.</p><section class=\"secret\" id=\"secret-a6187b94336dbeb8\"><p><strong>GM note.</strong> Session 15, not Session 14. The camp bell's clapper, held by the Iron Bailiffs at Bridgehollow's Customs House (the capsule's \"Clapper taken to the Customs House\"). The far knot needs the camp bell rung in the Bell knock, so the party has to recover it. The reason for the seizure is only what the Thaw thinks (an unlicensed signal).</p></section>",
+        "chat": ""
+      },
+      "source": {
+        "custom": "Varrenmoor DM Guide, Part 7 (Session 14)",
+        "book": "",
+        "page": "",
+        "license": "",
+        "rules": "2014",
+        "revision": 1
+      },
+      "quantity": 1,
+      "weight": {
+        "value": 8,
+        "units": "lb"
+      },
+      "price": {
+        "value": 0,
+        "denomination": "gp"
+      },
+      "rarity": "",
+      "identified": true,
+      "type": {
+        "value": "gear",
+        "subtype": ""
+      },
+      "properties": [],
+      "container": null,
+      "unidentified": {
+        "description": ""
+      }
+    },
+    "effects": [],
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {}
+  },
+  {
+    "pipelineId": "item:ossuary:s14:irregular_transfer_permit",
+    "name": "Irregular-Transfer Permit",
+    "type": "loot",
+    "img": "icons/sundries/documents/document-official-capital.webp",
+    "system": {
+      "description": {
+        "value": "<p>An Exchange permit, sealed and countersigned, for one irregular transfer through a named threshold. Valid once.</p><section class=\"secret\" id=\"secret-16f4e972cf532070\"><p><strong>GM note.</strong> Scene 5 only, and only if won: Persuasion DC 17 with the T5 audit done, or Pringus speaks for the records. It makes the later return fully legal. A delay (DC 15) or a lie (DC 16) does not earn it.</p></section>",
+        "chat": ""
+      },
+      "source": {
+        "custom": "Varrenmoor DM Guide, Part 7 (Session 14)",
+        "book": "",
+        "page": "",
+        "license": "",
+        "rules": "2014",
+        "revision": 1
+      },
+      "quantity": 1,
+      "weight": {
+        "value": 0,
+        "units": "lb"
+      },
+      "price": {
+        "value": 0,
+        "denomination": "gp"
+      },
+      "rarity": "",
+      "identified": true,
+      "type": {
+        "value": "gear",
+        "subtype": ""
+      },
+      "properties": [],
+      "container": null,
+      "unidentified": {
+        "description": ""
+      }
+    },
+    "effects": [],
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {}
+  }
+]
