@@ -4,7 +4,7 @@
 # (skybox, padding table), makes the scene EMPTY first and then adds the model tile and lights one by one (Scene.create with embedded
 # documents duplicated them). Tile x,y is its centre; rotation 0 = plan north is canvas up (verified). The scene is not activated.
 param([Parameter(Mandatory)][string]$Model, [Parameter(Mandatory)][string]$Name, [string]$Playlist = '', [string]$PlaylistSound = '',
-      [int]$Pad = 4, [double]$Rotation = 0, [switch]$DisableAnim)
+      [int]$Pad = 4, [double]$Rotation = 0, [switch]$DisableAnim, [string]$FolderId = '')
 $ErrorActionPreference = 'Stop'
 Set-Location $PSScriptRoot
 $bridge = Join-Path $PSScriptRoot 'bridge.ps1'
@@ -23,7 +23,7 @@ $sceneX = [math]::Ceiling($W * 0.25 / 100) * 100; $sceneY = [math]::Ceiling($H *
 $cx = $sceneX + $W / 2; $cy = $sceneY + $H / 2
 
 $scene = [ordered]@{
-  name = $Name; folder = $m.folder; width = $W; height = $H; padding = $m.padding; shiftX = 0; shiftY = 0
+  name = $Name; folder = $(if ($FolderId) { $FolderId } else { $m.folder }); width = $W; height = $H; padding = $m.padding; shiftX = 0; shiftY = 0
   grid = $m.grid; tokenVision = $m.tokenVision; fog = $m.fog; environment = $m.environment; levels = $m.levels
   initialLevel = $m.initialLevel; navigation = $false; flags = $m.flags
 }
