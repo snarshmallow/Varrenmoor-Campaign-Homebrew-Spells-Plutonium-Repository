@@ -1,0 +1,1634 @@
+{
+  "name": "Ysolde Harrowgate, Licensed Restorer",
+  "type": "npc",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "abilities": {
+      "str": {
+        "value": 11,
+        "proficient": 0,
+        "bonuses": {
+          "check": "",
+          "save": ""
+        },
+        "max": null
+      },
+      "dex": {
+        "value": 12,
+        "proficient": 0,
+        "bonuses": {
+          "check": "",
+          "save": ""
+        },
+        "max": null
+      },
+      "con": {
+        "value": 12,
+        "proficient": 0,
+        "bonuses": {
+          "check": "",
+          "save": ""
+        },
+        "max": null
+      },
+      "int": {
+        "value": 15,
+        "proficient": 0,
+        "bonuses": {
+          "check": "",
+          "save": ""
+        },
+        "max": null
+      },
+      "wis": {
+        "value": 15,
+        "proficient": 1,
+        "bonuses": {
+          "check": "",
+          "save": ""
+        },
+        "max": null
+      },
+      "cha": {
+        "value": 12,
+        "proficient": 0,
+        "bonuses": {
+          "check": "",
+          "save": ""
+        },
+        "max": null
+      }
+    },
+    "attributes": {
+      "ac": {
+        "flat": 11,
+        "calc": "natural",
+        "formula": ""
+      },
+      "hp": {
+        "value": 22,
+        "max": 22,
+        "temp": 0,
+        "tempmax": 0,
+        "formula": "4d8+4"
+      },
+      "init": {
+        "ability": "",
+        "bonus": "0",
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "movement": {
+        "burrow": 0,
+        "climb": 0,
+        "fly": 0,
+        "swim": 0,
+        "walk": 30,
+        "units": "ft",
+        "hover": false
+      },
+      "attunement": {
+        "max": 3
+      },
+      "senses": {
+        "units": "ft",
+        "special": "",
+        "ranges": {
+          "darkvision": 0,
+          "blindsight": 0,
+          "tremorsense": 0,
+          "truesight": 0
+        }
+      },
+      "spellcasting": "",
+      "exhaustion": 0,
+      "concentration": {
+        "ability": "",
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        },
+        "bonuses": {
+          "save": ""
+        },
+        "limit": 1
+      },
+      "hd": {
+        "spent": 0
+      },
+      "death": {
+        "ability": "",
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        },
+        "success": 0,
+        "failure": 0
+      }
+    },
+    "details": {
+      "biography": {
+        "value": "<p><strong>Ysolde Harrowgate</strong> runs Harrowgate Restorations, an independent licensed restoration house in the Lower market, in her third leased body (lovely, apart from the knees). Brisk, warm and practical, she washes her hands before and after every sentence that matters.</p><p><strong>GM notes (Part 7).</strong> [SECRET] Thaw member: she prepares the lawful vessel and keeps Violet's culture. T3 (Violet: Read Green Pattern DC 12, Quickening DC 13) and T4 (Betsy: judge DC 12, Splicing DC 14 suggested, \"warm from the core\") happen at her house. The vessel is lawful (Insight DC 11: true). Takes Bones's restoration at cost after the operation.</p>",
+        "public": ""
+      },
+      "alignment": "neutral good",
+      "race": null,
+      "type": {
+        "value": "humanoid",
+        "subtype": "human (leased body)",
+        "swarm": "",
+        "custom": ""
+      },
+      "cr": 0.5,
+      "ideal": "Do it properly or don't do it.",
+      "bond": "Her restoration house and its receipts.",
+      "flaw": "Takes on one patient too many.",
+      "habitat": {
+        "custom": "Ossuary Exchange — Lower Ring",
+        "value": []
+      },
+      "treasure": {
+        "value": []
+      }
+    },
+    "traits": {
+      "size": "med",
+      "di": {
+        "value": [],
+        "bypasses": [],
+        "custom": ""
+      },
+      "dr": {
+        "value": [],
+        "bypasses": [],
+        "custom": ""
+      },
+      "dv": {
+        "value": [],
+        "bypasses": [],
+        "custom": ""
+      },
+      "ci": {
+        "value": [],
+        "custom": ""
+      },
+      "languages": {
+        "value": [
+          "common"
+        ],
+        "custom": ""
+      },
+      "dm": {
+        "amount": {},
+        "bypasses": []
+      }
+    },
+    "currency": {
+      "pp": 0,
+      "gp": 0,
+      "ep": 0,
+      "sp": 0,
+      "cp": 0
+    },
+    "skills": {
+      "acr": {
+        "value": 0,
+        "ability": "dex",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "ani": {
+        "value": 0,
+        "ability": "wis",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "arc": {
+        "value": 0,
+        "ability": "int",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "ath": {
+        "value": 0,
+        "ability": "str",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "dec": {
+        "value": 0,
+        "ability": "cha",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "his": {
+        "value": 0,
+        "ability": "int",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "ins": {
+        "value": 1,
+        "ability": "wis",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "itm": {
+        "value": 0,
+        "ability": "cha",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "inv": {
+        "value": 0,
+        "ability": "int",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "med": {
+        "value": 2,
+        "ability": "wis",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "nat": {
+        "value": 1,
+        "ability": "int",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "prc": {
+        "value": 0,
+        "ability": "wis",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "prf": {
+        "value": 0,
+        "ability": "cha",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "per": {
+        "value": 0,
+        "ability": "cha",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "rel": {
+        "value": 0,
+        "ability": "int",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "slt": {
+        "value": 0,
+        "ability": "dex",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "ste": {
+        "value": 0,
+        "ability": "dex",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "sur": {
+        "value": 0,
+        "ability": "wis",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      }
+    },
+    "spells": {
+      "spell0": {
+        "value": 0,
+        "override": null
+      },
+      "spell1": {
+        "value": 0,
+        "override": null
+      },
+      "spell2": {
+        "value": 0,
+        "override": null
+      },
+      "spell3": {
+        "value": 0,
+        "override": null
+      },
+      "spell4": {
+        "value": 0,
+        "override": null
+      },
+      "spell5": {
+        "value": 0,
+        "override": null
+      },
+      "spell6": {
+        "value": 0,
+        "override": null
+      },
+      "spell7": {
+        "value": 0,
+        "override": null
+      },
+      "spell8": {
+        "value": 0,
+        "override": null
+      },
+      "spell9": {
+        "value": 0,
+        "override": null
+      },
+      "pact": {
+        "value": 0,
+        "override": null
+      }
+    },
+    "bonuses": {
+      "mwak": {
+        "attack": "",
+        "damage": ""
+      },
+      "rwak": {
+        "attack": "",
+        "damage": ""
+      },
+      "msak": {
+        "attack": "",
+        "damage": ""
+      },
+      "rsak": {
+        "attack": "",
+        "damage": ""
+      },
+      "abilities": {
+        "check": "",
+        "save": "",
+        "skill": ""
+      },
+      "spell": {
+        "dc": ""
+      }
+    },
+    "resources": {
+      "legact": {
+        "value": 0,
+        "max": 0
+      },
+      "legres": {
+        "value": 0,
+        "max": 0
+      },
+      "lair": {
+        "value": false,
+        "initiative": null
+      }
+    },
+    "tools": {
+      "herb": {
+        "value": 1,
+        "ability": "wis",
+        "bonuses": {
+          "check": ""
+        }
+      }
+    },
+    "source": {
+      "custom": "Varrenmoor DM Guide, Part 7 (Session 14)",
+      "book": "",
+      "page": "",
+      "license": "",
+      "rules": "2014",
+      "revision": 1
+    }
+  },
+  "prototypeToken": {
+    "name": "Ysolde Harrowgate",
+    "displayName": 30,
+    "actorLink": false,
+    "width": 1,
+    "height": 1,
+    "lockRotation": false,
+    "rotation": 0,
+    "disposition": 1,
+    "displayBars": 20,
+    "bar1": {
+      "attribute": "attributes.hp"
+    },
+    "bar2": {
+      "attribute": null
+    },
+    "flags": {},
+    "randomImg": false,
+    "alpha": 1,
+    "light": {
+      "alpha": 1,
+      "angle": 360,
+      "bright": 0,
+      "coloration": 1,
+      "dim": 0,
+      "luminosity": 0.5,
+      "saturation": 0,
+      "contrast": 0,
+      "shadows": 0,
+      "animation": {
+        "speed": 5,
+        "intensity": 5,
+        "type": null,
+        "reverse": false
+      },
+      "darkness": {
+        "min": 0,
+        "max": 1
+      },
+      "attenuation": 0.5,
+      "color": null,
+      "negative": false,
+      "priority": 0
+    },
+    "texture": {
+      "src": "icons/svg/mystery-man.svg",
+      "tint": "#ffffff",
+      "scaleX": 1,
+      "scaleY": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "rotation": 0,
+      "anchorX": 0.5,
+      "anchorY": 0.5,
+      "fit": "contain",
+      "alphaThreshold": 0.75
+    },
+    "sight": {
+      "angle": 360,
+      "enabled": true,
+      "range": 0,
+      "brightness": 1,
+      "visionMode": "basic",
+      "color": null,
+      "attenuation": 0.1,
+      "saturation": 0,
+      "contrast": 0
+    },
+    "detectionModes": [],
+    "appendNumber": false,
+    "prependAdjective": false,
+    "occludable": {
+      "radius": 0
+    },
+    "ring": {
+      "enabled": false,
+      "colors": {
+        "ring": null,
+        "background": null
+      },
+      "effects": 1,
+      "subject": {
+        "scale": 1,
+        "texture": null
+      }
+    },
+    "turnMarker": {
+      "mode": 1,
+      "animation": null,
+      "src": null,
+      "disposition": false
+    },
+    "movementAction": null
+  },
+  "items": [
+    {
+      "_id": "35e0bfe71423c7d3",
+      "name": "Leased Body",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": {
+          "value": "<p>Ysolde lives in her third leased body (lease up in spring; rent paid monthly). If reduced to 0 HP she drops unconscious as normal; if killed, her lease contract lets the Exchange recover her name. She would be furious.</p>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide, Part 7 (Session 14)",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "uses": {
+          "max": "",
+          "recovery": [],
+          "spent": 0
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "requirements": "",
+        "properties": [],
+        "activities": {},
+        "enchant": {},
+        "prerequisites": {
+          "level": null
+        },
+        "identifier": "8761e5508a"
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 100000,
+      "ownership": {
+        "default": 0
+      },
+      "flags": {}
+    },
+    {
+      "_id": "6fbf4294c8278a77",
+      "name": "Licensed Restorer",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": {
+          "value": "<p>She knows the restoration materials list and can tell at a glance whether a vessel or a set of remains is <strong>Stable</strong>, <strong>Strained</strong> or unusable.</p>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide, Part 7 (Session 14)",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "uses": {
+          "max": "",
+          "recovery": [],
+          "spent": 0
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "requirements": "",
+        "properties": [],
+        "activities": {},
+        "enchant": {},
+        "prerequisites": {
+          "level": null
+        },
+        "identifier": "a33a23f4ef"
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 200000,
+      "ownership": {
+        "default": 0
+      },
+      "flags": {}
+    },
+    {
+      "_id": "04bebd3ecffb1956",
+      "name": "Restorer's Kit",
+      "type": "feat",
+      "img": "icons/svg/regen.svg",
+      "system": {
+        "description": {
+          "value": "<p><strong>Tool feature (herbalism kit and healer's kit, proficient).</strong> As an action, she stabilizes a creature and restores <strong>1d4 + 2</strong> hit points. 3/day.</p>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide, Part 7 (Session 14)",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "uses": {
+          "max": "3",
+          "recovery": [
+            {
+              "period": "lr",
+              "type": "recoverAll"
+            }
+          ],
+          "spent": 0
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "requirements": "",
+        "properties": [],
+        "activities": {
+          "aedf256704a1d017": {
+            "_id": "aedf256704a1d017",
+            "type": "utility",
+            "activation": {
+              "type": "action",
+              "value": 1,
+              "condition": "",
+              "override": false
+            },
+            "consumption": {
+              "targets": [],
+              "scaling": {
+                "allowed": false,
+                "max": ""
+              },
+              "spellSlot": false
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "concentration": false,
+              "value": "",
+              "units": "",
+              "special": "",
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "override": false
+            },
+            "target": {
+              "prompt": false,
+              "template": {
+                "contiguous": false,
+                "units": "ft"
+              },
+              "affects": {
+                "choice": false
+              },
+              "override": false
+            },
+            "roll": {
+              "formula": "",
+              "name": "",
+              "prompt": false,
+              "visible": false
+            },
+            "uses": {
+              "max": "3",
+              "recovery": [
+                {
+                  "period": "lr",
+                  "type": "recoverAll"
+                }
+              ],
+              "spent": 0
+            },
+            "sort": 0,
+            "name": "Restorer's Kit",
+            "img": ""
+          }
+        },
+        "enchant": {},
+        "prerequisites": {
+          "level": null
+        },
+        "identifier": "d621de6053"
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 300000,
+      "ownership": {
+        "default": 0
+      },
+      "flags": {}
+    },
+    {
+      "_id": "8f1c0f0beec19799",
+      "name": "Scalpel",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": {
+          "value": "<p><em>Melee Attack Roll:</em> +3 to hit, reach 5 ft. <em>Hit:</em> 1d4 + 1 slashing damage.</p>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide, Part 7 (Session 14)",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 0,
+          "denomination": "gp"
+        },
+        "attunement": "",
+        "equipped": true,
+        "rarity": "",
+        "identified": true,
+        "cover": null,
+        "range": {
+          "value": null,
+          "long": null,
+          "units": "ft",
+          "reach": 5
+        },
+        "uses": {
+          "max": "",
+          "recovery": [],
+          "spent": 0
+        },
+        "damage": {
+          "versatile": {
+            "number": null,
+            "denomination": null,
+            "bonus": "",
+            "types": [],
+            "custom": {
+              "enabled": false,
+              "formula": ""
+            },
+            "scaling": {
+              "mode": "",
+              "number": null,
+              "formula": ""
+            }
+          },
+          "base": {
+            "number": 1,
+            "denomination": 4,
+            "bonus": "",
+            "types": [
+              "slashing"
+            ],
+            "custom": {
+              "enabled": false,
+              "formula": ""
+            },
+            "scaling": {
+              "mode": "",
+              "number": null,
+              "formula": ""
+            }
+          }
+        },
+        "armor": {
+          "value": 10
+        },
+        "hp": {
+          "value": 0,
+          "max": 0,
+          "dt": null,
+          "conditions": ""
+        },
+        "properties": [],
+        "proficient": 1,
+        "type": {
+          "value": "natural",
+          "baseItem": ""
+        },
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "crewed": false,
+        "magicalBonus": null,
+        "activities": {
+          "83f22952f26dfa33": {
+            "_id": "83f22952f26dfa33",
+            "type": "attack",
+            "activation": {
+              "type": "action",
+              "value": 1,
+              "condition": "",
+              "override": false
+            },
+            "consumption": {
+              "targets": [],
+              "scaling": {
+                "allowed": false,
+                "max": ""
+              },
+              "spellSlot": false
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "concentration": false,
+              "value": "",
+              "units": "",
+              "special": "",
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "value": "5",
+              "units": "ft",
+              "special": "",
+              "override": false
+            },
+            "target": {
+              "template": {
+                "count": "",
+                "contiguous": false,
+                "type": "",
+                "size": "",
+                "width": "",
+                "height": "",
+                "units": ""
+              },
+              "affects": {
+                "count": "1",
+                "type": "creature",
+                "choice": false,
+                "special": ""
+              },
+              "prompt": true,
+              "override": false
+            },
+            "attack": {
+              "ability": "dex",
+              "bonus": "",
+              "critical": {
+                "threshold": null
+              },
+              "flat": false,
+              "type": {
+                "value": "melee",
+                "classification": "weapon"
+              }
+            },
+            "damage": {
+              "critical": {
+                "bonus": ""
+              },
+              "includeBase": true,
+              "parts": []
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "sort": 0,
+            "attuned": false,
+            "ammunition": {},
+            "name": "Scalpel"
+          }
+        },
+        "identifier": "16a931b45d"
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 400000,
+      "ownership": {
+        "default": 0
+      },
+      "flags": {}
+    },
+    {
+      "_id": "b6169fe1d72481a1",
+      "name": "Steady Hands",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": {
+          "value": "<p><strong>Reaction.</strong> When a creature within 5 feet fails a Medicine or Splicing check on a body she is supervising, she lets it reroll once. 1/day.</p>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide, Part 7 (Session 14)",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "uses": {
+          "max": "1",
+          "recovery": [
+            {
+              "period": "lr",
+              "type": "recoverAll"
+            }
+          ],
+          "spent": 0
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "requirements": "",
+        "properties": [],
+        "activities": {
+          "1ae13b1e9ef177e7": {
+            "_id": "1ae13b1e9ef177e7",
+            "type": "utility",
+            "activation": {
+              "type": "reaction",
+              "value": 1,
+              "condition": "",
+              "override": false
+            },
+            "consumption": {
+              "targets": [],
+              "scaling": {
+                "allowed": false,
+                "max": ""
+              },
+              "spellSlot": false
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "concentration": false,
+              "value": "",
+              "units": "",
+              "special": "",
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "override": false
+            },
+            "target": {
+              "prompt": false,
+              "template": {
+                "contiguous": false,
+                "units": "ft"
+              },
+              "affects": {
+                "choice": false
+              },
+              "override": false
+            },
+            "roll": {
+              "formula": "",
+              "name": "",
+              "prompt": false,
+              "visible": false
+            },
+            "uses": {
+              "max": "1",
+              "recovery": [
+                {
+                  "period": "lr",
+                  "type": "recoverAll"
+                }
+              ],
+              "spent": 0
+            },
+            "sort": 0,
+            "name": "Steady Hands",
+            "img": ""
+          }
+        },
+        "enchant": {},
+        "prerequisites": {
+          "level": null
+        },
+        "identifier": "bae82190ac"
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 500000,
+      "ownership": {
+        "default": 0
+      },
+      "flags": {}
+    },
+    {
+      "_id": "95c97cac09db0a4b",
+      "name": "GM Reference: Ysolde Harrowgate, Voice and Restoration House",
+      "type": "feat",
+      "img": "icons/sundries/documents/document-sealed-red-yellow.webp",
+      "system": {
+        "description": {
+          "value": "<h2>Ysolde Harrowgate, Licensed Restorer</h2><p><em>\"Nobody was ever in it. I checked three times. That's the law, and it's also manners.\"</em></p><p><strong>Body:</strong> a woman in her third leased body (a sturdy, middle-aged human body; the lease is up in spring and she pays rent on it monthly). She is fond of it and complains about the knees.</p><p><strong>Job:</strong> runs <em>Harrowgate Restorations</em>, an independent licensed restoration house in the Lower market. Restoration under contract, no guarantees. [SUGGESTED] It is the house named on Tobias Wren's referral card (Part 6, Quest 3).</p><p><strong>[SECRET] Thaw role:</strong> prepares the vessel (a lawful construct frame with no identity, grown with tissue from a seed of life) in her back room, and keeps Violet's mycelium culture in a glass case. Quill is a customer and friend who writes her boundary runes.</p><p><strong>Motivation:</strong> she restores people for a living, and thinks one person is owed a body more than most. Privately, she would like to restore someone who will remember it was done well.</p><p><strong>Voice:</strong> brisk, warm, practical, a nurse's humor. Rubs her borrowed knees. Says \"properly\" a lot. Washes her hands before and after every sentence that matters.</p><h3>Sample dialogue</h3><ul><li>[COMMON] \"Restoration's a contract, not a miracle. Sit down, you look like a claim form.\"</li><li>[COMMON] \"No, I can't do it today. Nobody does it today. Today is for paperwork.\"</li><li>[ASK] \"This body? Leased. Third one. Lovely, apart from the knees. Lease is up in spring.\"</li><li>[ASK] <em>(the vessel)</em> \"Construct material without identity. Bought, receipted, three records. Nobody was ever in it.\" (Insight DC 11: true.)</li><li>[ASK] <em>(to Betsy)</em> \"It'll arrive cold from the inside. Pick me a body that warms from the middle, not one that just survives by stopping. She's done enough stopping.\"</li><li>[EARN] \"Yes, I know whose it's for. No, I won't say it out here.\"</li><li>[EARN] <em>(Bones)</em> \"Bring me the name, the skull if you can get it, and the toe if you can't. After this is done, I'll take him at cost. No promises. There never are.\"</li><li><em>(to Lil)</em> \"Hands where I can see them, love.\" <em>(Lil: \"They're always where you can see them. That's the problem with hands.\")</em></li></ul>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide, Part 7 (Session 14)",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "uses": {
+          "max": "",
+          "recovery": [],
+          "spent": 0
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "requirements": "",
+        "properties": [],
+        "activities": {},
+        "enchant": {},
+        "prerequisites": {
+          "level": null
+        },
+        "identifier": "8079d70daa"
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 600000,
+      "ownership": {
+        "default": 0
+      },
+      "flags": {}
+    },
+    {
+      "_id": "4e99c7a0de14c447",
+      "name": "Lore Reference: The Vessel",
+      "type": "feat",
+      "img": "icons/sundries/documents/document-sealed-red-yellow.webp",
+      "system": {
+        "description": {
+          "value": "<h2>The Vessel</h2><p>[ASK] <strong>Lawful category:</strong> construct material without identity, an Exchange category. Bought, receipted, three records. Nobody was ever in it (Insight DC 11: true). <em>\"If she comes back in her own skin, good. This is in case she doesn't.\"</em></p><p><strong>Materials:</strong> burial linen, distilled water, a seed of life, a boundary rune (Quill's), needle and thread, and identity anchors. Prepared like a restoration.</p><p>[EARN] <strong>Why cold-from-inside matters:</strong> Cladis shredded her own thread to get out. What comes back along a mended thread may be only herself: name and mind. Whatever climbs back arrives carrying the palace's cold <em>inside</em> it, and an ordinary body would freeze from the core outward. The grown tissue needs a viable cold adaptation (T4). If her own body makes the crossing, the vessel is simply not used.</p><p><strong>She knows:</strong> the vessel, the restoration materials, what cold does to tissue, that it is for Cladis. <strong>She does not know:</strong> the cold door's timetable, the courier, or the Bridgehollow news beyond rumor.</p>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide, Part 7 (Session 14)",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "uses": {
+          "max": "",
+          "recovery": [],
+          "spent": 0
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "requirements": "",
+        "properties": [],
+        "activities": {},
+        "enchant": {},
+        "prerequisites": {
+          "level": null
+        },
+        "identifier": "1b702dab34"
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 700000,
+      "ownership": {
+        "default": 0
+      },
+      "flags": {}
+    },
+    {
+      "_id": "85efee29c8872700",
+      "name": "Training Reference: Choosing a Continuation",
+      "type": "feat",
+      "img": "icons/sundries/documents/document-sealed-red-yellow.webp",
+      "system": {
+        "description": {
+          "value": "<h2>Choosing a Continuation (supports Betsy's T4)</h2><p>Pimm's rule: <em>a problem, a continuation, a cost.</em> Ysolde offers three continuations. Betsy judges them with Medicine or Nature <strong>DC 12</strong> (free) and picks one:</p><ul><li><strong>Warm from the core</strong> (a deep layer of heat-making fat around the heart and spine, as some hibernating animals have). <strong>Viable and correct.</strong> Cost: the body is always hungry.</li><li><strong>Cold-proof blood that slows down</strong> (like a frog that freezes in winter). Viable, but the wrong problem: the body would survive the cold by stopping, which is exactly where she has been stuck. Ysolde points this out if chosen.</li><li><strong>\"Frost-proof bones.\"</strong> Not a viable continuation. Pimm: <em>\"That is not biology. That is a wish.\"</em></li></ul><p>Apply the chosen continuation with Betsy's Splicing <strong>as her sheet defines it</strong> (her sheet is authoritative). Suggested DC 14, advantage with Pimm supervising (Ysolde tells Pimm it is \"a cold-climate restoration\"). Success: vessel <strong>Stable</strong>. Failure: <strong>Strained</strong> (she arrives weak and cold if it is used).</p><p><strong>Limits:</strong> supervision gives advantage on one check. No extra charges or actions.</p>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide, Part 7 (Session 14)",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "uses": {
+          "max": "",
+          "recovery": [],
+          "spent": 0
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "requirements": "",
+        "properties": [],
+        "activities": {},
+        "enchant": {},
+        "prerequisites": {
+          "level": null
+        },
+        "identifier": "79c9f3515f"
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 800000,
+      "ownership": {
+        "default": 0
+      },
+      "flags": {}
+    },
+    {
+      "_id": "dc7cf77a0988c884",
+      "name": "Side Quest: A Body That Warms From the Middle",
+      "type": "feat",
+      "img": "icons/sundries/documents/document-sealed-red-yellow.webp",
+      "system": {
+        "description": {
+          "value": "<h2>Side Quest: A Body That Warms From the Middle (Part 7, T3 and T4)</h2><ul><li><strong>T3, the living strand (Violet):</strong> the culture is in Ysolde's glass case. Read Green Pattern (free, DC 12): cave mycelium, Vitality Strained, cold blocking growth. Quickening (1 charge) DC 13 grows a 30-ft strand (failure: 10 ft, a second Quickening finishes it). Tie Green Thread (1 charge, 10 minutes) between the case and the strand's tip: the signal. Needs Dale's Rime dose (T2) or the strand freezes in an hour.</li><li><strong>T4, the vessel's fit (Betsy):</strong> see <em>Training Reference: Choosing a Continuation</em>.</li></ul><p><strong>Reward:</strong> a Stable vessel and a calm Ysolde; Betsy gets a supervised adaptation study (no extra charges or actions). Ysolde agrees to take Bones's restoration at cost once the operation is done.</p>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide, Part 7 (Session 14)",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "uses": {
+          "max": "",
+          "recovery": [],
+          "spent": 0
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "requirements": "",
+        "properties": [],
+        "activities": {},
+        "enchant": {},
+        "prerequisites": {
+          "level": null
+        },
+        "identifier": "13edd58940"
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 900000,
+      "ownership": {
+        "default": 0
+      },
+      "flags": {}
+    },
+    {
+      "_id": "f8d006f245a06d51",
+      "name": "Merchant Reference: Harrowgate's Counter",
+      "type": "feat",
+      "img": "icons/sundries/documents/document-sealed-red-yellow.webp",
+      "system": {
+        "description": {
+          "value": "<h2>Harrowgate's Counter</h2><ul><li>Clean burial linen: 5 sp per yard</li><li>Distilled water: 2 sp per flask</li><li>Joining needles and bone-thread: 1 gp</li><li>Identity tag blanks: 1 sp</li><li>Preserving salts: 5 sp</li><li>Restoration consultations: 5 gp (written)</li><li>Restoration contracts: by quote, no guarantees</li></ul><p><strong>Refusals:</strong> she does not sell bodies over the counter, and does not sell anything that \"was ever someone\".</p>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide, Part 7 (Session 14)",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "uses": {
+          "max": "",
+          "recovery": [],
+          "spent": 0
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "requirements": "",
+        "properties": [],
+        "activities": {},
+        "enchant": {},
+        "prerequisites": {
+          "level": null
+        },
+        "identifier": "70e58248a8"
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 1000000,
+      "ownership": {
+        "default": 0
+      },
+      "flags": {}
+    },
+    {
+      "_id": "5884cf972631801b",
+      "name": "Lore Reference: Bones's Restoration",
+      "type": "feat",
+      "img": "icons/sundries/documents/document-sealed-red-yellow.webp",
+      "system": {
+        "description": {
+          "value": "<h2>Bones's Restoration</h2><p>[EARN] <em>\"Bring me the name, the skull if you can get it, and the toe if you can't. After this is done, I'll take him at cost. No promises. There never are.\"</em></p><p>She takes Bones's restoration contract <strong>at cost</strong> once the Thaw's operation is done. No guaranteed success (canon). Pringus's claim process stays separate from the restoration. If the party has Wren's stamped referral card, this is the house on the card [SUGGESTED]. If the party refuses the Thaw, she still only takes Bones on after the operation (7.10).</p>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide, Part 7 (Session 14)",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "uses": {
+          "max": "",
+          "recovery": [],
+          "spent": 0
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "requirements": "",
+        "properties": [],
+        "activities": {},
+        "enchant": {},
+        "prerequisites": {
+          "level": null
+        },
+        "identifier": "0eb752d30e"
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 1100000,
+      "ownership": {
+        "default": 0
+      },
+      "flags": {}
+    },
+    {
+      "_id": "e1c9e24f07b81747",
+      "name": "Burial Linen",
+      "type": "loot",
+      "img": "icons/svg/item-bag.svg",
+      "system": {
+        "description": {
+          "value": "<p>Clean white burial linen, sold by the yard.</p>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide, Part 7 (Session 14)",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "quantity": 10,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 5,
+          "denomination": "sp"
+        },
+        "rarity": "",
+        "identified": true,
+        "type": {
+          "value": "gear",
+          "subtype": ""
+        },
+        "properties": [],
+        "container": null,
+        "activities": {}
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 1200000,
+      "ownership": {
+        "default": 0
+      },
+      "flags": {}
+    },
+    {
+      "_id": "04952dac653a40cf",
+      "name": "Distilled Water",
+      "type": "loot",
+      "img": "icons/svg/item-bag.svg",
+      "system": {
+        "description": {
+          "value": "<p>A stoppered flask of distilled water.</p>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide, Part 7 (Session 14)",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "quantity": 6,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 2,
+          "denomination": "sp"
+        },
+        "rarity": "",
+        "identified": true,
+        "type": {
+          "value": "gear",
+          "subtype": ""
+        },
+        "properties": [],
+        "container": null,
+        "activities": {}
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 1300000,
+      "ownership": {
+        "default": 0
+      },
+      "flags": {}
+    },
+    {
+      "_id": "7bc0dd92cf98c92a",
+      "name": "Joining Needles and Bone-Thread",
+      "type": "loot",
+      "img": "icons/svg/item-bag.svg",
+      "system": {
+        "description": {
+          "value": "<p>A roll of curved joining needles and a spool of bone-thread.</p>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide, Part 7 (Session 14)",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "quantity": 4,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 1,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "type": {
+          "value": "gear",
+          "subtype": ""
+        },
+        "properties": [],
+        "container": null,
+        "activities": {}
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 1400000,
+      "ownership": {
+        "default": 0
+      },
+      "flags": {}
+    },
+    {
+      "_id": "3fa5cb1ffd1ef832",
+      "name": "Identity Tag Blank",
+      "type": "loot",
+      "img": "icons/svg/item-bag.svg",
+      "system": {
+        "description": {
+          "value": "<p>A blank identity tag, ready to be stamped.</p>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide, Part 7 (Session 14)",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "quantity": 10,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 1,
+          "denomination": "sp"
+        },
+        "rarity": "",
+        "identified": true,
+        "type": {
+          "value": "gear",
+          "subtype": ""
+        },
+        "properties": [],
+        "container": null,
+        "activities": {}
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 1500000,
+      "ownership": {
+        "default": 0
+      },
+      "flags": {}
+    },
+    {
+      "_id": "47d25a1ba6baa7d8",
+      "name": "Preserving Salts",
+      "type": "loot",
+      "img": "icons/svg/item-bag.svg",
+      "system": {
+        "description": {
+          "value": "<p>A packet of preserving salts.</p>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide, Part 7 (Session 14)",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "quantity": 6,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 5,
+          "denomination": "sp"
+        },
+        "rarity": "",
+        "identified": true,
+        "type": {
+          "value": "gear",
+          "subtype": ""
+        },
+        "properties": [],
+        "container": null,
+        "activities": {}
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 1600000,
+      "ownership": {
+        "default": 0
+      },
+      "flags": {}
+    }
+  ],
+  "effects": [],
+  "folder": "ae9wu7eMHFRxi43Q",
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {}
+}

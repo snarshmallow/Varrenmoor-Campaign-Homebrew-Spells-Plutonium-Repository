@@ -1,0 +1,1530 @@
+{
+  "name": "Sabeline Nock, Night Custody Clerk",
+  "type": "npc",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "abilities": {
+      "str": {
+        "value": 8,
+        "proficient": 0,
+        "bonuses": {
+          "check": "",
+          "save": ""
+        },
+        "max": null
+      },
+      "dex": {
+        "value": 12,
+        "proficient": 0,
+        "bonuses": {
+          "check": "",
+          "save": ""
+        },
+        "max": null
+      },
+      "con": {
+        "value": 10,
+        "proficient": 0,
+        "bonuses": {
+          "check": "",
+          "save": ""
+        },
+        "max": null
+      },
+      "int": {
+        "value": 16,
+        "proficient": 1,
+        "bonuses": {
+          "check": "",
+          "save": ""
+        },
+        "max": null
+      },
+      "wis": {
+        "value": 14,
+        "proficient": 1,
+        "bonuses": {
+          "check": "",
+          "save": ""
+        },
+        "max": null
+      },
+      "cha": {
+        "value": 11,
+        "proficient": 0,
+        "bonuses": {
+          "check": "",
+          "save": ""
+        },
+        "max": null
+      }
+    },
+    "attributes": {
+      "ac": {
+        "flat": 12,
+        "calc": "natural",
+        "formula": ""
+      },
+      "hp": {
+        "value": 13,
+        "max": 13,
+        "temp": 0,
+        "tempmax": 0,
+        "formula": "3d8"
+      },
+      "init": {
+        "ability": "",
+        "bonus": "0",
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "movement": {
+        "burrow": 0,
+        "climb": 0,
+        "fly": 0,
+        "swim": 0,
+        "walk": 30,
+        "units": "ft",
+        "hover": false
+      },
+      "attunement": {
+        "max": 3
+      },
+      "senses": {
+        "units": "ft",
+        "special": "",
+        "ranges": {
+          "darkvision": 60,
+          "blindsight": 0,
+          "tremorsense": 0,
+          "truesight": 0
+        }
+      },
+      "spellcasting": "",
+      "exhaustion": 0,
+      "concentration": {
+        "ability": "",
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        },
+        "bonuses": {
+          "save": ""
+        },
+        "limit": 1
+      },
+      "hd": {
+        "spent": 0
+      },
+      "death": {
+        "ability": "",
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        },
+        "success": 0,
+        "failure": 0
+      }
+    },
+    "details": {
+      "biography": {
+        "value": "<p><strong>Sabeline Nock</strong> is a small, very neat sentient skeleton, contracted Exchange staff, who keeps the night copy of the custody ledger in the night custody office. Quiet, exact and faintly amused, she taps four slow with her pen when she thinks and never raises her voice; she lowers it.</p><p><strong>GM notes (Part 7).</strong> [SECRET] She runs the Thaw day to day (Quill is its cause): she found Cladis's open claim while copying it forward. She drives T5 (The Outstanding Tag: Investigation or History DC 12, then Pringus's public audit) and approaches the party herself in Scene 3B if Quill's test fails. Reassigned to a day desk if Tallis's review goes ahead (7.6, day 2).</p>",
+        "public": ""
+      },
+      "alignment": "lawful neutral",
+      "race": null,
+      "type": {
+        "value": "undead",
+        "subtype": "sentient skeleton",
+        "swarm": "",
+        "custom": ""
+      },
+      "cr": 0.25,
+      "ideal": "Three records must agree.",
+      "bond": "The night ledger, and the claim she has copied forward four times.",
+      "flaw": "Would rather be correct than safe.",
+      "habitat": {
+        "custom": "Ossuary Exchange — Lower Ring",
+        "value": []
+      },
+      "treasure": {
+        "value": []
+      }
+    },
+    "traits": {
+      "size": "med",
+      "di": {
+        "value": [
+          "poison"
+        ],
+        "bypasses": [],
+        "custom": ""
+      },
+      "dr": {
+        "value": [],
+        "bypasses": [],
+        "custom": ""
+      },
+      "dv": {
+        "value": [
+          "bludgeoning"
+        ],
+        "bypasses": [],
+        "custom": ""
+      },
+      "ci": {
+        "value": [
+          "exhaustion",
+          "poisoned"
+        ],
+        "custom": ""
+      },
+      "languages": {
+        "value": [
+          "common"
+        ],
+        "custom": "reads old Eirwyn script"
+      },
+      "dm": {
+        "amount": {},
+        "bypasses": []
+      }
+    },
+    "currency": {
+      "pp": 0,
+      "gp": 0,
+      "ep": 0,
+      "sp": 0,
+      "cp": 0
+    },
+    "skills": {
+      "acr": {
+        "value": 0,
+        "ability": "dex",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "ani": {
+        "value": 0,
+        "ability": "wis",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "arc": {
+        "value": 0,
+        "ability": "int",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "ath": {
+        "value": 0,
+        "ability": "str",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "dec": {
+        "value": 0,
+        "ability": "cha",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "his": {
+        "value": 1,
+        "ability": "int",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "ins": {
+        "value": 1,
+        "ability": "wis",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "itm": {
+        "value": 0,
+        "ability": "cha",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "inv": {
+        "value": 1,
+        "ability": "int",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "med": {
+        "value": 0,
+        "ability": "wis",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "nat": {
+        "value": 0,
+        "ability": "int",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "prc": {
+        "value": 0,
+        "ability": "wis",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "prf": {
+        "value": 0,
+        "ability": "cha",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "per": {
+        "value": 0,
+        "ability": "cha",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "rel": {
+        "value": 0,
+        "ability": "int",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "slt": {
+        "value": 0,
+        "ability": "dex",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "ste": {
+        "value": 0,
+        "ability": "dex",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "sur": {
+        "value": 0,
+        "ability": "wis",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      }
+    },
+    "spells": {
+      "spell0": {
+        "value": 0,
+        "override": null
+      },
+      "spell1": {
+        "value": 0,
+        "override": null
+      },
+      "spell2": {
+        "value": 0,
+        "override": null
+      },
+      "spell3": {
+        "value": 0,
+        "override": null
+      },
+      "spell4": {
+        "value": 0,
+        "override": null
+      },
+      "spell5": {
+        "value": 0,
+        "override": null
+      },
+      "spell6": {
+        "value": 0,
+        "override": null
+      },
+      "spell7": {
+        "value": 0,
+        "override": null
+      },
+      "spell8": {
+        "value": 0,
+        "override": null
+      },
+      "spell9": {
+        "value": 0,
+        "override": null
+      },
+      "pact": {
+        "value": 0,
+        "override": null
+      }
+    },
+    "bonuses": {
+      "mwak": {
+        "attack": "",
+        "damage": ""
+      },
+      "rwak": {
+        "attack": "",
+        "damage": ""
+      },
+      "msak": {
+        "attack": "",
+        "damage": ""
+      },
+      "rsak": {
+        "attack": "",
+        "damage": ""
+      },
+      "abilities": {
+        "check": "",
+        "save": "",
+        "skill": ""
+      },
+      "spell": {
+        "dc": ""
+      }
+    },
+    "resources": {
+      "legact": {
+        "value": 0,
+        "max": 0
+      },
+      "legres": {
+        "value": 0,
+        "max": 0
+      },
+      "lair": {
+        "value": false,
+        "initiative": null
+      }
+    },
+    "tools": {
+      "calligrapher": {
+        "value": 1,
+        "ability": "int",
+        "bonuses": {
+          "check": ""
+        }
+      }
+    },
+    "source": {
+      "custom": "Varrenmoor DM Guide, Part 7 (Session 14)",
+      "book": "",
+      "page": "",
+      "license": "",
+      "rules": "2014",
+      "revision": 1
+    }
+  },
+  "prototypeToken": {
+    "name": "Sabeline Nock",
+    "displayName": 30,
+    "actorLink": false,
+    "width": 1,
+    "height": 1,
+    "lockRotation": false,
+    "rotation": 0,
+    "disposition": 0,
+    "displayBars": 20,
+    "bar1": {
+      "attribute": "attributes.hp"
+    },
+    "bar2": {
+      "attribute": null
+    },
+    "flags": {},
+    "randomImg": false,
+    "alpha": 1,
+    "light": {
+      "alpha": 1,
+      "angle": 360,
+      "bright": 0,
+      "coloration": 1,
+      "dim": 0,
+      "luminosity": 0.5,
+      "saturation": 0,
+      "contrast": 0,
+      "shadows": 0,
+      "animation": {
+        "speed": 5,
+        "intensity": 5,
+        "type": null,
+        "reverse": false
+      },
+      "darkness": {
+        "min": 0,
+        "max": 1
+      },
+      "attenuation": 0.5,
+      "color": null,
+      "negative": false,
+      "priority": 0
+    },
+    "texture": {
+      "src": "icons/svg/mystery-man.svg",
+      "tint": "#ffffff",
+      "scaleX": 1,
+      "scaleY": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "rotation": 0,
+      "anchorX": 0.5,
+      "anchorY": 0.5,
+      "fit": "contain",
+      "alphaThreshold": 0.75
+    },
+    "sight": {
+      "angle": 360,
+      "enabled": true,
+      "range": 60,
+      "brightness": 1,
+      "visionMode": "darkvision",
+      "color": null,
+      "attenuation": 0.1,
+      "saturation": 0,
+      "contrast": 0
+    },
+    "detectionModes": [],
+    "appendNumber": false,
+    "prependAdjective": false,
+    "occludable": {
+      "radius": 0
+    },
+    "ring": {
+      "enabled": false,
+      "colors": {
+        "ring": null,
+        "background": null
+      },
+      "effects": 1,
+      "subject": {
+        "scale": 1,
+        "texture": null
+      }
+    },
+    "turnMarker": {
+      "mode": 1,
+      "animation": null,
+      "src": null,
+      "disposition": false
+    },
+    "movementAction": null
+  },
+  "items": [
+    {
+      "_id": "fd42a96596a261e1",
+      "name": "Copied Forward",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": {
+          "value": "<p>Sabeline has advantage on checks to recall or find any entry in the custody ledger that she has copied.</p>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide, Part 7 (Session 14)",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "uses": {
+          "max": "",
+          "recovery": [],
+          "spent": 0
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "requirements": "",
+        "properties": [],
+        "activities": {},
+        "enchant": {},
+        "prerequisites": {
+          "level": null
+        },
+        "identifier": "2cb1376882"
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 100000,
+      "ownership": {
+        "default": 0
+      },
+      "flags": {}
+    },
+    {
+      "_id": "59dd3698d50a4c54",
+      "name": "Contracted Staff",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": {
+          "value": "<p>She cannot be bought, sold or claimed: she is a person under contract, not property. The Exchange's wards treat harm to her as an offense against the house.</p>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide, Part 7 (Session 14)",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "uses": {
+          "max": "",
+          "recovery": [],
+          "spent": 0
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "requirements": "",
+        "properties": [],
+        "activities": {},
+        "enchant": {},
+        "prerequisites": {
+          "level": null
+        },
+        "identifier": "2997361dbf"
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 200000,
+      "ownership": {
+        "default": 0
+      },
+      "flags": {}
+    },
+    {
+      "_id": "49e33e517f5b58ee",
+      "name": "Ledger Hand",
+      "type": "feat",
+      "img": "icons/svg/book.svg",
+      "system": {
+        "description": {
+          "value": "<p><strong>Tool feature (calligrapher's supplies, proficient).</strong> In 10 minutes she can make an exact, certified copy of any Exchange page she has access to.</p>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide, Part 7 (Session 14)",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "uses": {
+          "max": "",
+          "recovery": [],
+          "spent": 0
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "requirements": "",
+        "properties": [],
+        "activities": {},
+        "enchant": {},
+        "prerequisites": {
+          "level": null
+        },
+        "identifier": "227b9be52b"
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 300000,
+      "ownership": {
+        "default": 0
+      },
+      "flags": {}
+    },
+    {
+      "_id": "d7b3c385f153545e",
+      "name": "Pen Jab",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": {
+          "value": "<p><em>Melee Attack Roll:</em> +3 to hit, reach 5 ft. <em>Hit:</em> 1 piercing damage. (She will not.)</p>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide, Part 7 (Session 14)",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 0,
+          "denomination": "gp"
+        },
+        "attunement": "",
+        "equipped": true,
+        "rarity": "",
+        "identified": true,
+        "cover": null,
+        "range": {
+          "value": null,
+          "long": null,
+          "units": "ft",
+          "reach": 5
+        },
+        "uses": {
+          "max": "",
+          "recovery": [],
+          "spent": 0
+        },
+        "damage": {
+          "versatile": {
+            "number": null,
+            "denomination": null,
+            "bonus": "",
+            "types": [],
+            "custom": {
+              "enabled": false,
+              "formula": ""
+            },
+            "scaling": {
+              "mode": "",
+              "number": null,
+              "formula": ""
+            }
+          },
+          "base": {
+            "number": null,
+            "denomination": null,
+            "bonus": "",
+            "types": [
+              "piercing"
+            ],
+            "custom": {
+              "enabled": true,
+              "formula": "1"
+            },
+            "scaling": {
+              "mode": "",
+              "number": null,
+              "formula": ""
+            }
+          }
+        },
+        "armor": {
+          "value": 10
+        },
+        "hp": {
+          "value": 0,
+          "max": 0,
+          "dt": null,
+          "conditions": ""
+        },
+        "properties": [],
+        "proficient": 1,
+        "type": {
+          "value": "natural",
+          "baseItem": ""
+        },
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "crewed": false,
+        "magicalBonus": null,
+        "activities": {
+          "3125cb05198ba36e": {
+            "_id": "3125cb05198ba36e",
+            "type": "attack",
+            "activation": {
+              "type": "action",
+              "value": 1,
+              "condition": "",
+              "override": false
+            },
+            "consumption": {
+              "targets": [],
+              "scaling": {
+                "allowed": false,
+                "max": ""
+              },
+              "spellSlot": false
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "concentration": false,
+              "value": "",
+              "units": "",
+              "special": "",
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "value": "5",
+              "units": "ft",
+              "special": "",
+              "override": false
+            },
+            "target": {
+              "template": {
+                "count": "",
+                "contiguous": false,
+                "type": "",
+                "size": "",
+                "width": "",
+                "height": "",
+                "units": ""
+              },
+              "affects": {
+                "count": "1",
+                "type": "creature",
+                "choice": false,
+                "special": ""
+              },
+              "prompt": true,
+              "override": false
+            },
+            "attack": {
+              "ability": "dex",
+              "bonus": "",
+              "critical": {
+                "threshold": null
+              },
+              "flat": false,
+              "type": {
+                "value": "melee",
+                "classification": "weapon"
+              }
+            },
+            "damage": {
+              "critical": {
+                "bonus": ""
+              },
+              "includeBase": true,
+              "parts": []
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "sort": 0,
+            "attuned": false,
+            "ammunition": {},
+            "name": "Pen Jab"
+          }
+        },
+        "identifier": "77f36dd24e"
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 400000,
+      "ownership": {
+        "default": 0
+      },
+      "flags": {}
+    },
+    {
+      "_id": "8a4d8b699ae95615",
+      "name": "Call the Desk",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": {
+          "value": "<p>She rings the night desk bell; two Exchange custodians arrive in 1d4 rounds. Works only inside the Exchange's thresholds.</p>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide, Part 7 (Session 14)",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "uses": {
+          "max": "1",
+          "recovery": [
+            {
+              "period": "day",
+              "type": "recoverAll"
+            }
+          ],
+          "spent": 0
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "requirements": "",
+        "properties": [],
+        "activities": {
+          "7ebc65af01b227b6": {
+            "_id": "7ebc65af01b227b6",
+            "type": "utility",
+            "activation": {
+              "type": "action",
+              "value": 1,
+              "condition": "",
+              "override": false
+            },
+            "consumption": {
+              "targets": [],
+              "scaling": {
+                "allowed": false,
+                "max": ""
+              },
+              "spellSlot": false
+            },
+            "description": {
+              "chatFlavor": "<p>The night desk bell rings once.</p>"
+            },
+            "duration": {
+              "concentration": false,
+              "value": "",
+              "units": "",
+              "special": "",
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "override": false
+            },
+            "target": {
+              "prompt": false,
+              "template": {
+                "contiguous": false,
+                "units": "ft"
+              },
+              "affects": {
+                "choice": false
+              },
+              "override": false
+            },
+            "roll": {
+              "formula": "",
+              "name": "",
+              "prompt": false,
+              "visible": false
+            },
+            "uses": {
+              "max": "1",
+              "recovery": [
+                {
+                  "period": "day",
+                  "type": "recoverAll"
+                }
+              ],
+              "spent": 0
+            },
+            "sort": 0,
+            "name": "Call the Desk",
+            "img": ""
+          }
+        },
+        "enchant": {},
+        "prerequisites": {
+          "level": null
+        },
+        "identifier": "eec0435fb4"
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 500000,
+      "ownership": {
+        "default": 0
+      },
+      "flags": {}
+    },
+    {
+      "_id": "c41799d5b50cb6be",
+      "name": "GM Reference: Sabeline Nock, Voice and Night Desk",
+      "type": "feat",
+      "img": "icons/sundries/documents/document-sealed-red-yellow.webp",
+      "system": {
+        "description": {
+          "value": "<h2>Sabeline Nock, Night Custody Clerk</h2><p><em>\"Three records must agree. One of mine never has.\"</em></p><p><strong>Body:</strong> a sentient skeleton, contracted Exchange staff (a person under contract, not property). Small and upright; reading spectacles wired to her skull; a clerk's sleeve-garters on bare arm bones. Very neat.</p><p><strong>Job:</strong> keeps the night copy of the custody ledger: reconciles the day's entries and copies forward open claims when a volume fills.</p><p><strong>[SECRET] Thaw role:</strong> runs the Thaw day to day; Quill is its cause. She found Cladis's open claim while copying it forward for the fourth time and brought it to Quill, who recognized it as one mark of Cladis's trail. Keeps the custody page and the meeting times. Old colleague of Quill's; they argue about commas.</p><p><strong>Motivation:</strong> duty first: a claim that never closes offends her. Second, plain politics: Nior wanted authority over every settlement and road, and the Niorghast means to resurrect him; that would not leave a neutral house neutral, and her contract only exists because the Exchange is neutral.</p><p><strong>Where:</strong> the night custody office from the tenth hour; Table Seven at Mottle's after the evening rush.</p><p><strong>Voice:</strong> quiet, exact, faintly amused. Taps four slow with her pen when thinking (the Bell knock). Calls Cladis \"the claimant\" in public. Never raises her voice; she lowers it.</p><h3>Sample dialogue</h3><ul><li>[COMMON] \"Night desk. If it isn't in the ledger, it hasn't happened yet.\"</li><li>[COMMON] \"I don't sell anything. I write down who did.\"</li><li>[ASK] \"There is an open claim in my ledger. It's been open for three hundred years. I'd like to close it properly.\"</li><li>[ASK] <em>(showing the page)</em> \"Named. Held. Tag outstanding. Two out of three. Pringus would call it a rumor. I call it a job.\"</li><li>[EARN] \"She isn't dead. She was put outside, and she tied herself off out there. A thread tied in the wrong place can be tied again. That's all we're doing. Knots.\"</li><li>[EARN] \"Why now? Because you walked a piece of the place she's in through my intake hall. And because of the news from Bridgehollow.\"</li><li>[EARN] \"No, I don't know what happened in the fortress. Nobody does. I am not going to guess at you.\"</li><li><em>(to Tallis)</em> \"Inspector. You're early. Sit. The kettle's honest.\"</li></ul><p><strong>Scene 3B (if Quill's test failed):</strong> she finds the party at intake, because the custody ledger shows they hold the Stolen Shard: <em>\"You are carrying a piece of a place I have been filing for longer than you have been alive. May we talk somewhere with soup?\"</em></p><p><strong>Scene 7:</strong> <em>\"We can finish this end. We cannot ring a bell that has no tongue, and we can't tie the far knot from here. After noon tomorrow, this door does not open again.\"</em></p>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide, Part 7 (Session 14)",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "uses": {
+          "max": "",
+          "recovery": [],
+          "spent": 0
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "requirements": "",
+        "properties": [],
+        "activities": {},
+        "enchant": {},
+        "prerequisites": {
+          "level": null
+        },
+        "identifier": "5bcc9e3dc9"
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 600000,
+      "ownership": {
+        "default": 0
+      },
+      "flags": {}
+    },
+    {
+      "_id": "538952205d96297d",
+      "name": "Lore Reference: The Open Claim",
+      "type": "feat",
+      "img": "icons/sundries/documents/document-sealed-red-yellow.webp",
+      "system": {
+        "description": {
+          "value": "<h2>The Open Claim</h2><p>[ASK] The custody line, copied forward for about three hundred years: <em>\"Cladis. Named. Held: the place where even time cannot leave. Tag: outstanding.\"</em> The same words are cut into the Stolen Shard.</p><p><strong>Why it is a \"rumor\":</strong> the Exchange accepts a named person into a body only when three records agree: the intake ledger (her name), the custody ledger (the \"held\" line) and the physical tag. Intake and custody agree; the tag has been outstanding for 300 years. Two out of three is a rumor (Pringus's rule).</p><p>[EARN] The claim is one mark of Cladis's trail, left on purpose (with the CLADIS marks on Europa's father's map and the old intake tag from the Session 12 passage).</p><p><strong>She knows:</strong> the open claim, the method, every Thaw member, the cold door's timetable, Tallis's interest. <strong>She does not know:</strong> who banished Cladis, what happened in Nior's fortress, who cut the sentence, or whether it will work. She knows <em>of</em> the Goddess's name but has never heard it said. [SECRET] She says \"I don't know\" about the fortress plainly.</p><p><strong>Secrecy:</strong> she never says \"Cladis\" in a common hall (\"the claimant\", \"her\"). The page is shown once, at Table Seven, or Pringus finds it during an audit.</p>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide, Part 7 (Session 14)",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "uses": {
+          "max": "",
+          "recovery": [],
+          "spent": 0
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "requirements": "",
+        "properties": [],
+        "activities": {},
+        "enchant": {},
+        "prerequisites": {
+          "level": null
+        },
+        "identifier": "ebb64db518"
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 700000,
+      "ownership": {
+        "default": 0
+      },
+      "flags": {}
+    },
+    {
+      "_id": "e82612a8f437d658",
+      "name": "Side Quest: The Outstanding Tag",
+      "type": "feat",
+      "img": "icons/sundries/documents/document-sealed-red-yellow.webp",
+      "system": {
+        "description": {
+          "value": "<h2>Side Quest: The Outstanding Tag (Part 7, T5)</h2><p><strong>Hook:</strong> intake and custody agree; the physical tag has been \"outstanding\" for 300 years. Find it and make the three records agree.</p><h3>Objectives</h3><ul><li><strong>Find the tag.</strong> It is among the old intake tags from the Session 12 chest and passage material. If the party took them: Investigation <strong>DC 12</strong> to spot a tag stamped with the Winter crown's mark and an intake number matching Sabeline's page. If not: it is still in the passage under the Cladis memorial (History <strong>DC 12</strong> to read the old numbering).</li><li><strong>Second path:</strong> the Rite of the Remaining Bone (Expose Claim, 10 minutes, a copper coin, no charges) on the tag shows the claim it belongs to.</li><li><strong>Present it.</strong> A party member with custody presents the tag to Pringus for a Reconciliation Audit: <em>\"I know this tag is real. The ledger states the claim is open. I infer it was left to be found. I do not know what is at the other end.\"</em> Once all three agree, the claim is reconciled and the threshold will accept the named person.</li></ul><p><strong>Warning:</strong> an audit is a <em>public</em> record. Inspector Tallis reads audits. Doing it honestly makes the operation legal and visible; skipping it makes it invisible and impossible. A completed audit gives advantage when talking Tallis down (Scene 5).</p><p><strong>Reward:</strong> the records agree; Tallis can be talked down (delay DC 15, permit DC 17).</p>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide, Part 7 (Session 14)",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "uses": {
+          "max": "",
+          "recovery": [],
+          "spent": 0
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "requirements": "",
+        "properties": [],
+        "activities": {},
+        "enchant": {},
+        "prerequisites": {
+          "level": null
+        },
+        "identifier": "6f30ac793d"
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 800000,
+      "ownership": {
+        "default": 0
+      },
+      "flags": {}
+    },
+    {
+      "_id": "dd3366a6776af959",
+      "name": "GM Reference: Lil' Apostrophe at the Night Desk",
+      "type": "feat",
+      "img": "icons/sundries/documents/document-sealed-red-yellow.webp",
+      "system": {
+        "description": {
+          "value": "<h2>Lil' Apostrophe at the Night Desk</h2><p>Sabeline: <em>\"Please don't write on my ledger.\"</em> Lil: <em>\"I wasn't gonna. ...What's it say if I did?\"</em></p><p>Lil: <em>\"Is the ledger a book that's awake at night?\"</em> Sabeline: <em>\"Yes.\"</em> Lil: <em>\"Same.\"</em></p>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide, Part 7 (Session 14)",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "uses": {
+          "max": "",
+          "recovery": [],
+          "spent": 0
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "requirements": "",
+        "properties": [],
+        "activities": {},
+        "enchant": {},
+        "prerequisites": {
+          "level": null
+        },
+        "identifier": "7e19f3e890"
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 900000,
+      "ownership": {
+        "default": 0
+      },
+      "flags": {}
+    },
+    {
+      "_id": "98e6afb5f2b5f733",
+      "name": "Night Custody Ledger (copy volume)",
+      "type": "loot",
+      "img": "icons/svg/book.svg",
+      "system": {
+        "description": {
+          "value": "<p>A thick ledger volume in a neat night-clerk's hand.</p>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide, Part 7 (Session 14)",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 0,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "type": {
+          "value": "gear",
+          "subtype": ""
+        },
+        "properties": [],
+        "container": null,
+        "activities": {}
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 1000000,
+      "ownership": {
+        "default": 0
+      },
+      "flags": {}
+    },
+    {
+      "_id": "866b6b95704ffefe",
+      "name": "Copied Open-Claim Page",
+      "type": "loot",
+      "img": "icons/svg/book.svg",
+      "system": {
+        "description": {
+          "value": "<p>A certified copy of a custody ledger page. One entry: Named. Held: the place where even time cannot leave. Tag: outstanding.</p>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide, Part 7 (Session 14)",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 0,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "type": {
+          "value": "gear",
+          "subtype": ""
+        },
+        "properties": [],
+        "container": null,
+        "activities": {}
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 1100000,
+      "ownership": {
+        "default": 0
+      },
+      "flags": {}
+    },
+    {
+      "_id": "2c7d891e8739f54e",
+      "name": "Steel-Nib Pens",
+      "type": "loot",
+      "img": "icons/svg/item-bag.svg",
+      "system": {
+        "description": {
+          "value": "<p>A case of steel-nib pens and a brass knock-block.</p>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide, Part 7 (Session 14)",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 0,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "type": {
+          "value": "gear",
+          "subtype": ""
+        },
+        "properties": [],
+        "container": null,
+        "activities": {}
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 1200000,
+      "ownership": {
+        "default": 0
+      },
+      "flags": {}
+    },
+    {
+      "_id": "89579c266a129085",
+      "name": "Wire Spectacles",
+      "type": "loot",
+      "img": "icons/svg/item-bag.svg",
+      "system": {
+        "description": {
+          "value": "<p>Reading spectacles wired to fit a skull.</p>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide, Part 7 (Session 14)",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 0,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "type": {
+          "value": "gear",
+          "subtype": ""
+        },
+        "properties": [],
+        "container": null,
+        "activities": {}
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 1300000,
+      "ownership": {
+        "default": 0
+      },
+      "flags": {}
+    },
+    {
+      "_id": "2c3f0db5594b37e1",
+      "name": "Tin of Tea",
+      "type": "loot",
+      "img": "icons/svg/item-bag.svg",
+      "system": {
+        "description": {
+          "value": "<p>A tin of plain black tea.</p>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide, Part 7 (Session 14)",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 0,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "type": {
+          "value": "gear",
+          "subtype": ""
+        },
+        "properties": [],
+        "container": null,
+        "activities": {}
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 1400000,
+      "ownership": {
+        "default": 0
+      },
+      "flags": {}
+    },
+    {
+      "_id": "613d7331394dc8be",
+      "name": "Night Office Key",
+      "type": "loot",
+      "img": "icons/svg/item-bag.svg",
+      "system": {
+        "description": {
+          "value": "<p>A key to the night custody office (not to the vaults).</p>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide, Part 7 (Session 14)",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 0,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "type": {
+          "value": "gear",
+          "subtype": ""
+        },
+        "properties": [],
+        "container": null,
+        "activities": {}
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 1500000,
+      "ownership": {
+        "default": 0
+      },
+      "flags": {}
+    }
+  ],
+  "effects": [],
+  "folder": "ae9wu7eMHFRxi43Q",
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {}
+}

@@ -1,0 +1,1107 @@
+{
+  "folder": "ae9wu7eMHFRxi43Q",
+  "name": "Quillibus “Quill” Scratch",
+  "type": "npc",
+  "_id": "PsjbmI1M64DINQmV",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "abilities": {
+      "str": {
+        "value": 8,
+        "proficient": 0,
+        "bonuses": {
+          "check": "",
+          "save": ""
+        },
+        "max": null,
+        "check": {
+          "roll": {
+            "min": null,
+            "max": null,
+            "mode": 0
+          }
+        },
+        "save": {
+          "roll": {
+            "min": null,
+            "max": null,
+            "mode": 0
+          }
+        }
+      },
+      "dex": {
+        "value": 13,
+        "proficient": 0,
+        "bonuses": {
+          "check": "",
+          "save": ""
+        },
+        "max": null,
+        "check": {
+          "roll": {
+            "min": null,
+            "max": null,
+            "mode": 0
+          }
+        },
+        "save": {
+          "roll": {
+            "min": null,
+            "max": null,
+            "mode": 0
+          }
+        }
+      },
+      "con": {
+        "value": 12,
+        "proficient": 0,
+        "bonuses": {
+          "check": "",
+          "save": ""
+        },
+        "max": null,
+        "check": {
+          "roll": {
+            "min": null,
+            "max": null,
+            "mode": 0
+          }
+        },
+        "save": {
+          "roll": {
+            "min": null,
+            "max": null,
+            "mode": 0
+          }
+        }
+      },
+      "int": {
+        "value": 16,
+        "proficient": 1,
+        "bonuses": {
+          "check": "",
+          "save": ""
+        },
+        "max": null,
+        "check": {
+          "roll": {
+            "min": null,
+            "max": null,
+            "mode": 0
+          }
+        },
+        "save": {
+          "roll": {
+            "min": null,
+            "max": null,
+            "mode": 0
+          }
+        }
+      },
+      "wis": {
+        "value": 15,
+        "proficient": 1,
+        "bonuses": {
+          "check": "",
+          "save": ""
+        },
+        "max": null,
+        "check": {
+          "roll": {
+            "min": null,
+            "max": null,
+            "mode": 0
+          }
+        },
+        "save": {
+          "roll": {
+            "min": null,
+            "max": null,
+            "mode": 0
+          }
+        }
+      },
+      "cha": {
+        "value": 10,
+        "proficient": 0,
+        "bonuses": {
+          "check": "",
+          "save": ""
+        },
+        "max": null,
+        "check": {
+          "roll": {
+            "min": null,
+            "max": null,
+            "mode": 0
+          }
+        },
+        "save": {
+          "roll": {
+            "min": null,
+            "max": null,
+            "mode": 0
+          }
+        }
+      }
+    },
+    "attributes": {
+      "ac": {
+        "flat": 12,
+        "calc": "natural",
+        "formula": ""
+      },
+      "hp": {
+        "value": 24,
+        "max": 24,
+        "temp": 0,
+        "tempmax": 0,
+        "formula": ""
+      },
+      "init": {
+        "ability": "",
+        "bonus": "0",
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "movement": {
+        "burrow": "0",
+        "climb": "0",
+        "fly": "0",
+        "swim": "0",
+        "walk": "30",
+        "units": "ft",
+        "hover": false,
+        "ignoredDifficultTerrain": []
+      },
+      "attunement": {
+        "max": 3
+      },
+      "senses": {
+        "units": "ft",
+        "special": "",
+        "ranges": {
+          "darkvision": 60,
+          "blindsight": 0,
+          "tremorsense": 0,
+          "truesight": 0
+        }
+      },
+      "spellcasting": "",
+      "exhaustion": 0,
+      "concentration": {
+        "ability": "",
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        },
+        "bonuses": {
+          "save": ""
+        },
+        "limit": 1
+      },
+      "hd": {
+        "spent": 0
+      },
+      "death": {
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        },
+        "success": 0,
+        "failure": 0,
+        "bonuses": {
+          "save": ""
+        }
+      },
+      "spell": {
+        "level": 0
+      },
+      "loyalty": {},
+      "price": {
+        "value": null,
+        "denomination": "gp"
+      }
+    },
+    "details": {
+      "biography": {
+        "value": "<h2>Quillibus “Quill” Scratch</h2><p><strong>Occupation:</strong> Runecrafter, repairman, inscription copyist, and reluctant municipal contractor.</p><p><strong>Training role:</strong> Stellan's practical low-level Runecraft trainer. He teaches grammar, diagnosis, and legitimate glyph study without granting free Rune Charges.</p><p><strong>Combat:</strong> Civilian craftsperson. His safest combat technique is standing behind Exchange security while explaining why the attacker used the wrong door.</p>",
+        "public": "<p>A skeleton in a craftsman's coat sits behind a counter covered in carved tiles, wax impressions, chalk, chisels, and labeled anchor materials. Tiny inscriptions run along several of his own bones.</p><p><strong>Quillibus “Quill” Scratch</strong><br>Runecrafter</p>"
+      },
+      "alignment": "",
+      "race": null,
+      "type": {
+        "value": "undead",
+        "subtype": "sentient skeletal runecrafter",
+        "swarm": "",
+        "custom": ""
+      },
+      "cr": 0.5,
+      "ideal": "An instruction should mean exactly one thing before anyone is permitted to bleed near it.",
+      "bond": "His shop, his surviving fingers, and the grammatical integrity of local inscriptions.",
+      "flaw": "Treats every conversation as if someone may later attempt to Countermark it.",
+      "habitat": {
+        "custom": "Ossuary Exchange — Lower Craft Ring",
+        "value": []
+      },
+      "treasure": {
+        "value": []
+      }
+    },
+    "traits": {
+      "size": "med",
+      "di": {
+        "value": [
+          "poison"
+        ],
+        "bypasses": [],
+        "custom": ""
+      },
+      "dr": {
+        "value": [],
+        "bypasses": [],
+        "custom": ""
+      },
+      "dv": {
+        "value": [],
+        "bypasses": [],
+        "custom": ""
+      },
+      "ci": {
+        "value": [
+          "poisoned",
+          "exhaustion"
+        ],
+        "custom": ""
+      },
+      "languages": {
+        "value": [
+          "common"
+        ],
+        "custom": "",
+        "communication": {}
+      },
+      "dm": {
+        "amount": {},
+        "bypasses": []
+      },
+      "important": false
+    },
+    "currency": {
+      "pp": 0,
+      "gp": 0,
+      "ep": 0,
+      "sp": 0,
+      "cp": 0
+    },
+    "skills": {
+      "acr": {
+        "value": 0,
+        "ability": "dex",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "ani": {
+        "value": 0,
+        "ability": "wis",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "arc": {
+        "value": 2,
+        "ability": "int",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "ath": {
+        "value": 0,
+        "ability": "str",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "dec": {
+        "value": 0,
+        "ability": "cha",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "his": {
+        "value": 2,
+        "ability": "int",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "ins": {
+        "value": 1,
+        "ability": "wis",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "itm": {
+        "value": 0,
+        "ability": "cha",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "inv": {
+        "value": 2,
+        "ability": "int",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "med": {
+        "value": 0,
+        "ability": "wis",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "nat": {
+        "value": 0,
+        "ability": "int",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "prc": {
+        "value": 0,
+        "ability": "wis",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "prf": {
+        "value": 0,
+        "ability": "cha",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "per": {
+        "value": 0,
+        "ability": "cha",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "rel": {
+        "value": 0,
+        "ability": "int",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "slt": {
+        "value": 0,
+        "ability": "dex",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "ste": {
+        "value": 0,
+        "ability": "dex",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      },
+      "sur": {
+        "value": 0,
+        "ability": "wis",
+        "bonuses": {
+          "check": "",
+          "passive": ""
+        },
+        "roll": {
+          "min": null,
+          "max": null,
+          "mode": 0
+        }
+      }
+    },
+    "spells": {
+      "spell0": {
+        "value": 0,
+        "override": null
+      },
+      "spell1": {
+        "value": 0,
+        "override": null
+      },
+      "spell2": {
+        "value": 0,
+        "override": null
+      },
+      "spell3": {
+        "value": 0,
+        "override": null
+      },
+      "spell4": {
+        "value": 0,
+        "override": null
+      },
+      "spell5": {
+        "value": 0,
+        "override": null
+      },
+      "spell6": {
+        "value": 0,
+        "override": null
+      },
+      "spell7": {
+        "value": 0,
+        "override": null
+      },
+      "spell8": {
+        "value": 0,
+        "override": null
+      },
+      "spell9": {
+        "value": 0,
+        "override": null
+      },
+      "pact": {
+        "value": 0,
+        "override": null
+      }
+    },
+    "bonuses": {
+      "mwak": {
+        "attack": "",
+        "damage": ""
+      },
+      "rwak": {
+        "attack": "",
+        "damage": ""
+      },
+      "msak": {
+        "attack": "",
+        "damage": ""
+      },
+      "rsak": {
+        "attack": "",
+        "damage": ""
+      },
+      "abilities": {
+        "check": "",
+        "save": "",
+        "skill": ""
+      },
+      "spell": {
+        "dc": ""
+      }
+    },
+    "resources": {
+      "legact": {
+        "max": 0,
+        "spent": 0
+      },
+      "legres": {
+        "max": 0,
+        "spent": 0
+      },
+      "lair": {
+        "value": false,
+        "initiative": null,
+        "inside": false
+      }
+    },
+    "tools": {},
+    "source": {
+      "custom": "Varrenmoor DM Guide — Ossuary Exchange Vendors",
+      "book": "",
+      "page": "",
+      "license": "",
+      "revision": 1,
+      "rules": "2014"
+    }
+  },
+  "prototypeToken": {
+    "name": "Quillibus “Quill” Scratch",
+    "displayName": 20,
+    "actorLink": true,
+    "width": 1,
+    "height": 1,
+    "depth": 1,
+    "texture": {
+      "src": "icons/svg/mystery-man.svg",
+      "anchorX": 0.5,
+      "anchorY": 0.5,
+      "fit": "contain",
+      "scaleX": 1,
+      "scaleY": 1,
+      "tint": "#ffffff",
+      "alphaThreshold": 0.75
+    },
+    "lockRotation": false,
+    "rotation": 0,
+    "alpha": 1,
+    "disposition": 1,
+    "displayBars": 20,
+    "bar1": {
+      "attribute": "attributes.hp"
+    },
+    "bar2": {
+      "attribute": null
+    },
+    "light": {
+      "negative": false,
+      "priority": 0,
+      "alpha": 1,
+      "angle": 360,
+      "bright": 0,
+      "color": null,
+      "coloration": 1,
+      "dim": 0,
+      "attenuation": 0.5,
+      "luminosity": 0.5,
+      "saturation": 0,
+      "contrast": 0,
+      "shadows": 0,
+      "animation": {
+        "type": null,
+        "speed": 5,
+        "intensity": 5,
+        "reverse": false
+      },
+      "darkness": {
+        "min": 0,
+        "max": 1
+      }
+    },
+    "sight": {
+      "enabled": true,
+      "range": 60,
+      "angle": 360,
+      "visionMode": "darkvision",
+      "color": null,
+      "attenuation": 0.1,
+      "brightness": 1,
+      "saturation": 0,
+      "contrast": 0
+    },
+    "detectionModes": {},
+    "occludable": {
+      "radius": 0
+    },
+    "ring": {
+      "enabled": false,
+      "colors": {
+        "ring": null,
+        "background": null
+      },
+      "effects": 1,
+      "subject": {
+        "scale": 1,
+        "texture": null
+      }
+    },
+    "turnMarker": {
+      "mode": 1,
+      "animation": null,
+      "src": null,
+      "disposition": false
+    },
+    "movementAction": null,
+    "flags": {
+      "levels-3d-preview": {
+        "model3d": "assets/varrenmoor-3d/Act 2 Road to Bridgehollow/Ossuary Exchange/Tokens/token_quill_ai.glb",
+        "scale": 1,
+        "autoCenter": false
+      }
+    },
+    "randomImg": false,
+    "appendNumber": false,
+    "prependAdjective": false
+  },
+  "items": [
+    {
+      "_id": "adbd030d2808d9aa",
+      "name": "GM Reference: Quill Scratch — Voice & Shop",
+      "type": "feat",
+      "img": "icons/sundries/documents/document-sealed-red-yellow.webp",
+      "system": {
+        "description": {
+          "value": "<h2>Quillibus “Quill” Scratch</h2>\n<p><strong>Shop:</strong> <em>Scratch &amp; Son Rune, Ward and Inscription</em>.</p>\n<p>There is no son. There has never been a son. Quill says it sounds established.</p>\n<p><strong>Appearance:</strong> A skeletal runecrafter whose own bones contain tiny inscriptions. Several are crossed out. One femur reads LEFT. It is the right femur.</p>\n<blockquote>\n<p><strong>Stellan:</strong> That's your right leg.</p>\n<p><strong>Quill:</strong> Yes.</p>\n<p><strong>Stellan:</strong> Why does it say left?</p>\n<p><strong>Quill:</strong> Apprenticeship.</p>\n</blockquote>\n<p><strong>Voice:</strong> Fussy craftsman, magical grammarian, and man who believes incorrect punctuation is a health hazard because for him it sometimes is.</p>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide — Ossuary Exchange Vendors",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "uses": {
+          "max": "",
+          "recovery": [],
+          "spent": 0
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "requirements": "",
+        "properties": [],
+        "activities": {},
+        "enchant": {},
+        "prerequisites": {
+          "level": null,
+          "items": [],
+          "repeatable": false
+        },
+        "identifier": "gm-reference-quill-scratch-voice-shop",
+        "advancement": {},
+        "crewed": false
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 100000,
+      "flags": {},
+      "_stats": {
+        "coreVersion": "14.360",
+        "systemId": "dnd5e",
+        "systemVersion": "5.3.1",
+        "createdTime": 1788217569925,
+        "modifiedTime": 1788217569925,
+        "lastModifiedBy": "KuhR2W92zhAUlxUe",
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0
+      }
+    },
+    {
+      "_id": "626d2d24ad8ca509",
+      "name": "Training Reference: Runecraft Grammar",
+      "type": "feat",
+      "img": "icons/sundries/documents/document-sealed-red-yellow.webp",
+      "system": {
+        "description": {
+          "value": "<h2>What Quill Teaches Stellan</h2>\n<p>Quill reinforces the exact structure already present in Stellan's Runecrafting feature.</p>\n<ul>\n<li>A complete inscription is a sentence: <strong>subject, Root Rune or Runes, scope, trigger, and anchor</strong>.</li>\n<li>Knowing a rune's name does not mean Stellan knows its glyph. He must discover and study the graphic form before using it as a known Root Rune.</li>\n<li>At level 4, Stellan can already Countermark and compose temporary two-rune sentences using known Root Runes.</li>\n<li>Quill teaches him to diagnose why a sentence works, which part can be opposed, and which edits would change the effect without pretending every ward is simply an “off switch.”</li>\n<li>Quill grants no extra Rune Charges.</li>\n</ul>\n<blockquote><p>Most apprentices learn nouns and immediately attempt murder. Grammar is what keeps the building standing.</p></blockquote>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide — Ossuary Exchange Vendors",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "uses": {
+          "max": "",
+          "recovery": [],
+          "spent": 0
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "requirements": "",
+        "properties": [],
+        "activities": {},
+        "enchant": {},
+        "prerequisites": {
+          "level": null,
+          "items": [],
+          "repeatable": false
+        },
+        "identifier": "training-reference-runecraft-grammar",
+        "advancement": {},
+        "crewed": false
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 200000,
+      "flags": {},
+      "_stats": {
+        "coreVersion": "14.360",
+        "systemId": "dnd5e",
+        "systemVersion": "5.3.1",
+        "createdTime": 1788217569925,
+        "modifiedTime": 1788217569925,
+        "lastModifiedBy": "KuhR2W92zhAUlxUe",
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0
+      }
+    },
+    {
+      "_id": "6a48f0e8dbeacd49",
+      "name": "GM Reference: Quill's First Lesson",
+      "type": "feat",
+      "img": "icons/sundries/documents/document-sealed-red-yellow.webp",
+      "system": {
+        "description": {
+          "value": "<h2>The Lunch Box</h2>\n<p>Quill places a wooden box on the counter and tells Stellan to open it.</p>\n<blockquote>\n<p><strong>Quill:</strong> Open it.</p>\n<p><strong>Stellan:</strong> It's warded.</p>\n<p><strong>Quill:</strong> Excellent.</p>\n<p><strong>Stellan:</strong> Against opening?</p>\n<p><strong>Quill:</strong> No.</p>\n<p><strong>Stellan:</strong> Against what?</p>\n<p><strong>Quill:</strong> That's the lesson.</p>\n</blockquote>\n<p>The inscription is effectively: <strong>WHEN OPENED BY A PERSON OTHER THAN QUILL → PRODUCE A LOUD NOISE</strong>. The exercise is to identify subject, trigger, scope, result, and anchor rather than reducing the ward to “do not open.”</p>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide — Ossuary Exchange Vendors",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "uses": {
+          "max": "",
+          "recovery": [],
+          "spent": 0
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "requirements": "",
+        "properties": [],
+        "activities": {},
+        "enchant": {},
+        "prerequisites": {
+          "level": null,
+          "items": [],
+          "repeatable": false
+        },
+        "identifier": "gm-reference-quill-s-first-lesson",
+        "advancement": {},
+        "crewed": false
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 300000,
+      "flags": {},
+      "_stats": {
+        "coreVersion": "14.360",
+        "systemId": "dnd5e",
+        "systemVersion": "5.3.1",
+        "createdTime": 1788217569925,
+        "modifiedTime": 1788217569925,
+        "lastModifiedBy": "KuhR2W92zhAUlxUe",
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0
+      }
+    },
+    {
+      "_id": "2e7aa98acd482a24",
+      "name": "Side Quest: The Extremely Specific Door",
+      "type": "feat",
+      "img": "icons/sundries/documents/document-sealed-red-yellow.webp",
+      "system": {
+        "description": {
+          "value": "<h2>The Extremely Specific Door</h2>\n<p>An old warehouse door refuses every recognized worker. Quill has been hired to repair it and has decided delegation is a sign of leadership.</p>\n<blockquote><p>It's old municipal runework. Dangerous? Worse. Amended.</p></blockquote>\n<p>The original inscription allowed authorized custodians to enter. Centuries of owners added exceptions, definitions, and countermarks until the sentence now recognizes one particular dead rat as the only valid custodian.</p>\n<p>Stellan can solve the problem by tracking down the rat's remains and proving the absurd condition, or by correctly reading and Countermarking the inscription within his existing mechanics.</p>\n<p><strong>Reward:</strong> Quill may teach Stellan the graphic form of <strong>one Tier I Root Rune chosen by the GM</strong> that Stellan does not already know. Stellan must study the glyph; this counts as discovering and studying it under the existing Runecrafting rule. No extra charges are granted.</p>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide — Ossuary Exchange Vendors",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "uses": {
+          "max": "",
+          "recovery": [],
+          "spent": 0
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "requirements": "",
+        "properties": [],
+        "activities": {},
+        "enchant": {},
+        "prerequisites": {
+          "level": null,
+          "items": [],
+          "repeatable": false
+        },
+        "identifier": "side-quest-the-extremely-specific-door",
+        "advancement": {},
+        "crewed": false
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 400000,
+      "flags": {},
+      "_stats": {
+        "coreVersion": "14.360",
+        "systemId": "dnd5e",
+        "systemVersion": "5.3.1",
+        "createdTime": 1788217569925,
+        "modifiedTime": 1788217569925,
+        "lastModifiedBy": "KuhR2W92zhAUlxUe",
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0
+      }
+    },
+    {
+      "_id": "c7e2a6d717669bbc",
+      "name": "Merchant Reference: Quill's Counter",
+      "type": "feat",
+      "img": "icons/sundries/documents/document-sealed-red-yellow.webp",
+      "system": {
+        "description": {
+          "value": "<h2>Common Stock</h2>\n<ul>\n<li>blank rune tiles, bone slips, paper charms, carving wax, chalk, and fine chisels,</li>\n<li>anchor nails and thread for temporary inscriptions,</li>\n<li>copying services for non-secret known glyphs,</li>\n<li>inspection of damaged wards and contracts for repair work,</li>\n<li>lessons in inscription grammar.</li>\n</ul>\n<p>He will not sell an unknown glyph as though knowledge of its name were sufficient. The buyer must actually study it.</p>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide — Ossuary Exchange Vendors",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "uses": {
+          "max": "",
+          "recovery": [],
+          "spent": 0
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "requirements": "",
+        "properties": [],
+        "activities": {},
+        "enchant": {},
+        "prerequisites": {
+          "level": null,
+          "items": [],
+          "repeatable": false
+        },
+        "identifier": "merchant-reference-quill-s-counter",
+        "advancement": {},
+        "crewed": false
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 500000,
+      "flags": {},
+      "_stats": {
+        "coreVersion": "14.360",
+        "systemId": "dnd5e",
+        "systemVersion": "5.3.1",
+        "createdTime": 1788217569925,
+        "modifiedTime": 1788217569925,
+        "lastModifiedBy": "KuhR2W92zhAUlxUe",
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0
+      }
+    },
+    {
+      "_id": "8969594a58579dc8",
+      "name": "GM Reference: Lil' Apostrophe at Quill's",
+      "type": "feat",
+      "img": "icons/sundries/documents/document-sealed-red-yellow.webp",
+      "system": {
+        "description": {
+          "value": "<h2>If Calvin Visits Quill Later</h2>\n<p>Calvin thinks he has found a fellow word wizard. Quill experiences this as a personal attack on grammar.</p>\n<blockquote>\n<p><strong>Lil' Apostrophe:</strong> Yo, bone wizard.</p>\n<p><strong>Quill:</strong> Runecrafter.</p>\n<p><strong>Lil' Apostrophe:</strong> Right. Bone words.</p>\n<p><strong>Quill:</strong> No.</p>\n<p><strong>Lil' Apostrophe</strong> <em>(pointing at the writing on Quill's forearm)</em>: I mean... from here?</p>\n<p><strong>Quill:</strong> A rune is an instruction. Every mark must mean exactly one thing.</p>\n<p><strong>Lil' Apostrophe:</strong> One thing? Every time?</p>\n<p><strong>Quill:</strong> Yes.</p>\n<p><strong>Lil' Apostrophe:</strong> Man. That sounds peaceful.</p>\n</blockquote>\n<p>Quill notices Calvin is holding a stick of labeled workshop chalk.</p>\n<blockquote>\n<p><strong>Quill:</strong> Put down my chalk.</p>\n<p><strong>Lil' Apostrophe</strong> <em>(reading the label)</em>: Oh. I thought “Quill” was the color.</p>\n<p><strong>Quill:</strong> Quill is my name.</p>\n<p><strong>Lil' Apostrophe:</strong> That makes more sense. I was like, what color even is this?</p>\n<p><strong>Quill:</strong> Put it down.</p>\n<p><strong>Lil' Apostrophe:</strong> Want me to make you another one?</p>\n<p><strong>Quill:</strong> No.</p>\n</blockquote>\n<p>Calvin traces <strong>COPY</strong> on a blank wax tablet. Every written mark in the shop doubles. Duplicate runes crawl onto spare tiles, labels split across jars, extra inscriptions spread along Quill's arm, and copied chalk begins appearing between Calvin's fingers.</p>\n<blockquote>\n<p><strong>Lil' Apostrophe:</strong> Oh, man. Your arm has subtitles now.</p>\n<p><strong>Quill:</strong> Put. Down. The chalk.</p>\n</blockquote>\n<p>Calvin opens his hand. Dozens of copied chalk sticks clatter onto the floor.</p>\n<blockquote>\n<p><strong>Lil' Apostrophe:</strong> I only picked up one.</p>\n<p><strong>Quill:</strong> Stellan may stay. You may leave.</p>\n<p><strong>Lil' Apostrophe</strong> <em>(to Stellan)</em>: See? That's basically enrollment.</p>\n<p><strong>Quill:</strong> It is not.</p>\n<p><strong>Lil' Apostrophe:</strong> Yeah, but he said it exact.</p>\n</blockquote>",
+          "chat": ""
+        },
+        "source": {
+          "custom": "Varrenmoor DM Guide — Ossuary Exchange Vendors",
+          "book": "",
+          "page": "",
+          "license": "",
+          "rules": "2014",
+          "revision": 1
+        },
+        "uses": {
+          "max": "",
+          "recovery": [],
+          "spent": 0
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "requirements": "",
+        "properties": [],
+        "activities": {},
+        "enchant": {},
+        "prerequisites": {
+          "level": null,
+          "items": [],
+          "repeatable": false
+        },
+        "identifier": "gm-reference-lil-apostrophe-at-quill-s",
+        "advancement": {},
+        "crewed": false
+      },
+      "effects": [],
+      "folder": null,
+      "sort": 600000,
+      "flags": {},
+      "_stats": {
+        "coreVersion": "14.360",
+        "systemId": "dnd5e",
+        "systemVersion": "5.3.1",
+        "createdTime": 1788217569925,
+        "modifiedTime": 1788217569925,
+        "lastModifiedBy": "KuhR2W92zhAUlxUe",
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0
+      }
+    }
+  ],
+  "effects": [],
+  "sort": 800000,
+  "ownership": {
+    "default": 0,
+    "KuhR2W92zhAUlxUe": 3
+  },
+  "flags": {},
+  "_stats": {
+    "coreVersion": "14.360",
+    "systemId": "dnd5e",
+    "systemVersion": "5.3.1",
+    "createdTime": 1788217569925,
+    "modifiedTime": 1791220721547,
+    "lastModifiedBy": "KuhR2W92zhAUlxUe",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  }
+}
