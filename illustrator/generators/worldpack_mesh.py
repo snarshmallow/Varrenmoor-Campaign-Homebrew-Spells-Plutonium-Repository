@@ -360,7 +360,40 @@ def build_road(cx, e):
 
 
 KERB_H_FT = 0.5
-KERB_SINK_FT = 0.5      # the kerb base is buried this far below the lower of road surface and terrain, so it never hovers over the skirt/ground
+KERB_SINK_FT = 1.0      # the kerb base is buried this far below the lower of road surface and terrain, so it never hovers over the skirt/ground
+KERB_GROUND_PROBE_FT = 2.0   # terrain is also probed this far around every kerb vertex (8 directions) and the lowest height wins: the kerb skirt cannot be bridged by coarser terrain
+
+
+def kerb_rings(e):
+    """Simple kerb rings of a road. A ring that encloses the road outline (an isolated road: the band around it is an annulus and exterior-only
+    triangulation would lay a lid over the whole road) is cut open with a thin slit so it becomes one simple polygon."""
+    from shapely.geometry import Polygon, LineString
+    rings = [[tuple(p[:2]) for p in r] for r in (e.get("kerbs") or [])]
+    ol = e.get("outline")
+    if not ol or len(ol) < 3:
+        return rings
+    road = Polygon(ol).buffer(0)
+    out = []
+    for r in rings:
+        pg = Polygon(r).buffer(0)
+        if pg.is_empty or not (pg.contains(road.representative_point()) and pg.area > road.area):
+            out.append(r)
+            continue
+        band = pg.difference(road)
+        if band.is_empty:
+            continue
+        g = max(getattr(band, "geoms", [band]), key=lambda q: q.area)
+        if not g.interiors:
+            out.append([tuple(c) for c in list(g.exterior.coords)[:-1]])
+            continue
+        a = Polygon(g.interiors[0]).exterior
+        p0 = g.exterior.coords[0]
+        q0 = a.interpolate(a.project(__import__("shapely.geometry", fromlist=["Point"]).Point(p0)))
+        cut = LineString([p0, (q0.x, q0.y)]).buffer(0.08, cap_style=3)
+        for q in getattr(g.difference(cut), "geoms", [g.difference(cut)]):
+            if q.geom_type == "Polygon" and q.area > 1.0:
+                out.append([tuple(c) for c in list(q.exterior.coords)[:-1]])
+    return out
 
 
 def kerb_heights(cx, e, ring):
@@ -401,6 +434,9 @@ def kerb_heights(cx, e, ring):
     ground = None
     if getattr(cx, "h", None) is not None:
         ground = np.asarray(wg.mesh_height(cx.h, cx.pack.cell_ft, P[:, 0], P[:, 1]), float)
+        for k in range(8):
+            a = k * math.pi / 4
+            ground = np.minimum(ground, np.asarray(wg.mesh_height(cx.h, cx.pack.cell_ft, P[:, 0] + KERB_GROUND_PROBE_FT * math.cos(a), P[:, 1] + KERB_GROUND_PROBE_FT * math.sin(a)), float))
     return surf, ground
 
 
@@ -409,7 +445,7 @@ def _add_kerbs(cx, b, e):
     its cross-slope; the base is buried KERB_SINK_FT below the lower of surface and terrain (no hovering kerb, no grass gap under it)."""
     mat, tile = "mat_kerb", 4.0
     z0 = cx.fr.z_origin_ft
-    for ring in e["kerbs"]:
+    for ring in kerb_rings(e):
         P = [tuple(p) for p in ring]
         # densify long edges so the kerb follows the road profile
         D = []

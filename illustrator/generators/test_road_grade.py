@@ -309,5 +309,62 @@ class KerbFlush(unittest.TestCase):
         self.assertTrue(np.all((z[near] <= edge + 0.1) & (z[near] >= edgel - 0.1)))
 
 
+class KerbSkirt(unittest.TestCase):
+    def _build(self, pts, width=16.0):
+        from shapely.geometry import LineString
+        h = terrain()
+        r = road("c", pts, width=width)
+        pk = synth(h, [r])
+        runs, rep = rg.grade_roads(pk, h, {})
+        ls = LineString([(p[0], p[1]) for p in pts])
+        outline = ls.buffer(width / 2, cap_style=2)
+        band = outline.buffer(0.7, join_style=2).difference(outline)
+        e = dict(r, _grade={"runs": runs["c"], "skirt": True}, kerbs=[[list(p) for p in list(band.exterior.coords)[:-1]]],
+                 outline=[list(p) for p in list(outline.exterior.coords)[:-1]])
+        cx = wm.Ctx(pk)
+        b = wm.Builder()
+        wm._add_kerbs(cx, b, e)
+        return h, pk, runs["c"], e, b.build()
+
+    def test_annulus_has_no_lid_over_the_road(self):
+        h, pk, run, e, m = self._build([(30, 60, 100.0), (300, 140, 100.0)])
+        V = m.V[m.subs["mat_kerb"]]
+        x = V[:, :, 0] / FT
+        y = pk.frame.height_ft - V[:, :, 1] / FT
+        from shapely.geometry import Polygon, Point
+        road_poly = Polygon(e["outline"]).buffer(-0.5)
+        c = np.stack([x.mean(1), y.mean(1)], 1)
+        self.assertFalse(any(road_poly.contains(Point(p)) for p in c), "a kerb triangle lies over the road surface")
+
+    def test_kerb_wall_columns_bury_below_dense_terrain(self):
+        """Sloped and curved roads: every wall base point, and points between the 3 ft vertices, lies below the terrain sampled densely (0.5 ft)."""
+        for pts in ([(30, 60, 100.0), (300, 140, 100.0)], [(40, 300, 98.0), (120, 220, 103.0), (200, 230, 101.0), (280, 120, 108.0), (340, 90, 106.0)]):
+            h, pk, run, e, m = self._build([tuple(p) for p in pts])
+            T = m.subs["mat_kerb"]
+            V = m.V
+            worst = -1e9
+            n = 0
+            colmin, colmax = {}, {}
+            for t in T:
+                for i in t:
+                    k = (round(V[i][0], 4), round(V[i][1], 4))
+                    colmin[k] = min(colmin.get(k, 1e9), V[i][2])
+                    colmax[k] = max(colmax.get(k, -1e9), V[i][2])
+            for t in T:
+                P = V[list(t)]
+                bs = [p for p in P if abs(p[2] - colmin[(round(p[0], 4), round(p[1], 4))]) < 1e-6 and p[2] < colmax[(round(p[0], 4), round(p[1], 4))] - 0.1]
+                if len(bs) != 2:
+                    continue                          # not a wall triangle with a base edge
+                p0, p1 = bs
+                for u in np.linspace(0, 1, 9):
+                    q = p0 + (p1 - p0) * u
+                    x, y = q[0] / FT, pk.frame.height_ft - q[1] / FT
+                    g = float(rg.mesh_height(h, CELL, np.array([x]), np.array([y]))[0])
+                    worst = max(worst, q[2] / FT + ZO - g)
+                    n += 1
+            self.assertGreater(n, 100)
+            self.assertLess(worst, -0.4, f"a kerb base sits {worst:.2f} ft relative to terrain (must stay below)")
+
+
 if __name__ == "__main__":
     unittest.main()
