@@ -354,6 +354,52 @@ def _links(e):
     return e.get("links") or {"foundry_scene": None, "model3d": None, "ai_layer": None}
 
 
+ROAD_EDIT_KEYS = ("class", "surface", "kerb", "grade")
+BUILDING_EDIT_KEYS = ("roof_type", "roof_pitch", "roof_material", "wall_material", "roof_overhang_ft", "no_windows", "keep_individual")
+GRADE_EDIT_KEYS = ("smooth", "max_grade_deg", "cross_deg", "cutfill")
+
+
+def road_edit(s):
+    """Validated per-road overrides of a street entry (`edit` dict written by object_edit.py): class, surface (texture name), kerb (bool), grade
+    {smooth, max_grade_deg, cross_deg, cutfill}. Unknown keys and null values are dropped; no `edit` -> {}."""
+    ed = s.get("edit") if isinstance(s, dict) else None
+    out = {}
+    if not isinstance(ed, dict):
+        return out
+    for k in ("class", "surface"):
+        if isinstance(ed.get(k), str) and ed[k]:
+            out[k] = ed[k]
+    if isinstance(ed.get("kerb"), bool):
+        out["kerb"] = ed["kerb"]
+    g = ed.get("grade")
+    if isinstance(g, dict):
+        gg = {k: g[k] for k in GRADE_EDIT_KEYS if g.get(k) is not None}
+        if gg:
+            out["grade"] = gg
+    return out
+
+
+def building_edit(b):
+    """Validated per-building overrides of a building json (`edit` dict written by object_edit.py): roof_type (gable|hip), roof_pitch (rise/run), roof_material
+    and wall_material (texture names), roof_overhang_ft, no_windows, keep_individual (merge keeps the building as its own model). No `edit` -> {}."""
+    ed = b.get("edit") if isinstance(b, dict) else None
+    out = {}
+    if not isinstance(ed, dict):
+        return out
+    if ed.get("roof_type") in ("gable", "hip"):
+        out["roof_type"] = ed["roof_type"]
+    for k, lo, hi in (("roof_pitch", 0.05, 2.0), ("roof_overhang_ft", 0.0, 6.0)):
+        if isinstance(ed.get(k), (int, float)) and not isinstance(ed.get(k), bool):
+            out[k] = float(min(hi, max(lo, ed[k])))
+    for k in ("roof_material", "wall_material"):
+        if isinstance(ed.get(k), str) and ed[k]:
+            out[k] = ed[k]
+    for k in ("no_windows", "keep_individual"):
+        if ed.get(k) is True:
+            out[k] = True
+    return out
+
+
 def _common(e, place, type_, src):
     return {"id": e["id"], "name": e.get("name", e["id"]), "kind": e.get("kind", ""), "status": e.get("status", "proposed"),
             "notes": e.get("notes", ""), "links": _links(e), "source": src,
@@ -709,7 +755,12 @@ def export_world(place, out_dir=None, lod=(1, 4), world_root=None, terrain_sourc
         pts = [[p[0], p[1]] for p in s["geometry"]["points"]]
         z = s.get("elevations_ft") or _entity_z(h, cell, pts)
         cls = fr.classify_street(s, sc)
+        ed = road_edit(s)                                              # per-road overrides (panel: Roads tab > Edit road); empty = unchanged behaviour
+        if ed.get("class") in sc:
+            cls = ed["class"]
         tc = sc.get(cls, sc.get("street", {"texture": "gravel", "tile_ft": 26}))
+        if ed.get("surface"):
+            tc = dict(tc, texture=ed["surface"])
         e.update({"class": cls, "width_ft": s["geometry"]["width_ft"], "points": [[r3(p[0]), r3(p[1]), r3(zz)] for p, zz in zip(pts, z)],
                   "ring": s.get("ring"), "grade_max": s.get("grade_max"), "grade_raw_max": s.get("grade_raw_max"), "cut_fill_ft": s.get("cut_fill_ft"),
                   "length_ft": r3(sum(math.hypot(pts[i + 1][0] - pts[i][0], pts[i + 1][1] - pts[i][1]) for i in range(len(pts) - 1))),
@@ -739,8 +790,20 @@ def export_world(place, out_dir=None, lod=(1, 4), world_root=None, terrain_sourc
                     for sg in segs:
                         if sg.geom_type == "LineString" and sg.length > 1.0:
                             e["fords"].append({"water": w["id"], "length_ft": r3(sg.length), "points": [[r3(a), r3(b)] for a, b in sg.coords]})
+        if ed:
+            e["edit"] = ed
+            if ed.get("grade"):
+                e["grade_override"] = dict(ed["grade"])
+            e.setdefault("derived", []).append("edit")
         ents["roads"].append(e)
-    _road_kerbs(ents["roads"], {k["street"] for k in model.get("details", {}).get("kerbs", [])})
+    kerb_ids = {k["street"] for k in model.get("details", {}).get("kerbs", [])}
+    for s_ in model["streets"]:                                        # per-road kerb switch: True forces kerbs, False removes them
+        kv = road_edit(s_).get("kerb")
+        if kv is True:
+            kerb_ids.add(s_["id"])
+        elif kv is False:
+            kerb_ids.discard(s_["id"])
+    _road_kerbs(ents["roads"], kerb_ids)
     # ---- buildings
     bc = types.get("buildings", {})
     for b in sorted(model["buildings"], key=lambda e: e["id"]):
@@ -755,6 +818,16 @@ def export_world(place, out_dir=None, lod=(1, 4), world_root=None, terrain_sourc
         tc = bc.get(kind, bc.get("default", {"texture": "shingle"}))
         rtex = fr.pick(tc, rng(b["id"]))
         wtex, wtile = WALLS.get(kind, WALLS["default"])
+        bed = building_edit(b)                                         # per-building overrides (panel: Buildings tab > Edit building); empty = unchanged behaviour
+        if bed.get("roof_type"):
+            rtype = bed["roof_type"]
+        if "roof_pitch" in bed:
+            pitch = bed["roof_pitch"]
+        ridge_h = Wd / 2 * pitch
+        if bed.get("roof_material"):
+            rtex = bed["roof_material"]
+        if bed.get("wall_material"):
+            wtex = bed["wall_material"]
         floor_z = float(b.get("elevation_ft", bilinear(h, cell, cx, cy)))
         import building_ground as bg
         floor_z, skirt_ft, _g = bg.resolve(poly, [d for d in model.get("details", {}).get("doors", []) if d.get("building") == b["id"]], floor_z, h, cell)   # base from the footprint ground (building_ground.py)
@@ -762,7 +835,7 @@ def export_world(place, out_dir=None, lod=(1, 4), world_root=None, terrain_sourc
                   "base_elevation_ft": r3(floor_z), "skirt_depth_ft": r3(max(float(b.get("site_relief_ft", 0.0)) + 1.0, skirt_ft)),
                   "wall_height_ft": r3(wall_h), "height_ft": r3(wall_h + ridge_h),
                   "obb": {"center": [r3(cx), r3(cy)], "angle_deg": r3(ang), "length_ft": r3(L), "width_ft": r3(Wd)},
-                  "roof": {"type": rtype, "pitch": pitch, "ridge_axis_deg": r3(ang), "ridge_height_ft": r3(ridge_h), "overhang_ft": 1.0,
+                  "roof": {"type": rtype, "pitch": pitch, "ridge_axis_deg": r3(ang), "ridge_height_ft": r3(ridge_h), "overhang_ft": bed.get("roof_overhang_ft", 1.0),
                            "surface": _surface(tex.tex(rtex), tc.get("tile_ft", 14))},
                   "wall": {"surface": _surface(tex.tex(wtex), wtile)},
                   "site_slope": b.get("site_slope"), "site_relief_ft": b.get("site_relief_ft"),
@@ -770,6 +843,11 @@ def export_world(place, out_dir=None, lod=(1, 4), world_root=None, terrain_sourc
                                                  "door_ids": [d.get("id") for d in b.get("doors", [])]},
                   "rooms": b.get("rooms", []), "doors": b.get("doors", []),
                   "derived": ["wall_height_ft", "height_ft", "roof", "wall", "skirt_depth_ft", "obb"]})
+        if bed:
+            e["edit"] = bed
+            e["derived"].append("edit")
+            if bed.get("keep_individual"):
+                e["keep_individual"] = True
         if b.get("interior_style"):
             e["interior_style"] = b["interior_style"]            # per-building interior style override (interior_styles.py); absent = scene setting / kind default
         if b.get("style"):
@@ -778,6 +856,8 @@ def export_world(place, out_dir=None, lod=(1, 4), world_root=None, terrain_sourc
         if dr:
             e["openings"] = {"doors": [{"id": d["id"], "point": d["point"], "width_ft": d.get("width_ft"), "facing": d.get("facing")} for d in dr],
                              "windows": "derived at mesh time (worldpack_detail.py)", "wall_thickness_ft": 0.75, "canon": False}
+            if bed.get("no_windows"):
+                e["openings"]["no_windows"] = True                  # per-building override: doors only, no window holes (worldpack_detail.plan_holes)
             e["derived"].append("openings")
             import interiors as _interiors                      # generated room layout (interiors.py): stored layout, else generated on the fly
             _interiors.attach_to_entity(e, b, dr)

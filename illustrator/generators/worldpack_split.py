@@ -303,10 +303,15 @@ def merge_export(pack_dir, preset="layer", out_dir=None, lods=(1, 2), compress="
             tg = (mem.get(nid) or {}).get("tags", {})
             items.append((e, nid, m.translated(pv), e["layer"], tg.get("district")))
     groups, keyof = {}, {}
+    kept = {b["id"] for b in pack.list("buildings") if b.get("keep_individual")}
+    kept_keys = set()
     for it in items:
         e = it[0]
         if preset == "individual" or it[3] == "roofs":      # roof tiles keep their own file whatever the preset: that is what the toggle hides
             k = e["file"][len("models/"):-4]
+        elif it[3] == "buildings" and it[1] in kept:        # per-building keep_individual flag (object_edit.py): own file whatever the preset
+            k = e["file"][len("models/"):-4] if e["file"].startswith("models/") else it[1]
+            kept_keys.add(k)
         elif preset == "all":
             k = "scene"
         elif preset == "district":
@@ -340,7 +345,7 @@ def merge_export(pack_dir, preset="layer", out_dir=None, lods=(1, 2), compress="
         pivot = wm._pivot(merged)
         rel = f"{k}.glb"
         nodes = [(k, merged.translated([-pivot[0], -pivot[1], -pivot[2]]), {"merged": [n for n, *_ in meshes]})]
-        if preset == "individual" or its[0][3] == "roofs":
+        if preset == "individual" or its[0][3] == "roofs" or k in kept_keys:
             nodes = [(n, m.translated([-pivot[0], -pivot[1], -pivot[2]]), {**roofex.get(n, {}), "id": n}) for n, m, _, _ in meshes]
         n_doors_k = 0
         for did, dex, dm_, dabs, _e in doors:                # door leaves stay separate nodes (hinge at node origin, extras kept) in their building's file

@@ -62,7 +62,7 @@ def wall_geometry(P):
     return D, N, Q
 
 
-def plan_holes(P, doors, storeys, zf):
+def plan_holes(P, doors, storeys, zf, no_windows=False):
     """Per edge: sorted list of holes {u0,u1,z0,z1,kind[,door]} (u along the edge in metres from P[i]). Doors first, windows in the free wall."""
     n = len(P)
     out = []
@@ -80,7 +80,7 @@ def plan_holes(P, doors, storeys, zf):
                     if seg[1] - seg[0] > 0:
                         nf.append(seg)
             free = nf
-        for lo, hi in free:
+        for lo, hi in ([] if no_windows else free):
             span = hi - lo
             cnt = int(span / (WIN_SPACING_FT * FT))
             for k in range(cnt):
@@ -111,8 +111,8 @@ def build_building_detailed(cx, e):
     if e.get("layout"):
         import interior_styles as ist
         inner_mat = ist.get(ist.resolve_name(e, ist.scene_style(cx.pack)))["mats"]["wall"]
-    edge_holes = plan_holes(P, door_hits(P, e.get("openings"), cx), storeys, zf)
-    if e.get("layout"):                                      # interior layout owns the window positions (worldpack_interiors)
+    edge_holes = plan_holes(P, door_hits(P, e.get("openings"), cx), storeys, zf, bool((e.get("openings") or {}).get("no_windows")))
+    if e.get("layout") and not (e.get("openings") or {}).get("no_windows"):                                      # interior layout owns the window positions (worldpack_interiors)
         import worldpack_interiors as wi
         edge_holes = wi.apply_layout_windows(edge_holes, P, e, cx, zf)
     import building_styles_arch as bsa

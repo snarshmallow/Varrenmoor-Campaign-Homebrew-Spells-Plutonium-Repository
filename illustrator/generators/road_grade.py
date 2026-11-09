@@ -44,6 +44,25 @@ def params(p=None):
     return D
 
 
+ROAD_OVERRIDE_KEYS = ("smooth", "max_grade_deg", "cross_deg", "cutfill")
+
+
+def road_params(P, r):
+    """Effective settings of one road: the global P with the road's optional `grade_override` {smooth, max_grade_deg, cross_deg, cutfill} on top
+    (clamped like params()). No override (the default) returns the global values unchanged. P['ignore_road_overrides'] disables the overrides."""
+    out = {"smooth": P["smooth"], "max_grade_deg": P["max_grade_deg"], "cross_deg": P["cross_deg"], "cutfill": bool(P["cutfill"])}
+    ov = r.get("grade_override") if not P.get("ignore_road_overrides") else None
+    if isinstance(ov, dict):
+        for k in ROAD_OVERRIDE_KEYS:
+            if ov.get(k) is not None:
+                out[k] = ov[k]
+        out["smooth"] = float(min(1.0, max(0.0, out["smooth"])))
+        out["max_grade_deg"] = float(min(60.0, max(1.0, out["max_grade_deg"])))
+        out["cross_deg"] = float(min(45.0, max(0.0, out["cross_deg"])))
+        out["cutfill"] = bool(out["cutfill"])
+    return out
+
+
 def mesh_height(h, cell, x, y):
     """Height of the exported terrain mesh at (x, y) feet. build_terrain triangulates each cell (a,c,b) and (b,c,d) with a=(i,j), b=(i,j+1), c=(i+1,j),
     d=(i+1,j+1): the diagonal runs b-c. Arrays or scalars, clamped to the grid. This is the surface the player sees, not the bilinear raster."""
@@ -181,9 +200,7 @@ def grade_roads(pack, h, p=None):
     cell = pack.cell_ft
     step = float(P["step_ft"] or cell)
     lift = P["lift_m"] / FT_M
-    tang = math.tan(math.radians(P["max_grade_deg"]))
-    tcross = math.tan(math.radians(P["cross_deg"]))
-    cutfill = bool(P["cutfill"])
+    cutfill_ids = set()
     import bridge_maker as bm
     roads = pack.list("roads")
     runs, warns = {}, []
@@ -202,9 +219,13 @@ def grade_roads(pack, h, p=None):
             nrm = _normals(x, y)
             hw = np.full(len(x), r["width_ft"] / 2.0)
             gc = mesh_height(h, cell, x, y)
-            prof = (1 - P["smooth"]) * gc + P["smooth"] * _smooth(gc, step, P["smooth_window_ft"])
+            RP = road_params(P, r)
+            if RP["cutfill"]:
+                cutfill_ids.add(r["id"])
+            prof = (1 - RP["smooth"]) * gc + RP["smooth"] * _smooth(gc, step, P["smooth_window_ft"])
             gap_ends = [bool(np.hypot(*(piece[0, :2] - pts[0, :2])) > 0.05), bool(np.hypot(*(piece[-1, :2] - pts[-1, :2])) > 0.05)]
-            work.append(dict(id=r["id"], k=k, s=s, x=x, y=y, nrm=nrm, hw=hw, gc=gc, prof=prof + lift, gap_ends=gap_ends, z_auth=(piece[0, 2], piece[-1, 2]), cls=r.get("class")))
+            work.append(dict(id=r["id"], k=k, s=s, x=x, y=y, nrm=nrm, hw=hw, gc=gc, prof=prof + lift, gap_ends=gap_ends, z_auth=(piece[0, 2], piece[-1, 2]), cls=r.get("class"),
+                             tang=math.tan(math.radians(RP["max_grade_deg"])), tcross=math.tan(math.radians(RP["cross_deg"])), cutfill=RP["cutfill"], max_grade=RP["max_grade_deg"], cross=RP["cross_deg"]))
     # ---- pins: bridge-deck ends (authored height, fixed), then every junction / crossing with another road (T: the ending road meets the through road;
     # end-to-end and X crossings: both move to the mean), each as a cosine-windowed correction along the road
     bridge_pts = [np.asarray(r["points"], float) for r in roads if r.get("bridge") and r.get("points")]
@@ -286,6 +307,7 @@ def grade_roads(pack, h, p=None):
 
     def finish(w):
         s, x, y, nrm, hw = w["s"], w["x"], w["y"], w["nrm"], w["hw"]
+        cutfill, tang, tcross = w["cutfill"], w["tang"], w["tcross"]
         if "delta" not in w:
             if cutfill:
                 w["delta"] = np.zeros(len(x))
@@ -338,22 +360,23 @@ def grade_roads(pack, h, p=None):
         rid = f"{w['id']}" + (f"#{w['k']}" if w["k"] else "")
         ground_grade = np.abs(np.diff(gc)) / np.maximum(np.diff(s), 1e-6)
         if (z - zpre).max() > P["float_warn_ft"]:
-            warns.append(f"{rid}: ground is steeper than the {P['max_grade_deg']:.0f} deg grade limit; the road was raised up to {float((z - zpre).max()):.1f} ft clear of it (skirt closes the gap)")
-        elif fl.max() > P["float_warn_ft"] * 1.6 and not cutfill:
-            warns.append(f"{rid}: road stands up to {float(fl.max()):.1f} ft above the ground (cross-slope limit {P['cross_deg']:.0f} deg / grade limit); skirt closes the gap")
-        if ground_grade.size and np.degrees(np.arctan(np.percentile(ground_grade, 95))) > P["max_grade_deg"] * 1.5:
-            warns.append(f"{rid}: natural ground along the road is steeper than {P['max_grade_deg'] * 1.5:.0f} deg over 5%+ of its length; consider switchbacks or cut/fill")
+            warns.append(f"{rid}: ground is steeper than the {w['max_grade']:.0f} deg grade limit; the road was raised up to {float((z - zpre).max()):.1f} ft clear of it (skirt closes the gap)")
+        elif fl.max() > P["float_warn_ft"] * 1.6 and not w["cutfill"]:
+            warns.append(f"{rid}: road stands up to {float(fl.max()):.1f} ft above the ground (cross-slope limit {w['cross']:.0f} deg / grade limit); skirt closes the gap")
+        if ground_grade.size and np.degrees(np.arctan(np.percentile(ground_grade, 95))) > w["max_grade"] * 1.5:
+            warns.append(f"{rid}: natural ground along the road is steeper than {w['max_grade'] * 1.5:.0f} deg over 5%+ of its length; consider switchbacks or cut/fill")
         for end in (0, 1):
             if w["gap_ends"][end]:
                 zz = z[0] if end == 0 else z[-1]
                 if zz - w["z_auth"][end] > 0.25:
                     warns.append(f"{rid}: road end at a bridge was raised {zz - w['z_auth'][end]:.1f} ft above the bridge deck end (terrain/grade limit); check the approach")
         gx = np.degrees(np.arctan(np.abs(np.diff(z)) / np.maximum(np.diff(s), 1e-6)))
-        if gx.size and gx.max() > P["max_grade_deg"] + 0.05:
+        if gx.size and gx.max() > w["max_grade"] + 0.05:
             warns.append(f"{rid}: grade limit could not be met, max {gx.max():.1f} deg")
         zl, zr = z + delta, z - delta
         runs.setdefault(w["id"], []).append(Run(w["id"], x, y, z, zl, zr, hw, s, w["gap_ends"]))
-    return runs, {"warnings": warns, "stats": {k: (round(v, 2) if isinstance(v, float) else v) for k, v in stats.items()}, "params": {k: P[k] for k in ("smooth", "max_grade_deg", "skirt", "cutfill", "cross_deg", "smooth_window_ft", "cutfill_falloff_ft")}}
+    overridden = sorted({r["id"] for r in roads if isinstance(r.get("grade_override"), dict) and not P.get("ignore_road_overrides")})
+    return runs, {"cutfill_ids": sorted(cutfill_ids), "overridden": overridden, "warnings": warns, "stats": {k: (round(v, 2) if isinstance(v, float) else v) for k, v in stats.items()}, "params": {k: P[k] for k in ("smooth", "max_grade_deg", "skirt", "cutfill", "cross_deg", "smooth_window_ft", "cutfill_falloff_ft")}}
 
 
 def cutfill_heights(h, cell, runs, falloff_ft=12.0, lift_ft=0.82, shoulder_ft=0.5):
@@ -415,13 +438,14 @@ def grade_and_cutfill(pack, h, p=None):
     ground (beds of different roads overlapping), the roads are re-draped onto the modified terrain (raise only) and the report says so."""
     P = params(p)
     runs, rep = grade_roads(pack, h, P)
-    if not P["cutfill"]:
+    if not rep.get("cutfill_ids"):
         return h, runs, rep
-    h2, cf = cutfill_heights(h, pack.cell_ft, runs, P["cutfill_falloff_ft"], P["lift_m"] / FT_M)
+    cf_ids = set(rep["cutfill_ids"])                                    # all roads with the global switch, else only the roads that ask for it
+    h2, cf = cutfill_heights(h, pack.cell_ft, {k: v for k, v in runs.items() if k in cf_ids}, P["cutfill_falloff_ft"], P["lift_m"] / FT_M)
     rep["cutfill"] = cf
     mn, mx, bad, n = verify(h2, pack.cell_ft, runs, 0.0)
     if bad:
-        runs, rep2 = grade_roads(pack, h2, dict(P, cutfill=False, smooth=0.0))
+        runs, rep2 = grade_roads(pack, h2, dict(P, cutfill=False, smooth=0.0, ignore_road_overrides=True))
         rep["warnings"] += ["cut/fill: roads were re-draped onto the modified terrain where road beds overlap"] + rep2["warnings"]
     return h2, runs, rep
 
