@@ -487,5 +487,45 @@ class AssignCli(unittest.TestCase):
             shutil.rmtree(tmp, ignore_errors=True)
 
 
+
+def beam_over_roof(e, m, tol_m=0.02):
+    """Largest height (m) by which a timber-frame vertex above the wall top rises over the roof surface (same Roof model the builder uses)."""
+    S = e["_style"]
+    cxo = wm.Ctx(pack())
+    zt = (e["base_elevation_ft"] - cxo.fr.z_origin_ft + e["wall_height_ft"]) * FT
+    R = bsg.Roof(cxo, e).zt(zt)
+    F = m.subs.get(S["beam_mat"])
+    if F is None or not len(F):
+        return 0.0
+    V = np.unique(m.V[F.ravel()], axis=0)
+    V = V[V[:, 2] > zt + 1e-4]
+    worst = 0.0
+    for x, y, z in V:
+        dx, dy = x - R.cxm, y - R.cym
+        l, w = dx * R.ex[0] + dy * R.ex[1], dx * R.ey[0] + dy * R.ey[1]
+        worst = max(worst, z - R.roof_z(l, w))
+    return worst
+
+
+class TimberStaysUnderRoof(unittest.TestCase):
+    """Half-timber / corner-board geometry that rises above the wall top (gable studs, tie beam, rake rafters) must stay under the roof surface: no frame members
+    poking through thatch or tiles (user report: dark diagonal timbers through the roof of the yellow Dyers house)."""
+
+    def test_every_preset_gable_and_hip(self):
+        pk = pack()
+        checked = 0
+        for pid, pre in bs.load_presets().items():
+            if pre["wall"]["system"] not in ("halftimber", "corners") or pid == "stave_church":      # plain walls have no frame; the stave church's tiers are meant to rise above the roof
+                continue
+            for rtype, pitch in (("gable", 0.45), ("gable", 0.9), ("hip", 0.6)):
+                e = bsp.sample_entity(pk, pid, pk.list("buildings")[0])
+                e["roof"] = dict(e["roof"], type=rtype, ridge_height_ft=e["obb"]["width_ft"] / 2 * pitch)
+                e = bs.apply_style(e)
+                m, _ = wd.build_building_detailed(wm.Ctx(pk), e)
+                self.assertLessEqual(beam_over_roof(e, m), 0.05, f"{pid} {rtype} pitch {pitch}")     # 5 cm: ridge caps / barge boards are roof trim
+                checked += 1
+        self.assertGreaterEqual(checked, 12)
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=1)

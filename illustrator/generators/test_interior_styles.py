@@ -118,6 +118,28 @@ class Geometry(unittest.TestCase):
         for m in ("mat_int_plank", "mat_int_frame", "mat_int_rug", "mat_pottery", "mat_herb", "mat_straw", "mat_int_stone"):
             self.assertIn(m, mats, m)
 
+    def test_top_ceiling_lives_in_roof_node(self):
+        """Everything that closes the top storey from above (ceiling plate, joists / beams, plank ceiling, racks hung from the beams) is in the `_roof` node, so hiding the
+        roof (per-building tile, merged scene tile, or the `_roof` node) opens the interior from above. Lower-storey ceilings (= floor slabs) stay in `_int_f<s>`."""
+        FT = wi.FT
+        for (nm, f), (nodes, e, st) in self.res.items():
+            M = ist.get(nm)["mats"]
+            top = {M["ceiling"], "mat_herb"}               # (beam material also builds partition door frames, which legitimately reach the ceiling)
+            roof = [m for n, m, _ in nodes if n.endswith("_roof")][0]
+            zs = [roof.V[F][:, :, 2].min() for k, F in roof.subs.items() if k == M["ceiling"] and len(F)]
+            self.assertTrue(zs, (nm, f))                                          # the roof node carries the ceiling plate
+            plate = min(zs)
+            self.assertIn(M["beam"], roof.subs, (nm, f))                              # joists / beams hang from the roof plate
+            for n, m, _ in nodes:
+                if n.endswith("_roof") or "_int_f" not in n and "_props_f" not in n:       # (shell nodes: the style's ceiling material can equal its wall material)
+                    continue
+                for k, F in m.subs.items():
+                    if k in top and k != M["wall"] and len(F):       # (a ceiling material shared with the partitions' wall material cannot be told apart)
+                        self.assertLess(m.V[F][:, :, 2].max(), plate - 0.9 * FT, (nm, f, n, k))      # nothing of the top ceiling / its racks left in the building nodes
+            if nm == "rustic_cottage" and f == 1:
+                self.assertIn("mat_herb", roof.subs)                              # herb rods hang from the top beams: part of the roof
+
+
     def test_poor_hovel_is_sparse_earth_and_straw(self):
         mats = self.res[("poor_hovel", 1)][2]["materials"]
         self.assertIn("mat_int_earth", mats)

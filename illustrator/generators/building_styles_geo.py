@@ -502,6 +502,9 @@ def stepped_gable(g, R, e, S, zt):
                 _box(g, R, cap, lo - 0.06 * FT, hi + 0.06 * FT, wa, wb, top, top + 0.16 * FT, 4.0, skip=("z0",))
 
 
+ROOF_INSET_FT = 0.1       # timber that rises into the roof zone stays this far under the roof surface
+
+
 def gable_timber(g, R, e, S, zt):
     """Timber on the gable triangles (close studs, tie beam, rafters) of a half-timbered gable roof."""
     W = S["wall"]
@@ -523,17 +526,18 @@ def gable_timber(g, R, e, S, zt):
             top = zt + R.rise - abs(u) * R.slope - 0.35 * FT
             if top - (zt + RAIL_H * FT) > 0.5 * FT:
                 g.rect(X, mat, u - bw / 2, u + bw / 2, zt + RAIL_H * FT, top, d, True, skip=(0,))
-        # rafter beams along the rake (parallelograms)
+        # rafter beams along the rake: parallelograms under the roof sheet (top edge ROOF_INSET below the roof surface, bottom edge one beam-width lower), so they
+        # never poke through the thatch / tiles; they run from the tie beam end up to the apex
+        wh = bw * math.sqrt(1 + R.slope ** 2)
+        inset = ROOF_INSET_FT * FT
         for s in (-1, 1):
-            wh = bw * math.sqrt(1 + R.slope ** 2)
-            ua, ub = s * R.hw, 0.0
-            quad = [(ua, zt), (ua - s * 0.0, zt + wh), (ub, zt + R.rise), (ub, zt + R.rise - wh)] if False else None
-            pa = (s * R.hw, zt + RAIL_H * FT)
-            pb = (0.0, zt + R.rise)
-            # lower edge of the rafter: offset down by wh
-            quad = [(pa[0], pa[1] - 0.0), (pb[0], pb[1] - wh), (pb[0], pb[1]), (pa[0], pa[1] + wh)] if s > 0 else [(pb[0], pb[1] - wh), (pa[0], pa[1]), (pa[0], pa[1] + wh), (pb[0], pb[1])]
-            ang = math.atan2(pb[1] - pa[1], pb[0] - pa[0]) if s > 0 else math.atan2(pb[1] - pa[1], pb[0] - pa[0])
-            g.prism(X, mat, quad if s > 0 else quad, d * 0.8, (math.cos(ang), math.sin(ang)), skip=())
+            ua = s * (R.hw - 0.5 * FT)
+            top = lambda u: zt + R.rise - abs(u) * R.slope - inset
+            quad = [(ua, top(ua) - wh), (0.0, top(0.0) - wh), (0.0, top(0.0)), (ua, top(ua))]
+            if s < 0:                                              # keep the winding (right-bottom, left-bottom, left-top, right-top) on both rakes
+                quad = [quad[1], quad[0], quad[3], quad[2]]
+            ang = math.atan2(top(0.0) - top(ua), -ua)
+            g.prism(X, mat, quad, d * 0.8, (math.cos(ang), math.sin(ang)), skip=())
 
 
 def tower(g, R, e, S, zt, z0):

@@ -26,6 +26,26 @@ def glb(path):
     return json.loads(raw[20:20 + struct.unpack_from("<I", raw, 12)[0]])
 
 
+CEIL = ("mat_ceiling", "mat_int_plank", "mat_int_lime", "mat_int_boards", "mat_int_slab")      # ceiling materials of the interior styles (plank also = floor: compare, do not assume zero)
+
+
+def mat_tris(path, mats=CEIL, node_filter=lambda n: True):
+    """Triangles of the given materials in the nodes of a GLB accepted by node_filter(node name)."""
+    j = glb(path)
+    t = 0
+    for n in j["nodes"]:
+        if "mesh" in n and node_filter(n["name"]):
+            for pr in j["meshes"][n["mesh"]]["primitives"]:
+                if j["materials"][pr["material"]]["name"] in mats:
+                    t += j["accessors"][pr["indices"]]["count"] // 3
+    return t
+
+
+def outside_roof_tris(pack, doc):
+    """Ceiling-material triangles in the building files outside the `_roof` node."""
+    return sum(mat_tris(os.path.join(pack, e["file"]), CEIL, lambda n: not n.endswith("_roof")) for e in doc["files"] if e["layer"] == "buildings")
+
+
 def house(pdir, bid, x0, y0, door):
     sq = [[x0, y0], [x0 + 40, y0], [x0 + 40, y0 + 25], [x0, y0 + 25]]
     json.dump({"id": bid, "name": bid, "kind": "house", "status": "proposed", "geometry": {"type": "polygon", "points": sq}, "notes": "",
@@ -62,6 +82,10 @@ class RoofModes(unittest.TestCase):
         self.assertFalse([e for e in base["files"] if e["layer"] == "roofs"])
         total = self.tris(base, {"buildings"})
         self.assertGreater(total, 0)
+        # mode none: no roof toggle tile; the top ceiling stays in the building file, but inside the toggle-able `_roof` node (hide that node for the cutaway)
+        rn = sum(mat_tris(os.path.join(self.pack, e["file"]), CEIL, lambda n: n.endswith("_roof")) for e in base["files"] if e["layer"] == "buildings")
+        self.assertGreater(rn, 0, "top ceiling plate is in the _roof node")
+        out0 = outside_roof_tris(self.pack, base)
 
         pb = self.split("per_building")
         roofs = [e for e in pb["files"] if e["layer"] == "roofs"]
@@ -75,6 +99,9 @@ class RoofModes(unittest.TestCase):
             self.assertGreater(e["pivot"]["rel_z_ft"], 0, "roof tile sits at the eaves, not on the ground")
         self.assertEqual(self.tris(pb, {"buildings"}) + self.tris(pb, {"roofs"}), total, "no triangle lost or duplicated")
         self.assertGreater(self.tris(pb, {"roofs"}), 0)
+        rc = sum(mat_tris(os.path.join(self.pack, e["file"])) for e in roofs)
+        self.assertEqual(rc, rn, "per_building: the roof tile holds exactly the ceiling triangles of the _roof node")
+        self.assertEqual(outside_roof_tris(self.pack, pb), out0, "per_building: building files keep only floors / lower ceilings, no top ceiling")
         self.assertEqual(wp._jload(os.path.join(self.pack, "manifest.json"))["foundry"]["roof_mode"], "per_building")
         names = {n["name"] for e in pb["files"] if e["layer"] == "buildings" for n in glb(os.path.join(self.pack, e["file"]))["nodes"]}
         self.assertFalse([n for n in names if n.endswith("_roof")], "roof nodes left the building files")
@@ -107,6 +134,8 @@ class RoofModes(unittest.TestCase):
         self.assertEqual(len(glb(os.path.join(self.pack, "models/roofs.glb"))["nodes"]), 1, "ONE roof mesh for the whole scene")
         self.assertFalse(os.path.exists(os.path.join(self.pack, "models", "roofs")), "old per-building roof files removed")
         self.assertEqual(self.tris(ps, {"buildings"}) + self.tris(ps, {"roofs"}), total)
+        self.assertEqual(mat_tris(os.path.join(self.pack, "models/roofs.glb")), rc, "per_scene: the same ceiling triangles sit in the merged roofs tile")
+        self.assertEqual(outside_roof_tris(self.pack, ps), out0)
         self.assertEqual(ps["split"]["roofs"], "layer")
 
         # reexport of one building keeps the mode

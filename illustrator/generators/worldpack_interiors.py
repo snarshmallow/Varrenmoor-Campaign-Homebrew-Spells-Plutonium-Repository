@@ -10,7 +10,7 @@ glTF nodes per building (names; extras carry `tags`, `storey`, `building`):
   <id>                 exterior shell of the ground storey + foundation        tags [building, shell]   storey 0
   <id>_shell_f<s>      exterior walls of storey s >= 1 (windows, trim)         tags [building, shell]   storey s
   <id>_int_f<s>        floor (s=0) or slab+ceiling+joists below it, partitions, stairs of storey s    tags [interior]  storey s
-  <id>_roof            roof, gables, top ceiling plate + beams                 tags [building, roof]
+  <id>_roof            roof, gables, top ceiling plate + beams + racks hung from them   tags [building, roof]
   <id>_props_f<s>      furniture of storey s (hide with tag `prop`)            tags [interior, prop]    storey s
   <id>_idoor_f<s>_<n>  interior door leaves, origin on the hinge               isDoor, doorStyle 1, doorAnimateAngle 1.5708 (RADIANS, read raw by 3D Canvas)
 Toggle `_roof`, then `_shell_f<n>` / `_int_f<n>` / `_props_f<n>` from the top storey down for a cutaway.
@@ -495,7 +495,7 @@ def add_interior(cx, e, mesh, door_nodes):
         if styled:
             occupied[s].append((fx, Polygon(_rect(px, py, fx["size_ft"][0], fx["size_ft"][1], a))))
     if styled:
-        _decorate(e, S, lay, rooms, occupied, props_g, B2, floor_lvl, ceil_bot, floors)
+        _decorate(e, S, lay, rooms, occupied, props_g, B2, floor_lvl, ceil_bot, floors, roof_g)
     for lt in lay["lights"]:
         lights.append({**lt, "z_abs_ft": e["base_elevation_ft"] + lt["z_ft"] + (lt["floor"] * STOREY if lt["type"] == "hearth" else 0.0)})
     # ---- 3. assemble
@@ -521,9 +521,10 @@ def _rect(cx, cy, sx, sy, ang):
     return [(cx + (lx * c - ly * s), cy + (lx * s + ly * c)) for lx, ly in ((-sx / 2, -sy / 2), (sx / 2, -sy / 2), (sx / 2, sy / 2), (-sx / 2, sy / 2))]
 
 
-def _decorate(e, S, lay, rooms, occupied, props_g, B2, floor_lvl, ceil_bot, floors):
+def _decorate(e, S, lay, rooms, occupied, props_g, B2, floor_lvl, ceil_bot, floors, roof_g=None):
     """Style decor placed around the layout's furniture with rejection tests (inside the room, clear of the other props and the stairs): stools at tables, a rag rug under
-    the table, drying herbs / hanging pots over the hearth, straw on earth floors. Deterministic per building. All of it lands in the `_props_f<s>` node."""
+    the table, drying herbs / hanging pots over the hearth, straw on earth floors. Deterministic per building. All of it lands in the `_props_f<s>` node, except the herb / pot racks hung from the top-storey ceiling beams: they hang from the roof structure, so they go
+    into the `_roof` node (hiding the roof then removes everything that closes the room from above)."""
     import random
     from shapely.geometry import LineString, Polygon
     M = S["mats"]
@@ -578,6 +579,7 @@ def _decorate(e, S, lay, rooms, occupied, props_g, B2, floor_lvl, ceil_bot, floo
                     if rm is None or not Polygon(rm["polygon"]).buffer(-0.3).contains(rp):
                         continue
                     zr = ceil_bot(s) - (S["beams"]["h_ft"] + 0.6) * FT
+                    g = roof_g if (roof_g is not None and s == floors - 1) else props_g[s]     # top storey: hangs from the ceiling = roof node
                     g.box(M["beam"], T, -ww / 2 * FT, ww / 2 * FT, (ly - 0.06) * FT, (ly + 0.06) * FT, zr, zr + 0.12 * FT)
                     for lx in (-ww / 2 + 0.3, ww / 2 - 0.3):
                         g.box("mat_iron", T, lx * FT - 0.02 * FT, lx * FT + 0.02 * FT, (ly - 0.02) * FT, (ly + 0.02) * FT, zr + 0.12 * FT, ceil_bot(s) - 0.02 * FT, skip=("z0", "z1"))
