@@ -16,6 +16,7 @@ import building_styles_arch as bsa
 FT = wm.FT
 BEAM_TILE = 3.0
 RAIL_H, MIN_PIECE = 0.40, 0.45
+CLOSE_STUD_FT = 1.15      # close studding: stud centres (gaps 0.7-0.8 ft between 4-5 in studs)
 
 
 def _minus(rects, holes, mg):
@@ -146,7 +147,7 @@ def wall_frame(g, i, X, L, holes, P, D, zf, zt, floors, S, z0):
     if sysm != "halftimber":
         return
     pat = W["pattern"]
-    sp = (1.15 if pat == "close" else W["spacing_ft"]) * FT
+    sp = (CLOSE_STUD_FT if pat == "close" else W["spacing_ft"]) * FT
     n = max(1, int(round((u_b - u_a) / sp)))
     xs = [u_a + (u_b - u_a) * k / n for k in range(n + 1)]
     rows = [(a[1], b[0]) for a, b in zip(acc, acc[1:]) if b[0] - a[1] > 0.5 * FT]

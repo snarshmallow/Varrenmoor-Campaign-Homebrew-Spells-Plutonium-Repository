@@ -186,6 +186,7 @@ RE_T = re.compile(r"^mat_s_tint_([a-z_]+?)_([0-9a-f]{6})$")
 KINDS = {  # kind: tile ft per repeat, roughness, normal strength
     "plaster": (6.0, 0.93, 1.4), "brick": (4.0, 0.88, 3.2), "board": (4.5, 0.86, 2.8), "clap": (4.0, 0.84, 2.4), "log": (4.8, 0.88, 3.2),
     "beam": (3.0, 0.86, 2.0), "turf": (9.0, 0.97, 2.6), "flat": (3.0, 0.8, 0.0)}
+COURSES = {"board": 7, "clap": 10, "log": 6, "brick": 16}     # boards / courses per texture repeat (the generators below draw exactly these)
 TINT_BASES = {"thatch": (14.0, 0.97, 3.0), "shingle": (14.0, 0.85, 3.5), "slate": (14.0, 0.5, 3.5), "red_tile": (14.0, 0.55, 3.5), "timber_roof": (14.0, 0.85, 2.8),
               "door_wood": (3.5, 0.75, 2.4), "trim": (3.0, 0.7, 1.6), "wall_stone": (7.0, 0.85, 4.0), "plank": (5.0, 0.82, 2.2), "wall_batten": (6.0, 0.88, 2.6)}
 
@@ -265,7 +266,7 @@ def _gen_brick(col, n=512):
     p = _P()
     rng = np.random.RandomState(81)
     base = p.hexrgb(col)
-    rows, per = 16, 6
+    rows, per = COURSES["brick"], 6
     rh = n // rows
     alb = np.zeros((n, n, 3))
     h = np.zeros((n, n))
@@ -294,7 +295,7 @@ def _gen_board(col, n=512):
     """Vertical boards with battens over the joints (falu / board and batten)."""
     p = _P()
     base = p.hexrgb(col)
-    count = 7
+    count = COURSES["board"]
     bw = n // count
     alb = np.zeros((n, n, 3))
     h = np.zeros((n, n))
@@ -317,7 +318,7 @@ def _gen_board(col, n=512):
 def _gen_clap(col, n=512):
     p = _P()
     base = p.hexrgb(col)
-    rows = 10
+    rows = COURSES["clap"]
     rh = n // rows
     alb = np.zeros((n, n, 3))
     h = np.zeros((n, n))
@@ -335,7 +336,7 @@ def _gen_clap(col, n=512):
 def _gen_log(col, n=512):
     p = _P()
     base = p.hexrgb(col)
-    rows = 6
+    rows = COURSES["log"]
     rh = n // rows
     alb = np.zeros((n, n, 3))
     h = np.zeros((n, n))
@@ -392,6 +393,65 @@ def gen_texture(mid):
         return _gen_flat("#" + m.group(2))
     alb, h = bt
     return _tinted(alb, "#" + m.group(2)), h
+
+
+# ------------------------------------------------------------------ real-world dimension rules (PLUGIN_GUIDE: Buildings > Realistic dimensions)
+# Feet. Oak framing: posts / plates / rails 0.33-0.8 ft (4-10 in), braces >= 0.33 ft; frame panels 1-6 ft wide (close studding: 0.5-1.2 ft gaps);
+# siding: weatherboard / clapboard / plank 0.35-0.7 ft per board, vertical boards 0.55-1.0 ft, logs 0.6-1.2 ft, brick courses 0.2-0.3 ft;
+# roof courses (shingle, slate, tile, boards) 0.35-1.0 ft; snow white to blue-grey, never warm (saturation < 0.12, or hue 180-250 deg).
+DIM_RULES = {"member": (0.33, 0.8), "brace": (0.33, 0.8), "panel": (1.0, 6.0), "close_gap": (0.5, 1.2), "board": (0.55, 1.0), "clap": (0.35, 0.7), "plank": (0.35, 0.7),
+             "log": (0.6, 1.2), "brick": (0.2, 0.3), "roof_course": (0.35, 1.0)}
+ROOF_COURSES = {"shingle": 16, "slate": 16, "tile": 16, "red_tile": 16, "timber": 10}     # courses per preset image (presets/textures/<base>.png)
+LEGACY_WALLS = {"mat_plank": ("plank", 8), "mat_w_plank": ("plank", 8), "mat_wall_batten": ("board", 8)}    # catalogue walls: boards per repeat
+
+
+def snow_ok(color):
+    """True for a snow colour: bright, white or cool blue-grey, never yellow / cream."""
+    import colorsys
+    r, g, b = (int(_hex(color)[i:i + 2], 16) / 255.0 for i in (0, 2, 4))
+    h, s, v = colorsys.rgb_to_hsv(r, g, b)
+    return v > 0.75 and (s < 0.05 or (s < 0.12 and 180 <= h * 360 <= 250))
+
+
+def dimension_audit(pid, samples=24):
+    """Real-world sizes (feet) a preset produces over `samples` building ids: frame members, panel widths, wall board / course size, roof course,
+    snow colour. -> dict; `problems` lists every value outside DIM_RULES."""
+    import worldpack_pbr as pbr
+    import building_styles_geo as bsg
+    rows = [resolve(pid, f"bld_audit_{k}") for k in range(samples)]
+    S0 = rows[0]
+    W, R = S0["wall"], S0["roof"]
+    out = {"id": pid, "system": W["system"], "wall": W["material"], "roof": R["material"], "problems": []}
+    rule = DIM_RULES
+
+    def chk(name, lo_hi, vals):
+        lo, hi = lo_hi
+        vals = [v for v in vals if v is not None]
+        if vals:
+            out[name] = (round(min(vals), 3), round(max(vals), 3))
+            if min(vals) < lo - 1e-9 or max(vals) > hi + 1e-9:
+                out["problems"].append(f"{name} {out[name]} outside {lo_hi}")
+    if W["system"] in ("halftimber", "corners"):
+        chk("corner_ft", rule["member"], [S["wall"]["corner_ft"] for S in rows])
+    if W["system"] == "halftimber":
+        chk("member_ft", rule["member"], [S["wall"]["beam_w_ft"] for S in rows] + [bsg.RAIL_H])
+        chk("panel_ft", rule["panel"], [S["wall"]["spacing_ft"] - S["wall"]["beam_w_ft"] for S in rows if S["wall"]["pattern"] != "close"])
+        chk("close_gap_ft", rule["close_gap"], [bsg.CLOSE_STUD_FT - S["wall"]["beam_w_ft"] for S in rows if S["wall"]["pattern"] == "close"])
+    kind = W["material"] if W["material"] in COURSES else None
+    if kind:
+        chk(f"{kind}_ft", rule[kind], [KINDS[kind][0] / COURSES[kind]])
+    up = S0.get("upper")
+    if up and up["material"] in COURSES:
+        chk(f"upper_{up['material']}_ft", rule[up["material"]], [KINDS[up["material"]][0] / COURSES[up["material"]]])
+    rb = R["material"]
+    if rb in ROOF_COURSES:
+        chk("roof_course_ft", rule["roof_course"], [ROOF_TILE.get(rb, 14.0) * S["tile_scale"] * pbr.ROOF_TEXEL_SCALE / ROOF_COURSES[rb] for S in rows])
+    sn = S0["special"].get("snow")
+    if sn:
+        out["snow"] = sn.get("color", "#eef2f6")
+        if not snow_ok(out["snow"]):
+            out["problems"].append(f"snow colour {out['snow']} is not white / blue-grey")
+    return out
 
 
 # ------------------------------------------------------------------ applying a style to a building entity
@@ -588,6 +648,7 @@ def main(argv=None):
     s.add_argument("--district")
     s.add_argument("--all", action="store_true", help="every building of the place")
     s.add_argument("--dry", action="store_true")
+    sub.add_parser("audit-dims", help="real-world sizes of every preset (frame members, panels, boards, roof courses, snow) against DIM_RULES")
     s = sub.add_parser("resolve")
     s.add_argument("--style", required=True)
     s.add_argument("--id", default="bld_x")
@@ -598,6 +659,8 @@ def main(argv=None):
         out = {"presets": list_presets()}
     elif a.cmd == "summary":
         out = summary(a.place)
+    elif a.cmd == "audit-dims":
+        out = [dimension_audit(pid) for pid in sorted(load_presets())]
     elif a.cmd == "assign":
         out = assign(a.place, a.style, a.ids.split(",") if a.ids else None, a.kind, a.district, a.dry, a.all)
     else:

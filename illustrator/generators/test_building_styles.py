@@ -710,5 +710,81 @@ class BridgehollowTiers(unittest.TestCase):
             shutil.rmtree(tmp, ignore_errors=True)
 
 
+class RealisticDimensions(unittest.TestCase):
+    """Real-world sizes (PLUGIN_GUIDE: Buildings > Realistic dimensions): frame members 4-10 in, panels 1-6 ft, boards / courses at their real width,
+    snow white to blue-grey. The legacy look (no style key) is held to the same rules: its timber frame and siding are textures."""
+
+    def test_every_preset_loads_and_meets_the_rules(self):
+        pres = bs.load_presets()
+        self.assertGreaterEqual(len(pres), 35)
+        for pid in sorted(pres):
+            r = bs.dimension_audit(pid, samples=16)
+            self.assertEqual(r["problems"], [], pid)
+            if r["system"] == "halftimber":
+                self.assertIn("member_ft", r, pid)
+
+    def test_legacy_frame_texture_members(self):
+        lo, hi = bs.DIM_RULES["member"]
+        boxes, braces = pbr.frame_layout()
+        for kind, u0, u1, z0, z1 in boxes:
+            w = min(u1 - u0, z1 - z0)
+            self.assertTrue(lo <= w <= hi, (kind, w))
+        for ub, zb, ut, zt, w in braces:
+            self.assertGreaterEqual(w, bs.DIM_RULES["brace"][0])
+            self.assertGreater(abs(zt - zb), 1.5)                                 # a brace, not a sliver
+        bay = pbr.FRAME_TILE_FT / pbr.FRAME_BAYS
+        self.assertTrue(bs.DIM_RULES["panel"][0] <= bay <= bs.DIM_RULES["panel"][1], bay)
+        self.assertEqual(pbr.tile_ft("mat_wall_frame"), pbr.FRAME_TILE_FT)
+        # the painted texture: dark runs along a row between the rails (posts, studs, braces) and down a column (plates, rails)
+        n = 500
+        alb, _h = pbr.gen_timberframe(n)
+        ppf = n / pbr.FRAME_TILE_FT
+        lum = alb @ np.array([0.3, 0.59, 0.11])
+
+        def runs(line):
+            dark = np.roll(line < 110, -int(np.argmax(line >= 110)))          # start on plaster so a member across the wrap is one run
+            out, k = [], 0
+            for d in dark:
+                if d:
+                    k += 1
+                elif k:
+                    out.append(k / ppf)
+                    k = 0
+            return out + ([k / ppf] if k else [])
+        row = runs(lum[int(n - 5.0 * ppf)])                                      # 5 ft above the floor
+        col = runs(lum[:, int(bay * 0.5 * ppf)])                                 # middle of the first bay
+        self.assertGreaterEqual(len(row), 5, row)                                # 3 posts/studs + 2 braces per 10 ft
+        self.assertTrue(all(0.3 <= w <= 0.8 for w in row), row)
+        self.assertGreaterEqual(len(col), 3, col)                                # plate + 2 rails per storey
+        self.assertTrue(all(0.3 <= w <= 0.8 for w in col), col)
+
+    def test_legacy_siding_board_width(self):
+        from PIL import Image
+        for mid, (rule, boards) in bs.LEGACY_WALLS.items():
+            w = pbr.tile_ft(mid) / boards
+            self.assertTrue(bs.DIM_RULES[rule][0] <= w <= bs.DIM_RULES[rule][1], (mid, w))
+        a = np.asarray(Image.open(os.path.join(pbr.TEXTURE_DIR, "plank.png")).convert("L"), float)
+        r = a.mean(axis=1)
+        joint = r < 0.6 * np.median(r)                                           # the dark joint lines between boards (wrap-aware count)
+        self.assertEqual(int((joint & ~np.roll(joint, 1)).sum()), bs.LEGACY_WALLS["mat_plank"][1])
+
+    def test_snow_is_white_not_yellow(self):
+        import colorsys
+        for pid, p in bs.load_presets().items():
+            S = bs.resolve(pid, "bld_snow")
+            if S["special"].get("snow"):
+                self.assertTrue(bs.snow_ok(S["special"]["snow"].get("color", "#eef2f6")), pid)
+        self.assertTrue(bs.snow_ok(pbr.SNOW_RGB) and bs.snow_ok(pbr.SNOW_SHADE_RGB))
+        self.assertFalse(bs.snow_ok("#e6d9a8"))                                    # cream / straw
+        for mid in ("mat_w_roof_thatch", "mat_w_roof_timber", "mat_w_roof_red", "mat_w_roof_slate", "mat_w_roof_snow"):
+            alb, _h = pbr.base_texture(mid)
+            mean = "#%02x%02x%02x" % tuple(int(round(v)) for v in np.clip(alb.reshape(-1, 3).mean(0), 0, 255))
+            self.assertTrue(bs.snow_ok(mean), (mid, mean))
+            px = np.clip(alb.reshape(-1, 3)[::7] / 255.0, 0, 1)
+            hsv = np.array([colorsys.rgb_to_hsv(*c) for c in px])
+            warm = ((hsv[:, 0] * 360 > 20) & (hsv[:, 0] * 360 < 75) & (hsv[:, 1] > 0.15)).mean()
+            self.assertLess(warm, 0.03, (mid, warm))                               # no golden / straw patches through the snow
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=1)

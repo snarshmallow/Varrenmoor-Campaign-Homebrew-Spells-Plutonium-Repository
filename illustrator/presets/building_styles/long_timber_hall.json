@@ -55,7 +55,7 @@
    "#6a2c24"
   ]
  },
- "tile_scale": 0.6,
+ "tile_scale": 0.75,
  "preview": "illustrator/out/building_styles/long_timber_hall.png",
  "plinth": {
   "material": "stone",
