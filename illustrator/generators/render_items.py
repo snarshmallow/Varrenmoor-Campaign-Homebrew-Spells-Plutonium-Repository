@@ -48,7 +48,8 @@ def neighbours(streets, ids, before=None, gone=()):
         return []
     from shapely.ops import unary_union
     u = unary_union(probes)
-    return sorted(s["id"] for s in streets if s["id"] not in ids and len(s["geometry"]["points"]) >= 2 and _buf(s, 0.0).intersects(u))
+    skip = set(ids) | set(gone)
+    return sorted(s["id"] for s in streets if s["id"] not in skip and len(s["geometry"]["points"]) >= 2 and _buf(s, 0.0).intersects(u))
 
 
 def render(model, view, ids, out, layers=LAYERS):

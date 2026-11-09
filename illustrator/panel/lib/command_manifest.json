@@ -2676,6 +2676,110 @@
      "cli_only": "test override of the world folder; the panel uses the repository's world folder"
     }
    }
+  },
+  "render_items.py": {
+   "commands": {},
+   "flags": {
+    "--place": {
+     "controls": [
+      "act:obj_r_del",
+      "act:obj_r_undo",
+      "act:obj_r_shape",
+      "act:obj_r_split",
+      "act:obj_r_join",
+      "act:obj_r_add",
+      "act:obj_r_reshape",
+      "act:obj_r_readall"
+     ]
+    },
+    "--ids": {
+     "controls": [
+      "act:obj_r_del",
+      "act:obj_r_undo",
+      "act:obj_r_shape",
+      "act:obj_r_split",
+      "act:obj_r_join",
+      "act:obj_r_add",
+      "act:obj_r_reshape",
+      "act:obj_r_readall"
+     ]
+    },
+    "--gone": {
+     "controls": [
+      "act:obj_r_del",
+      "act:obj_r_undo",
+      "act:obj_r_shape",
+      "act:obj_r_split",
+      "act:obj_r_join",
+      "act:obj_r_add",
+      "act:obj_r_reshape",
+      "act:obj_r_readall"
+     ]
+    },
+    "--before-file": {
+     "controls": [
+      "act:obj_r_del",
+      "act:obj_r_undo",
+      "act:obj_r_shape",
+      "act:obj_r_split",
+      "act:obj_r_join",
+      "act:obj_r_add",
+      "act:obj_r_reshape",
+      "act:obj_r_readall"
+     ]
+    },
+    "--neighbours": {
+     "controls": [
+      "act:obj_r_del",
+      "act:obj_r_undo",
+      "act:obj_r_shape",
+      "act:obj_r_split",
+      "act:obj_r_join",
+      "act:obj_r_add",
+      "act:obj_r_reshape",
+      "act:obj_r_readall"
+     ]
+    },
+    "--out": {
+     "controls": [
+      "act:obj_r_del",
+      "act:obj_r_undo",
+      "act:obj_r_shape",
+      "act:obj_r_split",
+      "act:obj_r_join",
+      "act:obj_r_add",
+      "act:obj_r_reshape",
+      "act:obj_r_readall"
+     ]
+    },
+    "--layers": {
+     "cli_only": "The panel always draws both Roads and Road Centerlines; limiting the output is for scripted use and tests."
+    },
+    "--view-file": {
+     "cli_only": "The panel passes the view flags directly (one python run less); a saved panelio view json is for scripted use."
+    },
+    "--view": {
+     "cli_only": "From the Scale tab (same flags as panelio.py view, via VB.panelioViewFlags) on every fast road update; not a control of its own."
+    },
+    "--preset": {
+     "cli_only": "From the Scale tab (same flags as panelio.py view, via VB.panelioViewFlags) on every fast road update; not a control of its own."
+    },
+    "--scale": {
+     "cli_only": "From the Scale tab (same flags as panelio.py view, via VB.panelioViewFlags) on every fast road update; not a control of its own."
+    },
+    "--grid": {
+     "cli_only": "From the Scale tab (same flags as panelio.py view, via VB.panelioViewFlags) on every fast road update; not a control of its own."
+    },
+    "--major": {
+     "cli_only": "From the Scale tab (same flags as panelio.py view, via VB.panelioViewFlags) on every fast road update; not a control of its own."
+    },
+    "--no-grid": {
+     "cli_only": "From the Scale tab (same flags as panelio.py view, via VB.panelioViewFlags) on every fast road update; not a control of its own."
+    },
+    "--page": {
+     "cli_only": "From the Scale tab (same flags as panelio.py view, via VB.panelioViewFlags) on every fast road update; not a control of its own."
+    }
+   }
   }
  },
  "other": {
