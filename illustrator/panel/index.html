@@ -14,6 +14,7 @@ body{font:11px/1.35 "Segoe UI",Arial,sans-serif;background:var(--bg);color:var(-
 #status{font-weight:600}
 #verText{font-size:9px;color:var(--dim);white-space:nowrap;max-width:110px;overflow:hidden;text-overflow:ellipsis}
 #reloadPanel{position:relative;padding:3px 5px;line-height:0}
+#hdrFoundryRefresh{padding:3px 5px;line-height:0}
 #reloadPanel.armed{background:#6b3631;border-color:#8a463f}
 #verDot{position:absolute;top:-2px;right:-2px;width:7px;height:7px;border-radius:50%;background:var(--warn);box-shadow:0 0 0 1px var(--bg2)}
 #status.busy{color:var(--warn)}
@@ -84,6 +85,7 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
     <button id="cancel" disabled title="Stop the running job">Cancel</button>
     <button id="toggleLog" title="Show or hide the log">Log</button>
     <select id="profQuick" title="Load a profile (opens Tools > Profiles with a preview; nothing changes until you press Apply)" style="width:86px"></select><span id="profInd" class="tag" title="Profile loaded for this place"></span>
+    <button id="hdrFoundryRefresh" data-act="f_refresh" title="Refresh from Foundry: reads the scene, actor and item lists (needs the GM tab connected)" aria-label="Refresh scenes and lists from Foundry"><svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.6 12.2H4a2.8 2.8 0 0 1-.3-5.6 4.3 4.3 0 0 1 8.3.7 2.5 2.5 0 0 1-.1 4.9h-.6"/><path d="M8 7v5.4M5.9 10.4 8 12.5l2.1-2.1"/></svg></button>
     <span id="verText" title="loaded panel version"></span>
     <button id="reloadPanel" title="Reload panel (picks up pushed code; replaces close/reopen)" aria-label="Reload panel"><svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.5 8a5.5 5.5 0 1 1-1.8-4.1"/><path d="M13.6 1.8v3.2h-3.2"/></svg><i id="verDot" hidden></i></button>
   </div>
