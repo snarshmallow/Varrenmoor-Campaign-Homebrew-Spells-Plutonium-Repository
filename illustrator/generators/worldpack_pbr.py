@@ -577,7 +577,7 @@ def detail_terrain(albedo_png, out_png, width_ft, height_ft, seed=5, max_px=4096
 
     def noise(period_ft, s, beta=2.0):
         # a small periodic field resampled bicubically up to the texture size
-        small = fbm(0, s, beta, 1, shape=(max(4, int(height_ft / period_ft * 4)), max(4, int(width_ft / period_ft * 4))))
+        small = fbm(0, s, beta, 1, shape=(min(4096, max(4, int(height_ft / period_ft * 4))), min(4096, max(4, int(width_ft / period_ft * 4)))))   # capped: a 4600 ft window at a 0.6 ft period was a 26000 x 31000 FFT (hours, 4 GB)
         return np.asarray(Image.fromarray((small * 255).astype(np.uint8)).resize((W, H), Image.BICUBIC), float) / 255.0
     d_low = noise(40.0, seed + 1)
     d_mid = noise(9.0, seed + 2)

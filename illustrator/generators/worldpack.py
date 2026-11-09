@@ -428,6 +428,7 @@ def _common(e, place, type_, src):
 
 
 KERB_W_FT = 0.7
+UNPAVED_MATERIALS = ("mat_dirt", "mat_mud", "mat_gravel", "mat_packed_earth", "mat_sand")   # roads on these surfaces get no kerb by default
 
 
 def _road_kerbs(roads, street_ids):
@@ -824,6 +825,7 @@ def export_world(place, out_dir=None, lod=(1, 4), world_root=None, terrain_sourc
             kerb_ids.add(s_["id"])
         elif kv is False:
             kerb_ids.discard(s_["id"])
+    kerb_ids = drop_unpaved_kerbs(kerb_ids, ents["roads"], model["streets"])
     _road_kerbs(ents["roads"], kerb_ids)
     # ---- buildings
     bc = types.get("buildings", {})

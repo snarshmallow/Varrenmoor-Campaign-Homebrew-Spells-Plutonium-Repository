@@ -1,0 +1,82 @@
+{
+ "id": "long_timber_hall",
+ "name": "Long timber hall (Varrenmoor big hall)",
+ "category": "town",
+ "culture": "Upland moor / Norse-influenced",
+ "description": "Long timber hall on a high stone plinth: dark half-timbered walls, hipped shingle roof, wide windows and a ridge chimney. Role-neutral big hall.",
+ "kinds": {
+  "hall": 8,
+  "longhall": 6
+ },
+ "wall": {
+  "system": "halftimber",
+  "material": "plaster",
+  "colors": [
+   "#8c8068",
+   "#847a64"
+  ],
+  "beam_colors": [
+   "#3a2c20"
+  ],
+  "beam_depth_ft": 0.3
+ },
+ "roof": {
+  "type": "hip",
+  "material": "shingle",
+  "colors": [
+   "#3d3a2c",
+   "#46412f"
+  ],
+  "pitch": [
+   0.9,
+   1.05
+  ],
+  "overhang_ft": [
+   1.4,
+   1.8
+  ],
+  "ridge_cap": true
+ },
+ "windows": {
+  "type": "casement",
+  "cols": [
+   3,
+   4
+  ],
+  "rows": [
+   1,
+   2
+  ]
+ },
+ "door": {
+  "colors": [
+   "#5a3a22",
+   "#3c4a38",
+   "#6a2c24"
+  ]
+ },
+ "tile_scale": 0.6,
+ "preview": "illustrator/out/building_styles/long_timber_hall.png",
+ "plinth": {
+  "material": "stone",
+  "colors": [
+   "#6e6a5f"
+  ],
+  "height_ft": [
+   2.0,
+   2.8
+  ]
+ },
+ "trim_colors": [
+  "#8a7f6a"
+ ],
+ "chimney": {
+  "type": "ridge",
+  "material": "stone",
+  "colors": [
+   "#6e6a5f"
+  ],
+  "width_ft": 2.6,
+  "rise_ft": 3.0
+ }
+}

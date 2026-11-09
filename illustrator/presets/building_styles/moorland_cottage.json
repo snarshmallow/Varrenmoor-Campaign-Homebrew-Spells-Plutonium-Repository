@@ -1,0 +1,82 @@
+{
+ "id": "moorland_cottage",
+ "name": "Moorland cottage (Varrenmoor)",
+ "category": "house",
+ "culture": "Upland moor / Norse-influenced",
+ "description": "Weathered grey-brown plank walls on a drystone plinth, small deep-set casements, steep split-shingle roof stained green-black with moss. The Varrenmoor village house: poor, unpainted, no trim.",
+ "kinds": {
+  "house": 3,
+  "farmhouse": 2,
+  "shed": 2,
+  "craft": 1,
+  "cottage": 8
+ },
+ "wall": {
+  "system": "corners",
+  "material": "board",
+  "colors": [
+   "#5b5045",
+   "#4f463c",
+   "#665a4c",
+   "#463e36"
+  ],
+  "beam_colors": [
+   "#3a3129"
+  ],
+  "beam_depth_ft": 0.14
+ },
+ "roof": {
+  "type": "gable",
+  "material": "shingle",
+  "colors": [
+   "#3d3a2c",
+   "#46412f",
+   "#34342a"
+  ],
+  "pitch": [
+   0.75,
+   0.95
+  ],
+  "overhang_ft": [
+   1.0,
+   1.4
+  ],
+  "barge": true,
+  "fascia_colors": [
+   "#2f2a22"
+  ]
+ },
+ "windows": {
+  "type": "casement",
+  "cols": [
+   1,
+   2
+  ],
+  "rows": [
+   1,
+   2
+  ]
+ },
+ "door": {
+  "colors": [
+   "#5a3a22",
+   "#3c4a38",
+   "#6a2c24"
+  ]
+ },
+ "preview": "illustrator/out/building_styles/moorland_cottage.png",
+ "plinth": {
+  "material": "stone",
+  "colors": [
+   "#6e6a5f",
+   "#7a7467"
+  ],
+  "height_ft": [
+   1.4,
+   2.2
+  ]
+ },
+ "trim_colors": [
+  "#8a7f6a"
+ ]
+}
