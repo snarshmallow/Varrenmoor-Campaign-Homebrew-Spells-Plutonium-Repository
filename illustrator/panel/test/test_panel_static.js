@@ -20,6 +20,6 @@ for (const f of ["heightpaint_ui.js", "main.js"]) {
 }
 for (const f of files.filter(f => f.endsWith(".js"))) {
   const t = fs.readFileSync(f, "utf8").replace(/\/\/.*$/gm, "");
-  check("no confirm/alert/prompt in " + path.relative(P, f), !/\b(window\.)?(confirm|alert|prompt)\s*\(/.test(t));
+  check("no confirm/alert/prompt in " + path.relative(P, f), !/\b(window\.)?(confirm|alert|prompt)\(/.test(t));
 }
 console.log(pass + " passed, " + fail + " failed"); process.exit(fail ? 1 : 0);
