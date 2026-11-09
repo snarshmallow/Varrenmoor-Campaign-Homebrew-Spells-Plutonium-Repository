@@ -11,11 +11,15 @@ Painting works on a WORKING copy (illustrator/out/panel/<place>/heightmap_paint/
   python heightmap_paint.py export-preview --place P [--max-px 512] [--contour-ft 10] [--png out.png] [--bin-dir DIR] [--layer work|saved|base]
   python heightmap_paint.py stats --place P [--layer work|saved]
   python heightmap_paint.py save --place P         | discard --place P | reset --place P [--layer work|saved|both]
+  python heightmap_paint.py check --place P [--layer work|saved] [--delta-ft 3] [--cross-deg 10] [--grade-deg 14]   (roads / bridges / buildings the layer changes)
+  python heightmap_paint.py conform-roads --place P [--roads id,id | --all] [--extra-ft 2] [--falloff-ft 12] [--smooth-ft 40]   (flatten the layer across road footprints)
 Every command prints one JSON object. Stroke JSON (feet, x east, y south):
   {"tool": raise|lower|smooth|flatten|noise|set|ridge|valley|river, "points": [[x,y],...], "radius_ft": 30, "strength": 0.5 (0..1),
    "falloff": smooth|linear|sharp|round|constant, "hardness": 0..1 (inner plateau), "height_ft": target (flatten: default = height at the first point; set: required;
    ridge / valley: crest height / depth, default 15), "rate_ft": raise / lower / noise amplitude per dab (default 2), "depth_ft": river (default 6),
    "bank_slope": river bank rise per foot (default 0.6), "noise_scale_ft": default radius/2, "seed": int, "spacing": dab spacing as a fraction of the radius (default 0.25)}
+Stroke-like command (undoable, replayable): {"tool": "conform-roads", "roads": [{"id", "points": [[x,y],...], "width_ft"}], "extra_ft": 2, "falloff_ft": 12, "smooth_ft": 40}:
+the ground across each road footprint (half width + extra_ft) is set to the road's centreline height (moving average over smooth_ft), blended out over falloff_ft.
 """
 import argparse
 import json
@@ -32,6 +36,8 @@ REPO = os.path.abspath(os.path.join(HERE, "..", ".."))
 
 VERSION = 1
 TOOLS = ("raise", "lower", "smooth", "flatten", "noise", "set", "ridge", "valley", "river")
+CONFORM = "conform-roads"
+CONFORM_MAX_GRADE_DEG = 12.0
 FALLOFFS = ("smooth", "linear", "sharp", "round", "constant")
 DAB_TOOLS = ("raise", "lower", "smooth", "flatten", "set")
 EDITS_NAME = "heightmap_edits"
@@ -93,6 +99,17 @@ def validate_stroke(s):
     if not isinstance(s, dict):
         raise ValueError("a stroke is an object")
     tool = s.get("tool")
+    if tool == CONFORM:
+        roads = []
+        for r in s.get("roads") or []:
+            pts = r.get("points") if isinstance(r, dict) else None
+            if not (isinstance(pts, list) and len(pts) >= 2 and all(isinstance(q, (list, tuple)) and len(q) >= 2 and all(isinstance(v, (int, float)) and np.isfinite(v) for v in q[:2]) for q in pts)):
+                raise ValueError("conform-roads: every road needs points [[x, y], ...] (at least 2)")
+            roads.append({"id": str(r.get("id", "")), "points": [[float(q[0]), float(q[1])] for q in pts], "width_ft": max(float(r.get("width_ft") or 12.0), 1.0)})
+        if not roads:
+            raise ValueError("conform-roads: no roads")
+        return {"tool": CONFORM, "roads": roads, "extra_ft": max(float(s.get("extra_ft", 2.0)), 0.0), "falloff_ft": max(float(s.get("falloff_ft", 12.0)), 0.5),
+                "smooth_ft": max(float(s.get("smooth_ft", 40.0)), 0.0)}
     if tool not in TOOLS:
         raise ValueError(f"unknown tool {tool!r}; have {', '.join(TOOLS)}")
     pts = s.get("points")
@@ -190,6 +207,8 @@ def apply_stroke(h, cell, stroke):
     """Apply one stroke to the height array `h` (float, in place) and return it. `cell` in feet; node (i,j) is at x=j*cell, y=i*cell."""
     from scipy import ndimage as ndi
     s = validate_stroke(stroke)
+    if s["tool"] == CONFORM:
+        return conform_roads_stroke(h, cell, s)
     tool, r, st = s["tool"], s["radius_ft"], s["strength"]
     hard, fo = s["hardness"], s["falloff"]
     rate = s.get("rate_ft", 2.0)
@@ -259,6 +278,41 @@ def apply_stroke(h, cell, stroke):
         bed_half = 0.5 * hard * r
         target = bed + slope * np.maximum(dist - bed_half, 0.0)
         sub -= np.maximum(sub - target, 0.0) * np.clip(w * st, 0.0, 1.0)
+    return h
+
+
+def conform_roads_stroke(h, cell, s):
+    """Set the ground under each road footprint to the road's centreline height (moving average along the road) so the road bed and the terrain agree;
+    full weight out to half width + extra_ft, then a smooth blend over falloff_ft. h (edited terrain, float, in place)."""
+    from scipy import ndimage as ndi
+    for rd in s["roads"]:
+        P = _resample(rd["points"], max(cell, 1.0))
+        if len(P) > MAX_SEGMENTS + 1:
+            P = P[np.linspace(0, len(P) - 1, MAX_SEGMENTS + 1).round().astype(int)]
+        if len(P) < 2:
+            continue
+        hw, fall = rd["width_ft"] / 2.0 + s["extra_ft"], s["falloff_ft"]
+        win = _window(h.shape, cell, P, hw + fall)
+        if win is None:
+            continue
+        zc = _bilinear(h, cell, P)
+        step = float(np.hypot(*(P[1:] - P[:-1]).T).mean()) or cell
+        if s["smooth_ft"] > 0 and len(P) > 2:
+            win_n = max(int(round(s["smooth_ft"] / step)), 1)
+            zc = ndi.uniform_filter1d(zc, win_n, mode="nearest")
+            for _ in range(6):         # a bed steeper than the road grade limit (14 deg) is smoothed again with a wider window
+                if np.degrees(np.arctan(np.abs(np.diff(zc)).max() / step)) <= CONFORM_MAX_GRADE_DEG:
+                    break
+                win_n = int(win_n * 1.6) + 1
+                zc = ndi.uniform_filter1d(zc, win_n, mode="nearest")
+        i0, i1, j0, j1 = win
+        X, Y = _grid(win, cell)
+        dist, par = _polyline_dist(X, Y, P)
+        w = falloff_weight(np.maximum(dist - hw, 0.0), fall, 0.0, "smooth")
+        w = np.where(dist <= hw, 1.0, w)
+        target = np.interp(par, np.arange(len(P)), zc)
+        sub = h[i0:i1, j0:j1]
+        sub += w * (target - sub)
     return h
 
 
@@ -478,6 +532,161 @@ def stats(place, root=None, wdir=None, layer="work"):
             "unsaved": _unsaved(wd, sd), "source": meta.get("source")}
 
 
+# ------------------------------------------------------------------ check: what do the edits do to roads, bridges and buildings?
+CHECK_DEFAULTS = {"delta_ft": 3.0, "cross_deg": 10.0, "grade_deg": 14.0, "building_ft": 3.0}
+LATERAL = (-1.0, -0.5, 0.0, 0.5, 1.0)
+
+
+def load_features(place, root=None):
+    """Road polylines (streets.json), bridge chords (bridges.json) and building footprints (buildings/*.json) of a place -> dict of lists (feet, x east, y south)."""
+    d = saved_dir(place, root)
+    roads, bridges, blds = [], [], []
+    for s in (_jload(os.path.join(d, "streets.json"), {}) or {}).get("streets", []):
+        g = s.get("geometry") or {}
+        pts = g.get("points") or []
+        if len(pts) >= 2:
+            roads.append({"id": s.get("id"), "name": s.get("name"), "points": [[float(q[0]), float(q[1])] for q in pts], "width_ft": float(g.get("width_ft") or 12.0)})
+    for b in (_jload(os.path.join(d, "bridges.json"), {}) or {}).get("bridges", []):
+        sp = b.get("span") or {}
+        if sp.get("start") and sp.get("end"):
+            bridges.append({"id": b.get("id"), "name": b.get("name"), "points": [sp["start"][:2], sp["end"][:2]], "width_ft": float(sp.get("width_ft") or 8.0)})
+    bd = os.path.join(d, "buildings")
+    if os.path.isdir(bd):
+        for fn in sorted(os.listdir(bd)):
+            if fn.endswith(".json"):
+                b = _jload(os.path.join(bd, fn), {}) or {}
+                pts = (b.get("geometry") or {}).get("points") or []
+                if len(pts) >= 3:
+                    blds.append({"id": b.get("id") or fn[:-5], "name": b.get("name"), "polygon": [[float(q[0]), float(q[1])] for q in pts]})
+    return {"roads": roads, "bridges": bridges, "buildings": blds}
+
+
+def _stations(points, hw, cell):
+    """(n, k) x and y of lateral samples (offsets LATERAL * hw) at stations about a cell apart along the polyline, plus the centreline arc length per station."""
+    P = _resample(points, max(cell, 1.0))
+    if len(P) < 2:
+        P = np.vstack([P, P])
+    t = np.gradient(P, axis=0)
+    t /= np.maximum(np.hypot(t[:, 0], t[:, 1]), 1e-9)[:, None]
+    nrm = np.stack([-t[:, 1], t[:, 0]], 1)
+    X = np.stack([P[:, 0] + nrm[:, 0] * hw * f for f in LATERAL], 1)
+    Y = np.stack([P[:, 1] + nrm[:, 1] * hw * f for f in LATERAL], 1)
+    s = np.concatenate([[0.0], np.cumsum(np.hypot(*(P[1:] - P[:-1]).T))])
+    return X, Y, s
+
+
+def _sample(a, cell, X, Y):
+    return _bilinear(a, cell, np.stack([X.ravel(), Y.ravel()], 1)).reshape(X.shape)
+
+
+def _ribbon_check(base, delta, cell, f, cfg):
+    hw = f["width_ft"] / 2.0
+    X, Y, s = _stations(f["points"], hw, cell)
+    d = _sample(delta, cell, X, Y)
+    hb = _sample(base, cell, X, Y)
+    ha = hb + d
+    wid = max(f["width_ft"], 1.0)
+    cross = lambda a: float(np.degrees(np.arctan(np.abs(a[:, 0] - a[:, -1]) / wid)).max())
+    grade = lambda a: float(np.degrees(np.arctan(np.abs(np.diff(a[:, 2])) / np.maximum(np.diff(s), 1e-6))).max()) if len(s) > 1 else 0.0
+    i = int(np.abs(d).argmax())
+    r = {"id": f["id"], "name": f.get("name"), "width_ft": f["width_ft"], "max_delta_ft": round(float(d.flat[i]), 2), "mean_shift_ft": round(float(d[:, 2].mean()), 2),
+         "edge_delta_diff_ft": round(float(np.abs(d[:, 0] - d[:, -1]).max()), 2), "cross_slope_before_deg": round(cross(hb), 1), "cross_slope_after_deg": round(cross(ha), 1),
+         "grade_before_deg": round(grade(hb), 1), "grade_after_deg": round(grade(ha), 1), "length_ft": round(float(s[-1]), 1)}
+    r["touched"] = bool(np.abs(d).max() > 0.05)
+    why = []
+    if r["edge_delta_diff_ft"] > cfg["delta_ft"]:
+        why.append(f"one edge moved {r['edge_delta_diff_ft']:.1f} ft more than the other")
+    if r["cross_slope_after_deg"] > cfg["cross_deg"] and r["cross_slope_after_deg"] > r["cross_slope_before_deg"] + 2.0:
+        why.append(f"cross-slope {r['cross_slope_after_deg']:.0f} deg (was {r['cross_slope_before_deg']:.0f})")
+    if r["grade_after_deg"] > cfg["grade_deg"] and r["grade_after_deg"] > r["grade_before_deg"] + 2.0:
+        why.append(f"road grade {r['grade_after_deg']:.0f} deg (was {r['grade_before_deg']:.0f})")
+    r["flagged"] = bool(why)
+    r["reasons"] = why
+    return r
+
+
+def check_arrays(base, delta, cell, feats, cfg=None):
+    """Pure core of `check`. -> {roads: [...touched...], bridges: [...], buildings: [...], warnings: [str], flagged_roads: [ids]}.
+    A road is flagged when an edit moves one edge relative to the other (>delta_ft), steepens the cross-slope past cross_deg, or steepens the grade past grade_deg:
+    road_grade only ever raises the road onto the ground it reads from the mesh, so those roads end up on a skirt. A uniform shift of the whole road is not flagged."""
+    cfg = dict(CHECK_DEFAULTS, **(cfg or {}))
+    base = np.asarray(base, np.float64)
+    delta = np.asarray(delta, np.float64)
+    out = {"roads": [], "bridges": [], "buildings": [], "warnings": [], "flagged_roads": [], "thresholds": cfg}
+    tip = "Tip: smooth or flatten along the road, press 'Flatten under roads'"
+    if not np.any(np.abs(delta) > 1e-4):
+        return out
+    for f in feats.get("roads", []):
+        r = _ribbon_check(base, delta, cell, f, cfg)
+        if r["touched"]:
+            out["roads"].append(r)
+        if r["flagged"]:
+            out["flagged_roads"].append(r["id"])
+            nm = (' "' + r["name"] + '"') if r.get("name") else ""
+            out["warnings"].append(f"Road {r['id']}{nm}: ground changed up to {r['max_delta_ft']:+.1f} ft ({'; '.join(r['reasons'])}): will stand on a skirt. {tip} or turn on Cut/fill terrain.")
+    for f in feats.get("bridges", []):
+        r = _ribbon_check(base, delta, cell, f, cfg)
+        r["flagged"] = abs(r["max_delta_ft"]) > cfg["delta_ft"]
+        if r["flagged"]:
+            out["warnings"].append(f"Bridge {r['id']}: ground under the span changed up to {r['max_delta_ft']:+.1f} ft; the deck was built for the old ground. Re-run bridge_maker afterwards.")
+        if r["touched"]:
+            out["bridges"].append(r)
+    if feats.get("buildings"):
+        from shapely.geometry import Polygon
+        import shapely
+        for b in feats["buildings"]:
+            pg = Polygon(b["polygon"])
+            x0, y0, x1, y1 = pg.bounds
+            GX, GY = np.meshgrid(np.arange(x0, x1 + cell, cell), np.arange(y0, y1 + cell, cell))
+            m = shapely.contains_xy(pg, GX.ravel(), GY.ravel())
+            Q = np.vstack([np.stack([GX.ravel()[m], GY.ravel()[m]], 1), np.asarray(b["polygon"], float)])
+            dd = _bilinear(delta, cell, Q)
+            if np.abs(dd).max() <= 0.05:
+                continue
+            r = {"id": b["id"], "name": b.get("name"), "max_delta_ft": round(float(dd[np.abs(dd).argmax()]), 2), "mean_shift_ft": round(float(dd.mean()), 2),
+                 "tilt_ft": round(float(dd.max() - dd.min()), 2)}
+            r["flagged"] = r["tilt_ft"] > cfg["building_ft"]
+            out["buildings"].append(r)
+            if r["flagged"]:
+                out["warnings"].append(f"Building {r['id']}: ground under it now varies by {r['tilt_ft']:.1f} ft across the footprint (edit {dd.min():+.1f} .. {dd.max():+.1f} ft); "
+                                       f"expect a deep foundation skirt or a cut pad. Smooth or flatten under the building.")
+    out["flagged_roads"] = sorted(set(out["flagged_roads"]))
+    return out
+
+
+def check(place, root=None, wdir=None, layer="work", cfg=None):
+    base, meta = base_terrain(place, root)
+    d, info = (_working(place, root, wdir or work_dir(place, root)) if layer == "work" else load_layer(saved_dir(place, root)))
+    if d is None or d.shape != base.shape:
+        d = np.zeros_like(base)
+    res = check_arrays(base, d, float(meta["cell_ft"]), load_features(place, root), cfg)
+    res.update(ok=True, place=place, layer=layer, strokes=len(info.get("strokes", [])), n_roads_changed=len(res["roads"]), n_warnings=len(res["warnings"]))
+    return res
+
+
+def conform_roads(place, roads="flagged", root=None, wdir=None, extra_ft=2.0, falloff_ft=12.0, smooth_ft=40.0, cfg=None):
+    """Append one undoable 'conform-roads' stroke to the working layer: `roads` = "flagged" (those `check` warns about), "all", or a list of road ids."""
+    wdir = wdir or work_dir(place, root)
+    base, meta = base_terrain(place, root)
+    cell = float(meta["cell_ft"])
+    delta, info = _working(place, root, wdir)
+    if delta is None or delta.shape != base.shape:
+        delta = np.zeros_like(base)
+    feats = load_features(place, root)
+    if roads == "all":
+        ids = [r["id"] for r in feats["roads"]]
+    elif roads == "flagged":
+        ids = check_arrays(base, delta, cell, feats, cfg)["flagged_roads"]
+    else:
+        ids = list(roads)
+    sel = [r for r in feats["roads"] if r["id"] in set(ids)]
+    if not sel:
+        return {"ok": True, "conformed": [], "note": "no roads to conform", "strokes_total": len((info or {}).get("strokes", []))}
+    r = apply_strokes(place, [{"tool": CONFORM, "roads": sel, "extra_ft": extra_ft, "falloff_ft": falloff_ft, "smooth_ft": smooth_ft}], "append", root, wdir)
+    r["conformed"] = [x["id"] for x in sel]
+    return r
+
+
 # ------------------------------------------------------------------ preview
 def hillshade(h, cell, azimuth=315.0, altitude=40.0, exag=1.0):
     gy, gx = np.gradient(h.astype(np.float64) * exag, cell)
@@ -580,6 +789,20 @@ def main(argv=None):
     s = sub.add_parser("stats")
     common(s)
     s.add_argument("--layer", default="work", choices=["work", "saved"])
+    s = sub.add_parser("check")
+    common(s)
+    s.add_argument("--layer", default="work", choices=["work", "saved"])
+    s.add_argument("--delta-ft", type=float, default=CHECK_DEFAULTS["delta_ft"], help="flag a road whose edges move apart by more than this (ft); bridges: any change over it")
+    s.add_argument("--cross-deg", type=float, default=CHECK_DEFAULTS["cross_deg"], help="flag a road whose cross-slope after the edit exceeds this (and grew)")
+    s.add_argument("--grade-deg", type=float, default=CHECK_DEFAULTS["grade_deg"], help="flag a road whose grade after the edit exceeds this (and grew)")
+    s.add_argument("--building-ft", type=float, default=CHECK_DEFAULTS["building_ft"], help="flag a building whose footprint ground now varies by more than this (ft)")
+    s = sub.add_parser("conform-roads")
+    common(s)
+    s.add_argument("--roads", help="comma list of road ids (default: the roads `check` flags)")
+    s.add_argument("--all", action="store_true", help="every road, not just the flagged ones")
+    s.add_argument("--extra-ft", type=float, default=2.0, help="level strip beyond the road edge (shoulder), ft")
+    s.add_argument("--falloff-ft", type=float, default=12.0, help="blend distance back to the painted ground, ft")
+    s.add_argument("--smooth-ft", type=float, default=40.0, help="moving-average window along the road for the bed height, ft")
     s = sub.add_parser("save")
     common(s)
     s = sub.add_parser("discard")
@@ -598,6 +821,10 @@ def main(argv=None):
             r = export_preview(a.place, root, a.work_dir, a.max_px, a.contour_ft, a.png, a.bin_dir, a.layer, a.exag, a.show_delta)
         elif a.cmd == "stats":
             r = stats(a.place, root, a.work_dir, a.layer)
+        elif a.cmd == "check":
+            r = check(a.place, root, a.work_dir, a.layer, {"delta_ft": a.delta_ft, "cross_deg": a.cross_deg, "grade_deg": a.grade_deg, "building_ft": a.building_ft})
+        elif a.cmd == "conform-roads":
+            r = conform_roads(a.place, "all" if a.all else ([x for x in a.roads.split(",") if x] if a.roads else "flagged"), root, a.work_dir, a.extra_ft, a.falloff_ft, a.smooth_ft)
         elif a.cmd == "save":
             r = save(a.place, root, a.work_dir)
         else:

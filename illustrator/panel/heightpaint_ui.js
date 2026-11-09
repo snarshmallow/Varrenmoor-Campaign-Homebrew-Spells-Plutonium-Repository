@@ -87,7 +87,17 @@
     if (meta) t.push("Preview 1:" + meta.factor + " (" + meta.pw + " x " + meta.ph + " px). Edits are computed at full resolution in python.");
     var l = P().last; if (l && l.saved !== undefined) t.push((l.saved ? "Saved " : "Saved (layer was empty, removed) ") + l.at);
     el.textContent = t.join("\n");
+    warnings();
     var u = $("hpUndo"), r = $("hpRedo"); if (u) u.disabled = !(s.strokes > 0); if (r) r.disabled = !((P().redo || []).length);
+  }
+  // roads / bridges / buildings the edit layer endangers (heightmap_paint.py check, run after every job): one line each, plus the Flatten under roads button
+  function warnings() {
+    var box = $("hpWarn"), c = P().check, btn = document.querySelector('[data-act="hp_conform"]'); if (!box) return;
+    var w = (c && c.warnings) || []; while (box.firstChild) box.removeChild(box.firstChild);
+    w.forEach(function (m) { var li = document.createElement("li"); li.textContent = m; box.appendChild(li); });
+    box.hidden = !w.length;
+    var n = (c && c.flagged_roads || []).length;
+    if (btn) { btn.disabled = !n; btn.title = n ? "Flatten the edit layer across " + c.flagged_roads.join(", ") + " so the ground matches the road bed (one undoable step)" : "No road is endangered by the current edits"; }
   }
   function paintTools() {
     var box = $("hpTools"); if (!box) return;
@@ -197,7 +207,12 @@
       disarmReset(); ctx.showError("");
       pending = []; return enqueue(VB.jobHpReset(ctx.state(), ctx.dirs()));
     },
-    hp_stats: function () { return enqueue(VB.jobHpStats(ctx.state(), ctx.dirs())); }
+    hp_stats: function () { return enqueue(VB.jobHpStats(ctx.state(), ctx.dirs())); },
+    hp_check: function () { return enqueue(VB.jobHpCheck(ctx.state(), ctx.dirs())); },
+    hp_conform: function () {
+      var c = P().check; if (!c || !(c.flagged_roads || []).length) return;
+      P().redo = []; P().unsaved = true; return enqueue(VB.jobHpConform(ctx.state(), ctx.dirs(), null));
+    }
   };
 
   // the Terrain tab was shown or the Paint section was opened: size the canvas, draw, and load the preview the first time

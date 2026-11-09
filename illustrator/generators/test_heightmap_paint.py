@@ -278,6 +278,103 @@ class FakePlace(unittest.TestCase):
         self.assertEqual((rc, o["ok"]), (1, False))
 
 
+class RoadCheck(unittest.TestCase):
+    """check / conform-roads: which roads an edit layer endangers, and the undoable stroke that flattens the layer across them."""
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.root = os.path.join(self.tmp.name, "world")
+        d = os.path.join(self.root, "pl")
+        os.makedirs(os.path.join(d, "terrain"))
+        os.makedirs(os.path.join(d, "buildings"))
+        self.base = (100.0 + 0.02 * np.add.outer(np.arange(81.0), np.arange(81.0))).astype(np.float32)
+        np.save(os.path.join(d, "terrain", "heightmap.npy"), self.base)
+        with open(os.path.join(d, "terrain", "terrain_meta.json"), "w") as f:
+            json.dump({"cell_ft": CELL, "nx": 81, "ny": 81, "origin_ft": [0.0, 0.0], "elev_min": 100.0, "elev_max": 200.0, "relief_ft": 100.0}, f)
+        with open(os.path.join(d, "streets.json"), "w") as f:      # one road east-west at y=60, one far away at y=140
+            json.dump({"streets": [{"id": "r1", "name": "Near", "geometry": {"points": [[20, 60], [80, 60], [140, 60]], "width_ft": 16}},
+                                   {"id": "r2", "name": "Far", "geometry": {"points": [[20, 140], [140, 140]], "width_ft": 16}}]}, f)
+        with open(os.path.join(d, "buildings", "b1.json"), "w") as f:
+            json.dump({"id": "b1", "geometry": {"points": [[60, 100], [75, 100], [75, 112], [60, 112]]}}, f)
+        self.work = os.path.join(self.tmp.name, "work")
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def run_check(self):
+        return hp.check("pl", self.root, self.work)
+
+    def test_no_edits_no_warnings(self):
+        r = self.run_check()
+        self.assertEqual((r["ok"], r["warnings"], r["roads"], r["flagged_roads"]), (True, [], [], []))
+
+    def test_edge_raise_is_flagged_but_uniform_shift_is_not(self):
+        hp.apply_strokes("pl", [stroke("raise", [[80, 52]], rate_ft=12, radius_ft=8)], "append", self.root, self.work)      # raises the north edge only
+        r = self.run_check()
+        self.assertEqual(r["flagged_roads"], ["r1"])
+        road = next(x for x in r["roads"] if x["id"] == "r1")
+        self.assertGreater(road["edge_delta_diff_ft"], 3.0)
+        self.assertGreater(road["cross_slope_after_deg"], road["cross_slope_before_deg"] + 5)
+        self.assertIn("Road r1", r["warnings"][0])
+        self.assertIn("skirt", r["warnings"][0])
+        hp.reset("pl", self.root, self.work, "work")
+        hp.apply_strokes("pl", [stroke("raise", [[80, 60], [80, 60]], rate_ft=12, radius_ft=60, falloff="constant")], "append", self.root, self.work)   # all of road r1 up the same amount
+        r = self.run_check()
+        self.assertEqual(r["flagged_roads"], [])
+        self.assertGreater(next(x for x in r["roads"] if x["id"] == "r1")["mean_shift_ft"], 10.0)
+
+    def test_building_tilt_is_reported(self):
+        hp.apply_strokes("pl", [stroke("raise", [[75, 106]], rate_ft=8, radius_ft=10)], "append", self.root, self.work)
+        r = self.run_check()
+        self.assertTrue(any(b["id"] == "b1" for b in r["buildings"]))
+        self.assertTrue(any(w.startswith("Building b1") for w in r["warnings"]))
+
+    def test_conform_roads_flattens_the_layer_across_the_road(self):
+        hp.apply_strokes("pl", [stroke("raise", [[80, 52]], rate_ft=12, radius_ft=8)], "append", self.root, self.work)
+        r = hp.conform_roads("pl", "flagged", self.root, self.work)
+        self.assertEqual((r["ok"], r["conformed"], r["strokes_total"]), (True, ["r1"], 2))
+        after = self.run_check()
+        self.assertEqual(after["flagged_roads"], [])
+        road = next(x for x in after["roads"] if x["id"] == "r1")
+        self.assertLess(road["edge_delta_diff_ft"], 1.5)
+        d, info = hp.load_layer(self.work)
+        far = np.abs(d[int(140 / CELL) - 3: int(140 / CELL) + 4]).max()               # the far road is untouched
+        self.assertEqual(far, 0.0)
+        self.assertEqual(info["strokes"][-1]["tool"], "conform-roads")
+        r = hp.apply_strokes("pl", [], "undo-last", self.root, self.work)               # undoable, replayable
+        self.assertEqual(self.run_check()["flagged_roads"], ["r1"])
+        r = hp.apply_strokes("pl", [], "replay", self.root, self.work)
+        self.assertEqual(r["strokes_total"], 1)
+
+    def test_conform_with_nothing_flagged_is_a_no_op(self):
+        r = hp.conform_roads("pl", "flagged", self.root, self.work)
+        self.assertEqual((r["ok"], r["conformed"]), (True, []))
+        self.assertFalse(os.path.exists(hp.layer_paths(self.work)[0]))
+
+    def test_stroke_validation(self):
+        with self.assertRaises(ValueError):
+            hp.validate_stroke({"tool": "conform-roads", "roads": []})
+        with self.assertRaises(ValueError):
+            hp.validate_stroke({"tool": "conform-roads", "roads": [{"id": "x", "points": [[1, 2]]}]})
+
+    def test_cli(self):
+        base = [sys.executable, os.path.join(HERE, "heightmap_paint.py")]
+        common = ["--place", "pl", "--world-root", self.root, "--work-dir", self.work]
+        sj = os.path.join(self.tmp.name, "s.json")
+        with open(sj, "w") as f:
+            json.dump({"strokes": [stroke("raise", [[80, 52]], rate_ft=12, radius_ft=8)]}, f)
+
+        def run(*a):
+            p = subprocess.run(base + list(a) + common, capture_output=True, text=True)
+            return p.returncode, json.loads(p.stdout)
+        run("apply-strokes", "--strokes", sj)
+        rc, o = run("check")
+        self.assertEqual((rc, o["flagged_roads"]), (0, ["r1"]))
+        rc, o = run("conform-roads", "--roads", "r1", "--falloff-ft", "10")
+        self.assertEqual((rc, o["conformed"]), (0, ["r1"]))
+        self.assertEqual(run("check")[1]["flagged_roads"], [])
+
+
 REAL = "bridgehollow__dyers_walk_local"
 
 

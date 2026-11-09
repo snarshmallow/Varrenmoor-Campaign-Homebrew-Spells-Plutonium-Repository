@@ -100,7 +100,8 @@ def audit(pack, with_mesh=True):
     import worldpack_mesh as wm
     import road_grade as rg
     h = wm.final_heights(pack)
-    rows = [audit_building(e, h, pack.cell_ft, rg) for e in pack.list("buildings")]
+    import building_ground as bg
+    rows = [audit_building(bg.with_final_skirt(e, h, pack.cell_ft), h, pack.cell_ft, rg) for e in pack.list("buildings")]
     if with_mesh:
         eave_clearance(pack, h, rows)
     return rows

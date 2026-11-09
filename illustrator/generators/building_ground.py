@@ -119,6 +119,24 @@ def pad_heights(pack, h, cfg=None):
     return h if out is None else out
 
 
+def final_skirt(e, h, cell, cfg=None):
+    """Skirt depth (ft) against the FINAL terrain mesh h (after pads, door aprons, road grading and painted edits). resolve() only sees the natural ground, but the
+    pad of a lower neighbour (or a painted cut) can lower the ground under this footprint afterwards; the skirt must reach below that too. Never shallower than e's."""
+    c = cfg_for(e, cfg)
+    G, W = _samples(e["polygon"])
+    tmin = float(rg.mesh_height(h, cell, W[:, 0], W[:, 1]).min())
+    need = float(e["base_elevation_ft"]) - tmin + c["skirt_extra_ft"]
+    return round(max(float(e.get("skirt_depth_ft") or 0.0), need), 3)
+
+
+def with_final_skirt(e, h, cell, cfg=None):
+    """e itself when its skirt already reaches below the final ground, else a copy with the deeper skirt."""
+    if not e.get("polygon"):
+        return e
+    s = final_skirt(e, h, cell, cfg)
+    return e if s <= float(e.get("skirt_depth_ft") or 0.0) + 1e-6 else dict(e, skirt_depth_ft=s)
+
+
 def eave_z(e):
     """Lowest roof edge (ft, absolute) of the plain building roof: the wall top minus the overhang drop. Style roofs may hang lower (see the audit)."""
     r = e.get("roof") or {}

@@ -1464,6 +1464,16 @@
      "controls": [
       "act:hp_discard"
      ]
+    },
+    "check": {
+     "controls": [
+      "act:hp_check"
+     ]
+    },
+    "conform-roads": {
+     "controls": [
+      "act:hp_conform"
+     ]
     }
    },
    "flags": {
@@ -1515,6 +1525,43 @@
     },
     "--show-delta": {
      "cli_only": "PNG tint of the edits; the canvas has its own tint checkbox (View)"
+    },
+    "--delta-ft": {
+     "controls": [
+      "s:hp.chk_delta_ft"
+     ]
+    },
+    "--cross-deg": {
+     "controls": [
+      "s:hp.chk_cross_deg"
+     ]
+    },
+    "--grade-deg": {
+     "cli_only": "road grade threshold of the check: the panel keeps the 14 degree road-grade default"
+    },
+    "--building-ft": {
+     "cli_only": "building tilt threshold of the check: the panel keeps the 3 ft default"
+    },
+    "--roads": {
+     "cli_only": "the panel flattens the roads the check flags; naming road ids is for terminal use"
+    },
+    "--all": {
+     "cli_only": "the panel flattens only the flagged roads; --all conforms every road (terminal use)"
+    },
+    "--extra-ft": {
+     "controls": [
+      "s:hp.conform_extra_ft"
+     ]
+    },
+    "--falloff-ft": {
+     "controls": [
+      "s:hp.conform_falloff_ft"
+     ]
+    },
+    "--smooth-ft": {
+     "controls": [
+      "s:hp.conform_smooth_ft"
+     ]
     }
    }
   },

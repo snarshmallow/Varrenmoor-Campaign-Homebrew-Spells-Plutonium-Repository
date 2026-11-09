@@ -18,7 +18,8 @@
   VB.hpDefaults = function () {
     return { tool: "raise", radius_ft: 30, strength: 0.5, falloff: "smooth", hardness: 0.2, rate_ft: 2, height_ft: "", depth_ft: 6, bank_slope: 0.6, noise_scale_ft: "", seed: 7,
       contour_ft: 0, exag: 1, light_az: 315, show_delta: true, max_px: 640, auto_apply: true, rebuild_pack: false,
-      view: { zoom: 1, ox: 0, oy: 0 }, meta: null, stats: null, strokes: 0, redo: [], unsaved: false, last: null };
+      view: { zoom: 1, ox: 0, oy: 0 }, meta: null, stats: null, strokes: 0, redo: [], unsaved: false, last: null,
+      check: null, chk_delta_ft: 3, chk_cross_deg: 10, conform_extra_ft: 2, conform_falloff_ft: 12, conform_smooth_ft: 40 };
   };
   var baseDefaults = VB.defaults;
   VB.defaults = function () { var o = baseDefaults(); o.hp = VB.hpDefaults(); return o; };
@@ -54,9 +55,17 @@
     var pv = run.vars.pv, ss = run.vars.hs;
     if (pv) run.setState("hp.meta", pv);
     if (ss) { run.setState("hp.stats", ss); run.setState("hp.strokes", ss.strokes); run.setState("hp.unsaved", !!ss.unsaved); }
+    if (run.vars.hc) run.setState("hp.check", { warnings: run.vars.hc.warnings || [], flagged_roads: run.vars.hc.flagged_roads || [], n_roads_changed: run.vars.hc.n_roads_changed || 0,
+      buildings: (run.vars.hc.buildings || []).filter(function (b) { return b.flagged; }).map(function (b) { return b.id; }) });
     run.setState("hp.stamp", Date.now());
   }
   var statsStep = function (st) { return py(GEN + "heightmap_paint.py", function () { return ["stats"].concat(VB.hpBase(st)); }, "heightmap_paint.py stats", { json: "hs" }); };
+  // what the edit layer does to roads, bridges and buildings (heightmap_paint.py check): warnings list under the canvas
+  VB.hpCheckArgs = function (st) {
+    var p = st.hp;
+    return ["check"].concat(VB.hpBase(st), ["--layer", "work", "--delta-ft", String(Math.max(num(p.chk_delta_ft, 3), 0.1)), "--cross-deg", String(Math.max(num(p.chk_cross_deg, 10), 1))]);
+  };
+  var checkStep = function (st) { return py(GEN + "heightmap_paint.py", function () { return VB.hpCheckArgs(st); }, "heightmap_paint.py check", { json: "hc" }); };
   var previewStep = function (st, d, layer) { return py(GEN + "heightmap_paint.py", function () { return VB.hpPreviewArgs(st, d, layer); }, "heightmap_paint.py export-preview", { json: "pv" }); };
 
   // mode: append (strokes on top of the working layer) | undo-last | replay | replace. quiet jobs are not written to the jobs log (one per brush stroke would flood it).
@@ -72,25 +81,37 @@
       if (mode === "append" || mode === "replace") a.push("--strokes", VB.hpStrokesPath(d));
       return a;
     }, "heightmap_paint.py apply-strokes", { json: "ap" }));
-    steps.push(previewStep(st, d), statsStep(st), { t: "fn", label: "remember", fn: remember });
+    steps.push(previewStep(st, d), statsStep(st), checkStep(st), { t: "fn", label: "remember", fn: remember });
     return { kind: "hp_" + mode.replace("-", "_"), label: "Paint: " + mode + (strokes.length ? " (" + strokes.length + " stroke" + (strokes.length > 1 ? "s" : "") + ")" : ""), noLog: true, params: { mode: mode, n: strokes.length }, steps: steps };
   };
   VB.jobHpRefresh = function (st, d, layer) {
-    return { kind: "hp_preview", label: "Paint: refresh preview", noLog: true, steps: [previewStep(st, d, layer), statsStep(st), { t: "fn", label: "remember", fn: remember }] };
+    return { kind: "hp_preview", label: "Paint: refresh preview", noLog: true, steps: [previewStep(st, d, layer), statsStep(st), checkStep(st), { t: "fn", label: "remember", fn: remember }] };
   };
+  // flatten the edit layer across road footprints (heightmap_paint.py conform-roads): the roads check flags (ids empty) or the given road ids. One undoable stroke.
+  VB.hpConformArgs = function (st, ids) {
+    var p = st.hp, a = ["conform-roads"].concat(VB.hpBase(st));
+    if (ids && ids.length) a.push("--roads", ids.join(","));
+    return a.concat(["--extra-ft", String(Math.max(num(p.conform_extra_ft, 2), 0)), "--falloff-ft", String(Math.max(num(p.conform_falloff_ft, 12), 0.5)), "--smooth-ft", String(Math.max(num(p.conform_smooth_ft, 40), 0))]);
+  };
+  VB.jobHpConform = function (st, d, ids) {
+    return { kind: "hp_conform", label: "Paint: flatten under roads", noLog: true, params: { roads: ids || "flagged" }, steps: [
+      py(GEN + "heightmap_paint.py", function () { return VB.hpConformArgs(st, ids); }, "heightmap_paint.py conform-roads", { json: "cf" }),
+      previewStep(st, d), statsStep(st), checkStep(st), { t: "fn", label: "remember", fn: function (run) { remember(run); run.setState("hp.redo", []); run.setState("hp.unsaved", true); } }] };
+  };
+  VB.jobHpCheck = function (st, d) { return { kind: "hp_check", label: "Paint: check roads", noLog: true, steps: [statsStep(st), checkStep(st), { t: "fn", label: "remember", fn: remember }] }; };
   VB.jobHpSave = function (st, d) {
-    var steps = [py(GEN + "heightmap_paint.py", function () { return ["save"].concat(VB.hpBase(st)); }, "heightmap_paint.py save", { json: "sv" }), previewStep(st, d), statsStep(st),
+    var steps = [py(GEN + "heightmap_paint.py", function () { return ["save"].concat(VB.hpBase(st)); }, "heightmap_paint.py save", { json: "sv" }), previewStep(st, d), statsStep(st), checkStep(st),
       { t: "fn", label: "remember", fn: function (run) { remember(run); run.setState("hp.last", { at: new Date().toISOString(), saved: !!(run.vars.sv && run.vars.sv.saved), path: run.vars.sv && run.vars.sv.path }); run.setState("hp.redo", []); } }];
     if (st.hp.rebuild_pack) steps.push.apply(steps, VB.jobWorldPack(st, d).steps);
     return { kind: "hp_save", label: st.hp.rebuild_pack ? "Heightmap: save edits and export the world pack" : "Heightmap: save edits", params: { rebuild_pack: !!st.hp.rebuild_pack }, steps: steps };
   };
   VB.jobHpDiscard = function (st, d) {
     return { kind: "hp_discard", label: "Heightmap: discard unsaved edits", noLog: true, steps: [py(GEN + "heightmap_paint.py", function () { return ["discard"].concat(VB.hpBase(st)); }, "heightmap_paint.py discard"),
-      previewStep(st, d), statsStep(st), { t: "fn", label: "remember", fn: function (run) { remember(run); run.setState("hp.redo", []); } }] };
+      previewStep(st, d), statsStep(st), checkStep(st), { t: "fn", label: "remember", fn: function (run) { remember(run); run.setState("hp.redo", []); } }] };
   };
   VB.jobHpReset = function (st, d) {   // empties both the working copy and the saved layer: the generated terrain shows again
     return { kind: "hp_reset", label: "Heightmap: reset (remove all edits)", steps: [py(GEN + "heightmap_paint.py", function () { return ["reset"].concat(VB.hpBase(st), ["--layer", "both"]); }, "heightmap_paint.py reset"),
-      previewStep(st, d), statsStep(st), { t: "fn", label: "remember", fn: function (run) { remember(run); run.setState("hp.redo", []); } }] };
+      previewStep(st, d), statsStep(st), checkStep(st), { t: "fn", label: "remember", fn: function (run) { remember(run); run.setState("hp.redo", []); } }] };
   };
   VB.jobHpStats = function (st, d) { return { kind: "hp_stats", label: "Heightmap: statistics", noLog: true, steps: [statsStep(st), { t: "fn", label: "remember", fn: remember }] }; };
 

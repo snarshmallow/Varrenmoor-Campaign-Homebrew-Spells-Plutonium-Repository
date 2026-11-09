@@ -178,7 +178,7 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
   <img id="patchPrev" alt="patch preview (hillshade)">
 <!-- HEIGHTMAP PAINT (heightpaint_ui.js, lib/heightpaint.js; python generators/heightmap_paint.py): a collapsible section at the end of the Terrain tab -->
 <details id="hpDetails"><summary><b>Paint heightmap</b> <span class="note">(edit layer on top of the generated terrain)</span></summary>
-  <style>#hpCanvas{width:100%;border:1px solid var(--line);background:#202020;display:block}#hpTools{display:flex;flex-wrap:wrap;gap:3px;margin:3px 0}#hpReadout,#hpOut,#hpStatus{white-space:pre-wrap;font:11px monospace;margin:3px 0}#hpReadout,#hpStatus{min-height:15px}#hpStatus{color:var(--warn)}#hpDetails [hidden]{display:none!important}</style>
+  <style>#hpCanvas{width:100%;border:1px solid var(--line);background:#202020;display:block}#hpTools{display:flex;flex-wrap:wrap;gap:3px;margin:3px 0}#hpReadout,#hpOut,#hpStatus{white-space:pre-wrap;font:11px monospace;margin:3px 0}#hpReadout,#hpStatus{min-height:15px}#hpStatus{color:var(--warn)}#hpDetails [hidden]{display:none!important}#hpWarn{margin:3px 0;padding:4px 4px 4px 22px;border:1px solid var(--warn);font-size:11px}</style>
     <p class="note">Edits go into a separate layer (world/&lt;place&gt;/heightmap_edits.*) that is added on top of the generated terrain every time it is loaded, so regenerating the terrain keeps them. Nothing reaches the pipeline until you Save. Drag to paint; wheel zooms; Shift, Space or right / middle drag pans; Alt + wheel changes the brush radius; Ctrl+Z / Ctrl+Y undo / redo.</p>
   <div class="btns">
     <button data-act="hp_refresh" title="Read the terrain and the working edits again and redraw">Load / refresh</button>
@@ -191,6 +191,7 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
   <div id="hpTools" role="group" aria-label="Brush"></div>
   <canvas id="hpCanvas" width="320" height="260" aria-label="Heightmap relief"></canvas>
   <div id="hpReadout"></div><div id="hpStatus"></div>
+  <ul id="hpWarn" hidden aria-live="polite" title="Roads, bridges and buildings the current edits will leave standing on a skirt or floating"></ul>
   <div class="grid">
     <label>Brush <select data-s="hp.tool" data-act-change="hp_tool_changed"><option value="raise">raise</option><option value="lower">lower</option><option value="smooth">smooth</option><option value="flatten">flatten</option><option value="set">set height</option><option value="noise">roughen</option><option value="ridge">ridge</option><option value="valley">valley</option><option value="river">river carve</option></select></label>
     <label>Radius (ft) <input type="number" data-s="hp.radius_ft" min="1" step="1"></label>
@@ -217,9 +218,20 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
     <button data-act="hp_discard" title="Throw away the unsaved working edits (back to the last saved layer)">Discard unsaved</button>
     <button data-act="hp_reset" title="Remove all edits, saved ones too">Reset to generated terrain</button>
     <button data-act="hp_stats">Statistics</button>
+    <button data-act="hp_check" title="Which roads, bridges and buildings do the edits change? (also runs after every stroke)">Check roads</button>
+    <button data-act="hp_conform" disabled title="Flatten the edit layer across the roads listed in the warnings">Flatten under roads</button>
   </div>
+  <details><summary class="note">Road check and Flatten under roads</summary>
+    <div class="grid">
+      <label>Warn when one road edge moves this much more than the other (ft) <input type="number" data-s="hp.chk_delta_ft" min="0.1" step="0.5"></label>
+      <label>Warn above this cross-slope (deg) <input type="number" data-s="hp.chk_cross_deg" min="1" step="1"></label>
+      <label>Flatten: level strip beyond the road edge (ft) <input type="number" data-s="hp.conform_extra_ft" min="0" step="0.5"></label>
+      <label>Flatten: blend back to the painted ground over (ft) <input type="number" data-s="hp.conform_falloff_ft" min="0.5" step="1"></label>
+      <label>Flatten: smooth the road bed along its length (ft) <input type="number" data-s="hp.conform_smooth_ft" min="0" step="5"></label>
+    </div>
+  </details>
   <div id="hpOut"></div>
-  <p class="note">The canvas shows a downsampled preview; every stroke is computed on the full-resolution grid in python. After Save, re-run Terrain / Contours / Shading and the world pack export for the edits to appear in them (regenerating terrain keeps them). Reset brings the generated terrain back. CLI: <code>python illustrator/generators/heightmap_paint.py apply-strokes|export-preview|stats|save|discard|reset --place P</code>.</p>
+  <p class="note">The canvas shows a downsampled preview; every stroke is computed on the full-resolution grid in python. After Save, re-run Terrain / Contours / Shading and the world pack export for the edits to appear in them (regenerating terrain keeps them). Reset brings the generated terrain back. CLI: <code>python illustrator/generators/heightmap_paint.py apply-strokes|export-preview|stats|check|conform-roads|save|discard|reset --place P</code>.</p>
 </details>
 </section>
 

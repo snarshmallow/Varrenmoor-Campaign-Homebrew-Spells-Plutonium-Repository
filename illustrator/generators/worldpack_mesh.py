@@ -745,6 +745,8 @@ def build_parts(pack, step=1, carve=True, conform=True, layers=None, drape_edge_
         if want("buildings"):
             import worldpack_pbr as pbr
             e = pbr.restyle_building(e)
+            import building_ground as _bg
+            e = _bg.with_final_skirt(e, h, pack.cell_ft)              # skirt reaches below the FINAL ground (a neighbour's pad / painted cut may have lowered it after resolve())
             if e.get("style"):                                        # building style preset (building_styles.py); no style key = legacy look
                 import building_styles as _bs
                 e = _bs.apply_style(e)

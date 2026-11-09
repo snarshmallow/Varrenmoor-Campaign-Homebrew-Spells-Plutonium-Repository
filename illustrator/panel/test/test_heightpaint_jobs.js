@@ -58,9 +58,9 @@ check("readBin reads little-endian float32", (bb => VB.hpReadBin(bb)[1] === 2.5)
 
 // job shapes
 let j = VB.jobHpApply(st, d, [s], "append");
-check("apply job: check, write, apply, preview, stats, remember; quiet", j.noLog === true && j.steps.map(x => x.t).join() === "fn,write,py,py,py,fn" && /strokes\.json$/.test(j.steps[1].path), j.steps.map(x => x.t).join());
+check("apply job: check, write, apply, preview, stats, remember; quiet", j.noLog === true && j.steps.map(x => x.t).join() === "fn,write,py,py,py,py,fn" && /strokes\.json$/.test(j.steps[1].path), j.steps.map(x => x.t).join());
 const ap = j.steps[2].args(); check("apply args", ap.join(" ") === "apply-strokes --place pl --mode append --strokes " + d.panel + "/heightmap_paint_strokes.json", ap.join(" "));
-check("undo job has no strokes file", (u => u.steps.map(x => x.t).join() === "py,py,py,fn" && u.steps[0].args().join(" ") === "apply-strokes --place pl --mode undo-last")(VB.jobHpApply(st, d, [], "undo-last")));
+check("undo job has no strokes file", (u => u.steps.map(x => x.t).join() === "py,py,py,py,fn" && u.steps[0].args().join(" ") === "apply-strokes --place pl --mode undo-last")(VB.jobHpApply(st, d, [], "undo-last")));
 st.hp.rebuild_pack = true; const sv = VB.jobHpSave(st, d);
 check("save + pack appends the pack export", sv.steps.some(x => x.script && /worldpack\.py$/.test(x.script)) && /export the world pack/.test(sv.label));
 st.hp.rebuild_pack = false; check("plain save does not", !VB.jobHpSave(st, d).steps.some(x => x.script && /worldpack\.py$/.test(x.script)));
@@ -105,6 +105,17 @@ const runner = R.createRunner({ root: ROOT, jobsDir: tmp + "/jobs", fs, path, sp
   check("reset removes working and saved layers", r.ok && !fs.existsSync(tmp + "/world/pl/heightmap_edits.npz") && !fs.existsSync(tmp + "/work/heightmap_edits.npz") && st.hp.stats.summary.changed_cells === 0, r.error);
   r = await runner.run(VB.jobHpApply(st, d, [], "undo-last")); check("undo with nothing to undo fails cleanly", !r.ok && /nothing to undo/.test(r.error), r.error);
   r = await runner.run(VB.jobHpApply(st, d, [], "append")); check("empty apply refused before python", !r.ok && /no strokes/.test(r.error), r.error);
+  // road check + Flatten under roads
+  check("check args", VB.hpCheckArgs(st).join(" ") === "check --place pl --layer work --delta-ft 3 --cross-deg 10", VB.hpCheckArgs(st).join(" "));
+  check("conform args: flagged roads by default, ids when given", VB.hpConformArgs(st).join(" ") === "conform-roads --place pl --extra-ft 2 --falloff-ft 12 --smooth-ft 40" && VB.hpConformArgs(st, ["a", "b"]).join(" ").indexOf("--roads a,b") > 0);
+  fs.writeFileSync(tmp + "/world/pl/streets.json", JSON.stringify({ streets: [{ id: "r1", name: "Near", geometry: { points: [[20, 60], [70, 60], [120, 60]], width_ft: 12 } }] }));
+  r = await runner.run(VB.jobHpApply(st, d, [Object.assign({}, stroke, { points: [[70, 52]], radius_ft: 8, rate_ft: 12 })], "append"));
+  check("check runs after a stroke and flags the endangered road", r.ok && st.hp.check && st.hp.check.flagged_roads.join() === "r1" && /Road r1/.test(st.hp.check.warnings[0]) && /skirt/.test(st.hp.check.warnings[0]), JSON.stringify(st.hp.check));
+  r = await runner.run(VB.jobHpConform(st, d, null));
+  check("Flatten under roads is one more stroke and clears the warning", r.ok && st.hp.strokes === 2 && info().strokes[1].tool === "conform-roads" && st.hp.check.flagged_roads.length === 0 && st.hp.unsaved === true, r.error + JSON.stringify(st.hp.check));
+  r = await runner.run(VB.jobHpApply(st, d, [], "undo-last"));
+  check("undo takes the conform step back (road flagged again)", r.ok && st.hp.strokes === 1 && st.hp.check.flagged_roads.join() === "r1", r.error);
+  r = await runner.run(VB.jobHpCheck(st, d)); check("Check roads job", r.ok && st.hp.check.n_roads_changed >= 1, r.error);
   try { fs.rmSync(TMP, { recursive: true, force: true }); } catch (e) { /* scratch */ }
   console.log("\n" + ok + " passed, " + fail + " failed");
   process.exit(fail ? 1 : 0);
