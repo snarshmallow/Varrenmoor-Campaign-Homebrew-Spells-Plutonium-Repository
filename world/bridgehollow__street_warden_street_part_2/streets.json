@@ -862,6 +862,41 @@
     },
     "part": 1
    }
+  },
+  {
+   "id": "str_bridgehead_path",
+   "name": "Bridgehead Path",
+   "kind": "lane",
+   "status": "proposed",
+   "geometry": {
+    "type": "polyline",
+    "points": [
+     [
+      270.93,
+      4.3
+     ],
+     [
+      264.2,
+      16.4
+     ]
+    ],
+    "width_ft": 10.0
+   },
+   "notes": "Added with the Roads tab (road_edit.py).",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "region": {
+    "parent_id": "str_bridgehead_path",
+    "clipped": true,
+    "continues_off_map": {
+     "start": true,
+     "end": false
+    },
+    "part": 1
+   }
   }
  ]
 }

@@ -15,11 +15,11 @@
   "buildings": 73,
   "trees": 9,
   "status": "verified",
-  "updated": "2026-11-09T16:46:19",
-  "tris": 316833,
+  "updated": "2026-11-09T17:11:52",
+  "tris": 321587,
   "lamps": 8,
   "scene_uuid": "Scene.bseT6oQjhcePl4o8",
-  "tiles": 91,
+  "tiles": 93,
   "foliage_tiles": 11,
   "lights": 32,
   "audit": {
@@ -30,6 +30,16 @@
   "light_types": {
    "lamp": 8,
    "hearth": 24
+  },
+  "bridges": {
+   "in_window": [
+    "brg_str_pilgrim_road_bridge_1"
+   ],
+   "carried": [
+    "brg_str_pilgrim_road_bridge_1"
+   ],
+   "tiles": 1,
+   "roof_tiles": 1
   }
  },
  "warden_street_part_2": {
@@ -48,8 +58,8 @@
   "buildings": 42,
   "trees": 7,
   "status": "verified",
-  "updated": "2026-11-09T16:48:06",
-  "tris": 195847,
+  "updated": "2026-11-09T17:13:35",
+  "tris": 195842,
   "lamps": 5,
   "scene_uuid": "Scene.vQn1X2x3RapFEuqd",
   "tiles": 61,
@@ -63,6 +73,12 @@
   "light_types": {
    "lamp": 5,
    "hearth": 27
+  },
+  "bridges": {
+   "in_window": [],
+   "carried": [],
+   "tiles": 0,
+   "roof_tiles": 0
   }
  },
  "cooper_row": {
@@ -81,12 +97,12 @@
   "buildings": 61,
   "trees": 7,
   "status": "verified",
-  "updated": "2026-11-09T16:49:58",
-  "tris": 250142,
+  "updated": "2026-11-09T17:15:23",
+  "tris": 253241,
   "lamps": 6,
   "scene_uuid": "Scene.ANgLSeNLw7bE17bc",
-  "tiles": 78,
-  "foliage_tiles": 10,
+  "tiles": 79,
+  "foliage_tiles": 9,
   "lights": 32,
   "audit": {
    "clean": true,
@@ -96,6 +112,16 @@
   "light_types": {
    "lamp": 6,
    "hearth": 26
+  },
+  "bridges": {
+   "in_window": [
+    "brg_str_pilgrim_road_bridge_1"
+   ],
+   "carried": [
+    "brg_str_pilgrim_road_bridge_1"
+   ],
+   "tiles": 1,
+   "roof_tiles": 1
   }
  },
  "market_square": {
@@ -113,10 +139,33 @@
   ],
   "buildings": 35,
   "trees": 6,
-  "status": "failed: foundry_push.py failed (1):",
-  "updated": "2026-11-09T16:51:08",
-  "tris": 129643,
-  "lamps": 0
+  "status": "verified",
+  "updated": "2026-11-09T17:16:57",
+  "tris": 134389,
+  "lamps": 0,
+  "scene_uuid": "Scene.EnF4ZShiND30PVBO",
+  "tiles": 52,
+  "foliage_tiles": 7,
+  "lights": 32,
+  "audit": {
+   "clean": true,
+   "counts": {},
+   "missing": 0
+  },
+  "light_types": {
+   "hearth": 25,
+   "window": 7
+  },
+  "bridges": {
+   "in_window": [
+    "brg_str_pilgrim_road_bridge_1"
+   ],
+   "carried": [
+    "brg_str_pilgrim_road_bridge_1"
+   ],
+   "tiles": 1,
+   "roof_tiles": 1
+  }
  },
  "court_square": {
   "scene_name": "Bridgehollow - Court Square (Winter)",
@@ -134,11 +183,11 @@
   "buildings": 26,
   "trees": 3,
   "status": "verified",
-  "updated": "2026-11-09T16:52:57",
-  "tris": 142547,
+  "updated": "2026-11-09T17:18:32",
+  "tris": 146933,
   "lamps": 2,
   "scene_uuid": "Scene.7BbqkJxx0UgNlMsY",
-  "tiles": 39,
+  "tiles": 41,
   "foliage_tiles": 6,
   "lights": 32,
   "audit": {
@@ -150,6 +199,16 @@
    "lamp": 2,
    "hearth": 27,
    "window": 3
+  },
+  "bridges": {
+   "in_window": [
+    "brg_str_pilgrim_road_bridge_1"
+   ],
+   "carried": [
+    "brg_str_pilgrim_road_bridge_1"
+   ],
+   "tiles": 1,
+   "roof_tiles": 1
   }
  },
  "pilgrim_road_part_1": {
@@ -168,7 +227,7 @@
   "buildings": 4,
   "trees": 5,
   "status": "verified",
-  "updated": "2026-11-09T16:54:10",
+  "updated": "2026-11-09T17:19:34",
   "tris": 78954,
   "lamps": 4,
   "scene_uuid": "Scene.Dfl2RxYHSQIZwfYs",
@@ -184,6 +243,12 @@
    "lamp": 4,
    "hearth": 6,
    "window": 16
+  },
+  "bridges": {
+   "in_window": [],
+   "carried": [],
+   "tiles": 0,
+   "roof_tiles": 0
   }
  },
  "pilgrim_road_part_2": {
@@ -245,11 +310,11 @@
   "buildings": 27,
   "trees": 12,
   "status": "verified",
-  "updated": "2026-11-09T16:57:39",
-  "tris": 138763,
+  "updated": "2026-11-09T17:20:48",
+  "tris": 142701,
   "lamps": 0,
   "scene_uuid": "Scene.ZB97U3A52HFSQqux",
-  "tiles": 44,
+  "tiles": 46,
   "foliage_tiles": 9,
   "lights": 32,
   "audit": {
@@ -260,6 +325,16 @@
   "light_types": {
    "window": 15,
    "hearth": 17
+  },
+  "bridges": {
+   "in_window": [
+    "brg_str_pilgrim_road_bridge_1"
+   ],
+   "carried": [
+    "brg_str_pilgrim_road_bridge_1"
+   ],
+   "tiles": 1,
+   "roof_tiles": 1
   }
  },
  "weavers_walk_south_part_1": {
@@ -278,11 +353,11 @@
   "buildings": 33,
   "trees": 6,
   "status": "verified",
-  "updated": "2026-11-09T16:59:18",
-  "tris": 171840,
+  "updated": "2026-11-09T17:22:26",
+  "tris": 176587,
   "lamps": 2,
   "scene_uuid": "Scene.DSVN5mNXDL6116ji",
-  "tiles": 48,
+  "tiles": 50,
   "foliage_tiles": 6,
   "lights": 32,
   "audit": {
@@ -293,6 +368,16 @@
   "light_types": {
    "lamp": 2,
    "hearth": 30
+  },
+  "bridges": {
+   "in_window": [
+    "brg_str_pilgrim_road_bridge_1"
+   ],
+   "carried": [
+    "brg_str_pilgrim_road_bridge_1"
+   ],
+   "tiles": 1,
+   "roof_tiles": 1
   }
  },
  "weavers_walk_south_part_2": {
@@ -311,7 +396,7 @@
   "buildings": 25,
   "trees": 10,
   "status": "verified",
-  "updated": "2026-11-09T17:00:41",
+  "updated": "2026-11-09T17:23:47",
   "tris": 187794,
   "lamps": 3,
   "scene_uuid": "Scene.aKtmFaXhwXg06Dbe",
@@ -327,6 +412,12 @@
    "lamp": 3,
    "window": 5,
    "hearth": 24
+  },
+  "bridges": {
+   "in_window": [],
+   "carried": [],
+   "tiles": 0,
+   "roof_tiles": 0
   }
  },
  "brook_lane": {
@@ -345,7 +436,7 @@
   "buildings": 31,
   "trees": 5,
   "status": "verified",
-  "updated": "2026-11-09T17:02:00",
+  "updated": "2026-11-09T17:25:03",
   "tris": 136237,
   "lamps": 0,
   "scene_uuid": "Scene.nNY2jIUZGJqwPjd3",
@@ -360,6 +451,12 @@
   "light_types": {
    "window": 13,
    "hearth": 19
+  },
+  "bridges": {
+   "in_window": [],
+   "carried": [],
+   "tiles": 0,
+   "roof_tiles": 0
   }
  },
  "brook_lane_south": {
@@ -378,7 +475,7 @@
   "buildings": 17,
   "trees": 6,
   "status": "verified",
-  "updated": "2026-11-09T17:03:11",
+  "updated": "2026-11-09T17:26:10",
   "tris": 93851,
   "lamps": 5,
   "scene_uuid": "Scene.Wl0eyb8tPlwDu1pj",
@@ -394,6 +491,12 @@
    "lamp": 5,
    "hearth": 17,
    "window": 10
+  },
+  "bridges": {
+   "in_window": [],
+   "carried": [],
+   "tiles": 0,
+   "roof_tiles": 0
   }
  },
  "hollow_way": {
@@ -412,11 +515,11 @@
   "buildings": 65,
   "trees": 16,
   "status": "verified",
-  "updated": "2026-11-09T17:04:51",
-  "tris": 261287,
+  "updated": "2026-11-09T17:27:46",
+  "tris": 266041,
   "lamps": 6,
   "scene_uuid": "Scene.c495NwXOYfIZAaaP",
-  "tiles": 84,
+  "tiles": 86,
   "foliage_tiles": 12,
   "lights": 32,
   "audit": {
@@ -427,6 +530,16 @@
   "light_types": {
    "lamp": 6,
    "hearth": 26
+  },
+  "bridges": {
+   "in_window": [
+    "brg_str_pilgrim_road_bridge_1"
+   ],
+   "carried": [
+    "brg_str_pilgrim_road_bridge_1"
+   ],
+   "tiles": 1,
+   "roof_tiles": 1
   }
  },
  "chandler_row": {
@@ -444,8 +557,8 @@
   ],
   "buildings": 28,
   "trees": 3,
-  "status": "verified",
-  "updated": "2026-11-09T17:06:17",
+  "status": "failed: only 3.0 GB free RAM (< 3.0 GB): close something or run on Vega",
+  "updated": "2026-11-09T17:27:48",
   "tris": 96994,
   "lamps": 0,
   "scene_uuid": "Scene.BugFxm0hQocOwn9C",
@@ -477,7 +590,9 @@
   ],
   "buildings": 79,
   "trees": 9,
-  "status": "extracted",
-  "updated": "2026-11-09T17:06:20"
+  "status": "built",
+  "updated": "2026-11-09T17:28:52",
+  "tris": 304502,
+  "lamps": 4
  }
 }

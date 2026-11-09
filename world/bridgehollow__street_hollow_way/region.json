@@ -67,11 +67,11 @@
   903.8
  ],
  "parent_source": {
-  "git_commit": "b2f16bb32c884d2bf8a6c97354daf5d0cea9b9e7",
+  "git_commit": "13c3e50bde95efb02ff68881525bf98bd7d3aefe",
   "parent_dirty": true,
-  "content_sha1": "37cc9c997e890947923818fea94d482bc564012b"
+  "content_sha1": "98de4e874378f6b8540fa41473d590cfb4389ec5"
  },
- "extracted_at": "2026-11-09T22:03:12+00:00",
+ "extracted_at": "2026-11-09T22:26:11+00:00",
  "params": {
   "margin": 0.0,
   "terrain_cell_ft": 2.5,
@@ -318,6 +318,9 @@
   ],
   "str_024": [
    "str_024"
+  ],
+  "str_bridgehead_path": [
+   "str_bridgehead_path"
   ],
   "wat_river": [
    "wat_river"
@@ -754,7 +757,7 @@
  ],
  "counts": {
   "buildings": 65,
-  "streets": 12,
+  "streets": 13,
   "water": 1,
   "districts": 4
  },
@@ -836,6 +839,7 @@
   "str_016": "6c05319b0331",
   "str_019": "2dfdcbb69d15",
   "str_024": "0e9511bff00f",
+  "str_bridgehead_path": "00e4bc2e07ea",
   "wat_river": "4cc071c7cdce",
   "dis_authority": "ecd4f8d18583",
   "dis_commoner": "bc8704ba1c79",

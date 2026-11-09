@@ -6,7 +6,7 @@
  "frame": "world feet: x east, y south, z up (elevation)",
  "counters": {
   "st_hedges": 7,
-  "st_trees": 12,
+  "st_trees": 11,
   "w_forest_1": 4614,
   "w_river_1": 16,
   "w_river_2": 10,
@@ -162,7 +162,7 @@
     ]
    ],
    "path": null,
-   "count": 12
+   "count": 11
   },
   {
    "id": "w_town_1",
@@ -496,9 +496,9 @@
   },
   {
    "species": "alder",
-   "x": 153.01,
-   "y": 144.11,
-   "z": 649.44,
+   "x": 259.59,
+   "y": 330.28,
+   "z": 641.26,
    "scale": 1.107,
    "rot": 82.0,
    "variant": 1,
@@ -519,26 +519,14 @@
    "src": "generated"
   },
   {
-   "species": "spruce",
-   "x": 116.83,
-   "y": 238.58,
-   "z": 649.07,
-   "scale": 1.091,
-   "rot": 204.2,
-   "variant": 1,
-   "id": "fol_st_trees_0010",
-   "zone": "st_trees",
-   "src": "generated"
-  },
-  {
    "species": "fir",
    "x": 163.12,
    "y": 323.59,
    "z": 642.56,
-   "scale": 1.047,
-   "rot": 341.1,
+   "scale": 0.98,
+   "rot": 36.9,
    "variant": 1,
-   "id": "fol_st_trees_0011",
+   "id": "fol_st_trees_0010",
    "zone": "st_trees",
    "src": "generated"
   },
@@ -547,10 +535,10 @@
    "x": 133.13,
    "y": 210.54,
    "z": 649.21,
-   "scale": 0.932,
-   "rot": 149.7,
+   "scale": 0.985,
+   "rot": 102.9,
    "variant": 0,
-   "id": "fol_st_trees_0012",
+   "id": "fol_st_trees_0011",
    "zone": "st_trees",
    "src": "generated"
   },

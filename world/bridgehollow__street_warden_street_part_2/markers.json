@@ -81,6 +81,22 @@
    ],
    "width_ft": 24.0,
    "label": "Weavers Walk 2 continues"
+  },
+  {
+   "id": "mk_str_bridgehead_path_start",
+   "kind": "continues_off_map",
+   "street": "str_bridgehead_path",
+   "parent_street": "str_bridgehead_path",
+   "point": [
+    270.93,
+    4.3
+   ],
+   "dir": [
+    0.486,
+    -0.874
+   ],
+   "width_ft": 10.0,
+   "label": "Bridgehead Path continues"
   }
  ]
 }

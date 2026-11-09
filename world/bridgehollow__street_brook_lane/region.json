@@ -67,11 +67,11 @@
   944.8
  ],
  "parent_source": {
-  "git_commit": "ea13205cb12a0018da385dbca67ad803de9f4445",
+  "git_commit": "13c3e50bde95efb02ff68881525bf98bd7d3aefe",
   "parent_dirty": true,
-  "content_sha1": "37cc9c997e890947923818fea94d482bc564012b"
+  "content_sha1": "98de4e874378f6b8540fa41473d590cfb4389ec5"
  },
- "extracted_at": "2026-11-09T22:00:42+00:00",
+ "extracted_at": "2026-11-09T22:23:48+00:00",
  "params": {
   "margin": 0.0,
   "terrain_cell_ft": 2.5,

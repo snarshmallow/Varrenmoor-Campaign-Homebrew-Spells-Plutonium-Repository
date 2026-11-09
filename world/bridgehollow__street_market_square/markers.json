@@ -241,6 +241,38 @@
    ],
    "width_ft": 21.0,
    "label": "Tanners Row 2 continues"
+  },
+  {
+   "id": "mk_str_bridgehead_path_start",
+   "kind": "continues_off_map",
+   "street": "str_bridgehead_path",
+   "parent_street": "str_bridgehead_path",
+   "point": [
+    4.3,
+    123.99
+   ],
+   "dir": [
+    -0.4,
+    -0.917
+   ],
+   "width_ft": 10.0,
+   "label": "Bridgehead Path continues"
+  },
+  {
+   "id": "mk_str_bridgehead_path_end",
+   "kind": "continues_off_map",
+   "street": "str_bridgehead_path",
+   "parent_street": "str_bridgehead_path",
+   "point": [
+    4.3,
+    188.24
+   ],
+   "dir": [
+    -0.486,
+    0.874
+   ],
+   "width_ft": 10.0,
+   "label": "Bridgehead Path continues"
   }
  ]
 }

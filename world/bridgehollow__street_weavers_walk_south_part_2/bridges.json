@@ -1,0 +1,21 @@
+{
+ "place": "bridgehollow__street_weavers_walk_south_part_2",
+ "schema": 1,
+ "generated_by": "region_extract.py (from the parent's bridges.json)",
+ "status": "proposed",
+ "thresholds": {
+  "float_ft": 4.0,
+  "level_ft": 3.0,
+  "min_span_ft": 8.0,
+  "merge_gap_ft": 24.0,
+  "abut_margin_ft": 5.0,
+  "bank_ft": 3.0,
+  "sample_ft": 2.0,
+  "ground_over_ft": 0.5,
+  "max_lift_ft": 6.0,
+  "lift_slope": 0.12,
+  "ramp_slope": 0.1
+ },
+ "removed": [],
+ "bridges": []
+}
