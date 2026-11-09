@@ -29,6 +29,7 @@ import sys
 import time
 
 import numpy as np
+from scipy import ndimage as ndi
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
@@ -777,8 +778,11 @@ def export_preview(place, root=None, wdir=None, max_px=512, contour_ft=0.0, png=
         d = None
     fin = base + d if d is not None else base
     f = max(int(np.ceil(max(fin.shape) / float(max_px))), 1)
-    hp = np.ascontiguousarray(fin[::f, ::f])
-    dp = np.ascontiguousarray(d[::f, ::f]) if d is not None else np.zeros_like(hp)
+    # box-average over the f x f cells around each sampled node (plain striding aliased fine relief into noisy 'grain'
+    # in the shaded preview; shape, node positions and elev range limits are unchanged)
+    pool = (lambda a: ndi.uniform_filter(np.asarray(a, np.float32), size=f, mode="nearest")[::f, ::f]) if f > 1 else (lambda a: a)
+    hp = np.ascontiguousarray(pool(fin))
+    dp = np.ascontiguousarray(pool(d)) if d is not None else np.zeros_like(hp)
     lo, hi = float(fin.min()), float(fin.max())
     out = {"ok": True, "place": place, "layer": layer, "factor": f, "pw": int(hp.shape[1]), "ph": int(hp.shape[0]), "cell_ft": cell, "size_ft": [(fin.shape[1] - 1) * cell, (fin.shape[0] - 1) * cell],
            "shape": list(fin.shape), "elev_min": lo, "elev_max": hi, "base_min": float(base.min()), "base_max": float(base.max()), "edited": bool(d is not None and np.any(d)),

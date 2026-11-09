@@ -25,7 +25,7 @@ alternative worlds directory. Python API: `apply_patch(heightmap, meta, polygon_
 | `avg_height_ft` | target mean elevation over the polygon (all nodes inside, feather included) |
 | `steepness` 0-1 | rounded dome to sharp cone; mesa/sinkhole/trench wall steepness |
 | `feather_ft` | edge blend width (quintic smootherstep of signed distance, C2) |
-| `seed`, `roughness` 0-1, `erosion` (thermal iterations) | deterministic detail |
+| `seed`, `roughness` 0-1, `erosion` | deterministic detail. `roughness` 0 = broad massif with coarse ridges only, 1 = rock-scale breakup. `erosion`: stream-power passes for mountain / rocky_crags / ridge_line (0 = automatic 6, max 24); thermal iterations for the other types |
 | `angle_deg`, `width_ft`, `wavelength_ft` | axis for ridge_line/valley/trench/dunes (0 = +x, 90 = +y), half-width, dune spacing |
 
 ## How it fits
@@ -44,6 +44,20 @@ weight >= 0.9), so rugged ground near the border that already exceeds `max_heigh
 `avg_range` (achievable mean for that max), `needed_ext` ("avg 800 needs max height >= 1025"), `before_mean`, `max_rise_ft`,
 `max_drop_ft`, `mean_change_ft`, `peak_core_ft`; a note when existing ground still exceeds the requested max, and when
 `min_height_ft` is given to a raise type (ignored). Tests: `generators/test_terrain_patch_absolute.py`.
+
+## Natural relief (mountain, rocky_crags, ridge_line; lighter versions for rolling_hills, mesa, plateau)
+`terrain_relief.py` (shared with the base-terrain generator) supplies band-limited FFT noise, a multi-octave relief field
+(smooth + ridged fBm, per-octave domain warp, wavelengths from about half the polygon width down to 4 cells, octaves below
+width/8 weighted by roughness^0.6) and a stream-power erosion (D8 flow accumulation, implicit solver, hillslope diffusion,
+thermal creep). For a mountain: envelope (dome -> cone by Steepness, footprint perturbed by a large-scale noise) +
+radial ridge lines from the crest (5 to 8 spokes, wandering) + the multi-octave field, eroded so the valleys branch down the
+slopes. The detail D (in [-1, 1]) rides on the envelope: `T_k = s^k + a*D*s^(k/2)`, so the exponent k that fixes the mean
+reshapes the massif without flattening the ridges, and gullies keep running to the foot of the flank. The detail fades near
+the edge and the shape ramps up over one feather width, so the seam is as clean as before; the existing ground texture
+stays on the low flanks. Max and Avg are fitted exactly as before; when Avg is close to Max (k < 0.2) a warning says the
+polygon becomes a high plateau by definition. Cost: about 5 s and 0.4 GB for a 5000 ft patch on a 10 ft grid.
+Tests: `generators/test_terrain_patch_relief.py` (spectrum at 1500/500/150 ft, roughness 0 vs 1, relief scaling, seed
+determinism, seam, Max/Avg, all raise types).
 
 ## Signed elevations
 Elevations are signed feet relative to `sea_level_ft` in terrain meta (default 0, only used for previews). Nothing is

@@ -53,7 +53,7 @@ class Basemap(unittest.TestCase):
             ("amp", dict(copy.deepcopy(PANEL), noise={"ridged_amp_ft": 10, "scale_ft": 420})),
             ("scale", dict(copy.deepcopy(PANEL), noise={"ridged_amp_ft": 110, "scale_ft": 1500})),
             ("seed", dict(PANEL, seed=7)),
-            ("erosion", dict(PANEL, erosion={"thermal_iterations": 0, "smooth_sigma_cells": 1})),
+            ("erosion", dict(PANEL, erosion={"thermal_iterations": 60, "talus_slope": 0.1, "smooth_sigma_cells": 1})),
             ("smooth", dict(PANEL, erosion={"thermal_iterations": 60, "smooth_sigma_cells": 4})),
             ("base", dict(PANEL, base_elevation_ft=100)),
         ]:
@@ -99,6 +99,54 @@ class Basemap(unittest.TestCase):
     def test_missing_image_is_ignored(self):
         h = gen(dict(PANEL, image_path="nope.png", image_blend=0.5))[0]
         self.assertTrue(np.array_equal(h, gen(PANEL)[0]))
+
+
+class NaturalRelief(unittest.TestCase):
+    """The base terrain is multi-scale (fBm + ridged mix, domain warp, stream-power erosion), not one wormy ridged scale."""
+
+    def _bands(self, h, lams):
+        from scipy import ndimage as ndi
+        sg = lambda lam: lam / (2 * np.pi) / CELL * 1.3
+        g = [ndi.gaussian_filter(h.astype(float), sg(l)) for l in lams]
+        return [float((g[i + 1] - g[i]).std()) for i in range(len(lams) - 1)]
+
+    def test_relief_has_energy_at_several_scales_no_single_dominant_wavelength(self):
+        # the user's spec: noise.scale_ft 200, ridged_amp_ft 110 (this was a uniform maze of worm-like ridges at one scale)
+        spec = dict(PANEL, noise={"ridged_amp_ft": 110, "scale_ft": 200})
+        h = gen(spec)[0]
+        b = self._bands(h, [12000, 4000, 1500, 600, 240])
+        print("  band std (ft), wavelengths 12000>4000>1500>600>240:", [round(x, 1) for x in b])
+        self.assertTrue(all(x > 1.0 for x in b[:3]), b)          # kilometre / mile / valley scale landforms exist
+        self.assertLess(max(b) / sum(b), 0.7, b)                   # no single scale holds the relief
+
+    def test_slopes_are_natural_not_cliffs_everywhere(self):
+        h = gen(dict(PANEL, noise={"ridged_amp_ft": 110, "scale_ft": 200}))[0]
+        gy, gx = np.gradient(h.astype(float), CELL)
+        slope = np.hypot(gx, gy)
+        self.assertLess(float(np.median(slope)), 0.6)
+
+    def test_stream_erosion_key_is_honoured_and_deterministic(self):
+        a = gen(PANEL)[0]
+        off = gen(dict(PANEL, erosion={"thermal_iterations": 60, "smooth_sigma_cells": 1, "stream_iterations": 0}))[0]
+        self.assertFalse(np.array_equal(a, off))
+        self.assertTrue(np.array_equal(a, gen(copy.deepcopy(PANEL))[0]))
+        self.assertAlmostEqual(float(a.std()), float(off.std()), delta=0.25 * float(off.std()))   # erosion keeps the spread
+
+    def test_no_periodic_tiling_in_the_detail(self):
+        # a tiled pattern shows as a strong secondary peak in the autocorrelation of the detail band
+        spec = dict(PANEL, noise={"ridged_amp_ft": 110, "scale_ft": 200}, size_ft=[8000.0, 8000.0])
+        h = T.generate(spec, 20)[0].astype(float)
+        from scipy import ndimage as ndi
+        d = h - ndi.gaussian_filter(h, 6)
+        d = d[:, :] - d.mean()
+        F = np.fft.rfft2(d)
+        ac = np.fft.irfft2(F * np.conj(F), s=d.shape)
+        ac /= ac[0, 0]
+        ky = np.minimum(np.arange(d.shape[0]), d.shape[0] - np.arange(d.shape[0]))[:, None]
+        kx = np.minimum(np.arange(d.shape[1]), d.shape[1] - np.arange(d.shape[1]))[None, :]
+        far = np.hypot(ky, kx) >= 40                                # beyond 800 ft: ignore the natural short-range correlation
+        print("  detail autocorrelation beyond 800 ft: max |r| = %.3f" % float(np.abs(ac[far]).max()))
+        self.assertLess(float(np.abs(ac[far]).max()), 0.3)
 
 
 class ExistingPlacesUnchanged(unittest.TestCase):

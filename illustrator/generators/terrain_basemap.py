@@ -8,10 +8,18 @@ Spec keys (all optional; the panel's Base terrain block writes them):
   seed, cell_ft, base_elevation_ft   elevation of the middle of the relief range
   recipe        "rolling_hills" (default) | "valley" | "highland_ridge"
   relief_ft     overall broad-landform relief; default scale-aware: 3 % of the shorter map side, clamped 60..900 ft
-  noise.scale_ft        wavelength of the detail noise (default 420)
-  noise.ridged_amp_ft   amplitude of the ridged detail noise at that wavelength (default 60), added on top of the landform
-  noise.octaves/lacunarity/gain/warp_ft/base_amp_ft  as in terrain.py
-  erosion.thermal_iterations / talus_slope / rate / smooth_sigma_cells   as in terrain.py
+  noise.scale_ft        LARGEST wavelength of the detail band (default 420); detail runs from there down to ~4 cells
+  noise.ridged_amp_ft   amplitude of that detail band (default 60), added on top
+                        of the landform; a natural multi-octave ridged + smooth fBm with domain warp (finer octaves have less
+                        amplitude), no longer a single-scale ridged noise.
+                        Its standard deviation is 0.22 * amp, capped at 0.025 * scale_ft so huge amp on a short wavelength cannot
+                        make cliffs everywhere (amp 110 @ 200 ft -> 5 ft std, not 24)
+  noise.base_amp_ft     extra smooth undulation (default 3)
+  noise.landform_ft     amplitude of the mid-scale landform band between the broad hills (map/3) and the detail band
+                        (default 0.3 * relief); wavelength map/4 down to noise.scale_ft
+  erosion.stream_iterations  stream-power erosion passes (D8 flow routing, default 8, 0 = off) that cut dendritic valleys through
+                        the landform; erosion.stream_strength (default 0.6)
+  erosion.thermal_iterations / talus_slope / rate / smooth_sigma_cells   as in terrain.py (applied after the stream erosion)
   image_blend   0..1 (default 0 = off): gentle bias of the elevation by the base image's blurred luminance (light = higher)
   image_path    set by terrain.py from the place's underlay when image_blend > 0
 Broad landform wavelength is proportional to the map (shorter side / 3), so a multi-mile map gets mile-scale hills.
@@ -23,6 +31,7 @@ import numpy as np
 from scipy import ndimage as ndi
 
 import terrain as T
+import terrain_relief as TR
 
 RECIPES = ("rolling_hills", "valley", "highland_ridge")
 FEATURE_KEYS = ("ridges", "peaks", "valleys", "passes", "natural")
@@ -90,19 +99,39 @@ def generate(spec, cell_ft=None, seed=None, verbose=False):
             broad = _norm01(0.8 * (1.0 - prof) ** 1.3 + 0.2 * _norm01(hills))
     h = spec.get("base_elevation_ft", 0.0) + relief * (broad - 0.5)
 
-    # detail: ridged noise at noise.scale_ft, stronger on higher ground; the amplitude is honoured as given
+    # natural multi-scale relief. 1) landform band: wavelengths map/4 down to noise.scale_ft (smooth + ridged fBm, warped)
     scale = float(nz.get("scale_ft", 420.0))
-    Xw, Yw = X, Y
-    wf = nz.get("warp_ft", 0.0)
-    if wf:
-        ws = nz.get("warp_scale_ft", scale * 1.4)
-        Xw = X + wf * T._fbm(rng, X, Y, ws, 3, 2.0, 0.5, False)
-        Yw = Y + wf * T._fbm(rng, X + 5000, Y + 5000, ws, 3, 2.0, 0.5, False)
     amp = float(nz.get("ridged_amp_ft", 60.0))
-    ridged = T._fbm(rng, Xw, Yw, scale, nz.get("octaves", 5), nz.get("lacunarity", 2.0), nz.get("gain", 0.5), True)
-    smooth = T._fbm(rng, Xw, Yw, scale * 0.6, 4, 2.0, 0.5, False)
     mass = 0.35 + 0.65 * broad
-    h = h + mass * amp * ridged + (nz.get("base_amp_ft", 3.0) + 0.35 * mass * amp) * smooth
+    lf_amp = float(nz.get("landform_ft", 0.3 * relief))
+    lam_lf = max(short / 4.0, scale * 2.0)
+    if lf_amp > 0:
+        lf = TR.relief_field(rng, (ny, nx), cell, lam_lf, scale, hurst=1.0, ridge_mix=0.3, warp_frac=0.3, damp=0.0, octaves=7)
+        h = h + lf_amp * 0.5 * (0.6 + 0.4 * broad) * lf
+    # 2) detail band: largest wavelength noise.scale_ft, amplitude noise.ridged_amp_ft (octaves halve in wavelength; amplitude
+    #    falls with hurst 0.85), stronger on higher ground
+    wf = nz.get("warp_ft", 0.0)
+    det = TR.relief_field(rng, (ny, nx), cell, scale, None, hurst=1.25, ridge_mix=0.2, warp_frac=0.25 + (0.15 if wf else 0.0),
+                          damp=0.6, octaves=int(nz.get("octaves", 6)) + 2)
+    sm = TR.relief_field(rng, (ny, nx), cell, scale * 1.4, None, hurst=1.0, ridge_mix=0.0, warp_frac=0.2, damp=0.0, octaves=3)
+    det_sd = min(amp * 0.22, 0.025 * scale)       # std of the detail band; capped so its steepest scale stays walkable (rms slope <~ 0.16)
+    h = h + mass ** 1.5 * det_sd * det + (nz.get("base_amp_ft", 3.0) + 0.08 * mass * amp) * sm
+
+    # 3) stream-power erosion: dendritic valleys / ridges out of the combined surface (worked on a <=~300k-node grid,
+    #    the change is then added back at full resolution so fine detail stays)
+    n_st = int(er.get("stream_iterations", 8) or 0)
+    if n_st > 0:
+        sd0 = float(h.std())
+        f = 1
+        while (ny // f) * (nx // f) > 300000:
+            f += 1
+        hc = ndi.gaussian_filter(h, f * 0.5)[::f, ::f] if f > 1 else h
+        he = TR.stream_erode(hc, cell * f, n_st, strength=float(er.get("stream_strength", 0.6)), talus=0.5)
+        dlt = he - hc
+        if f > 1:
+            dlt = ndi.zoom(dlt, (ny / dlt.shape[0], nx / dlt.shape[1]), order=1)[:ny, :nx]
+        h = h + dlt
+        h = h.mean() + (h - h.mean()) * (sd0 / max(float(h.std()), 1e-9))     # erosion trims relief; keep the requested spread
 
     blend = float(spec.get("image_blend", 0) or 0)
     img_used = False
