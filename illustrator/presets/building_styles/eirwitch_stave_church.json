@@ -3,7 +3,7 @@
  "name": "Eirwitch stave church (tall, winter)",
  "category": "church",
  "culture": "Norwegian",
- "description": "Tall, narrow two-storey stave church for the Eirwitch Camp: near-black tarred boards, very steep shingle roof, three stepped tower tiers with skirt roofs and a needle spire, dragon-head finials on the gables, fieldstone plinth, snow on the roofs. Made for a 14 x 20 ft footprint with 2 floors (about 55 ft to the spire tip).",
+ "description": "Tall, narrow two-storey stave church for the Eirwitch Camp: near-black tarred boards, very steep shingle roof, three stepped tower tiers with skirt roofs and a needle spire, dragon-head finials on the gables, fieldstone plinth, snow on the roofs. Made for a 14 x 20 ft footprint with 2 floors (about 57 ft to the spire tip).",
  "kinds": {
   "church": 1,
   "chapel": 1
@@ -29,8 +29,8 @@
    "#40322a"
   ],
   "pitch": [
-   1.55,
-   1.6
+   1.45,
+   1.5
   ],
   "overhang_ft": [
    1.4,
@@ -79,7 +79,7 @@
  "special": {
   "tiers": {
    "count": 3,
-   "base_ft": 4.4
+   "base_ft": 3.2
   },
   "snow": {
    "depth_ft": 0.42,

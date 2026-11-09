@@ -48,8 +48,9 @@ CHURCH = {"id": "bld_eirwitch_church", "name": "Eirwitch Stave Church", "center"
 ROAD = {"id": "str_witch_road", "name": "Witch Road", "width": 12.0,
         "points": [(0.0, 655.0), (70.0, 640.0), (150.0, 655.0), (230.0, 632.0), (300.0, 603.0), (370.0, 585.0), (430.0, 560.0), (480.0, 528.0), (520.0, 494.0)]}
 PATH = {"id": "str_gorge_path", "name": "Gorge Footpath", "width": 4.0,
-        "points": [(626.0, 470.0), (680.0, 470.0), (722.0, 470.0), (790.0, 470.0), (858.0, 470.0), (905.0, 466.0), (980.0, 452.0), (1060.0, 446.0), (1130.0, 440.0), (1200.0, 436.0)]}
-PATH_SPAN = (722.0, 858.0)            # x range of the footpath carried by the rope bridge (rim to rim + anchors)
+        "points": [(626.0, 470.0), (680.0, 470.0), (734.0, 470.0), (790.0, 470.0), (852.0, 470.0), (900.0, 478.0), (960.0, 505.0), (1040.0, 540.0), (1120.0, 568.0), (1200.0, 590.0)]}
+PATH_EAST = 4                         # index of the first footpath vertex east of the gorge (the east landing)
+PATH_SPAN = (734.0, 852.0)            # x range of the footpath carried by the rope bridge (rim to rim + anchors)
 GORGE = [(775.0, -20.0), (762.0, 150.0), (772.0, 300.0), (790.0, 470.0), (815.0, 600.0), (868.0, 718.0), (955.0, 798.0), (1050.0, 850.0), (1110.0, 880.0)]
 GORGE_BED_HALF = 18.0                 # flat floor half width
 GORGE_WALL = 34.0                     # horizontal run of the walls (rim at 52 ft from the axis)
@@ -161,19 +162,13 @@ def design_heights(base, cell=CELL):
     rc0 = np.hypot(X - CLEAR_C[0], Y - CLEAR_C[1])
     ring = (rc0 > 60.0) & (rc0 < 160.0)
     E += CLEAR_Z - float(np.mean(E[ring]))
-    # road bench: follow a smoothed, grade-limited profile within the corridor
-    d_r, s_r, L_r = polyline_dist(X, Y, ROAD["points"])
-    ss = np.linspace(0, L_r, 200)
-    rp = _resample(ROAD["points"], ss)
-    import worldpack as wp
-    prof = np.array([wp.bilinear(E, cell, x, y) for x, y in rp])
-    prof[-1] = CLEAR_Z
-    k = 31
-    prof = np.convolve(np.pad(prof, k // 2, mode="edge"), np.ones(k) / k, mode="valid")
-    prof[-12:] = np.linspace(prof[-12], CLEAR_Z, 12)
-    zr = np.interp(s_r, ss, prof)
-    wr = 1.0 - smoothstep((d_r - ROAD["width"] / 2 - 4.0) / 26.0)
-    E = E + (zr - E) * wr
+    # east shoulder: a gentler bench of ground beyond the gorge so the footpath can climb away from the bridge
+    rs = np.hypot(X - 960.0, Y - 520.0)
+    E = E + (CLEAR_Z + 8.0 + 0.5 * (E - CLEAR_Z) * 0.3 - E) * 0.9 * (1.0 - smoothstep((rs - 90.0) / 130.0))
+    # road bench: follow a smoothed profile within the corridor, ending at the clearing level
+    E = _bench(E, X, Y, ROAD["points"], ROAD["width"], end_z=CLEAR_Z, cell=cell)
+    # east footpath bench from the rocky ledge to the east edge
+    E = _bench(E, X, Y, PATH["points"][PATH_EAST:], PATH["width"] + 4.0, start_z=CLEAR_Z + 3.0, cell=cell, margin=18.0)
     # clearing: level, blended out over 45 ft
     rc = np.hypot(X - CLEAR_C[0], Y - CLEAR_C[1])
     wc = 1.0 - smoothstep((rc - CLEAR_R) / 70.0)
@@ -197,6 +192,24 @@ def design_heights(base, cell=CELL):
     fq = 0.55 * np.sqrt(1.0 - tq) + 0.45 * (1.0 - tq)
     E = np.where(E > FJORD["floor"], E - (E - FJORD["floor"]) * fq, E)
     return E.astype(np.float32)
+
+
+def _bench(E, X, Y, pts, width, cell=CELL, start_z=None, end_z=None, margin=26.0):
+    """Cut / fill a corridor along a polyline to a smoothed profile of the ground (box filter over ~90 ft), pinned at start_z / end_z."""
+    import worldpack as wp
+    d, s, L = polyline_dist(X, Y, pts)
+    ss = np.linspace(0, L, 200)
+    rp = _resample(pts, ss)
+    prof = np.array([wp.bilinear(E, cell, x, y) for x, y in rp])
+    k = 31
+    prof = np.convolve(np.pad(prof, k // 2, mode="edge"), np.ones(k) / k, mode="valid")
+    if end_z is not None:
+        prof[-12:] = np.linspace(prof[-12], end_z, 12)
+    if start_z is not None:
+        prof[:60] = np.linspace(start_z, prof[59], 60)
+    z = np.interp(s, ss, prof)
+    w = 1.0 - smoothstep((d - width / 2 - 4.0) / margin)
+    return E + (z - E) * w
 
 
 def _resample(pts, ss):
@@ -238,7 +251,7 @@ def water_doc():
     ]}
 
 
-def streets_doc(h):
+def streets_doc(h, edits_hash=None):
     import worldpack as wp
     road = {"id": ROAD["id"], "name": ROAD["name"], "kind": "lane", "status": "proposed",
             "geometry": {"type": "polyline", "points": [list(p) for p in ROAD["points"]], "width_ft": ROAD["width"]},
@@ -248,16 +261,30 @@ def streets_doc(h):
     xa, xb = PATH_SPAN
     za = float(wp.bilinear(h, CELL, xa, 470.0))
     zb = float(wp.bilinear(h, CELL, xb, 470.0))
-    for x, y in PATH["points"]:
+    pts = path_points_dense()
+    for x, y in pts:
         if xa < x < xb:
             zs.append(round(za + (zb - za) * (x - xa) / (xb - xa), 2))
         else:
             zs.append(round(float(wp.bilinear(h, CELL, x, y)), 2))
     path = {"id": PATH["id"], "name": PATH["name"], "kind": "lane", "status": "proposed",
-            "geometry": {"type": "polyline", "points": [list(p) for p in PATH["points"]], "width_ft": PATH["width"]},
-            "edit": {"class": "lane", "surface": "dirt", "kerb": False}, "elevations_ft": zs, "elevation_ft": round(float(np.mean(zs)), 2),
+            "geometry": {"type": "polyline", "points": pts, "width_ft": PATH["width"]},
+            "edit": {"class": "lane", "surface": "dirt", "kerb": False}, "elevations_ft": zs, "elevation_ft": round(float(np.mean(zs)), 2), "elevations_edits_hash": edits_hash,
             "notes": "eirwitch_camp.py: footpath from the clearing over the gorge (rope bridge) to the east edge"}
     return {"place": PLACE, "streets": [road, path]}
+
+
+def path_points_dense(step=12.0):
+    """Footpath vertices every ~12 ft on land (so its bed follows the ground), the span over the gorge kept as one straight run."""
+    out = []
+    P = PATH["points"]
+    for (ax, ay), (bx, by) in zip(P[:-1], P[1:]):
+        L = math.hypot(bx - ax, by - ay)
+        n = 1 if PATH_SPAN[0] <= min(ax, bx) and max(ax, bx) <= PATH_SPAN[1] else max(1, int(round(L / step)))
+        for k in range(n):
+            out.append([round(ax + (bx - ax) * k / n, 2), round(ay + (by - ay) * k / n, 2)])
+    out.append([P[-1][0], P[-1][1]])
+    return out
 
 
 def church_footprint():
@@ -371,10 +398,11 @@ def design(dry=False):
         res["plan"] = {"water": [w["id"] for w in water_doc()["water"]], "streets": [ROAD["id"], PATH["id"]], "buildings": [CHURCH["id"]],
                        "foliage_zones": len(foliage_params())}
         return res
-    hp.save_layer(wd, h - base.astype(np.float32), {"strokes": [], "source": "eirwitch_camp.py design_heights (whole-map designed terrain as one edit layer)"}, CELL)
+    delta = (h - base.astype(np.float32)).astype(np.float32)
+    hp.save_layer(wd, delta, {"strokes": [], "source": "eirwitch_camp.py design_heights (whole-map designed terrain as one edit layer)"}, CELL)
     # remove stale working copies of the paint layer so the panel shows the saved one
     _wj(os.path.join(wd, "water.json"), water_doc())
-    _wj(os.path.join(wd, "streets.json"), streets_doc(h))
+    _wj(os.path.join(wd, "streets.json"), streets_doc(h, hp.delta_hash(delta)))   # elevations are against the edited terrain already
     bdir = os.path.join(wd, "buildings")
     os.makedirs(bdir, exist_ok=True)
     for f in glob.glob(os.path.join(bdir, "*.json")):
@@ -524,18 +552,24 @@ EXPORT_ARGS = ["--roof-mode", "per_scene", "--interior-style", "plain", "--style
 def build(dry=False, min_free_gb=3.0):
     steps = [
         [os.path.join(G, "worldpack.py"), "export", "--place", PLACE] + EXPORT_ARGS,
+        "RM_BRIDGES",
         [os.path.join(G, "bridge_maker.py"), "apply", "--place", PLACE, "--preset", "rope_plank", "--set", "width_ft=3.5", "--no-export"],
         [os.path.join(G, "worldpack_split.py"), "split", "--place", PLACE, "--roof-mode", "per_scene"],
-        [os.path.join(G, "worldpack_split.py"), "merge", "--place", PLACE, "--preset", "layer", "--compress", "none", "--foliage"],
+        [os.path.join(G, "worldpack_split.py"), "merge", "--place", PLACE, "--preset", "layer", "--compress", "none", "--foliage", "--foliage-impostor-ft", "320"],
         [os.path.join(G, "skybox.py"), "generate", "--place", PLACE, "--presets", "night", "--lighting-presets", "night"],
     ]
     if dry:
-        return {"dry_run": True, "steps": [" ".join(["python"] + s) for s in steps] + ["(campfire tile + 4 lights into export/placements.json and the merged set)"]}
+        return {"dry_run": True, "steps": [(" ".join(["python"] + s) if isinstance(s, list) else "delete world/eirwitch_camp/bridges.json") for s in steps] + ["(campfire tile + 4 lights into export/placements.json and the merged set)"]}
     g = free_gb()
     if g is not None and g < min_free_gb:
         raise RuntimeError(f"only {g:.1f} GB free RAM (< {min_free_gb} GB): run `python illustrator/generators/eirwitch_camp.py build` later")
     res = {}
     for s in steps:
+        if s == "RM_BRIDGES":                                  # bridges.json entries are locked once applied: start fresh so a layout change is picked up
+            bp = os.path.join(world_dir(), "bridges.json")
+            if os.path.exists(bp):
+                os.remove(bp)
+            continue
         r = _py(s, env={"VB_FOLIAGE_SEASON": "winter"})
         res[os.path.basename(s[0]) + ":" + s[1]] = {k: r.get(k) for k in list(r)[:8]} if isinstance(r, dict) else r
     opt = latest_opt()
