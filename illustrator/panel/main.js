@@ -683,7 +683,7 @@
         var age = VB.cacheAgeMin(state.foundry.cache);
         fOut("Cannot read Foundry: " + r.error + (age === null ? "" : "\nShowing the cached lists from " + age + " min ago."), "warn"); return;
       }
-      state.foundry.cache = { fetched: r.fetched, lists: r.lists }; save(); fPaint(); if (window.VBPlacesUI) VBPlacesUI.paint();   // the Places tab scene picker reads the same lists
+      state.foundry.cache = { fetched: r.fetched, lists: r.lists }; save(); fPaint(); if (window.VBPlacesUI) VBPlacesUI.paint(); if (window.VBExportUI && VBExportUI.paint) VBExportUI.paint();   // the Places tab and the Export/Push scene pickers read the same lists
       fOut("Read " + Object.keys(r.lists).map(function (k) { return r.lists[k].length + " " + k; }).join(", ") + ".");
     });
   }
@@ -713,6 +713,7 @@
       fOut(r.error || r.warning || "Foundry " + r.foundry + ", world " + r.world + ", module " + r.module + " (pipeline ops ok).", r.pipeline_ops ? "" : "warn");
     }); },
     f_refresh: fRefresh,
+    f_refresh_if_needed: function () { var L = ((state.foundry.cache || {}).lists || {}); if (state.foundry.target === "existing" && !(L.scenes && L.scenes.length)) return fRefresh(); },   // picking "Existing scene" with no lists yet reads them from Foundry
     f_export: function () { return fGuard("export view", async function () { var e = await fExport(null, "view_export.png", false); fOut("Exported " + e.png + " (" + e.info.width_px + "x" + e.info.height_px + " px)."); }); },
     f_plan_scene: fPlanScene,
     f_push_scene: function () { return fPushScene(false, false); },

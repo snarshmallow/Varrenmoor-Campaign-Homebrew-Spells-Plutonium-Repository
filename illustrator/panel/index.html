@@ -966,11 +966,11 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
     <h4 style="margin-top:8px">Push to Foundry <span class="note">(one item per thing that is pushed)</span></h4>
     <div class="note">Target scene, shared by every item below (the same fields as in "Foundry" further down). Padding, skybox and foliage use this scene too.</div>
     <div class="grid">
-      <label>Target <select data-s="foundry.target"><option value="new">New scene (create)</option><option value="existing">Existing scene</option></select></label>
+      <label>Target <select data-s="foundry.target" data-act-change="f_refresh_if_needed"><option value="new">New scene (create)</option><option value="existing">Existing scene</option></select></label>
       <label>New scene name <input type="text" data-s="foundry.sceneName" placeholder="e.g. Town overview"></label>
       <label>Existing scene <select id="exScene" data-s="foundry.sceneUuid"></select></label>
     </div>
-    <div class="btns"><button id="exLast" title="Existing scene = the scene last pushed from this panel">Use last pushed scene</button></div>
+    <div class="btns"><button data-act="f_refresh" title="Reads the scene, actor and item lists from Foundry (needs the GM tab connected). The Existing scene list fills from this.">Refresh scenes from Foundry</button><button id="exLast" title="Existing scene = the scene last pushed from this panel">Use last pushed scene</button><span id="exSceneTag" class="tag">no scenes loaded: press Refresh</span></div>
     <div id="exPushList"></div>
     <div class="btns"><button class="primary" id="exPushRun">Push selected</button><button id="exPushAll" title="Ticks models, padding, skybox, sun, lighting, lights, collision, doors and foliage and runs them in the verified order (dry run first unless Dry run is off and confirmed)">Push everything (verified order)</button><button id="exPushDry" title="Runs every ticked item as a dry run: nothing is written to Foundry">Dry run everything (no Foundry writes)</button><button id="exPushResume" hidden></button></div>
     <div id="exPushBlock" class="note"></div>

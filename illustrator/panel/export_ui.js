@@ -76,6 +76,7 @@
     var src = $("fScene"), dst = $("exScene");
     if (src && dst && dst.getAttribute("data-h") !== src.innerHTML) { dst.innerHTML = src.innerHTML; dst.setAttribute("data-h", src.innerHTML); }
     if (dst) dst.value = st.foundry.sceneUuid || "";
+    var nSc = (((st.foundry.cache || {}).lists || {}).scenes || []).length, tg = $("exSceneTag"); if (tg) { tg.textContent = nSc ? nSc + " scenes loaded" : "no scenes loaded: press Refresh"; tg.className = "tag" + (nSc ? "" : " stale"); }
     var lastS = (st.foundry.last || {}).scene_uuid; $("exLast").disabled = !lastS; $("exLast").title = lastS ? "Use " + (st.foundry.last.scene_name || "") + " (" + lastS + ")" : "No scene pushed from this panel yet";
   }
 
