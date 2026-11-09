@@ -9,7 +9,16 @@ for (const dir of [P, P + "/lib"]) fs.readdirSync(dir).filter(f => f.endsWith(".
 files.push(P + "/jsx/host.jsx");
 for (const f of files) { try { new vm.Script(fs.readFileSync(f, "utf8"), { filename: f }); check("parses " + path.relative(P, f), true); } catch (e) { check("parses " + path.relative(P, f), false, e.message); } }
 const html = fs.readFileSync(P + "/index.html", "utf8");
-const srcs = [...html.matchAll(/<script src="([^"]+)"/g)].map(m => m[1]);
+// scripts are written by the loader at the top of the script block (cache-busting ?v= query), from one list
+const loader = /var files = \[([^\]]*)\];[\s\S]*?document\.write\('<script src="' \+ files\[i\] \+ '\?v=' \+ v/.exec(html);
+check("index.html has the cache-busting script loader", !!loader);
+const srcs = loader ? [...loader[1].matchAll(/"([^"]+)"/g)].map(m => m[1]) : [];
+check("no plain <script src> tags bypass the loader", !/^\s*<script src=/m.test(html));
+check("loader lists version.js and version_ui.js before main.js, main.js last", srcs.indexOf("lib/version.js") > 0 && srcs.indexOf("version_ui.js") > srcs.indexOf("lib/version.js") && srcs[srcs.length - 1] === "main.js" && srcs.indexOf("version_ui.js") < srcs.length - 1);
+const allJs = fs.readdirSync(P).filter(f => f.endsWith("_ui.js") || f === "main.js").concat(fs.readdirSync(P + "/lib").filter(f => f.endsWith(".js")).map(f => "lib/" + f));
+check("every panel script is in the loader list", allJs.every(f => srcs.includes(f)), allJs.filter(f => !srcs.includes(f)).join(", "));
+check("reload button, version text and badge exist", ["reloadPanel", "verText", "verDot"].every(i => html.includes('id="' + i + '"')));
+check("main.js wires VBVersionUI init and afterInit", /VBVersionUI\.init\(/.test(fs.readFileSync(P + "/main.js", "utf8")) && /VBVersionUI\.afterInit\(\)/.test(fs.readFileSync(P + "/main.js", "utf8")));
 check("script tags resolve", srcs.every(s => fs.existsSync(path.join(P, s))), srcs.filter(s => !fs.existsSync(path.join(P, s))).join(", "));
 const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map(m => m[1]);
 check("no duplicate element ids", new Set(ids).size === ids.length, ids.filter((x, i) => ids.indexOf(x) !== i).join(", "));

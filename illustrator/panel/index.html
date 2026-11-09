@@ -12,6 +12,10 @@ body{font:11px/1.35 "Segoe UI",Arial,sans-serif;background:var(--bg);color:var(-
 #top .row>#status{flex:1 1 90px;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #top .row select,#top .row input{min-width:0}
 #status{font-weight:600}
+#verText{font-size:9px;color:var(--dim);white-space:nowrap;max-width:110px;overflow:hidden;text-overflow:ellipsis}
+#reloadPanel{position:relative;padding:3px 5px;line-height:0}
+#reloadPanel.armed{background:#6b3631;border-color:#8a463f}
+#verDot{position:absolute;top:-2px;right:-2px;width:7px;height:7px;border-radius:50%;background:var(--warn);box-shadow:0 0 0 1px var(--bg2)}
 #status.busy{color:var(--warn)}
 #err{color:var(--bad);white-space:pre-wrap;margin-top:2px}
 #err.warn{color:var(--warn)}
@@ -79,6 +83,8 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
     <span id="status">starting</span>
     <button id="cancel" disabled title="Stop the running job">Cancel</button>
     <button id="toggleLog" title="Show or hide the log">Log</button>
+    <span id="verText" title="loaded panel version"></span>
+    <button id="reloadPanel" title="Reload panel (picks up pushed code; replaces close/reopen)" aria-label="Reload panel"><svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.5 8a5.5 5.5 0 1 1-1.8-4.1"/><path d="M13.6 1.8v3.2h-3.2"/></svg><i id="verDot" hidden></i></button>
   </div>
   <div id="err" role="alert"></div>
 </div>
@@ -1371,39 +1377,51 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
 
 </main>
 <div id="log" hidden></div>
-<script src="CSInterface.js"></script>
-<script src="lib/core.js"></script>
-<script src="lib/runner.js"></script>
-<script src="lib/townarea.js"></script>
-<script src="lib/regions.js"></script>
-<script src="regions_ui.js"></script>
-<script src="lib/styles.js"></script>
-<script src="styles_ui.js"></script>
-<script src="lib/objects.js"></script>
-<script src="objects_ui.js"></script>
-<script src="lib/lighting.js"></script>
-<script src="lighting_ui.js"></script>
-<script src="lib/sun3d.js"></script><!-- SUN3D -->
-<script src="sun3d_ui.js"></script><!-- SUN3D -->
-<script src="lib/streetlamps.js"></script><!-- STREETLAMPS -->
-<script src="streetlamps_ui.js"></script><!-- STREETLAMPS -->
-<script src="lib/foliage.js"></script>
-<script src="foliage_ui.js"></script>
-<script src="lib/skybox.js"></script><!-- SKYBOX -->
-<script src="skybox_ui.js"></script><!-- SKYBOX -->
-<script src="lib/water.js"></script><!-- 3D WATER -->
-<script src="water_ui.js"></script><!-- 3D WATER -->
-<script src="lib/heightpaint.js"></script><!-- HEIGHTMAP PAINT -->
-<script src="heightpaint_ui.js"></script><!-- HEIGHTMAP PAINT -->
-<script src="lib/padding.js"></script>
-<script src="padding_ui.js"></script>
-<script src="lib/bridges.js"></script><!-- BRIDGES -->
-<script src="bridges_ui.js"></script><!-- BRIDGES -->
-<script src="lib/places.js"></script><!-- PLACES -->
-<script src="places_ui.js"></script><!-- PLACES -->
-<script src="lib/tools.js"></script><!-- TOOLS TAB -->
-<script src="tools_ui.js"></script><!-- TOOLS TAB -->
-<script src="lib/bridge.js"></script><!-- BRIDGE SECTION -->
-<script src="bridge_ui.js"></script><!-- BRIDGE SECTION -->
-<script src="main.js"></script>
+<!-- Script loader: writes every script tag, in order, with a ?v=<load time> query so a reload can never reuse cached JS (CEP keeps cached pages/scripts until the engine restarts).
+     To add a panel script, add its path to the list (test_panel_static.js reads this list). -->
+<script>
+(function () {
+  var files = [
+  "CSInterface.js",
+  "lib/core.js",
+  "lib/runner.js",
+  "lib/townarea.js",
+  "lib/regions.js",
+  "regions_ui.js",
+  "lib/styles.js",
+  "styles_ui.js",
+  "lib/objects.js",
+  "objects_ui.js",
+  "lib/lighting.js",
+  "lighting_ui.js",
+  "lib/sun3d.js",
+  "sun3d_ui.js",
+  "lib/streetlamps.js",
+  "streetlamps_ui.js",
+  "lib/foliage.js",
+  "foliage_ui.js",
+  "lib/skybox.js",
+  "skybox_ui.js",
+  "lib/water.js",
+  "water_ui.js",
+  "lib/heightpaint.js",
+  "heightpaint_ui.js",
+  "lib/padding.js",
+  "padding_ui.js",
+  "lib/bridges.js",
+  "bridges_ui.js",
+  "lib/places.js",
+  "places_ui.js",
+  "lib/tools.js",
+  "tools_ui.js",
+  "lib/bridge.js",
+  "bridge_ui.js",
+  "lib/version.js",
+  "version_ui.js",
+  "main.js"
+  ];
+  var v = Date.now();
+  for (var i = 0; i < files.length; i++) document.write('<script src="' + files[i] + '?v=' + v + '"><' + '/script>');
+})();
+</script>
 </body></html>

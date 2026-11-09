@@ -819,6 +819,9 @@
     if (window.VBObjectsUI) VBObjectsUI.init({ state: function () { return state; }, dirs: function () { return d; }, save: save, startJob: startJob, startJobQueued: startJobQueued, readJson: readJson, fs: fs, path: path, root: root, acts: acts, showError: showError }); // per-object editors: Buildings tab block + Roads tab (objects_ui.js)
     $("cancel").addEventListener("click", function () { if (runner.cancel()) logLine("cancel requested"); });
     $("toggleLog").addEventListener("click", function () { var l = $("log"); l.hidden = !l.hidden; });
+    if (window.VBVersionUI) VBVersionUI.init({ cs: function () { return cs; }, fs: fs, path: path, root: root, panelDir: cs.getSystemPath(SystemPath.EXTENSION).split("\\").join("/"), runner: function () { return runner; }, state: function () { return state; }, saveNow: saveNow, logLine: logLine, showError: showError,
+      rawBusy: function () { return rawPending > 0; }, statusText: function () { var e = $("status"); return e ? e.textContent : ""; }, showTab: showTab,
+      writeLastPlace: function (p) { try { fs.writeFileSync(path.join(root, "world", "panel_last_place.json"), JSON.stringify({ place: p })); } catch (e) { /* ignore */ } } }); // reload / version button (version_ui.js)
     window.addEventListener("error", function (e) { showError("panel error: " + e.message); });
     var cur = places.indexOf(readJson(path.join(root, "world", "panel_last_place.json"), {}).place) >= 0 ? readJson(path.join(root, "world", "panel_last_place.json"), {}).place : places[0];
     await switchPlace(cur);
@@ -840,6 +843,7 @@
     ["foundry.filter.actors", "foundry.filter.items"].forEach(function (k) { var el = document.querySelector('[data-s="' + k + '"]'); if (el) el.addEventListener("input", fPaint); });
     fPaint(); fSetupAuto();
     setStatus("idle", false);
+    if (window.VBVersionUI) VBVersionUI.afterInit();
     loadTextures();
     reloadHost().then(function () { setInterval(pollJobs, 2000); pollJobs(); setTimeout(liveTick, 3000); });
   }
