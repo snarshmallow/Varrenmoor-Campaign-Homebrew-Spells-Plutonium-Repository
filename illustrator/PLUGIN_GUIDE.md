@@ -63,7 +63,7 @@ Quick rules of thumb:
 
 ## 2. Tab-by-tab reference
 
-The panel has 17 tabs, in this order: Scale, Terrain, Contours, Labels, Shading, Lighting, Skybox, Water, Town, **Buildings** (added next to Town by `styles_ui.js`), Regions, Foliage, Padding, Bridges, Places, Layers, Foundry.
+The panel has 18 tabs, in this order: Scale, Terrain, Contours, Labels, Shading, Lighting, Skybox, Water, Town, **Buildings** (added next to Town by `styles_ui.js`), **Roads** (added by `objects_ui.js`, single-road editor, see 2.18), Regions, Foliage, Padding, Bridges, Places, Layers, Foundry.
 
 Ranges below come from the panel's own limits. Where a field has no stated sensible value I wrote **check in panel** (the control's tooltip often says more).
 
@@ -531,6 +531,34 @@ Measure in Foundry (the module has a `perf_sample` op for frame rate while you m
 - Foliage and unmerged building tiles can mean thousands of objects. If a scene stutters, merge first, then lower the foliage triangle cap.
 
 ---
+
+### 2.18 Editing a single building / road
+
+Use this when one building or one road must differ from the rest (a hip roof on one house, a lane that is cobbled and kerbed, a steep road that may cut into the hill). Everything is stored in the place's own files, so it survives re-exports; nothing is written until you press **Apply edits**. A new place has no overrides: the exporter behaves exactly as before.
+
+**One building (Buildings tab, block "Edit selected buildings" under the list)**
+
+1. Choose the building: tick it in the list, or select its shape in Illustrator and press **Use Illustrator selection** (shapes are named `bld_house_041` ...). You can tick several; they all get the same values.
+2. Tick the box left of every field you want to change. Unticked fields are never touched. **Load values of first chosen** fills the form from the first building.
+3. Fields: Storeys (refused if the building already has a generated interior for a different number of storeys), Interior style, Roof type (gable or hip), Roof pitch, Roof overhang, Roof material, Wall material, No windows (doors stay), Keep as its own model (Merge/compress never merges it into a group, so you can still pick, edit or animate it).
+4. A ticked field set to "(default: clear the override)" or an empty number box removes that override. **Reset overrides** removes all of them for the chosen buildings.
+5. Press **Apply edits**, then Foundry tab: **Export world pack (3D)**, **Export split models** (and Merge, Push). The 2D map does not change.
+
+Stored as: `floors`, `interior_style` (top-level keys of `world/<place>/buildings/<id>.json`) and an `edit` block (`roof_type, roof_pitch, roof_overhang_ft, roof_material, wall_material, no_windows, keep_individual`). Style presets keep working as before (Apply style); a roof or wall material override beats the style's.
+
+**One road (Roads tab)**
+
+1. Tick the road in the list (bridges cannot be edited here; use the Bridges tab) or select its line in Illustrator (named like `str_008`) and press **Use Illustrator selection**.
+2. Tick the fields: Class (road, street, lane, alley: picks the surface style), Width, Surface material, Kerb (yes, no, or as the detail pass decided), and the grading overrides Smoothing, Max grade, Max cross slope and Cut/fill terrain. Grading overrides replace the global "Roads (3D)" values on the Foundry tab for these roads only; Cut/fill works per road (yes cuts only this road, no excludes it even when the global switch is on).
+3. **Apply edits**, then export the pack and split models. **Reset overrides** deletes the edit block (the width stays as it is).
+
+Stored as: `geometry.width_ft` (the street's normal width key, so the 2D map follows after a redraw) and an `edit` block on the street in `world/<place>/streets.json` (`class, surface, kerb, grade{smooth,max_grade_deg,cross_deg,cutfill}`). The pack's road entity carries `edit` and `grade_override`.
+
+Command line (same thing the buttons run): `python illustrator/generators/object_edit.py set-building --place P --ids bld_house_041 --set roof_type=hip --set no_windows=true`, `set-road --ids str_008 --set kerb=true --set grade.cutfill=true`, `reset-building`, `reset-road`, `list-buildings`, `list-roads`, `choices`. Values outside the allowed range or unknown textures are refused with a message and nothing is written.
+
+Not available (no generator support yet): door on/off per building (doors come from the Regions detail pass), per-building storey height (fixed 10 ft), road sidewalks. The full audit of generator features against panel controls is `illustrator/out/panel_coverage.md`.
+
+**More pack options (Foundry tab, 3D models, collapsible)**: split preset, merge compression (quant adds the needed `--allow-quantized` automatically), scene mode flat/3d, carve river beds, conform terrain to roads, prune stale tiles, create roof tiles hidden, **Push models (dry run)**, **Audit scene tiles** (read-only duplicate/stale tile finder), **Lights (dry run)** and **Push interior lights**. Roads (3D) also has Max cross slope and a Road grading on/off switch.
 
 ## 7. Troubleshooting
 
