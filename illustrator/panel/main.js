@@ -501,7 +501,7 @@
     scale_reload: function () { state.scale.loaded = false; loadFiles("scale"); refreshAll(); },
     scale_preset: function () { var p = state.scale.preset; state.scale.loaded = false; loadFiles("scale"); state.scale.preset = p; refreshAll(); },
     terrain_load_spec: function () { loadFiles("spec"); refreshAll(); },
-    terrain_generate: function () { return startJob(VB.jobTerrainGenerate(state, d), refreshPatches); },
+    terrain_generate: function () { return startJob(VB.jobTerrainGenerate(state, d), function (r) { refreshPatches(); if (r && r.ok && window.VBHeightPaintUI && VBHeightPaintUI.actions && VBHeightPaintUI.actions.hp_refresh) setTimeout(function () { try { VBHeightPaintUI.actions.hp_refresh(); } catch (e) { /* paint section not ready */ } }, 400); }); },   // the Paint canvas showed the PREVIOUS terrain until Load / refresh: reload it after a regenerate
     patch_capture: function () { return startJob(VB.jobCapture(state, d, { what: "terrain polygon", layer: "TERRAIN AREA", closed: true, store: "terrain.patch.polygon", srcName: "terrain.patch.polygon_src" })); },
     patch_preview: function () { return startJob(VB.jobPatch(state, d, "preview"), showPatchPreview); },
     patch_apply: function () { return startJob(VB.jobPatch(state, d, "apply"), function (r) { refreshPatches(); if (r.ok) { showPatchPreview(r); } }); },
