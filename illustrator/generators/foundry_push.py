@@ -988,11 +988,14 @@ def build_light_docs(doc, c, only_types=None, animation=None):
         l3d = {"enableParticle": False}      # never torch/smoke/fire particle presets (house rule); plain point light, optional --light-animation
         if lt.get("shadows") is not None:
             l3d["castShadow"] = bool(lt["shadows"])          # street lamps: per-light shadow flag, off unless asked (streetlamps.py)
+        elev = round(lt.get("z_abs_ft", z0 + lt.get("z_ft", 5.0)) - z0, 2)
         out.append({"id": f"light:{place}:{lt['id']}", "data": {
-            "x": round(px), "y": round(py), "elevation": round(lt.get("z_abs_ft", z0 + lt.get("z_ft", 5.0)) - z0, 2), "rotation": 0, "walls": False, "vision": False,
+            "x": round(px), "y": round(py), "elevation": elev, "rotation": 0, "walls": False, "vision": False,
             "config": {"dim": lt.get("dim_ft", 10), "bright": lt.get("bright_ft", 4), "color": lt.get("color", "#ffffff"), "alpha": min(0.9, max(0.1, lt.get("intensity", 0.5))),
                        "luminosity": 0.5, "animation": {"type": (lt["animation"] if "animation" in lt else animation) or None, "speed": 2, "intensity": 2}},
-            "flags": {"levels-3d-preview": l3d, FLAG: {"lightId": lt["id"], "building": lt.get("building"), "type": lt["type"]}}}})
+            # 3D Canvas (light3d.js refresh) puts the light at (flags.levels.rangeTop ?? 1 + elevation) / 2: without rangeTop a light at 35 ft
+            # renders at 18 ft, under the road / floor it should light. rangeTop = elevation puts it exactly at the lantern / hearth (what 3D Canvas itself writes on drag).
+            "flags": {"levels-3d-preview": l3d, "levels": {"rangeTop": elev}, FLAG: {"lightId": lt["id"], "building": lt.get("building"), "type": lt["type"]}}}})
     return out
 
 

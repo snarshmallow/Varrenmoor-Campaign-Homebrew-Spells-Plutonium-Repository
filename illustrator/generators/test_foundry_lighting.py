@@ -47,6 +47,16 @@ class Lighting(unittest.TestCase):
         self.assertEqual((p["x"], p["y"]), (200, 200))
         self.assertFalse(p["flags"]["levels-3d-preview"]["enableParticle"])
 
+    def test_light_height_is_rangetop(self):
+        """3D Canvas renders a light at (flags.levels.rangeTop ?? 1 + elevation) / 2; without rangeTop a lamp at 35 ft sat at 18 ft, under the road."""
+        doc = {"place": "p", "frame": {"z_origin_ft": 630.0}, "lights": [{"id": "lamp1", "type": "lamp", "point": [1, 2], "z_abs_ft": 665.43}]}
+        d = fp.build_light_docs(doc, {"ppf": 20, "x0": 0, "y0": 0, "sceneX": 0, "sceneY": 0})[0]["data"]
+        self.assertEqual(d["elevation"], 35.43)
+        self.assertEqual(d["flags"]["levels"]["rangeTop"], d["elevation"])
+        c = fl.load_lighting({"sun": {}, "lights": [{"id": "a", "x": 740, "y": 720, "radius": 40, "height": 8}]})
+        p = fl.point_light_docs(c, [730, 710], 20)[0]["data"]
+        self.assertEqual(p["flags"]["levels"]["rangeTop"], p["elevation"])
+
 
 if __name__ == "__main__":
     unittest.main()

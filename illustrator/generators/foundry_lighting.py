@@ -98,5 +98,5 @@ def point_light_docs(cfg, origin_ft, ppf, scene_xy=(0, 0), x0=0.0, y0=0.0, place
             "x": round(scene_xy[0] + (fx - x0) * ppf), "y": round(scene_xy[1] + (fy - y0) * ppf), "elevation": float(l.get("height", 6.0)), "walls": True, "vision": False,
             "config": {"dim": r, "bright": r * 0.4, "color": l.get("color", "#fff1d0"), "alpha": min(0.9, 0.2 + 0.5 * float(l.get("intensity", 1.0))), "luminosity": 0.5,
                        "animation": {"type": None}},
-            "flags": {"levels-3d-preview": {"enableParticle": False}, "varrenmoor": {"lightId": f"2d_{l.get('id', i)}", "type": "point2d"}}}})
+            "flags": {"levels-3d-preview": {"enableParticle": False}, "levels": {"rangeTop": float(l.get("height", 6.0))}, "varrenmoor": {"lightId": f"2d_{l.get('id', i)}", "type": "point2d"}}}})
     return out
