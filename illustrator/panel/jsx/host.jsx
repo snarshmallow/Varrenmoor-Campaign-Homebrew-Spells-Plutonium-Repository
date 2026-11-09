@@ -82,6 +82,56 @@ function VB_collectPaths(items, outList) {
     else if (t === "GroupItem") VB_collectPaths(it.pageItems, outList);
   }
 }
+// ---- plugin lasso (see lib/lasso.js): helper layer "VB LASSO", drawing the captured polygon back as a selection, selecting items inside it ----
+var VB_LASSO_LAYER = "VB LASSO";
+function VB_lassoLayer(doc, clear) {
+  var ll = VB_find(doc, VB_LASSO_LAYER);
+  if (!ll) { ll = doc.layers.add(); ll.name = VB_LASSO_LAYER; }
+  try { ll.locked = false; ll.visible = true; } catch (e) {}
+  try { ll.move(doc, ElementPlacement.PLACEATBEGINNING); } catch (e) {}   // keep it on top
+  if (clear) {
+    for (var i = ll.pageItems.length - 1; i >= 0; i--) { var it = ll.pageItems[i]; try { it.locked = false; it.hidden = false; } catch (e) {} try { it.remove(); } catch (e2) {} }
+  }
+  return ll;
+}
+function VB_pip(x, y, poly) {   // even-odd point in polygon, poly = [[x,y],...]
+  var inside = false, n = poly.length;
+  for (var i = 0, j = n - 1; i < n; j = i++) {
+    var xi = poly[i][0], yi = poly[i][1], xj = poly[j][0], yj = poly[j][1];
+    if (((yi > y) !== (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi)) inside = !inside;
+  }
+  return inside;
+}
+function VB_lassoLayerOk(l, filter) {   // default: unlocked + visible layers except the lasso layer and guides; a name list overrides lock/visibility
+  var nm = l.name;
+  if (nm === VB_LASSO_LAYER || /^guides?$/i.test(nm)) return false;
+  if (filter && filter.length) { for (var i = 0; i < filter.length; i++) if (String(filter[i]).toLowerCase() === nm.toLowerCase()) return true; return false; }
+  return !l.locked && l.visible;
+}
+function VB_lassoScan(container, a, st) {
+  for (var li = 0; li < container.layers.length; li++) {
+    var l = container.layers[li];
+    VB_lassoScan(l, a, st);
+    if (!VB_lassoLayerOk(l, a.filter)) { if (l.name !== VB_LASSO_LAYER) st.skipped++; continue; }
+    var items = VB_direct(l), cnt = 0;
+    for (var k = 0; k < items.length; k++) {
+      if (st.scanned >= st.cap) { st.truncated = true; return; }
+      if (st.hits.length >= a.max) { st.truncated = true; return; }
+      var it = items[k]; st.scanned++;
+      try { if (it.locked || it.hidden) continue; } catch (e) {}
+      var b; try { b = it.geometricBounds; } catch (e3) { continue; }   // [left, top, right, bottom]
+      var ok;
+      if (a.mode === "all") {
+        var pts = [];
+        if (it.typename === "PathItem" && it.pathPoints.length <= 2000) { for (var p = 0; p < it.pathPoints.length; p++) pts.push(it.pathPoints[p].anchor); }
+        else pts = [[b[0], b[1]], [b[2], b[1]], [b[2], b[3]], [b[0], b[3]]];
+        ok = pts.length > 0; for (var q = 0; ok && q < pts.length; q++) if (!VB_pip(pts[q][0], pts[q][1], a.poly)) ok = false;
+      } else ok = VB_pip((b[0] + b[2]) / 2, (b[1] + b[3]) / 2, a.poly);
+      if (ok) { st.hits.push(it); cnt++; }
+    }
+    if (cnt) st.layers.push({ name: l.name, count: cnt });
+  }
+}
 // Visibility snapshot of every (sub)layer: [{l, v}]; used by export_view to show only some layers and restore afterwards.
 function VB_snapshot(container, list) {
   for (var i = 0; i < container.layers.length; i++) { var l = container.layers[i]; list.push({ l: l, v: l.visible }); VB_snapshot(l, list); }
@@ -520,8 +570,39 @@ function VB_run(json) {
         // Paths of the current selection; if nothing is selected and `layer` is given, the paths on that layer.
         if (app.documents.length === 0) throw new Error("no open document");
         var sd = app.activeDocument, found = [], src = "selection";
-        var selItems = []; for (var si3 = 0; si3 < sd.selection.length; si3++) selItems.push(sd.selection[si3]);
+        var selItems = []; for (var si3 = 0; si3 < sd.selection.length && si3 < 5000; si3++) selItems.push(sd.selection[si3]);
         VB_collectPaths(selItems, found);
+        if (a.lasso) {
+          // lasso mode (capture buttons): report every path (selected ones flagged in_sel, paths of the VB LASSO layer flagged lasso, newest first) and
+          // let lib/lasso.js choose; also report what kinds of objects are selected so a useless selection can be explained.
+          out.source = "selection"; out.artboard = sd.artboards[0].artboardRect; out.paths = []; out.types = {}; out.sel_count = sd.selection.length;
+          for (var ti = 0; ti < selItems.length; ti++) { var tn = selItems[ti].typename; out.types[tn] = (out.types[tn] || 0) + 1; }
+          var seen = {};
+          for (var lp = 0; lp < found.length && lp < 200; lp++) {
+            var li0 = VB_pathInfo(found[lp]), isL = false;
+            try { isL = (found[lp].layer.name === VB_LASSO_LAYER); } catch (e) {}
+            li0.in_sel = true; li0.lasso = isL; out.paths.push(li0);
+            seen[li0.points.length + ":" + (li0.points.length ? li0.points[0].a[0] + "," + li0.points[0].a[1] : "")] = true;
+          }
+          try {
+            var lyr = VB_find(sd, VB_LASSO_LAYER), lfound = [];
+            if (lyr) VB_collectPaths(VB_direct(lyr), lfound);
+            for (var lq = 0; lq < lfound.length && lq < 20; lq++) {
+              var li1 = VB_pathInfo(lfound[lq]), sg = li1.points.length + ":" + (li1.points.length ? li1.points[0].a[0] + "," + li1.points[0].a[1] : "");
+              if (seen[sg]) continue;
+              li1.in_sel = false; li1.lasso = true; out.paths.push(li1);
+            }
+          } catch (e4) {}
+          if (!out.paths.length && a.layer) {
+            var fl = VB_find(sd, a.layer);
+            if (fl) {
+              var ff = []; VB_collectPaths(VB_direct(fl), ff);
+              for (var fq = 0; fq < ff.length && fq < 20; fq++) { var li2 = VB_pathInfo(ff[fq]); li2.in_sel = false; li2.lasso = false; out.paths.push(li2); }
+              out.source = "layer " + a.layer;
+            }
+          }
+          break;
+        }
         if (!found.length && a.layer) {
           var sl3 = VB_find(sd, a.layer);
           if (!sl3) throw new Error("layer not found: " + a.layer);
@@ -535,6 +616,71 @@ function VB_run(json) {
           out.paths.push(inf);
         }
         if (!out.paths.length) out.ok = false, out.error = "no " + (a.closed_only ? "closed " : a.open_only ? "open " : "") + "path selected" + (a.layer ? " (or on layer " + a.layer + ")" : "");
+        break;
+      }
+      case "lasso_start": {
+        // create/clear the helper layer, make it active, pick a freehand tool when ExtendScript offers app.selectTool (feature-detected)
+        if (app.documents.length === 0) throw new Error("no open document");
+        var ls0 = app.activeDocument;
+        try {
+          var ll0 = VB_lassoLayer(ls0, true);
+          try { ls0.selection = null; } catch (e) {}
+          try { ls0.activeLayer = ll0; } catch (e) { out.warn = "could not make layer " + VB_LASSO_LAYER + " active: select it in the Layers panel"; }
+          out.layer = VB_LASSO_LAYER; out.tool = "none";
+          if (typeof app.selectTool === "function") {
+            var tnames = ["Adobe Pencil Tool", "Adobe Pen Tool"];
+            for (var tq = 0; tq < tnames.length; tq++) { try { app.selectTool(tnames[tq]); out.tool = tnames[tq]; break; } catch (e) {} }
+          }
+        } catch (le) { throw new Error("could not prepare the lasso layer: " + le.message); }
+        break;
+      }
+      case "lasso_draw": {
+        // a.rings = [{role: "core"|"outer"|"inner", pts: [[x, y], ...] in document points}]; core is selected afterwards (the Photoshop-style lasso selection)
+        if (app.documents.length === 0) throw new Error("no open document");
+        var ld0 = app.activeDocument, rings = a.rings || [], drawn = 0, corePath = null;
+        try {
+          var ll1 = VB_lassoLayer(ld0, a.keep !== true);
+          for (var ri0 = 0; ri0 < rings.length; ri0++) {
+            var rg = rings[ri0]; if (!rg.pts || rg.pts.length < 3) continue;
+            var core = (rg.role === "core"), np = ll1.pathItems.add();
+            np.setEntirePath(rg.pts); np.closed = true; np.filled = false; np.stroked = true;
+            try {
+              var sc = new RGBColor(); if (core) { sc.red = 255; sc.green = 0; sc.blue = 170; } else { sc.red = 255; sc.green = 150; sc.blue = 220; }
+              np.strokeColor = sc; np.strokeWidth = core ? 1.5 : 1; np.strokeDashes = core ? [6, 4] : [3, 5];
+              if (!core) np.opacity = 70;
+              np.name = core ? "VB Lasso" : ("VB Lasso feather " + rg.role);
+            } catch (se) {}
+            if (core) corePath = np;
+            drawn++;
+          }
+          try { ld0.activeLayer = ll1; } catch (e) {}
+          out.drawn = drawn; out.selected = false;
+          if (corePath && a.select !== false) { try { ld0.selection = [corePath]; out.selected = true; } catch (e) { out.warn = "polygon drawn but could not be selected: " + e.message; } }
+        } catch (de) { throw new Error("could not draw the lasso: " + de.message); }
+        break;
+      }
+      case "lasso_select": {
+        // select every item whose bounds centre (mode "center") or all anchors (mode "all") lie inside a.poly (document points)
+        if (app.documents.length === 0) throw new Error("no open document");
+        if (!a.poly || a.poly.length < 3) throw new Error("no lasso polygon");
+        var lsd = app.activeDocument, sst = { hits: [], scanned: 0, skipped: 0, layers: [], truncated: false, cap: 20000 };
+        try {
+          VB_lassoScan(lsd, { poly: a.poly, mode: a.mode === "all" ? "all" : "center", filter: a.filter || null, max: a.max || 5000 }, sst);
+          lsd.selection = sst.hits.length ? sst.hits : null;
+        } catch (se2) { throw new Error("select inside failed: " + se2.message); }
+        out.selected = sst.hits.length; out.scanned = sst.scanned; out.skipped_layers = sst.skipped; out.layers = sst.layers; out.truncated = sst.truncated;
+        if (!sst.hits.length) { out.ok = false; out.error = "no objects inside the lasso on the chosen layers (" + sst.scanned + " scanned, " + sst.skipped + " locked/hidden layers skipped)"; }
+        break;
+      }
+      case "lasso_clear": {
+        if (app.documents.length === 0) throw new Error("no open document");
+        var lcd = app.activeDocument, lcl = VB_find(lcd, VB_LASSO_LAYER);
+        out.removed = false;
+        if (lcl) {
+          try { lcd.selection = null; } catch (e) {}
+          try { lcl.locked = false; lcl.visible = true; for (var ci = lcl.pageItems.length - 1; ci >= 0; ci--) { try { lcl.pageItems[ci].locked = false; } catch (e) {} } lcl.remove(); out.removed = true; }
+          catch (ce) { throw new Error("could not remove layer " + VB_LASSO_LAYER + ": " + ce.message); }
+        }
         break;
       }
       case "place_image": {

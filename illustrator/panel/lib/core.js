@@ -468,20 +468,31 @@
     };
   };
   // capture the selected path -> state value. opts: {what, layer, closed, open, store, srcName}
+  var LS = function () { return root.VBLasso || (typeof require !== "undefined" ? (function () { try { return require("./lasso.js"); } catch (e) { return null; } })() : null); };
   VB.jobCapture = function (st, d, opts) {
     return {
       kind: "capture_" + opts.store.replace(/\./g, "_"), label: "Capture " + opts.what, params: { opts: opts, view: st.settings.view },
       steps: [
         py(GEN + "panelio.py", ["view", "--place", st.place].concat(VB.panelioViewFlags(st)), "page <-> feet mapping", { json: "view" }),
-        host({ action: "get_selection", layer: opts.layer, closed_only: !!opts.closed, open_only: !!opts.open }, "read selection"),
+        host(LS() ? { action: "get_selection", layer: opts.layer, lasso: true } : { action: "get_selection", layer: opts.layer, closed_only: !!opts.closed, open_only: !!opts.open }, "read selection"),
         { t: "fn", label: "convert to feet", fn: function (run) {
-          var sel = run.last, view = run.vars.view, path = sel.paths[0];
-          var pts = VB.pathToFt(view, sel.artboard, path);
-          if (opts.closed && pts.length > 1 && pts[0][0] === pts[pts.length - 1][0] && pts[0][1] === pts[pts.length - 1][1]) pts.pop();
+          var sel = run.last, view = run.vars.view, lasso = LS(), pts, path, note;
+          if (lasso) {   // lib/lasso.js: closed / open / anchor / lasso-layer selections, simplified, repaired, with notes
+            var r = lasso.fromSelection(view, sel, { closed: !!opts.closed, open: !!opts.open });
+            if (!r.ok) throw new Error(r.error);
+            pts = r.pts; note = r.note; (r.warnings || []).forEach(function (w) { run.log("note: " + w); });
+            path = { name: note }; run.vars.captured = { pts: pts, closed: !!opts.closed, via: r.via, ab: sel.artboard };
+          } else { path = sel.paths[0]; pts = VB.pathToFt(view, sel.artboard, path);
+            if (opts.closed && pts.length > 1 && pts[0][0] === pts[pts.length - 1][0] && pts[0][1] === pts[pts.length - 1][1]) pts.pop();
+            run.vars.captured = { pts: pts, closed: !!opts.closed }; }
           run.setState(opts.store, pts);
           if (opts.srcName) run.setState(opts.srcName, sel.source + " (" + (path.name || "unnamed") + ", " + pts.length + " pts" +
             (opts.closed ? ", " + Math.round(VB.polyArea(pts)) + " ft2" : "") + ")");
-          run.log(pts.length + " points from " + sel.source + (sel.paths.length > 1 ? " (first of " + sel.paths.length + " paths)" : "")); } }
+          run.log((lasso && opts.closed ? "polygon: " + lasso.describe(lasso.stats(pts)) + " (" + note + ")" : pts.length + " points from " + sel.source) + (sel.paths.length > 1 && !lasso ? " (first of " + sel.paths.length + " paths)" : "")); } },
+        // leave the captured shape selected in Illustrator on the VB LASSO layer (Photoshop-style); never fails the capture
+        { t: "host", label: "show lasso in Illustrator", optional: true,
+          when: function (run) { var c = run.vars.captured; return !!(c && c.closed && c.ab && LS()); },
+          action: function (run) { var c = run.vars.captured; return { action: "lasso_draw", select: true, rings: [{ role: "core", pts: c.pts.map(function (p) { return VB.ftToDoc(run.vars.view, c.ab, p); }) }] }; } }
       ]
     };
   };
