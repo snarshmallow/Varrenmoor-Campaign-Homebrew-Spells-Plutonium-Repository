@@ -1,0 +1,49 @@
+{
+ "_note": "Drawing scale and grid for this blank place (written by place_create.py create-blank). Feet are the model unit; only the drawing changes with scale.",
+ "units": "ft",
+ "margin_in": 0.5,
+ "min_street_width_ft": 6,
+ "default_preset": "town",
+ "contour_mask": {
+  "enabled": true,
+  "include": [
+   "buildings",
+   "streets",
+   "plazas"
+  ]
+ },
+ "presets": {
+  "town": {
+   "scale_ft_per_in": 100,
+   "grid_ft": 100,
+   "grid_major_every": 5,
+   "focus": "center",
+   "scale_bar_ft": 500
+  },
+  "bowl": {
+   "scale_ft_per_in": 200,
+   "grid_ft": 200,
+   "grid_major_every": 5,
+   "focus": "center",
+   "scale_bar_ft": 1000
+  },
+  "street": {
+   "scale_ft_per_in": 20,
+   "grid_ft": 20,
+   "grid_major_every": 5,
+   "focus": "entity",
+   "scale_bar_ft": 100
+  },
+  "room": {
+   "scale_ft_per_in": 5,
+   "grid_ft": 5,
+   "grid_major_every": 5,
+   "focus": "entity",
+   "scale_bar_ft": 25
+  }
+ },
+ "page_in": [
+  13.0,
+  10.0
+ ]
+}

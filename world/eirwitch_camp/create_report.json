@@ -1,0 +1,15 @@
+{
+ "id": "eirwitch_camp",
+ "blank": true,
+ "size_ft": [
+  1200,
+  900
+ ],
+ "cell_ft": 6.0,
+ "recipe": "highland_ridge",
+ "seed": 1713,
+ "terrain": {
+  "elev_min": -21.1,
+  "elev_max": 239.8
+ }
+}

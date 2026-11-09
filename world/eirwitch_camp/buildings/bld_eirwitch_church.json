@@ -1,0 +1,40 @@
+{
+ "id": "bld_eirwitch_church",
+ "name": "Eirwitch Stave Church",
+ "kind": "church",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    553.0,
+    412.0
+   ],
+   [
+    567.0,
+    412.0
+   ],
+   [
+    567.0,
+    432.0
+   ],
+   [
+    553.0,
+    432.0
+   ]
+  ]
+ },
+ "notes": "The supposed eirwitch's stave church: tall, narrow, two storeys, door facing the campfire (south).",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 2,
+ "rooms": [],
+ "doors": [],
+ "style": "eirwitch_stave_church",
+ "elevation_ft": 3202.29,
+ "site_slope": 0.0,
+ "site_relief_ft": 1.91
+}

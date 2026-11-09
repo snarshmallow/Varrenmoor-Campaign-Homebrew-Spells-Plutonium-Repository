@@ -1,0 +1,12 @@
+{
+ "size_ft": [
+  1200,
+  900
+ ],
+ "cell_ft": 6.0,
+ "seed": 1713,
+ "recipe": "highland_ridge",
+ "sea_level_ft": -1000.0,
+ "relief_ft": 160.0,
+ "base_elevation_ft": 120.0
+}

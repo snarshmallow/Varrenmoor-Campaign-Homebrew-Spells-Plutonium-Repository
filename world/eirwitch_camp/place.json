@@ -1,0 +1,52 @@
+{
+ "id": "eirwitch_camp",
+ "name": "Eirwitch Camp",
+ "kind": "blank",
+ "status": "blank",
+ "units": "feet",
+ "origin": "top-left, x right, y down (up = north)",
+ "bounds": {
+  "width_ft": 1200,
+  "height_ft": 900
+ },
+ "population_estimate": 0,
+ "notes": "Supposed camp of a lone ancient eirwitch in the mountains outside Bridgehollow (winter night): clearing with one campfire, tall stave church, dense pines, dirt road dead-ending in the clearing, river gorge with a rope bridge. Built by illustrator/generators/eirwitch_camp.py.",
+ "files": {
+  "districts": "districts.json",
+  "streets": "streets.json",
+  "water": "water.json",
+  "buildings": "buildings/",
+  "view_settings": "view_settings.json",
+  "terrain": "terrain/"
+ },
+ "view_focus": {
+  "town": [
+   560.0,
+   470.0
+  ]
+ },
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "generated_by": "place_create.py create-blank",
+ "sea_level_ft": -1000.0,
+ "phase_elevation": "percentile",
+ "culture": "fantasy_generic",
+ "defaults": {
+  "shading_preset": "alpine_winter",
+  "padding_preset": "fjord-walls",
+  "foliage_mix": "spruce_forest",
+  "season": "winter",
+  "fills_style": "winter",
+  "label_preset": "working"
+ },
+ "blank": {
+  "recipe": "highland_ridge",
+  "seed": 1713,
+  "cell_ft": 6.0,
+  "created": "2026-11-09T17:03:09"
+ },
+ "season": "winter"
+}

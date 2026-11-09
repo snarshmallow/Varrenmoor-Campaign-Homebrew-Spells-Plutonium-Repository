@@ -1,0 +1,22 @@
+{
+ "canon": false,
+ "note": "details written by building_edit.py (front doors set in the Buildings tab)",
+ "doors": [
+  {
+   "id": "bld_eirwitch_church_door1",
+   "building": "bld_eirwitch_church",
+   "edge": 2,
+   "point": [
+    560.0,
+    432.0
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    0.0,
+    1.0
+   ],
+   "detail": true,
+   "set_by": "building_edit"
+  }
+ ]
+}

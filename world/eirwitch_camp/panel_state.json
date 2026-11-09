@@ -1,0 +1,10 @@
+{
+ "shading": {
+  "preset": "alpine_winter"
+ },
+ "town": {
+  "fills": {
+   "style": "winter"
+  }
+ }
+}

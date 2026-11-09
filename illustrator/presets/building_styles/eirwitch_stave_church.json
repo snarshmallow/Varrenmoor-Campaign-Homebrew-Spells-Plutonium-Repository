@@ -1,0 +1,89 @@
+{
+ "id": "eirwitch_stave_church",
+ "name": "Eirwitch stave church (tall, winter)",
+ "category": "church",
+ "culture": "Norwegian",
+ "description": "Tall, narrow two-storey stave church for the Eirwitch Camp: near-black tarred boards, very steep shingle roof, three stepped tower tiers with skirt roofs and a needle spire, dragon-head finials on the gables, fieldstone plinth, snow on the roofs. Made for a 14 x 20 ft footprint with 2 floors (about 55 ft to the spire tip).",
+ "kinds": {
+  "church": 1,
+  "chapel": 1
+ },
+ "wall": {
+  "system": "corners",
+  "material": "board",
+  "colors": [
+   "#231d19",
+   "#1e1915"
+  ],
+  "beam_colors": [
+   "#2a2018"
+  ],
+  "beam_depth_ft": 0.14,
+  "corner_ft": 0.5
+ },
+ "roof": {
+  "type": "gable",
+  "material": "shingle",
+  "colors": [
+   "#3a2e26",
+   "#40322a"
+  ],
+  "pitch": [
+   1.55,
+   1.6
+  ],
+  "overhang_ft": [
+   1.4,
+   1.6
+  ],
+  "barge": true,
+  "fascia_colors": [
+   "#2a2018"
+  ]
+ },
+ "windows": {
+  "type": "casement",
+  "cols": [
+   1,
+   1
+  ],
+  "rows": [
+   1,
+   1
+  ],
+  "shape": "round_arch",
+  "width_ft": 1.2,
+  "height_ft": 2.8,
+  "sill_ft": 5.0
+ },
+ "door": {
+  "colors": [
+   "#5a3a22"
+  ],
+  "shape": "round_arch"
+ },
+ "preview": "illustrator/out/building_styles/eirwitch_stave_church.png",
+ "plinth": {
+  "material": "stone",
+  "colors": [
+   "#6f6b64"
+  ],
+  "height_ft": [
+   1.2,
+   1.2
+  ]
+ },
+ "trim_colors": [
+  "#2a2018"
+ ],
+ "special": {
+  "tiers": {
+   "count": 3,
+   "base_ft": 4.4
+  },
+  "snow": {
+   "depth_ft": 0.42,
+   "color": "#eef2f6"
+  }
+ }
+}

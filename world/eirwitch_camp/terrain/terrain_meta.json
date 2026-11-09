@@ -1,0 +1,17 @@
+{
+ "size_ft": [
+  1200,
+  900
+ ],
+ "cell_ft": 6.0,
+ "nx": 201,
+ "ny": 151,
+ "seed": 1713,
+ "elev_min": -21.1406307220459,
+ "elev_max": 239.82150268554688,
+ "relief_ft": 260.9621276855469,
+ "units": "feet",
+ "recipe": "highland_ridge",
+ "node_convention": "h[i,j] at x=j*cell_ft, y=i*cell_ft (y down)",
+ "sea_level_ft": -1000.0
+}

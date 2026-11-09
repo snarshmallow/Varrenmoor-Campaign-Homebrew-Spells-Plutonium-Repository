@@ -1,0 +1,130 @@
+{
+ "place": "eirwitch_camp",
+ "streets": [
+  {
+   "id": "str_witch_road",
+   "name": "Witch Road",
+   "kind": "lane",
+   "status": "proposed",
+   "geometry": {
+    "type": "polyline",
+    "points": [
+     [
+      0.0,
+      655.0
+     ],
+     [
+      70.0,
+      640.0
+     ],
+     [
+      150.0,
+      655.0
+     ],
+     [
+      230.0,
+      632.0
+     ],
+     [
+      300.0,
+      603.0
+     ],
+     [
+      370.0,
+      585.0
+     ],
+     [
+      430.0,
+      560.0
+     ],
+     [
+      480.0,
+      528.0
+     ],
+     [
+      520.0,
+      494.0
+     ]
+    ],
+    "width_ft": 12.0
+   },
+   "edit": {
+    "class": "lane",
+    "surface": "dirt",
+    "kerb": false
+   },
+   "notes": "eirwitch_camp.py: dirt road from the west edge, dead-ends in the clearing"
+  },
+  {
+   "id": "str_gorge_path",
+   "name": "Gorge Footpath",
+   "kind": "lane",
+   "status": "proposed",
+   "geometry": {
+    "type": "polyline",
+    "points": [
+     [
+      626.0,
+      470.0
+     ],
+     [
+      680.0,
+      470.0
+     ],
+     [
+      722.0,
+      470.0
+     ],
+     [
+      790.0,
+      470.0
+     ],
+     [
+      858.0,
+      470.0
+     ],
+     [
+      905.0,
+      466.0
+     ],
+     [
+      980.0,
+      452.0
+     ],
+     [
+      1060.0,
+      446.0
+     ],
+     [
+      1130.0,
+      440.0
+     ],
+     [
+      1200.0,
+      436.0
+     ]
+    ],
+    "width_ft": 4.0
+   },
+   "edit": {
+    "class": "lane",
+    "surface": "dirt",
+    "kerb": false
+   },
+   "elevations_ft": [
+    3200.0,
+    3200.0,
+    3200.0,
+    3203.45,
+    3206.9,
+    3214.4,
+    3283.67,
+    3309.71,
+    3306.89,
+    3312.15
+   ],
+   "elevation_ft": 3243.72,
+   "notes": "eirwitch_camp.py: footpath from the clearing over the gorge (rope bridge) to the east edge"
+  }
+ ]
+}
