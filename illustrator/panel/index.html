@@ -907,6 +907,23 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
     <label>Roof mode <select id="fRoofMode" data-s="foundry.models.roofMode"><option value="none">None: roofs merged into buildings (cheapest)</option><option value="per_building">Per building: hide each roof separately</option><option value="per_scene">Per scene: one switch for all roofs</option></select></label>
     <label>Home interior style <select id="fInteriorStyle" data-s="foundry.models.interiorStyle" title="Furnishing and finish of generated home interiors. Auto picks by building kind; a building JSON key interior_style overrides it. Export again + Push models to apply."><option value="auto">Auto: by building kind (houses rustic)</option><option value="rustic_cottage">Rustic cottage: plank floor, beams, hearth, rag rug</option><option value="farmhouse">Farmhouse: flagstone floor, lime-washed walls</option><option value="burgher_townhouse">Burgher townhouse: plastered, canopy bed</option><option value="poor_hovel">Poor hovel: earth floor, sparse</option><option value="plain">Plain: the original look</option></select></label>
   </div>
+  <details id="wpMore"><summary class="note">More pack options (split granularity, compression, push options)</summary>
+  <div class="grid">
+    <label>Split preset <select data-s="foundry.models.splitPreset" title="Granularity of the split files when the Split box above is empty: default (buildings one file each), layers (one file per layer), districts (buildings and roads per district), individual (everything one file per entity)"><option value="default">default</option><option value="layers">layers</option><option value="districts">districts</option><option value="individual">individual</option></select></label>
+    <label>Compression (Merge) <select data-s="foundry.models.compress" title="none always loads. quant is about half the size (KHR_mesh_quantization, push adds --allow-quantized). meshopt variants: test one file in Foundry first, see WORLD_PACK.md"><option value="none">none (safe)</option><option value="quant">quant</option><option value="meshopt-fallback">meshopt with fallback</option><option value="meshopt">meshopt (smallest)</option></select></label>
+    <label>Scene mode on push <select data-s="foundry.models.sceneMode" title="3D Canvas scene flags written by Push models: flat = 2D map, 3d = terrain/model scene. Blank = the tool default"><option value="">default</option><option value="3d">3d</option><option value="flat">flat</option></select></label>
+    <label class="chk"><input type="checkbox" data-s="foundry.models.carve" title="Cut the river beds into the exported terrain (off = --no-carve)"> Carve river beds into the terrain</label>
+    <label class="chk"><input type="checkbox" data-s="foundry.models.conform" title="Pull the terrain to the roads and bridges (off = --no-conform: also turns road grading off)"> Conform terrain to roads and bridges</label>
+    <label class="chk"><input type="checkbox" data-s="foundry.models.prune" title="Also delete pipeline model tiles that are not in this push (needed when the push would remove many tiles; run the dry run first)"> Prune stale tiles on push</label>
+    <label class="chk"><input type="checkbox" data-s="foundry.models.roofsHidden" title="Create the roof tiles hidden (roof mode per building / per scene only)"> Create roof tiles hidden</label>
+  </div>
+  <div class="btns">
+    <button data-act="wp_push_dry" title="Plan only: lists what Push models would create, update or delete. Writes nothing to Foundry.">Push models (dry run)</button>
+    <button data-act="wp_scene_audit" title="Read-only: finds duplicate or stale pipeline tiles on the picked existing scene and prints a repair plan">Audit scene tiles</button>
+    <button data-act="wp_push_lights_dry" title="Plan the interior point lights for the picked existing scene. Writes nothing.">Lights (dry run)</button>
+    <button data-act="wp_push_lights" title="Push the interior lights of the exported pack to the picked existing scene (upsert by flag)">Push interior lights</button>
+  </div>
+  </details>
   <p class="note" id="fRoofNote">Applies to Export world pack / Export split models. None: roofs are part of each building, nothing can be hidden (default, fewest tiles). Per building: every roof is its own tile (about 1 extra tile per building, same triangles), so you can hide one roof to look inside. Per scene: all roofs are ONE tile (one extra tile in total, fewer draw calls): hide or show every roof at once; buildings are exported open at the top. Hiding a roof in Foundry: Install roof macros once, then use the hotbar macros (GM sees a hidden roof as a ghost, players see nothing).</p>
   <div class="btns">
     <button data-act="wp_roof_macros" title="Creates the 'Roofs: toggle all' and 'Roofs: toggle selected / at token / pick' macros in the Foundry world (no module update needed)">Install roof macros</button>
@@ -917,8 +934,11 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
   <h4>Roads (3D)</h4>
   <div class="sl"><span>Smoothing</span><input type="range" data-s="roads.smooth" min="0" max="1" step="0.05" title="0 = roads follow the raw ground exactly, 1 = fully smoothed along their length"><span class="nb"><input type="number" data-s="roads.smooth" min="0" max="1" step="0.05"></span></div>
   <div class="sl"><span>Max grade</span><input type="range" data-s="roads.max_grade" min="3" max="30" step="1" title="Steepest slope a road may have along its length; where the ground is steeper the road is raised clear and a warning is listed in the export"><span class="nb"><input type="number" data-s="roads.max_grade" min="3" max="30" step="1"><span class="un">deg</span></span></div>
+  <div class="sl"><span>Max cross slope</span><input type="range" data-s="roads.cross_deg" min="0" max="45" step="1" title="Steepest side-to-side tilt of the road surface (default 10)"><span class="nb"><input type="number" data-s="roads.cross_deg" min="0" max="45" step="1"><span class="un">deg</span></span></div>
+  <label class="chk"><input type="checkbox" data-s="roads.grade" title="Off = the old behaviour: roads at the authored heights, terrain pulled to the centreline"> Road grading on (drape, smooth, grade-limit)</label>
   <label class="chk"><input type="checkbox" data-s="roads.skirt"> Skirt (apron down to the ground under roads that stand above it)</label>
   <label class="chk"><input type="checkbox" data-s="roads.cutfill"> Cut/fill terrain under and beside roads (blends back to natural ground)</label>
+  <p class="note">To change ONE road (class, width, surface, kerb, grading) use the Roads tab.</p>
   <p class="note">Roads sit just above the real terrain mesh so the ground never covers them. Smoothing blends the raw ground height with a smoothed profile along the road; roads meet bridges and each other at the same height. Cut/fill is off by default and changes the terrain mesh; warnings and cut/fill amounts are written to placements.json (road_grade). Notes: illustrator/out/road_grade_notes.md.</p>
   <div class="btns">
     <button data-act="wp_export" title="worldpack.py export: terrain, roads, buildings, water ... as a versioned pack in world/&lt;place&gt;/export">Export world pack (3D)</button>
@@ -1024,6 +1044,8 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
 <script src="regions_ui.js"></script>
 <script src="lib/styles.js"></script>
 <script src="styles_ui.js"></script>
+<script src="lib/objects.js"></script>
+<script src="objects_ui.js"></script>
 <script src="lib/lighting.js"></script>
 <script src="lighting_ui.js"></script>
 <script src="lib/foliage.js"></script>

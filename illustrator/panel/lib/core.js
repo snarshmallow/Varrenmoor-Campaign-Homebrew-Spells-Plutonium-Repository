@@ -104,8 +104,8 @@
       },
       foundry: { target: "new", sceneName: "", sceneUuid: "", dpi: 150, ftPerGrid: null, walls: true, drawRoads: false, drawWater: false,
         tileLayers: "Labels - Districts,Labels - Streets,Labels - Buildings", actorUuid: "", itemUuid: "", spec: "", image: "", at: "", itemName: "", itemDesc: "",
-        models: { split: "", preset: "layer", layers: "", lod: 0, compress: "none", roofMode: "none", interiorStyle: "auto" }, sizeFt: 5, autoPush: false, filter: { actors: "", items: "" }, cache: { fetched: null, lists: {} }, last: null },
-      roads: { smooth: 0.5, max_grade: 14, skirt: true, cutfill: false },   // ROAD GRADING (generators/road_grade.py), passed to worldpack_split.py split
+        models: { split: "", preset: "layer", layers: "", lod: 0, compress: "none", roofMode: "none", interiorStyle: "auto", splitPreset: "default", carve: true, conform: true, prune: false, roofsHidden: false, sceneMode: "" }, sizeFt: 5, autoPush: false, filter: { actors: "", items: "" }, cache: { fetched: null, lists: {} }, last: null },
+      roads: { smooth: 0.5, max_grade: 14, skirt: true, cutfill: false, cross_deg: 10, grade: true },   // ROAD GRADING (generators/road_grade.py), passed to worldpack_split.py split
       stale: { contours: false, shading: false, town: false },
       ui: { tab: "scale" }
     };
@@ -691,6 +691,11 @@
     var m = st.foundry.models, a = ["split", "--place", st.place, "--pack", pack || VB.packDir(d), "--roof-mode", VB.roofMode(st), "--interior-style", VB.interiorStyle(st)]; if (m.split) a.push("--split", m.split);
     var rd = st.roads || {}; a.push("--road-smooth", String(isFinite(+rd.smooth) ? Math.min(1, Math.max(0, +rd.smooth)) : 0.5), "--road-max-grade", String(+rd.max_grade > 0 ? Math.min(60, Math.max(1, +rd.max_grade)) : 14));
     if (rd.skirt === false) a.push("--no-road-skirt"); if (rd.cutfill) a.push("--road-cutfill");
+    if (isFinite(+rd.cross_deg) && +rd.cross_deg !== 10 && rd.cross_deg !== "") a.push("--road-cross-deg", String(Math.min(45, Math.max(0, +rd.cross_deg))));
+    if (rd.grade === false) a.push("--road-grade", "off");
+    if (m.splitPreset && m.splitPreset !== "default") a.push("--split-preset", m.splitPreset);
+    if (m.carve === false) a.push("--no-carve");
+    if (m.conform === false) a.push("--no-conform");
     return { kind: "worldpack_split", label: "Export split models", params: { split: m.split, roads: rd, roof_mode: VB.roofMode(st), interior_style: VB.interiorStyle(st) }, steps: [py(GEN + "worldpack_split.py", a, "split models")] };
   };
   VB.jobWorldMerge = function (st, d, pack) {
@@ -705,6 +710,10 @@
     else { if (!String(f.sceneName || "").trim()) throw new Error("type a name for the new scene"); a.push("--scene-name", String(f.sceneName).trim()); }
     if (m.layers) a.push("--layers", m.layers);
     if (+m.lod) a.push("--lod", String(+m.lod));
+    if (m.prune) a.push("--prune");
+    if (m.roofsHidden && VB.roofMode(st) !== "none") a.push("--roofs-hidden");
+    if (m.sceneMode === "flat" || m.sceneMode === "3d") a.push("--scene-mode", m.sceneMode);
+    if (m.compress === "quant") a.push("--allow-quantized");
     if (o.dry) a.push("--dry-run");
     return a;
   };
@@ -719,6 +728,16 @@
     var f = st.foundry; if (f.target !== "existing" || !f.sceneUuid) throw new Error("pick an existing scene (Refresh from Foundry first)");
     return { kind: "roofs_" + state, label: "Roofs: " + state, params: { state: state },
       steps: [py(VB.FOUNDRY_PY || "illustrator/generators/foundry_push.py", ["roofs", "--scene-uuid", f.sceneUuid, "--roof-state", state], "roofs " + state)] };
+  };
+  // read-only: duplicate / stale pipeline tiles on the target scene against the placements (foundry_push.py scene-audit)
+  VB.jobSceneAudit = function (st, d) {
+    var f = st.foundry; if (f.target !== "existing" || !f.sceneUuid) throw new Error("pick an existing scene (Refresh from Foundry first)");
+    return { kind: "scene_audit", label: "Audit scene tiles (read-only)", params: {}, steps: [py(VB.FOUNDRY_PY || "illustrator/generators/foundry_push.py", ["scene-audit", "--scene-uuid", f.sceneUuid, "--placements", VB.packDir(d) + "/placements.json"], "scene audit")] };
+  };
+  VB.jobPushLights = function (st, d, dry) {
+    var f = st.foundry; if (f.target !== "existing" || !f.sceneUuid) throw new Error("pick an existing scene (Refresh from Foundry first)");
+    var a = ["push-lights", "--place", st.place, "--scene-uuid", f.sceneUuid, "--placements", VB.packDir(d) + "/placements.json"]; if (dry) a.push("--dry-run");
+    return { kind: "push_lights", label: "Push interior lights" + (dry ? " (dry run)" : ""), params: { dry: !!dry }, steps: [py(VB.FOUNDRY_PY || "illustrator/generators/foundry_push.py", a, "push lights")] };
   };
   VB.jobWorldPublish = function (st, d) {
     var f = st.foundry, m = f.models, a = ["publish", "--place", st.place, "--pack", VB.packDir(d), "--preset", m.preset, "--compress", m.compress || "none", "--lod", String(+m.lod || 0)];

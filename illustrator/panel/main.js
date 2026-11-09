@@ -450,7 +450,7 @@
     $("candTag").className = "tag" + (state.town.candidate ? " stale" : "");
     $("statePath").textContent = d.state;
   }
-  function refreshAll() { paintInputs(); if (window.VBRegionUI) VBRegionUI.paint(); if (window.VBLightUI) VBLightUI.paint(); if (window.VBStylesUI) VBStylesUI.paint(); if (window.VBFoliageUI) VBFoliageUI.paint(); if (window.VBPaddingUI) VBPaddingUI.paint(); if (window.VBSkyUI) VBSkyUI.paint(); if (window.VBWaterUI) VBWaterUI.paint(); if (window.VBBridgesUI) VBBridgesUI.paint(); if (window.VBPlacesUI) VBPlacesUI.paint(); paintTags(); paintStale(); paintPatchForm(); paintRings(); if (typeof fPaint === "function" && state) fPaint(); }
+  function refreshAll() { paintInputs(); if (window.VBRegionUI) VBRegionUI.paint(); if (window.VBLightUI) VBLightUI.paint(); if (window.VBStylesUI) VBStylesUI.paint(); if (window.VBObjectsUI) VBObjectsUI.paint(); if (window.VBFoliageUI) VBFoliageUI.paint(); if (window.VBPaddingUI) VBPaddingUI.paint(); if (window.VBSkyUI) VBSkyUI.paint(); if (window.VBWaterUI) VBWaterUI.paint(); if (window.VBBridgesUI) VBBridgesUI.paint(); if (window.VBPlacesUI) VBPlacesUI.paint(); paintTags(); paintStale(); paintPatchForm(); paintRings(); if (typeof fPaint === "function" && state) fPaint(); }
 
   function showCrossings() {
     var j = readJson(d.water + "/crossings.json", null), el = $("crossInfo");
@@ -525,6 +525,10 @@
     wp_roofs_show: function () { try { return startJob(VB.jobRoofs(state, "show")); } catch (e) { showError(String(e.message || e)); } },
     wp_merge: function () { return startJob(VB.jobWorldMerge(state, d)); },
     wp_push: function () { try { return startJob(VB.jobWorldPush(state, d)); } catch (e) { showError(String(e.message || e)); } },
+    wp_push_dry: function () { try { return startJob(VB.jobWorldPush(state, d, { dry: true })); } catch (e) { showError(String(e.message || e)); } },
+    wp_scene_audit: function () { try { return startJob(VB.jobSceneAudit(state, d)); } catch (e) { showError(String(e.message || e)); } },
+    wp_push_lights: function () { try { return startJob(VB.jobPushLights(state, d, false)); } catch (e) { showError(String(e.message || e)); } },
+    wp_push_lights_dry: function () { try { return startJob(VB.jobPushLights(state, d, true)); } catch (e) { showError(String(e.message || e)); } },
     wp_publish: function () { try { return startJob(VB.jobWorldPublish(state, d)); } catch (e) { showError(String(e.message || e)); } },
     town_fills: function () { return startJob(VB.jobFills(state, d)); },
     fills_render: function () { return startJob(VB.jobFullFills(state, d)); },
@@ -777,6 +781,7 @@
     if (window.VBRegionUI) VBRegionUI.init({ state: function () { return state; }, dirs: function () { return d; }, save: save, startJob: startJob, syncInputs: paintInputs, readJson: readJson, fs: fs, path: path,
       root: root, acts: acts, switchPlace: switchPlace });
     if (window.VBStylesUI) VBStylesUI.init({ state: function () { return state; }, dirs: function () { return d; }, save: save, startJob: startJob, readJson: readJson, fs: fs, path: path, root: root, acts: acts }); // buildings tab (styles_ui.js)
+    if (window.VBObjectsUI) VBObjectsUI.init({ state: function () { return state; }, dirs: function () { return d; }, save: save, startJob: startJob, readJson: readJson, fs: fs, path: path, root: root, acts: acts, showError: showError }); // per-object editors: Buildings tab block + Roads tab (objects_ui.js)
     $("cancel").addEventListener("click", function () { if (runner.cancel()) logLine("cancel requested"); });
     $("toggleLog").addEventListener("click", function () { var l = $("log"); l.hidden = !l.hidden; });
     window.addEventListener("error", function (e) { showError("panel error: " + e.message); });
