@@ -354,7 +354,7 @@ def _links(e):
     return e.get("links") or {"foundry_scene": None, "model3d": None, "ai_layer": None}
 
 
-ROAD_EDIT_KEYS = ("class", "surface", "kerb", "grade")
+ROAD_EDIT_KEYS = ("class", "surface", "kerb", "grade", "lamps")
 BUILDING_EDIT_KEYS = ("roof_type", "roof_pitch", "roof_material", "wall_material", "roof_overhang_ft", "no_windows", "keep_individual")
 GRADE_EDIT_KEYS = ("smooth", "max_grade_deg", "cross_deg", "cutfill")
 
@@ -376,6 +376,27 @@ def road_edit(s):
         gg = {k: g[k] for k in GRADE_EDIT_KEYS if g.get(k) is not None}
         if gg:
             out["grade"] = gg
+    lp = ed.get("lamps")
+    if isinstance(lp, dict):                                          # street lamps (streetlamps.py): {on: bool, style: str, spacing_ft: number}
+        ll = {}
+        if isinstance(lp.get("on"), bool):
+            ll["on"] = lp["on"]
+        if isinstance(lp.get("style"), str) and lp["style"]:
+            ll["style"] = lp["style"]
+        if isinstance(lp.get("spacing_ft"), (int, float)) and not isinstance(lp.get("spacing_ft"), bool):
+            ll["spacing_ft"] = float(lp["spacing_ft"])
+        if ll:
+            out["lamps"] = ll
+    return out
+
+
+def drop_unpaved_kerbs(kerb_ids, roads, streets):
+    """Generator rule: a road whose surface is unpaved (dirt, mud, gravel, packed earth, sand) gets no kerb unless its street edit says kerb = true."""
+    by_id = {x["id"]: x for x in streets}
+    out = set(kerb_ids)
+    for r in roads:
+        if r["id"] in out and (r.get("surface") or {}).get("material") in UNPAVED_MATERIALS and road_edit(by_id.get(r["id"], {})).get("kerb") is not True:
+            out.discard(r["id"])
     return out
 
 

@@ -986,10 +986,12 @@ def build_light_docs(doc, c, only_types=None, animation=None):
             continue
         px, py = c["sceneX"] + (lt["point"][0] - c["x0"]) * ppf, c["sceneY"] + (lt["point"][1] - c["y0"]) * ppf
         l3d = {"enableParticle": False}      # never torch/smoke/fire particle presets (house rule); plain point light, optional --light-animation
+        if lt.get("shadows") is not None:
+            l3d["castShadow"] = bool(lt["shadows"])          # street lamps: per-light shadow flag, off unless asked (streetlamps.py)
         out.append({"id": f"light:{place}:{lt['id']}", "data": {
             "x": round(px), "y": round(py), "elevation": round(lt.get("z_abs_ft", z0 + lt.get("z_ft", 5.0)) - z0, 2), "rotation": 0, "walls": False, "vision": False,
             "config": {"dim": lt.get("dim_ft", 10), "bright": lt.get("bright_ft", 4), "color": lt.get("color", "#ffffff"), "alpha": min(0.9, max(0.1, lt.get("intensity", 0.5))),
-                       "luminosity": 0.5, "animation": {"type": animation or None, "speed": 2, "intensity": 2}},
+                       "luminosity": 0.5, "animation": {"type": (lt["animation"] if "animation" in lt else animation) or None, "speed": 2, "intensity": 2}},
             "flags": {"levels-3d-preview": l3d, FLAG: {"lightId": lt["id"], "building": lt.get("building"), "type": lt["type"]}}}})
     return out
 
@@ -1437,6 +1439,9 @@ def main(argv=None, bridge=None):
         import foundry_lightbudget
         return foundry_lightbudget.main(_av, bridge)
     if _av and _av[0] == "set-sun":                               # sun, shadows, fog, sky presets (foundry_sun.py)
+    if _av and _av[0] == "set-streetlamps":                       # hide / show the street lamp tile + lights of a scene, retune the lamp lights (streetlamps.py)
+        import streetlamps_scene
+        return streetlamps_scene.main(_av, bridge)
         import foundry_sun
         return foundry_sun.main(_av, bridge)
     if _av and _av[0] in ("set-collision", "push-walls", "sync-doors", "install-door-sync"):       # collision flag per layer / sight+sound+light walls (foundry_collision.py)

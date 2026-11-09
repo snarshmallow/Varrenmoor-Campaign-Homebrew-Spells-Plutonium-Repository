@@ -30,7 +30,7 @@ BUILDING_EDIT = {"roof_type": "choice", "roof_pitch": (0.05, 2.0), "roof_overhan
                  "no_windows": "bool", "keep_individual": "bool"}
 BUILDING_TOP = {"floors": (1, 12), "style": "style", "interior_style": "interior"}
 ROAD_EDIT = {"class": "class", "surface": "texture", "kerb": "bool", "grade.smooth": (0.0, 1.0), "grade.max_grade_deg": (1.0, 60.0),
-             "grade.cross_deg": (0.0, 45.0), "grade.cutfill": "bool"}
+             "grade.cross_deg": (0.0, 45.0), "grade.cutfill": "bool", "lamps.on": "bool", "lamps.style": "lampstyle", "lamps.spacing_ft": (8.0, 400.0)}
 ROAD_TOP = {"width_ft": (2.0, 120.0)}
 ROAD_CLASSES = ["road", "street", "lane", "alley"]          # "bridge" roads are made by the Bridges tab
 
@@ -104,6 +104,12 @@ def _coerce(key, raw, rule, tx):
     if rule == "class":
         if v not in ROAD_CLASSES:
             raise SystemExit(f"{key}: {v!r} not one of {', '.join(ROAD_CLASSES)}")
+        return v
+    if rule == "lampstyle":
+        import streetlamps
+        names = list(streetlamps.load_styles()["styles"])
+        if v not in names:
+            raise SystemExit(f"{key}: {v!r} not one of {', '.join(names)}")
         return v
     if rule == "texture":
         if v not in tx:
@@ -179,8 +185,16 @@ def list_roads(place):
     return out
 
 
+def lamp_style_ids():
+    try:
+        import streetlamps
+        return list(streetlamps.load_styles()["styles"])
+    except Exception:
+        return []
+
+
 def choices(place=None):
-    return {"road_classes": ROAD_CLASSES, "textures": textures(), "interior_styles": interior_styles(), "roof_types": ROOF_TYPES, "building_styles": building_style_ids()}
+    return {"road_classes": ROAD_CLASSES, "textures": textures(), "interior_styles": interior_styles(), "roof_types": ROOF_TYPES, "building_styles": building_style_ids(), "lamp_styles": lamp_style_ids()}
 
 
 def set_building(place, ids, sets=None, clears=None, dry=False):

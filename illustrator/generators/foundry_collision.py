@@ -27,8 +27,8 @@ FLAG = "varrenmoor"
 L3D = "levels-3d-preview"
 NONE, LIMITED, NORMAL = 0, 10, 20
 
-COLLISION_LAYERS = ("padding", "terrain", "water", "roads", "plazas", "fields", "fences", "walls", "bridges", "buildings", "roofs", "foliage", "props")
-COLLISION_DEFAULT = ("terrain", "roads", "plazas", "fields", "fences", "walls", "bridges", "buildings", "props")
+COLLISION_LAYERS = ("padding", "terrain", "water", "roads", "plazas", "fields", "fences", "walls", "bridges", "buildings", "roofs", "foliage", "props", "streetlamps")
+COLLISION_DEFAULT = ("terrain", "roads", "plazas", "fields", "fences", "walls", "bridges", "buildings", "props", "streetlamps")
 # `sight` tile flag = the mesh blocks token vision, fog exploration, AmbientLight and AmbientSound polygons (3D Canvas vision worker, see out/vision_walls_research.md).
 # Buildings (an open model door lets it through) and town walls block; tree/foliage chunks block at eye height (trunks, hedges) while tokens still walk through (collision off).
 # OFF: terrain/roads/plazas/fields/bridges/props/padding (ground), water, fences (open), roofs (the GM hides them, they sit above eye height, a hidden roof must not block).
