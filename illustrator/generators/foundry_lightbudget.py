@@ -29,8 +29,9 @@ DEFAULT_PRIORITY = 50
 HYBRID_MAX = 16               # hybrid with no explicit --max-lights
 GLOBAL_AMBIENT = 0.55         # ambient strength used by mode global when none is given
 HYBRID_AMBIENT = 0.45
-AUTO_HYBRID_ABOVE = 64        # auto: more pipeline lights than this -> hybrid
-AUTO_GLOBAL_ABOVE = 256       # auto: more than this -> global
+AUTO_HYBRID_ABOVE = 64        # auto: more pipeline lights than this -> hybrid (72 lights already cost 2.4x the GPU time of 14, measured)
+AUTO_GLOBAL_ABOVE = 150       # auto: more than this -> global (live test: 156 visible lights ran, 206 ran at 28 ms GPU, 306 compiled no shader and drew nothing)
+SAFE_VISIBLE_LIGHTS = 150     # above this many VISIBLE point lights 3D Canvas shaders may exceed the GPU uniform limit (1024 vectors on the test GPU)
 # estimated relative cost (1.0 = the empty scene with sun + ambient); constants from the live measurements, FOUNDRY_3D_CANVAS_NOTES.md section 11
 COST_PER_LIGHT = 0.02
 COST_PER_SHADOW_LIGHT = 0.6
@@ -271,6 +272,9 @@ def cmd_set_lighting(br, a):
            "hand_hidden_untouched": plan["hand_hidden"], "shadow_casters_after": plan["shadow"], "shadow_casters_now": n_shadow_now, "light_changes": len(plan["items"]),
            "light_unchanged": plan["unchanged"], "flag_changes": flag_changes, "cost_after": estimate_cost(plan["on"], plan["shadow"]),
            "cost_now": estimate_cost(sum(1 for l in lights if not l.get("hidden")), n_shadow_now), "pack_lights": pack_light_counts(a, fp)}
+    if plan["on"] > SAFE_VISIBLE_LIGHTS:
+        res["warning"] = (f"{plan['on']} visible lights is above {SAFE_VISIBLE_LIGHTS}: on the test GPU 206 lights ran at about 28 ms and 306 lights compiled no shaders (blank scene). "
+                          "Lower --max-lights or use hybrid / global.")
     fp.LOG(f"{plan['mode']}: {plan['on']} on / {plan['off']} off of {plan['pipeline']} pipeline lights, {len(plan['items'])} light change(s), {len(flag_changes)} scene flag change(s); {plan['reason']}")
     if not a.apply or a.dry_run:
         res["note"] = "dry run: nothing written, repeat with --apply"

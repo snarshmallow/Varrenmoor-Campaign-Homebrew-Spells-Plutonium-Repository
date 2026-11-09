@@ -137,7 +137,7 @@
 
   // ---------------------------------------------------------------- Foundry 3D lighting: light budget, lighting mode, sun / ambient flags (generators/foundry_lightbudget.py, `set-lighting`)
   // Constants mirror foundry_lightbudget.py (test_lighting_jobs.js checks both give the same numbers).
-  VB.F3D = { HYBRID_MAX: 16, AUTO_HYBRID_ABOVE: 64, AUTO_GLOBAL_ABOVE: 256, COST_PER_LIGHT: 0.02, COST_PER_SHADOW_LIGHT: 0.6, GLOBAL_AMBIENT: 0.55, HYBRID_AMBIENT: 0.45 };
+  VB.F3D = { HYBRID_MAX: 16, AUTO_HYBRID_ABOVE: 64, AUTO_GLOBAL_ABOVE: 150, SAFE_VISIBLE_LIGHTS: 150, COST_PER_LIGHT: 0.02, COST_PER_SHADOW_LIGHT: 0.6, GLOBAL_AMBIENT: 0.55, HYBRID_AMBIENT: 0.45 };
   VB.F3D_TIMES = { "": "keep the scene's time", dawn: "Dawn", noon: "Noon", dusk: "Dusk", night: "Night" };
   VB.f3dDefaults = function () {
     // defaults leave small scenes exactly as before: mode "auto" keeps every light up to 64 lights, no scale, no flag writes
@@ -183,7 +183,8 @@
     on = mode === "global" ? 0 : (cap ? Math.min(cap, n) : n);
     var sh = f.shadows === "on" ? on : (/^\d+$/.test(f.shadows || "") ? Math.min(on, +f.shadows) : 0);
     var rel = 1 + K.COST_PER_LIGHT * on + K.COST_PER_SHADOW_LIGHT * sh;
-    return { mode: mode, on: on, off: n - on, reason: why, shadow: sh, relative: Math.round(rel * 100) / 100, label: rel <= 1.25 ? "low" : rel <= 2 ? "medium" : rel <= 4 ? "high" : "very high" };
+    return { mode: mode, on: on, off: n - on, reason: why, shadow: sh, relative: Math.round(rel * 100) / 100, label: rel <= 1.25 ? "low" : rel <= 2 ? "medium" : rel <= 4 ? "high" : "very high",
+      warn: on > K.SAFE_VISIBLE_LIGHTS ? on + " visible lights is above " + K.SAFE_VISIBLE_LIGHTS + ": on the test GPU 206 lights ran at about 28 ms and 306 drew nothing (shader limit). Lower the budget." : "" };
   };
   VB.jobSetLighting = function (st, d, apply) {
     var args = VB.f3dSetArgs(st, d, apply);

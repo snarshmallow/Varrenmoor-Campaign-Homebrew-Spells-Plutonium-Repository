@@ -110,8 +110,8 @@ class Modes(unittest.TestCase):
         r = flb.resolve_mode("auto", 65)
         self.assertEqual((r["mode"], r["max"]), ("hybrid", flb.HYBRID_MAX))
         self.assertIn("65", r["reason"])
-        self.assertEqual(flb.resolve_mode("auto", 256)["mode"], "hybrid")
-        self.assertEqual(flb.resolve_mode("auto", 257)["mode"], "global")
+        self.assertEqual(flb.resolve_mode("auto", 150)["mode"], "hybrid")
+        self.assertEqual(flb.resolve_mode("auto", 151)["mode"], "global")
         with self.assertRaises(ValueError):
             flb.resolve_mode("bogus", 1)
 

@@ -28,7 +28,8 @@ const runner = R.createRunner({ root: ROOT, jobsDir: tmp + "/jobs", fs, path, sp
   const m = (n, over) => VB.f3dPlan(n, Object.assign({}, VB.f3dDefaults(), over || {}));
   check("auto: 64 lights = all", m(64).mode === "lights" && m(64).on === 64);
   check("auto: 65 lights = hybrid 16", m(65).mode === "hybrid" && m(65).on === 16 && /65 lights is more than 64/.test(m(65).reason));
-  check("auto: 256 hybrid, 257 global", m(256).mode === "hybrid" && m(257).mode === "global" && m(257).on === 0);
+  check("auto: 150 hybrid, 151 global", m(150).mode === "hybrid" && m(151).mode === "global" && m(151).on === 0);
+  check("warns above 150 visible lights", m(300, { mode: "lights" }).warn && !m(100, { mode: "lights" }).warn);
   check("cost 72 lights = 2.44 high (same as python)", m(72, { mode: "lights" }).relative === 2.44 && m(72, { mode: "lights" }).label === "high");
   check("cost global = 1.0 low", m(300, { mode: "global" }).relative === 1 && m(300, { mode: "global" }).label === "low");
   check("4 shadow lights are very high", m(10, { mode: "lights", shadows: "4" }).relative === 3.6 && m(10, { mode: "lights", shadows: "4" }).label === "high");

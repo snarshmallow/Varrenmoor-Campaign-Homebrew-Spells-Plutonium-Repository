@@ -117,7 +117,7 @@
     return '<details open id="f3dBlock"><summary><b>Foundry 3D lighting and light budget</b></summary>' +
       '<p class="note">Applies to the Foundry scene picked on the Foundry tab. Dry run by default: Check shows what would change, Apply writes it. Only the pipeline\'s own lights are touched. Defaults leave small scenes unchanged.</p>' +
       '<p class="note">Target scene: <b id="f3dScene">none</b></p>' +
-      '<div class="grid"><label title="lights = every light as a point light. hybrid = only the most important lights + ambient fill. global = no point lights, ambient + sun only. auto = lights up to 64, hybrid up to 256, global above.">Lighting mode <select data-s="lighting.f3d.mode" id="f3dMode">' +
+      '<div class="grid"><label title="lights = every light as a point light. hybrid = only the most important lights + ambient fill. global = no point lights, ambient + sun only. auto = lights up to 64, hybrid up to 150, global above.">Lighting mode <select data-s="lighting.f3d.mode" id="f3dMode">' +
       opts({ auto: "Auto (by light count)", lights: "Point lights (all)", hybrid: "Hybrid (few lights + ambient)", global: "Global illumination only" }) + "</select></label>" +
       '<label title="Light shadows are the most expensive light feature: every shadow-casting point light renders the scene 6 more times. They only show when the Foundry client setting 3D Canvas shadow quality is above 0.">Light shadows <select data-s="lighting.f3d.shadows" id="f3dShadows">' +
       opts({ "": "leave as is", off: "off (cheapest)", "4": "4 most important", "8": "8 most important", on: "every kept light (slow)" }) + "</select></label>" +
@@ -165,6 +165,7 @@
       var p = VB.f3dPlan(Math.max(0, n2), f);
       lines.push("Lights: " + n + " in the pipeline" + (Object.keys(pack).length ? " (pack: " + Object.keys(pack).map(function (k) { return pack[k] + " " + k; }).join(", ") + ")" : "") + ".");
       lines.push("Plan: " + p.on + " on, " + (n - p.on) + " off, mode " + p.mode + ". " + p.reason + ".");
+      if (p.warn) lines.push("WARNING: " + p.warn);
       lines.push("Estimated cost: " + p.relative + "x an empty scene (" + p.label + ")" + (last && last.cost_now ? "; the scene is at " + last.cost_now.relative + "x (" + last.cost_now.label + ") now" : "") + ".");
     }
     if (last) lines.push("Last " + (last.applied ? "apply" : "check") + " (" + String(last.at || "").replace("T", " ").slice(0, 19) + "): " + last.on + " of " + last.pipeline + " lights on, " + last.shadow + " casting shadows" +
