@@ -34,7 +34,7 @@ def build(k):
     M, W, B = S.M, S.W, S.B
     frost = k.mat("frost_rime", (0.78, 0.86, 0.95), roughness=0.35)
     mist = k.mat("cold_mist", (0.70, 0.78, 0.88), roughness=1.0)
-    dust = k.mat("dust", (0.42, 0.40, 0.36), roughness=1.0)
+    dust = k.mat("dust", (0.20, 0.19, 0.17), roughness=1.0)
 
     def sep(o, name):
         o.name = name
@@ -98,7 +98,7 @@ def build(k):
     # dust on the floor and on the plinth
     for (x, y, sx, sy) in ((10, 9, 1.8, 1.0), (20, 12, 1.2, 0.8), (6, 22, 1.6, 1.1), (26, 4, 1.4, 0.6), (36, 26, 1.0, 0.7)):
         px, py = P(x, y)
-        k.sphere(1.0, loc=(px, py, F + 0.002), scale=(sx, sy, 0.006), material=dust, name="dust", segments=10)
+        k.sphere(1.0, loc=(px, py, F + 0.002), scale=(sx * 0.7, sy * 0.7, 0.006), material=dust, name="dust", segments=10)
 
     # PELL'S RAIL along the north wall, x 5..30 ft, with his counterweighted chair
     r0, _ = P(5, 0)
