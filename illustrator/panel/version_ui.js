@@ -41,22 +41,21 @@
     disarm(); reload(0, !!staleNow);
   }
 
-  // level 0 location.reload(true); 1 navigation to the same file with ?r=<now>; 2 close and reopen the extension. A watchdog escalates when the page is still alive.
+  // level 0 location.reload(true); 1 navigation to the same file with ?r=<now>. NEVER close the extension (a close/reopen from inside the page left the panel blank when the reopen did not run). A slow reload is given 12 s before level 1 is tried.
   function reload(level, wasStale) {
     try { ctx.saveNow(); } catch (e) { /* ignore */ }
     var det = $("hpDetails"), m = document.querySelector("main"), st = ctx.state();
     var blob = { t: Date.now(), level: level, wasStale: !!wasStale, fromHash: ver.loaded.hash, fromMtime: ver.loaded.mtime, place: st && st.place, tab: st && st.ui && st.ui.tab,
       hpOpen: !!(det && det.open), scroll: m ? m.scrollTop : 0, winScroll: window.pageYOffset || 0 };
     ls("set", KEY, JSON.stringify(blob));
-    ctx.logLine("Reloading panel (method " + (level + 1) + "/3)...");
+    ctx.logLine("Reloading panel (method " + (level + 1) + "/2)...");
     try {
       if (st && st.place) ctx.writeLastPlace(st.place);
       if (level === 0) location.reload(true);
-      else if (level === 1) location.href = pageBase() + "?r=" + Date.now();
-      else { var id = ctx.cs().getExtensionID(); ctx.cs().closeExtension(); setTimeout(function () { try { ctx.cs().requestOpenExtension(id); } catch (e) { /* page is gone */ } }, 300); }
+      else location.href = pageBase() + "?r=" + Date.now();
     } catch (e) { ctx.logLine("Reload step failed: " + (e && e.message || e)); }
     clearTimeout(escTimer);
-    if (level < 2) escTimer = setTimeout(function () { ctx.logLine("Page did not reload, trying the next method"); reload(level + 1, wasStale); }, 2500);   // still running = the reload had no effect
+    if (level < 1) escTimer = setTimeout(function () { ctx.logLine("Page did not reload within 12 s, trying the next method"); reload(level + 1, wasStale); }, 12000);   // still running = the reload had no effect; the new page cancels this timer by replacing the old one
   }
 
   function init(c) {
@@ -83,7 +82,7 @@
     } catch (e) { /* best effort */ }
     ctx.logLine("reloaded to " + ver.label() + (same ? " (no newer files than before)" : ""));
     var t = $("verText"); if (t) { t.textContent = "reloaded to " + ver.short(); setTimeout(function () { paintBadge(null); }, 8000); }
-    if (same && blob.wasStale && blob.level < 2) {   // disk was newer, yet the same code came back: try the stronger method
+    if (same && blob.wasStale && blob.level < 1) {   // disk was newer, yet the same code came back: try the navigation method (never close the extension)
       ctx.logLine("Reload brought no newer version although files changed: escalating");
       setTimeout(function () { reload(blob.level + 1, true); }, 500);
     }
