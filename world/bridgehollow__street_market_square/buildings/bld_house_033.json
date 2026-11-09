@@ -1,0 +1,46 @@
+{
+ "id": "bld_house_033",
+ "name": "House 33",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    292.7,
+    77.8
+   ],
+   [
+    292.3,
+    65.0
+   ],
+   [
+    273.2,
+    65.6
+   ],
+   [
+    273.7,
+    78.5
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 662.3,
+ "site_slope": 0.069,
+ "site_relief_ft": 1.3,
+ "region": {
+  "parent_id": "bld_house_033",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

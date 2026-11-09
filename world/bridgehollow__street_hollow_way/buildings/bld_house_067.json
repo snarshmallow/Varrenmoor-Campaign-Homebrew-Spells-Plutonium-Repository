@@ -1,0 +1,47 @@
+{
+ "id": "bld_house_067",
+ "name": "House 67",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    261.7,
+    285.9
+   ],
+   [
+    277.6,
+    312.9
+   ],
+   [
+    285.3,
+    308.3
+   ],
+   [
+    269.4,
+    281.4
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 654.1,
+ "site_slope": 0.057,
+ "site_relief_ft": 1.7,
+ "style": "bh_inner_house_winter",
+ "region": {
+  "parent_id": "bld_house_067",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

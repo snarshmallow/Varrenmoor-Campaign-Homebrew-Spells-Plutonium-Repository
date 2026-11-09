@@ -1,0 +1,166 @@
+{
+ "region_outline": [
+  [
+   294.2,
+   6.4
+  ],
+  [
+   294.2,
+   465.2
+  ],
+  [
+   6.1,
+   465.2
+  ],
+  [
+   6.1,
+   6.4
+  ]
+ ],
+ "markers": [
+  {
+   "id": "mk_str_005_end",
+   "kind": "continues_off_map",
+   "street": "str_005",
+   "parent_street": "str_005",
+   "point": [
+    26.96,
+    6.4
+   ],
+   "dir": [
+    0.13,
+    -0.991
+   ],
+   "width_ft": 18.0,
+   "label": "Cooper Row continues"
+  },
+  {
+   "id": "mk_str_008_start",
+   "kind": "continues_off_map",
+   "street": "str_008",
+   "parent_street": "str_008",
+   "point": [
+    6.1,
+    25.12
+   ],
+   "dir": [
+    -0.983,
+    0.183
+   ],
+   "width_ft": 20.4,
+   "label": "Hollow Way continues"
+  },
+  {
+   "id": "mk_str_008_end",
+   "kind": "continues_off_map",
+   "street": "str_008",
+   "parent_street": "str_008",
+   "point": [
+    115.86,
+    6.4
+   ],
+   "dir": [
+    0.954,
+    -0.3
+   ],
+   "width_ft": 20.4,
+   "label": "Hollow Way continues"
+  },
+  {
+   "id": "mk_str_009_start",
+   "kind": "continues_off_map",
+   "street": "str_009",
+   "parent_street": "str_009",
+   "point": [
+    185.04,
+    6.4
+   ],
+   "dir": [
+    0.363,
+    -0.932
+   ],
+   "width_ft": 24.0,
+   "label": "Alley 9 continues"
+  },
+  {
+   "id": "mk_str_011_start",
+   "kind": "continues_off_map",
+   "street": "str_011",
+   "parent_street": "str_011",
+   "point": [
+    6.1,
+    75.0
+   ],
+   "dir": [
+    -0.447,
+    -0.894
+   ],
+   "width_ft": 20.7,
+   "label": "Cobbler Row continues"
+  },
+  {
+   "id": "mk_str_014_start",
+   "kind": "continues_off_map",
+   "street": "str_014",
+   "parent_street": "str_014",
+   "point": [
+    98.6,
+    6.4
+   ],
+   "dir": [
+    0.202,
+    -0.979
+   ],
+   "width_ft": 24.0,
+   "label": "Warden Street continues"
+  },
+  {
+   "id": "mk_str_016_start",
+   "kind": "continues_off_map",
+   "street": "str_016",
+   "parent_street": "str_016",
+   "point": [
+    6.1,
+    226.44
+   ],
+   "dir": [
+    -0.611,
+    -0.791
+   ],
+   "width_ft": 18.0,
+   "label": "Dyers Walk continues"
+  },
+  {
+   "id": "mk_str_023_start",
+   "kind": "continues_off_map",
+   "street": "str_023",
+   "parent_street": "str_023",
+   "point": [
+    6.1,
+    412.03
+   ],
+   "dir": [
+    -0.969,
+    -0.248
+   ],
+   "width_ft": 18.0,
+   "label": "Alley 23 continues"
+  },
+  {
+   "id": "mk_str_024_end",
+   "kind": "continues_off_map",
+   "street": "str_024",
+   "parent_street": "str_024",
+   "point": [
+    47.2,
+    465.2
+   ],
+   "dir": [
+    -0.611,
+    0.791
+   ],
+   "width_ft": 24.0,
+   "label": "Weavers Walk 2 continues"
+  }
+ ]
+}

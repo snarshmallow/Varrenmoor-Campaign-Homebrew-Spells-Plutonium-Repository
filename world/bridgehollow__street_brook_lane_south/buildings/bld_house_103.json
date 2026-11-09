@@ -1,0 +1,47 @@
+{
+ "id": "bld_house_103",
+ "name": "House 103",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    11.6,
+    58.5
+   ],
+   [
+    15.5,
+    42.2
+   ],
+   [
+    -1.5,
+    38.1
+   ],
+   [
+    -5.4,
+    54.4
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 639.3,
+ "site_slope": 0.119,
+ "site_relief_ft": 2.9,
+ "style": "bh_inner_house_winter",
+ "region": {
+  "parent_id": "bld_house_103",
+  "clipped": false,
+  "edge": true,
+  "inside_frac": 0.779,
+  "in_region_frac": 0.779
+ }
+}

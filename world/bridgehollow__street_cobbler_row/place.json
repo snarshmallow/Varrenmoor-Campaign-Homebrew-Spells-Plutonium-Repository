@@ -1,0 +1,59 @@
+{
+ "id": "bridgehollow__street_cobbler_row",
+ "name": "Bridgehollow (draft) - Cobbler Row",
+ "kind": "district",
+ "status": "proposed",
+ "units": "feet",
+ "origin": "top-left, y down",
+ "bounds": {
+  "width_ft": 423.8,
+  "height_ft": 504.1
+ },
+ "window_ft": [
+  3.3,
+  8.1,
+  423.8,
+  504.1
+ ],
+ "parent": {
+  "place": "bridgehollow",
+  "region": "region.json"
+ },
+ "notes": "Zoom-in child of bridgehollow (region Cobbler Row). Same ids and foot coordinates as the parent shifted by origin_ft 710.0,550.0. See region.json; details.json is generated, not canon.",
+ "files": {
+  "districts": "districts.json",
+  "streets": "streets.json",
+  "water": "water.json",
+  "buildings": "buildings/",
+  "view_settings": "view_settings.json",
+  "terrain": "terrain/",
+  "region": "region.json",
+  "details": "details.json",
+  "markers": "markers.json"
+ },
+ "view_focus": {
+  "district": [
+   213.5,
+   256.1
+  ]
+ },
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null,
+  "parent_place": "bridgehollow",
+  "scene_name": "Bridgehollow - Cobbler Row (Winter)"
+ },
+ "generated_by": "region_extract.py",
+ "sea_level_ft": 0.0,
+ "season": "winter",
+ "street": {
+  "key": "cobbler_row",
+  "part": 1,
+  "parts": 1,
+  "street_ids": [
+   "str_011"
+  ],
+  "generated_by": "bridgehollow_streets.py"
+ }
+}

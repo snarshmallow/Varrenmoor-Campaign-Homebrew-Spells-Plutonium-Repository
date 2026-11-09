@@ -1,0 +1,47 @@
+{
+ "id": "bld_shed_018",
+ "name": "Shed 18",
+ "kind": "shed",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    69.2,
+    46.6
+   ],
+   [
+    65.7,
+    52.4
+   ],
+   [
+    72.3,
+    56.4
+   ],
+   [
+    75.7,
+    50.6
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 659.0,
+ "site_slope": 0.09,
+ "site_relief_ft": 0.8,
+ "style": "bh_ring_outbuilding_winter",
+ "region": {
+  "parent_id": "bld_shed_018",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

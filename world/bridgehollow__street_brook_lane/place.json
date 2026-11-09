@@ -1,0 +1,59 @@
+{
+ "id": "bridgehollow__street_brook_lane",
+ "name": "Bridgehollow (draft) - Brook Lane",
+ "kind": "district",
+ "status": "proposed",
+ "units": "feet",
+ "origin": "top-left, y down",
+ "bounds": {
+  "width_ft": 283.6,
+  "height_ft": 524.8
+ },
+ "window_ft": [
+  9.8,
+  1.8,
+  283.6,
+  524.8
+ ],
+ "parent": {
+  "place": "bridgehollow",
+  "region": "region.json"
+ },
+ "notes": "Zoom-in child of bridgehollow (region Brook Lane). Same ids and foot coordinates as the parent shifted by origin_ft 1250.0,420.0. See region.json; details.json is generated, not canon.",
+ "files": {
+  "districts": "districts.json",
+  "streets": "streets.json",
+  "water": "water.json",
+  "buildings": "buildings/",
+  "view_settings": "view_settings.json",
+  "terrain": "terrain/",
+  "region": "region.json",
+  "details": "details.json",
+  "markers": "markers.json"
+ },
+ "view_focus": {
+  "district": [
+   146.7,
+   263.3
+  ]
+ },
+ "links": {
+  "foundry_scene": "Scene.nNY2jIUZGJqwPjd3",
+  "model3d": null,
+  "ai_layer": null,
+  "parent_place": "bridgehollow",
+  "scene_name": "Bridgehollow - Brook Lane (Winter)"
+ },
+ "generated_by": "region_extract.py",
+ "sea_level_ft": 0.0,
+ "season": "winter",
+ "street": {
+  "key": "brook_lane",
+  "part": 1,
+  "parts": 1,
+  "street_ids": [
+   "str_007"
+  ],
+  "generated_by": "bridgehollow_streets.py"
+ }
+}

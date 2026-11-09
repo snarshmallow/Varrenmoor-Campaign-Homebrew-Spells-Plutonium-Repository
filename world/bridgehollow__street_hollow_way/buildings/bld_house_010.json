@@ -1,0 +1,46 @@
+{
+ "id": "bld_house_010",
+ "name": "House 10",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    315.0,
+    31.6
+   ],
+   [
+    298.4,
+    42.3
+   ],
+   [
+    306.5,
+    54.7
+   ],
+   [
+    323.1,
+    44.0
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 664.4,
+ "site_slope": 0.146,
+ "site_relief_ft": 1.9,
+ "region": {
+  "parent_id": "bld_house_010",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

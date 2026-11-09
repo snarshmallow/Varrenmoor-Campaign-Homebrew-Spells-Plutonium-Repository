@@ -1,0 +1,102 @@
+{
+ "region_outline": [
+  [
+   303.0,
+   9.9
+  ],
+  [
+   303.0,
+   350.4
+  ],
+  [
+   0.3,
+   350.4
+  ],
+  [
+   0.3,
+   9.9
+  ]
+ ],
+ "markers": [
+  {
+   "id": "mk_str_pilgrim_road_1_start",
+   "kind": "continues_off_map",
+   "street": "str_pilgrim_road_1",
+   "parent_street": "str_pilgrim_road_1",
+   "point": [
+    190.5,
+    350.4
+   ],
+   "dir": [
+    0.515,
+    0.857
+   ],
+   "width_ft": 30,
+   "label": "Pilgrim Road continues"
+  },
+  {
+   "id": "mk_str_pilgrim_road_1_end",
+   "kind": "continues_off_map",
+   "street": "str_pilgrim_road_1",
+   "parent_street": "str_pilgrim_road_1",
+   "point": [
+    225.69,
+    9.9
+   ],
+   "dir": [
+    -0.565,
+    -0.825
+   ],
+   "width_ft": 30,
+   "label": "Pilgrim Road continues"
+  },
+  {
+   "id": "mk_str_021_start",
+   "kind": "continues_off_map",
+   "street": "str_021",
+   "parent_street": "str_021",
+   "point": [
+    158.05,
+    9.9
+   ],
+   "dir": [
+    -0.477,
+    -0.879
+   ],
+   "width_ft": 22.8,
+   "label": "Cartwright Lane 2 continues"
+  },
+  {
+   "id": "mk_str_022_start",
+   "kind": "continues_off_map",
+   "street": "str_022",
+   "parent_street": "str_022",
+   "point": [
+    303.0,
+    19.72
+   ],
+   "dir": [
+    0.562,
+    0.827
+   ],
+   "width_ft": 21.0,
+   "label": "Tanners Row 2 continues"
+  },
+  {
+   "id": "mk_str_022_end",
+   "kind": "continues_off_map",
+   "street": "str_022",
+   "parent_street": "str_022",
+   "point": [
+    296.33,
+    9.9
+   ],
+   "dir": [
+    -0.562,
+    -0.827
+   ],
+   "width_ft": 21.0,
+   "label": "Tanners Row 2 continues"
+  }
+ ]
+}

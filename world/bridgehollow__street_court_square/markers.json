@@ -1,0 +1,214 @@
+{
+ "region_outline": [
+  [
+   286.7,
+   7.4
+  ],
+  [
+   286.7,
+   350.7
+  ],
+  [
+   2.1,
+   350.7
+  ],
+  [
+   2.1,
+   7.4
+  ]
+ ],
+ "markers": [
+  {
+   "id": "mk_str_pilgrim_road_1_start",
+   "kind": "continues_off_map",
+   "street": "str_pilgrim_road_1",
+   "parent_street": "str_pilgrim_road_1",
+   "point": [
+    286.7,
+    246.57
+   ],
+   "dir": [
+    0.699,
+    0.715
+   ],
+   "width_ft": 30,
+   "label": "Pilgrim Road continues"
+  },
+  {
+   "id": "mk_str_003_start",
+   "kind": "continues_off_map",
+   "street": "str_003",
+   "parent_street": "str_003",
+   "point": [
+    2.1,
+    23.08
+   ],
+   "dir": [
+    -0.995,
+    -0.096
+   ],
+   "width_ft": 15.3,
+   "label": "Alley 3 continues"
+  },
+  {
+   "id": "mk_str_003_end",
+   "kind": "continues_off_map",
+   "street": "str_003",
+   "parent_street": "str_003",
+   "point": [
+    61.67,
+    7.4
+   ],
+   "dir": [
+    -0.061,
+    -0.998
+   ],
+   "width_ft": 15.3,
+   "label": "Alley 3 continues"
+  },
+  {
+   "id": "mk_str_004_start",
+   "kind": "continues_off_map",
+   "street": "str_004",
+   "parent_street": "str_004",
+   "point": [
+    184.62,
+    7.4
+   ],
+   "dir": [
+    0.498,
+    -0.867
+   ],
+   "width_ft": 15.3,
+   "label": "Alley 4 continues"
+  },
+  {
+   "id": "mk_str_005_start",
+   "kind": "continues_off_map",
+   "street": "str_005",
+   "parent_street": "str_005",
+   "point": [
+    2.1,
+    82.98
+   ],
+   "dir": [
+    -0.285,
+    0.958
+   ],
+   "width_ft": 18.0,
+   "label": "Cooper Row continues"
+  },
+  {
+   "id": "mk_str_005_end",
+   "kind": "continues_off_map",
+   "street": "str_005",
+   "parent_street": "str_005",
+   "point": [
+    60.4,
+    7.4
+   ],
+   "dir": [
+    0.783,
+    -0.621
+   ],
+   "width_ft": 18.0,
+   "label": "Cooper Row continues"
+  },
+  {
+   "id": "mk_str_008_start",
+   "kind": "continues_off_map",
+   "street": "str_008",
+   "parent_street": "str_008",
+   "point": [
+    2.1,
+    121.52
+   ],
+   "dir": [
+    -0.998,
+    0.057
+   ],
+   "width_ft": 20.4,
+   "label": "Hollow Way continues"
+  },
+  {
+   "id": "mk_str_011_start",
+   "kind": "continues_off_map",
+   "street": "str_011",
+   "parent_street": "str_011",
+   "point": [
+    2.1,
+    224.81
+   ],
+   "dir": [
+    -0.513,
+    -0.858
+   ],
+   "width_ft": 20.7,
+   "label": "Cobbler Row continues"
+  },
+  {
+   "id": "mk_str_014_start",
+   "kind": "continues_off_map",
+   "street": "str_014",
+   "parent_street": "str_014",
+   "point": [
+    137.01,
+    7.4
+   ],
+   "dir": [
+    0.838,
+    -0.545
+   ],
+   "width_ft": 24.0,
+   "label": "Warden Street continues"
+  },
+  {
+   "id": "mk_str_014_end",
+   "kind": "continues_off_map",
+   "street": "str_014",
+   "parent_street": "str_014",
+   "point": [
+    76.45,
+    350.7
+   ],
+   "dir": [
+    0.15,
+    0.989
+   ],
+   "width_ft": 24.0,
+   "label": "Warden Street continues"
+  },
+  {
+   "id": "mk_str_019_start",
+   "kind": "continues_off_map",
+   "street": "str_019",
+   "parent_street": "str_019",
+   "point": [
+    50.84,
+    350.7
+   ],
+   "dir": [
+    -0.926,
+    0.377
+   ],
+   "width_ft": 20.4,
+   "label": "Potters Row continues"
+  },
+  {
+   "id": "mk_str_024_end",
+   "kind": "continues_off_map",
+   "street": "str_024",
+   "parent_street": "str_024",
+   "point": [
+    139.71,
+    350.7
+   ],
+   "dir": [
+    -0.02,
+    1.0
+   ],
+   "width_ft": 24.0,
+   "label": "Weavers Walk 2 continues"
+  }
+ ]
+}

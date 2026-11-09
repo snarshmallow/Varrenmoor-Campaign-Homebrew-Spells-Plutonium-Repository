@@ -1,0 +1,59 @@
+{
+ "id": "bridgehollow__street_court_square",
+ "name": "Bridgehollow (draft) - Court Square",
+ "kind": "district",
+ "status": "proposed",
+ "units": "feet",
+ "origin": "top-left, y down",
+ "bounds": {
+  "width_ft": 286.7,
+  "height_ft": 350.7
+ },
+ "window_ft": [
+  2.1,
+  7.4,
+  286.7,
+  350.7
+ ],
+ "parent": {
+  "place": "bridgehollow",
+  "region": "region.json"
+ },
+ "notes": "Zoom-in child of bridgehollow (region Court Square). Same ids and foot coordinates as the parent shifted by origin_ft 940.0,600.0. See region.json; details.json is generated, not canon.",
+ "files": {
+  "districts": "districts.json",
+  "streets": "streets.json",
+  "water": "water.json",
+  "buildings": "buildings/",
+  "view_settings": "view_settings.json",
+  "terrain": "terrain/",
+  "region": "region.json",
+  "details": "details.json",
+  "markers": "markers.json"
+ },
+ "view_focus": {
+  "district": [
+   144.4,
+   179.1
+  ]
+ },
+ "links": {
+  "foundry_scene": "Scene.7BbqkJxx0UgNlMsY",
+  "model3d": null,
+  "ai_layer": null,
+  "parent_place": "bridgehollow",
+  "scene_name": "Bridgehollow - Court Square (Winter)"
+ },
+ "generated_by": "region_extract.py",
+ "sea_level_ft": 0.0,
+ "season": "winter",
+ "street": {
+  "key": "court_square",
+  "part": 1,
+  "parts": 1,
+  "street_ids": [
+   "sqr_court"
+  ],
+  "generated_by": "bridgehollow_streets.py"
+ }
+}

@@ -1,0 +1,47 @@
+{
+ "id": "bld_house_091",
+ "name": "House 91",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    274.4,
+    335.9
+   ],
+   [
+    278.4,
+    352.2
+   ],
+   [
+    290.0,
+    349.4
+   ],
+   [
+    286.0,
+    333.1
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 642.9,
+ "site_slope": 0.096,
+ "site_relief_ft": 1.3,
+ "style": "bh_warden_house_winter",
+ "region": {
+  "parent_id": "bld_house_091",
+  "clipped": false,
+  "edge": true,
+  "inside_frac": 0.858,
+  "in_region_frac": 0.858
+ }
+}

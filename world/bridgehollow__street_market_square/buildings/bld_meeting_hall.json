@@ -1,0 +1,47 @@
+{
+ "id": "bld_meeting_hall",
+ "name": "Meeting Hall",
+ "kind": "civic",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    20.8,
+    345.9
+   ],
+   [
+    18.1,
+    310.0
+   ],
+   [
+    4.2,
+    311.1
+   ],
+   [
+    7.0,
+    347.0
+   ]
+  ]
+ },
+ "notes": "Plain hall for town meetings; no religious use.",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 642.3,
+ "site_slope": 0.103,
+ "site_relief_ft": 2.2,
+ "style": "bh_warden_civic_winter",
+ "region": {
+  "parent_id": "bld_meeting_hall",
+  "clipped": false,
+  "edge": true,
+  "inside_frac": 0.81,
+  "in_region_frac": 0.81
+ }
+}

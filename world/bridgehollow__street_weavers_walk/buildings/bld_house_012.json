@@ -1,0 +1,47 @@
+{
+ "id": "bld_house_012",
+ "name": "House 12",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    39.1,
+    106.1
+   ],
+   [
+    46.9,
+    98.9
+   ],
+   [
+    33.5,
+    84.4
+   ],
+   [
+    25.7,
+    91.6
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 654.9,
+ "site_slope": 0.099,
+ "site_relief_ft": 1.9,
+ "style": "bh_inner_house_winter",
+ "region": {
+  "parent_id": "bld_house_012",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

@@ -1,0 +1,46 @@
+{
+ "id": "bld_house_032",
+ "name": "House 32",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    181.5,
+    164.7
+   ],
+   [
+    204.9,
+    148.2
+   ],
+   [
+    198.6,
+    139.2
+   ],
+   [
+    175.1,
+    155.7
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 658.7,
+ "site_slope": 0.075,
+ "site_relief_ft": 1.9,
+ "region": {
+  "parent_id": "bld_house_032",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

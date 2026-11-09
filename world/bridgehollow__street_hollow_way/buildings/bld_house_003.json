@@ -1,0 +1,46 @@
+{
+ "id": "bld_house_003",
+ "name": "House 3",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    314.8,
+    -0.7
+   ],
+   [
+    302.6,
+    6.1
+   ],
+   [
+    310.6,
+    20.5
+   ],
+   [
+    322.8,
+    13.6
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 668.9,
+ "site_slope": 0.188,
+ "site_relief_ft": 3.1,
+ "region": {
+  "parent_id": "bld_house_003",
+  "clipped": false,
+  "edge": true,
+  "inside_frac": 0.91,
+  "in_region_frac": 0.91
+ }
+}

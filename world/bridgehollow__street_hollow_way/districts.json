@@ -1,0 +1,315 @@
+{
+ "place": "bridgehollow__street_hollow_way",
+ "districts": [
+  {
+   "id": "dis_authority",
+   "name": "Authority Ward",
+   "kind": "district",
+   "status": "proposed",
+   "geometry": {
+    "type": "polygon",
+    "points": [
+     [
+      414.4,
+      80.0
+     ],
+     [
+      380.0,
+      93.0
+     ],
+     [
+      350.0,
+      110.1
+     ],
+     [
+      320.0,
+      136.2
+     ],
+     [
+      295.6,
+      170.0
+     ],
+     [
+      282.3,
+      200.0
+     ],
+     [
+      275.9,
+      230.0
+     ],
+     [
+      276.8,
+      260.0
+     ],
+     [
+      284.2,
+      290.0
+     ],
+     [
+      300.0,
+      323.6
+     ],
+     [
+      315.07,
+      343.8
+     ],
+     [
+      566.4,
+      343.8
+     ],
+     [
+      566.4,
+      88.9
+     ],
+     [
+      550.0,
+      77.6
+     ],
+     [
+      520.0,
+      68.5
+     ],
+     [
+      490.0,
+      66.6
+     ],
+     [
+      456.2,
+      70.0
+     ]
+    ]
+   },
+   "notes": "Wardens, court, tax office and lockup on the low rise.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "ring": "authority",
+   "label_point": [
+    317.7,
+    243.7
+   ],
+   "elevation_ft": 646.7,
+   "region": {
+    "parent_id": "dis_authority",
+    "clipped": true,
+    "inside_frac": 0.754,
+    "part": 1
+   }
+  },
+  {
+   "id": "dis_commoner",
+   "name": "Commoners' Ring",
+   "kind": "district",
+   "status": "proposed",
+   "geometry": {
+    "type": "polygon",
+    "points": [
+     [
+      289.5,
+      10.2
+     ],
+     [
+      239.7,
+      45.3
+     ],
+     [
+      183.7,
+      90.6
+     ],
+     [
+      158.9,
+      116.7
+     ],
+     [
+      138.1,
+      146.1
+     ],
+     [
+      120.0,
+      187.7
+     ],
+     [
+      110.1,
+      214.9
+     ],
+     [
+      105.7,
+      247.8
+     ],
+     [
+      108.5,
+      283.8
+     ],
+     [
+      123.61,
+      343.8
+     ],
+     [
+      566.4,
+      343.8
+     ],
+     [
+      566.4,
+      35.58
+     ],
+     [
+      510.49,
+      3.5
+     ],
+     [
+      314.26,
+      3.5
+     ]
+    ]
+   },
+   "notes": "Commoners' homes and trades around the centre.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "ring": "commoner",
+   "label_point": [
+    150.0,
+    220.0
+   ],
+   "elevation_ft": 653.6,
+   "region": {
+    "parent_id": "dis_commoner",
+    "clipped": true,
+    "inside_frac": 0.393,
+    "part": 1
+   }
+  },
+  {
+   "id": "sqr_market",
+   "name": "Market Square",
+   "kind": "square",
+   "status": "proposed",
+   "geometry": {
+    "type": "polygon",
+    "points": [
+     [
+      563.6,
+      208.5
+     ],
+     [
+      557.4,
+      220.0
+     ],
+     [
+      554.3,
+      233.0
+     ],
+     [
+      558.3,
+      245.9
+     ],
+     [
+      565.2,
+      256.7
+     ],
+     [
+      566.4,
+      257.78
+     ],
+     [
+      566.4,
+      205.51
+     ]
+    ]
+   },
+   "notes": "Open plaza grown at a junction.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "elevation_ft": 652.0,
+   "region": {
+    "parent_id": "sqr_market",
+    "clipped": true,
+    "inside_frac": 0.056,
+    "part": 1
+   }
+  },
+  {
+   "id": "sqr_court",
+   "name": "Court Square",
+   "kind": "square",
+   "status": "proposed",
+   "geometry": {
+    "type": "polygon",
+    "points": [
+     [
+      412.3,
+      182.3
+     ],
+     [
+      405.4,
+      194.3
+     ],
+     [
+      402.1,
+      207.2
+     ],
+     [
+      402.6,
+      232.7
+     ],
+     [
+      406.4,
+      245.2
+     ],
+     [
+      413.4,
+      256.6
+     ],
+     [
+      423.5,
+      266.0
+     ],
+     [
+      436.5,
+      270.2
+     ],
+     [
+      446.7,
+      270.8
+     ],
+     [
+      441.2,
+      197.7
+     ],
+     [
+      443.8,
+      167.3
+     ],
+     [
+      436.0,
+      167.7
+     ],
+     [
+      422.4,
+      172.1
+     ]
+    ]
+   },
+   "notes": "Open plaza grown at a junction.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "elevation_ft": 646.9,
+   "region": {
+    "parent_id": "sqr_court",
+    "clipped": false,
+    "inside_frac": 1.0,
+    "part": 1
+   }
+  }
+ ]
+}

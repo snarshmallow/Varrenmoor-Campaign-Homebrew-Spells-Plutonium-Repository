@@ -1,0 +1,46 @@
+{
+ "id": "bld_house_064",
+ "name": "House 64",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    176.0,
+    292.5
+   ],
+   [
+    166.2,
+    277.9
+   ],
+   [
+    145.2,
+    292.0
+   ],
+   [
+    155.1,
+    306.6
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 655.0,
+ "site_slope": 0.065,
+ "site_relief_ft": 1.6,
+ "region": {
+  "parent_id": "bld_house_064",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

@@ -1,0 +1,47 @@
+{
+ "id": "bld_house_043",
+ "name": "House 43",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    165.5,
+    193.6
+   ],
+   [
+    153.6,
+    180.4
+   ],
+   [
+    142.4,
+    190.5
+   ],
+   [
+    154.3,
+    203.7
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 657.4,
+ "site_slope": 0.071,
+ "site_relief_ft": 1.5,
+ "style": "bh_inner_house_winter",
+ "region": {
+  "parent_id": "bld_house_043",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

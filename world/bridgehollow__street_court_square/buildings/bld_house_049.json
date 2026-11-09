@@ -1,0 +1,47 @@
+{
+ "id": "bld_house_049",
+ "name": "House 49",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    29.9,
+    191.2
+   ],
+   [
+    29.1,
+    176.9
+   ],
+   [
+    0.2,
+    178.6
+   ],
+   [
+    1.1,
+    192.9
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 656.9,
+ "site_slope": 0.049,
+ "site_relief_ft": 1.2,
+ "style": "bh_warden_house_winter",
+ "region": {
+  "parent_id": "bld_house_049",
+  "clipped": false,
+  "edge": true,
+  "inside_frac": 0.95,
+  "in_region_frac": 0.95
+ }
+}

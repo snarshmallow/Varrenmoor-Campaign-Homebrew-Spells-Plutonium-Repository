@@ -1,0 +1,46 @@
+{
+ "id": "bld_house_022",
+ "name": "House 22",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    211.1,
+    97.3
+   ],
+   [
+    201.7,
+    90.9
+   ],
+   [
+    192.3,
+    104.7
+   ],
+   [
+    201.7,
+    111.1
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 2,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 663.8,
+ "site_slope": 0.061,
+ "site_relief_ft": 1.1,
+ "region": {
+  "parent_id": "bld_house_022",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

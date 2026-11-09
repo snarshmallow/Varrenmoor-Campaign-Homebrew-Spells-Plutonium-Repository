@@ -1,0 +1,46 @@
+{
+ "id": "bld_house_016",
+ "name": "House 16",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    247.4,
+    78.9
+   ],
+   [
+    255.2,
+    88.0
+   ],
+   [
+    265.4,
+    79.2
+   ],
+   [
+    257.7,
+    70.1
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 664.2,
+ "site_slope": 0.064,
+ "site_relief_ft": 1.0,
+ "region": {
+  "parent_id": "bld_house_016",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

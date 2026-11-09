@@ -1,0 +1,580 @@
+{
+ "place": "bridgehollow__street_weavers_walk",
+ "districts": [
+  {
+   "id": "dis_authority",
+   "name": "Authority Ward",
+   "kind": "district",
+   "status": "proposed",
+   "geometry": {
+    "type": "polygon",
+    "points": [
+     [
+      154.6,
+      310.0
+     ],
+     [
+      151.6,
+      270.0
+     ],
+     [
+      143.1,
+      220.0
+     ],
+     [
+      132.1,
+      180.0
+     ],
+     [
+      120.0,
+      154.6
+     ],
+     [
+      108.0,
+      140.0
+     ],
+     [
+      90.0,
+      127.6
+     ],
+     [
+      60.0,
+      118.5
+     ],
+     [
+      30.0,
+      116.6
+     ],
+     [
+      7.3,
+      118.88
+     ],
+     [
+      7.3,
+      329.6
+     ],
+     [
+      152.77,
+      329.6
+     ]
+    ]
+   },
+   "notes": "Wardens, court, tax office and lockup on the low rise.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "ring": "authority",
+   "elevation_ft": 646.7,
+   "region": {
+    "parent_id": "dis_authority",
+    "clipped": true,
+    "inside_frac": 0.293,
+    "part": 1
+   }
+  },
+  {
+   "id": "dis_commoner",
+   "name": "Commoners' Ring",
+   "kind": "district",
+   "status": "proposed",
+   "geometry": {
+    "type": "polygon",
+    "points": [
+     [
+      340.9,
+      230.0
+     ],
+     [
+      339.1,
+      180.0
+     ],
+     [
+      330.0,
+      150.0
+     ],
+     [
+      314.5,
+      120.0
+     ],
+     [
+      282.4,
+      70.0
+     ],
+     [
+      247.6,
+      26.1
+     ],
+     [
+      233.7,
+      33.5
+     ],
+     [
+      178.8,
+      80.1
+     ],
+     [
+      145.9,
+      93.8
+     ],
+     [
+      110.8,
+      88.1
+     ],
+     [
+      48.4,
+      52.3
+     ],
+     [
+      14.3,
+      41.0
+     ],
+     [
+      7.3,
+      40.01
+     ],
+     [
+      7.3,
+      329.6
+     ],
+     [
+      326.32,
+      329.6
+     ]
+    ]
+   },
+   "notes": "Commoners' homes and trades around the centre.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "ring": "commoner",
+   "elevation_ft": 653.6,
+   "region": {
+    "parent_id": "dis_commoner",
+    "clipped": true,
+    "inside_frac": 0.239,
+    "part": 1
+   }
+  },
+  {
+   "id": "dis_farm",
+   "name": "Farmland",
+   "kind": "district",
+   "status": "proposed",
+   "geometry": {
+    "type": "polygon",
+    "points": [
+     [
+      385.7,
+      307.9
+     ],
+     [
+      377.3,
+      272.9
+     ],
+     [
+      374.6,
+      237.0
+     ],
+     [
+      376.8,
+      129.0
+     ],
+     [
+      371.7,
+      93.5
+     ],
+     [
+      356.0,
+      61.2
+     ],
+     [
+      331.6,
+      35.0
+     ],
+     [
+      300.5,
+      17.1
+     ],
+     [
+      265.1,
+      16.3
+     ],
+     [
+      247.9,
+      26.2
+     ],
+     [
+      289.3,
+      80.0
+     ],
+     [
+      325.4,
+      140.0
+     ],
+     [
+      339.1,
+      180.0
+     ],
+     [
+      341.6,
+      220.0
+     ],
+     [
+      325.46,
+      329.6
+     ],
+     [
+      394.79,
+      329.6
+     ]
+    ]
+   },
+   "notes": "Fields and farmsteads feathering out toward the hills.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "ring": "farm",
+   "elevation_ft": 652.3,
+   "region": {
+    "parent_id": "dis_farm",
+    "clipped": true,
+    "inside_frac": 0.069,
+    "part": 1
+   }
+  },
+  {
+   "id": "sqr_market",
+   "name": "Market Square",
+   "kind": "square",
+   "status": "proposed",
+   "geometry": {
+    "type": "polygon",
+    "points": [
+     [
+      180.4,
+      248.8
+     ],
+     [
+      169.5,
+      242.5
+     ],
+     [
+      158.2,
+      237.9
+     ],
+     [
+      146.1,
+      236.4
+     ],
+     [
+      134.1,
+      238.1
+     ],
+     [
+      122.9,
+      242.8
+     ],
+     [
+      112.3,
+      249.2
+     ],
+     [
+      103.6,
+      258.5
+     ],
+     [
+      97.4,
+      270.0
+     ],
+     [
+      94.3,
+      283.0
+     ],
+     [
+      98.3,
+      295.9
+     ],
+     [
+      105.2,
+      306.7
+     ],
+     [
+      114.3,
+      314.9
+     ],
+     [
+      134.6,
+      326.1
+     ],
+     [
+      146.1,
+      329.4
+     ],
+     [
+      158.6,
+      329.6
+     ],
+     [
+      171.1,
+      326.3
+     ],
+     [
+      180.1,
+      317.0
+     ],
+     [
+      186.1,
+      306.1
+     ],
+     [
+      188.8,
+      294.5
+     ],
+     [
+      188.4,
+      283.0
+     ],
+     [
+      196.0,
+      269.7
+     ],
+     [
+      189.5,
+      258.0
+     ]
+    ]
+   },
+   "notes": "Open plaza grown at a junction.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "elevation_ft": 652.0,
+   "region": {
+    "parent_id": "sqr_market",
+    "clipped": false,
+    "inside_frac": 1.0,
+    "part": 1
+   }
+  },
+  {
+   "id": "fld_001",
+   "name": "Field 001",
+   "kind": "field",
+   "status": "proposed",
+   "geometry": {
+    "type": "polygon",
+    "points": [
+     [
+      226.5,
+      42.4
+     ],
+     [
+      270.3,
+      85.9
+     ],
+     [
+      249.5,
+      35.4
+     ],
+     [
+      250.6,
+      33.6
+     ],
+     [
+      267.1,
+      26.3
+     ],
+     [
+      269.5,
+      26.9
+     ],
+     [
+      291.9,
+      81.1
+     ],
+     [
+      300.6,
+      116.6
+     ],
+     [
+      322.1,
+      138.4
+     ],
+     [
+      369.9,
+      95.0
+     ],
+     [
+      354.9,
+      63.4
+     ],
+     [
+      348.5,
+      56.7
+     ],
+     [
+      338.8,
+      49.2
+     ],
+     [
+      279.6,
+      19.8
+     ],
+     [
+      265.6,
+      18.3
+     ],
+     [
+      234.8,
+      35.2
+     ]
+    ]
+   },
+   "notes": "Irregular field parcel.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "elevation_ft": 668.8,
+   "region": {
+    "parent_id": "fld_001",
+    "clipped": false,
+    "inside_frac": 1.0,
+    "part": 1
+   }
+  },
+  {
+   "id": "fld_002",
+   "name": "Field 002",
+   "kind": "field",
+   "status": "proposed",
+   "geometry": {
+    "type": "polygon",
+    "points": [
+     [
+      305.63,
+      329.6
+     ],
+     [
+      385.58,
+      329.6
+     ],
+     [
+      383.5,
+      320.2
+     ],
+     [
+      382.7,
+      304.0
+     ],
+     [
+      373.5,
+      270.4
+     ],
+     [
+      373.0,
+      116.5
+     ],
+     [
+      370.6,
+      99.8
+     ],
+     [
+      328.1,
+      138.4
+     ],
+     [
+      361.4,
+      137.2
+     ],
+     [
+      362.7,
+      158.3
+     ],
+     [
+      304.2,
+      160.9
+     ],
+     [
+      303.5,
+      230.9
+     ],
+     [
+      319.0,
+      234.7
+     ],
+     [
+      328.8,
+      239.6
+     ],
+     [
+      337.1,
+      246.3
+     ],
+     [
+      344.5,
+      257.1
+     ],
+     [
+      352.4,
+      280.9
+     ],
+     [
+      362.3,
+      281.3
+     ],
+     [
+      374.9,
+      284.2
+     ],
+     [
+      369.8,
+      305.7
+     ],
+     [
+      368.1,
+      307.1
+     ],
+     [
+      350.8,
+      305.3
+     ],
+     [
+      338.7,
+      307.1
+     ],
+     [
+      322.5,
+      312.9
+     ],
+     [
+      301.1,
+      324.4
+     ]
+    ]
+   },
+   "notes": "Irregular field parcel.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "elevation_ft": 663.8,
+   "region": {
+    "parent_id": "fld_002",
+    "clipped": true,
+    "inside_frac": 0.623,
+    "part": 1
+   }
+  }
+ ]
+}

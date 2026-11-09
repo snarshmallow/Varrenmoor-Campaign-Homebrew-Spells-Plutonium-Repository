@@ -1,0 +1,47 @@
+{
+ "id": "bld_treasury",
+ "name": "Town Treasury",
+ "kind": "civic",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    141.6,
+    29.7
+   ],
+   [
+    127.3,
+    45.0
+   ],
+   [
+    146.9,
+    63.4
+   ],
+   [
+    161.2,
+    48.1
+   ]
+  ]
+ },
+ "notes": "Strong room for levies and fines, next to the hall.",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 2,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 654.8,
+ "site_slope": 0.092,
+ "site_relief_ft": 2.4,
+ "style": "bh_warden_civic_winter",
+ "region": {
+  "parent_id": "bld_treasury",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

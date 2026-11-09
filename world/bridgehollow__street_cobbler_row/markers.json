@@ -1,0 +1,118 @@
+{
+ "region_outline": [
+  [
+   423.8,
+   8.1
+  ],
+  [
+   423.8,
+   504.1
+  ],
+  [
+   3.3,
+   504.1
+  ],
+  [
+   3.3,
+   8.1
+  ]
+ ],
+ "markers": [
+  {
+   "id": "mk_str_pilgrim_road_bridge_start",
+   "kind": "continues_off_map",
+   "street": "str_pilgrim_road_bridge",
+   "parent_street": "str_pilgrim_road_bridge",
+   "point": [
+    423.8,
+    240.77
+   ],
+   "dir": [
+    0.911,
+    0.412
+   ],
+   "width_ft": 26,
+   "label": "Pilgrim Bridge continues"
+  },
+  {
+   "id": "mk_str_005_end",
+   "kind": "continues_off_map",
+   "street": "str_005",
+   "parent_street": "str_005",
+   "point": [
+    384.1,
+    8.1
+   ],
+   "dir": [
+    0.97,
+    -0.243
+   ],
+   "width_ft": 18.0,
+   "label": "Cooper Row continues"
+  },
+  {
+   "id": "mk_str_014_start",
+   "kind": "continues_off_map",
+   "street": "str_014",
+   "parent_street": "str_014",
+   "point": [
+    423.8,
+    34.46
+   ],
+   "dir": [
+    0.98,
+    -0.201
+   ],
+   "width_ft": 24.0,
+   "label": "Warden Street continues"
+  },
+  {
+   "id": "mk_str_014_end",
+   "kind": "continues_off_map",
+   "street": "str_014",
+   "parent_street": "str_014",
+   "point": [
+    257.42,
+    504.1
+   ],
+   "dir": [
+    -0.438,
+    0.899
+   ],
+   "width_ft": 24.0,
+   "label": "Warden Street continues"
+  },
+  {
+   "id": "mk_str_023_end",
+   "kind": "continues_off_map",
+   "street": "str_023",
+   "parent_street": "str_023",
+   "point": [
+    190.27,
+    504.1
+   ],
+   "dir": [
+    0.195,
+    0.981
+   ],
+   "width_ft": 18.0,
+   "label": "Alley 23 continues"
+  },
+  {
+   "id": "mk_str_024_end",
+   "kind": "continues_off_map",
+   "street": "str_024",
+   "parent_street": "str_024",
+   "point": [
+    321.81,
+    504.1
+   ],
+   "dir": [
+    -0.433,
+    0.901
+   ],
+   "width_ft": 24.0,
+   "label": "Weavers Walk 2 continues"
+  }
+ ]
+}

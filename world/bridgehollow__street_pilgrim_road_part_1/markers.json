@@ -1,0 +1,54 @@
+{
+ "region_outline": [
+  [
+   296.7,
+   0.4
+  ],
+  [
+   296.7,
+   430.0
+  ],
+  [
+   6.1,
+   430.0
+  ],
+  [
+   6.1,
+   0.4
+  ]
+ ],
+ "markers": [
+  {
+   "id": "mk_str_pilgrim_road_1_end",
+   "kind": "continues_off_map",
+   "street": "str_pilgrim_road_1",
+   "parent_street": "str_pilgrim_road_1",
+   "point": [
+    246.62,
+    0.4
+   ],
+   "dir": [
+    -0.373,
+    -0.928
+   ],
+   "width_ft": 30,
+   "label": "Pilgrim Road continues"
+  },
+  {
+   "id": "mk_str_021_start",
+   "kind": "continues_off_map",
+   "street": "str_021",
+   "parent_street": "str_021",
+   "point": [
+    189.1,
+    0.4
+   ],
+   "dir": [
+    -0.544,
+    -0.839
+   ],
+   "width_ft": 22.8,
+   "label": "Cartwright Lane 2 continues"
+  }
+ ]
+}

@@ -1,0 +1,46 @@
+{
+ "id": "bld_house_059",
+ "name": "House 59",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    347.0,
+    124.8
+   ],
+   [
+    337.7,
+    129.6
+   ],
+   [
+    349.5,
+    152.1
+   ],
+   [
+    358.7,
+    147.3
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 658.2,
+ "site_slope": 0.11,
+ "site_relief_ft": 1.9,
+ "region": {
+  "parent_id": "bld_house_059",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

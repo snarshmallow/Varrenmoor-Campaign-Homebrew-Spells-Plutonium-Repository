@@ -1,0 +1,46 @@
+{
+ "id": "bld_tax_office",
+ "name": "Tax and Permit Office",
+ "kind": "civic",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    351.1,
+    390.6
+   ],
+   [
+    337.9,
+    368.2
+   ],
+   [
+    327.3,
+    374.4
+   ],
+   [
+    340.4,
+    396.8
+   ]
+  ]
+ },
+ "notes": "Tolls, permits and levies, first stop on the road into the centre.",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 642.8,
+ "site_slope": 0.108,
+ "site_relief_ft": 1.6,
+ "region": {
+  "parent_id": "bld_tax_office",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

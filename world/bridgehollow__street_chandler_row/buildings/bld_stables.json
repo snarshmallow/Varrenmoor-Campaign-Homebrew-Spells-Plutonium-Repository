@@ -1,0 +1,47 @@
+{
+ "id": "bld_stables",
+ "name": "Stables",
+ "kind": "stable",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    9.7,
+    109.9
+   ],
+   [
+    29.3,
+    90.7
+   ],
+   [
+    13.9,
+    74.9
+   ],
+   [
+    -5.8,
+    94.2
+   ]
+  ]
+ },
+ "notes": "Stables beside the inn.",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 653.2,
+ "site_slope": 0.087,
+ "site_relief_ft": 2.4,
+ "style": "bh_ring_outbuilding_winter",
+ "region": {
+  "parent_id": "bld_stables",
+  "clipped": false,
+  "edge": true,
+  "inside_frac": 0.616,
+  "in_region_frac": 0.616
+ }
+}

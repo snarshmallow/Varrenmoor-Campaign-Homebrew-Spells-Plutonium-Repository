@@ -1,0 +1,46 @@
+{
+ "id": "bld_house_072",
+ "name": "House 72",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    34.4,
+    433.9
+   ],
+   [
+    40.0,
+    450.0
+   ],
+   [
+    51.7,
+    445.9
+   ],
+   [
+    46.1,
+    429.8
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 2,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 653.3,
+ "site_slope": 0.065,
+ "site_relief_ft": 1.1,
+ "region": {
+  "parent_id": "bld_house_072",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

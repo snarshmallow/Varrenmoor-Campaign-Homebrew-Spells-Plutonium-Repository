@@ -1,0 +1,47 @@
+{
+ "id": "bld_house_015",
+ "name": "House 15",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    312.6,
+    88.0
+   ],
+   [
+    324.5,
+    73.6
+   ],
+   [
+    308.7,
+    60.7
+   ],
+   [
+    296.9,
+    75.2
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 660.2,
+ "site_slope": 0.103,
+ "site_relief_ft": 2.3,
+ "style": "bh_inner_house_winter",
+ "region": {
+  "parent_id": "bld_house_015",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

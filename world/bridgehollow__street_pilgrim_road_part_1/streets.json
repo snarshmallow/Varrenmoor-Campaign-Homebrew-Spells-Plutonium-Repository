@@ -1,0 +1,306 @@
+{
+ "place": "bridgehollow__street_pilgrim_road_part_1",
+ "streets": [
+  {
+   "id": "str_pilgrim_road_1",
+   "name": "Pilgrim Road",
+   "kind": "road",
+   "status": "proposed",
+   "geometry": {
+    "type": "polyline",
+    "points": [
+     [
+      150.0,
+      410.0
+     ],
+     [
+      155.9,
+      359.3
+     ],
+     [
+      174.6,
+      311.8
+     ],
+     [
+      176.8,
+      296.2
+     ],
+     [
+      170.1,
+      273.0
+     ],
+     [
+      138.0,
+      219.6
+     ],
+     [
+      129.4,
+      200.4
+     ],
+     [
+      126.0,
+      178.9
+     ],
+     [
+      130.6,
+      151.2
+     ],
+     [
+      142.9,
+      120.5
+     ],
+     [
+      156.9,
+      106.9
+     ],
+     [
+      171.9,
+      102.6
+     ],
+     [
+      224.0,
+      97.7
+     ],
+     [
+      238.5,
+      92.6
+     ],
+     [
+      249.1,
+      85.4
+     ],
+     [
+      257.3,
+      74.7
+     ],
+     [
+      261.0,
+      64.2
+     ],
+     [
+      261.8,
+      46.7
+     ],
+     [
+      258.9,
+      30.9
+     ],
+     [
+      246.62,
+      0.4
+     ]
+    ],
+    "width_ft": 30
+   },
+   "notes": "Main road in from the entry.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "elevations_ft": [
+    618.2,
+    619.4,
+    622.0,
+    623.0,
+    624.5,
+    628.4,
+    629.6,
+    630.8,
+    632.4,
+    634.4,
+    635.5,
+    636.4,
+    639.3,
+    640.1,
+    640.7,
+    641.4,
+    641.9,
+    642.6,
+    643.3,
+    644.4
+   ],
+   "elevation_ft": 633.4,
+   "grade_max": 0.063,
+   "grade_raw_max": 0.083,
+   "cut_fill_ft": 2.8,
+   "region": {
+    "parent_id": "str_pilgrim_road_1",
+    "clipped": true,
+    "continues_off_map": {
+     "start": false,
+     "end": true
+    },
+    "part": 1
+   }
+  },
+  {
+   "id": "str_021",
+   "name": "Cartwright Lane 2",
+   "kind": "street",
+   "status": "proposed",
+   "geometry": {
+    "type": "polyline",
+    "points": [
+     [
+      189.1,
+      0.4
+     ],
+     [
+      198.9,
+      15.5
+     ],
+     [
+      205.1,
+      22.9
+     ],
+     [
+      208.6,
+      26.2
+     ],
+     [
+      216.6,
+      31.3
+     ],
+     [
+      225.4,
+      34.5
+     ],
+     [
+      230.1,
+      35.4
+     ],
+     [
+      239.9,
+      36.0
+     ],
+     [
+      259.7,
+      35.5
+     ]
+    ],
+    "width_ft": 22.8
+   },
+   "notes": "Commoners' Ring; follows the contours.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "elevations_ft": [
+    642.1,
+    642.0,
+    642.0,
+    642.0,
+    642.0,
+    642.0,
+    642.0,
+    642.0,
+    642.0
+   ],
+   "elevation_ft": 642.0,
+   "grade_max": 0.018,
+   "grade_raw_max": 0.058,
+   "cut_fill_ft": 1.9,
+   "ring": "commoner",
+   "region": {
+    "parent_id": "str_021",
+    "clipped": true,
+    "continues_off_map": {
+     "start": true,
+     "end": false
+    },
+    "part": 1
+   }
+  },
+  {
+   "id": "str_026",
+   "name": "Brook Lane 2",
+   "kind": "street",
+   "status": "proposed",
+   "geometry": {
+    "type": "polyline",
+    "points": [
+     [
+      80.2,
+      19.8
+     ],
+     [
+      88.7,
+      37.1
+     ],
+     [
+      92.4,
+      45.9
+     ],
+     [
+      96.9,
+      59.5
+     ],
+     [
+      101.4,
+      77.9
+     ],
+     [
+      104.6,
+      86.7
+     ],
+     [
+      106.8,
+      90.7
+     ],
+     [
+      112.3,
+      98.1
+     ],
+     [
+      119.1,
+      104.5
+     ],
+     [
+      126.8,
+      110.1
+     ],
+     [
+      143.0,
+      120.4
+     ]
+    ],
+    "width_ft": 18.0
+   },
+   "notes": "Commoners' Ring; follows the contours.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "elevations_ft": [
+    632.0,
+    632.0,
+    632.0,
+    632.0,
+    632.1,
+    632.1,
+    632.2,
+    632.2,
+    632.2,
+    632.2,
+    632.3
+   ],
+   "elevation_ft": 632.1,
+   "grade_max": 0.005,
+   "grade_raw_max": 0.05,
+   "cut_fill_ft": 1.6,
+   "ring": "commoner",
+   "region": {
+    "parent_id": "str_026",
+    "clipped": false,
+    "continues_off_map": {
+     "start": false,
+     "end": false
+    },
+    "part": 1
+   }
+  }
+ ]
+}

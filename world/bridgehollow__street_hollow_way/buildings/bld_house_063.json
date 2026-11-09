@@ -1,0 +1,46 @@
+{
+ "id": "bld_house_063",
+ "name": "House 63",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    145.7,
+    273.5
+   ],
+   [
+    148.6,
+    285.3
+   ],
+   [
+    158.4,
+    282.9
+   ],
+   [
+    155.5,
+    271.1
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 2,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 655.1,
+ "site_slope": 0.049,
+ "site_relief_ft": 0.7,
+ "region": {
+  "parent_id": "bld_house_063",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

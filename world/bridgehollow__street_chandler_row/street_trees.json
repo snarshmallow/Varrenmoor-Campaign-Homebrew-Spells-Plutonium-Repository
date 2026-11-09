@@ -1,0 +1,128 @@
+{
+ "zones": [
+  {
+   "polygon": [
+    [
+     0,
+     0
+    ],
+    [
+     272.0,
+     0
+    ],
+    [
+     272.0,
+     324.0
+    ],
+    [
+     0,
+     324.0
+    ]
+   ],
+   "size_var": 0.35,
+   "pattern": "uniform",
+   "avoid_buildings": true,
+   "avoid_roads": true,
+   "avoid_water": true,
+   "slope_max_deg": 36,
+   "moisture_bias": 0.0,
+   "replace_zone": true,
+   "edge_ft": 0,
+   "line_jitter": 0.15,
+   "zone": "st_trees",
+   "name": "Street and yard trees (winter)",
+   "mix": [
+    {
+     "species": "oak",
+     "weight": 1.0
+    },
+    {
+     "species": "birch",
+     "weight": 1.2
+    },
+    {
+     "species": "rowan",
+     "weight": 1.0
+    },
+    {
+     "species": "maple",
+     "weight": 0.6
+    },
+    {
+     "species": "alder",
+     "weight": 0.5
+    },
+    {
+     "species": "spruce",
+     "weight": 0.9
+    },
+    {
+     "species": "fir",
+     "weight": 0.5
+    },
+    {
+     "species": "scots_pine",
+     "weight": 0.4
+    }
+   ],
+   "density_per_ha": 34,
+   "seed": 50879,
+   "clearance_building_ft": 6,
+   "clearance_road_ft": 5,
+   "max_instances": 23
+  },
+  {
+   "polygon": [
+    [
+     0,
+     0
+    ],
+    [
+     272.0,
+     0
+    ],
+    [
+     272.0,
+     324.0
+    ],
+    [
+     0,
+     324.0
+    ]
+   ],
+   "size_var": 0.35,
+   "pattern": "clustered",
+   "avoid_buildings": true,
+   "avoid_roads": true,
+   "avoid_water": true,
+   "slope_max_deg": 36,
+   "moisture_bias": 0.0,
+   "replace_zone": true,
+   "edge_ft": 0,
+   "line_jitter": 0.15,
+   "zone": "st_hedges",
+   "name": "Hedges and bushes",
+   "mix": [
+    {
+     "species": "hedge",
+     "weight": 2.0
+    },
+    {
+     "species": "bush",
+     "weight": 1.0
+    },
+    {
+     "species": "juniper",
+     "weight": 0.8
+    }
+   ],
+   "density_per_ha": 22,
+   "seed": 50880,
+   "cluster_radius_ft": 18,
+   "cluster_size": 4,
+   "clearance_building_ft": 3,
+   "clearance_road_ft": 3,
+   "max_instances": 10
+  }
+ ]
+}

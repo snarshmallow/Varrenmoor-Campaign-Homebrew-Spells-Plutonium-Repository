@@ -1,0 +1,46 @@
+{
+ "id": "bld_house_029",
+ "name": "House 29",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    210.5,
+    118.3
+   ],
+   [
+    193.8,
+    135.2
+   ],
+   [
+    202.3,
+    143.5
+   ],
+   [
+    218.9,
+    126.6
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 661.9,
+ "site_slope": 0.058,
+ "site_relief_ft": 1.1,
+ "region": {
+  "parent_id": "bld_house_029",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

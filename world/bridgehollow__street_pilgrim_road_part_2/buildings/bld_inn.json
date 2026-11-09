@@ -1,0 +1,47 @@
+{
+ "id": "bld_inn",
+ "name": "Inn",
+ "kind": "inn",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    219.5,
+    48.7
+   ],
+   [
+    221.8,
+    70.4
+   ],
+   [
+    239.4,
+    68.6
+   ],
+   [
+    237.1,
+    46.9
+   ]
+  ]
+ },
+ "notes": "Inn on Pilgrim Road by the market.",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 2,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 654.6,
+ "site_slope": 0.167,
+ "site_relief_ft": 2.0,
+ "style": "bh_warden_house_winter",
+ "region": {
+  "parent_id": "bld_inn",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

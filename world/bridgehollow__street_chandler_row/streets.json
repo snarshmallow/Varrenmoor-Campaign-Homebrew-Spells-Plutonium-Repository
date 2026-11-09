@@ -1,0 +1,865 @@
+{
+ "place": "bridgehollow__street_chandler_row",
+ "streets": [
+  {
+   "id": "str_pilgrim_road_1",
+   "name": "Pilgrim Road",
+   "kind": "road",
+   "status": "proposed",
+   "geometry": {
+    "type": "polyline",
+    "points": [
+     [
+      116.07,
+      326.4
+     ],
+     [
+      72.6,
+      281.9
+     ]
+    ],
+    "width_ft": 30
+   },
+   "notes": "Main road in from the entry.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "elevations_ft": [
+    647.4,
+    647.1
+   ],
+   "elevation_ft": 647.2,
+   "grade_max": 0.063,
+   "grade_raw_max": 0.083,
+   "cut_fill_ft": 2.8,
+   "region": {
+    "parent_id": "str_pilgrim_road_1",
+    "clipped": true,
+    "continues_off_map": {
+     "start": true,
+     "end": false
+    },
+    "part": 1
+   }
+  },
+  {
+   "id": "str_pilgrim_road_bridge",
+   "name": "Pilgrim Bridge",
+   "kind": "bridge",
+   "status": "proposed",
+   "geometry": {
+    "type": "polyline",
+    "points": [
+     [
+      72.6,
+      281.9
+     ],
+     [
+      9.5,
+      253.35
+     ]
+    ],
+    "width_ft": 26
+   },
+   "notes": "The one stone bridge over the river.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "elevations_ft": [
+    646.0,
+    647.9
+   ],
+   "elevation_ft": 647.0,
+   "grade_max": 0.0,
+   "material": "stone",
+   "region": {
+    "parent_id": "str_pilgrim_road_bridge",
+    "clipped": true,
+    "continues_off_map": {
+     "start": false,
+     "end": true
+    },
+    "part": 1
+   }
+  },
+  {
+   "id": "str_006",
+   "name": "Weavers Walk",
+   "kind": "street",
+   "status": "proposed",
+   "geometry": {
+    "type": "polyline",
+    "points": [
+     [
+      117.2,
+      179.7
+     ],
+     [
+      125.3,
+      173.7
+     ],
+     [
+      172.0,
+      144.8
+     ],
+     [
+      192.6,
+      130.6
+     ],
+     [
+      200.3,
+      124.2
+     ],
+     [
+      207.4,
+      117.2
+     ],
+     [
+      220.4,
+      102.0
+     ],
+     [
+      223.9,
+      98.4
+     ],
+     [
+      228.0,
+      95.7
+     ],
+     [
+      232.8,
+      94.4
+     ],
+     [
+      237.7,
+      95.1
+     ],
+     [
+      242.3,
+      97.2
+     ],
+     [
+      246.4,
+      100.0
+     ],
+     [
+      258.2,
+      109.2
+     ],
+     [
+      262.3,
+      112.0
+     ],
+     [
+      266.8,
+      114.3
+     ],
+     [
+      271.3,
+      116.4
+     ],
+     [
+      281.0,
+      118.9
+     ],
+     [
+      282.0,
+      119.0
+     ]
+    ],
+    "width_ft": 17.9
+   },
+   "notes": "Commoners' Ring; runs across the slope.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "elevations_ft": [
+    656.8,
+    656.8,
+    658.1,
+    659.0,
+    659.4,
+    659.9,
+    660.8,
+    661.0,
+    661.3,
+    661.5,
+    661.7,
+    662.0,
+    662.2,
+    662.8,
+    663.0,
+    663.2,
+    663.4,
+    663.8,
+    663.8
+   ],
+   "elevation_ft": 661.1,
+   "grade_max": 0.048,
+   "grade_raw_max": 0.07,
+   "cut_fill_ft": 2.2,
+   "ring": "commoner",
+   "region": {
+    "parent_id": "str_006",
+    "clipped": true,
+    "continues_off_map": {
+     "start": false,
+     "end": true
+    },
+    "part": 1
+   }
+  },
+  {
+   "id": "str_007",
+   "name": "Brook Lane",
+   "kind": "street",
+   "status": "proposed",
+   "geometry": {
+    "type": "polyline",
+    "points": [
+     [
+      282.0,
+      106.0
+     ],
+     [
+      281.3,
+      98.3
+     ],
+     [
+      279.0,
+      83.7
+     ],
+     [
+      275.8,
+      69.1
+     ],
+     [
+      271.6,
+      54.8
+     ],
+     [
+      263.0,
+      31.6
+     ],
+     [
+      250.2,
+      2.7
+     ]
+    ],
+    "width_ft": 18.0
+   },
+   "notes": "Commoners' Ring; follows the contours.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "elevations_ft": [
+    664.9,
+    665.0,
+    665.2,
+    665.4,
+    665.6,
+    665.8,
+    665.9
+   ],
+   "elevation_ft": 665.4,
+   "grade_max": 0.023,
+   "grade_raw_max": 0.058,
+   "cut_fill_ft": 2.4,
+   "ring": "commoner",
+   "region": {
+    "parent_id": "str_007",
+    "clipped": true,
+    "continues_off_map": {
+     "start": true,
+     "end": true
+    },
+    "part": 1
+   }
+  },
+  {
+   "id": "str_007__p2",
+   "name": "Brook Lane",
+   "kind": "street",
+   "status": "proposed",
+   "geometry": {
+    "type": "polyline",
+    "points": [
+     [
+      267.5,
+      284.8
+     ],
+     [
+      273.1,
+      271.0
+     ],
+     [
+      277.3,
+      256.8
+     ],
+     [
+      279.0,
+      247.1
+     ],
+     [
+      281.0,
+      227.4
+     ],
+     [
+      282.0,
+      209.69
+     ]
+    ],
+    "width_ft": 18.0
+   },
+   "notes": "Commoners' Ring; follows the contours.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "elevations_ft": [
+    661.6,
+    661.7,
+    661.8,
+    662.0,
+    662.3,
+    662.7
+   ],
+   "elevation_ft": 662.0,
+   "grade_max": 0.023,
+   "grade_raw_max": 0.058,
+   "cut_fill_ft": 2.4,
+   "ring": "commoner",
+   "region": {
+    "parent_id": "str_007",
+    "clipped": true,
+    "continues_off_map": {
+     "start": false,
+     "end": true
+    },
+    "part": 2
+   }
+  },
+  {
+   "id": "str_010",
+   "name": "Chandler Row",
+   "kind": "street",
+   "status": "proposed",
+   "geometry": {
+    "type": "polyline",
+    "points": [
+     [
+      134.8,
+      206.4
+     ],
+     [
+      133.4,
+      203.2
+     ],
+     [
+      130.7,
+      193.8
+     ],
+     [
+      129.5,
+      184.1
+     ],
+     [
+      129.5,
+      174.2
+     ],
+     [
+      131.1,
+      159.4
+     ],
+     [
+      135.8,
+      135.2
+     ],
+     [
+      138.0,
+      127.0
+     ],
+     [
+      139.4,
+      124.2
+     ],
+     [
+      140.9,
+      122.7
+     ],
+     [
+      142.8,
+      122.6
+     ],
+     [
+      144.8,
+      124.0
+     ],
+     [
+      147.1,
+      126.6
+     ],
+     [
+      162.1,
+      150.9
+     ]
+    ],
+    "width_ft": 21.0
+   },
+   "notes": "Commoners' Ring; follows the contours.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "elevations_ft": [
+    655.3,
+    655.3,
+    655.3,
+    655.3,
+    655.3,
+    655.3,
+    655.3,
+    655.3,
+    655.3,
+    655.3,
+    655.3,
+    655.3,
+    655.3,
+    655.2
+   ],
+   "elevation_ft": 655.3,
+   "grade_max": 0.002,
+   "grade_raw_max": 0.067,
+   "cut_fill_ft": 1.5,
+   "ring": "commoner",
+   "region": {
+    "parent_id": "str_010",
+    "clipped": false,
+    "continues_off_map": {
+     "start": false,
+     "end": false
+    },
+    "part": 1
+   }
+  },
+  {
+   "id": "str_012",
+   "name": "Baker Lane",
+   "kind": "lane",
+   "status": "proposed",
+   "geometry": {
+    "type": "polyline",
+    "points": [
+     [
+      282.0,
+      209.7
+     ],
+     [
+      271.0,
+      209.4
+     ],
+     [
+      251.2,
+      209.7
+     ],
+     [
+      236.4,
+      210.8
+     ],
+     [
+      226.6,
+      212.1
+     ],
+     [
+      216.9,
+      214.0
+     ],
+     [
+      185.5,
+      222.6
+     ],
+     [
+      177.0,
+      223.7
+     ],
+     [
+      175.5,
+      223.7
+     ]
+    ],
+    "width_ft": 15.3
+   },
+   "notes": "Commoners' Ring; runs across the slope.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "elevations_ft": [
+    662.0,
+    661.9,
+    661.7,
+    661.6,
+    661.5,
+    661.4,
+    661.2,
+    661.1,
+    661.1
+   ],
+   "elevation_ft": 661.5,
+   "grade_max": 0.011,
+   "grade_raw_max": 0.046,
+   "cut_fill_ft": 1.9,
+   "ring": "commoner",
+   "region": {
+    "parent_id": "str_012",
+    "clipped": true,
+    "continues_off_map": {
+     "start": true,
+     "end": false
+    },
+    "part": 1
+   }
+  },
+  {
+   "id": "str_013",
+   "name": "Thatchers Way",
+   "kind": "street",
+   "status": "proposed",
+   "geometry": {
+    "type": "polyline",
+    "points": [
+     [
+      201.8,
+      37.0
+     ],
+     [
+      209.1,
+      66.1
+     ],
+     [
+      212.6,
+      85.7
+     ],
+     [
+      215.9,
+      115.3
+     ],
+     [
+      218.4,
+      170.0
+     ],
+     [
+      220.4,
+      194.8
+     ],
+     [
+      223.5,
+      214.4
+     ],
+     [
+      227.5,
+      228.7
+     ],
+     [
+      233.7,
+      242.2
+     ],
+     [
+      238.9,
+      250.5
+     ],
+     [
+      244.9,
+      258.4
+     ],
+     [
+      260.9,
+      277.4
+     ],
+     [
+      282.0,
+      300.74
+     ]
+    ],
+    "width_ft": 18.0
+   },
+   "notes": "Commoners' Ring; follows the contours.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "elevations_ft": [
+    660.1,
+    660.1,
+    660.2,
+    660.3,
+    660.6,
+    660.6,
+    660.4,
+    660.3,
+    660.1,
+    659.9,
+    659.7,
+    659.1,
+    658.0
+   ],
+   "elevation_ft": 660.0,
+   "grade_max": 0.037,
+   "grade_raw_max": 0.058,
+   "cut_fill_ft": 2.3,
+   "ring": "commoner",
+   "region": {
+    "parent_id": "str_013",
+    "clipped": true,
+    "continues_off_map": {
+     "start": false,
+     "end": true
+    },
+    "part": 1
+   }
+  },
+  {
+   "id": "str_014",
+   "name": "Warden Street",
+   "kind": "street",
+   "status": "proposed",
+   "geometry": {
+    "type": "polyline",
+    "points": [
+     [
+      39.6,
+      39.1
+     ],
+     [
+      15.8,
+      42.0
+     ],
+     [
+      9.5,
+      43.29
+     ]
+    ],
+    "width_ft": 24.0
+   },
+   "notes": "Authority Ward; follows the contours.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "elevations_ft": [
+    657.5,
+    657.5,
+    657.5
+   ],
+   "elevation_ft": 657.5,
+   "grade_max": 0.04,
+   "grade_raw_max": 0.082,
+   "cut_fill_ft": 2.9,
+   "ring": "authority",
+   "region": {
+    "parent_id": "str_014",
+    "clipped": true,
+    "continues_off_map": {
+     "start": false,
+     "end": true
+    },
+    "part": 1
+   }
+  },
+  {
+   "id": "str_015",
+   "name": "Wheelwright Lane",
+   "kind": "street",
+   "status": "proposed",
+   "geometry": {
+    "type": "polyline",
+    "points": [
+     [
+      282.0,
+      285.5
+     ],
+     [
+      268.2,
+      293.3
+     ],
+     [
+      254.8,
+      299.7
+     ],
+     [
+      245.5,
+      302.7
+     ],
+     [
+      235.9,
+      304.4
+     ],
+     [
+      231.0,
+      304.6
+     ],
+     [
+      221.2,
+      304.2
+     ],
+     [
+      206.8,
+      301.2
+     ],
+     [
+      192.9,
+      296.1
+     ],
+     [
+      179.4,
+      289.8
+     ],
+     [
+      171.1,
+      285.7
+     ]
+    ],
+    "width_ft": 20.4
+   },
+   "notes": "Commoners' Ring; runs across the slope.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "elevations_ft": [
+    658.8,
+    658.3,
+    657.8,
+    657.5,
+    657.2,
+    657.1,
+    656.8,
+    656.4,
+    656.2,
+    656.0,
+    655.9
+   ],
+   "elevation_ft": 657.1,
+   "grade_max": 0.034,
+   "grade_raw_max": 0.053,
+   "cut_fill_ft": 2.6,
+   "ring": "commoner",
+   "region": {
+    "parent_id": "str_015",
+    "clipped": true,
+    "continues_off_map": {
+     "start": true,
+     "end": false
+    },
+    "part": 1
+   }
+  },
+  {
+   "id": "str_021",
+   "name": "Cartwright Lane 2",
+   "kind": "street",
+   "status": "proposed",
+   "geometry": {
+    "type": "polyline",
+    "points": [
+     [
+      107.4,
+      317.5
+     ],
+     [
+      102.57,
+      326.4
+     ]
+    ],
+    "width_ft": 22.8
+   },
+   "notes": "Commoners' Ring; follows the contours.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "elevations_ft": [
+    645.4,
+    645.3
+   ],
+   "elevation_ft": 645.3,
+   "grade_max": 0.018,
+   "grade_raw_max": 0.058,
+   "cut_fill_ft": 1.9,
+   "ring": "commoner",
+   "region": {
+    "parent_id": "str_021",
+    "clipped": true,
+    "continues_off_map": {
+     "start": false,
+     "end": true
+    },
+    "part": 1
+   }
+  },
+  {
+   "id": "str_022",
+   "name": "Tanners Row 2",
+   "kind": "street",
+   "status": "proposed",
+   "geometry": {
+    "type": "polyline",
+    "points": [
+     [
+      201.71,
+      326.4
+     ],
+     [
+      193.7,
+      312.4
+     ],
+     [
+      175.4,
+      277.9
+     ]
+    ],
+    "width_ft": 21.0
+   },
+   "notes": "Commoners' Ring; follows the contours.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "elevations_ft": [
+    653.1,
+    653.3,
+    653.6
+   ],
+   "elevation_ft": 653.3,
+   "grade_max": 0.023,
+   "grade_raw_max": 0.064,
+   "cut_fill_ft": 1.4,
+   "ring": "commoner",
+   "region": {
+    "parent_id": "str_022",
+    "clipped": true,
+    "continues_off_map": {
+     "start": true,
+     "end": false
+    },
+    "part": 1
+   }
+  }
+ ]
+}

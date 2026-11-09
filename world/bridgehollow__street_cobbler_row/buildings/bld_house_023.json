@@ -1,0 +1,46 @@
+{
+ "id": "bld_house_023",
+ "name": "House 23",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    195.6,
+    106.5
+   ],
+   [
+    186.8,
+    116.9
+   ],
+   [
+    194.8,
+    123.8
+   ],
+   [
+    203.7,
+    113.3
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 662.9,
+ "site_slope": 0.061,
+ "site_relief_ft": 0.9,
+ "region": {
+  "parent_id": "bld_house_023",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

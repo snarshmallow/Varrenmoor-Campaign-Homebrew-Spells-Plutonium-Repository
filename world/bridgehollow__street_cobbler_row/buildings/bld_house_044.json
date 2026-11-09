@@ -1,0 +1,46 @@
+{
+ "id": "bld_house_044",
+ "name": "House 44",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    93.3,
+    196.0
+   ],
+   [
+    80.6,
+    185.2
+   ],
+   [
+    72.5,
+    194.6
+   ],
+   [
+    85.3,
+    205.5
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 2,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 659.8,
+ "site_slope": 0.141,
+ "site_relief_ft": 1.4,
+ "region": {
+  "parent_id": "bld_house_044",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

@@ -1,0 +1,46 @@
+{
+ "id": "bld_house_039",
+ "name": "House 39",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    201.1,
+    205.0
+   ],
+   [
+    210.0,
+    215.8
+   ],
+   [
+    217.2,
+    209.8
+   ],
+   [
+    208.2,
+    199.1
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 2,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 659.8,
+ "site_slope": 0.069,
+ "site_relief_ft": 1.1,
+ "region": {
+  "parent_id": "bld_house_039",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

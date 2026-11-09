@@ -1,0 +1,46 @@
+{
+ "id": "bld_house_027",
+ "name": "House 27",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    94.1,
+    239.8
+   ],
+   [
+    84.1,
+    231.7
+   ],
+   [
+    75.8,
+    241.8
+   ],
+   [
+    85.8,
+    249.9
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 663.1,
+ "site_slope": 0.056,
+ "site_relief_ft": 1.0,
+ "region": {
+  "parent_id": "bld_house_027",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

@@ -1,0 +1,46 @@
+{
+ "id": "bld_house_004",
+ "name": "House 4",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    205.6,
+    129.9
+   ],
+   [
+    196.8,
+    135.8
+   ],
+   [
+    211.1,
+    156.9
+   ],
+   [
+    219.9,
+    151.0
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 666.9,
+ "site_slope": 0.178,
+ "site_relief_ft": 4.3,
+ "region": {
+  "parent_id": "bld_house_004",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

@@ -1,0 +1,47 @@
+{
+ "id": "bld_house_080",
+ "name": "House 80",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    98.7,
+    272.7
+   ],
+   [
+    99.2,
+    304.0
+   ],
+   [
+    125.0,
+    303.6
+   ],
+   [
+    124.6,
+    272.3
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 647.4,
+ "site_slope": 0.079,
+ "site_relief_ft": 2.7,
+ "style": "bh_warden_house_winter",
+ "region": {
+  "parent_id": "bld_house_080",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

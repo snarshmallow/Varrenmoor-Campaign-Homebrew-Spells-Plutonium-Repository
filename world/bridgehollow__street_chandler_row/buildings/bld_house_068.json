@@ -1,0 +1,46 @@
+{
+ "id": "bld_house_068",
+ "name": "House 68",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    257.5,
+    326.0
+   ],
+   [
+    273.8,
+    317.3
+   ],
+   [
+    269.5,
+    309.3
+   ],
+   [
+    253.2,
+    318.0
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 656.8,
+ "site_slope": 0.075,
+ "site_relief_ft": 1.4,
+ "region": {
+  "parent_id": "bld_house_068",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

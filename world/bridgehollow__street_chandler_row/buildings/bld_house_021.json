@@ -1,0 +1,46 @@
+{
+ "id": "bld_house_021",
+ "name": "House 21",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    191.2,
+    100.6
+   ],
+   [
+    169.5,
+    123.3
+   ],
+   [
+    176.1,
+    129.6
+   ],
+   [
+    197.8,
+    106.9
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 657.6,
+ "site_slope": 0.09,
+ "site_relief_ft": 2.1,
+ "region": {
+  "parent_id": "bld_house_021",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

@@ -1,0 +1,214 @@
+{
+ "region_outline": [
+  [
+   282.0,
+   2.7
+  ],
+  [
+   282.0,
+   326.4
+  ],
+  [
+   9.5,
+   326.4
+  ],
+  [
+   9.5,
+   2.7
+  ]
+ ],
+ "markers": [
+  {
+   "id": "mk_str_pilgrim_road_1_start",
+   "kind": "continues_off_map",
+   "street": "str_pilgrim_road_1",
+   "parent_street": "str_pilgrim_road_1",
+   "point": [
+    116.07,
+    326.4
+   ],
+   "dir": [
+    0.699,
+    0.715
+   ],
+   "width_ft": 30,
+   "label": "Pilgrim Road continues"
+  },
+  {
+   "id": "mk_str_pilgrim_road_bridge_end",
+   "kind": "continues_off_map",
+   "street": "str_pilgrim_road_bridge",
+   "parent_street": "str_pilgrim_road_bridge",
+   "point": [
+    9.5,
+    253.35
+   ],
+   "dir": [
+    -0.911,
+    -0.412
+   ],
+   "width_ft": 26,
+   "label": "Pilgrim Bridge continues"
+  },
+  {
+   "id": "mk_str_006_end",
+   "kind": "continues_off_map",
+   "street": "str_006",
+   "parent_street": "str_006",
+   "point": [
+    282.0,
+    119.0
+   ],
+   "dir": [
+    0.995,
+    0.1
+   ],
+   "width_ft": 17.9,
+   "label": "Weavers Walk continues"
+  },
+  {
+   "id": "mk_str_007_start",
+   "kind": "continues_off_map",
+   "street": "str_007",
+   "parent_street": "str_007",
+   "point": [
+    282.0,
+    106.0
+   ],
+   "dir": [
+    0.091,
+    0.996
+   ],
+   "width_ft": 18.0,
+   "label": "Brook Lane continues"
+  },
+  {
+   "id": "mk_str_007_end",
+   "kind": "continues_off_map",
+   "street": "str_007",
+   "parent_street": "str_007",
+   "point": [
+    250.2,
+    2.7
+   ],
+   "dir": [
+    -0.405,
+    -0.914
+   ],
+   "width_ft": 18.0,
+   "label": "Brook Lane continues"
+  },
+  {
+   "id": "mk_str_007__p2_end",
+   "kind": "continues_off_map",
+   "street": "str_007__p2",
+   "parent_street": "str_007",
+   "point": [
+    282.0,
+    209.69
+   ],
+   "dir": [
+    0.056,
+    -0.998
+   ],
+   "width_ft": 18.0,
+   "label": "Brook Lane continues"
+  },
+  {
+   "id": "mk_str_012_start",
+   "kind": "continues_off_map",
+   "street": "str_012",
+   "parent_street": "str_012",
+   "point": [
+    282.0,
+    209.7
+   ],
+   "dir": [
+    1.0,
+    0.027
+   ],
+   "width_ft": 15.3,
+   "label": "Baker Lane continues"
+  },
+  {
+   "id": "mk_str_013_end",
+   "kind": "continues_off_map",
+   "street": "str_013",
+   "parent_street": "str_013",
+   "point": [
+    282.0,
+    300.74
+   ],
+   "dir": [
+    0.671,
+    0.742
+   ],
+   "width_ft": 18.0,
+   "label": "Thatchers Way continues"
+  },
+  {
+   "id": "mk_str_014_end",
+   "kind": "continues_off_map",
+   "street": "str_014",
+   "parent_street": "str_014",
+   "point": [
+    9.5,
+    43.29
+   ],
+   "dir": [
+    -0.98,
+    0.201
+   ],
+   "width_ft": 24.0,
+   "label": "Warden Street continues"
+  },
+  {
+   "id": "mk_str_015_start",
+   "kind": "continues_off_map",
+   "street": "str_015",
+   "parent_street": "str_015",
+   "point": [
+    282.0,
+    285.5
+   ],
+   "dir": [
+    0.871,
+    -0.492
+   ],
+   "width_ft": 20.4,
+   "label": "Wheelwright Lane continues"
+  },
+  {
+   "id": "mk_str_021_end",
+   "kind": "continues_off_map",
+   "street": "str_021",
+   "parent_street": "str_021",
+   "point": [
+    102.57,
+    326.4
+   ],
+   "dir": [
+    -0.477,
+    0.879
+   ],
+   "width_ft": 22.8,
+   "label": "Cartwright Lane 2 continues"
+  },
+  {
+   "id": "mk_str_022_start",
+   "kind": "continues_off_map",
+   "street": "str_022",
+   "parent_street": "str_022",
+   "point": [
+    201.71,
+    326.4
+   ],
+   "dir": [
+    0.497,
+    0.868
+   ],
+   "width_ft": 21.0,
+   "label": "Tanners Row 2 continues"
+  }
+ ]
+}

@@ -1,0 +1,46 @@
+{
+ "id": "bld_house_075",
+ "name": "House 75",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    319.2,
+    250.3
+   ],
+   [
+    330.8,
+    271.9
+   ],
+   [
+    340.0,
+    266.9
+   ],
+   [
+    328.4,
+    245.3
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 655.8,
+ "site_slope": 0.069,
+ "site_relief_ft": 1.5,
+ "region": {
+  "parent_id": "bld_house_075",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

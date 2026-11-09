@@ -1,0 +1,47 @@
+{
+ "id": "bld_house_011",
+ "name": "House 11",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    100.3,
+    2.6
+   ],
+   [
+    90.4,
+    9.4
+   ],
+   [
+    96.3,
+    17.8
+   ],
+   [
+    106.2,
+    11.0
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 660.3,
+ "site_slope": 0.116,
+ "site_relief_ft": 1.2,
+ "style": "bh_inner_house_winter",
+ "region": {
+  "parent_id": "bld_house_011",
+  "clipped": false,
+  "edge": true,
+  "inside_frac": 0.798,
+  "in_region_frac": 0.798
+ }
+}

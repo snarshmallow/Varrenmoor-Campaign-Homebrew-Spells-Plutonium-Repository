@@ -1,0 +1,46 @@
+{
+ "id": "bld_house_115",
+ "name": "House 115",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    157.7,
+    103.2
+   ],
+   [
+    147.6,
+    85.0
+   ],
+   [
+    138.5,
+    90.0
+   ],
+   [
+    148.6,
+    108.3
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 636.3,
+ "site_slope": 0.148,
+ "site_relief_ft": 2.6,
+ "region": {
+  "parent_id": "bld_house_115",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

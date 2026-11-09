@@ -1,0 +1,166 @@
+{
+ "region_outline": [
+  [
+   480.8,
+   4.5
+  ],
+  [
+   480.8,
+   329.6
+  ],
+  [
+   7.3,
+   329.6
+  ],
+  [
+   7.3,
+   4.5
+  ]
+ ],
+ "markers": [
+  {
+   "id": "mk_str_pilgrim_road_1_start",
+   "kind": "continues_off_map",
+   "street": "str_pilgrim_road_1",
+   "parent_street": "str_pilgrim_road_1",
+   "point": [
+    99.89,
+    329.6
+   ],
+   "dir": [
+    0.699,
+    0.715
+   ],
+   "width_ft": 30,
+   "label": "Pilgrim Road continues"
+  },
+  {
+   "id": "mk_str_pilgrim_road_bridge_end",
+   "kind": "continues_off_map",
+   "street": "str_pilgrim_road_bridge",
+   "parent_street": "str_pilgrim_road_bridge",
+   "point": [
+    7.3,
+    277.83
+   ],
+   "dir": [
+    -0.911,
+    -0.412
+   ],
+   "width_ft": 26,
+   "label": "Pilgrim Bridge continues"
+  },
+  {
+   "id": "mk_str_004_start",
+   "kind": "continues_off_map",
+   "street": "str_004",
+   "parent_street": "str_004",
+   "point": [
+    7.3,
+    75.72
+   ],
+   "dir": [
+    -0.657,
+    -0.754
+   ],
+   "width_ft": 15.3,
+   "label": "Alley 4 continues"
+  },
+  {
+   "id": "mk_str_004_end",
+   "kind": "continues_off_map",
+   "street": "str_004",
+   "parent_street": "str_004",
+   "point": [
+    7.3,
+    92.74
+   ],
+   "dir": [
+    -0.5,
+    0.866
+   ],
+   "width_ft": 15.3,
+   "label": "Alley 4 continues"
+  },
+  {
+   "id": "mk_str_013_end",
+   "kind": "continues_off_map",
+   "street": "str_013",
+   "parent_street": "str_013",
+   "point": [
+    290.97,
+    329.6
+   ],
+   "dir": [
+    0.671,
+    0.742
+   ],
+   "width_ft": 18.0,
+   "label": "Thatchers Way continues"
+  },
+  {
+   "id": "mk_str_014_end",
+   "kind": "continues_off_map",
+   "street": "str_014",
+   "parent_street": "str_014",
+   "point": [
+    7.3,
+    75.79
+   ],
+   "dir": [
+    -0.98,
+    0.201
+   ],
+   "width_ft": 24.0,
+   "label": "Warden Street continues"
+  },
+  {
+   "id": "mk_str_015_end",
+   "kind": "continues_off_map",
+   "street": "str_015",
+   "parent_street": "str_015",
+   "point": [
+    265.01,
+    329.6
+   ],
+   "dir": [
+    -0.902,
+    0.431
+   ],
+   "width_ft": 20.4,
+   "label": "Wheelwright Lane continues"
+  },
+  {
+   "id": "mk_str_015__p2_start",
+   "kind": "continues_off_map",
+   "street": "str_015__p2",
+   "parent_street": "str_015",
+   "point": [
+    212.44,
+    329.6
+   ],
+   "dir": [
+    0.939,
+    0.344
+   ],
+   "width_ft": 20.4,
+   "label": "Wheelwright Lane continues"
+  },
+  {
+   "id": "mk_str_022_start",
+   "kind": "continues_off_map",
+   "street": "str_022",
+   "parent_street": "str_022",
+   "point": [
+    196.91,
+    329.6
+   ],
+   "dir": [
+    0.469,
+    0.883
+   ],
+   "width_ft": 21.0,
+   "label": "Tanners Row 2 continues"
+  }
+ ]
+}

@@ -1,0 +1,46 @@
+{
+ "id": "bld_house_054",
+ "name": "House 54",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    110.1,
+    258.8
+   ],
+   [
+    123.7,
+    259.8
+   ],
+   [
+    125.4,
+    236.0
+   ],
+   [
+    111.8,
+    235.0
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 657.1,
+ "site_slope": 0.105,
+ "site_relief_ft": 1.8,
+ "region": {
+  "parent_id": "bld_house_054",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

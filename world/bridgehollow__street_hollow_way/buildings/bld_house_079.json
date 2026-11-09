@@ -1,0 +1,47 @@
+{
+ "id": "bld_house_079",
+ "name": "House 79",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    544.3,
+    309.2
+   ],
+   [
+    546.0,
+    344.1
+   ],
+   [
+    555.1,
+    343.7
+   ],
+   [
+    553.4,
+    308.8
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 643.9,
+ "site_slope": 0.099,
+ "site_relief_ft": 2.2,
+ "style": "bh_warden_house_winter",
+ "region": {
+  "parent_id": "bld_house_079",
+  "clipped": false,
+  "edge": true,
+  "inside_frac": 0.997,
+  "in_region_frac": 0.997
+ }
+}

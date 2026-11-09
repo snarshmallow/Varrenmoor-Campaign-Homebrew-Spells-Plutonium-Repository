@@ -15,12 +15,12 @@
   "buildings": 73,
   "trees": 9,
   "status": "verified",
-  "updated": "2026-11-09T16:40:34",
-  "tris": 298249,
+  "updated": "2026-11-09T16:46:19",
+  "tris": 316833,
   "lamps": 8,
   "scene_uuid": "Scene.bseT6oQjhcePl4o8",
-  "tiles": 87,
-  "foliage_tiles": 7,
+  "tiles": 91,
+  "foliage_tiles": 11,
   "lights": 32,
   "audit": {
    "clean": true,
@@ -47,7 +47,437 @@
   ],
   "buildings": 42,
   "trees": 7,
+  "status": "verified",
+  "updated": "2026-11-09T16:48:06",
+  "tris": 195847,
+  "lamps": 5,
+  "scene_uuid": "Scene.vQn1X2x3RapFEuqd",
+  "tiles": 61,
+  "foliage_tiles": 10,
+  "lights": 32,
+  "audit": {
+   "clean": true,
+   "counts": {},
+   "missing": 0
+  },
+  "light_types": {
+   "lamp": 5,
+   "hearth": 27
+  }
+ },
+ "cooper_row": {
+  "scene_name": "Bridgehollow - Cooper Row (Winter)",
+  "child": "bridgehollow__street_cooper_row",
+  "size_ft": [
+   421,
+   463
+  ],
+  "rect": [
+   798.4,
+   436.8,
+   1219.6,
+   899.6
+  ],
+  "buildings": 61,
+  "trees": 7,
+  "status": "verified",
+  "updated": "2026-11-09T16:49:58",
+  "tris": 250142,
+  "lamps": 6,
+  "scene_uuid": "Scene.ANgLSeNLw7bE17bc",
+  "tiles": 78,
+  "foliage_tiles": 10,
+  "lights": 32,
+  "audit": {
+   "clean": true,
+   "counts": {},
+   "missing": 0
+  },
+  "light_types": {
+   "lamp": 6,
+   "hearth": 26
+  }
+ },
+ "market_square": {
+  "scene_name": "Bridgehollow - Market Square (Winter)",
+  "child": "bridgehollow__street_market_square",
+  "size_ft": [
+   342,
+   333
+  ],
+  "rect": [
+   1094.3,
+   626.5,
+   1436.0,
+   959.6
+  ],
+  "buildings": 35,
+  "trees": 6,
+  "status": "failed: foundry_push.py failed (1):",
+  "updated": "2026-11-09T16:51:08",
+  "tris": 129643,
+  "lamps": 0
+ },
+ "court_square": {
+  "scene_name": "Bridgehollow - Court Square (Winter)",
+  "child": "bridgehollow__street_court_square",
+  "size_ft": [
+   285,
+   343
+  ],
+  "rect": [
+   942.1,
+   607.4,
+   1226.7,
+   950.7
+  ],
+  "buildings": 26,
+  "trees": 3,
+  "status": "verified",
+  "updated": "2026-11-09T16:52:57",
+  "tris": 142547,
+  "lamps": 2,
+  "scene_uuid": "Scene.7BbqkJxx0UgNlMsY",
+  "tiles": 39,
+  "foliage_tiles": 6,
+  "lights": 32,
+  "audit": {
+   "clean": true,
+   "counts": {},
+   "missing": 0
+  },
+  "light_types": {
+   "lamp": 2,
+   "hearth": 27,
+   "window": 3
+  }
+ },
+ "pilgrim_road_part_1": {
+  "scene_name": "Bridgehollow - Pilgrim Road Part 1 (Winter)",
+  "child": "bridgehollow__street_pilgrim_road_part_1",
+  "size_ft": [
+   291,
+   430
+  ],
+  "rect": [
+   1146.1,
+   1070.4,
+   1436.7,
+   1500.0
+  ],
+  "buildings": 4,
+  "trees": 5,
+  "status": "verified",
+  "updated": "2026-11-09T16:54:10",
+  "tris": 78954,
+  "lamps": 4,
+  "scene_uuid": "Scene.Dfl2RxYHSQIZwfYs",
+  "tiles": 18,
+  "foliage_tiles": 6,
+  "lights": 26,
+  "audit": {
+   "clean": true,
+   "counts": {},
+   "missing": 0
+  },
+  "light_types": {
+   "lamp": 4,
+   "hearth": 6,
+   "window": 16
+  }
+ },
+ "pilgrim_road_part_2": {
+  "scene_name": "Bridgehollow - Pilgrim Road Part 2 (Winter)",
+  "child": "bridgehollow__street_pilgrim_road_part_2",
+  "size_ft": [
+   492,
+   610
+  ],
+  "rect": [
+   1010.1,
+   680.1,
+   1501.7,
+   1290.4
+  ],
+  "buildings": 61,
+  "trees": 14,
+  "status": "verified",
+  "updated": "2026-11-09T17:09:16",
+  "tris": 316182,
+  "lamps": 7,
+  "scene_uuid": "Scene.xTooQNKvbkd0ASw7",
+  "tiles": 88,
+  "foliage_tiles": 16,
+  "lights": 32,
+  "audit": {
+   "clean": true,
+   "counts": {},
+   "missing": 0
+  },
+  "light_types": {
+   "lamp": 7,
+   "hearth": 25
+  },
+  "bridges": {
+   "in_window": [
+    "brg_str_pilgrim_road_bridge_1"
+   ],
+   "carried": [
+    "brg_str_pilgrim_road_bridge_1"
+   ],
+   "tiles": 1,
+   "roof_tiles": 1
+  }
+ },
+ "weavers_walk": {
+  "scene_name": "Bridgehollow - Weavers Walk (Winter)",
+  "child": "bridgehollow__street_weavers_walk",
+  "size_ft": [
+   474,
+   325
+  ],
+  "rect": [
+   1127.3,
+   514.5,
+   1600.8,
+   839.6
+  ],
+  "buildings": 27,
+  "trees": 12,
+  "status": "verified",
+  "updated": "2026-11-09T16:57:39",
+  "tris": 138763,
+  "lamps": 0,
+  "scene_uuid": "Scene.ZB97U3A52HFSQqux",
+  "tiles": 44,
+  "foliage_tiles": 9,
+  "lights": 32,
+  "audit": {
+   "clean": true,
+   "counts": {},
+   "missing": 0
+  },
+  "light_types": {
+   "window": 15,
+   "hearth": 17
+  }
+ },
+ "weavers_walk_south_part_1": {
+  "scene_name": "Bridgehollow - Weavers Walk South Part 1 (Winter)",
+  "child": "bridgehollow__street_weavers_walk_south_part_1",
+  "size_ft": [
+   288,
+   459
+  ],
+  "rect": [
+   916.1,
+   706.4,
+   1204.2,
+   1165.2
+  ],
+  "buildings": 33,
+  "trees": 6,
+  "status": "verified",
+  "updated": "2026-11-09T16:59:18",
+  "tris": 171840,
+  "lamps": 2,
+  "scene_uuid": "Scene.DSVN5mNXDL6116ji",
+  "tiles": 48,
+  "foliage_tiles": 6,
+  "lights": 32,
+  "audit": {
+   "clean": true,
+   "counts": {},
+   "missing": 0
+  },
+  "light_types": {
+   "lamp": 2,
+   "hearth": 30
+  }
+ },
+ "weavers_walk_south_part_2": {
+  "scene_name": "Bridgehollow - Weavers Walk South Part 2 (Winter)",
+  "child": "bridgehollow__street_weavers_walk_south_part_2",
+  "size_ft": [
+   389,
+   554
+  ],
+  "rect": [
+   766.7,
+   925.5,
+   1155.9,
+   1479.1
+  ],
+  "buildings": 25,
+  "trees": 10,
+  "status": "verified",
+  "updated": "2026-11-09T17:00:41",
+  "tris": 187794,
+  "lamps": 3,
+  "scene_uuid": "Scene.aKtmFaXhwXg06Dbe",
+  "tiles": 46,
+  "foliage_tiles": 12,
+  "lights": 32,
+  "audit": {
+   "clean": true,
+   "counts": {},
+   "missing": 0
+  },
+  "light_types": {
+   "lamp": 3,
+   "window": 5,
+   "hearth": 24
+  }
+ },
+ "brook_lane": {
+  "scene_name": "Bridgehollow - Brook Lane (Winter)",
+  "child": "bridgehollow__street_brook_lane",
+  "size_ft": [
+   274,
+   523
+  ],
+  "rect": [
+   1259.8,
+   421.8,
+   1533.6,
+   944.8
+  ],
+  "buildings": 31,
+  "trees": 5,
+  "status": "verified",
+  "updated": "2026-11-09T17:02:00",
+  "tris": 136237,
+  "lamps": 0,
+  "scene_uuid": "Scene.nNY2jIUZGJqwPjd3",
+  "tiles": 47,
+  "foliage_tiles": 8,
+  "lights": 32,
+  "audit": {
+   "clean": true,
+   "counts": {},
+   "missing": 0
+  },
+  "light_types": {
+   "window": 13,
+   "hearth": 19
+  }
+ },
+ "brook_lane_south": {
+  "scene_name": "Bridgehollow - Brook Lane South (Winter)",
+  "child": "bridgehollow__street_brook_lane_south",
+  "size_ft": [
+   303,
+   341
+  ],
+  "rect": [
+   1100.3,
+   969.9,
+   1403.0,
+   1310.4
+  ],
+  "buildings": 17,
+  "trees": 6,
+  "status": "verified",
+  "updated": "2026-11-09T17:03:11",
+  "tris": 93851,
+  "lamps": 5,
+  "scene_uuid": "Scene.Wl0eyb8tPlwDu1pj",
+  "tiles": 31,
+  "foliage_tiles": 6,
+  "lights": 32,
+  "audit": {
+   "clean": true,
+   "counts": {},
+   "missing": 0
+  },
+  "light_types": {
+   "lamp": 5,
+   "hearth": 17,
+   "window": 10
+  }
+ },
+ "hollow_way": {
+  "scene_name": "Bridgehollow - Hollow Way (Winter)",
+  "child": "bridgehollow__street_hollow_way",
+  "size_ft": [
+   565,
+   340
+  ],
+  "rect": [
+   661.2,
+   563.5,
+   1226.4,
+   903.8
+  ],
+  "buildings": 65,
+  "trees": 16,
+  "status": "verified",
+  "updated": "2026-11-09T17:04:51",
+  "tris": 261287,
+  "lamps": 6,
+  "scene_uuid": "Scene.c495NwXOYfIZAaaP",
+  "tiles": 84,
+  "foliage_tiles": 12,
+  "lights": 32,
+  "audit": {
+   "clean": true,
+   "counts": {},
+   "missing": 0
+  },
+  "light_types": {
+   "lamp": 6,
+   "hearth": 26
+  }
+ },
+ "chandler_row": {
+  "scene_name": "Bridgehollow - Chandler Row (Winter)",
+  "child": "bridgehollow__street_chandler_row",
+  "size_ft": [
+   272,
+   324
+  ],
+  "rect": [
+   1139.5,
+   542.7,
+   1412.0,
+   866.4
+  ],
+  "buildings": 28,
+  "trees": 3,
+  "status": "verified",
+  "updated": "2026-11-09T17:06:17",
+  "tris": 96994,
+  "lamps": 0,
+  "scene_uuid": "Scene.BugFxm0hQocOwn9C",
+  "tiles": 42,
+  "foliage_tiles": 6,
+  "lights": 32,
+  "audit": {
+   "clean": true,
+   "counts": {},
+   "missing": 0
+  },
+  "light_types": {
+   "window": 14,
+   "hearth": 18
+  }
+ },
+ "cobbler_row": {
+  "scene_name": "Bridgehollow - Cobbler Row (Winter)",
+  "child": "bridgehollow__street_cobbler_row",
+  "size_ft": [
+   420,
+   496
+  ],
+  "rect": [
+   713.3,
+   558.1,
+   1133.8,
+   1054.1
+  ],
+  "buildings": 79,
+  "trees": 9,
   "status": "extracted",
-  "updated": "2026-11-09T16:38:06"
+  "updated": "2026-11-09T17:06:20"
  }
 }

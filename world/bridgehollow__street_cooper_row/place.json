@@ -1,0 +1,59 @@
+{
+ "id": "bridgehollow__street_cooper_row",
+ "name": "Bridgehollow (draft) - Cooper Row",
+ "kind": "district",
+ "status": "proposed",
+ "units": "feet",
+ "origin": "top-left, y down",
+ "bounds": {
+  "width_ft": 429.6,
+  "height_ft": 469.6
+ },
+ "window_ft": [
+  8.4,
+  6.8,
+  429.6,
+  469.6
+ ],
+ "parent": {
+  "place": "bridgehollow",
+  "region": "region.json"
+ },
+ "notes": "Zoom-in child of bridgehollow (region Cooper Row). Same ids and foot coordinates as the parent shifted by origin_ft 790.0,430.0. See region.json; details.json is generated, not canon.",
+ "files": {
+  "districts": "districts.json",
+  "streets": "streets.json",
+  "water": "water.json",
+  "buildings": "buildings/",
+  "view_settings": "view_settings.json",
+  "terrain": "terrain/",
+  "region": "region.json",
+  "details": "details.json",
+  "markers": "markers.json"
+ },
+ "view_focus": {
+  "district": [
+   219.0,
+   238.2
+  ]
+ },
+ "links": {
+  "foundry_scene": "Scene.ANgLSeNLw7bE17bc",
+  "model3d": null,
+  "ai_layer": null,
+  "parent_place": "bridgehollow",
+  "scene_name": "Bridgehollow - Cooper Row (Winter)"
+ },
+ "generated_by": "region_extract.py",
+ "sea_level_ft": 0.0,
+ "season": "winter",
+ "street": {
+  "key": "cooper_row",
+  "part": 1,
+  "parts": 1,
+  "street_ids": [
+   "str_005"
+  ],
+  "generated_by": "bridgehollow_streets.py"
+ }
+}

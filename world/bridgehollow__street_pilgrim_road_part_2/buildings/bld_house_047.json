@@ -1,0 +1,46 @@
+{
+ "id": "bld_house_047",
+ "name": "House 47",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    375.4,
+    99.8
+   ],
+   [
+    375.1,
+    85.2
+   ],
+   [
+    365.2,
+    85.4
+   ],
+   [
+    365.5,
+    100.0
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 661.9,
+ "site_slope": 0.043,
+ "site_relief_ft": 0.6,
+ "region": {
+  "parent_id": "bld_house_047",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

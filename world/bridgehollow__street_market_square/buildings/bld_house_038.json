@@ -1,0 +1,46 @@
+{
+ "id": "bld_house_038",
+ "name": "House 38",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    290.1,
+    98.2
+   ],
+   [
+    289.8,
+    85.3
+   ],
+   [
+    273.8,
+    85.7
+   ],
+   [
+    274.1,
+    98.6
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 662.4,
+ "site_slope": 0.061,
+ "site_relief_ft": 1.0,
+ "region": {
+  "parent_id": "bld_house_038",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

@@ -1,0 +1,47 @@
+{
+ "id": "bld_house_076",
+ "name": "House 76",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    209.5,
+    262.1
+   ],
+   [
+    200.7,
+    250.5
+   ],
+   [
+    191.9,
+    257.2
+   ],
+   [
+    200.7,
+    268.8
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 650.1,
+ "site_slope": 0.089,
+ "site_relief_ft": 1.0,
+ "style": "bh_inner_house_winter",
+ "region": {
+  "parent_id": "bld_house_076",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

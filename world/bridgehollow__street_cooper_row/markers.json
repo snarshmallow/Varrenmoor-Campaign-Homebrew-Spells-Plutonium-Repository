@@ -1,0 +1,134 @@
+{
+ "region_outline": [
+  [
+   429.6,
+   6.8
+  ],
+  [
+   429.6,
+   469.6
+  ],
+  [
+   8.4,
+   469.6
+  ],
+  [
+   8.4,
+   6.8
+  ]
+ ],
+ "markers": [
+  {
+   "id": "mk_str_pilgrim_road_1_start",
+   "kind": "continues_off_map",
+   "street": "str_pilgrim_road_1",
+   "parent_street": "str_pilgrim_road_1",
+   "point": [
+    429.6,
+    409.3
+   ],
+   "dir": [
+    0.699,
+    0.715
+   ],
+   "width_ft": 30,
+   "label": "Pilgrim Road continues"
+  },
+  {
+   "id": "mk_str_008_start",
+   "kind": "continues_off_map",
+   "street": "str_008",
+   "parent_street": "str_008",
+   "point": [
+    8.4,
+    347.03
+   ],
+   "dir": [
+    -0.939,
+    0.345
+   ],
+   "width_ft": 20.4,
+   "label": "Hollow Way continues"
+  },
+  {
+   "id": "mk_str_011_end",
+   "kind": "continues_off_map",
+   "street": "str_011",
+   "parent_street": "str_011",
+   "point": [
+    178.26,
+    469.6
+   ],
+   "dir": [
+    0.302,
+    0.953
+   ],
+   "width_ft": 20.7,
+   "label": "Cobbler Row continues"
+  },
+  {
+   "id": "mk_str_014_end",
+   "kind": "continues_off_map",
+   "street": "str_014",
+   "parent_street": "str_014",
+   "point": [
+    218.74,
+    469.6
+   ],
+   "dir": [
+    0.094,
+    0.996
+   ],
+   "width_ft": 24.0,
+   "label": "Warden Street continues"
+  },
+  {
+   "id": "mk_str_016_start",
+   "kind": "continues_off_map",
+   "street": "str_016",
+   "parent_street": "str_016",
+   "point": [
+    8.4,
+    354.33
+   ],
+   "dir": [
+    -0.603,
+    -0.798
+   ],
+   "width_ft": 18.0,
+   "label": "Dyers Walk continues"
+  },
+  {
+   "id": "mk_str_016_end",
+   "kind": "continues_off_map",
+   "street": "str_016",
+   "parent_street": "str_016",
+   "point": [
+    102.99,
+    469.6
+   ],
+   "dir": [
+    0.69,
+    0.724
+   ],
+   "width_ft": 18.0,
+   "label": "Dyers Walk continues"
+  },
+  {
+   "id": "mk_str_024_end",
+   "kind": "continues_off_map",
+   "street": "str_024",
+   "parent_street": "str_024",
+   "point": [
+    290.73,
+    469.6
+   ],
+   "dir": [
+    -0.02,
+    1.0
+   ],
+   "width_ft": 24.0,
+   "label": "Weavers Walk 2 continues"
+  }
+ ]
+}

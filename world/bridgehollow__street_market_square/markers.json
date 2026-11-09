@@ -1,0 +1,246 @@
+{
+ "region_outline": [
+  [
+   346.0,
+   6.5
+  ],
+  [
+   346.0,
+   339.6
+  ],
+  [
+   4.3,
+   339.6
+  ],
+  [
+   4.3,
+   6.5
+  ]
+ ],
+ "markers": [
+  {
+   "id": "mk_str_pilgrim_road_1_start",
+   "kind": "continues_off_map",
+   "street": "str_pilgrim_road_1",
+   "parent_street": "str_pilgrim_road_1",
+   "point": [
+    228.64,
+    339.6
+   ],
+   "dir": [
+    0.565,
+    0.825
+   ],
+   "width_ft": 30,
+   "label": "Pilgrim Road continues"
+  },
+  {
+   "id": "mk_str_004_start",
+   "kind": "continues_off_map",
+   "street": "str_004",
+   "parent_street": "str_004",
+   "point": [
+    24.52,
+    6.5
+   ],
+   "dir": [
+    0.363,
+    -0.932
+   ],
+   "width_ft": 15.3,
+   "label": "Alley 4 continues"
+  },
+  {
+   "id": "mk_str_006_end",
+   "kind": "continues_off_map",
+   "street": "str_006",
+   "parent_street": "str_006",
+   "point": [
+    346.0,
+    39.88
+   ],
+   "dir": [
+    0.999,
+    -0.043
+   ],
+   "width_ft": 17.9,
+   "label": "Weavers Walk continues"
+  },
+  {
+   "id": "mk_str_007_end",
+   "kind": "continues_off_map",
+   "street": "str_007",
+   "parent_street": "str_007",
+   "point": [
+    319.44,
+    6.5
+   ],
+   "dir": [
+    -0.156,
+    -0.988
+   ],
+   "width_ft": 18.0,
+   "label": "Brook Lane continues"
+  },
+  {
+   "id": "mk_str_008_start",
+   "kind": "continues_off_map",
+   "street": "str_008",
+   "parent_street": "str_008",
+   "point": [
+    4.3,
+    66.55
+   ],
+   "dir": [
+    -0.968,
+    0.25
+   ],
+   "width_ft": 20.4,
+   "label": "Hollow Way continues"
+  },
+  {
+   "id": "mk_str_009_end",
+   "kind": "continues_off_map",
+   "street": "str_009",
+   "parent_street": "str_009",
+   "point": [
+    4.3,
+    88.3
+   ],
+   "dir": [
+    -0.361,
+    0.933
+   ],
+   "width_ft": 24.0,
+   "label": "Alley 9 continues"
+  },
+  {
+   "id": "mk_str_012_start",
+   "kind": "continues_off_map",
+   "street": "str_012",
+   "parent_street": "str_012",
+   "point": [
+    346.0,
+    133.98
+   ],
+   "dir": [
+    0.9,
+    0.435
+   ],
+   "width_ft": 15.3,
+   "label": "Baker Lane continues"
+  },
+  {
+   "id": "mk_str_013_start",
+   "kind": "continues_off_map",
+   "street": "str_013",
+   "parent_street": "str_013",
+   "point": [
+    252.69,
+    6.5
+   ],
+   "dir": [
+    -0.111,
+    -0.994
+   ],
+   "width_ft": 18.0,
+   "label": "Thatchers Way continues"
+  },
+  {
+   "id": "mk_str_013_end",
+   "kind": "continues_off_map",
+   "street": "str_013",
+   "parent_street": "str_013",
+   "point": [
+    346.0,
+    247.48
+   ],
+   "dir": [
+    0.633,
+    0.774
+   ],
+   "width_ft": 18.0,
+   "label": "Thatchers Way continues"
+  },
+  {
+   "id": "mk_str_015_start",
+   "kind": "continues_off_map",
+   "street": "str_015",
+   "parent_street": "str_015",
+   "point": [
+    346.0,
+    192.52
+   ],
+   "dir": [
+    0.889,
+    -0.458
+   ],
+   "width_ft": 20.4,
+   "label": "Wheelwright Lane continues"
+  },
+  {
+   "id": "mk_str_017_start",
+   "kind": "continues_off_map",
+   "street": "str_017",
+   "parent_street": "str_017",
+   "point": [
+    346.0,
+    281.87
+   ],
+   "dir": [
+    0.888,
+    -0.459
+   ],
+   "width_ft": 15.3,
+   "label": "Rope Walk continues"
+  },
+  {
+   "id": "mk_str_019_start",
+   "kind": "continues_off_map",
+   "street": "str_019",
+   "parent_street": "str_019",
+   "point": [
+    4.3,
+    283.32
+   ],
+   "dir": [
+    -0.814,
+    0.581
+   ],
+   "width_ft": 20.4,
+   "label": "Potters Row continues"
+  },
+  {
+   "id": "mk_str_021_end",
+   "kind": "continues_off_map",
+   "street": "str_021",
+   "parent_street": "str_021",
+   "point": [
+    162.76,
+    339.6
+   ],
+   "dir": [
+    0.411,
+    0.912
+   ],
+   "width_ft": 22.8,
+   "label": "Cartwright Lane 2 continues"
+  },
+  {
+   "id": "mk_str_022_start",
+   "kind": "continues_off_map",
+   "street": "str_022",
+   "parent_street": "str_022",
+   "point": [
+    299.95,
+    339.6
+   ],
+   "dir": [
+    0.514,
+    0.858
+   ],
+   "width_ft": 21.0,
+   "label": "Tanners Row 2 continues"
+  }
+ ]
+}

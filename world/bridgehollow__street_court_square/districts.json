@@ -1,0 +1,287 @@
+{
+ "place": "bridgehollow__street_court_square",
+ "districts": [
+  {
+   "id": "dis_authority",
+   "name": "Authority Ward",
+   "kind": "district",
+   "status": "proposed",
+   "geometry": {
+    "type": "polygon",
+    "points": [
+     [
+      134.4,
+      40.0
+     ],
+     [
+      100.0,
+      53.0
+     ],
+     [
+      70.0,
+      70.1
+     ],
+     [
+      40.0,
+      96.2
+     ],
+     [
+      15.6,
+      130.0
+     ],
+     [
+      2.3,
+      160.0
+     ],
+     [
+      2.1,
+      160.94
+     ],
+     [
+      2.1,
+      241.49
+     ],
+     [
+      4.2,
+      250.0
+     ],
+     [
+      20.0,
+      283.6
+     ],
+     [
+      39.7,
+      310.0
+     ],
+     [
+      62.5,
+      330.0
+     ],
+     [
+      100.0,
+      349.4
+     ],
+     [
+      103.96,
+      350.7
+     ],
+     [
+      274.74,
+      350.7
+     ],
+     [
+      286.7,
+      339.1
+     ],
+     [
+      286.7,
+      49.1
+     ],
+     [
+      270.0,
+      37.6
+     ],
+     [
+      240.0,
+      28.5
+     ],
+     [
+      210.0,
+      26.6
+     ],
+     [
+      176.2,
+      30.0
+     ]
+    ]
+   },
+   "notes": "Wardens, court, tax office and lockup on the low rise.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "ring": "authority",
+   "label_point": [
+    37.7,
+    203.7
+   ],
+   "elevation_ft": 646.7,
+   "region": {
+    "parent_id": "dis_authority",
+    "clipped": true,
+    "inside_frac": 0.863,
+    "part": 1
+   }
+  },
+  {
+   "id": "dis_commoner",
+   "name": "Commoners' Ring",
+   "kind": "district",
+   "status": "proposed",
+   "geometry": {
+    "type": "polygon",
+    "points": [
+     [
+      2.1,
+      7.4
+     ],
+     [
+      2.1,
+      350.7
+     ],
+     [
+      286.7,
+      350.7
+     ],
+     [
+      286.7,
+      7.4
+     ]
+    ]
+   },
+   "notes": "Commoners' homes and trades around the centre.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "ring": "commoner",
+   "elevation_ft": 653.6,
+   "region": {
+    "parent_id": "dis_commoner",
+    "clipped": true,
+    "inside_frac": 0.275,
+    "part": 1
+   }
+  },
+  {
+   "id": "sqr_market",
+   "name": "Market Square",
+   "kind": "square",
+   "status": "proposed",
+   "geometry": {
+    "type": "polygon",
+    "points": [
+     [
+      283.6,
+      168.5
+     ],
+     [
+      277.4,
+      180.0
+     ],
+     [
+      274.3,
+      193.0
+     ],
+     [
+      278.3,
+      205.9
+     ],
+     [
+      285.2,
+      216.7
+     ],
+     [
+      286.7,
+      218.05
+     ],
+     [
+      286.7,
+      165.19
+     ]
+    ]
+   },
+   "notes": "Open plaza grown at a junction.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "elevation_ft": 652.0,
+   "region": {
+    "parent_id": "sqr_market",
+    "clipped": true,
+    "inside_frac": 0.058,
+    "part": 1
+   }
+  },
+  {
+   "id": "sqr_court",
+   "name": "Court Square",
+   "kind": "square",
+   "status": "proposed",
+   "geometry": {
+    "type": "polygon",
+    "points": [
+     [
+      132.3,
+      142.3
+     ],
+     [
+      125.4,
+      154.3
+     ],
+     [
+      122.1,
+      167.2
+     ],
+     [
+      122.6,
+      192.7
+     ],
+     [
+      126.4,
+      205.2
+     ],
+     [
+      133.4,
+      216.6
+     ],
+     [
+      143.5,
+      226.0
+     ],
+     [
+      156.5,
+      230.2
+     ],
+     [
+      166.7,
+      230.8
+     ],
+     [
+      161.2,
+      157.7
+     ],
+     [
+      163.8,
+      127.3
+     ],
+     [
+      156.0,
+      127.7
+     ],
+     [
+      142.4,
+      132.1
+     ]
+    ]
+   },
+   "notes": "Open plaza grown at a junction.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "elevation_ft": 646.9,
+   "region": {
+    "parent_id": "sqr_court",
+    "clipped": false,
+    "inside_frac": 1.0,
+    "part": 1
+   }
+  }
+ ]
+}

@@ -1,0 +1,46 @@
+{
+ "id": "bld_house_028",
+ "name": "House 28",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    251.9,
+    136.0
+   ],
+   [
+    263.9,
+    136.7
+   ],
+   [
+    264.5,
+    126.4
+   ],
+   [
+    252.6,
+    125.7
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 663.4,
+ "site_slope": 0.072,
+ "site_relief_ft": 0.9,
+ "region": {
+  "parent_id": "bld_house_028",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

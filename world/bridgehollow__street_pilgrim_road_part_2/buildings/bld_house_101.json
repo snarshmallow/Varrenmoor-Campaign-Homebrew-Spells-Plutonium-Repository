@@ -1,0 +1,47 @@
+{
+ "id": "bld_house_101",
+ "name": "House 101",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    26.8,
+    337.1
+   ],
+   [
+    36.6,
+    323.5
+   ],
+   [
+    22.0,
+    313.0
+   ],
+   [
+    12.2,
+    326.6
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 2,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 644.1,
+ "site_slope": 0.095,
+ "site_relief_ft": 2.1,
+ "style": "bh_inner_house_winter",
+ "region": {
+  "parent_id": "bld_house_101",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

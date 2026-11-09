@@ -1,0 +1,47 @@
+{
+ "id": "bld_house_061",
+ "name": "House 61",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    97.0,
+    396.6
+   ],
+   [
+    103.7,
+    407.0
+   ],
+   [
+    121.9,
+    395.1
+   ],
+   [
+    115.2,
+    384.7
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 655.8,
+ "site_slope": 0.05,
+ "site_relief_ft": 1.0,
+ "style": "bh_inner_house_winter",
+ "region": {
+  "parent_id": "bld_house_061",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

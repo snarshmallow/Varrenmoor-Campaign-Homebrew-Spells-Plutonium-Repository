@@ -1,0 +1,435 @@
+{
+ "place": "bridgehollow__street_market_square",
+ "districts": [
+  {
+   "id": "dis_authority",
+   "name": "Authority Ward",
+   "kind": "district",
+   "status": "proposed",
+   "geometry": {
+    "type": "polygon",
+    "points": [
+     [
+      4.3,
+      15.24
+     ],
+     [
+      4.3,
+      339.6
+     ],
+     [
+      113.04,
+      339.6
+     ],
+     [
+      120.0,
+      335.3
+     ],
+     [
+      140.0,
+      315.9
+     ],
+     [
+      160.0,
+      287.8
+     ],
+     [
+      173.3,
+      260.0
+     ],
+     [
+      181.8,
+      230.0
+     ],
+     [
+      184.6,
+      200.0
+     ],
+     [
+      181.6,
+      160.0
+     ],
+     [
+      173.1,
+      110.0
+     ],
+     [
+      162.1,
+      70.0
+     ],
+     [
+      150.0,
+      44.6
+     ],
+     [
+      138.0,
+      30.0
+     ],
+     [
+      120.0,
+      17.6
+     ],
+     [
+      90.0,
+      8.5
+     ],
+     [
+      60.0,
+      6.6
+     ],
+     [
+      26.2,
+      10.0
+     ]
+    ]
+   },
+   "notes": "Wardens, court, tax office and lockup on the low rise.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "ring": "authority",
+   "elevation_ft": 646.7,
+   "region": {
+    "parent_id": "dis_authority",
+    "clipped": true,
+    "inside_frac": 0.566,
+    "part": 1
+   }
+  },
+  {
+   "id": "dis_commoner",
+   "name": "Commoners' Ring",
+   "kind": "district",
+   "status": "proposed",
+   "geometry": {
+    "type": "polygon",
+    "points": [
+     [
+      344.5,
+      10.0
+     ],
+     [
+      342.25,
+      6.5
+     ],
+     [
+      4.3,
+      6.5
+     ],
+     [
+      4.3,
+      339.6
+     ],
+     [
+      346.0,
+      339.6
+     ],
+     [
+      346.0,
+      12.9
+     ]
+    ]
+   },
+   "notes": "Commoners' homes and trades around the centre.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "ring": "commoner",
+   "elevation_ft": 653.6,
+   "region": {
+    "parent_id": "dis_commoner",
+    "clipped": true,
+    "inside_frac": 0.321,
+    "part": 1
+   }
+  },
+  {
+   "id": "sqr_market",
+   "name": "Market Square",
+   "kind": "square",
+   "status": "proposed",
+   "geometry": {
+    "type": "polygon",
+    "points": [
+     [
+      210.4,
+      138.8
+     ],
+     [
+      199.5,
+      132.5
+     ],
+     [
+      188.2,
+      127.9
+     ],
+     [
+      176.1,
+      126.4
+     ],
+     [
+      164.1,
+      128.1
+     ],
+     [
+      152.9,
+      132.8
+     ],
+     [
+      142.3,
+      139.2
+     ],
+     [
+      133.6,
+      148.5
+     ],
+     [
+      127.4,
+      160.0
+     ],
+     [
+      124.3,
+      173.0
+     ],
+     [
+      128.3,
+      185.9
+     ],
+     [
+      135.2,
+      196.7
+     ],
+     [
+      144.3,
+      204.9
+     ],
+     [
+      164.6,
+      216.1
+     ],
+     [
+      176.1,
+      219.4
+     ],
+     [
+      188.6,
+      219.6
+     ],
+     [
+      201.1,
+      216.3
+     ],
+     [
+      210.1,
+      207.0
+     ],
+     [
+      216.1,
+      196.1
+     ],
+     [
+      218.8,
+      184.5
+     ],
+     [
+      218.4,
+      173.0
+     ],
+     [
+      226.0,
+      159.7
+     ],
+     [
+      219.5,
+      148.0
+     ]
+    ]
+   },
+   "notes": "Open plaza grown at a junction.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "elevation_ft": 652.0,
+   "region": {
+    "parent_id": "sqr_market",
+    "clipped": false,
+    "inside_frac": 1.0,
+    "part": 1
+   }
+  },
+  {
+   "id": "sqr_court",
+   "name": "Court Square",
+   "kind": "square",
+   "status": "proposed",
+   "geometry": {
+    "type": "polygon",
+    "points": [
+     [
+      6.5,
+      210.2
+     ],
+     [
+      16.7,
+      210.8
+     ],
+     [
+      11.2,
+      137.7
+     ],
+     [
+      13.8,
+      107.3
+     ],
+     [
+      6.0,
+      107.7
+     ],
+     [
+      4.3,
+      108.25
+     ],
+     [
+      4.3,
+      209.49
+     ]
+    ]
+   },
+   "notes": "Open plaza grown at a junction.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "elevation_ft": 646.9,
+   "region": {
+    "parent_id": "sqr_court",
+    "clipped": true,
+    "inside_frac": 0.272,
+    "part": 1
+   }
+  },
+  {
+   "id": "fld_001",
+   "name": "Field 001",
+   "kind": "field",
+   "status": "proposed",
+   "geometry": {
+    "type": "polygon",
+    "points": [
+     [
+      330.6,
+      6.6
+     ],
+     [
+      346.0,
+      22.21
+     ],
+     [
+      346.0,
+      6.5
+     ],
+     [
+      330.58,
+      6.5
+     ]
+    ]
+   },
+   "notes": "Irregular field parcel.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "elevation_ft": 668.8,
+   "region": {
+    "parent_id": "fld_001",
+    "clipped": true,
+    "inside_frac": 0.017,
+    "part": 1
+   }
+  },
+  {
+   "id": "fld_002",
+   "name": "Field 002",
+   "kind": "field",
+   "status": "proposed",
+   "geometry": {
+    "type": "polygon",
+    "points": [
+     [
+      334.2,
+      50.9
+     ],
+     [
+      333.5,
+      120.9
+     ],
+     [
+      346.0,
+      123.96
+     ],
+     [
+      346.0,
+      50.38
+     ]
+    ]
+   },
+   "notes": "Irregular field parcel.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "elevation_ft": 663.8,
+   "region": {
+    "parent_id": "fld_002",
+    "clipped": true,
+    "inside_frac": 0.069,
+    "part": 1
+   }
+  },
+  {
+   "id": "fld_002__p2",
+   "name": "Field 002",
+   "kind": "field",
+   "status": "proposed",
+   "geometry": {
+    "type": "polygon",
+    "points": [
+     [
+      346.0,
+      231.51
+     ],
+     [
+      346.0,
+      206.39
+     ],
+     [
+      331.1,
+      214.4
+     ]
+    ]
+   },
+   "notes": "Irregular field parcel.",
+   "links": {
+    "foundry_scene": null,
+    "model3d": null,
+    "ai_layer": null
+   },
+   "elevation_ft": 663.8,
+   "region": {
+    "parent_id": "fld_002",
+    "clipped": true,
+    "inside_frac": 0.069,
+    "part": 2
+   }
+  }
+ ]
+}

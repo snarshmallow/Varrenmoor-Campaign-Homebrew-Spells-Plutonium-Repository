@@ -1,0 +1,323 @@
+{
+ "instances": [
+  {
+   "id": "fol_st_hedges_0001",
+   "species": "hedge",
+   "x": 292.9,
+   "y": 269.27,
+   "z": 643.85,
+   "scale": 1.082,
+   "rotation": 321.6,
+   "height_ft": 5.41,
+   "kind": "hedge"
+  },
+  {
+   "id": "fol_st_hedges_0002",
+   "species": "hedge",
+   "x": 247.37,
+   "y": 187.72,
+   "z": 639.37,
+   "scale": 0.957,
+   "rotation": 105.8,
+   "height_ft": 4.79,
+   "kind": "hedge"
+  },
+  {
+   "id": "fol_st_hedges_0003",
+   "species": "hedge",
+   "x": 267.42,
+   "y": 175.13,
+   "z": 640.64,
+   "scale": 1.077,
+   "rotation": 329.5,
+   "height_ft": 5.38,
+   "kind": "hedge"
+  },
+  {
+   "id": "fol_st_hedges_0004",
+   "species": "hedge",
+   "x": 191.89,
+   "y": 0.57,
+   "z": 646.7,
+   "scale": 1.065,
+   "rotation": 91.6,
+   "height_ft": 5.32,
+   "kind": "hedge"
+  },
+  {
+   "id": "fol_st_hedges_0005",
+   "species": "hedge",
+   "x": 103.72,
+   "y": 107.64,
+   "z": 632.35,
+   "scale": 0.976,
+   "rotation": 253.6,
+   "height_ft": 4.88,
+   "kind": "hedge"
+  },
+  {
+   "id": "fol_st_hedges_0006",
+   "species": "bush",
+   "x": 286.89,
+   "y": 309.04,
+   "z": 639.75,
+   "scale": 0.883,
+   "rotation": 141.7,
+   "height_ft": 3.97,
+   "kind": "shrub"
+  },
+  {
+   "id": "fol_st_hedges_0007",
+   "species": "bush",
+   "x": 234.39,
+   "y": 308.58,
+   "z": 634.72,
+   "scale": 0.913,
+   "rotation": 133.2,
+   "height_ft": 4.11,
+   "kind": "shrub"
+  },
+  {
+   "id": "fol_st_hedges_0008",
+   "species": "bush",
+   "x": 208.21,
+   "y": 1.7,
+   "z": 647.46,
+   "scale": 1.025,
+   "rotation": 170.7,
+   "height_ft": 4.61,
+   "kind": "shrub"
+  },
+  {
+   "id": "fol_st_hedges_0009",
+   "species": "juniper",
+   "x": 200.42,
+   "y": 125.39,
+   "z": 638.0,
+   "scale": 1.009,
+   "rotation": 328.9,
+   "height_ft": 6.05,
+   "kind": "shrub"
+  },
+  {
+   "id": "fol_st_hedges_0010",
+   "species": "juniper",
+   "x": 148.6,
+   "y": 233.43,
+   "z": 631.33,
+   "scale": 1.334,
+   "rotation": 317.4,
+   "height_ft": 8.0,
+   "kind": "shrub"
+  },
+  {
+   "id": "fol_st_trees_0001",
+   "species": "oak",
+   "x": 232.11,
+   "y": 331.02,
+   "z": 632.65,
+   "scale": 1.052,
+   "rotation": 225.5,
+   "height_ft": 60.49,
+   "kind": "tree"
+  },
+  {
+   "id": "fol_st_trees_0002",
+   "species": "oak",
+   "x": 219.04,
+   "y": 308.98,
+   "z": 633.53,
+   "scale": 0.911,
+   "rotation": 167.5,
+   "height_ft": 52.38,
+   "kind": "tree"
+  },
+  {
+   "id": "fol_st_trees_0003",
+   "species": "birch",
+   "x": 219.22,
+   "y": 159.27,
+   "z": 638.12,
+   "scale": 0.922,
+   "rotation": 163.5,
+   "height_ft": 41.49,
+   "kind": "tree"
+  },
+  {
+   "id": "fol_st_trees_0004",
+   "species": "birch",
+   "x": 79.84,
+   "y": 4.39,
+   "z": 639.27,
+   "scale": 0.975,
+   "rotation": 66.6,
+   "height_ft": 43.88,
+   "kind": "tree"
+  },
+  {
+   "id": "fol_st_trees_0005",
+   "species": "birch",
+   "x": 245.74,
+   "y": 303.09,
+   "z": 635.72,
+   "scale": 0.892,
+   "rotation": 15.2,
+   "height_ft": 40.14,
+   "kind": "tree"
+  },
+  {
+   "id": "fol_st_trees_0006",
+   "species": "rowan",
+   "x": 187.98,
+   "y": 94.54,
+   "z": 638.66,
+   "scale": 1.032,
+   "rotation": 215.5,
+   "height_ft": 24.77,
+   "kind": "tree"
+  },
+  {
+   "id": "fol_st_trees_0007",
+   "species": "rowan",
+   "x": 12.71,
+   "y": 176.71,
+   "z": 632.21,
+   "scale": 0.939,
+   "rotation": 317.1,
+   "height_ft": 22.54,
+   "kind": "tree"
+  },
+  {
+   "id": "fol_st_trees_0008",
+   "species": "maple",
+   "x": 109.16,
+   "y": 338.84,
+   "z": 625.39,
+   "scale": 1.098,
+   "rotation": 156.6,
+   "height_ft": 49.41,
+   "kind": "tree"
+  },
+  {
+   "id": "fol_st_trees_0009",
+   "species": "alder",
+   "x": 145.04,
+   "y": 142.35,
+   "z": 632.9,
+   "scale": 0.954,
+   "rotation": 104.3,
+   "height_ft": 42.93,
+   "kind": "tree"
+  },
+  {
+   "id": "fol_st_trees_0010",
+   "species": "spruce",
+   "x": 120.86,
+   "y": 114.91,
+   "z": 632.77,
+   "scale": 0.917,
+   "rotation": 167.5,
+   "height_ft": 68.78,
+   "kind": "tree"
+  },
+  {
+   "id": "fol_st_trees_0011",
+   "species": "spruce",
+   "x": 252.59,
+   "y": 327.89,
+   "z": 634.37,
+   "scale": 1.181,
+   "rotation": 352.5,
+   "height_ft": 88.58,
+   "kind": "tree"
+  },
+  {
+   "id": "fol_st_trees_0012",
+   "species": "fir",
+   "x": 260.65,
+   "y": 305.55,
+   "z": 636.54,
+   "scale": 1.12,
+   "rotation": 344.4,
+   "height_ft": 81.2,
+   "kind": "tree"
+  },
+  {
+   "id": "fol_st_trees_0013",
+   "species": "scots_pine",
+   "x": 222.63,
+   "y": 277.62,
+   "z": 635.69,
+   "scale": 0.986,
+   "rotation": 39.6,
+   "height_ft": 61.62,
+   "kind": "tree"
+  },
+  {
+   "id": "fol_w_river_3_0005",
+   "species": "alder",
+   "x": 100.28,
+   "y": 318.75,
+   "z": 626.25,
+   "scale": 0.987,
+   "rotation": 206.9,
+   "height_ft": 44.41,
+   "kind": "tree"
+  },
+  {
+   "id": "fol_w_river_3_0007",
+   "species": "alder",
+   "x": 78.0,
+   "y": 296.96,
+   "z": 625.17,
+   "scale": 0.911,
+   "rotation": 20.7,
+   "height_ft": 41.0,
+   "kind": "tree"
+  },
+  {
+   "id": "fol_w_town_1_0016",
+   "species": "birch",
+   "x": 20.7,
+   "y": 125.05,
+   "z": 632.63,
+   "scale": 0.991,
+   "rotation": 234.8,
+   "height_ft": 44.59,
+   "kind": "tree"
+  },
+  {
+   "id": "fol_w_town_1_0019",
+   "species": "rowan",
+   "x": 108.54,
+   "y": 78.74,
+   "z": 635.4,
+   "scale": 1.027,
+   "rotation": 328.6,
+   "height_ft": 24.65,
+   "kind": "tree"
+  },
+  {
+   "id": "fol_w_town_1_0020",
+   "species": "rowan",
+   "x": 204.41,
+   "y": 150.71,
+   "z": 637.27,
+   "scale": 0.983,
+   "rotation": 181.0,
+   "height_ft": 23.59,
+   "kind": "tree"
+  },
+  {
+   "id": "fol_w_town_1_0021",
+   "species": "rowan",
+   "x": 292.86,
+   "y": 73.34,
+   "z": 646.85,
+   "scale": 0.951,
+   "rotation": 118.8,
+   "height_ft": 22.82,
+   "kind": "tree"
+  }
+ ]
+}

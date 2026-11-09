@@ -1,0 +1,47 @@
+{
+ "id": "bld_house_018",
+ "name": "House 18",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    287.2,
+    100.1
+   ],
+   [
+    293.0,
+    89.6
+   ],
+   [
+    281.2,
+    83.1
+   ],
+   [
+    275.4,
+    93.6
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 660.7,
+ "site_slope": 0.089,
+ "site_relief_ft": 1.4,
+ "style": "bh_inner_house_winter",
+ "region": {
+  "parent_id": "bld_house_018",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

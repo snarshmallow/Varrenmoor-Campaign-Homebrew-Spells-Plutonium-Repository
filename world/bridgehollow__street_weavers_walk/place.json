@@ -1,0 +1,59 @@
+{
+ "id": "bridgehollow__street_weavers_walk",
+ "name": "Bridgehollow (draft) - Weavers Walk",
+ "kind": "district",
+ "status": "proposed",
+ "units": "feet",
+ "origin": "top-left, y down",
+ "bounds": {
+  "width_ft": 480.8,
+  "height_ft": 329.6
+ },
+ "window_ft": [
+  7.3,
+  4.5,
+  480.8,
+  329.6
+ ],
+ "parent": {
+  "place": "bridgehollow",
+  "region": "region.json"
+ },
+ "notes": "Zoom-in child of bridgehollow (region Weavers Walk). Same ids and foot coordinates as the parent shifted by origin_ft 1120.0,510.0. See region.json; details.json is generated, not canon.",
+ "files": {
+  "districts": "districts.json",
+  "streets": "streets.json",
+  "water": "water.json",
+  "buildings": "buildings/",
+  "view_settings": "view_settings.json",
+  "terrain": "terrain/",
+  "region": "region.json",
+  "details": "details.json",
+  "markers": "markers.json"
+ },
+ "view_focus": {
+  "district": [
+   244.0,
+   167.1
+  ]
+ },
+ "links": {
+  "foundry_scene": "Scene.ZB97U3A52HFSQqux",
+  "model3d": null,
+  "ai_layer": null,
+  "parent_place": "bridgehollow",
+  "scene_name": "Bridgehollow - Weavers Walk (Winter)"
+ },
+ "generated_by": "region_extract.py",
+ "sea_level_ft": 0.0,
+ "season": "winter",
+ "street": {
+  "key": "weavers_walk",
+  "part": 1,
+  "parts": 1,
+  "street_ids": [
+   "str_006"
+  ],
+  "generated_by": "bridgehollow_streets.py"
+ }
+}

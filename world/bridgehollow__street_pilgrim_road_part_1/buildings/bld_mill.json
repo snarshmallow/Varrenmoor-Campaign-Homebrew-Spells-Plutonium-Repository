@@ -1,0 +1,46 @@
+{
+ "id": "bld_mill",
+ "name": "Mill",
+ "kind": "craft",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    115.6,
+    141.1
+   ],
+   [
+    95.6,
+    180.3
+   ],
+   [
+    67.1,
+    165.7
+   ],
+   [
+    87.1,
+    126.6
+   ]
+  ]
+ },
+ "notes": "Water mill on the river bank (mill-race site; slope limit relaxed 1.6x for the bank).",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 2,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 629.6,
+ "site_slope": 0.078,
+ "site_relief_ft": 3.6,
+ "region": {
+  "parent_id": "bld_mill",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

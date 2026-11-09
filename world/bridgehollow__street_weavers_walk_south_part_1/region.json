@@ -1,0 +1,919 @@
+{
+ "schema": 1,
+ "child": "bridgehollow__street_weavers_walk_south_part_1",
+ "parent": "bridgehollow",
+ "name": "Weavers Walk South Part 1",
+ "region": {
+  "kind": "rect",
+  "rect": [
+   916.1,
+   706.4,
+   1204.2,
+   1165.2
+  ],
+  "name": "Weavers Walk South Part 1",
+  "polygon_parent_ft": [
+   [
+    1204.2,
+    706.4
+   ],
+   [
+    1204.2,
+    1165.2
+   ],
+   [
+    916.1,
+    1165.2
+   ],
+   [
+    916.1,
+    706.4
+   ]
+  ],
+  "area_ft2": 132180.3
+ },
+ "work_area_polygon_parent_ft": [
+  [
+   1204.2,
+   706.4
+  ],
+  [
+   1204.2,
+   1165.2
+  ],
+  [
+   916.1,
+   1165.2
+  ],
+  [
+   916.1,
+   706.4
+  ]
+ ],
+ "margin_ft": 0.0,
+ "transform": {
+  "type": "translate",
+  "origin_ft": [
+   910.0,
+   700.0
+  ],
+  "scale": 1.0,
+  "note": "child = parent - origin_ft (feet, y down); zoom is the view scale only"
+ },
+ "window_parent_ft": [
+  916.1,
+  706.4,
+  1204.2,
+  1165.2
+ ],
+ "parent_source": {
+  "git_commit": "39576a4e6ce5451659cc3c8bcbed6928a355b0e2",
+  "parent_dirty": true,
+  "content_sha1": "37cc9c997e890947923818fea94d482bc564012b"
+ },
+ "extracted_at": "2026-11-09T21:57:39+00:00",
+ "params": {
+  "margin": 0.0,
+  "terrain_cell_ft": 2.5,
+  "seed": 13345409,
+  "scale": 20.0,
+  "grid": 5.0,
+  "detail": "doors,roofs,chimneys,lots,fences,kerbs",
+  "detail_params": {},
+  "clip_buildings": false,
+  "local_origin": true,
+  "detail_ft": 0.45,
+  "flatten_pads": true,
+  "terrain": true,
+  "parent_root": null
+ },
+ "id_map": {
+  "bld_barn_002": [
+   "bld_barn_002"
+  ],
+  "bld_customs_house": [
+   "bld_customs_house"
+  ],
+  "bld_house_049": [
+   "bld_house_049"
+  ],
+  "bld_house_058": [
+   "bld_house_058"
+  ],
+  "bld_house_067": [
+   "bld_house_067"
+  ],
+  "bld_house_073": [
+   "bld_house_073"
+  ],
+  "bld_house_080": [
+   "bld_house_080"
+  ],
+  "bld_house_082": [
+   "bld_house_082"
+  ],
+  "bld_house_087": [
+   "bld_house_087"
+  ],
+  "bld_house_090": [
+   "bld_house_090"
+  ],
+  "bld_house_098": [
+   "bld_house_098"
+  ],
+  "bld_house_099": [
+   "bld_house_099"
+  ],
+  "bld_house_101": [
+   "bld_house_101"
+  ],
+  "bld_house_103": [
+   "bld_house_103"
+  ],
+  "bld_house_107": [
+   "bld_house_107"
+  ],
+  "bld_house_109": [
+   "bld_house_109"
+  ],
+  "bld_house_111": [
+   "bld_house_111"
+  ],
+  "bld_house_113": [
+   "bld_house_113"
+  ],
+  "bld_house_116": [
+   "bld_house_116"
+  ],
+  "bld_house_117": [
+   "bld_house_117"
+  ],
+  "bld_house_118": [
+   "bld_house_118"
+  ],
+  "bld_house_119": [
+   "bld_house_119"
+  ],
+  "bld_house_122": [
+   "bld_house_122"
+  ],
+  "bld_house_123": [
+   "bld_house_123"
+  ],
+  "bld_house_124": [
+   "bld_house_124"
+  ],
+  "bld_lockup": [
+   "bld_lockup"
+  ],
+  "bld_magistrate_court": [
+   "bld_magistrate_court"
+  ],
+  "bld_meeting_hall": [
+   "bld_meeting_hall"
+  ],
+  "bld_records_house": [
+   "bld_records_house"
+  ],
+  "bld_shed_049": [
+   "bld_shed_049"
+  ],
+  "bld_shed_067": [
+   "bld_shed_067"
+  ],
+  "bld_smithy": [
+   "bld_smithy"
+  ],
+  "bld_warden_hall": [
+   "bld_warden_hall"
+  ],
+  "str_pilgrim_road_bridge": [
+   "str_pilgrim_road_bridge"
+  ],
+  "str_005": [
+   "str_005"
+  ],
+  "str_008": [
+   "str_008"
+  ],
+  "str_009": [
+   "str_009"
+  ],
+  "str_011": [
+   "str_011"
+  ],
+  "str_014": [
+   "str_014"
+  ],
+  "str_016": [
+   "str_016"
+  ],
+  "str_019": [
+   "str_019"
+  ],
+  "str_020": [
+   "str_020"
+  ],
+  "str_023": [
+   "str_023"
+  ],
+  "str_024": [
+   "str_024"
+  ],
+  "wat_river": [
+   "wat_river"
+  ],
+  "dis_authority": [
+   "dis_authority"
+  ],
+  "dis_commoner": [
+   "dis_commoner"
+  ],
+  "dis_farm": [
+   "dis_farm"
+  ],
+  "sqr_court": [
+   "sqr_court"
+  ],
+  "sqr_3": [
+   "sqr_3"
+  ],
+  "fld_005": [
+   "fld_005"
+  ],
+  "fld_007": [
+   "fld_007"
+  ]
+ },
+ "dropped": [
+  {
+   "id": "bld_barn_001",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_farm_001",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_farm_002",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_farm_003",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_gate_watch",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_001",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_002",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_003",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_004",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_005",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_006",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_007",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_008",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_009",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_010",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_011",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_012",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_013",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_014",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_015",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_016",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_017",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_018",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_019",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_020",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_021",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_022",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_023",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_024",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_025",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_026",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_027",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_028",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_029",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_030",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_031",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_032",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_033",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_034",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_035",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_036",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_037",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_038",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_039",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_040",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_041",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_042",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_043",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_044",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_045",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_046",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_047",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_048",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_050",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_051",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_052",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_053",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_054",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_055",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_056",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_057",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_059",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_060",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_061",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_062",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_063",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_064",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_065",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_066",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_068",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_069",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_070",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_071",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_072",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_074",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_075",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_076",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_077",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_078",
+   "reason": "mostly outside",
+   "inside_frac": 0.021
+  },
+  {
+   "id": "bld_house_079",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_081",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_083",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_084",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_085",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_086",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_088",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_089",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_091",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_092",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_093",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_094",
+   "reason": "mostly outside",
+   "inside_frac": 0.376
+  },
+  {
+   "id": "bld_house_095",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_096",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_097",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_100",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_102",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_104",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_105",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_106",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_108",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_110",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_112",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_114",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_115",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_120",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_house_121",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_inn",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_mill",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_shed_018",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_shed_035",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_shed_079",
+   "reason": "mostly outside",
+   "inside_frac": 0.149
+  },
+  {
+   "id": "bld_stables",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_tax_office",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_treasury",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "bld_wardens_barracks",
+   "reason": "mostly outside",
+   "inside_frac": 0.0
+  },
+  {
+   "id": "str_pilgrim_road_1",
+   "reason": "fragment"
+  }
+ ],
+ "counts": {
+  "buildings": 33,
+  "streets": 11,
+  "water": 1,
+  "districts": 7
+ },
+ "snapshot": {
+  "bld_barn_002": "682991907356",
+  "bld_customs_house": "bd6c3b668a76",
+  "bld_house_049": "da0073e65bed",
+  "bld_house_058": "6a139a7c39a9",
+  "bld_house_067": "0d3ad81090ed",
+  "bld_house_073": "c0fa45b6c76e",
+  "bld_house_080": "3a1e95b5dbbd",
+  "bld_house_082": "3067143be94d",
+  "bld_house_087": "6802e495e2d2",
+  "bld_house_090": "ba19fcc04013",
+  "bld_house_098": "586fd94bf1dc",
+  "bld_house_099": "eb8504c9fdc0",
+  "bld_house_101": "c58774d83c65",
+  "bld_house_103": "f7de5135b062",
+  "bld_house_107": "43168f6e5b21",
+  "bld_house_109": "812b92b5dd21",
+  "bld_house_111": "7f4dce9eb2ab",
+  "bld_house_113": "984d6c11e568",
+  "bld_house_116": "eed55a95067e",
+  "bld_house_117": "d095fc4f33d6",
+  "bld_house_118": "512f0eb9dbda",
+  "bld_house_119": "239e1ec4925b",
+  "bld_house_122": "f6c7e5a7bc06",
+  "bld_house_123": "c795e971f7bf",
+  "bld_house_124": "d007d1e03910",
+  "bld_lockup": "c0327f58e1a1",
+  "bld_magistrate_court": "ffc4bab20a41",
+  "bld_meeting_hall": "19c595e897a7",
+  "bld_records_house": "a4096b4f685f",
+  "bld_shed_049": "9f23b4446e08",
+  "bld_shed_067": "36b802c20eaf",
+  "bld_smithy": "2fabf2067a7b",
+  "bld_warden_hall": "f04a3efecdf3",
+  "str_pilgrim_road_bridge": "e8c531be5409",
+  "str_005": "5058b2a68ec0",
+  "str_008": "821e18a7550f",
+  "str_009": "3af6394bfd54",
+  "str_011": "0bdbda3b03ab",
+  "str_014": "cafcc7fbcdf2",
+  "str_016": "0e916a321122",
+  "str_019": "7a48ba4a222f",
+  "str_020": "053e24c9a7d7",
+  "str_023": "87054f32a0fa",
+  "str_024": "47630336015c",
+  "wat_river": "16418262adea",
+  "dis_authority": "a267087c58d2",
+  "dis_commoner": "bccceeda4631",
+  "dis_farm": "af1597778200",
+  "sqr_court": "42ebc974038c",
+  "sqr_3": "afdc4d1d4e76",
+  "fld_005": "f084b63a332e",
+  "fld_007": "81efca395cf3"
+ },
+ "interiors": {},
+ "terrain": {
+  "cell_ft": 2.5,
+  "parent_cell_ft": 10.0,
+  "upres_factor": 4,
+  "nx": 137,
+  "ny": 205,
+  "elev_min": 626.3988647460938,
+  "elev_max": 662.4739379882812,
+  "max_node_dev_ft": 1.6332,
+  "max_node_dev_outside_pads_ft": 0.0,
+  "origin_ft": [
+   -20.0,
+   -20.0
+  ],
+  "detail_ft": 0.45,
+  "seed": 13345409
+ },
+ "sync": {
+  "shared_attrs": [
+   "name",
+   "kind",
+   "status",
+   "notes",
+   "floors",
+   "links",
+   "geometry (unclipped, unshifted-aware)"
+  ],
+  "rule": "child -> parent only through `region_extract.py sync --child ID --apply` (diff first)"
+ }
+}

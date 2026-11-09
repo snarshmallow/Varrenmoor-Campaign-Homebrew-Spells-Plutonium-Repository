@@ -1,0 +1,46 @@
+{
+ "id": "bld_house_050",
+ "name": "House 50",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    353.5,
+    155.8
+   ],
+   [
+    335.0,
+    152.9
+   ],
+   [
+    332.0,
+    172.6
+   ],
+   [
+    350.4,
+    175.4
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 2,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 661.5,
+ "site_slope": 0.054,
+ "site_relief_ft": 1.1,
+ "region": {
+  "parent_id": "bld_house_050",
+  "clipped": false,
+  "edge": true,
+  "inside_frac": 0.678,
+  "in_region_frac": 0.678
+ }
+}

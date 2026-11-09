@@ -1,0 +1,46 @@
+{
+ "id": "bld_house_110",
+ "name": "House 110",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    216.4,
+    353.3
+   ],
+   [
+    221.6,
+    362.6
+   ],
+   [
+    239.8,
+    352.5
+   ],
+   [
+    234.7,
+    343.2
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 638.6,
+ "site_slope": 0.151,
+ "site_relief_ft": 3.3,
+ "region": {
+  "parent_id": "bld_house_110",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

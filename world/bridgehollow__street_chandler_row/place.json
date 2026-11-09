@@ -1,0 +1,59 @@
+{
+ "id": "bridgehollow__street_chandler_row",
+ "name": "Bridgehollow (draft) - Chandler Row",
+ "kind": "district",
+ "status": "proposed",
+ "units": "feet",
+ "origin": "top-left, y down",
+ "bounds": {
+  "width_ft": 282.0,
+  "height_ft": 326.4
+ },
+ "window_ft": [
+  9.5,
+  2.7,
+  282.0,
+  326.4
+ ],
+ "parent": {
+  "place": "bridgehollow",
+  "region": "region.json"
+ },
+ "notes": "Zoom-in child of bridgehollow (region Chandler Row). Same ids and foot coordinates as the parent shifted by origin_ft 1130.0,540.0. See region.json; details.json is generated, not canon.",
+ "files": {
+  "districts": "districts.json",
+  "streets": "streets.json",
+  "water": "water.json",
+  "buildings": "buildings/",
+  "view_settings": "view_settings.json",
+  "terrain": "terrain/",
+  "region": "region.json",
+  "details": "details.json",
+  "markers": "markers.json"
+ },
+ "view_focus": {
+  "district": [
+   145.8,
+   164.6
+  ]
+ },
+ "links": {
+  "foundry_scene": "Scene.BugFxm0hQocOwn9C",
+  "model3d": null,
+  "ai_layer": null,
+  "parent_place": "bridgehollow",
+  "scene_name": "Bridgehollow - Chandler Row (Winter)"
+ },
+ "generated_by": "region_extract.py",
+ "sea_level_ft": 0.0,
+ "season": "winter",
+ "street": {
+  "key": "chandler_row",
+  "part": 1,
+  "parts": 1,
+  "street_ids": [
+   "str_010"
+  ],
+  "generated_by": "bridgehollow_streets.py"
+ }
+}

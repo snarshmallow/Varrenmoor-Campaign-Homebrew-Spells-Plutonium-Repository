@@ -1,0 +1,46 @@
+{
+ "id": "bld_house_108",
+ "name": "House 108",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    328.5,
+    340.5
+   ],
+   [
+    321.4,
+    328.4
+   ],
+   [
+    301.2,
+    340.2
+   ],
+   [
+    308.3,
+    352.3
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 2,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 645.2,
+ "site_slope": 0.138,
+ "site_relief_ft": 2.7,
+ "region": {
+  "parent_id": "bld_house_108",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

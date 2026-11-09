@@ -1,0 +1,46 @@
+{
+ "id": "bld_house_013",
+ "name": "House 13",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    115.2,
+    191.6
+   ],
+   [
+    102.3,
+    192.0
+   ],
+   [
+    102.6,
+    203.0
+   ],
+   [
+    115.6,
+    202.6
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 2,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 661.4,
+ "site_slope": 0.095,
+ "site_relief_ft": 1.3,
+ "region": {
+  "parent_id": "bld_house_013",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

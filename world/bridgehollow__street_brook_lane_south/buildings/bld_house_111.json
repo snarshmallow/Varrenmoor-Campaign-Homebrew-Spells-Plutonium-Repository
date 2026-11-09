@@ -1,0 +1,46 @@
+{
+ "id": "bld_house_111",
+ "name": "House 111",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    7.1,
+    82.5
+   ],
+   [
+    10.5,
+    70.4
+   ],
+   [
+    -6.1,
+    65.9
+   ],
+   [
+    -9.4,
+    78.0
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 2,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 637.7,
+ "site_slope": 0.127,
+ "site_relief_ft": 2.6,
+ "region": {
+  "parent_id": "bld_house_111",
+  "clipped": false,
+  "edge": true,
+  "inside_frac": 0.514,
+  "in_region_frac": 0.514
+ }
+}

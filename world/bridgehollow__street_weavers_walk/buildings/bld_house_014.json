@@ -1,0 +1,46 @@
+{
+ "id": "bld_house_014",
+ "name": "House 14",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    273.4,
+    106.1
+   ],
+   [
+    258.5,
+    107.1
+   ],
+   [
+    259.3,
+    119.4
+   ],
+   [
+    274.2,
+    118.4
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 663.7,
+ "site_slope": 0.089,
+ "site_relief_ft": 1.5,
+ "region": {
+  "parent_id": "bld_house_014",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

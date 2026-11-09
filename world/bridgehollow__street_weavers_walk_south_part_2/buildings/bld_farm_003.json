@@ -1,0 +1,46 @@
+{
+ "id": "bld_farm_003",
+ "name": "Farmhouse 3",
+ "kind": "farmhouse",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    164.0,
+    412.1
+   ],
+   [
+    174.5,
+    386.9
+   ],
+   [
+    157.7,
+    379.8
+   ],
+   [
+    147.1,
+    405.1
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 2,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 633.5,
+ "site_slope": 0.077,
+ "site_relief_ft": 1.5,
+ "region": {
+  "parent_id": "bld_farm_003",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

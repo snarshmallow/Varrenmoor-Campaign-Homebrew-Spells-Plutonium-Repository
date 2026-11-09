@@ -1,0 +1,47 @@
+{
+ "id": "bld_house_070",
+ "name": "House 70",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    203.4,
+    245.4
+   ],
+   [
+    213.1,
+    257.8
+   ],
+   [
+    226.9,
+    247.0
+   ],
+   [
+    217.2,
+    234.6
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 651.9,
+ "site_slope": 0.09,
+ "site_relief_ft": 1.7,
+ "style": "bh_inner_house_winter",
+ "region": {
+  "parent_id": "bld_house_070",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

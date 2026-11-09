@@ -1,0 +1,46 @@
+{
+ "id": "bld_house_040",
+ "name": "House 40",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    268.5,
+    199.4
+   ],
+   [
+    266.6,
+    226.7
+   ],
+   [
+    275.7,
+    227.3
+   ],
+   [
+    277.6,
+    200.0
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 2,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 663.2,
+ "site_slope": 0.043,
+ "site_relief_ft": 0.8,
+ "region": {
+  "parent_id": "bld_house_040",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

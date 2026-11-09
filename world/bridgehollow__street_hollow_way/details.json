@@ -1,0 +1,15175 @@
+{
+ "canon": false,
+ "note": "detail: generated at district scale (not canon, safe to regenerate)",
+ "seed": 12212881,
+ "kinds": [
+  "chimneys",
+  "doors",
+  "fences",
+  "kerbs",
+  "lots",
+  "roofs"
+ ],
+ "doors": [
+  {
+   "id": "bld_customs_house_door1",
+   "building": "bld_customs_house",
+   "edge": 2,
+   "point": [
+    289.35,
+    193.6
+   ],
+   "width_ft": 6.0,
+   "facing": [
+    -0.995,
+    -0.104
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_002_door1",
+   "building": "bld_house_002",
+   "edge": 2,
+   "point": [
+    363.75,
+    14.85
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    0.535,
+    0.845
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_003_door1",
+   "building": "bld_house_003",
+   "edge": 2,
+   "point": [
+    316.7,
+    17.05
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    0.492,
+    0.87
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_004_door1",
+   "building": "bld_house_004",
+   "edge": 2,
+   "point": [
+    345.5,
+    23.95
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    0.557,
+    0.831
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_005_door1",
+   "building": "bld_house_005",
+   "edge": 0,
+   "point": [
+    414.6,
+    17.8
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    -0.443,
+    -0.897
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_007_door1",
+   "building": "bld_house_007",
+   "edge": 2,
+   "point": [
+    518.4,
+    27.0
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    -0.816,
+    -0.578
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_008_door1",
+   "building": "bld_house_008",
+   "edge": 0,
+   "point": [
+    390.7,
+    28.7
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    -0.555,
+    -0.832
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_010_door1",
+   "building": "bld_house_010",
+   "edge": 2,
+   "point": [
+    314.8,
+    49.35
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    0.542,
+    0.841
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_011_door1",
+   "building": "bld_house_011",
+   "edge": 2,
+   "point": [
+    381.25,
+    54.4
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    0.566,
+    0.824
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_012_door1",
+   "building": "bld_house_012",
+   "edge": 2,
+   "point": [
+    489.6,
+    38.0
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    -0.678,
+    -0.735
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_015_door1",
+   "building": "bld_house_015",
+   "edge": 0,
+   "point": [
+    368.55,
+    70.8
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    0.771,
+    0.637
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_016_door1",
+   "building": "bld_house_016",
+   "edge": 2,
+   "point": [
+    261.55,
+    74.65
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    0.763,
+    -0.646
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_017_door1",
+   "building": "bld_house_017",
+   "edge": 2,
+   "point": [
+    227.3,
+    78.9
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    0.733,
+    -0.68
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_018_door1",
+   "building": "bld_house_018",
+   "edge": 1,
+   "point": [
+    337.1,
+    76.35
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    0.482,
+    -0.876
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_020_door1",
+   "building": "bld_house_020",
+   "edge": 2,
+   "point": [
+    280.0,
+    99.45
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    0.71,
+    0.704
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_022_door1",
+   "building": "bld_house_022",
+   "edge": 2,
+   "point": [
+    197.0,
+    107.9
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    -0.563,
+    0.827
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_023_door1",
+   "building": "bld_house_023",
+   "edge": 2,
+   "point": [
+    249.25,
+    108.55
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    0.763,
+    0.647
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_025_door1",
+   "building": "bld_house_025",
+   "edge": 2,
+   "point": [
+    307.05,
+    101.7
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    -0.903,
+    -0.43
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_026_door1",
+   "building": "bld_house_026",
+   "edge": 2,
+   "point": [
+    340.4,
+    113.85
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    0.908,
+    0.419
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_027_door1",
+   "building": "bld_house_027",
+   "edge": 2,
+   "point": [
+    210.8,
+    115.85
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    -0.629,
+    0.777
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_029_door1",
+   "building": "bld_house_029",
+   "edge": 2,
+   "point": [
+    260.6,
+    125.05
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    0.713,
+    0.701
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_030_door1",
+   "building": "bld_house_030",
+   "edge": 2,
+   "point": [
+    221.15,
+    131.35
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    -0.663,
+    0.749
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_031_door1",
+   "building": "bld_house_031",
+   "edge": 2,
+   "point": [
+    169.15,
+    123.05
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    0.638,
+    -0.77
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_035_door1",
+   "building": "bld_house_035",
+   "edge": 2,
+   "point": [
+    310.4,
+    141.45
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    -0.173,
+    0.985
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_036_door1",
+   "building": "bld_house_036",
+   "edge": 1,
+   "point": [
+    237.95,
+    150.9
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    -0.623,
+    0.782
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_037_door1",
+   "building": "bld_house_037",
+   "edge": 2,
+   "point": [
+    152.7,
+    145.45
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    0.644,
+    -0.765
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_041_door1",
+   "building": "bld_house_041",
+   "edge": 2,
+   "point": [
+    155.05,
+    174.65
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    0.856,
+    0.517
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_044_door1",
+   "building": "bld_house_044",
+   "edge": 2,
+   "point": [
+    128.9,
+    190.05
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    -0.648,
+    0.761
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_046_door1",
+   "building": "bld_house_046",
+   "edge": 2,
+   "point": [
+    218.45,
+    194.1
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    -0.573,
+    -0.82
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_048_door1",
+   "building": "bld_house_048",
+   "edge": 2,
+   "point": [
+    239.6,
+    212.8
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    0.826,
+    -0.563
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_049_door1",
+   "building": "bld_house_049",
+   "edge": 2,
+   "point": [
+    280.65,
+    225.75
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    -0.998,
+    0.063
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_052_door1",
+   "building": "bld_house_052",
+   "edge": 2,
+   "point": [
+    162.15,
+    235.1
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    -0.856,
+    0.517
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_053_door1",
+   "building": "bld_house_053",
+   "edge": 1,
+   "point": [
+    190.35,
+    226.2
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    -0.419,
+    -0.908
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_054_door1",
+   "building": "bld_house_054",
+   "edge": 2,
+   "point": [
+    118.6,
+    235.5
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    0.073,
+    -0.997
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_055_door1",
+   "building": "bld_house_055",
+   "edge": 2,
+   "point": [
+    238.4,
+    243.2
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    0.826,
+    -0.564
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_056_door1",
+   "building": "bld_house_056",
+   "edge": 2,
+   "point": [
+    142.25,
+    255.25
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    0.999,
+    -0.053
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_057_door1",
+   "building": "bld_house_057",
+   "edge": 2,
+   "point": [
+    176.05,
+    258.05
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    -0.806,
+    0.592
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_058_door1",
+   "building": "bld_house_058",
+   "edge": 2,
+   "point": [
+    298.7,
+    255.3
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    -1.0,
+    0.008
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_061_door1",
+   "building": "bld_house_061",
+   "edge": 2,
+   "point": [
+    248.55,
+    259.9
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    0.841,
+    -0.542
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_062_door1",
+   "building": "bld_house_062",
+   "edge": 2,
+   "point": [
+    186.65,
+    273.5
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    -0.824,
+    0.567
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_063_door1",
+   "building": "bld_house_063",
+   "edge": 2,
+   "point": [
+    156.95,
+    277.0
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    0.971,
+    -0.239
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_064_door1",
+   "building": "bld_house_064",
+   "edge": 2,
+   "point": [
+    200.15,
+    289.3
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    -0.828,
+    0.561
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_065_door1",
+   "building": "bld_house_065",
+   "edge": 2,
+   "point": [
+    126.95,
+    285.15
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    0.981,
+    -0.193
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_066_door1",
+   "building": "bld_house_066",
+   "edge": 2,
+   "point": [
+    247.35,
+    285.9
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    0.835,
+    -0.55
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_067_door1",
+   "building": "bld_house_067",
+   "edge": 1,
+   "point": [
+    281.45,
+    310.6
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    0.513,
+    0.858
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_069_door1",
+   "building": "bld_house_069",
+   "edge": 2,
+   "point": [
+    218.5,
+    309.3
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    -0.796,
+    0.605
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_072_door1",
+   "building": "bld_house_072",
+   "edge": 2,
+   "point": [
+    178.9,
+    307.85
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    0.944,
+    -0.329
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_073_door1",
+   "building": "bld_house_073",
+   "edge": 0,
+   "point": [
+    330.6,
+    311.5
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    0.998,
+    -0.062
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_077_door1",
+   "building": "bld_house_077",
+   "edge": 2,
+   "point": [
+    146.7,
+    320.7
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    0.987,
+    -0.16
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_078_door1",
+   "building": "bld_house_078",
+   "edge": 2,
+   "point": [
+    240.6,
+    328.15
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    -0.736,
+    0.677
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_079_door1",
+   "building": "bld_house_079",
+   "edge": 3,
+   "point": [
+    548.85,
+    309.0
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    -0.044,
+    -0.999
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_080_door1",
+   "building": "bld_house_080",
+   "edge": 2,
+   "point": [
+    404.8,
+    327.95
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    1.0,
+    -0.013
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_082_door1",
+   "building": "bld_house_082",
+   "edge": 2,
+   "point": [
+    256.35,
+    343.25
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    -0.717,
+    0.697
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_lockup_door1",
+   "building": "bld_lockup",
+   "edge": 2,
+   "point": [
+    361.35,
+    212.4
+   ],
+   "width_ft": 6.0,
+   "facing": [
+    -1.0,
+    0.009
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_magistrate_court_door1",
+   "building": "bld_magistrate_court",
+   "edge": 2,
+   "point": [
+    360.3,
+    278.0
+   ],
+   "width_ft": 6.0,
+   "facing": [
+    -0.996,
+    -0.086
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_records_house_door1",
+   "building": "bld_records_house",
+   "edge": 2,
+   "point": [
+    362.3,
+    244.4
+   ],
+   "width_ft": 6.0,
+   "facing": [
+    -0.999,
+    -0.045
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_shed_018_door1",
+   "building": "bld_shed_018",
+   "edge": 2,
+   "point": [
+    354.0,
+    93.5
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    0.863,
+    0.506
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_shed_035_door1",
+   "building": "bld_shed_035",
+   "edge": 3,
+   "point": [
+    337.45,
+    134.65
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    0.984,
+    0.177
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_shed_049_door1",
+   "building": "bld_shed_049",
+   "edge": 2,
+   "point": [
+    329.3,
+    221.0
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    1.0,
+    -0.021
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_shed_067_door1",
+   "building": "bld_shed_067",
+   "edge": 2,
+   "point": [
+    264.55,
+    270.9
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    0.858,
+    -0.513
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_shed_079_door1",
+   "building": "bld_shed_079",
+   "edge": 2,
+   "point": [
+    548.65,
+    295.2
+   ],
+   "width_ft": 3.5,
+   "facing": [
+    0.713,
+    -0.701
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_stables_door1",
+   "building": "bld_stables",
+   "edge": 2,
+   "point": [
+    474.05,
+    64.55
+   ],
+   "width_ft": 6.0,
+   "facing": [
+    -0.7,
+    -0.714
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_treasury_door1",
+   "building": "bld_treasury",
+   "edge": 2,
+   "point": [
+    434.05,
+    95.75
+   ],
+   "width_ft": 6.0,
+   "facing": [
+    0.731,
+    0.683
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_warden_hall_door1",
+   "building": "bld_warden_hall",
+   "edge": 2,
+   "point": [
+    389.2,
+    158.05
+   ],
+   "width_ft": 6.0,
+   "facing": [
+    -0.01,
+    -1.0
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_wardens_barracks_door1",
+   "building": "bld_wardens_barracks",
+   "edge": 0,
+   "point": [
+    399.2,
+    117.9
+   ],
+   "width_ft": 6.0,
+   "facing": [
+    0.278,
+    0.961
+   ],
+   "detail": true
+  }
+ ],
+ "roofs": [
+  {
+   "id": "bld_customs_house_roof",
+   "building": "bld_customs_house",
+   "type": "gable",
+   "ridge": [
+    [
+     291.75,
+     193.81
+    ],
+    [
+     307.17,
+     195.49
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_002_roof",
+   "building": "bld_house_002",
+   "type": "gable",
+   "ridge": [
+    [
+     364.97,
+     3.91
+    ],
+    [
+     353.33,
+     11.29
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_003_roof",
+   "building": "bld_house_003",
+   "type": "gable",
+   "ridge": [
+    [
+     309.66,
+     4.43
+    ],
+    [
+     315.76,
+     15.36
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_004_roof",
+   "building": "bld_house_004",
+   "type": "gable",
+   "ridge": [
+    [
+     332.9,
+     5.37
+    ],
+    [
+     343.8,
+     21.43
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_005_roof",
+   "building": "bld_house_005",
+   "type": "gable",
+   "ridge": [
+    [
+     410.74,
+     24.77
+    ],
+    [
+     422.52,
+     19.0
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_007_roof",
+   "building": "bld_house_007",
+   "type": "gable",
+   "ridge": [
+    [
+     528.78,
+     26.13
+    ],
+    [
+     521.02,
+     37.07
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_008_roof",
+   "building": "bld_house_008",
+   "type": "gable",
+   "ridge": [
+    [
+     396.83,
+     37.96
+    ],
+    [
+     391.51,
+     29.98
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_010_roof",
+   "building": "bld_house_010",
+   "type": "gable",
+   "ridge": [
+    [
+     304.41,
+     47.23
+    ],
+    [
+     317.09,
+     39.07
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_011_roof",
+   "building": "bld_house_011",
+   "type": "gable",
+   "ridge": [
+    [
+     382.1,
+     47.59
+    ],
+    [
+     374.5,
+     52.81
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_012_roof",
+   "building": "bld_house_012",
+   "type": "gable",
+   "ridge": [
+    [
+     491.21,
+     39.74
+    ],
+    [
+     501.39,
+     50.76
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_015_roof",
+   "building": "bld_house_015",
+   "type": "gable",
+   "ridge": [
+    [
+     366.69,
+     69.29
+    ],
+    [
+     354.68,
+     59.49
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_016_roof",
+   "building": "bld_house_016",
+   "type": "gable",
+   "ridge": [
+    [
+     252.53,
+     82.39
+    ],
+    [
+     260.35,
+     75.69
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_017_roof",
+   "building": "bld_house_017",
+   "type": "gable",
+   "ridge": [
+    [
+     225.98,
+     80.12
+    ],
+    [
+     217.42,
+     87.98
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_018_roof",
+   "building": "bld_house_018",
+   "type": "gable",
+   "ridge": [
+    [
+     338.69,
+     84.07
+    ],
+    [
+     329.71,
+     79.13
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_020_roof",
+   "building": "bld_house_020",
+   "type": "gable",
+   "ridge": [
+    [
+     269.44,
+     88.98
+    ],
+    [
+     278.56,
+     98.02
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_022_roof",
+   "building": "bld_house_022",
+   "type": "gable",
+   "ridge": [
+    [
+     198.13,
+     106.24
+    ],
+    [
+     205.27,
+     95.76
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_023_roof",
+   "building": "bld_house_023",
+   "type": "gable",
+   "ridge": [
+    [
+     241.83,
+     109.12
+    ],
+    [
+     248.6,
+     101.14
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_025_roof",
+   "building": "bld_house_025",
+   "type": "gable",
+   "ridge": [
+    [
+     314.29,
+     97.17
+    ],
+    [
+     308.11,
+     110.13
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_026_roof",
+   "building": "bld_house_026",
+   "type": "gable",
+   "ridge": [
+    [
+     330.88,
+     117.24
+    ],
+    [
+     336.8,
+     104.4
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_027_roof",
+   "building": "bld_house_027",
+   "type": "gable",
+   "ridge": [
+    [
+     218.13,
+     106.94
+    ],
+    [
+     211.77,
+     114.66
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_029_roof",
+   "building": "bld_house_029",
+   "type": "gable",
+   "ridge": [
+    [
+     262.72,
+     114.5
+    ],
+    [
+     250.03,
+     127.35
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_030_roof",
+   "building": "bld_house_030",
+   "type": "gable",
+   "ridge": [
+    [
+     230.55,
+     120.81
+    ],
+    [
+     222.42,
+     129.93
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_031_roof",
+   "building": "bld_house_031",
+   "type": "gable",
+   "ridge": [
+    [
+     167.91,
+     124.55
+    ],
+    [
+     159.97,
+     134.08
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_035_roof",
+   "building": "bld_house_035",
+   "type": "gable",
+   "ridge": [
+    [
+     302.7,
+     132.99
+    ],
+    [
+     320.5,
+     136.11
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_036_roof",
+   "building": "bld_house_036",
+   "type": "gable",
+   "ridge": [
+    [
+     246.34,
+     150.04
+    ],
+    [
+     236.96,
+     142.56
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_037_roof",
+   "building": "bld_house_037",
+   "type": "gable",
+   "ridge": [
+    [
+     145.04,
+     146.19
+    ],
+    [
+     153.26,
+     153.11
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_041_roof",
+   "building": "bld_house_041",
+   "type": "gable",
+   "ridge": [
+    [
+     153.59,
+     173.77
+    ],
+    [
+     144.31,
+     168.13
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_044_roof",
+   "building": "bld_house_044",
+   "type": "gable",
+   "ridge": [
+    [
+     128.06,
+     181.18
+    ],
+    [
+     137.79,
+     189.46
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_046_roof",
+   "building": "bld_house_046",
+   "type": "gable",
+   "ridge": [
+    [
+     224.97,
+     195.11
+    ],
+    [
+     217.13,
+     200.59
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_048_roof",
+   "building": "bld_house_048",
+   "type": "gable",
+   "ridge": [
+    [
+     228.53,
+     210.55
+    ],
+    [
+     237.67,
+     223.95
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_049_roof",
+   "building": "bld_house_049",
+   "type": "gable",
+   "ridge": [
+    [
+     306.05,
+     224.26
+    ],
+    [
+     284.09,
+     225.55
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_052_roof",
+   "building": "bld_house_052",
+   "type": "gable",
+   "ridge": [
+    [
+     162.29,
+     226.52
+    ],
+    [
+     169.81,
+     238.98
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_053_roof",
+   "building": "bld_house_053",
+   "type": "gable",
+   "ridge": [
+    [
+     198.97,
+     244.86
+    ],
+    [
+     191.53,
+     228.74
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_054_roof",
+   "building": "bld_house_054",
+   "type": "gable",
+   "ridge": [
+    [
+     118.4,
+     238.35
+    ],
+    [
+     117.1,
+     256.45
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_055_roof",
+   "building": "bld_house_055",
+   "type": "gable",
+   "ridge": [
+    [
+     236.47,
+     244.52
+    ],
+    [
+     224.23,
+     252.88
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_056_roof",
+   "building": "bld_house_056",
+   "type": "gable",
+   "ridge": [
+    [
+     137.92,
+     260.55
+    ],
+    [
+     137.39,
+     250.44
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_057_roof",
+   "building": "bld_house_057",
+   "type": "gable",
+   "ridge": [
+    [
+     184.06,
+     258.8
+    ],
+    [
+     177.74,
+     250.2
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_058_roof",
+   "building": "bld_house_058",
+   "type": "gable",
+   "ridge": [
+    [
+     310.63,
+     264.63
+    ],
+    [
+     310.47,
+     245.77
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_061_roof",
+   "building": "bld_house_061",
+   "type": "gable",
+   "ridge": [
+    [
+     232.51,
+     270.39
+    ],
+    [
+     246.39,
+     261.31
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_062_roof",
+   "building": "bld_house_062",
+   "type": "gable",
+   "ridge": [
+    [
+     204.67,
+     261.19
+    ],
+    [
+     189.09,
+     271.83
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_063_roof",
+   "building": "bld_house_063",
+   "type": "gable",
+   "ridge": [
+    [
+     150.95,
+     273.71
+    ],
+    [
+     153.15,
+     282.69
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_064_roof",
+   "building": "bld_house_064",
+   "type": "gable",
+   "ridge": [
+    [
+     218.6,
+     276.91
+    ],
+    [
+     202.64,
+     287.63
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_065_roof",
+   "building": "bld_house_065",
+   "type": "gable",
+   "ridge": [
+    [
+     118.36,
+     277.41
+    ],
+    [
+     121.94,
+     295.59
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_066_roof",
+   "building": "bld_house_066",
+   "type": "gable",
+   "ridge": [
+    [
+     240.25,
+     283.71
+    ],
+    [
+     246.55,
+     293.29
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_067_roof",
+   "building": "bld_house_067",
+   "type": "gable",
+   "ridge": [
+    [
+     267.47,
+     286.86
+    ],
+    [
+     279.56,
+     307.38
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_069_roof",
+   "building": "bld_house_069",
+   "type": "gable",
+   "ridge": [
+    [
+     220.75,
+     301.05
+    ],
+    [
+     227.01,
+     309.3
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_072_roof",
+   "building": "bld_house_072",
+   "type": "gable",
+   "ridge": [
+    [
+     170.92,
+     303.77
+    ],
+    [
+     175.18,
+     316.03
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_073_roof",
+   "building": "bld_house_073",
+   "type": "gable",
+   "ridge": [
+    [
+     324.66,
+     326.59
+    ],
+    [
+     322.84,
+     297.26
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_077_roof",
+   "building": "bld_house_077",
+   "type": "gable",
+   "ridge": [
+    [
+     136.29,
+     314.71
+    ],
+    [
+     138.81,
+     329.79
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_078_roof",
+   "building": "bld_house_078",
+   "type": "gable",
+   "ridge": [
+    [
+     240.32,
+     317.12
+    ],
+    [
+     251.58,
+     329.38
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_079_roof",
+   "building": "bld_house_079",
+   "type": "gable",
+   "ridge": [
+    [
+     550.35,
+     339.73
+    ],
+    [
+     549.05,
+     313.17
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_080_roof",
+   "building": "bld_house_080",
+   "type": "gable",
+   "ridge": [
+    [
+     391.71,
+     316.26
+    ],
+    [
+     392.08,
+     340.04
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_082_roof",
+   "building": "bld_house_082",
+   "type": "gable",
+   "ridge": [
+    [
+     269.68,
+     330.27
+    ],
+    [
+     258.16,
+     341.48
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_lockup_roof",
+   "building": "bld_lockup",
+   "type": "hip",
+   "ridge": [
+    [
+     376.27,
+     202.66
+    ],
+    [
+     376.43,
+     221.84
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_magistrate_court_roof",
+   "building": "bld_magistrate_court",
+   "type": "hip",
+   "ridge": [
+    [
+     382.69,
+     279.95
+    ],
+    [
+     366.61,
+     278.55
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_records_house_roof",
+   "building": "bld_records_house",
+   "type": "gable",
+   "ridge": [
+    [
+     388.89,
+     245.54
+    ],
+    [
+     365.91,
+     244.56
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_shed_018_roof",
+   "building": "bld_shed_018",
+   "type": "gable",
+   "ridge": [
+    [
+     348.24,
+     89.98
+    ],
+    [
+     353.26,
+     93.02
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_shed_035_roof",
+   "building": "bld_shed_035",
+   "type": "gable",
+   "ridge": [
+    [
+     336.59,
+     134.49
+    ],
+    [
+     331.11,
+     133.51
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_shed_049_roof",
+   "building": "bld_shed_049",
+   "type": "gable",
+   "ridge": [
+    [
+     327.75,
+     221.03
+    ],
+    [
+     317.95,
+     221.24
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_shed_067_roof",
+   "building": "bld_shed_067",
+   "type": "gable",
+   "ridge": [
+    [
+     259.98,
+     269.38
+    ],
+    [
+     263.72,
+     275.62
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_shed_079_roof",
+   "building": "bld_shed_079",
+   "type": "gable",
+   "ridge": [
+    [
+     544.33,
+     295.11
+    ],
+    [
+     548.69,
+     299.57
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_stables_roof",
+   "building": "bld_stables",
+   "type": "gable",
+   "ridge": [
+    [
+     489.26,
+     65.1
+    ],
+    [
+     474.28,
+     79.76
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_treasury_roof",
+   "building": "bld_treasury",
+   "type": "hip",
+   "ridge": [
+    [
+     418.75,
+     81.39
+    ],
+    [
+     429.75,
+     91.71
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_warden_hall_roof",
+   "building": "bld_warden_hall",
+   "type": "gable",
+   "ridge": [
+    [
+     377.43,
+     170.21
+    ],
+    [
+     401.17,
+     169.99
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_wardens_barracks_roof",
+   "building": "bld_wardens_barracks",
+   "type": "hip",
+   "ridge": [
+    [
+     404.88,
+     107.05
+    ],
+    [
+     388.62,
+     111.75
+    ]
+   ],
+   "detail": true
+  }
+ ],
+ "chimneys": [
+  {
+   "id": "bld_customs_house_chimney",
+   "building": "bld_customs_house",
+   "geometry": [
+    [
+     292.71,
+     192.91
+    ],
+    [
+     294.7,
+     193.12
+    ],
+    [
+     294.49,
+     195.11
+    ],
+    [
+     292.5,
+     194.89
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_002_chimney",
+   "building": "bld_house_002",
+   "geometry": [
+    [
+     356.11,
+     10.71
+    ],
+    [
+     354.42,
+     11.78
+    ],
+    [
+     353.35,
+     10.09
+    ],
+    [
+     355.04,
+     9.02
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_003_chimney",
+   "building": "bld_house_003",
+   "geometry": [
+    [
+     310.78,
+     4.38
+    ],
+    [
+     311.76,
+     6.12
+    ],
+    [
+     310.01,
+     7.1
+    ],
+    [
+     309.03,
+     5.35
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_004_chimney",
+   "building": "bld_house_004",
+   "geometry": [
+    [
+     334.48,
+     5.9
+    ],
+    [
+     335.6,
+     7.56
+    ],
+    [
+     333.94,
+     8.68
+    ],
+    [
+     332.82,
+     7.03
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_007_chimney",
+   "building": "bld_house_007",
+   "geometry": [
+    [
+     523.35,
+     35.52
+    ],
+    [
+     522.19,
+     37.15
+    ],
+    [
+     520.56,
+     36.0
+    ],
+    [
+     521.72,
+     34.37
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_008_chimney",
+   "building": "bld_house_008",
+   "geometry": [
+    [
+     395.91,
+     38.39
+    ],
+    [
+     394.8,
+     36.73
+    ],
+    [
+     396.46,
+     35.62
+    ],
+    [
+     397.57,
+     37.28
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_012_chimney",
+   "building": "bld_house_012",
+   "geometry": [
+    [
+     492.48,
+     39.65
+    ],
+    [
+     493.84,
+     41.12
+    ],
+    [
+     492.37,
+     42.47
+    ],
+    [
+     491.02,
+     41.01
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_015_chimney",
+   "building": "bld_house_015",
+   "geometry": [
+    [
+     365.39,
+     69.52
+    ],
+    [
+     363.84,
+     68.26
+    ],
+    [
+     365.11,
+     66.71
+    ],
+    [
+     366.66,
+     67.97
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_016_chimney",
+   "building": "bld_house_016",
+   "geometry": [
+    [
+     258.0,
+     76.39
+    ],
+    [
+     259.52,
+     75.09
+    ],
+    [
+     260.82,
+     76.6
+    ],
+    [
+     259.31,
+     77.91
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_018_chimney",
+   "building": "bld_house_018",
+   "geometry": [
+    [
+     338.0,
+     84.84
+    ],
+    [
+     336.25,
+     83.87
+    ],
+    [
+     337.22,
+     82.12
+    ],
+    [
+     338.97,
+     83.09
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_020_chimney",
+   "building": "bld_house_020",
+   "geometry": [
+    [
+     270.53,
+     88.65
+    ],
+    [
+     271.95,
+     90.06
+    ],
+    [
+     270.54,
+     91.48
+    ],
+    [
+     269.12,
+     90.07
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_022_chimney",
+   "building": "bld_house_022",
+   "geometry": [
+    [
+     197.6,
+     105.25
+    ],
+    [
+     198.72,
+     103.6
+    ],
+    [
+     200.37,
+     104.72
+    ],
+    [
+     199.25,
+     106.38
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_023_chimney",
+   "building": "bld_house_023",
+   "geometry": [
+    [
+     246.38,
+     102.21
+    ],
+    [
+     247.67,
+     100.69
+    ],
+    [
+     249.2,
+     101.98
+    ],
+    [
+     247.9,
+     103.51
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_025_chimney",
+   "building": "bld_house_025",
+   "geometry": [
+    [
+     310.19,
+     108.1
+    ],
+    [
+     309.33,
+     109.91
+    ],
+    [
+     307.52,
+     109.05
+    ],
+    [
+     308.38,
+     107.24
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_026_chimney",
+   "building": "bld_house_026",
+   "geometry": [
+    [
+     330.26,
+     116.19
+    ],
+    [
+     331.1,
+     114.38
+    ],
+    [
+     332.91,
+     115.21
+    ],
+    [
+     332.08,
+     117.03
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_027_chimney",
+   "building": "bld_house_027",
+   "geometry": [
+    [
+     218.77,
+     107.73
+    ],
+    [
+     217.5,
+     109.27
+    ],
+    [
+     215.96,
+     108.0
+    ],
+    [
+     217.23,
+     106.46
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_029_chimney",
+   "building": "bld_house_029",
+   "geometry": [
+    [
+     252.97,
+     125.8
+    ],
+    [
+     251.56,
+     127.22
+    ],
+    [
+     250.14,
+     125.81
+    ],
+    [
+     251.54,
+     124.39
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_030_chimney",
+   "building": "bld_house_030",
+   "geometry": [
+    [
+     230.99,
+     121.82
+    ],
+    [
+     229.66,
+     123.31
+    ],
+    [
+     228.16,
+     121.98
+    ],
+    [
+     229.49,
+     120.49
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_031_chimney",
+   "building": "bld_house_031",
+   "geometry": [
+    [
+     162.33,
+     132.81
+    ],
+    [
+     161.05,
+     134.35
+    ],
+    [
+     159.51,
+     133.07
+    ],
+    [
+     160.79,
+     131.53
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_035_chimney",
+   "building": "bld_house_035",
+   "geometry": [
+    [
+     304.02,
+     132.21
+    ],
+    [
+     305.99,
+     132.55
+    ],
+    [
+     305.65,
+     134.52
+    ],
+    [
+     303.68,
+     134.18
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_037_chimney",
+   "building": "bld_house_037",
+   "geometry": [
+    [
+     152.15,
+     150.87
+    ],
+    [
+     153.68,
+     152.16
+    ],
+    [
+     152.39,
+     153.69
+    ],
+    [
+     150.86,
+     152.4
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_044_chimney",
+   "building": "bld_house_044",
+   "geometry": [
+    [
+     136.51,
+     187.06
+    ],
+    [
+     138.03,
+     188.36
+    ],
+    [
+     136.74,
+     189.88
+    ],
+    [
+     135.21,
+     188.58
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_046_chimney",
+   "building": "bld_house_046",
+   "geometry": [
+    [
+     225.43,
+     196.01
+    ],
+    [
+     223.79,
+     197.16
+    ],
+    [
+     222.64,
+     195.52
+    ],
+    [
+     224.28,
+     194.37
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_048_chimney",
+   "building": "bld_house_048",
+   "geometry": [
+    [
+     229.89,
+     210.77
+    ],
+    [
+     231.02,
+     212.42
+    ],
+    [
+     229.37,
+     213.55
+    ],
+    [
+     228.24,
+     211.9
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_049_chimney",
+   "building": "bld_house_049",
+   "geometry": [
+    [
+     287.78,
+     226.33
+    ],
+    [
+     285.78,
+     226.45
+    ],
+    [
+     285.67,
+     224.45
+    ],
+    [
+     287.66,
+     224.34
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_052_chimney",
+   "building": "bld_house_052",
+   "geometry": [
+    [
+     169.25,
+     236.12
+    ],
+    [
+     170.28,
+     237.83
+    ],
+    [
+     168.57,
+     238.86
+    ],
+    [
+     167.54,
+     237.15
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_053_chimney",
+   "building": "bld_house_053",
+   "geometry": [
+    [
+     191.93,
+     232.0
+    ],
+    [
+     191.09,
+     230.19
+    ],
+    [
+     192.91,
+     229.35
+    ],
+    [
+     193.75,
+     231.16
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_054_chimney",
+   "building": "bld_house_054",
+   "geometry": [
+    [
+     119.31,
+     239.59
+    ],
+    [
+     119.17,
+     241.59
+    ],
+    [
+     117.17,
+     241.44
+    ],
+    [
+     117.32,
+     239.45
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_055_chimney",
+   "building": "bld_house_055",
+   "geometry": [
+    [
+     236.39,
+     245.78
+    ],
+    [
+     234.74,
+     246.91
+    ],
+    [
+     233.61,
+     245.26
+    ],
+    [
+     235.26,
+     244.13
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_056_chimney",
+   "building": "bld_house_056",
+   "geometry": [
+    [
+     136.5,
+     252.7
+    ],
+    [
+     136.4,
+     250.7
+    ],
+    [
+     138.4,
+     250.6
+    ],
+    [
+     138.5,
+     252.6
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_057_chimney",
+   "building": "bld_house_057",
+   "geometry": [
+    [
+     178.29,
+     252.63
+    ],
+    [
+     177.1,
+     251.02
+    ],
+    [
+     178.71,
+     249.83
+    ],
+    [
+     179.9,
+     251.45
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_058_chimney",
+   "building": "bld_house_058",
+   "geometry": [
+    [
+     309.5,
+     249.04
+    ],
+    [
+     309.48,
+     247.04
+    ],
+    [
+     311.48,
+     247.03
+    ],
+    [
+     311.5,
+     249.03
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_061_chimney",
+   "building": "bld_house_061",
+   "geometry": [
+    [
+     243.34,
+     262.11
+    ],
+    [
+     245.02,
+     261.02
+    ],
+    [
+     246.11,
+     262.69
+    ],
+    [
+     244.44,
+     263.78
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_062_chimney",
+   "building": "bld_house_062",
+   "geometry": [
+    [
+     192.35,
+     270.82
+    ],
+    [
+     190.7,
+     271.95
+    ],
+    [
+     189.57,
+     270.3
+    ],
+    [
+     191.22,
+     269.17
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_063_chimney",
+   "building": "bld_house_063",
+   "geometry": [
+    [
+     151.94,
+     273.58
+    ],
+    [
+     152.42,
+     275.52
+    ],
+    [
+     150.48,
+     276.0
+    ],
+    [
+     150.0,
+     274.06
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_064_chimney",
+   "building": "bld_house_064",
+   "geometry": [
+    [
+     205.94,
+     286.62
+    ],
+    [
+     204.28,
+     287.73
+    ],
+    [
+     203.16,
+     286.07
+    ],
+    [
+     204.82,
+     284.96
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_065_chimney",
+   "building": "bld_house_065",
+   "geometry": [
+    [
+     119.58,
+     278.42
+    ],
+    [
+     119.97,
+     280.38
+    ],
+    [
+     118.0,
+     280.76
+    ],
+    [
+     117.62,
+     278.8
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_066_chimney",
+   "building": "bld_house_066",
+   "geometry": [
+    [
+     246.08,
+     290.75
+    ],
+    [
+     247.18,
+     292.42
+    ],
+    [
+     245.51,
+     293.52
+    ],
+    [
+     244.41,
+     291.85
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_069_chimney",
+   "building": "bld_house_069",
+   "geometry": [
+    [
+     226.45,
+     306.91
+    ],
+    [
+     227.66,
+     308.5
+    ],
+    [
+     226.07,
+     309.71
+    ],
+    [
+     224.86,
+     308.12
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_072_chimney",
+   "building": "bld_house_072",
+   "geometry": [
+    [
+     172.05,
+     303.97
+    ],
+    [
+     172.7,
+     305.86
+    ],
+    [
+     170.81,
+     306.52
+    ],
+    [
+     170.16,
+     304.63
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_073_chimney",
+   "building": "bld_house_073",
+   "geometry": [
+    [
+     322.12,
+     301.84
+    ],
+    [
+     322.0,
+     299.84
+    ],
+    [
+     323.99,
+     299.72
+    ],
+    [
+     324.12,
+     301.71
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_077_chimney",
+   "building": "bld_house_077",
+   "geometry": [
+    [
+     139.33,
+     326.83
+    ],
+    [
+     139.66,
+     328.8
+    ],
+    [
+     137.68,
+     329.13
+    ],
+    [
+     137.35,
+     327.16
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_079_chimney",
+   "building": "bld_house_079",
+   "geometry": [
+    [
+     549.24,
+     337.59
+    ],
+    [
+     549.14,
+     335.59
+    ],
+    [
+     551.14,
+     335.49
+    ],
+    [
+     551.24,
+     337.49
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_080_chimney",
+   "building": "bld_house_080",
+   "geometry": [
+    [
+     392.74,
+     318.1
+    ],
+    [
+     392.77,
+     320.1
+    ],
+    [
+     390.77,
+     320.13
+    ],
+    [
+     390.74,
+     318.13
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_lockup_chimney",
+   "building": "bld_lockup",
+   "geometry": [
+    [
+     377.41,
+     218.53
+    ],
+    [
+     377.42,
+     220.53
+    ],
+    [
+     375.42,
+     220.54
+    ],
+    [
+     375.41,
+     218.54
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_magistrate_court_chimney",
+   "building": "bld_magistrate_court",
+   "geometry": [
+    [
+     381.67,
+     280.87
+    ],
+    [
+     379.68,
+     280.69
+    ],
+    [
+     379.85,
+     278.7
+    ],
+    [
+     381.84,
+     278.87
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_records_house_chimney",
+   "building": "bld_records_house",
+   "geometry": [
+    [
+     369.62,
+     245.72
+    ],
+    [
+     367.63,
+     245.63
+    ],
+    [
+     367.71,
+     243.63
+    ],
+    [
+     369.71,
+     243.72
+    ]
+   ],
+   "detail": true
+  }
+ ],
+ "lots": [
+  {
+   "id": "bld_house_002_lot",
+   "building": "bld_house_002",
+   "geometry": [
+    [
+     350.73,
+     20.44
+    ],
+    [
+     350.54,
+     21.77
+    ],
+    [
+     340.81,
+     27.86
+    ],
+    [
+     331.41,
+     14.39
+    ],
+    [
+     343.06,
+     32.74
+    ],
+    [
+     362.77,
+     19.66
+    ],
+    [
+     389.43,
+     4.81
+    ],
+    [
+     388.59,
+     3.5
+    ],
+    [
+     339.25,
+     3.5
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_003_lot",
+   "building": "bld_house_003",
+   "geometry": [
+    [
+     314.63,
+     30.67
+    ],
+    [
+     315.78,
+     30.97
+    ],
+    [
+     319.25,
+     36.28
+    ],
+    [
+     338.43,
+     25.44
+    ],
+    [
+     325.88,
+     6.19
+    ],
+    [
+     326.09,
+     5.09
+    ],
+    [
+     328.43,
+     3.5
+    ],
+    [
+     280.56,
+     3.5
+    ],
+    [
+     300.65,
+     39.66
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_004_lot",
+   "building": "bld_house_004",
+   "geometry": [
+    [
+     326.09,
+     5.09
+    ],
+    [
+     325.88,
+     6.19
+    ],
+    [
+     338.43,
+     25.44
+    ],
+    [
+     323.93,
+     33.64
+    ],
+    [
+     330.12,
+     42.79
+    ],
+    [
+     343.06,
+     32.74
+    ],
+    [
+     331.41,
+     14.39
+    ],
+    [
+     340.81,
+     27.86
+    ],
+    [
+     350.54,
+     21.77
+    ],
+    [
+     350.73,
+     20.44
+    ],
+    [
+     339.25,
+     3.5
+    ],
+    [
+     328.43,
+     3.5
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_005_lot",
+   "building": "bld_house_005",
+   "geometry": [
+    [
+     421.79,
+     11.93
+    ],
+    [
+     421.22,
+     12.88
+    ],
+    [
+     398.03,
+     22.87
+    ],
+    [
+     389.67,
+     27.34
+    ],
+    [
+     389.98,
+     27.98
+    ],
+    [
+     395.33,
+     24.42
+    ],
+    [
+     396.27,
+     24.42
+    ],
+    [
+     403.68,
+     35.33
+    ],
+    [
+     403.43,
+     36.58
+    ],
+    [
+     396.43,
+     41.2
+    ],
+    [
+     398.22,
+     44.86
+    ],
+    [
+     405.31,
+     39.5
+    ],
+    [
+     422.86,
+     28.8
+    ],
+    [
+     437.34,
+     22.0
+    ],
+    [
+     444.97,
+     19.09
+    ],
+    [
+     437.17,
+     3.5
+    ],
+    [
+     418.83,
+     3.5
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_007_lot",
+   "building": "bld_house_007",
+   "geometry": [
+    [
+     512.05,
+     30.99
+    ],
+    [
+     511.27,
+     31.99
+    ],
+    [
+     494.52,
+     34.03
+    ],
+    [
+     507.75,
+     48.38
+    ],
+    [
+     507.76,
+     49.41
+    ],
+    [
+     506.0,
+     51.09
+    ],
+    [
+     530.59,
+     68.49
+    ],
+    [
+     561.6,
+     24.71
+    ],
+    [
+     531.63,
+     3.5
+    ],
+    [
+     512.99,
+     3.5
+    ],
+    [
+     509.33,
+     8.66
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_008_lot",
+   "building": "bld_house_008",
+   "geometry": [
+    [
+     381.7,
+     58.93
+    ],
+    [
+     398.22,
+     44.86
+    ],
+    [
+     396.43,
+     41.2
+    ],
+    [
+     403.43,
+     36.58
+    ],
+    [
+     403.68,
+     35.33
+    ],
+    [
+     396.27,
+     24.42
+    ],
+    [
+     395.33,
+     24.42
+    ],
+    [
+     389.98,
+     27.98
+    ],
+    [
+     389.67,
+     27.34
+    ],
+    [
+     398.03,
+     22.87
+    ],
+    [
+     385.38,
+     29.63
+    ],
+    [
+     368.95,
+     39.54
+    ],
+    [
+     373.32,
+     46.18
+    ],
+    [
+     379.82,
+     41.72
+    ],
+    [
+     380.84,
+     41.76
+    ],
+    [
+     387.02,
+     50.43
+    ],
+    [
+     386.84,
+     51.76
+    ],
+    [
+     380.05,
+     56.44
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_010_lot",
+   "building": "bld_house_010",
+   "geometry": [
+    [
+     324.68,
+     47.18
+    ],
+    [
+     330.12,
+     42.79
+    ],
+    [
+     323.93,
+     33.64
+    ],
+    [
+     334.08,
+     27.9
+    ],
+    [
+     319.25,
+     36.28
+    ],
+    [
+     315.78,
+     30.97
+    ],
+    [
+     314.63,
+     30.67
+    ],
+    [
+     300.65,
+     39.66
+    ],
+    [
+     292.38,
+     24.77
+    ],
+    [
+     273.43,
+     36.98
+    ],
+    [
+     284.98,
+     54.67
+    ],
+    [
+     304.54,
+     56.55
+    ],
+    [
+     315.1,
+     56.62
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_011_lot",
+   "building": "bld_house_011",
+   "geometry": [
+    [
+     373.28,
+     67.44
+    ],
+    [
+     381.7,
+     58.93
+    ],
+    [
+     380.05,
+     56.44
+    ],
+    [
+     386.84,
+     51.76
+    ],
+    [
+     387.02,
+     50.43
+    ],
+    [
+     380.84,
+     41.76
+    ],
+    [
+     379.82,
+     41.72
+    ],
+    [
+     373.32,
+     46.18
+    ],
+    [
+     368.95,
+     39.54
+    ],
+    [
+     353.09,
+     50.09
+    ],
+    [
+     350.62,
+     52.56
+    ],
+    [
+     353.07,
+     56.04
+    ],
+    [
+     357.99,
+     50.0
+    ],
+    [
+     359.08,
+     49.78
+    ],
+    [
+     375.33,
+     63.04
+    ],
+    [
+     375.33,
+     64.16
+    ],
+    [
+     366.38,
+     74.99
+    ],
+    [
+     366.65,
+     75.37
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_012_lot",
+   "building": "bld_house_012",
+   "geometry": [
+    [
+     479.07,
+     36.65
+    ],
+    [
+     475.88,
+     45.03
+    ],
+    [
+     471.51,
+     52.77
+    ],
+    [
+     477.75,
+     59.52
+    ],
+    [
+     483.27,
+     54.12
+    ],
+    [
+     484.38,
+     54.02
+    ],
+    [
+     500.02,
+     70.0
+    ],
+    [
+     500.07,
+     71.34
+    ],
+    [
+     494.09,
+     77.2
+    ],
+    [
+     498.09,
+     81.53
+    ],
+    [
+     520.19,
+     61.13
+    ],
+    [
+     506.0,
+     51.09
+    ],
+    [
+     507.76,
+     49.41
+    ],
+    [
+     507.75,
+     48.38
+    ],
+    [
+     494.52,
+     34.03
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_015_lot",
+   "building": "bld_house_015",
+   "geometry": [
+    [
+     349.63,
+     58.23
+    ],
+    [
+     346.49,
+     64.0
+    ],
+    [
+     341.99,
+     68.18
+    ],
+    [
+     336.41,
+     71.06
+    ],
+    [
+     331.92,
+     72.35
+    ],
+    [
+     343.72,
+     78.9
+    ],
+    [
+     343.92,
+     80.0
+    ],
+    [
+     341.64,
+     84.13
+    ],
+    [
+     346.92,
+     88.44
+    ],
+    [
+     348.46,
+     85.93
+    ],
+    [
+     349.36,
+     85.61
+    ],
+    [
+     356.46,
+     89.95
+    ],
+    [
+     366.65,
+     75.37
+    ],
+    [
+     366.38,
+     74.99
+    ],
+    [
+     375.33,
+     64.16
+    ],
+    [
+     375.33,
+     63.04
+    ],
+    [
+     359.08,
+     49.78
+    ],
+    [
+     357.99,
+     50.0
+    ],
+    [
+     353.07,
+     56.04
+    ],
+    [
+     350.62,
+     52.56
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_016_lot",
+   "building": "bld_house_016",
+   "geometry": [
+    [
+     253.29,
+     113.42
+    ],
+    [
+     268.31,
+     100.47
+    ],
+    [
+     261.63,
+     93.84
+    ],
+    [
+     261.52,
+     92.73
+    ],
+    [
+     272.96,
+     81.13
+    ],
+    [
+     274.23,
+     81.12
+    ],
+    [
+     281.91,
+     88.73
+    ],
+    [
+     290.66,
+     81.18
+    ],
+    [
+     282.74,
+     71.83
+    ],
+    [
+     239.67,
+     64.93
+    ],
+    [
+     238.86,
+     64.17
+    ],
+    [
+     239.09,
+     62.32
+    ],
+    [
+     224.69,
+     74.62
+    ],
+    [
+     233.35,
+     83.98
+    ],
+    [
+     233.31,
+     85.09
+    ],
+    [
+     230.9,
+     87.31
+    ],
+    [
+     241.55,
+     99.74
+    ],
+    [
+     244.9,
+     95.78
+    ],
+    [
+     245.81,
+     95.52
+    ],
+    [
+     254.48,
+     102.67
+    ],
+    [
+     254.52,
+     103.87
+    ],
+    [
+     249.84,
+     109.4
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_017_lot",
+   "building": "bld_house_017",
+   "geometry": [
+    [
+     226.0,
+     113.9
+    ],
+    [
+     227.06,
+     113.81
+    ],
+    [
+     238.34,
+     103.53
+    ],
+    [
+     241.55,
+     99.74
+    ],
+    [
+     230.9,
+     87.31
+    ],
+    [
+     233.31,
+     85.09
+    ],
+    [
+     233.35,
+     83.98
+    ],
+    [
+     224.69,
+     74.62
+    ],
+    [
+     237.63,
+     63.57
+    ],
+    [
+     223.1,
+     47.92
+    ],
+    [
+     185.47,
+     82.54
+    ],
+    [
+     197.37,
+     95.48
+    ],
+    [
+     200.93,
+     90.26
+    ],
+    [
+     201.81,
+     89.91
+    ],
+    [
+     211.81,
+     96.6
+    ],
+    [
+     211.98,
+     97.78
+    ],
+    [
+     206.67,
+     105.59
+    ],
+    [
+     208.22,
+     107.28
+    ],
+    [
+     214.19,
+     100.7
+    ],
+    [
+     224.8,
+     109.09
+    ],
+    [
+     224.93,
+     110.36
+    ],
+    [
+     218.38,
+     118.33
+    ],
+    [
+     220.08,
+     120.18
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_018_lot",
+   "building": "bld_house_018",
+   "geometry": [
+    [
+     331.92,
+     72.35
+    ],
+    [
+     326.79,
+     73.18
+    ],
+    [
+     325.09,
+     74.86
+    ],
+    [
+     311.41,
+     92.25
+    ],
+    [
+     319.99,
+     96.3
+    ],
+    [
+     320.37,
+     97.35
+    ],
+    [
+     318.86,
+     100.55
+    ],
+    [
+     327.38,
+     105.24
+    ],
+    [
+     330.34,
+     98.89
+    ],
+    [
+     331.14,
+     98.4
+    ],
+    [
+     344.89,
+     104.59
+    ],
+    [
+     345.24,
+     105.73
+    ],
+    [
+     341.81,
+     113.19
+    ],
+    [
+     344.08,
+     114.44
+    ],
+    [
+     352.33,
+     97.4
+    ],
+    [
+     344.79,
+     92.82
+    ],
+    [
+     346.92,
+     88.44
+    ],
+    [
+     341.64,
+     84.13
+    ],
+    [
+     343.92,
+     80.0
+    ],
+    [
+     343.72,
+     78.9
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_020_lot",
+   "building": "bld_house_020",
+   "geometry": [
+    [
+     260.59,
+     107.3
+    ],
+    [
+     269.78,
+     116.12
+    ],
+    [
+     269.68,
+     117.23
+    ],
+    [
+     265.43,
+     121.56
+    ],
+    [
+     270.57,
+     126.65
+    ],
+    [
+     273.56,
+     117.04
+    ],
+    [
+     280.01,
+     103.62
+    ],
+    [
+     288.21,
+     90.22
+    ],
+    [
+     296.28,
+     79.04
+    ],
+    [
+     289.68,
+     72.5
+    ],
+    [
+     282.74,
+     71.83
+    ],
+    [
+     290.66,
+     81.18
+    ],
+    [
+     281.91,
+     88.73
+    ],
+    [
+     274.23,
+     81.12
+    ],
+    [
+     272.96,
+     81.13
+    ],
+    [
+     261.52,
+     92.73
+    ],
+    [
+     261.63,
+     93.84
+    ],
+    [
+     268.31,
+     100.47
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_022_lot",
+   "building": "bld_house_022",
+   "geometry": [
+    [
+     169.41,
+     110.89
+    ],
+    [
+     169.45,
+     108.77
+    ],
+    [
+     172.11,
+     107.83
+    ],
+    [
+     178.39,
+     106.76
+    ],
+    [
+     184.74,
+     106.87
+    ],
+    [
+     191.27,
+     108.35
+    ],
+    [
+     198.84,
+     112.0
+    ],
+    [
+     206.41,
+     117.55
+    ],
+    [
+     213.92,
+     125.14
+    ],
+    [
+     218.48,
+     118.44
+    ],
+    [
+     216.43,
+     120.67
+    ],
+    [
+     215.42,
+     120.83
+    ],
+    [
+     204.84,
+     112.09
+    ],
+    [
+     208.22,
+     107.28
+    ],
+    [
+     206.67,
+     105.59
+    ],
+    [
+     211.98,
+     97.78
+    ],
+    [
+     211.81,
+     96.6
+    ],
+    [
+     201.81,
+     89.91
+    ],
+    [
+     200.93,
+     90.26
+    ],
+    [
+     197.37,
+     95.48
+    ],
+    [
+     185.55,
+     82.63
+    ],
+    [
+     167.29,
+     109.45
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_023_lot",
+   "building": "bld_house_023",
+   "geometry": [
+    [
+     227.27,
+     113.96
+    ],
+    [
+     237.9,
+     123.67
+    ],
+    [
+     237.81,
+     124.69
+    ],
+    [
+     234.36,
+     128.57
+    ],
+    [
+     246.79,
+     139.29
+    ],
+    [
+     251.32,
+     133.94
+    ],
+    [
+     243.1,
+     125.92
+    ],
+    [
+     242.82,
+     125.01
+    ],
+    [
+     258.33,
+     109.07
+    ],
+    [
+     253.29,
+     113.42
+    ],
+    [
+     249.84,
+     109.4
+    ],
+    [
+     254.52,
+     103.87
+    ],
+    [
+     254.48,
+     102.67
+    ],
+    [
+     245.81,
+     95.52
+    ],
+    [
+     244.9,
+     95.78
+    ],
+    [
+     238.34,
+     103.53
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_025_lot",
+   "building": "bld_house_025",
+   "geometry": [
+    [
+     291.96,
+     124.9
+    ],
+    [
+     299.58,
+     128.48
+    ],
+    [
+     300.17,
+     125.24
+    ],
+    [
+     301.08,
+     124.6
+    ],
+    [
+     324.26,
+     128.74
+    ],
+    [
+     328.57,
+     119.71
+    ],
+    [
+     322.89,
+     117.06
+    ],
+    [
+     322.41,
+     116.06
+    ],
+    [
+     327.38,
+     105.24
+    ],
+    [
+     318.86,
+     100.55
+    ],
+    [
+     320.37,
+     97.35
+    ],
+    [
+     319.99,
+     96.3
+    ],
+    [
+     311.41,
+     92.25
+    ],
+    [
+     305.02,
+     101.07
+    ],
+    [
+     297.79,
+     112.8
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_026_lot",
+   "building": "bld_house_026",
+   "geometry": [
+    [
+     324.26,
+     128.74
+    ],
+    [
+     325.5,
+     129.88
+    ],
+    [
+     324.34,
+     136.49
+    ],
+    [
+     336.23,
+     142.03
+    ],
+    [
+     336.92,
+     138.7
+    ],
+    [
+     328.93,
+     136.89
+    ],
+    [
+     329.83,
+     130.04
+    ],
+    [
+     330.88,
+     129.3
+    ],
+    [
+     338.75,
+     130.94
+    ],
+    [
+     344.08,
+     114.44
+    ],
+    [
+     341.81,
+     113.19
+    ],
+    [
+     345.24,
+     105.73
+    ],
+    [
+     344.89,
+     104.59
+    ],
+    [
+     331.14,
+     98.4
+    ],
+    [
+     330.34,
+     98.89
+    ],
+    [
+     322.41,
+     116.06
+    ],
+    [
+     322.89,
+     117.06
+    ],
+    [
+     328.57,
+     119.71
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_029_lot",
+   "building": "bld_house_029",
+   "geometry": [
+    [
+     238.56,
+     136.03
+    ],
+    [
+     239.82,
+     136.02
+    ],
+    [
+     252.38,
+     146.12
+    ],
+    [
+     252.34,
+     147.15
+    ],
+    [
+     247.14,
+     153.62
+    ],
+    [
+     248.97,
+     155.41
+    ],
+    [
+     258.01,
+     153.37
+    ],
+    [
+     267.18,
+     144.03
+    ],
+    [
+     268.5,
+     134.02
+    ],
+    [
+     270.57,
+     126.65
+    ],
+    [
+     265.43,
+     121.56
+    ],
+    [
+     269.68,
+     117.23
+    ],
+    [
+     269.78,
+     116.12
+    ],
+    [
+     260.59,
+     107.3
+    ],
+    [
+     268.31,
+     100.47
+    ],
+    [
+     253.29,
+     113.42
+    ],
+    [
+     258.33,
+     109.07
+    ],
+    [
+     242.82,
+     125.01
+    ],
+    [
+     243.1,
+     125.92
+    ],
+    [
+     251.32,
+     133.94
+    ],
+    [
+     246.79,
+     139.29
+    ],
+    [
+     234.36,
+     128.57
+    ],
+    [
+     228.37,
+     135.29
+    ],
+    [
+     234.4,
+     141.18
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_030_lot",
+   "building": "bld_house_030",
+   "geometry": [
+    [
+     213.92,
+     125.14
+    ],
+    [
+     224.88,
+     139.01
+    ],
+    [
+     234.79,
+     153.65
+    ],
+    [
+     236.86,
+     151.31
+    ],
+    [
+     230.8,
+     146.01
+    ],
+    [
+     234.4,
+     141.18
+    ],
+    [
+     228.37,
+     135.29
+    ],
+    [
+     237.81,
+     124.69
+    ],
+    [
+     237.9,
+     123.67
+    ],
+    [
+     227.27,
+     113.96
+    ],
+    [
+     238.34,
+     103.53
+    ],
+    [
+     227.06,
+     113.81
+    ],
+    [
+     226.0,
+     113.9
+    ],
+    [
+     220.08,
+     120.18
+    ],
+    [
+     218.48,
+     118.44
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_031_lot",
+   "building": "bld_house_031",
+   "geometry": [
+    [
+     182.37,
+     129.48
+    ],
+    [
+     176.6,
+     130.22
+    ],
+    [
+     175.7,
+     129.71
+    ],
+    [
+     169.41,
+     110.89
+    ],
+    [
+     167.29,
+     109.45
+    ],
+    [
+     172.21,
+     102.21
+    ],
+    [
+     161.55,
+     93.38
+    ],
+    [
+     128.18,
+     133.49
+    ],
+    [
+     142.28,
+     145.29
+    ],
+    [
+     146.6,
+     140.18
+    ],
+    [
+     147.94,
+     140.14
+    ],
+    [
+     159.03,
+     149.63
+    ],
+    [
+     158.92,
+     150.57
+    ],
+    [
+     154.65,
+     155.63
+    ],
+    [
+     166.13,
+     165.23
+    ],
+    [
+     191.64,
+     134.86
+    ],
+    [
+     186.31,
+     130.96
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_035_lot",
+   "building": "bld_house_035",
+   "geometry": [
+    [
+     286.57,
+     150.05
+    ],
+    [
+     307.64,
+     148.84
+    ],
+    [
+     330.46,
+     144.89
+    ],
+    [
+     335.94,
+     143.43
+    ],
+    [
+     336.92,
+     138.7
+    ],
+    [
+     336.23,
+     142.03
+    ],
+    [
+     324.34,
+     136.49
+    ],
+    [
+     325.5,
+     129.88
+    ],
+    [
+     324.26,
+     128.74
+    ],
+    [
+     301.08,
+     124.6
+    ],
+    [
+     300.17,
+     125.24
+    ],
+    [
+     299.58,
+     128.48
+    ],
+    [
+     291.96,
+     124.9
+    ],
+    [
+     288.21,
+     137.49
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_036_lot",
+   "building": "bld_house_036",
+   "geometry": [
+    [
+     234.79,
+     153.65
+    ],
+    [
+     238.17,
+     159.03
+    ],
+    [
+     248.97,
+     155.41
+    ],
+    [
+     247.14,
+     153.62
+    ],
+    [
+     252.34,
+     147.15
+    ],
+    [
+     252.38,
+     146.12
+    ],
+    [
+     239.82,
+     136.02
+    ],
+    [
+     238.56,
+     136.03
+    ],
+    [
+     230.8,
+     146.01
+    ],
+    [
+     236.86,
+     151.31
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_037_lot",
+   "building": "bld_house_037",
+   "geometry": [
+    [
+     154.65,
+     155.63
+    ],
+    [
+     158.92,
+     150.57
+    ],
+    [
+     159.03,
+     149.63
+    ],
+    [
+     147.94,
+     140.14
+    ],
+    [
+     146.6,
+     140.18
+    ],
+    [
+     142.28,
+     145.29
+    ],
+    [
+     129.24,
+     134.38
+    ],
+    [
+     114.82,
+     151.45
+    ],
+    [
+     139.11,
+     171.92
+    ],
+    [
+     145.46,
+     161.71
+    ],
+    [
+     158.48,
+     169.36
+    ],
+    [
+     158.66,
+     170.62
+    ],
+    [
+     152.54,
+     180.17
+    ],
+    [
+     141.02,
+     173.52
+    ],
+    [
+     153.15,
+     183.75
+    ],
+    [
+     183.48,
+     147.85
+    ],
+    [
+     181.87,
+     146.49
+    ],
+    [
+     166.13,
+     165.23
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_041_lot",
+   "building": "bld_house_041",
+   "geometry": [
+    [
+     129.98,
+     174.41
+    ],
+    [
+     131.25,
+     174.44
+    ],
+    [
+     144.19,
+     185.54
+    ],
+    [
+     144.12,
+     186.57
+    ],
+    [
+     139.26,
+     192.35
+    ],
+    [
+     151.55,
+     199.8
+    ],
+    [
+     164.43,
+     193.93
+    ],
+    [
+     182.5,
+     164.03
+    ],
+    [
+     174.11,
+     158.94
+    ],
+    [
+     153.15,
+     183.75
+    ],
+    [
+     141.02,
+     173.52
+    ],
+    [
+     152.54,
+     180.17
+    ],
+    [
+     158.66,
+     170.62
+    ],
+    [
+     158.48,
+     169.36
+    ],
+    [
+     145.46,
+     161.71
+    ],
+    [
+     139.11,
+     171.92
+    ],
+    [
+     125.78,
+     160.69
+    ],
+    [
+     115.4,
+     177.87
+    ],
+    [
+     123.0,
+     182.48
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_044_lot",
+   "building": "bld_house_044",
+   "geometry": [
+    [
+     130.15,
+     199.82
+    ],
+    [
+     131.42,
+     199.91
+    ],
+    [
+     136.48,
+     205.8
+    ],
+    [
+     151.55,
+     199.8
+    ],
+    [
+     139.26,
+     192.35
+    ],
+    [
+     144.12,
+     186.57
+    ],
+    [
+     144.19,
+     185.54
+    ],
+    [
+     131.25,
+     174.44
+    ],
+    [
+     129.98,
+     174.41
+    ],
+    [
+     123.0,
+     182.48
+    ],
+    [
+     115.4,
+     177.87
+    ],
+    [
+     125.78,
+     160.69
+    ],
+    [
+     139.11,
+     171.92
+    ],
+    [
+     122.05,
+     157.55
+    ],
+    [
+     97.05,
+     186.57
+    ],
+    [
+     121.41,
+     207.32
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_046_lot",
+   "building": "bld_house_046",
+   "geometry": [
+    [
+     228.65,
+     187.41
+    ],
+    [
+     195.53,
+     203.66
+    ],
+    [
+     214.0,
+     230.31
+    ],
+    [
+     225.69,
+     222.14
+    ],
+    [
+     219.72,
+     213.38
+    ],
+    [
+     220.04,
+     212.07
+    ],
+    [
+     233.59,
+     203.0
+    ],
+    [
+     234.43,
+     203.44
+    ],
+    [
+     240.24,
+     211.96
+    ],
+    [
+     241.46,
+     211.11
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_048_lot",
+   "building": "bld_house_048",
+   "geometry": [
+    [
+     234.43,
+     203.44
+    ],
+    [
+     233.59,
+     203.0
+    ],
+    [
+     220.04,
+     212.07
+    ],
+    [
+     219.72,
+     213.38
+    ],
+    [
+     225.69,
+     222.14
+    ],
+    [
+     214.0,
+     230.31
+    ],
+    [
+     197.69,
+     206.77
+    ],
+    [
+     195.61,
+     208.2
+    ],
+    [
+     220.63,
+     244.89
+    ],
+    [
+     233.89,
+     235.92
+    ],
+    [
+     234.93,
+     236.34
+    ],
+    [
+     241.62,
+     246.14
+    ],
+    [
+     254.55,
+     237.28
+    ],
+    [
+     241.46,
+     211.11
+    ],
+    [
+     240.24,
+     211.96
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_049_lot",
+   "building": "bld_house_049",
+   "geometry": [
+    [
+     309.55,
+     205.2
+    ],
+    [
+     308.49,
+     205.89
+    ],
+    [
+     288.2,
+     203.68
+    ],
+    [
+     287.42,
+     202.89
+    ],
+    [
+     287.66,
+     200.13
+    ],
+    [
+     287.12,
+     200.16
+    ],
+    [
+     284.83,
+     205.68
+    ],
+    [
+     281.9,
+     210.66
+    ],
+    [
+     271.92,
+     221.26
+    ],
+    [
+     286.83,
+     250.59
+    ],
+    [
+     297.66,
+     249.95
+    ],
+    [
+     297.6,
+     242.81
+    ],
+    [
+     298.49,
+     241.91
+    ],
+    [
+     322.49,
+     241.72
+    ],
+    [
+     323.29,
+     242.59
+    ],
+    [
+     323.35,
+     248.44
+    ],
+    [
+     328.87,
+     248.11
+    ],
+    [
+     327.68,
+     226.83
+    ],
+    [
+     316.42,
+     227.0
+    ],
+    [
+     315.5,
+     226.02
+    ],
+    [
+     315.65,
+     215.74
+    ],
+    [
+     327.04,
+     215.25
+    ],
+    [
+     326.06,
+     197.87
+    ],
+    [
+     310.27,
+     198.8
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_052_lot",
+   "building": "bld_house_052",
+   "geometry": [
+    [
+     179.59,
+     211.54
+    ],
+    [
+     150.79,
+     224.38
+    ],
+    [
+     160.91,
+     239.81
+    ],
+    [
+     173.16,
+     260.66
+    ],
+    [
+     175.63,
+     259.17
+    ],
+    [
+     171.04,
+     252.91
+    ],
+    [
+     171.0,
+     251.97
+    ],
+    [
+     181.09,
+     244.44
+    ],
+    [
+     182.34,
+     244.63
+    ],
+    [
+     187.69,
+     251.91
+    ],
+    [
+     193.89,
+     248.18
+    ],
+    [
+     184.83,
+     228.53
+    ],
+    [
+     185.21,
+     227.49
+    ],
+    [
+     188.34,
+     226.03
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_053_lot",
+   "building": "bld_house_053",
+   "geometry": [
+    [
+     195.7,
+     203.91
+    ],
+    [
+     179.59,
+     211.54
+    ],
+    [
+     188.34,
+     226.03
+    ],
+    [
+     185.21,
+     227.49
+    ],
+    [
+     184.83,
+     228.53
+    ],
+    [
+     193.89,
+     248.18
+    ],
+    [
+     187.69,
+     251.91
+    ],
+    [
+     190.87,
+     256.85
+    ],
+    [
+     182.22,
+     263.46
+    ],
+    [
+     183.65,
+     266.55
+    ],
+    [
+     203.3,
+     253.22
+    ],
+    [
+     204.27,
+     253.56
+    ],
+    [
+     210.36,
+     262.51
+    ],
+    [
+     222.83,
+     256.76
+    ],
+    [
+     217.02,
+     248.1
+    ],
+    [
+     217.36,
+     247.13
+    ],
+    [
+     220.63,
+     244.89
+    ],
+    [
+     195.61,
+     208.2
+    ],
+    [
+     197.69,
+     206.77
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_054_lot",
+   "building": "bld_house_054",
+   "geometry": [
+    [
+     133.25,
+     263.29
+    ],
+    [
+     132.4,
+     262.35
+    ],
+    [
+     131.94,
+     248.59
+    ],
+    [
+     132.75,
+     248.1
+    ],
+    [
+     142.13,
+     247.63
+    ],
+    [
+     131.35,
+     231.59
+    ],
+    [
+     125.6,
+     234.1
+    ],
+    [
+     124.6,
+     233.87
+    ],
+    [
+     117.29,
+     217.35
+    ],
+    [
+     95.13,
+     215.73
+    ],
+    [
+     90.87,
+     275.43
+    ],
+    [
+     110.17,
+     276.85
+    ],
+    [
+     110.04,
+     275.61
+    ],
+    [
+     110.71,
+     274.94
+    ],
+    [
+     124.7,
+     272.2
+    ],
+    [
+     125.56,
+     272.91
+    ],
+    [
+     126.57,
+     278.06
+    ],
+    [
+     140.37,
+     279.07
+    ],
+    [
+     141.52,
+     262.95
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_055_lot",
+   "building": "bld_house_055",
+   "geometry": [
+    [
+     232.98,
+     277.7
+    ],
+    [
+     226.11,
+     267.06
+    ],
+    [
+     226.45,
+     265.76
+    ],
+    [
+     244.92,
+     253.74
+    ],
+    [
+     245.98,
+     254.08
+    ],
+    [
+     252.69,
+     264.48
+    ],
+    [
+     264.21,
+     256.6
+    ],
+    [
+     250.16,
+     228.5
+    ],
+    [
+     254.55,
+     237.28
+    ],
+    [
+     241.62,
+     246.14
+    ],
+    [
+     234.93,
+     236.34
+    ],
+    [
+     233.89,
+     235.92
+    ],
+    [
+     217.36,
+     247.13
+    ],
+    [
+     217.02,
+     248.1
+    ],
+    [
+     222.83,
+     256.76
+    ],
+    [
+     210.36,
+     262.51
+    ],
+    [
+     211.66,
+     265.08
+    ],
+    [
+     209.25,
+     267.01
+    ],
+    [
+     211.29,
+     269.99
+    ],
+    [
+     215.73,
+     267.02
+    ],
+    [
+     216.83,
+     267.13
+    ],
+    [
+     226.91,
+     282.09
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_056_lot",
+   "building": "bld_house_056",
+   "geometry": [
+    [
+     144.7,
+     273.54
+    ],
+    [
+     145.37,
+     272.56
+    ],
+    [
+     155.51,
+     270.1
+    ],
+    [
+     143.8,
+     250.18
+    ],
+    [
+     133.22,
+     234.07
+    ],
+    [
+     131.35,
+     231.59
+    ],
+    [
+     142.13,
+     247.63
+    ],
+    [
+     132.75,
+     248.1
+    ],
+    [
+     131.94,
+     248.59
+    ],
+    [
+     132.4,
+     262.35
+    ],
+    [
+     133.25,
+     263.29
+    ],
+    [
+     141.52,
+     262.95
+    ],
+    [
+     140.37,
+     279.07
+    ],
+    [
+     126.57,
+     278.06
+    ],
+    [
+     127.07,
+     280.59
+    ],
+    [
+     146.21,
+     279.76
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_057_lot",
+   "building": "bld_house_057",
+   "geometry": [
+    [
+     187.31,
+     280.81
+    ],
+    [
+     189.41,
+     279.27
+    ],
+    [
+     182.08,
+     268.6
+    ],
+    [
+     182.22,
+     267.57
+    ],
+    [
+     183.65,
+     266.55
+    ],
+    [
+     182.22,
+     263.46
+    ],
+    [
+     190.87,
+     256.85
+    ],
+    [
+     182.34,
+     244.63
+    ],
+    [
+     181.09,
+     244.44
+    ],
+    [
+     171.0,
+     251.97
+    ],
+    [
+     171.04,
+     252.91
+    ],
+    [
+     175.63,
+     259.17
+    ],
+    [
+     173.16,
+     260.66
+    ],
+    [
+     175.77,
+     265.1
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_058_lot",
+   "building": "bld_house_058",
+   "geometry": [
+    [
+     302.58,
+     276.95
+    ],
+    [
+     306.17,
+     285.64
+    ],
+    [
+     332.8,
+     285.41
+    ],
+    [
+     333.0,
+     251.21
+    ],
+    [
+     331.46,
+     224.62
+    ],
+    [
+     330.38,
+     224.63
+    ],
+    [
+     329.89,
+     226.67
+    ],
+    [
+     327.68,
+     226.83
+    ],
+    [
+     328.87,
+     248.11
+    ],
+    [
+     323.35,
+     248.44
+    ],
+    [
+     323.29,
+     242.59
+    ],
+    [
+     322.49,
+     241.72
+    ],
+    [
+     298.49,
+     241.91
+    ],
+    [
+     297.6,
+     242.81
+    ],
+    [
+     297.66,
+     249.95
+    ],
+    [
+     286.83,
+     250.59
+    ],
+    [
+     280.56,
+     238.27
+    ],
+    [
+     285.36,
+     248.14
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_061_lot",
+   "building": "bld_house_061",
+   "geometry": [
+    [
+     234.34,
+     285.08
+    ],
+    [
+     234.75,
+     283.96
+    ],
+    [
+     243.4,
+     278.62
+    ],
+    [
+     249.88,
+     287.93
+    ],
+    [
+     273.48,
+     272.5
+    ],
+    [
+     264.21,
+     256.6
+    ],
+    [
+     252.69,
+     264.48
+    ],
+    [
+     245.98,
+     254.08
+    ],
+    [
+     244.92,
+     253.74
+    ],
+    [
+     226.45,
+     265.76
+    ],
+    [
+     226.11,
+     267.06
+    ],
+    [
+     232.98,
+     277.7
+    ],
+    [
+     226.91,
+     282.09
+    ],
+    [
+     226.64,
+     283.27
+    ],
+    [
+     219.45,
+     288.12
+    ],
+    [
+     224.04,
+     295.25
+    ],
+    [
+     225.76,
+     294.95
+    ],
+    [
+     230.25,
+     300.76
+    ],
+    [
+     240.29,
+     294.2
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_062_lot",
+   "building": "bld_house_062",
+   "geometry": [
+    [
+     201.44,
+     292.99
+    ],
+    [
+     194.37,
+     282.56
+    ],
+    [
+     194.27,
+     281.62
+    ],
+    [
+     211.29,
+     269.99
+    ],
+    [
+     209.25,
+     267.01
+    ],
+    [
+     211.66,
+     265.08
+    ],
+    [
+     204.27,
+     253.56
+    ],
+    [
+     203.3,
+     253.22
+    ],
+    [
+     182.22,
+     267.57
+    ],
+    [
+     182.08,
+     268.6
+    ],
+    [
+     189.41,
+     279.27
+    ],
+    [
+     187.31,
+     280.81
+    ],
+    [
+     199.36,
+     294.42
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_063_lot",
+   "building": "bld_house_063",
+   "geometry": [
+    [
+     175.13,
+     297.33
+    ],
+    [
+     159.3,
+     276.46
+    ],
+    [
+     155.51,
+     270.1
+    ],
+    [
+     145.37,
+     272.56
+    ],
+    [
+     144.7,
+     273.54
+    ],
+    [
+     146.21,
+     279.76
+    ],
+    [
+     128.89,
+     280.51
+    ],
+    [
+     135.41,
+     307.06
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_064_lot",
+   "building": "bld_house_064",
+   "geometry": [
+    [
+     196.19,
+     291.15
+    ],
+    [
+     202.63,
+     297.78
+    ],
+    [
+     216.76,
+     310.45
+    ],
+    [
+     217.66,
+     309.84
+    ],
+    [
+     213.45,
+     303.58
+    ],
+    [
+     224.04,
+     295.25
+    ],
+    [
+     219.45,
+     288.12
+    ],
+    [
+     226.64,
+     283.27
+    ],
+    [
+     226.91,
+     282.09
+    ],
+    [
+     216.83,
+     267.13
+    ],
+    [
+     215.73,
+     267.02
+    ],
+    [
+     194.27,
+     281.62
+    ],
+    [
+     194.37,
+     282.56
+    ],
+    [
+     201.44,
+     292.99
+    ],
+    [
+     199.36,
+     294.42
+    ],
+    [
+     187.31,
+     280.81
+    ],
+    [
+     179.82,
+     270.64
+    ],
+    [
+     186.94,
+     280.38
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_065_lot",
+   "building": "bld_house_065",
+   "geometry": [
+    [
+     125.7,
+     313.87
+    ],
+    [
+     126.53,
+     312.91
+    ],
+    [
+     145.03,
+     309.8
+    ],
+    [
+     145.95,
+     310.27
+    ],
+    [
+     146.32,
+     312.07
+    ],
+    [
+     150.43,
+     311.26
+    ],
+    [
+     148.95,
+     303.75
+    ],
+    [
+     135.41,
+     307.06
+    ],
+    [
+     128.89,
+     280.51
+    ],
+    [
+     144.25,
+     279.85
+    ],
+    [
+     127.07,
+     280.59
+    ],
+    [
+     125.56,
+     272.91
+    ],
+    [
+     124.7,
+     272.2
+    ],
+    [
+     110.71,
+     274.94
+    ],
+    [
+     110.04,
+     275.61
+    ],
+    [
+     110.17,
+     276.85
+    ],
+    [
+     92.59,
+     275.56
+    ],
+    [
+     101.52,
+     320.97
+    ],
+    [
+     126.05,
+     316.1
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_066_lot",
+   "building": "bld_house_066",
+   "geometry": [
+    [
+     260.76,
+     286.23
+    ],
+    [
+     261.11,
+     285.09
+    ],
+    [
+     266.35,
+     282.02
+    ],
+    [
+     264.11,
+     278.62
+    ],
+    [
+     249.88,
+     287.93
+    ],
+    [
+     243.4,
+     278.62
+    ],
+    [
+     234.75,
+     283.96
+    ],
+    [
+     234.34,
+     285.08
+    ],
+    [
+     240.29,
+     294.2
+    ],
+    [
+     230.25,
+     300.76
+    ],
+    [
+     234.4,
+     306.53
+    ],
+    [
+     230.38,
+     310.05
+    ],
+    [
+     235.01,
+     317.08
+    ],
+    [
+     243.75,
+     309.31
+    ],
+    [
+     249.59,
+     315.01
+    ],
+    [
+     269.83,
+     301.68
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_067_lot",
+   "building": "bld_house_067",
+   "geometry": [
+    [
+     291.84,
+     325.36
+    ],
+    [
+     288.12,
+     311.63
+    ],
+    [
+     285.21,
+     294.36
+    ],
+    [
+     282.58,
+     287.73
+    ],
+    [
+     273.48,
+     272.5
+    ],
+    [
+     264.11,
+     278.62
+    ],
+    [
+     266.35,
+     282.02
+    ],
+    [
+     261.11,
+     285.09
+    ],
+    [
+     260.76,
+     286.23
+    ],
+    [
+     269.83,
+     301.68
+    ],
+    [
+     255.62,
+     311.04
+    ],
+    [
+     264.73,
+     326.51
+    ],
+    [
+     267.27,
+     324.02
+    ],
+    [
+     268.29,
+     323.88
+    ],
+    [
+     275.94,
+     331.66
+    ],
+    [
+     275.86,
+     332.85
+    ],
+    [
+     271.28,
+     337.64
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_069_lot",
+   "building": "bld_house_069",
+   "geometry": [
+    [
+     216.76,
+     310.45
+    ],
+    [
+     235.35,
+     327.62
+    ],
+    [
+     237.35,
+     326.1
+    ],
+    [
+     232.3,
+     320.53
+    ],
+    [
+     232.39,
+     319.51
+    ],
+    [
+     235.01,
+     317.08
+    ],
+    [
+     230.38,
+     310.05
+    ],
+    [
+     234.4,
+     306.53
+    ],
+    [
+     225.76,
+     294.95
+    ],
+    [
+     224.04,
+     295.25
+    ],
+    [
+     213.45,
+     303.58
+    ],
+    [
+     217.66,
+     309.84
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_072_lot",
+   "building": "bld_house_072",
+   "geometry": [
+    [
+     189.0,
+     312.42
+    ],
+    [
+     175.13,
+     297.33
+    ],
+    [
+     145.58,
+     304.57
+    ],
+    [
+     148.95,
+     303.75
+    ],
+    [
+     150.43,
+     311.26
+    ],
+    [
+     148.06,
+     311.73
+    ],
+    [
+     158.93,
+     342.95
+    ],
+    [
+     204.6,
+     326.95
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_073_lot",
+   "building": "bld_house_073",
+   "geometry": [
+    [
+     336.2,
+     343.8
+    ],
+    [
+     333.0,
+     310.85
+    ],
+    [
+     332.6,
+     295.36
+    ],
+    [
+     333.03,
+     273.92
+    ],
+    [
+     332.8,
+     285.41
+    ],
+    [
+     306.17,
+     285.64
+    ],
+    [
+     307.39,
+     289.41
+    ],
+    [
+     310.41,
+     307.33
+    ],
+    [
+     312.51,
+     315.46
+    ],
+    [
+     320.39,
+     339.73
+    ],
+    [
+     319.87,
+     340.71
+    ],
+    [
+     312.44,
+     343.8
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_077_lot",
+   "building": "bld_house_077",
+   "geometry": [
+    [
+     148.06,
+     311.73
+    ],
+    [
+     146.32,
+     312.07
+    ],
+    [
+     145.95,
+     310.27
+    ],
+    [
+     145.03,
+     309.8
+    ],
+    [
+     126.53,
+     312.91
+    ],
+    [
+     125.7,
+     313.87
+    ],
+    [
+     126.05,
+     316.1
+    ],
+    [
+     109.37,
+     319.41
+    ],
+    [
+     113.44,
+     343.8
+    ],
+    [
+     168.67,
+     343.8
+    ],
+    [
+     168.02,
+     339.77
+    ],
+    [
+     158.93,
+     342.95
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_078_lot",
+   "building": "bld_house_078",
+   "geometry": [
+    [
+     235.35,
+     327.62
+    ],
+    [
+     244.5,
+     337.42
+    ],
+    [
+     244.27,
+     338.24
+    ],
+    [
+     238.45,
+     343.8
+    ],
+    [
+     255.49,
+     343.8
+    ],
+    [
+     252.02,
+     340.22
+    ],
+    [
+     251.92,
+     339.12
+    ],
+    [
+     264.73,
+     326.51
+    ],
+    [
+     255.62,
+     311.04
+    ],
+    [
+     249.59,
+     315.01
+    ],
+    [
+     243.75,
+     309.31
+    ],
+    [
+     232.39,
+     319.51
+    ],
+    [
+     232.3,
+     320.53
+    ],
+    [
+     237.35,
+     326.1
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_079_lot",
+   "building": "bld_house_079",
+   "geometry": [
+    [
+     556.37,
+     297.46
+    ],
+    [
+     555.03,
+     297.51
+    ],
+    [
+     548.65,
+     290.99
+    ],
+    [
+     528.07,
+     291.9
+    ],
+    [
+     528.8,
+     325.6
+    ],
+    [
+     530.07,
+     343.8
+    ],
+    [
+     566.4,
+     343.8
+    ],
+    [
+     566.4,
+     290.21
+    ],
+    [
+     563.66,
+     290.33
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_080_lot",
+   "building": "bld_house_080",
+   "geometry": [
+    [
+     362.21,
+     342.03
+    ],
+    [
+     361.18,
+     343.0
+    ],
+    [
+     361.19,
+     343.8
+    ],
+    [
+     407.68,
+     343.8
+    ],
+    [
+     408.02,
+     325.52
+    ],
+    [
+     409.7,
+     294.22
+    ],
+    [
+     360.41,
+     294.98
+    ],
+    [
+     360.99,
+     331.0
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_082_lot",
+   "building": "bld_house_082",
+   "geometry": [
+    [
+     295.65,
+     337.37
+    ],
+    [
+     291.84,
+     325.36
+    ],
+    [
+     271.28,
+     337.64
+    ],
+    [
+     275.86,
+     332.85
+    ],
+    [
+     275.94,
+     331.66
+    ],
+    [
+     268.29,
+     323.88
+    ],
+    [
+     267.27,
+     324.02
+    ],
+    [
+     251.92,
+     339.12
+    ],
+    [
+     252.02,
+     340.22
+    ],
+    [
+     255.49,
+     343.8
+    ],
+    [
+     289.0,
+     343.8
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_stables_lot",
+   "building": "bld_stables",
+   "geometry": [
+    [
+     461.34,
+     72.83
+    ],
+    [
+     459.46,
+     84.34
+    ],
+    [
+     460.14,
+     95.71
+    ],
+    [
+     479.49,
+     115.31
+    ],
+    [
+     524.72,
+     70.99
+    ],
+    [
+     517.51,
+     63.6
+    ],
+    [
+     498.09,
+     81.53
+    ],
+    [
+     494.09,
+     77.2
+    ],
+    [
+     500.07,
+     71.34
+    ],
+    [
+     500.02,
+     70.0
+    ],
+    [
+     484.38,
+     54.02
+    ],
+    [
+     483.27,
+     54.12
+    ],
+    [
+     477.75,
+     59.52
+    ],
+    [
+     471.51,
+     52.77
+    ],
+    [
+     464.22,
+     65.45
+    ]
+   ],
+   "detail": true
+  }
+ ],
+ "fences": [
+  {
+   "id": "bld_house_002_fence1",
+   "building": "bld_house_002",
+   "points": [
+    [
+     350.73,
+     20.44
+    ],
+    [
+     350.54,
+     21.77
+    ],
+    [
+     340.81,
+     27.86
+    ],
+    [
+     331.41,
+     14.39
+    ],
+    [
+     343.06,
+     32.74
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_002_fence2",
+   "building": "bld_house_002",
+   "points": [
+    [
+     362.77,
+     19.66
+    ],
+    [
+     389.43,
+     4.81
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_002_fence3",
+   "building": "bld_house_002",
+   "points": [
+    [
+     388.59,
+     3.5
+    ],
+    [
+     339.25,
+     3.5
+    ],
+    [
+     350.73,
+     20.44
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_003_fence1",
+   "building": "bld_house_003",
+   "points": [
+    [
+     314.63,
+     30.67
+    ],
+    [
+     315.78,
+     30.97
+    ],
+    [
+     319.25,
+     36.28
+    ],
+    [
+     338.43,
+     25.44
+    ],
+    [
+     325.88,
+     6.19
+    ],
+    [
+     326.09,
+     5.09
+    ],
+    [
+     328.43,
+     3.5
+    ],
+    [
+     280.56,
+     3.5
+    ],
+    [
+     300.65,
+     39.66
+    ],
+    [
+     314.63,
+     30.67
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_004_fence1",
+   "building": "bld_house_004",
+   "points": [
+    [
+     326.09,
+     5.09
+    ],
+    [
+     325.88,
+     6.19
+    ],
+    [
+     338.43,
+     25.44
+    ],
+    [
+     323.93,
+     33.64
+    ],
+    [
+     330.12,
+     42.79
+    ],
+    [
+     343.06,
+     32.74
+    ],
+    [
+     331.41,
+     14.39
+    ],
+    [
+     340.81,
+     27.86
+    ],
+    [
+     350.54,
+     21.77
+    ],
+    [
+     350.73,
+     20.44
+    ],
+    [
+     339.25,
+     3.5
+    ],
+    [
+     328.43,
+     3.5
+    ],
+    [
+     326.09,
+     5.09
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_005_fence1",
+   "building": "bld_house_005",
+   "points": [
+    [
+     398.03,
+     22.87
+    ],
+    [
+     389.67,
+     27.34
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_005_fence2",
+   "building": "bld_house_005",
+   "points": [
+    [
+     389.98,
+     27.98
+    ],
+    [
+     395.33,
+     24.42
+    ],
+    [
+     396.27,
+     24.42
+    ],
+    [
+     403.68,
+     35.33
+    ],
+    [
+     403.43,
+     36.58
+    ],
+    [
+     396.43,
+     41.2
+    ],
+    [
+     398.22,
+     44.86
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_005_fence3",
+   "building": "bld_house_005",
+   "points": [
+    [
+     444.97,
+     19.09
+    ],
+    [
+     437.17,
+     3.5
+    ],
+    [
+     418.83,
+     3.5
+    ],
+    [
+     421.79,
+     11.93
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_008_fence1",
+   "building": "bld_house_008",
+   "points": [
+    [
+     398.22,
+     44.86
+    ],
+    [
+     396.43,
+     41.2
+    ],
+    [
+     403.43,
+     36.58
+    ],
+    [
+     403.68,
+     35.33
+    ],
+    [
+     396.27,
+     24.42
+    ],
+    [
+     395.33,
+     24.42
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_008_fence2",
+   "building": "bld_house_008",
+   "points": [
+    [
+     385.38,
+     29.63
+    ],
+    [
+     368.95,
+     39.54
+    ],
+    [
+     373.32,
+     46.18
+    ],
+    [
+     379.82,
+     41.72
+    ],
+    [
+     380.84,
+     41.76
+    ],
+    [
+     387.02,
+     50.43
+    ],
+    [
+     386.84,
+     51.76
+    ],
+    [
+     380.05,
+     56.44
+    ],
+    [
+     381.7,
+     58.93
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_010_fence1",
+   "building": "bld_house_010",
+   "points": [
+    [
+     324.68,
+     47.18
+    ],
+    [
+     330.12,
+     42.79
+    ],
+    [
+     323.93,
+     33.64
+    ],
+    [
+     334.08,
+     27.9
+    ],
+    [
+     319.25,
+     36.28
+    ],
+    [
+     315.78,
+     30.97
+    ],
+    [
+     314.63,
+     30.67
+    ],
+    [
+     300.65,
+     39.66
+    ],
+    [
+     292.38,
+     24.77
+    ],
+    [
+     273.43,
+     36.98
+    ],
+    [
+     284.98,
+     54.67
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_010_fence2",
+   "building": "bld_house_010",
+   "points": [
+    [
+     315.1,
+     56.62
+    ],
+    [
+     324.68,
+     47.18
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_011_fence1",
+   "building": "bld_house_011",
+   "points": [
+    [
+     381.7,
+     58.93
+    ],
+    [
+     380.05,
+     56.44
+    ],
+    [
+     386.84,
+     51.76
+    ],
+    [
+     387.02,
+     50.43
+    ],
+    [
+     380.84,
+     41.76
+    ],
+    [
+     379.82,
+     41.72
+    ],
+    [
+     373.32,
+     46.18
+    ],
+    [
+     368.95,
+     39.54
+    ],
+    [
+     353.09,
+     50.09
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_011_fence2",
+   "building": "bld_house_011",
+   "points": [
+    [
+     350.62,
+     52.56
+    ],
+    [
+     353.07,
+     56.04
+    ],
+    [
+     357.99,
+     50.0
+    ],
+    [
+     359.08,
+     49.78
+    ],
+    [
+     375.33,
+     63.04
+    ],
+    [
+     375.33,
+     64.16
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_012_fence1",
+   "building": "bld_house_012",
+   "points": [
+    [
+     479.07,
+     36.65
+    ],
+    [
+     475.88,
+     45.03
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_012_fence2",
+   "building": "bld_house_012",
+   "points": [
+    [
+     471.51,
+     52.77
+    ],
+    [
+     477.75,
+     59.52
+    ],
+    [
+     483.27,
+     54.12
+    ],
+    [
+     484.38,
+     54.02
+    ],
+    [
+     500.02,
+     70.0
+    ],
+    [
+     500.07,
+     71.34
+    ],
+    [
+     494.09,
+     77.2
+    ],
+    [
+     498.09,
+     81.53
+    ],
+    [
+     520.19,
+     61.13
+    ],
+    [
+     506.0,
+     51.09
+    ],
+    [
+     507.76,
+     49.41
+    ],
+    [
+     507.75,
+     48.38
+    ],
+    [
+     494.52,
+     34.03
+    ],
+    [
+     479.07,
+     36.65
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_015_fence1",
+   "building": "bld_house_015",
+   "points": [
+    [
+     349.63,
+     58.23
+    ],
+    [
+     346.49,
+     64.0
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_015_fence2",
+   "building": "bld_house_015",
+   "points": [
+    [
+     341.99,
+     68.18
+    ],
+    [
+     336.41,
+     71.06
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_015_fence3",
+   "building": "bld_house_015",
+   "points": [
+    [
+     331.92,
+     72.35
+    ],
+    [
+     343.72,
+     78.9
+    ],
+    [
+     343.92,
+     80.0
+    ],
+    [
+     341.64,
+     84.13
+    ],
+    [
+     346.92,
+     88.44
+    ],
+    [
+     348.46,
+     85.93
+    ],
+    [
+     349.36,
+     85.61
+    ],
+    [
+     356.46,
+     89.95
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_015_fence4",
+   "building": "bld_house_015",
+   "points": [
+    [
+     375.33,
+     64.16
+    ],
+    [
+     375.33,
+     63.04
+    ],
+    [
+     359.08,
+     49.78
+    ],
+    [
+     357.99,
+     50.0
+    ],
+    [
+     353.07,
+     56.04
+    ],
+    [
+     350.62,
+     52.56
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_016_fence1",
+   "building": "bld_house_016",
+   "points": [
+    [
+     253.29,
+     113.42
+    ],
+    [
+     268.31,
+     100.47
+    ],
+    [
+     261.63,
+     93.84
+    ],
+    [
+     261.52,
+     92.73
+    ],
+    [
+     272.96,
+     81.13
+    ],
+    [
+     274.23,
+     81.12
+    ],
+    [
+     281.91,
+     88.73
+    ],
+    [
+     290.66,
+     81.18
+    ],
+    [
+     282.74,
+     71.83
+    ],
+    [
+     239.67,
+     64.93
+    ],
+    [
+     238.86,
+     64.17
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_016_fence2",
+   "building": "bld_house_016",
+   "points": [
+    [
+     239.09,
+     62.32
+    ],
+    [
+     224.69,
+     74.62
+    ],
+    [
+     233.35,
+     83.98
+    ],
+    [
+     233.31,
+     85.09
+    ],
+    [
+     230.9,
+     87.31
+    ],
+    [
+     241.55,
+     99.74
+    ],
+    [
+     244.9,
+     95.78
+    ],
+    [
+     245.81,
+     95.52
+    ],
+    [
+     254.48,
+     102.67
+    ],
+    [
+     254.52,
+     103.87
+    ],
+    [
+     249.84,
+     109.4
+    ],
+    [
+     253.29,
+     113.42
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_017_fence1",
+   "building": "bld_house_017",
+   "points": [
+    [
+     226.0,
+     113.9
+    ],
+    [
+     227.06,
+     113.81
+    ],
+    [
+     238.34,
+     103.53
+    ],
+    [
+     241.55,
+     99.74
+    ],
+    [
+     230.9,
+     87.31
+    ],
+    [
+     233.31,
+     85.09
+    ],
+    [
+     233.35,
+     83.98
+    ],
+    [
+     224.69,
+     74.62
+    ],
+    [
+     237.63,
+     63.57
+    ],
+    [
+     223.1,
+     47.92
+    ],
+    [
+     185.47,
+     82.54
+    ],
+    [
+     197.37,
+     95.48
+    ],
+    [
+     200.93,
+     90.26
+    ],
+    [
+     201.81,
+     89.91
+    ],
+    [
+     211.81,
+     96.6
+    ],
+    [
+     211.98,
+     97.78
+    ],
+    [
+     206.67,
+     105.59
+    ],
+    [
+     208.22,
+     107.28
+    ],
+    [
+     214.19,
+     100.7
+    ],
+    [
+     224.8,
+     109.09
+    ],
+    [
+     224.93,
+     110.36
+    ],
+    [
+     218.38,
+     118.33
+    ],
+    [
+     220.08,
+     120.18
+    ],
+    [
+     226.0,
+     113.9
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_018_fence2",
+   "building": "bld_house_018",
+   "points": [
+    [
+     311.41,
+     92.25
+    ],
+    [
+     319.99,
+     96.3
+    ],
+    [
+     320.37,
+     97.35
+    ],
+    [
+     318.86,
+     100.55
+    ],
+    [
+     327.38,
+     105.24
+    ],
+    [
+     330.34,
+     98.89
+    ],
+    [
+     331.14,
+     98.4
+    ],
+    [
+     344.89,
+     104.59
+    ],
+    [
+     345.24,
+     105.73
+    ],
+    [
+     341.81,
+     113.19
+    ],
+    [
+     344.08,
+     114.44
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_018_fence3",
+   "building": "bld_house_018",
+   "points": [
+    [
+     352.33,
+     97.4
+    ],
+    [
+     344.79,
+     92.82
+    ],
+    [
+     346.92,
+     88.44
+    ],
+    [
+     341.64,
+     84.13
+    ],
+    [
+     343.92,
+     80.0
+    ],
+    [
+     343.72,
+     78.9
+    ],
+    [
+     331.92,
+     72.35
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_020_fence1",
+   "building": "bld_house_020",
+   "points": [
+    [
+     260.59,
+     107.3
+    ],
+    [
+     269.78,
+     116.12
+    ],
+    [
+     269.68,
+     117.23
+    ],
+    [
+     265.43,
+     121.56
+    ],
+    [
+     270.57,
+     126.65
+    ],
+    [
+     273.56,
+     117.04
+    ],
+    [
+     280.01,
+     103.62
+    ],
+    [
+     288.21,
+     90.22
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_020_fence2",
+   "building": "bld_house_020",
+   "points": [
+    [
+     296.28,
+     79.04
+    ],
+    [
+     289.68,
+     72.5
+    ],
+    [
+     282.74,
+     71.83
+    ],
+    [
+     290.66,
+     81.18
+    ],
+    [
+     281.91,
+     88.73
+    ],
+    [
+     274.23,
+     81.12
+    ],
+    [
+     272.96,
+     81.13
+    ],
+    [
+     261.52,
+     92.73
+    ],
+    [
+     261.63,
+     93.84
+    ],
+    [
+     268.31,
+     100.47
+    ],
+    [
+     260.59,
+     107.3
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_022_fence1",
+   "building": "bld_house_022",
+   "points": [
+    [
+     172.11,
+     107.83
+    ],
+    [
+     178.39,
+     106.76
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_022_fence2",
+   "building": "bld_house_022",
+   "points": [
+    [
+     191.27,
+     108.35
+    ],
+    [
+     198.84,
+     112.0
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_022_fence3",
+   "building": "bld_house_022",
+   "points": [
+    [
+     213.92,
+     125.14
+    ],
+    [
+     218.48,
+     118.44
+    ],
+    [
+     216.43,
+     120.67
+    ],
+    [
+     215.42,
+     120.83
+    ],
+    [
+     204.84,
+     112.09
+    ],
+    [
+     208.22,
+     107.28
+    ],
+    [
+     206.67,
+     105.59
+    ],
+    [
+     211.98,
+     97.78
+    ],
+    [
+     211.81,
+     96.6
+    ],
+    [
+     201.81,
+     89.91
+    ],
+    [
+     200.93,
+     90.26
+    ],
+    [
+     197.37,
+     95.48
+    ],
+    [
+     185.55,
+     82.63
+    ],
+    [
+     167.29,
+     109.45
+    ],
+    [
+     169.41,
+     110.89
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_023_fence1",
+   "building": "bld_house_023",
+   "points": [
+    [
+     227.27,
+     113.96
+    ],
+    [
+     237.9,
+     123.67
+    ],
+    [
+     237.81,
+     124.69
+    ],
+    [
+     234.36,
+     128.57
+    ],
+    [
+     246.79,
+     139.29
+    ],
+    [
+     251.32,
+     133.94
+    ],
+    [
+     243.1,
+     125.92
+    ],
+    [
+     242.82,
+     125.01
+    ],
+    [
+     258.33,
+     109.07
+    ],
+    [
+     253.29,
+     113.42
+    ],
+    [
+     249.84,
+     109.4
+    ],
+    [
+     254.52,
+     103.87
+    ],
+    [
+     254.48,
+     102.67
+    ],
+    [
+     245.81,
+     95.52
+    ],
+    [
+     244.9,
+     95.78
+    ],
+    [
+     238.34,
+     103.53
+    ],
+    [
+     227.27,
+     113.96
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_025_fence1",
+   "building": "bld_house_025",
+   "points": [
+    [
+     291.96,
+     124.9
+    ],
+    [
+     299.58,
+     128.48
+    ],
+    [
+     300.17,
+     125.24
+    ],
+    [
+     301.08,
+     124.6
+    ],
+    [
+     324.26,
+     128.74
+    ],
+    [
+     328.57,
+     119.71
+    ],
+    [
+     322.89,
+     117.06
+    ],
+    [
+     322.41,
+     116.06
+    ],
+    [
+     327.38,
+     105.24
+    ],
+    [
+     318.86,
+     100.55
+    ],
+    [
+     320.37,
+     97.35
+    ],
+    [
+     319.99,
+     96.3
+    ],
+    [
+     311.41,
+     92.25
+    ],
+    [
+     305.02,
+     101.07
+    ],
+    [
+     297.79,
+     112.8
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_026_fence1",
+   "building": "bld_house_026",
+   "points": [
+    [
+     324.26,
+     128.74
+    ],
+    [
+     325.5,
+     129.88
+    ],
+    [
+     324.34,
+     136.49
+    ],
+    [
+     336.23,
+     142.03
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_026_fence2",
+   "building": "bld_house_026",
+   "points": [
+    [
+     336.92,
+     138.7
+    ],
+    [
+     328.93,
+     136.89
+    ],
+    [
+     329.83,
+     130.04
+    ],
+    [
+     330.88,
+     129.3
+    ],
+    [
+     338.75,
+     130.94
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_026_fence3",
+   "building": "bld_house_026",
+   "points": [
+    [
+     344.08,
+     114.44
+    ],
+    [
+     341.81,
+     113.19
+    ],
+    [
+     345.24,
+     105.73
+    ],
+    [
+     344.89,
+     104.59
+    ],
+    [
+     331.14,
+     98.4
+    ],
+    [
+     330.34,
+     98.89
+    ],
+    [
+     322.41,
+     116.06
+    ],
+    [
+     322.89,
+     117.06
+    ],
+    [
+     328.57,
+     119.71
+    ],
+    [
+     324.26,
+     128.74
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_030_fence1",
+   "building": "bld_house_030",
+   "points": [
+    [
+     213.92,
+     125.14
+    ],
+    [
+     224.88,
+     139.01
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_030_fence2",
+   "building": "bld_house_030",
+   "points": [
+    [
+     234.79,
+     153.65
+    ],
+    [
+     236.86,
+     151.31
+    ],
+    [
+     230.8,
+     146.01
+    ],
+    [
+     234.4,
+     141.18
+    ],
+    [
+     228.37,
+     135.29
+    ],
+    [
+     237.81,
+     124.69
+    ],
+    [
+     237.9,
+     123.67
+    ],
+    [
+     227.27,
+     113.96
+    ],
+    [
+     238.34,
+     103.53
+    ],
+    [
+     227.06,
+     113.81
+    ],
+    [
+     226.0,
+     113.9
+    ],
+    [
+     220.08,
+     120.18
+    ],
+    [
+     218.48,
+     118.44
+    ],
+    [
+     213.92,
+     125.14
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_031_fence1",
+   "building": "bld_house_031",
+   "points": [
+    [
+     182.37,
+     129.48
+    ],
+    [
+     176.6,
+     130.22
+    ],
+    [
+     175.7,
+     129.71
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_031_fence2",
+   "building": "bld_house_031",
+   "points": [
+    [
+     169.41,
+     110.89
+    ],
+    [
+     167.29,
+     109.45
+    ],
+    [
+     172.21,
+     102.21
+    ],
+    [
+     161.55,
+     93.38
+    ],
+    [
+     128.18,
+     133.49
+    ],
+    [
+     142.28,
+     145.29
+    ],
+    [
+     146.6,
+     140.18
+    ],
+    [
+     147.94,
+     140.14
+    ],
+    [
+     159.03,
+     149.63
+    ],
+    [
+     158.92,
+     150.57
+    ],
+    [
+     154.65,
+     155.63
+    ],
+    [
+     166.13,
+     165.23
+    ],
+    [
+     191.64,
+     134.86
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_036_fence1",
+   "building": "bld_house_036",
+   "points": [
+    [
+     234.79,
+     153.65
+    ],
+    [
+     238.17,
+     159.03
+    ],
+    [
+     248.97,
+     155.41
+    ],
+    [
+     247.14,
+     153.62
+    ],
+    [
+     252.34,
+     147.15
+    ],
+    [
+     252.38,
+     146.12
+    ],
+    [
+     239.82,
+     136.02
+    ],
+    [
+     238.56,
+     136.03
+    ],
+    [
+     230.8,
+     146.01
+    ],
+    [
+     236.86,
+     151.31
+    ],
+    [
+     234.79,
+     153.65
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_041_fence1",
+   "building": "bld_house_041",
+   "points": [
+    [
+     129.98,
+     174.41
+    ],
+    [
+     131.25,
+     174.44
+    ],
+    [
+     144.19,
+     185.54
+    ],
+    [
+     144.12,
+     186.57
+    ],
+    [
+     139.26,
+     192.35
+    ],
+    [
+     151.55,
+     199.8
+    ],
+    [
+     164.43,
+     193.93
+    ],
+    [
+     182.5,
+     164.03
+    ],
+    [
+     174.11,
+     158.94
+    ],
+    [
+     153.15,
+     183.75
+    ],
+    [
+     141.02,
+     173.52
+    ],
+    [
+     152.54,
+     180.17
+    ],
+    [
+     158.66,
+     170.62
+    ],
+    [
+     158.48,
+     169.36
+    ],
+    [
+     145.46,
+     161.71
+    ],
+    [
+     139.11,
+     171.92
+    ],
+    [
+     125.78,
+     160.69
+    ],
+    [
+     115.4,
+     177.87
+    ],
+    [
+     123.0,
+     182.48
+    ],
+    [
+     129.98,
+     174.41
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_044_fence1",
+   "building": "bld_house_044",
+   "points": [
+    [
+     131.42,
+     199.91
+    ],
+    [
+     136.48,
+     205.8
+    ],
+    [
+     151.55,
+     199.8
+    ],
+    [
+     139.26,
+     192.35
+    ],
+    [
+     144.12,
+     186.57
+    ],
+    [
+     144.19,
+     185.54
+    ],
+    [
+     131.25,
+     174.44
+    ],
+    [
+     129.98,
+     174.41
+    ],
+    [
+     123.0,
+     182.48
+    ],
+    [
+     115.4,
+     177.87
+    ],
+    [
+     125.78,
+     160.69
+    ],
+    [
+     139.11,
+     171.92
+    ],
+    [
+     122.05,
+     157.55
+    ],
+    [
+     97.05,
+     186.57
+    ],
+    [
+     121.41,
+     207.32
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_046_fence1",
+   "building": "bld_house_046",
+   "points": [
+    [
+     195.53,
+     203.66
+    ],
+    [
+     214.0,
+     230.31
+    ],
+    [
+     225.69,
+     222.14
+    ],
+    [
+     219.72,
+     213.38
+    ],
+    [
+     220.04,
+     212.07
+    ],
+    [
+     233.59,
+     203.0
+    ],
+    [
+     234.43,
+     203.44
+    ],
+    [
+     240.24,
+     211.96
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_046_fence2",
+   "building": "bld_house_046",
+   "points": [
+    [
+     241.46,
+     211.11
+    ],
+    [
+     228.65,
+     187.41
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_048_fence1",
+   "building": "bld_house_048",
+   "points": [
+    [
+     234.43,
+     203.44
+    ],
+    [
+     233.59,
+     203.0
+    ],
+    [
+     220.04,
+     212.07
+    ],
+    [
+     219.72,
+     213.38
+    ],
+    [
+     225.69,
+     222.14
+    ],
+    [
+     214.0,
+     230.31
+    ],
+    [
+     197.69,
+     206.77
+    ],
+    [
+     195.61,
+     208.2
+    ],
+    [
+     220.63,
+     244.89
+    ],
+    [
+     233.89,
+     235.92
+    ],
+    [
+     234.93,
+     236.34
+    ],
+    [
+     241.62,
+     246.14
+    ],
+    [
+     254.55,
+     237.28
+    ],
+    [
+     241.46,
+     211.11
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_048_fence2",
+   "building": "bld_house_048",
+   "points": [
+    [
+     240.24,
+     211.96
+    ],
+    [
+     234.43,
+     203.44
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_049_fence1",
+   "building": "bld_house_049",
+   "points": [
+    [
+     309.55,
+     205.2
+    ],
+    [
+     308.49,
+     205.89
+    ],
+    [
+     288.2,
+     203.68
+    ],
+    [
+     287.42,
+     202.89
+    ],
+    [
+     287.66,
+     200.13
+    ],
+    [
+     287.12,
+     200.16
+    ],
+    [
+     284.83,
+     205.68
+    ],
+    [
+     281.9,
+     210.66
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_049_fence2",
+   "building": "bld_house_049",
+   "points": [
+    [
+     286.83,
+     250.59
+    ],
+    [
+     297.66,
+     249.95
+    ],
+    [
+     297.6,
+     242.81
+    ],
+    [
+     298.49,
+     241.91
+    ],
+    [
+     322.49,
+     241.72
+    ],
+    [
+     323.29,
+     242.59
+    ],
+    [
+     323.35,
+     248.44
+    ],
+    [
+     328.87,
+     248.11
+    ],
+    [
+     327.68,
+     226.83
+    ],
+    [
+     316.42,
+     227.0
+    ],
+    [
+     315.5,
+     226.02
+    ],
+    [
+     315.65,
+     215.74
+    ],
+    [
+     327.04,
+     215.25
+    ],
+    [
+     326.06,
+     197.87
+    ],
+    [
+     310.27,
+     198.8
+    ],
+    [
+     309.55,
+     205.2
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_052_fence1",
+   "building": "bld_house_052",
+   "points": [
+    [
+     179.59,
+     211.54
+    ],
+    [
+     150.79,
+     224.38
+    ],
+    [
+     160.91,
+     239.81
+    ],
+    [
+     173.16,
+     260.66
+    ],
+    [
+     175.63,
+     259.17
+    ],
+    [
+     171.04,
+     252.91
+    ],
+    [
+     171.0,
+     251.97
+    ],
+    [
+     181.09,
+     244.44
+    ],
+    [
+     182.34,
+     244.63
+    ],
+    [
+     187.69,
+     251.91
+    ],
+    [
+     193.89,
+     248.18
+    ],
+    [
+     184.83,
+     228.53
+    ],
+    [
+     185.21,
+     227.49
+    ],
+    [
+     188.34,
+     226.03
+    ],
+    [
+     179.59,
+     211.54
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_053_fence1",
+   "building": "bld_house_053",
+   "points": [
+    [
+     179.59,
+     211.54
+    ],
+    [
+     188.34,
+     226.03
+    ],
+    [
+     185.21,
+     227.49
+    ],
+    [
+     184.83,
+     228.53
+    ],
+    [
+     193.89,
+     248.18
+    ],
+    [
+     187.69,
+     251.91
+    ],
+    [
+     190.87,
+     256.85
+    ],
+    [
+     182.22,
+     263.46
+    ],
+    [
+     183.65,
+     266.55
+    ],
+    [
+     203.3,
+     253.22
+    ],
+    [
+     204.27,
+     253.56
+    ],
+    [
+     210.36,
+     262.51
+    ],
+    [
+     222.83,
+     256.76
+    ],
+    [
+     217.02,
+     248.1
+    ],
+    [
+     217.36,
+     247.13
+    ],
+    [
+     220.63,
+     244.89
+    ],
+    [
+     195.61,
+     208.2
+    ],
+    [
+     197.69,
+     206.77
+    ],
+    [
+     195.7,
+     203.91
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_054_fence1",
+   "building": "bld_house_054",
+   "points": [
+    [
+     133.25,
+     263.29
+    ],
+    [
+     132.4,
+     262.35
+    ],
+    [
+     131.94,
+     248.59
+    ],
+    [
+     132.75,
+     248.1
+    ],
+    [
+     142.13,
+     247.63
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_054_fence2",
+   "building": "bld_house_054",
+   "points": [
+    [
+     125.6,
+     234.1
+    ],
+    [
+     124.6,
+     233.87
+    ],
+    [
+     117.29,
+     217.35
+    ],
+    [
+     95.13,
+     215.73
+    ],
+    [
+     90.87,
+     275.43
+    ],
+    [
+     110.17,
+     276.85
+    ],
+    [
+     110.04,
+     275.61
+    ],
+    [
+     110.71,
+     274.94
+    ],
+    [
+     124.7,
+     272.2
+    ],
+    [
+     125.56,
+     272.91
+    ],
+    [
+     126.57,
+     278.06
+    ],
+    [
+     140.37,
+     279.07
+    ],
+    [
+     141.52,
+     262.95
+    ],
+    [
+     133.25,
+     263.29
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_055_fence1",
+   "building": "bld_house_055",
+   "points": [
+    [
+     232.98,
+     277.7
+    ],
+    [
+     226.11,
+     267.06
+    ],
+    [
+     226.45,
+     265.76
+    ],
+    [
+     244.92,
+     253.74
+    ],
+    [
+     245.98,
+     254.08
+    ],
+    [
+     252.69,
+     264.48
+    ],
+    [
+     264.21,
+     256.6
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_055_fence2",
+   "building": "bld_house_055",
+   "points": [
+    [
+     254.55,
+     237.28
+    ],
+    [
+     241.62,
+     246.14
+    ],
+    [
+     234.93,
+     236.34
+    ],
+    [
+     233.89,
+     235.92
+    ],
+    [
+     217.36,
+     247.13
+    ],
+    [
+     217.02,
+     248.1
+    ],
+    [
+     222.83,
+     256.76
+    ],
+    [
+     210.36,
+     262.51
+    ],
+    [
+     211.66,
+     265.08
+    ],
+    [
+     209.25,
+     267.01
+    ],
+    [
+     211.29,
+     269.99
+    ],
+    [
+     215.73,
+     267.02
+    ],
+    [
+     216.83,
+     267.13
+    ],
+    [
+     226.91,
+     282.09
+    ],
+    [
+     232.98,
+     277.7
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_057_fence1",
+   "building": "bld_house_057",
+   "points": [
+    [
+     187.31,
+     280.81
+    ],
+    [
+     189.41,
+     279.27
+    ],
+    [
+     182.08,
+     268.6
+    ],
+    [
+     182.22,
+     267.57
+    ],
+    [
+     183.65,
+     266.55
+    ],
+    [
+     182.22,
+     263.46
+    ],
+    [
+     190.87,
+     256.85
+    ],
+    [
+     182.34,
+     244.63
+    ],
+    [
+     181.09,
+     244.44
+    ],
+    [
+     171.0,
+     251.97
+    ],
+    [
+     171.04,
+     252.91
+    ],
+    [
+     175.63,
+     259.17
+    ],
+    [
+     173.16,
+     260.66
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_057_fence2",
+   "building": "bld_house_057",
+   "points": [
+    [
+     175.77,
+     265.1
+    ],
+    [
+     187.31,
+     280.81
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_058_fence1",
+   "building": "bld_house_058",
+   "points": [
+    [
+     306.17,
+     285.64
+    ],
+    [
+     332.8,
+     285.41
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_058_fence2",
+   "building": "bld_house_058",
+   "points": [
+    [
+     331.46,
+     224.62
+    ],
+    [
+     330.38,
+     224.63
+    ],
+    [
+     329.89,
+     226.67
+    ],
+    [
+     327.68,
+     226.83
+    ],
+    [
+     328.87,
+     248.11
+    ],
+    [
+     323.35,
+     248.44
+    ],
+    [
+     323.29,
+     242.59
+    ],
+    [
+     322.49,
+     241.72
+    ],
+    [
+     298.49,
+     241.91
+    ],
+    [
+     297.6,
+     242.81
+    ],
+    [
+     297.66,
+     249.95
+    ],
+    [
+     286.83,
+     250.59
+    ],
+    [
+     280.56,
+     238.27
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_058_fence3",
+   "building": "bld_house_058",
+   "points": [
+    [
+     285.36,
+     248.14
+    ],
+    [
+     302.58,
+     276.95
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_061_fence1",
+   "building": "bld_house_061",
+   "points": [
+    [
+     234.34,
+     285.08
+    ],
+    [
+     234.75,
+     283.96
+    ],
+    [
+     243.4,
+     278.62
+    ],
+    [
+     249.88,
+     287.93
+    ],
+    [
+     273.48,
+     272.5
+    ],
+    [
+     264.21,
+     256.6
+    ],
+    [
+     252.69,
+     264.48
+    ],
+    [
+     245.98,
+     254.08
+    ],
+    [
+     244.92,
+     253.74
+    ],
+    [
+     226.45,
+     265.76
+    ],
+    [
+     226.11,
+     267.06
+    ],
+    [
+     232.98,
+     277.7
+    ],
+    [
+     226.91,
+     282.09
+    ],
+    [
+     226.64,
+     283.27
+    ],
+    [
+     219.45,
+     288.12
+    ],
+    [
+     224.04,
+     295.25
+    ],
+    [
+     225.76,
+     294.95
+    ],
+    [
+     230.25,
+     300.76
+    ],
+    [
+     240.29,
+     294.2
+    ],
+    [
+     234.34,
+     285.08
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_063_fence1",
+   "building": "bld_house_063",
+   "points": [
+    [
+     159.3,
+     276.46
+    ],
+    [
+     155.51,
+     270.1
+    ],
+    [
+     145.37,
+     272.56
+    ],
+    [
+     144.7,
+     273.54
+    ],
+    [
+     146.21,
+     279.76
+    ],
+    [
+     128.89,
+     280.51
+    ],
+    [
+     135.41,
+     307.06
+    ],
+    [
+     175.13,
+     297.33
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_064_fence1",
+   "building": "bld_house_064",
+   "points": [
+    [
+     217.66,
+     309.84
+    ],
+    [
+     213.45,
+     303.58
+    ],
+    [
+     224.04,
+     295.25
+    ],
+    [
+     219.45,
+     288.12
+    ],
+    [
+     226.64,
+     283.27
+    ],
+    [
+     226.91,
+     282.09
+    ],
+    [
+     216.83,
+     267.13
+    ],
+    [
+     215.73,
+     267.02
+    ],
+    [
+     194.27,
+     281.62
+    ],
+    [
+     194.37,
+     282.56
+    ],
+    [
+     201.44,
+     292.99
+    ],
+    [
+     199.36,
+     294.42
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_064_fence2",
+   "building": "bld_house_064",
+   "points": [
+    [
+     179.82,
+     270.64
+    ],
+    [
+     186.94,
+     280.38
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_065_fence1",
+   "building": "bld_house_065",
+   "points": [
+    [
+     125.7,
+     313.87
+    ],
+    [
+     126.53,
+     312.91
+    ],
+    [
+     145.03,
+     309.8
+    ],
+    [
+     145.95,
+     310.27
+    ],
+    [
+     146.32,
+     312.07
+    ],
+    [
+     150.43,
+     311.26
+    ],
+    [
+     148.95,
+     303.75
+    ],
+    [
+     135.41,
+     307.06
+    ],
+    [
+     128.89,
+     280.51
+    ],
+    [
+     144.25,
+     279.85
+    ],
+    [
+     127.07,
+     280.59
+    ],
+    [
+     125.56,
+     272.91
+    ],
+    [
+     124.7,
+     272.2
+    ],
+    [
+     110.71,
+     274.94
+    ],
+    [
+     110.04,
+     275.61
+    ],
+    [
+     110.17,
+     276.85
+    ],
+    [
+     92.59,
+     275.56
+    ],
+    [
+     101.52,
+     320.97
+    ],
+    [
+     126.05,
+     316.1
+    ],
+    [
+     125.7,
+     313.87
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_066_fence1",
+   "building": "bld_house_066",
+   "points": [
+    [
+     260.76,
+     286.23
+    ],
+    [
+     261.11,
+     285.09
+    ],
+    [
+     266.35,
+     282.02
+    ],
+    [
+     264.11,
+     278.62
+    ],
+    [
+     249.88,
+     287.93
+    ],
+    [
+     243.4,
+     278.62
+    ],
+    [
+     234.75,
+     283.96
+    ],
+    [
+     234.34,
+     285.08
+    ],
+    [
+     240.29,
+     294.2
+    ],
+    [
+     230.25,
+     300.76
+    ],
+    [
+     234.4,
+     306.53
+    ],
+    [
+     230.38,
+     310.05
+    ],
+    [
+     235.01,
+     317.08
+    ],
+    [
+     243.75,
+     309.31
+    ],
+    [
+     249.59,
+     315.01
+    ],
+    [
+     269.83,
+     301.68
+    ],
+    [
+     260.76,
+     286.23
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_067_fence1",
+   "building": "bld_house_067",
+   "points": [
+    [
+     285.21,
+     294.36
+    ],
+    [
+     282.58,
+     287.73
+    ],
+    [
+     273.48,
+     272.5
+    ],
+    [
+     264.11,
+     278.62
+    ],
+    [
+     266.35,
+     282.02
+    ],
+    [
+     261.11,
+     285.09
+    ],
+    [
+     260.76,
+     286.23
+    ],
+    [
+     269.83,
+     301.68
+    ],
+    [
+     255.62,
+     311.04
+    ],
+    [
+     264.73,
+     326.51
+    ],
+    [
+     267.27,
+     324.02
+    ],
+    [
+     268.29,
+     323.88
+    ],
+    [
+     275.94,
+     331.66
+    ],
+    [
+     275.86,
+     332.85
+    ],
+    [
+     271.28,
+     337.64
+    ],
+    [
+     291.84,
+     325.36
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_069_fence1",
+   "building": "bld_house_069",
+   "points": [
+    [
+     216.76,
+     310.45
+    ],
+    [
+     235.35,
+     327.62
+    ],
+    [
+     237.35,
+     326.1
+    ],
+    [
+     232.3,
+     320.53
+    ],
+    [
+     232.39,
+     319.51
+    ],
+    [
+     235.01,
+     317.08
+    ],
+    [
+     230.38,
+     310.05
+    ],
+    [
+     234.4,
+     306.53
+    ],
+    [
+     225.76,
+     294.95
+    ],
+    [
+     224.04,
+     295.25
+    ],
+    [
+     213.45,
+     303.58
+    ],
+    [
+     217.66,
+     309.84
+    ],
+    [
+     216.76,
+     310.45
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_077_fence1",
+   "building": "bld_house_077",
+   "points": [
+    [
+     148.06,
+     311.73
+    ],
+    [
+     146.32,
+     312.07
+    ],
+    [
+     145.95,
+     310.27
+    ],
+    [
+     145.03,
+     309.8
+    ],
+    [
+     126.53,
+     312.91
+    ],
+    [
+     125.7,
+     313.87
+    ],
+    [
+     126.05,
+     316.1
+    ],
+    [
+     109.37,
+     319.41
+    ],
+    [
+     113.44,
+     343.8
+    ],
+    [
+     168.67,
+     343.8
+    ],
+    [
+     168.02,
+     339.77
+    ],
+    [
+     158.93,
+     342.95
+    ],
+    [
+     148.06,
+     311.73
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_078_fence1",
+   "building": "bld_house_078",
+   "points": [
+    [
+     244.5,
+     337.42
+    ],
+    [
+     244.27,
+     338.24
+    ],
+    [
+     238.45,
+     343.8
+    ],
+    [
+     255.49,
+     343.8
+    ],
+    [
+     252.02,
+     340.22
+    ],
+    [
+     251.92,
+     339.12
+    ],
+    [
+     264.73,
+     326.51
+    ],
+    [
+     255.62,
+     311.04
+    ],
+    [
+     249.59,
+     315.01
+    ],
+    [
+     243.75,
+     309.31
+    ],
+    [
+     232.39,
+     319.51
+    ],
+    [
+     232.3,
+     320.53
+    ],
+    [
+     237.35,
+     326.1
+    ],
+    [
+     235.35,
+     327.62
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_080_fence1",
+   "building": "bld_house_080",
+   "points": [
+    [
+     362.21,
+     342.03
+    ],
+    [
+     361.18,
+     343.0
+    ],
+    [
+     361.19,
+     343.8
+    ],
+    [
+     407.68,
+     343.8
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_house_080_fence2",
+   "building": "bld_house_080",
+   "points": [
+    [
+     409.7,
+     294.22
+    ],
+    [
+     360.41,
+     294.98
+    ],
+    [
+     360.99,
+     331.0
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_stables_fence1",
+   "building": "bld_stables",
+   "points": [
+    [
+     461.34,
+     72.83
+    ],
+    [
+     459.46,
+     84.34
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "bld_stables_fence2",
+   "building": "bld_stables",
+   "points": [
+    [
+     460.14,
+     95.71
+    ],
+    [
+     479.49,
+     115.31
+    ],
+    [
+     524.72,
+     70.99
+    ],
+    [
+     517.51,
+     63.6
+    ],
+    [
+     498.09,
+     81.53
+    ],
+    [
+     494.09,
+     77.2
+    ],
+    [
+     500.07,
+     71.34
+    ],
+    [
+     500.02,
+     70.0
+    ],
+    [
+     484.38,
+     54.02
+    ],
+    [
+     483.27,
+     54.12
+    ],
+    [
+     477.75,
+     59.52
+    ],
+    [
+     471.51,
+     52.77
+    ]
+   ],
+   "detail": true
+  }
+ ],
+ "kerbs": [
+  {
+   "id": "str_003_kerb1",
+   "street": "str_003",
+   "geometry": [
+    [
+     319.01,
+     75.95
+    ],
+    [
+     320.03,
+     75.9
+    ],
+    [
+     329.64,
+     74.89
+    ],
+    [
+     330.76,
+     72.86
+    ],
+    [
+     330.79,
+     72.82
+    ],
+    [
+     330.82,
+     72.78
+    ],
+    [
+     330.85,
+     72.74
+    ],
+    [
+     330.89,
+     72.71
+    ],
+    [
+     330.93,
+     72.68
+    ],
+    [
+     330.97,
+     72.66
+    ],
+    [
+     331.01,
+     72.64
+    ],
+    [
+     331.06,
+     72.62
+    ],
+    [
+     331.11,
+     72.61
+    ],
+    [
+     331.16,
+     72.6
+    ],
+    [
+     331.21,
+     72.6
+    ],
+    [
+     331.26,
+     72.6
+    ],
+    [
+     331.3,
+     72.61
+    ],
+    [
+     331.35,
+     72.62
+    ],
+    [
+     331.4,
+     72.64
+    ],
+    [
+     331.44,
+     72.66
+    ],
+    [
+     333.77,
+     73.94
+    ],
+    [
+     335.57,
+     73.48
+    ],
+    [
+     337.12,
+     72.93
+    ],
+    [
+     341.12,
+     71.1
+    ],
+    [
+     343.11,
+     69.85
+    ],
+    [
+     346.24,
+     67.28
+    ],
+    [
+     347.26,
+     66.14
+    ],
+    [
+     346.58,
+     65.59
+    ],
+    [
+     346.55,
+     65.55
+    ],
+    [
+     346.51,
+     65.52
+    ],
+    [
+     346.49,
+     65.48
+    ],
+    [
+     346.46,
+     65.44
+    ],
+    [
+     346.44,
+     65.39
+    ],
+    [
+     346.42,
+     65.35
+    ],
+    [
+     346.41,
+     65.3
+    ],
+    [
+     346.4,
+     65.25
+    ],
+    [
+     346.4,
+     65.2
+    ],
+    [
+     346.4,
+     65.15
+    ],
+    [
+     346.41,
+     65.1
+    ],
+    [
+     346.42,
+     65.06
+    ],
+    [
+     346.44,
+     65.01
+    ],
+    [
+     346.46,
+     64.97
+    ],
+    [
+     346.48,
+     64.92
+    ],
+    [
+     346.51,
+     64.88
+    ],
+    [
+     351.59,
+     58.65
+    ],
+    [
+     352.43,
+     54.96
+    ],
+    [
+     352.64,
+     52.36
+    ],
+    [
+     351.94,
+     41.05
+    ],
+    [
+     330.69,
+     42.36
+    ],
+    [
+     331.28,
+     51.92
+    ],
+    [
+     331.25,
+     52.03
+    ],
+    [
+     330.8,
+     52.4
+    ],
+    [
+     329.23,
+     53.12
+    ],
+    [
+     326.61,
+     53.79
+    ],
+    [
+     318.48,
+     54.65
+    ],
+    [
+     307.62,
+     54.57
+    ],
+    [
+     306.77,
+     55.12
+    ],
+    [
+     306.73,
+     55.14
+    ],
+    [
+     306.68,
+     55.16
+    ],
+    [
+     306.64,
+     55.18
+    ],
+    [
+     306.59,
+     55.19
+    ],
+    [
+     306.54,
+     55.2
+    ],
+    [
+     306.49,
+     55.2
+    ],
+    [
+     306.44,
+     55.2
+    ],
+    [
+     306.4,
+     55.19
+    ],
+    [
+     306.35,
+     55.18
+    ],
+    [
+     306.3,
+     55.16
+    ],
+    [
+     306.26,
+     55.14
+    ],
+    [
+     306.22,
+     55.11
+    ],
+    [
+     306.18,
+     55.08
+    ],
+    [
+     306.14,
+     55.05
+    ],
+    [
+     306.11,
+     55.01
+    ],
+    [
+     306.08,
+     54.97
+    ],
+    [
+     305.81,
+     54.56
+    ],
+    [
+     304.65,
+     54.55
+    ],
+    [
+     280.59,
+     52.24
+    ],
+    [
+     239.91,
+     45.4
+    ],
+    [
+     236.38,
+     66.41
+    ],
+    [
+     257.17,
+     69.9
+    ],
+    [
+     257.38,
+     69.72
+    ],
+    [
+     257.41,
+     69.69
+    ],
+    [
+     257.46,
+     69.66
+    ],
+    [
+     257.5,
+     69.64
+    ],
+    [
+     257.55,
+     69.62
+    ],
+    [
+     257.59,
+     69.61
+    ],
+    [
+     257.64,
+     69.6
+    ],
+    [
+     257.69,
+     69.6
+    ],
+    [
+     257.74,
+     69.6
+    ],
+    [
+     257.79,
+     69.61
+    ],
+    [
+     257.84,
+     69.62
+    ],
+    [
+     257.88,
+     69.63
+    ],
+    [
+     257.93,
+     69.66
+    ],
+    [
+     257.97,
+     69.68
+    ],
+    [
+     258.01,
+     69.71
+    ],
+    [
+     258.05,
+     69.74
+    ],
+    [
+     258.08,
+     69.78
+    ],
+    [
+     258.35,
+     70.1
+    ],
+    [
+     277.49,
+     73.31
+    ],
+    [
+     278.13,
+     73.4
+    ],
+    [
+     303.14,
+     75.81
+    ],
+    [
+     303.96,
+     75.85
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "str_004_kerb1",
+   "street": "str_004",
+   "geometry": [
+    [
+     443.03,
+     66.65
+    ],
+    [
+     442.58,
+     68.2
+    ],
+    [
+     440.74,
+     77.51
+    ],
+    [
+     440.6,
+     78.5
+    ],
+    [
+     440.18,
+     83.27
+    ],
+    [
+     440.15,
+     84.35
+    ],
+    [
+     440.22,
+     86.5
+    ],
+    [
+     441.54,
+     87.74
+    ],
+    [
+     441.58,
+     87.77
+    ],
+    [
+     441.61,
+     87.81
+    ],
+    [
+     441.63,
+     87.85
+    ],
+    [
+     441.66,
+     87.89
+    ],
+    [
+     441.67,
+     87.94
+    ],
+    [
+     441.69,
+     87.99
+    ],
+    [
+     441.7,
+     88.03
+    ],
+    [
+     441.7,
+     88.08
+    ],
+    [
+     441.7,
+     88.13
+    ],
+    [
+     441.69,
+     88.18
+    ],
+    [
+     441.68,
+     88.23
+    ],
+    [
+     441.67,
+     88.28
+    ],
+    [
+     441.65,
+     88.32
+    ],
+    [
+     441.62,
+     88.36
+    ],
+    [
+     441.6,
+     88.4
+    ],
+    [
+     441.57,
+     88.44
+    ],
+    [
+     440.33,
+     89.77
+    ],
+    [
+     440.46,
+     93.92
+    ],
+    [
+     440.54,
+     94.88
+    ],
+    [
+     443.56,
+     116.73
+    ],
+    [
+     464.66,
+     113.81
+    ],
+    [
+     461.73,
+     92.6
+    ],
+    [
+     461.46,
+     84.39
+    ],
+    [
+     461.76,
+     81.0
+    ],
+    [
+     463.26,
+     73.4
+    ],
+    [
+     466.03,
+     66.32
+    ],
+    [
+     477.18,
+     46.92
+    ],
+    [
+     477.72,
+     45.82
+    ],
+    [
+     480.77,
+     38.36
+    ],
+    [
+     481.45,
+     34.89
+    ],
+    [
+     481.45,
+     31.27
+    ],
+    [
+     481.01,
+     28.46
+    ],
+    [
+     479.95,
+     25.15
+    ],
+    [
+     478.13,
+     21.93
+    ],
+    [
+     471.85,
+     14.74
+    ],
+    [
+     455.8,
+     28.74
+    ],
+    [
+     459.81,
+     33.34
+    ],
+    [
+     458.31,
+     37.01
+    ],
+    [
+     447.11,
+     56.49
+    ],
+    [
+     446.52,
+     57.72
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "str_005_kerb1",
+   "street": "str_005",
+   "geometry": [
+    [
+     286.02,
+     207.73
+    ],
+    [
+     286.65,
+     206.51
+    ],
+    [
+     288.14,
+     203.12
+    ],
+    [
+     288.12,
+     203.11
+    ],
+    [
+     288.08,
+     203.08
+    ],
+    [
+     288.04,
+     203.05
+    ],
+    [
+     288.01,
+     203.01
+    ],
+    [
+     287.98,
+     202.97
+    ],
+    [
+     287.96,
+     202.93
+    ],
+    [
+     287.94,
+     202.89
+    ],
+    [
+     287.92,
+     202.84
+    ],
+    [
+     287.91,
+     202.79
+    ],
+    [
+     287.9,
+     202.75
+    ],
+    [
+     287.9,
+     202.7
+    ],
+    [
+     287.9,
+     202.65
+    ],
+    [
+     289.8,
+     184.45
+    ],
+    [
+     289.81,
+     184.4
+    ],
+    [
+     289.82,
+     184.35
+    ],
+    [
+     289.84,
+     184.31
+    ],
+    [
+     289.86,
+     184.26
+    ],
+    [
+     289.89,
+     184.22
+    ],
+    [
+     289.92,
+     184.18
+    ],
+    [
+     289.95,
+     184.14
+    ],
+    [
+     289.98,
+     184.11
+    ],
+    [
+     290.02,
+     184.08
+    ],
+    [
+     290.07,
+     184.06
+    ],
+    [
+     290.11,
+     184.04
+    ],
+    [
+     290.16,
+     184.02
+    ],
+    [
+     290.2,
+     184.01
+    ],
+    [
+     290.25,
+     184.0
+    ],
+    [
+     290.3,
+     184.0
+    ],
+    [
+     290.35,
+     184.0
+    ],
+    [
+     291.08,
+     184.08
+    ],
+    [
+     291.04,
+     182.67
+    ],
+    [
+     288.88,
+     163.76
+    ],
+    [
+     288.52,
+     150.52
+    ],
+    [
+     290.17,
+     137.91
+    ],
+    [
+     293.83,
+     125.64
+    ],
+    [
+     299.54,
+     113.76
+    ],
+    [
+     304.86,
+     105.13
+    ],
+    [
+     310.65,
+     92.98
+    ],
+    [
+     310.67,
+     92.94
+    ],
+    [
+     310.7,
+     92.9
+    ],
+    [
+     310.73,
+     92.86
+    ],
+    [
+     310.76,
+     92.83
+    ],
+    [
+     310.8,
+     92.8
+    ],
+    [
+     310.84,
+     92.77
+    ],
+    [
+     310.89,
+     92.75
+    ],
+    [
+     310.93,
+     92.73
+    ],
+    [
+     310.98,
+     92.72
+    ],
+    [
+     311.03,
+     92.71
+    ],
+    [
+     311.08,
+     92.7
+    ],
+    [
+     311.12,
+     92.7
+    ],
+    [
+     311.17,
+     92.71
+    ],
+    [
+     311.22,
+     92.71
+    ],
+    [
+     311.27,
+     92.73
+    ],
+    [
+     311.31,
+     92.75
+    ],
+    [
+     312.96,
+     93.52
+    ],
+    [
+     317.8,
+     86.85
+    ],
+    [
+     326.56,
+     76.21
+    ],
+    [
+     339.66,
+     63.3
+    ],
+    [
+     354.26,
+     51.71
+    ],
+    [
+     374.15,
+     38.49
+    ],
+    [
+     385.1,
+     32.11
+    ],
+    [
+     385.1,
+     32.1
+    ],
+    [
+     385.1,
+     32.05
+    ],
+    [
+     385.11,
+     32.0
+    ],
+    [
+     385.12,
+     31.95
+    ],
+    [
+     385.14,
+     31.91
+    ],
+    [
+     385.16,
+     31.86
+    ],
+    [
+     385.19,
+     31.82
+    ],
+    [
+     385.21,
+     31.78
+    ],
+    [
+     385.25,
+     31.75
+    ],
+    [
+     385.28,
+     31.71
+    ],
+    [
+     385.32,
+     31.68
+    ],
+    [
+     395.52,
+     24.88
+    ],
+    [
+     395.56,
+     24.86
+    ],
+    [
+     395.61,
+     24.84
+    ],
+    [
+     395.66,
+     24.82
+    ],
+    [
+     395.7,
+     24.81
+    ],
+    [
+     395.75,
+     24.8
+    ],
+    [
+     395.8,
+     24.8
+    ],
+    [
+     395.85,
+     24.8
+    ],
+    [
+     395.9,
+     24.81
+    ],
+    [
+     395.95,
+     24.82
+    ],
+    [
+     395.99,
+     24.84
+    ],
+    [
+     396.04,
+     24.86
+    ],
+    [
+     396.08,
+     24.88
+    ],
+    [
+     396.12,
+     24.91
+    ],
+    [
+     396.15,
+     24.95
+    ],
+    [
+     396.19,
+     24.98
+    ],
+    [
+     396.22,
+     25.02
+    ],
+    [
+     396.75,
+     25.82
+    ],
+    [
+     398.92,
+     24.66
+    ],
+    [
+     407.29,
+     20.85
+    ],
+    [
+     422.08,
+     13.55
+    ],
+    [
+     422.12,
+     13.53
+    ],
+    [
+     422.17,
+     13.52
+    ],
+    [
+     422.22,
+     13.51
+    ],
+    [
+     422.27,
+     13.5
+    ],
+    [
+     422.32,
+     13.5
+    ],
+    [
+     422.36,
+     13.5
+    ],
+    [
+     422.41,
+     13.51
+    ],
+    [
+     422.46,
+     13.53
+    ],
+    [
+     422.5,
+     13.54
+    ],
+    [
+     422.55,
+     13.57
+    ],
+    [
+     422.59,
+     13.59
+    ],
+    [
+     422.63,
+     13.62
+    ],
+    [
+     422.66,
+     13.66
+    ],
+    [
+     422.7,
+     13.69
+    ],
+    [
+     422.72,
+     13.73
+    ],
+    [
+     422.75,
+     13.78
+    ],
+    [
+     423.04,
+     14.36
+    ],
+    [
+     424.63,
+     13.8
+    ],
+    [
+     420.96,
+     3.5
+    ],
+    [
+     417.77,
+     3.5
+    ],
+    [
+     420.79,
+     11.98
+    ],
+    [
+     414.98,
+     14.05
+    ],
+    [
+     397.59,
+     21.97
+    ],
+    [
+     384.89,
+     28.76
+    ],
+    [
+     372.56,
+     35.94
+    ],
+    [
+     352.5,
+     49.28
+    ],
+    [
+     337.67,
+     61.05
+    ],
+    [
+     324.35,
+     74.18
+    ],
+    [
+     315.42,
+     85.01
+    ],
+    [
+     304.19,
+     100.51
+    ],
+    [
+     296.91,
+     112.32
+    ],
+    [
+     291.02,
+     124.56
+    ],
+    [
+     287.23,
+     137.28
+    ],
+    [
+     285.52,
+     150.37
+    ],
+    [
+     285.89,
+     163.97
+    ],
+    [
+     288.04,
+     182.88
+    ],
+    [
+     288.09,
+     184.39
+    ],
+    [
+     287.59,
+     193.59
+    ],
+    [
+     287.33,
+     195.28
+    ],
+    [
+     286.23,
+     199.68
+    ],
+    [
+     285.74,
+     201.12
+    ],
+    [
+     283.94,
+     205.22
+    ],
+    [
+     283.4,
+     206.26
+    ],
+    [
+     281.1,
+     210.06
+    ],
+    [
+     280.06,
+     211.45
+    ],
+    [
+     274.16,
+     217.95
+    ],
+    [
+     273.31,
+     218.77
+    ],
+    [
+     264.21,
+     226.47
+    ],
+    [
+     252.59,
+     212.73
+    ],
+    [
+     261.23,
+     205.41
+    ],
+    [
+     266.15,
+     200.0
+    ],
+    [
+     267.7,
+     197.44
+    ],
+    [
+     268.95,
+     194.58
+    ],
+    [
+     269.66,
+     191.75
+    ],
+    [
+     270.07,
+     184.17
+    ],
+    [
+     267.96,
+     165.62
+    ],
+    [
+     267.9,
+     164.84
+    ],
+    [
+     267.5,
+     150.14
+    ],
+    [
+     267.58,
+     148.73
+    ],
+    [
+     269.48,
+     134.23
+    ],
+    [
+     269.77,
+     132.83
+    ],
+    [
+     273.97,
+     118.73
+    ],
+    [
+     274.49,
+     117.4
+    ],
+    [
+     280.89,
+     104.1
+    ],
+    [
+     281.34,
+     103.28
+    ],
+    [
+     289.04,
+     90.78
+    ],
+    [
+     289.41,
+     90.22
+    ],
+    [
+     301.01,
+     74.22
+    ],
+    [
+     301.36,
+     73.77
+    ],
+    [
+     310.76,
+     62.37
+    ],
+    [
+     311.38,
+     61.69
+    ],
+    [
+     325.38,
+     47.89
+    ],
+    [
+     326.11,
+     47.25
+    ],
+    [
+     341.61,
+     34.95
+    ],
+    [
+     342.22,
+     34.51
+    ],
+    [
+     362.82,
+     20.81
+    ],
+    [
+     363.27,
+     20.52
+    ],
+    [
+     375.97,
+     13.12
+    ],
+    [
+     376.26,
+     12.96
+    ],
+    [
+     389.36,
+     5.96
+    ],
+    [
+     389.87,
+     5.71
+    ],
+    [
+     394.72,
+     3.5
+    ],
+    [
+     387.6,
+     3.5
+    ],
+    [
+     374.82,
+     10.33
+    ],
+    [
+     374.48,
+     10.52
+    ],
+    [
+     361.72,
+     17.95
+    ],
+    [
+     361.19,
+     18.28
+    ],
+    [
+     340.5,
+     32.04
+    ],
+    [
+     339.79,
+     32.56
+    ],
+    [
+     324.18,
+     44.95
+    ],
+    [
+     323.33,
+     45.7
+    ],
+    [
+     309.22,
+     59.61
+    ],
+    [
+     308.49,
+     60.41
+    ],
+    [
+     299.01,
+     71.9
+    ],
+    [
+     298.61,
+     72.42
+    ],
+    [
+     286.95,
+     88.5
+    ],
+    [
+     286.51,
+     89.16
+    ],
+    [
+     284.66,
+     92.16
+    ],
+    [
+     285.95,
+     93.44
+    ],
+    [
+     285.99,
+     93.48
+    ],
+    [
+     286.01,
+     93.52
+    ],
+    [
+     286.04,
+     93.56
+    ],
+    [
+     286.06,
+     93.61
+    ],
+    [
+     286.08,
+     93.65
+    ],
+    [
+     286.09,
+     93.7
+    ],
+    [
+     286.1,
+     93.75
+    ],
+    [
+     286.1,
+     93.8
+    ],
+    [
+     286.1,
+     93.85
+    ],
+    [
+     286.09,
+     93.9
+    ],
+    [
+     286.08,
+     93.94
+    ],
+    [
+     286.06,
+     93.99
+    ],
+    [
+     286.04,
+     94.03
+    ],
+    [
+     286.02,
+     94.08
+    ],
+    [
+     285.99,
+     94.12
+    ],
+    [
+     285.96,
+     94.15
+    ],
+    [
+     279.3,
+     100.87
+    ],
+    [
+     278.74,
+     101.77
+    ],
+    [
+     278.22,
+     102.73
+    ],
+    [
+     271.74,
+     116.2
+    ],
+    [
+     271.13,
+     117.76
+    ],
+    [
+     266.87,
+     132.09
+    ],
+    [
+     266.52,
+     133.72
+    ],
+    [
+     264.59,
+     148.46
+    ],
+    [
+     264.5,
+     150.11
+    ],
+    [
+     264.91,
+     164.99
+    ],
+    [
+     264.97,
+     165.89
+    ],
+    [
+     267.06,
+     184.26
+    ],
+    [
+     266.68,
+     191.3
+    ],
+    [
+     266.1,
+     193.61
+    ],
+    [
+     265.03,
+     196.06
+    ],
+    [
+     263.73,
+     198.19
+    ],
+    [
+     259.15,
+     203.25
+    ],
+    [
+     248.36,
+     212.38
+    ],
+    [
+     263.86,
+     230.7
+    ],
+    [
+     275.33,
+     221.0
+    ],
+    [
+     276.32,
+     220.04
+    ],
+    [
+     282.38,
+     213.36
+    ],
+    [
+     283.59,
+     211.74
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "str_008_kerb1",
+   "street": "str_008",
+   "geometry": [
+    [
+     165.4,
+     220.45
+    ],
+    [
+     183.45,
+     211.93
+    ],
+    [
+     183.69,
+     211.81
+    ],
+    [
+     213.71,
+     196.8
+    ],
+    [
+     223.31,
+     190.09
+    ],
+    [
+     223.36,
+     190.06
+    ],
+    [
+     223.4,
+     190.04
+    ],
+    [
+     223.45,
+     190.02
+    ],
+    [
+     223.49,
+     190.01
+    ],
+    [
+     223.54,
+     190.0
+    ],
+    [
+     223.59,
+     190.0
+    ],
+    [
+     223.64,
+     190.0
+    ],
+    [
+     223.69,
+     190.01
+    ],
+    [
+     223.74,
+     190.02
+    ],
+    [
+     223.78,
+     190.03
+    ],
+    [
+     223.83,
+     190.05
+    ],
+    [
+     223.87,
+     190.08
+    ],
+    [
+     223.91,
+     190.11
+    ],
+    [
+     223.95,
+     190.14
+    ],
+    [
+     223.98,
+     190.18
+    ],
+    [
+     224.01,
+     190.22
+    ],
+    [
+     224.79,
+     191.33
+    ],
+    [
+     236.6,
+     186.03
+    ],
+    [
+     249.53,
+     180.75
+    ],
+    [
+     257.75,
+     178.24
+    ],
+    [
+     270.97,
+     175.78
+    ],
+    [
+     280.04,
+     174.86
+    ],
+    [
+     309.51,
+     173.18
+    ],
+    [
+     310.38,
+     173.09
+    ],
+    [
+     320.28,
+     171.78
+    ],
+    [
+     321.04,
+     171.65
+    ],
+    [
+     335.63,
+     168.73
+    ],
+    [
+     336.34,
+     168.57
+    ],
+    [
+     355.62,
+     163.45
+    ],
+    [
+     356.13,
+     163.3
+    ],
+    [
+     373.18,
+     157.94
+    ],
+    [
+     373.18,
+     157.93
+    ],
+    [
+     373.21,
+     157.89
+    ],
+    [
+     373.24,
+     157.85
+    ],
+    [
+     373.28,
+     157.82
+    ],
+    [
+     373.32,
+     157.79
+    ],
+    [
+     373.36,
+     157.76
+    ],
+    [
+     373.4,
+     157.74
+    ],
+    [
+     373.45,
+     157.72
+    ],
+    [
+     373.5,
+     157.71
+    ],
+    [
+     373.55,
+     157.7
+    ],
+    [
+     373.6,
+     157.7
+    ],
+    [
+     373.94,
+     157.7
+    ],
+    [
+     407.93,
+     146.99
+    ],
+    [
+     452.71,
+     135.43
+    ],
+    [
+     446.1,
+     109.87
+    ],
+    [
+     400.96,
+     121.53
+    ],
+    [
+     400.37,
+     121.7
+    ],
+    [
+     348.52,
+     138.02
+    ],
+    [
+     330.01,
+     142.94
+    ],
+    [
+     316.34,
+     145.67
+    ],
+    [
+     307.45,
+     146.85
+    ],
+    [
+     278.21,
+     148.52
+    ],
+    [
+     277.71,
+     148.56
+    ],
+    [
+     267.71,
+     149.57
+    ],
+    [
+     266.75,
+     149.71
+    ],
+    [
+     252.1,
+     152.44
+    ],
+    [
+     250.83,
+     152.75
+    ],
+    [
+     246.01,
+     154.22
+    ],
+    [
+     244.49,
+     156.11
+    ],
+    [
+     244.46,
+     156.15
+    ],
+    [
+     244.42,
+     156.18
+    ],
+    [
+     244.38,
+     156.21
+    ],
+    [
+     244.34,
+     156.24
+    ],
+    [
+     244.3,
+     156.26
+    ],
+    [
+     244.25,
+     156.28
+    ],
+    [
+     244.2,
+     156.29
+    ],
+    [
+     244.16,
+     156.3
+    ],
+    [
+     244.11,
+     156.3
+    ],
+    [
+     244.06,
+     156.3
+    ],
+    [
+     244.01,
+     156.29
+    ],
+    [
+     243.96,
+     156.28
+    ],
+    [
+     243.91,
+     156.26
+    ],
+    [
+     243.87,
+     156.24
+    ],
+    [
+     243.83,
+     156.22
+    ],
+    [
+     243.79,
+     156.19
+    ],
+    [
+     242.62,
+     155.26
+    ],
+    [
+     241.18,
+     155.7
+    ],
+    [
+     240.17,
+     156.06
+    ],
+    [
+     226.38,
+     161.69
+    ],
+    [
+     226.02,
+     161.85
+    ],
+    [
+     212.37,
+     167.97
+    ],
+    [
+     211.92,
+     168.18
+    ],
+    [
+     172.03,
+     188.13
+    ],
+    [
+     154.44,
+     196.43
+    ],
+    [
+     141.29,
+     201.91
+    ],
+    [
+     123.0,
+     208.63
+    ],
+    [
+     122.35,
+     208.89
+    ],
+    [
+     113.16,
+     212.91
+    ],
+    [
+     122.97,
+     235.32
+    ],
+    [
+     125.44,
+     235.5
+    ],
+    [
+     125.49,
+     235.51
+    ],
+    [
+     125.53,
+     235.52
+    ],
+    [
+     125.58,
+     235.53
+    ],
+    [
+     125.62,
+     235.55
+    ],
+    [
+     125.67,
+     235.58
+    ],
+    [
+     125.71,
+     235.61
+    ],
+    [
+     125.74,
+     235.64
+    ],
+    [
+     125.78,
+     235.67
+    ],
+    [
+     125.81,
+     235.71
+    ],
+    [
+     125.83,
+     235.75
+    ],
+    [
+     125.86,
+     235.8
+    ],
+    [
+     125.87,
+     235.84
+    ],
+    [
+     125.89,
+     235.89
+    ],
+    [
+     125.9,
+     235.94
+    ],
+    [
+     125.9,
+     235.99
+    ],
+    [
+     125.9,
+     236.04
+    ],
+    [
+     125.89,
+     236.16
+    ],
+    [
+     132.53,
+     233.25
+    ],
+    [
+     150.68,
+     226.58
+    ],
+    [
+     151.14,
+     226.4
+    ],
+    [
+     164.9,
+     220.67
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "str_009_kerb1",
+   "street": "str_009",
+   "geometry": [
+    [
+     428.76,
+     123.54
+    ],
+    [
+     424.39,
+     132.47
+    ],
+    [
+     423.93,
+     133.53
+    ],
+    [
+     420.29,
+     142.94
+    ],
+    [
+     419.93,
+     144.0
+    ],
+    [
+     414.29,
+     163.13
+    ],
+    [
+     413.96,
+     164.49
+    ],
+    [
+     412.9,
+     170.22
+    ],
+    [
+     442.4,
+     175.68
+    ],
+    [
+     443.31,
+     170.8
+    ],
+    [
+     448.51,
+     153.14
+    ],
+    [
+     451.66,
+     145.01
+    ],
+    [
+     455.32,
+     137.51
+    ],
+    [
+     466.21,
+     120.21
+    ],
+    [
+     467.76,
+     116.73
+    ],
+    [
+     468.52,
+     114.08
+    ],
+    [
+     468.81,
+     107.88
+    ],
+    [
+     468.39,
+     105.66
+    ],
+    [
+     466.62,
+     101.07
+    ],
+    [
+     464.1,
+     96.98
+    ],
+    [
+     449.58,
+     105.92
+    ],
+    [
+     440.4,
+     103.29
+    ],
+    [
+     439.56,
+     106.22
+    ],
+    [
+     429.46,
+     122.28
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "str_011_kerb1",
+   "street": "str_011",
+   "geometry": [
+    [
+     185.27,
+     132.68
+    ],
+    [
+     190.86,
+     136.77
+    ],
+    [
+     196.28,
+     142.44
+    ],
+    [
+     204.69,
+     153.25
+    ],
+    [
+     215.33,
+     168.97
+    ],
+    [
+     227.71,
+     189.73
+    ],
+    [
+     236.97,
+     206.6
+    ],
+    [
+     239.71,
+     212.08
+    ],
+    [
+     246.01,
+     221.32
+    ],
+    [
+     246.04,
+     221.36
+    ],
+    [
+     246.06,
+     221.4
+    ],
+    [
+     246.08,
+     221.45
+    ],
+    [
+     246.09,
+     221.5
+    ],
+    [
+     246.1,
+     221.55
+    ],
+    [
+     246.1,
+     221.59
+    ],
+    [
+     246.1,
+     221.64
+    ],
+    [
+     246.09,
+     221.69
+    ],
+    [
+     246.08,
+     221.74
+    ],
+    [
+     246.06,
+     221.79
+    ],
+    [
+     246.04,
+     221.83
+    ],
+    [
+     246.02,
+     221.87
+    ],
+    [
+     245.99,
+     221.91
+    ],
+    [
+     245.96,
+     221.95
+    ],
+    [
+     245.92,
+     221.98
+    ],
+    [
+     245.88,
+     222.01
+    ],
+    [
+     244.99,
+     222.63
+    ],
+    [
+     263.48,
+     259.62
+    ],
+    [
+     263.91,
+     260.4
+    ],
+    [
+     280.78,
+     288.62
+    ],
+    [
+     283.27,
+     294.9
+    ],
+    [
+     285.38,
+     307.46
+    ],
+    [
+     285.73,
+     308.05
+    ],
+    [
+     285.75,
+     308.09
+    ],
+    [
+     285.77,
+     308.13
+    ],
+    [
+     285.79,
+     308.18
+    ],
+    [
+     285.79,
+     308.23
+    ],
+    [
+     285.8,
+     308.28
+    ],
+    [
+     285.8,
+     308.33
+    ],
+    [
+     285.79,
+     308.38
+    ],
+    [
+     285.78,
+     308.42
+    ],
+    [
+     285.77,
+     308.47
+    ],
+    [
+     285.75,
+     308.52
+    ],
+    [
+     285.73,
+     308.56
+    ],
+    [
+     285.7,
+     308.6
+    ],
+    [
+     285.67,
+     308.64
+    ],
+    [
+     285.64,
+     308.67
+    ],
+    [
+     285.6,
+     308.7
+    ],
+    [
+     285.59,
+     308.7
+    ],
+    [
+     286.15,
+     311.98
+    ],
+    [
+     286.36,
+     312.98
+    ],
+    [
+     288.68,
+     321.98
+    ],
+    [
+     288.86,
+     322.6
+    ],
+    [
+     295.59,
+     343.8
+    ],
+    [
+     298.73,
+     343.8
+    ],
+    [
+     291.73,
+     321.73
+    ],
+    [
+     291.58,
+     321.19
+    ],
+    [
+     289.28,
+     312.29
+    ],
+    [
+     289.09,
+     311.42
+    ],
+    [
+     286.17,
+     294.09
+    ],
+    [
+     283.48,
+     287.29
+    ],
+    [
+     266.52,
+     258.91
+    ],
+    [
+     266.14,
+     258.23
+    ],
+    [
+     239.63,
+     205.21
+    ],
+    [
+     230.32,
+     188.24
+    ],
+    [
+     217.86,
+     167.36
+    ],
+    [
+     207.12,
+     151.48
+    ],
+    [
+     198.56,
+     140.47
+    ],
+    [
+     192.85,
+     134.51
+    ],
+    [
+     186.83,
+     130.1
+    ],
+    [
+     184.69,
+     129.05
+    ],
+    [
+     182.53,
+     128.49
+    ],
+    [
+     180.39,
+     128.39
+    ],
+    [
+     178.09,
+     128.71
+    ],
+    [
+     176.57,
+     129.22
+    ],
+    [
+     170.03,
+     109.58
+    ],
+    [
+     172.43,
+     108.78
+    ],
+    [
+     174.24,
+     108.35
+    ],
+    [
+     178.44,
+     107.75
+    ],
+    [
+     180.39,
+     107.66
+    ],
+    [
+     184.59,
+     107.86
+    ],
+    [
+     186.72,
+     108.19
+    ],
+    [
+     190.92,
+     109.29
+    ],
+    [
+     192.83,
+     110.0
+    ],
+    [
+     196.73,
+     111.9
+    ],
+    [
+     198.32,
+     112.85
+    ],
+    [
+     205.82,
+     118.35
+    ],
+    [
+     207.18,
+     119.54
+    ],
+    [
+     213.88,
+     126.54
+    ],
+    [
+     214.57,
+     127.35
+    ],
+    [
+     223.67,
+     139.05
+    ],
+    [
+     224.07,
+     139.6
+    ],
+    [
+     235.17,
+     156.0
+    ],
+    [
+     235.49,
+     156.5
+    ],
+    [
+     248.19,
+     177.8
+    ],
+    [
+     248.37,
+     178.12
+    ],
+    [
+     257.87,
+     195.42
+    ],
+    [
+     258.06,
+     195.77
+    ],
+    [
+     284.48,
+     248.62
+    ],
+    [
+     301.68,
+     277.39
+    ],
+    [
+     302.43,
+     278.89
+    ],
+    [
+     305.83,
+     287.49
+    ],
+    [
+     306.41,
+     289.58
+    ],
+    [
+     309.43,
+     307.54
+    ],
+    [
+     311.55,
+     315.74
+    ],
+    [
+     318.53,
+     337.74
+    ],
+    [
+     319.4,
+     339.82
+    ],
+    [
+     309.84,
+     343.8
+    ],
+    [
+     317.65,
+     343.8
+    ],
+    [
+     323.32,
+     341.44
+    ],
+    [
+     321.35,
+     336.71
+    ],
+    [
+     319.86,
+     332.0
+    ],
+    [
+     318.13,
+     332.1
+    ],
+    [
+     318.08,
+     332.1
+    ],
+    [
+     318.03,
+     332.1
+    ],
+    [
+     317.98,
+     332.09
+    ],
+    [
+     317.94,
+     332.07
+    ],
+    [
+     317.89,
+     332.05
+    ],
+    [
+     317.85,
+     332.03
+    ],
+    [
+     317.81,
+     332.0
+    ],
+    [
+     317.77,
+     331.97
+    ],
+    [
+     317.73,
+     331.94
+    ],
+    [
+     317.7,
+     331.9
+    ],
+    [
+     317.67,
+     331.86
+    ],
+    [
+     317.65,
+     331.82
+    ],
+    [
+     317.63,
+     331.77
+    ],
+    [
+     317.62,
+     331.73
+    ],
+    [
+     317.61,
+     331.68
+    ],
+    [
+     317.6,
+     331.63
+    ],
+    [
+     317.08,
+     323.24
+    ],
+    [
+     314.43,
+     314.91
+    ],
+    [
+     312.37,
+     306.92
+    ],
+    [
+     309.34,
+     288.93
+    ],
+    [
+     308.67,
+     286.54
+    ],
+    [
+     305.17,
+     277.68
+    ],
+    [
+     304.32,
+     275.95
+    ],
+    [
+     299.68,
+     268.19
+    ],
+    [
+     298.8,
+     268.2
+    ],
+    [
+     298.76,
+     268.2
+    ],
+    [
+     298.71,
+     268.19
+    ],
+    [
+     298.66,
+     268.18
+    ],
+    [
+     298.61,
+     268.16
+    ],
+    [
+     298.57,
+     268.14
+    ],
+    [
+     298.53,
+     268.12
+    ],
+    [
+     298.49,
+     268.09
+    ],
+    [
+     298.45,
+     268.06
+    ],
+    [
+     298.42,
+     268.02
+    ],
+    [
+     298.39,
+     267.98
+    ],
+    [
+     298.36,
+     267.94
+    ],
+    [
+     298.34,
+     267.9
+    ],
+    [
+     298.32,
+     267.85
+    ],
+    [
+     298.31,
+     267.8
+    ],
+    [
+     298.3,
+     267.75
+    ],
+    [
+     298.3,
+     267.7
+    ],
+    [
+     298.29,
+     265.86
+    ],
+    [
+     287.12,
+     247.18
+    ],
+    [
+     260.73,
+     194.4
+    ],
+    [
+     260.52,
+     194.0
+    ],
+    [
+     250.99,
+     176.65
+    ],
+    [
+     250.78,
+     176.29
+    ],
+    [
+     238.04,
+     154.93
+    ],
+    [
+     237.68,
+     154.35
+    ],
+    [
+     233.23,
+     147.78
+    ],
+    [
+     231.49,
+     146.39
+    ],
+    [
+     231.45,
+     146.36
+    ],
+    [
+     231.42,
+     146.32
+    ],
+    [
+     231.39,
+     146.28
+    ],
+    [
+     231.36,
+     146.24
+    ],
+    [
+     231.34,
+     146.2
+    ],
+    [
+     231.32,
+     146.15
+    ],
+    [
+     231.31,
+     146.1
+    ],
+    [
+     231.3,
+     146.06
+    ],
+    [
+     231.3,
+     146.01
+    ],
+    [
+     231.3,
+     145.96
+    ],
+    [
+     231.31,
+     145.91
+    ],
+    [
+     231.32,
+     145.86
+    ],
+    [
+     231.34,
+     145.81
+    ],
+    [
+     231.36,
+     145.77
+    ],
+    [
+     231.38,
+     145.73
+    ],
+    [
+     231.41,
+     145.69
+    ],
+    [
+     231.63,
+     145.41
+    ],
+    [
+     226.53,
+     137.88
+    ],
+    [
+     226.07,
+     137.24
+    ],
+    [
+     223.9,
+     134.45
+    ],
+    [
+     215.57,
+     127.07
+    ],
+    [
+     215.53,
+     127.04
+    ],
+    [
+     215.5,
+     127.0
+    ],
+    [
+     215.47,
+     126.96
+    ],
+    [
+     215.45,
+     126.92
+    ],
+    [
+     215.43,
+     126.87
+    ],
+    [
+     215.42,
+     126.83
+    ],
+    [
+     215.41,
+     126.78
+    ],
+    [
+     215.4,
+     126.73
+    ],
+    [
+     215.4,
+     126.68
+    ],
+    [
+     215.4,
+     126.63
+    ],
+    [
+     215.41,
+     126.58
+    ],
+    [
+     215.43,
+     126.54
+    ],
+    [
+     215.45,
+     126.49
+    ],
+    [
+     215.47,
+     126.45
+    ],
+    [
+     215.5,
+     126.41
+    ],
+    [
+     215.53,
+     126.37
+    ],
+    [
+     216.63,
+     125.14
+    ],
+    [
+     216.1,
+     124.52
+    ],
+    [
+     209.25,
+     117.37
+    ],
+    [
+     207.7,
+     116.01
+    ],
+    [
+     201.68,
+     111.6
+    ],
+    [
+     201.65,
+     111.6
+    ],
+    [
+     201.6,
+     111.59
+    ],
+    [
+     201.55,
+     111.58
+    ],
+    [
+     201.5,
+     111.56
+    ],
+    [
+     201.46,
+     111.54
+    ],
+    [
+     201.42,
+     111.51
+    ],
+    [
+     197.95,
+     109.15
+    ],
+    [
+     194.01,
+     107.23
+    ],
+    [
+     191.83,
+     106.42
+    ],
+    [
+     187.33,
+     105.25
+    ],
+    [
+     184.89,
+     104.87
+    ],
+    [
+     180.39,
+     104.66
+    ],
+    [
+     178.15,
+     104.76
+    ],
+    [
+     173.68,
+     105.4
+    ],
+    [
+     171.61,
+     105.89
+    ],
+    [
+     166.23,
+     107.68
+    ],
+    [
+     171.9,
+     124.68
+    ],
+    [
+     174.72,
+     127.01
+    ],
+    [
+     174.76,
+     127.05
+    ],
+    [
+     174.79,
+     127.08
+    ],
+    [
+     174.82,
+     127.12
+    ],
+    [
+     174.84,
+     127.17
+    ],
+    [
+     174.86,
+     127.21
+    ],
+    [
+     174.88,
+     127.26
+    ],
+    [
+     174.89,
+     127.31
+    ],
+    [
+     174.9,
+     127.36
+    ],
+    [
+     174.9,
+     127.4
+    ],
+    [
+     174.9,
+     127.45
+    ],
+    [
+     174.89,
+     127.5
+    ],
+    [
+     174.88,
+     127.55
+    ],
+    [
+     174.86,
+     127.6
+    ],
+    [
+     174.84,
+     127.64
+    ],
+    [
+     174.81,
+     127.68
+    ],
+    [
+     174.78,
+     127.72
+    ],
+    [
+     173.44,
+     129.32
+    ],
+    [
+     174.68,
+     133.01
+    ],
+    [
+     178.78,
+     131.65
+    ],
+    [
+     180.53,
+     131.4
+    ],
+    [
+     182.07,
+     131.47
+    ],
+    [
+     183.64,
+     131.88
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "str_014_kerb1",
+   "street": "str_014",
+   "geometry": [
+    [
+     447.71,
+     15.96
+    ],
+    [
+     446.86,
+     16.24
+    ],
+    [
+     437.46,
+     19.78
+    ],
+    [
+     436.51,
+     20.18
+    ],
+    [
+     422.9,
+     26.53
+    ],
+    [
+     421.93,
+     27.04
+    ],
+    [
+     413.24,
+     31.99
+    ],
+    [
+     412.56,
+     32.4
+    ],
+    [
+     404.17,
+     37.86
+    ],
+    [
+     403.35,
+     38.44
+    ],
+    [
+     391.45,
+     47.51
+    ],
+    [
+     390.61,
+     48.21
+    ],
+    [
+     379.42,
+     58.29
+    ],
+    [
+     378.78,
+     58.91
+    ],
+    [
+     374.69,
+     63.11
+    ],
+    [
+     374.82,
+     63.21
+    ],
+    [
+     374.85,
+     63.25
+    ],
+    [
+     374.89,
+     63.28
+    ],
+    [
+     374.92,
+     63.32
+    ],
+    [
+     374.94,
+     63.36
+    ],
+    [
+     374.96,
+     63.41
+    ],
+    [
+     374.98,
+     63.45
+    ],
+    [
+     374.99,
+     63.5
+    ],
+    [
+     375.0,
+     63.55
+    ],
+    [
+     375.0,
+     63.6
+    ],
+    [
+     375.0,
+     63.65
+    ],
+    [
+     374.99,
+     63.7
+    ],
+    [
+     374.98,
+     63.75
+    ],
+    [
+     374.96,
+     63.79
+    ],
+    [
+     374.94,
+     63.84
+    ],
+    [
+     374.91,
+     63.88
+    ],
+    [
+     374.89,
+     63.92
+    ],
+    [
+     362.99,
+     78.32
+    ],
+    [
+     362.95,
+     78.35
+    ],
+    [
+     362.92,
+     78.39
+    ],
+    [
+     362.88,
+     78.42
+    ],
+    [
+     362.83,
+     78.44
+    ],
+    [
+     362.79,
+     78.46
+    ],
+    [
+     362.74,
+     78.48
+    ],
+    [
+     362.7,
+     78.49
+    ],
+    [
+     362.65,
+     78.5
+    ],
+    [
+     362.6,
+     78.5
+    ],
+    [
+     362.55,
+     78.5
+    ],
+    [
+     362.5,
+     78.49
+    ],
+    [
+     362.46,
+     78.48
+    ],
+    [
+     362.41,
+     78.46
+    ],
+    [
+     362.37,
+     78.44
+    ],
+    [
+     362.32,
+     78.42
+    ],
+    [
+     362.28,
+     78.39
+    ],
+    [
+     362.1,
+     78.24
+    ],
+    [
+     355.45,
+     87.79
+    ],
+    [
+     354.72,
+     88.97
+    ],
+    [
+     354.53,
+     89.29
+    ],
+    [
+     355.96,
+     90.17
+    ],
+    [
+     356.0,
+     90.2
+    ],
+    [
+     356.04,
+     90.23
+    ],
+    [
+     356.07,
+     90.27
+    ],
+    [
+     356.1,
+     90.3
+    ],
+    [
+     356.13,
+     90.35
+    ],
+    [
+     356.15,
+     90.39
+    ],
+    [
+     356.17,
+     90.43
+    ],
+    [
+     356.19,
+     90.48
+    ],
+    [
+     356.19,
+     90.53
+    ],
+    [
+     356.2,
+     90.57
+    ],
+    [
+     356.2,
+     90.62
+    ],
+    [
+     356.19,
+     90.67
+    ],
+    [
+     356.19,
+     90.72
+    ],
+    [
+     356.17,
+     90.77
+    ],
+    [
+     356.15,
+     90.81
+    ],
+    [
+     356.13,
+     90.85
+    ],
+    [
+     352.73,
+     96.65
+    ],
+    [
+     352.7,
+     96.69
+    ],
+    [
+     352.67,
+     96.73
+    ],
+    [
+     352.64,
+     96.77
+    ],
+    [
+     352.6,
+     96.8
+    ],
+    [
+     352.56,
+     96.83
+    ],
+    [
+     352.52,
+     96.85
+    ],
+    [
+     352.47,
+     96.87
+    ],
+    [
+     352.42,
+     96.88
+    ],
+    [
+     352.37,
+     96.89
+    ],
+    [
+     352.32,
+     96.9
+    ],
+    [
+     352.28,
+     96.9
+    ],
+    [
+     352.23,
+     96.89
+    ],
+    [
+     352.18,
+     96.88
+    ],
+    [
+     352.13,
+     96.87
+    ],
+    [
+     352.08,
+     96.85
+    ],
+    [
+     352.04,
+     96.83
+    ],
+    [
+     350.78,
+     96.07
+    ],
+    [
+     347.45,
+     102.08
+    ],
+    [
+     346.97,
+     103.03
+    ],
+    [
+     342.82,
+     112.14
+    ],
+    [
+     342.39,
+     113.22
+    ],
+    [
+     339.05,
+     122.63
+    ],
+    [
+     338.77,
+     123.49
+    ],
+    [
+     336.7,
+     130.86
+    ],
+    [
+     338.09,
+     131.11
+    ],
+    [
+     338.14,
+     131.12
+    ],
+    [
+     338.18,
+     131.13
+    ],
+    [
+     338.23,
+     131.15
+    ],
+    [
+     338.27,
+     131.18
+    ],
+    [
+     338.31,
+     131.21
+    ],
+    [
+     338.35,
+     131.24
+    ],
+    [
+     338.38,
+     131.28
+    ],
+    [
+     338.41,
+     131.31
+    ],
+    [
+     338.44,
+     131.36
+    ],
+    [
+     338.46,
+     131.4
+    ],
+    [
+     338.48,
+     131.45
+    ],
+    [
+     338.49,
+     131.49
+    ],
+    [
+     338.5,
+     131.54
+    ],
+    [
+     338.5,
+     131.59
+    ],
+    [
+     338.5,
+     131.64
+    ],
+    [
+     338.49,
+     131.69
+    ],
+    [
+     337.39,
+     137.79
+    ],
+    [
+     337.38,
+     137.84
+    ],
+    [
+     337.37,
+     137.88
+    ],
+    [
+     337.35,
+     137.93
+    ],
+    [
+     337.32,
+     137.97
+    ],
+    [
+     337.29,
+     138.01
+    ],
+    [
+     337.26,
+     138.05
+    ],
+    [
+     337.22,
+     138.08
+    ],
+    [
+     337.18,
+     138.11
+    ],
+    [
+     337.14,
+     138.14
+    ],
+    [
+     337.1,
+     138.16
+    ],
+    [
+     337.05,
+     138.18
+    ],
+    [
+     337.01,
+     138.19
+    ],
+    [
+     336.96,
+     138.2
+    ],
+    [
+     336.91,
+     138.2
+    ],
+    [
+     336.86,
+     138.2
+    ],
+    [
+     336.81,
+     138.19
+    ],
+    [
+     335.05,
+     137.87
+    ],
+    [
+     331.8,
+     153.63
+    ],
+    [
+     331.62,
+     154.72
+    ],
+    [
+     329.2,
+     174.55
+    ],
+    [
+     329.11,
+     175.64
+    ],
+    [
+     328.31,
+     195.65
+    ],
+    [
+     328.3,
+     196.55
+    ],
+    [
+     328.71,
+     211.53
+    ],
+    [
+     328.72,
+     211.94
+    ],
+    [
+     328.94,
+     215.71
+    ],
+    [
+     329.19,
+     215.7
+    ],
+    [
+     329.24,
+     215.7
+    ],
+    [
+     329.29,
+     215.71
+    ],
+    [
+     329.33,
+     215.72
+    ],
+    [
+     329.38,
+     215.73
+    ],
+    [
+     329.43,
+     215.75
+    ],
+    [
+     329.47,
+     215.78
+    ],
+    [
+     329.51,
+     215.81
+    ],
+    [
+     329.55,
+     215.84
+    ],
+    [
+     329.58,
+     215.87
+    ],
+    [
+     329.61,
+     215.91
+    ],
+    [
+     329.64,
+     215.95
+    ],
+    [
+     329.66,
+     216.0
+    ],
+    [
+     329.68,
+     216.04
+    ],
+    [
+     329.69,
+     216.09
+    ],
+    [
+     329.7,
+     216.14
+    ],
+    [
+     329.7,
+     216.19
+    ],
+    [
+     329.9,
+     225.79
+    ],
+    [
+     329.9,
+     225.84
+    ],
+    [
+     329.89,
+     225.89
+    ],
+    [
+     329.88,
+     225.94
+    ],
+    [
+     329.87,
+     225.98
+    ],
+    [
+     329.85,
+     226.03
+    ],
+    [
+     329.82,
+     226.07
+    ],
+    [
+     329.79,
+     226.11
+    ],
+    [
+     329.76,
+     226.15
+    ],
+    [
+     329.72,
+     226.18
+    ],
+    [
+     329.69,
+     226.21
+    ],
+    [
+     329.64,
+     226.24
+    ],
+    [
+     329.6,
+     226.26
+    ],
+    [
+     329.55,
+     226.28
+    ],
+    [
+     331.0,
+     251.27
+    ],
+    [
+     331.1,
+     270.59
+    ],
+    [
+     330.6,
+     295.33
+    ],
+    [
+     330.6,
+     295.97
+    ],
+    [
+     330.96,
+     309.25
+    ],
+    [
+     331.24,
+     313.78
+    ],
+    [
+     333.87,
+     341.65
+    ],
+    [
+     333.97,
+     342.42
+    ],
+    [
+     334.18,
+     343.8
+    ],
+    [
+     337.21,
+     343.8
+    ],
+    [
+     336.94,
+     342.01
+    ],
+    [
+     336.85,
+     341.33
+    ],
+    [
+     334.05,
+     311.63
+    ],
+    [
+     334.0,
+     310.82
+    ],
+    [
+     333.6,
+     295.92
+    ],
+    [
+     333.6,
+     295.36
+    ],
+    [
+     334.1,
+     270.61
+    ],
+    [
+     334.0,
+     251.18
+    ],
+    [
+     331.72,
+     211.79
+    ],
+    [
+     331.7,
+     211.42
+    ],
+    [
+     331.3,
+     196.52
+    ],
+    [
+     331.31,
+     195.72
+    ],
+    [
+     332.11,
+     175.82
+    ],
+    [
+     332.19,
+     174.85
+    ],
+    [
+     334.59,
+     155.15
+    ],
+    [
+     334.75,
+     154.18
+    ],
+    [
+     338.75,
+     134.78
+    ],
+    [
+     338.95,
+     133.95
+    ],
+    [
+     341.65,
+     124.35
+    ],
+    [
+     341.89,
+     123.59
+    ],
+    [
+     345.19,
+     114.29
+    ],
+    [
+     345.58,
+     113.33
+    ],
+    [
+     349.68,
+     104.33
+    ],
+    [
+     350.1,
+     103.49
+    ],
+    [
+     357.3,
+     90.49
+    ],
+    [
+     357.95,
+     89.44
+    ],
+    [
+     366.45,
+     77.24
+    ],
+    [
+     367.06,
+     76.44
+    ],
+    [
+     373.36,
+     68.84
+    ],
+    [
+     373.99,
+     68.14
+    ],
+    [
+     380.89,
+     61.04
+    ],
+    [
+     381.47,
+     60.48
+    ],
+    [
+     392.57,
+     50.48
+    ],
+    [
+     393.32,
+     49.86
+    ],
+    [
+     405.12,
+     40.86
+    ],
+    [
+     405.86,
+     40.34
+    ],
+    [
+     414.16,
+     34.94
+    ],
+    [
+     414.76,
+     34.57
+    ],
+    [
+     423.36,
+     29.67
+    ],
+    [
+     424.23,
+     29.23
+    ],
+    [
+     437.73,
+     22.93
+    ],
+    [
+     438.57,
+     22.57
+    ],
+    [
+     447.87,
+     19.07
+    ],
+    [
+     448.62,
+     18.82
+    ],
+    [
+     462.82,
+     14.52
+    ],
+    [
+     463.89,
+     14.24
+    ],
+    [
+     483.39,
+     10.24
+    ],
+    [
+     484.35,
+     10.09
+    ],
+    [
+     508.15,
+     7.19
+    ],
+    [
+     511.05,
+     31.01
+    ],
+    [
+     487.73,
+     33.85
+    ],
+    [
+     469.25,
+     37.64
+    ],
+    [
+     455.96,
+     41.67
+    ],
+    [
+     447.46,
+     44.87
+    ],
+    [
+     434.82,
+     50.77
+    ],
+    [
+     426.95,
+     55.25
+    ],
+    [
+     419.32,
+     60.21
+    ],
+    [
+     408.27,
+     68.64
+    ],
+    [
+     397.83,
+     78.05
+    ],
+    [
+     391.54,
+     84.52
+    ],
+    [
+     385.86,
+     91.37
+    ],
+    [
+     378.0,
+     102.65
+    ],
+    [
+     371.33,
+     114.7
+    ],
+    [
+     367.64,
+     122.8
+    ],
+    [
+     364.64,
+     131.23
+    ],
+    [
+     362.17,
+     140.04
+    ],
+    [
+     358.35,
+     158.54
+    ],
+    [
+     356.07,
+     177.27
+    ],
+    [
+     355.31,
+     196.28
+    ],
+    [
+     355.69,
+     210.59
+    ],
+    [
+     357.98,
+     250.11
+    ],
+    [
+     358.0,
+     250.74
+    ],
+    [
+     358.1,
+     270.64
+    ],
+    [
+     358.1,
+     270.94
+    ],
+    [
+     357.6,
+     295.56
+    ],
+    [
+     357.98,
+     309.78
+    ],
+    [
+     360.71,
+     338.73
+    ],
+    [
+     361.21,
+     341.99
+    ],
+    [
+     349.35,
+     343.8
+    ],
+    [
+     364.52,
+     343.8
+    ],
+    [
+     363.69,
+     338.36
+    ],
+    [
+     360.98,
+     309.59
+    ],
+    [
+     360.6,
+     295.55
+    ],
+    [
+     360.71,
+     290.22
+    ],
+    [
+     359.26,
+     290.1
+    ],
+    [
+     359.21,
+     290.09
+    ],
+    [
+     359.16,
+     290.08
+    ],
+    [
+     359.11,
+     290.06
+    ],
+    [
+     359.07,
+     290.04
+    ],
+    [
+     359.03,
+     290.02
+    ],
+    [
+     358.99,
+     289.99
+    ],
+    [
+     358.95,
+     289.96
+    ],
+    [
+     358.92,
+     289.92
+    ],
+    [
+     358.89,
+     289.88
+    ],
+    [
+     358.86,
+     289.84
+    ],
+    [
+     358.84,
+     289.8
+    ],
+    [
+     358.82,
+     289.75
+    ],
+    [
+     358.81,
+     289.7
+    ],
+    [
+     358.8,
+     289.66
+    ],
+    [
+     358.8,
+     289.61
+    ],
+    [
+     358.8,
+     289.56
+    ],
+    [
+     360.8,
+     266.36
+    ],
+    [
+     360.81,
+     266.31
+    ],
+    [
+     360.82,
+     266.26
+    ],
+    [
+     360.84,
+     266.21
+    ],
+    [
+     360.86,
+     266.17
+    ],
+    [
+     360.88,
+     266.13
+    ],
+    [
+     360.91,
+     266.09
+    ],
+    [
+     360.94,
+     266.05
+    ],
+    [
+     360.98,
+     266.02
+    ],
+    [
+     361.02,
+     265.99
+    ],
+    [
+     361.06,
+     265.96
+    ],
+    [
+     361.08,
+     265.95
+    ],
+    [
+     361.0,
+     250.68
+    ],
+    [
+     360.98,
+     249.97
+    ],
+    [
+     358.69,
+     210.46
+    ],
+    [
+     358.31,
+     196.3
+    ],
+    [
+     359.06,
+     177.51
+    ],
+    [
+     361.32,
+     159.03
+    ],
+    [
+     365.08,
+     140.75
+    ],
+    [
+     367.5,
+     132.14
+    ],
+    [
+     370.42,
+     123.93
+    ],
+    [
+     374.01,
+     116.05
+    ],
+    [
+     379.55,
+     106.04
+    ],
+    [
+     379.32,
+     105.24
+    ],
+    [
+     379.31,
+     105.19
+    ],
+    [
+     379.3,
+     105.14
+    ],
+    [
+     379.3,
+     105.09
+    ],
+    [
+     379.3,
+     105.04
+    ],
+    [
+     379.31,
+     105.0
+    ],
+    [
+     379.32,
+     104.95
+    ],
+    [
+     379.34,
+     104.9
+    ],
+    [
+     379.36,
+     104.86
+    ],
+    [
+     379.39,
+     104.82
+    ],
+    [
+     379.42,
+     104.78
+    ],
+    [
+     379.45,
+     104.74
+    ],
+    [
+     379.49,
+     104.71
+    ],
+    [
+     379.53,
+     104.68
+    ],
+    [
+     379.57,
+     104.66
+    ],
+    [
+     379.61,
+     104.64
+    ],
+    [
+     379.66,
+     104.62
+    ],
+    [
+     380.47,
+     104.39
+    ],
+    [
+     380.55,
+     104.24
+    ],
+    [
+     388.25,
+     93.19
+    ],
+    [
+     393.77,
+     86.53
+    ],
+    [
+     399.91,
+     80.21
+    ],
+    [
+     410.18,
+     70.95
+    ],
+    [
+     421.05,
+     62.67
+    ],
+    [
+     428.51,
+     57.81
+    ],
+    [
+     436.2,
+     53.43
+    ],
+    [
+     448.62,
+     47.64
+    ],
+    [
+     456.92,
+     44.51
+    ],
+    [
+     469.99,
+     40.56
+    ],
+    [
+     488.22,
+     36.82
+    ],
+    [
+     490.44,
+     36.55
+    ],
+    [
+     493.16,
+     34.03
+    ],
+    [
+     493.2,
+     34.0
+    ],
+    [
+     493.24,
+     33.97
+    ],
+    [
+     493.28,
+     33.95
+    ],
+    [
+     493.33,
+     33.93
+    ],
+    [
+     493.37,
+     33.92
+    ],
+    [
+     493.42,
+     33.91
+    ],
+    [
+     493.47,
+     33.9
+    ],
+    [
+     493.52,
+     33.9
+    ],
+    [
+     493.57,
+     33.9
+    ],
+    [
+     493.62,
+     33.91
+    ],
+    [
+     493.66,
+     33.93
+    ],
+    [
+     493.71,
+     33.95
+    ],
+    [
+     493.75,
+     33.97
+    ],
+    [
+     493.79,
+     34.0
+    ],
+    [
+     493.83,
+     34.03
+    ],
+    [
+     493.87,
+     34.06
+    ],
+    [
+     495.58,
+     35.92
+    ],
+    [
+     512.97,
+     33.8
+    ],
+    [
+     514.2,
+     32.06
+    ],
+    [
+     510.76,
+     3.85
+    ],
+    [
+     483.93,
+     7.12
+    ],
+    [
+     482.85,
+     7.29
+    ],
+    [
+     463.22,
+     11.32
+    ],
+    [
+     462.02,
+     11.62
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "str_016_kerb1",
+   "street": "str_016",
+   "geometry": [
+    [
+     141.92,
+     248.1
+    ],
+    [
+     141.97,
+     248.11
+    ],
+    [
+     142.02,
+     248.11
+    ],
+    [
+     142.07,
+     248.13
+    ],
+    [
+     142.11,
+     248.15
+    ],
+    [
+     142.15,
+     248.17
+    ],
+    [
+     142.2,
+     248.2
+    ],
+    [
+     142.23,
+     248.23
+    ],
+    [
+     142.27,
+     248.26
+    ],
+    [
+     142.3,
+     248.3
+    ],
+    [
+     142.33,
+     248.34
+    ],
+    [
+     142.35,
+     248.38
+    ],
+    [
+     142.37,
+     248.43
+    ],
+    [
+     142.38,
+     248.48
+    ],
+    [
+     142.39,
+     248.52
+    ],
+    [
+     142.4,
+     248.57
+    ],
+    [
+     142.58,
+     252.05
+    ],
+    [
+     153.73,
+     271.02
+    ],
+    [
+     155.38,
+     270.61
+    ],
+    [
+     155.43,
+     270.61
+    ],
+    [
+     155.48,
+     270.6
+    ],
+    [
+     155.53,
+     270.6
+    ],
+    [
+     155.58,
+     270.61
+    ],
+    [
+     155.62,
+     270.62
+    ],
+    [
+     155.67,
+     270.63
+    ],
+    [
+     155.72,
+     270.65
+    ],
+    [
+     155.76,
+     270.67
+    ],
+    [
+     155.8,
+     270.7
+    ],
+    [
+     155.84,
+     270.73
+    ],
+    [
+     155.87,
+     270.77
+    ],
+    [
+     155.9,
+     270.8
+    ],
+    [
+     155.93,
+     270.84
+    ],
+    [
+     155.95,
+     270.89
+    ],
+    [
+     155.97,
+     270.93
+    ],
+    [
+     155.99,
+     270.98
+    ],
+    [
+     157.59,
+     277.5
+    ],
+    [
+     157.67,
+     277.62
+    ],
+    [
+     169.45,
+     293.73
+    ],
+    [
+     169.96,
+     294.37
+    ],
+    [
+     174.61,
+     299.79
+    ],
+    [
+     175.93,
+     299.33
+    ],
+    [
+     175.98,
+     299.31
+    ],
+    [
+     176.03,
+     299.3
+    ],
+    [
+     176.08,
+     299.3
+    ],
+    [
+     176.13,
+     299.3
+    ],
+    [
+     176.18,
+     299.31
+    ],
+    [
+     176.23,
+     299.32
+    ],
+    [
+     176.27,
+     299.33
+    ],
+    [
+     176.32,
+     299.35
+    ],
+    [
+     176.36,
+     299.37
+    ],
+    [
+     176.4,
+     299.4
+    ],
+    [
+     176.44,
+     299.43
+    ],
+    [
+     176.47,
+     299.47
+    ],
+    [
+     176.5,
+     299.51
+    ],
+    [
+     176.53,
+     299.55
+    ],
+    [
+     176.55,
+     299.59
+    ],
+    [
+     176.57,
+     299.64
+    ],
+    [
+     178.0,
+     303.74
+    ],
+    [
+     179.72,
+     305.75
+    ],
+    [
+     180.16,
+     306.23
+    ],
+    [
+     187.13,
+     313.4
+    ],
+    [
+     187.65,
+     313.9
+    ],
+    [
+     209.77,
+     333.73
+    ],
+    [
+     220.23,
+     343.61
+    ],
+    [
+     220.41,
+     343.8
+    ],
+    [
+     224.56,
+     343.8
+    ],
+    [
+     222.35,
+     341.48
+    ],
+    [
+     211.81,
+     331.52
+    ],
+    [
+     189.69,
+     311.7
+    ],
+    [
+     189.25,
+     311.27
+    ],
+    [
+     182.35,
+     304.17
+    ],
+    [
+     181.97,
+     303.76
+    ],
+    [
+     172.27,
+     292.46
+    ],
+    [
+     171.84,
+     291.91
+    ],
+    [
+     160.14,
+     275.91
+    ],
+    [
+     159.64,
+     275.16
+    ],
+    [
+     144.65,
+     249.65
+    ],
+    [
+     134.04,
+     233.49
+    ],
+    [
+     125.39,
+     222.05
+    ],
+    [
+     117.07,
+     212.36
+    ],
+    [
+     130.73,
+     200.64
+    ],
+    [
+     139.23,
+     210.54
+    ],
+    [
+     139.58,
+     210.97
+    ],
+    [
+     148.58,
+     222.87
+    ],
+    [
+     148.92,
+     223.36
+    ],
+    [
+     159.82,
+     239.96
+    ],
+    [
+     160.06,
+     240.34
+    ],
+    [
+     174.93,
+     265.65
+    ],
+    [
+     186.16,
+     281.0
+    ],
+    [
+     195.45,
+     291.83
+    ],
+    [
+     201.94,
+     298.51
+    ],
+    [
+     223.91,
+     318.2
+    ],
+    [
+     224.08,
+     318.36
+    ],
+    [
+     234.88,
+     328.56
+    ],
+    [
+     235.21,
+     328.89
+    ],
+    [
+     243.51,
+     337.59
+    ],
+    [
+     237.0,
+     343.8
+    ],
+    [
+     241.35,
+     343.8
+    ],
+    [
+     247.75,
+     337.69
+    ],
+    [
+     237.36,
+     326.79
+    ],
+    [
+     236.97,
+     326.4
+    ],
+    [
+     226.13,
+     316.16
+    ],
+    [
+     225.92,
+     315.98
+    ],
+    [
+     224.01,
+     314.26
+    ],
+    [
+     222.9,
+     315.1
+    ],
+    [
+     222.86,
+     315.13
+    ],
+    [
+     222.82,
+     315.15
+    ],
+    [
+     222.77,
+     315.17
+    ],
+    [
+     222.73,
+     315.18
+    ],
+    [
+     222.68,
+     315.19
+    ],
+    [
+     222.63,
+     315.2
+    ],
+    [
+     222.58,
+     315.2
+    ],
+    [
+     222.53,
+     315.2
+    ],
+    [
+     222.48,
+     315.19
+    ],
+    [
+     222.44,
+     315.17
+    ],
+    [
+     222.39,
+     315.15
+    ],
+    [
+     222.35,
+     315.13
+    ],
+    [
+     222.31,
+     315.1
+    ],
+    [
+     222.27,
+     315.07
+    ],
+    [
+     222.23,
+     315.04
+    ],
+    [
+     222.2,
+     315.0
+    ],
+    [
+     216.59,
+     307.61
+    ],
+    [
+     204.02,
+     296.34
+    ],
+    [
+     197.66,
+     289.8
+    ],
+    [
+     188.51,
+     279.14
+    ],
+    [
+     177.44,
+     264.0
+    ],
+    [
+     162.63,
+     238.79
+    ],
+    [
+     162.35,
+     238.34
+    ],
+    [
+     151.4,
+     221.67
+    ],
+    [
+     151.0,
+     221.1
+    ],
+    [
+     141.94,
+     209.12
+    ],
+    [
+     141.53,
+     208.62
+    ],
+    [
+     131.05,
+     196.41
+    ],
+    [
+     112.84,
+     212.04
+    ],
+    [
+     123.05,
+     223.94
+    ],
+    [
+     131.59,
+     235.22
+    ],
+    [
+     140.11,
+     248.2
+    ],
+    [
+     141.87,
+     248.1
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "str_019_kerb1",
+   "street": "str_019",
+   "geometry": [
+    [
+     435.98,
+     325.91
+    ],
+    [
+     423.52,
+     334.8
+    ],
+    [
+     429.94,
+     343.8
+    ],
+    [
+     433.63,
+     343.8
+    ],
+    [
+     427.71,
+     335.5
+    ],
+    [
+     435.28,
+     330.1
+    ],
+    [
+     445.05,
+     343.8
+    ],
+    [
+     448.74,
+     343.8
+    ]
+   ],
+   "detail": true
+  },
+  {
+   "id": "str_024_kerb1",
+   "street": "str_024",
+   "geometry": [
+    [
+     406.0,
+     325.88
+    ],
+    [
+     405.65,
+     343.8
+    ],
+    [
+     420.65,
+     343.8
+    ],
+    [
+     408.65,
+     343.56
+    ],
+    [
+     409.0,
+     325.96
+    ],
+    [
+     409.02,
+     325.56
+    ],
+    [
+     412.22,
+     265.86
+    ],
+    [
+     418.21,
+     266.18
+    ],
+    [
+     418.2,
+     266.4
+    ],
+    [
+     436.2,
+     266.4
+    ],
+    [
+     436.2,
+     266.5
+    ],
+    [
+     436.18,
+     267.14
+    ],
+    [
+     432.99,
+     326.64
+    ],
+    [
+     432.65,
+     343.8
+    ],
+    [
+     435.65,
+     343.8
+    ],
+    [
+     435.99,
+     326.75
+    ],
+    [
+     439.18,
+     267.26
+    ],
+    [
+     439.2,
+     266.54
+    ],
+    [
+     439.2,
+     263.4
+    ],
+    [
+     421.28,
+     263.4
+    ],
+    [
+     421.29,
+     263.34
+    ],
+    [
+     409.38,
+     262.7
+    ],
+    [
+     406.02,
+     325.42
+    ]
+   ],
+   "detail": true
+  }
+ ],
+ "trees": []
+}

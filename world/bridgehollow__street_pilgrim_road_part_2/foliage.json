@@ -1,0 +1,1638 @@
+{
+ "format": "varrenmoor-foliage",
+ "version": 1,
+ "place": "bridgehollow__street_pilgrim_road_part_2",
+ "units": "ft",
+ "frame": "world feet: x east, y south, z up (elevation)",
+ "counters": {
+  "st_hedges": 30,
+  "st_trees": 48,
+  "w_forest_1": 4614,
+  "w_river_1": 16,
+  "w_river_2": 10,
+  "w_river_3": 8,
+  "w_river_4": 16,
+  "w_slopes_1": 696,
+  "w_town_1": 25
+ },
+ "zones": [
+  {
+   "id": "st_hedges",
+   "name": "Hedges and bushes",
+   "params": {
+    "zone": "st_hedges",
+    "mix": [
+     {
+      "species": "hedge",
+      "weight": 2.0
+     },
+     {
+      "species": "bush",
+      "weight": 1.0
+     },
+     {
+      "species": "juniper",
+      "weight": 0.8
+     }
+    ],
+    "density_per_ha": 22,
+    "size_var": 0.35,
+    "seed": 78667,
+    "pattern": "clustered",
+    "cluster_radius_ft": 18,
+    "cluster_size": 4,
+    "edge_ft": 0,
+    "row_spacing_ft": 0,
+    "row_angle_deg": 0,
+    "line_spacing_ft": 0,
+    "line_jitter": 0.15,
+    "avoid_buildings": true,
+    "avoid_roads": true,
+    "avoid_water": true,
+    "clearance_building_ft": 3,
+    "clearance_road_ft": 3,
+    "slope_max_deg": 36,
+    "elev_min_ft": null,
+    "elev_max_ft": null,
+    "moisture_bias": 0.0,
+    "max_instances": 30,
+    "replace_zone": true,
+    "name": "Hedges and bushes"
+   },
+   "polygon": [
+    [
+     0,
+     0
+    ],
+    [
+     492.0,
+     0
+    ],
+    [
+     492.0,
+     610.0
+    ],
+    [
+     0,
+     610.0
+    ]
+   ],
+   "path": null,
+   "count": 30
+  },
+  {
+   "id": "st_trees",
+   "name": "Street and yard trees (winter)",
+   "params": {
+    "zone": "st_trees",
+    "mix": [
+     {
+      "species": "oak",
+      "weight": 1.0
+     },
+     {
+      "species": "birch",
+      "weight": 1.2
+     },
+     {
+      "species": "rowan",
+      "weight": 1.0
+     },
+     {
+      "species": "maple",
+      "weight": 0.6
+     },
+     {
+      "species": "alder",
+      "weight": 0.5
+     },
+     {
+      "species": "spruce",
+      "weight": 0.9
+     },
+     {
+      "species": "fir",
+      "weight": 0.5
+     },
+     {
+      "species": "scots_pine",
+      "weight": 0.4
+     }
+    ],
+    "density_per_ha": 34,
+    "size_var": 0.35,
+    "seed": 78666,
+    "pattern": "uniform",
+    "cluster_radius_ft": 45,
+    "cluster_size": 12,
+    "edge_ft": 0,
+    "row_spacing_ft": 0,
+    "row_angle_deg": 0,
+    "line_spacing_ft": 0,
+    "line_jitter": 0.15,
+    "avoid_buildings": true,
+    "avoid_roads": true,
+    "avoid_water": true,
+    "clearance_building_ft": 6,
+    "clearance_road_ft": 5,
+    "slope_max_deg": 36,
+    "elev_min_ft": null,
+    "elev_max_ft": null,
+    "moisture_bias": 0.0,
+    "max_instances": 70,
+    "replace_zone": true,
+    "name": "Street and yard trees (winter)"
+   },
+   "polygon": [
+    [
+     0,
+     0
+    ],
+    [
+     492.0,
+     0
+    ],
+    [
+     492.0,
+     610.0
+    ],
+    [
+     0,
+     610.0
+    ]
+   ],
+   "path": null,
+   "count": 48
+  },
+  {
+   "id": "w_river_2",
+   "name": "Riverbank",
+   "params": {
+    "zone": "w_river_2",
+    "mix": [
+     {
+      "species": "alder",
+      "weight": 3
+     },
+     {
+      "species": "willow",
+      "weight": 1.5
+     }
+    ],
+    "density_per_ha": 35,
+    "size_var": 0.45,
+    "seed": 72,
+    "pattern": "uniform",
+    "cluster_radius_ft": 45,
+    "cluster_size": 12,
+    "edge_ft": 40,
+    "row_spacing_ft": 0,
+    "row_angle_deg": 0,
+    "line_spacing_ft": 0,
+    "line_jitter": 0.15,
+    "avoid_buildings": true,
+    "avoid_roads": true,
+    "avoid_water": true,
+    "clearance_building_ft": null,
+    "clearance_road_ft": null,
+    "slope_max_deg": 36,
+    "elev_min_ft": null,
+    "elev_max_ft": null,
+    "moisture_bias": 0.0,
+    "max_instances": 4000,
+    "replace_zone": true,
+    "name": "Riverbank"
+   },
+   "polygon": [
+    [
+     1087.8,
+     1163.4
+    ],
+    [
+     1057.6,
+     1225.9
+    ],
+    [
+     1045.9,
+     1272.1
+    ],
+    [
+     1045.2,
+     1321.7
+    ],
+    [
+     1056.9,
+     1376.9
+    ],
+    [
+     1083.8,
+     1442.3
+    ],
+    [
+     1128.9,
+     1500.0
+    ],
+    [
+     1181.1,
+     1500.0
+    ],
+    [
+     1127.0,
+     1430.4
+    ],
+    [
+     1098.3,
+     1365.2
+    ],
+    [
+     1088.1,
+     1318.8
+    ],
+    [
+     1088.3,
+     1279.4
+    ],
+    [
+     1097.5,
+     1241.8
+    ],
+    [
+     1128.3,
+     1178.6
+    ],
+    [
+     1087.8,
+     1163.4
+    ]
+   ],
+   "path": null,
+   "count": 5
+  },
+  {
+   "id": "w_river_3",
+   "name": "Riverbank",
+   "params": {
+    "zone": "w_river_3",
+    "mix": [
+     {
+      "species": "alder",
+      "weight": 3
+     },
+     {
+      "species": "willow",
+      "weight": 1.5
+     }
+    ],
+    "density_per_ha": 35,
+    "size_var": 0.45,
+    "seed": 73,
+    "pattern": "uniform",
+    "cluster_radius_ft": 45,
+    "cluster_size": 12,
+    "edge_ft": 40,
+    "row_spacing_ft": 0,
+    "row_angle_deg": 0,
+    "line_spacing_ft": 0,
+    "line_jitter": 0.15,
+    "avoid_buildings": true,
+    "avoid_roads": true,
+    "avoid_water": true,
+    "clearance_building_ft": null,
+    "clearance_road_ft": null,
+    "slope_max_deg": 36,
+    "elev_min_ft": null,
+    "elev_max_ft": null,
+    "moisture_bias": 0.0,
+    "max_instances": 4000,
+    "replace_zone": true,
+    "name": "Riverbank"
+   },
+   "polygon": [
+    [
+     1299.1,
+     1500.0
+    ],
+    [
+     1274.4,
+     1432.9
+    ],
+    [
+     1223.5,
+     1363.6
+    ],
+    [
+     1206.8,
+     1308.0
+    ],
+    [
+     1210.4,
+     1286.0
+    ],
+    [
+     1252.2,
+     1205.2
+    ],
+    [
+     1262.3,
+     1163.5
+    ],
+    [
+     1214.2,
+     1183.2
+    ],
+    [
+     1170.6,
+     1269.6
+    ],
+    [
+     1164.0,
+     1311.9
+    ],
+    [
+     1185.2,
+     1383.2
+    ],
+    [
+     1238.1,
+     1455.8
+    ],
+    [
+     1255.1,
+     1500.0
+    ],
+    [
+     1299.1,
+     1500.0
+    ]
+   ],
+   "path": null,
+   "count": 4
+  },
+  {
+   "id": "w_town_1",
+   "name": "Town trees",
+   "params": {
+    "zone": "w_town_1",
+    "mix": [
+     {
+      "species": "oak",
+      "weight": 1
+     },
+     {
+      "species": "birch",
+      "weight": 1
+     },
+     {
+      "species": "rowan",
+      "weight": 1
+     },
+     {
+      "species": "maple",
+      "weight": 0.5
+     }
+    ],
+    "density_per_ha": 16,
+    "size_var": 0.45,
+    "seed": 51,
+    "pattern": "uniform",
+    "cluster_radius_ft": 45,
+    "cluster_size": 12,
+    "edge_ft": 40,
+    "row_spacing_ft": 0,
+    "row_angle_deg": 0,
+    "line_spacing_ft": 0,
+    "line_jitter": 0.15,
+    "avoid_buildings": true,
+    "avoid_roads": true,
+    "avoid_water": true,
+    "clearance_building_ft": 8,
+    "clearance_road_ft": 6,
+    "slope_max_deg": 36,
+    "elev_min_ft": null,
+    "elev_max_ft": null,
+    "moisture_bias": 0.0,
+    "max_instances": 4000,
+    "replace_zone": true,
+    "name": "Town trees"
+   },
+   "polygon": [
+    [
+     1089.7,
+     544.7
+    ],
+    [
+     949.5,
+     570.2
+    ],
+    [
+     843.7,
+     650.6
+    ],
+    [
+     798.1,
+     706.1
+    ],
+    [
+     770.1,
+     774.9
+    ],
+    [
+     768.5,
+     843.8
+    ],
+    [
+     817.9,
+     1040.0
+    ],
+    [
+     830.0,
+     1065.8
+    ],
+    [
+     852.1,
+     1090.0
+    ],
+    [
+     920.0,
+     1122.8
+    ],
+    [
+     1050.0,
+     1138.5
+    ],
+    [
+     1170.0,
+     1179.3
+    ],
+    [
+     1200.0,
+     1177.7
+    ],
+    [
+     1249.1,
+     1160.0
+    ],
+    [
+     1403.1,
+     1070.0
+    ],
+    [
+     1435.7,
+     1010.0
+    ],
+    [
+     1445.1,
+     970.0
+    ],
+    [
+     1444.8,
+     850.0
+    ],
+    [
+     1460.9,
+     740.0
+    ],
+    [
+     1459.1,
+     690.0
+    ],
+    [
+     1434.5,
+     630.0
+    ],
+    [
+     1367.6,
+     536.1
+    ],
+    [
+     1298.8,
+     590.1
+    ],
+    [
+     1265.9,
+     603.8
+    ],
+    [
+     1230.8,
+     598.1
+    ],
+    [
+     1168.4,
+     562.3
+    ],
+    [
+     1089.7,
+     544.7
+    ]
+   ],
+   "path": null,
+   "count": 18
+  }
+ ],
+ "items": [
+  {
+   "species": "hedge",
+   "x": 330.82,
+   "y": 444.7,
+   "z": 639.52,
+   "scale": 0.895,
+   "rot": 175.9,
+   "variant": 0,
+   "id": "fol_st_hedges_0001",
+   "zone": "st_hedges",
+   "src": "generated"
+  },
+  {
+   "species": "hedge",
+   "x": 33.87,
+   "y": 553.15,
+   "z": 628.7,
+   "scale": 0.884,
+   "rot": 214.6,
+   "variant": 0,
+   "id": "fol_st_hedges_0002",
+   "zone": "st_hedges",
+   "src": "generated"
+  },
+  {
+   "species": "hedge",
+   "x": 66.45,
+   "y": 607.51,
+   "z": 624.02,
+   "scale": 1.012,
+   "rot": 77.6,
+   "variant": 0,
+   "id": "fol_st_hedges_0003",
+   "zone": "st_hedges",
+   "src": "generated"
+  },
+  {
+   "species": "hedge",
+   "x": 94.59,
+   "y": 192.59,
+   "z": 643.85,
+   "scale": 0.987,
+   "rot": 97.8,
+   "variant": 0,
+   "id": "fol_st_hedges_0004",
+   "zone": "st_hedges",
+   "src": "generated"
+  },
+  {
+   "species": "hedge",
+   "x": 207.97,
+   "y": 436.35,
+   "z": 630.58,
+   "scale": 1.113,
+   "rot": 333.1,
+   "variant": 0,
+   "id": "fol_st_hedges_0005",
+   "zone": "st_hedges",
+   "src": "generated"
+  },
+  {
+   "species": "hedge",
+   "x": 99.02,
+   "y": 163.37,
+   "z": 644.75,
+   "scale": 0.991,
+   "rot": 12.8,
+   "variant": 0,
+   "id": "fol_st_hedges_0006",
+   "zone": "st_hedges",
+   "src": "generated"
+  },
+  {
+   "species": "hedge",
+   "x": 430.59,
+   "y": 36.65,
+   "z": 663.81,
+   "scale": 0.886,
+   "rot": 104.2,
+   "variant": 0,
+   "id": "fol_st_hedges_0007",
+   "zone": "st_hedges",
+   "src": "generated"
+  },
+  {
+   "species": "hedge",
+   "x": 183.28,
+   "y": 83.56,
+   "z": 648.02,
+   "scale": 0.934,
+   "rot": 324.0,
+   "variant": 0,
+   "id": "fol_st_hedges_0008",
+   "zone": "st_hedges",
+   "src": "generated"
+  },
+  {
+   "species": "hedge",
+   "x": 442.28,
+   "y": 289.76,
+   "z": 652.87,
+   "scale": 1.072,
+   "rot": 108.2,
+   "variant": 0,
+   "id": "fol_st_hedges_0009",
+   "zone": "st_hedges",
+   "src": "generated"
+  },
+  {
+   "species": "hedge",
+   "x": 310.24,
+   "y": 199.97,
+   "z": 651.78,
+   "scale": 0.87,
+   "rot": 119.4,
+   "variant": 0,
+   "id": "fol_st_hedges_0010",
+   "zone": "st_hedges",
+   "src": "generated"
+  },
+  {
+   "species": "hedge",
+   "x": 206.19,
+   "y": 313.49,
+   "z": 640.18,
+   "scale": 0.865,
+   "rot": 102.1,
+   "variant": 0,
+   "id": "fol_st_hedges_0011",
+   "zone": "st_hedges",
+   "src": "generated"
+  },
+  {
+   "species": "hedge",
+   "x": 390.2,
+   "y": 27.86,
+   "z": 663.46,
+   "scale": 0.908,
+   "rot": 0.0,
+   "variant": 0,
+   "id": "fol_st_hedges_0012",
+   "zone": "st_hedges",
+   "src": "generated"
+  },
+  {
+   "species": "hedge",
+   "x": 398.72,
+   "y": 379.32,
+   "z": 645.96,
+   "scale": 0.946,
+   "rot": 284.5,
+   "variant": 0,
+   "id": "fol_st_hedges_0013",
+   "zone": "st_hedges",
+   "src": "generated"
+  },
+  {
+   "species": "hedge",
+   "x": 491.06,
+   "y": 536.47,
+   "z": 654.96,
+   "scale": 1.129,
+   "rot": 212.5,
+   "variant": 0,
+   "id": "fol_st_hedges_0014",
+   "zone": "st_hedges",
+   "src": "generated"
+  },
+  {
+   "species": "hedge",
+   "x": 374.33,
+   "y": 23.56,
+   "z": 663.01,
+   "scale": 0.879,
+   "rot": 213.5,
+   "variant": 0,
+   "id": "fol_st_hedges_0015",
+   "zone": "st_hedges",
+   "src": "generated"
+  },
+  {
+   "species": "hedge",
+   "x": 444.37,
+   "y": 245.09,
+   "z": 654.3,
+   "scale": 0.983,
+   "rot": 165.7,
+   "variant": 0,
+   "id": "fol_st_hedges_0016",
+   "zone": "st_hedges",
+   "src": "generated"
+  },
+  {
+   "species": "bush",
+   "x": 182.76,
+   "y": 62.86,
+   "z": 649.22,
+   "scale": 0.986,
+   "rot": 141.7,
+   "variant": 0,
+   "id": "fol_st_hedges_0017",
+   "zone": "st_hedges",
+   "src": "generated"
+  },
+  {
+   "species": "bush",
+   "x": 185.64,
+   "y": 32.65,
+   "z": 649.91,
+   "scale": 1.187,
+   "rot": 4.9,
+   "variant": 1,
+   "id": "fol_st_hedges_0018",
+   "zone": "st_hedges",
+   "src": "generated"
+  },
+  {
+   "species": "bush",
+   "x": 285.84,
+   "y": 422.26,
+   "z": 636.83,
+   "scale": 1.06,
+   "rot": 41.7,
+   "variant": 0,
+   "id": "fol_st_hedges_0019",
+   "zone": "st_hedges",
+   "src": "generated"
+  },
+  {
+   "species": "bush",
+   "x": 472.15,
+   "y": 43.44,
+   "z": 665.15,
+   "scale": 0.795,
+   "rot": 36.6,
+   "variant": 0,
+   "id": "fol_st_hedges_0020",
+   "zone": "st_hedges",
+   "src": "generated"
+  },
+  {
+   "species": "bush",
+   "x": 181.1,
+   "y": 561.15,
+   "z": 626.48,
+   "scale": 1.112,
+   "rot": 238.3,
+   "variant": 0,
+   "id": "fol_st_hedges_0021",
+   "zone": "st_hedges",
+   "src": "generated"
+  },
+  {
+   "species": "bush",
+   "x": 79.97,
+   "y": 442.7,
+   "z": 634.18,
+   "scale": 0.883,
+   "rot": 295.6,
+   "variant": 1,
+   "id": "fol_st_hedges_0022",
+   "zone": "st_hedges",
+   "src": "generated"
+  },
+  {
+   "species": "bush",
+   "x": 420.15,
+   "y": 425.12,
+   "z": 644.92,
+   "scale": 0.878,
+   "rot": 339.6,
+   "variant": 1,
+   "id": "fol_st_hedges_0023",
+   "zone": "st_hedges",
+   "src": "generated"
+  },
+  {
+   "species": "bush",
+   "x": 22.74,
+   "y": 474.69,
+   "z": 634.46,
+   "scale": 1.084,
+   "rot": 13.9,
+   "variant": 1,
+   "id": "fol_st_hedges_0024",
+   "zone": "st_hedges",
+   "src": "generated"
+  },
+  {
+   "species": "juniper",
+   "x": 444.1,
+   "y": 146.24,
+   "z": 659.98,
+   "scale": 1.027,
+   "rot": 33.2,
+   "variant": 0,
+   "id": "fol_st_hedges_0025",
+   "zone": "st_hedges",
+   "src": "generated"
+  },
+  {
+   "species": "juniper",
+   "x": 360.6,
+   "y": 546.23,
+   "z": 640.71,
+   "scale": 1.054,
+   "rot": 274.0,
+   "variant": 0,
+   "id": "fol_st_hedges_0026",
+   "zone": "st_hedges",
+   "src": "generated"
+  },
+  {
+   "species": "juniper",
+   "x": 352.76,
+   "y": 522.83,
+   "z": 640.46,
+   "scale": 0.669,
+   "rot": 47.4,
+   "variant": 1,
+   "id": "fol_st_hedges_0027",
+   "zone": "st_hedges",
+   "src": "generated"
+  },
+  {
+   "species": "juniper",
+   "x": 21.67,
+   "y": 212.4,
+   "z": 648.65,
+   "scale": 1.293,
+   "rot": 283.6,
+   "variant": 0,
+   "id": "fol_st_hedges_0028",
+   "zone": "st_hedges",
+   "src": "generated"
+  },
+  {
+   "species": "juniper",
+   "x": 77.14,
+   "y": 499.13,
+   "z": 629.42,
+   "scale": 1.262,
+   "rot": 98.6,
+   "variant": 0,
+   "id": "fol_st_hedges_0029",
+   "zone": "st_hedges",
+   "src": "generated"
+  },
+  {
+   "species": "juniper",
+   "x": 88.76,
+   "y": 372.92,
+   "z": 636.31,
+   "scale": 1.208,
+   "rot": 118.7,
+   "variant": 0,
+   "id": "fol_st_hedges_0030",
+   "zone": "st_hedges",
+   "src": "generated"
+  },
+  {
+   "species": "oak",
+   "x": 27.18,
+   "y": 575.77,
+   "z": 628.18,
+   "scale": 0.922,
+   "rot": 110.7,
+   "variant": 0,
+   "id": "fol_st_trees_0001",
+   "zone": "st_trees",
+   "src": "generated"
+  },
+  {
+   "species": "oak",
+   "x": 403.35,
+   "y": 534.27,
+   "z": 642.09,
+   "scale": 1.026,
+   "rot": 105.4,
+   "variant": 1,
+   "id": "fol_st_trees_0002",
+   "zone": "st_trees",
+   "src": "generated"
+  },
+  {
+   "species": "oak",
+   "x": 433.67,
+   "y": 527.54,
+   "z": 644.64,
+   "scale": 0.98,
+   "rot": 90.7,
+   "variant": 0,
+   "id": "fol_st_trees_0003",
+   "zone": "st_trees",
+   "src": "generated"
+  },
+  {
+   "species": "oak",
+   "x": 422.8,
+   "y": 501.15,
+   "z": 643.23,
+   "scale": 1.033,
+   "rot": 152.9,
+   "variant": 1,
+   "id": "fol_st_trees_0004",
+   "zone": "st_trees",
+   "src": "generated"
+  },
+  {
+   "species": "oak",
+   "x": 236.89,
+   "y": 84.36,
+   "z": 651.23,
+   "scale": 1.083,
+   "rot": 311.5,
+   "variant": 1,
+   "id": "fol_st_trees_0005",
+   "zone": "st_trees",
+   "src": "generated"
+  },
+  {
+   "species": "oak",
+   "x": 466.83,
+   "y": 556.85,
+   "z": 653.42,
+   "scale": 0.951,
+   "rot": 84.7,
+   "variant": 1,
+   "id": "fol_st_trees_0006",
+   "zone": "st_trees",
+   "src": "generated"
+  },
+  {
+   "species": "oak",
+   "x": 378.54,
+   "y": 543.4,
+   "z": 643.53,
+   "scale": 0.905,
+   "rot": 36.2,
+   "variant": 1,
+   "id": "fol_st_trees_0007",
+   "zone": "st_trees",
+   "src": "generated"
+  },
+  {
+   "species": "oak",
+   "x": 45.65,
+   "y": 143.87,
+   "z": 649.94,
+   "scale": 1.092,
+   "rot": 123.4,
+   "variant": 0,
+   "id": "fol_st_trees_0008",
+   "zone": "st_trees",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 189.33,
+   "y": 257.08,
+   "z": 641.04,
+   "scale": 0.979,
+   "rot": 221.0,
+   "variant": 0,
+   "id": "fol_st_trees_0009",
+   "zone": "st_trees",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 436.48,
+   "y": 593.25,
+   "z": 646.62,
+   "scale": 1.072,
+   "rot": 179.3,
+   "variant": 0,
+   "id": "fol_st_trees_0010",
+   "zone": "st_trees",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 416.82,
+   "y": 405.37,
+   "z": 645.59,
+   "scale": 1.054,
+   "rot": 19.3,
+   "variant": 1,
+   "id": "fol_st_trees_0011",
+   "zone": "st_trees",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 101.92,
+   "y": 314.49,
+   "z": 639.67,
+   "scale": 1.144,
+   "rot": 109.5,
+   "variant": 1,
+   "id": "fol_st_trees_0012",
+   "zone": "st_trees",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 457.88,
+   "y": 534.54,
+   "z": 649.74,
+   "scale": 1.007,
+   "rot": 29.0,
+   "variant": 1,
+   "id": "fol_st_trees_0013",
+   "zone": "st_trees",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 244.38,
+   "y": 432.84,
+   "z": 633.09,
+   "scale": 0.896,
+   "rot": 235.0,
+   "variant": 0,
+   "id": "fol_st_trees_0014",
+   "zone": "st_trees",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 421.24,
+   "y": 559.17,
+   "z": 644.02,
+   "scale": 1.107,
+   "rot": 50.7,
+   "variant": 0,
+   "id": "fol_st_trees_0015",
+   "zone": "st_trees",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 23.7,
+   "y": 532.18,
+   "z": 630.57,
+   "scale": 1.09,
+   "rot": 46.2,
+   "variant": 1,
+   "id": "fol_st_trees_0016",
+   "zone": "st_trees",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 220.97,
+   "y": 582.6,
+   "z": 628.9,
+   "scale": 1.041,
+   "rot": 334.0,
+   "variant": 0,
+   "id": "fol_st_trees_0017",
+   "zone": "st_trees",
+   "src": "generated"
+  },
+  {
+   "species": "rowan",
+   "x": 245.58,
+   "y": 464.85,
+   "z": 632.45,
+   "scale": 1.13,
+   "rot": 282.0,
+   "variant": 0,
+   "id": "fol_st_trees_0018",
+   "zone": "st_trees",
+   "src": "generated"
+  },
+  {
+   "species": "rowan",
+   "x": 49.64,
+   "y": 479.86,
+   "z": 632.35,
+   "scale": 0.865,
+   "rot": 308.6,
+   "variant": 1,
+   "id": "fol_st_trees_0019",
+   "zone": "st_trees",
+   "src": "generated"
+  },
+  {
+   "species": "rowan",
+   "x": 2.83,
+   "y": 551.29,
+   "z": 630.8,
+   "scale": 1.094,
+   "rot": 28.6,
+   "variant": 0,
+   "id": "fol_st_trees_0020",
+   "zone": "st_trees",
+   "src": "generated"
+  },
+  {
+   "species": "rowan",
+   "x": 437.9,
+   "y": 393.85,
+   "z": 647.0,
+   "scale": 0.872,
+   "rot": 321.0,
+   "variant": 0,
+   "id": "fol_st_trees_0021",
+   "zone": "st_trees",
+   "src": "generated"
+  },
+  {
+   "species": "rowan",
+   "x": 354.69,
+   "y": 537.66,
+   "z": 640.34,
+   "scale": 0.826,
+   "rot": 342.4,
+   "variant": 0,
+   "id": "fol_st_trees_0022",
+   "zone": "st_trees",
+   "src": "generated"
+  },
+  {
+   "species": "rowan",
+   "x": 329.83,
+   "y": 558.4,
+   "z": 636.46,
+   "scale": 0.992,
+   "rot": 305.1,
+   "variant": 1,
+   "id": "fol_st_trees_0023",
+   "zone": "st_trees",
+   "src": "generated"
+  },
+  {
+   "species": "rowan",
+   "x": 427.33,
+   "y": 50.71,
+   "z": 663.4,
+   "scale": 1.121,
+   "rot": 226.0,
+   "variant": 0,
+   "id": "fol_st_trees_0024",
+   "zone": "st_trees",
+   "src": "generated"
+  },
+  {
+   "species": "rowan",
+   "x": 345.04,
+   "y": 285.17,
+   "z": 649.51,
+   "scale": 0.865,
+   "rot": 63.5,
+   "variant": 1,
+   "id": "fol_st_trees_0025",
+   "zone": "st_trees",
+   "src": "generated"
+  },
+  {
+   "species": "maple",
+   "x": 214.32,
+   "y": 71.43,
+   "z": 652.28,
+   "scale": 1.104,
+   "rot": 220.1,
+   "variant": 0,
+   "id": "fol_st_trees_0026",
+   "zone": "st_trees",
+   "src": "generated"
+  },
+  {
+   "species": "maple",
+   "x": 262.45,
+   "y": 437.11,
+   "z": 634.34,
+   "scale": 0.849,
+   "rot": 122.3,
+   "variant": 1,
+   "id": "fol_st_trees_0027",
+   "zone": "st_trees",
+   "src": "generated"
+  },
+  {
+   "species": "maple",
+   "x": 83.99,
+   "y": 546.14,
+   "z": 626.08,
+   "scale": 0.95,
+   "rot": 6.8,
+   "variant": 0,
+   "id": "fol_st_trees_0028",
+   "zone": "st_trees",
+   "src": "generated"
+  },
+  {
+   "species": "maple",
+   "x": 204.41,
+   "y": 596.41,
+   "z": 627.42,
+   "scale": 1.019,
+   "rot": 162.9,
+   "variant": 1,
+   "id": "fol_st_trees_0029",
+   "zone": "st_trees",
+   "src": "generated"
+  },
+  {
+   "species": "maple",
+   "x": 202.08,
+   "y": 79.9,
+   "z": 649.9,
+   "scale": 0.867,
+   "rot": 246.5,
+   "variant": 0,
+   "id": "fol_st_trees_0030",
+   "zone": "st_trees",
+   "src": "generated"
+  },
+  {
+   "species": "alder",
+   "x": 77.47,
+   "y": 466.28,
+   "z": 632.32,
+   "scale": 0.962,
+   "rot": 300.3,
+   "variant": 1,
+   "id": "fol_st_trees_0031",
+   "zone": "st_trees",
+   "src": "generated"
+  },
+  {
+   "species": "alder",
+   "x": 76.83,
+   "y": 452.42,
+   "z": 634.24,
+   "scale": 1.137,
+   "rot": 32.6,
+   "variant": 0,
+   "id": "fol_st_trees_0032",
+   "zone": "st_trees",
+   "src": "generated"
+  },
+  {
+   "species": "alder",
+   "x": 116.31,
+   "y": 482.52,
+   "z": 628.98,
+   "scale": 0.966,
+   "rot": 19.6,
+   "variant": 1,
+   "id": "fol_st_trees_0033",
+   "zone": "st_trees",
+   "src": "generated"
+  },
+  {
+   "species": "alder",
+   "x": 80.42,
+   "y": 113.89,
+   "z": 648.46,
+   "scale": 0.868,
+   "rot": 234.3,
+   "variant": 1,
+   "id": "fol_st_trees_0034",
+   "zone": "st_trees",
+   "src": "generated"
+  },
+  {
+   "species": "spruce",
+   "x": 333.57,
+   "y": 269.41,
+   "z": 649.61,
+   "scale": 0.845,
+   "rot": 190.6,
+   "variant": 1,
+   "id": "fol_st_trees_0035",
+   "zone": "st_trees",
+   "src": "generated"
+  },
+  {
+   "species": "spruce",
+   "x": 408.03,
+   "y": 248.82,
+   "z": 653.54,
+   "scale": 0.896,
+   "rot": 275.2,
+   "variant": 0,
+   "id": "fol_st_trees_0036",
+   "zone": "st_trees",
+   "src": "generated"
+  },
+  {
+   "species": "spruce",
+   "x": 419.02,
+   "y": 267.98,
+   "z": 653.33,
+   "scale": 0.873,
+   "rot": 321.2,
+   "variant": 0,
+   "id": "fol_st_trees_0037",
+   "zone": "st_trees",
+   "src": "generated"
+  },
+  {
+   "species": "spruce",
+   "x": 436.79,
+   "y": 579.49,
+   "z": 646.41,
+   "scale": 0.964,
+   "rot": 200.0,
+   "variant": 1,
+   "id": "fol_st_trees_0038",
+   "zone": "st_trees",
+   "src": "generated"
+  },
+  {
+   "species": "spruce",
+   "x": 296.16,
+   "y": 459.89,
+   "z": 636.53,
+   "scale": 1.087,
+   "rot": 12.5,
+   "variant": 0,
+   "id": "fol_st_trees_0039",
+   "zone": "st_trees",
+   "src": "generated"
+  },
+  {
+   "species": "spruce",
+   "x": 464.09,
+   "y": 478.2,
+   "z": 644.91,
+   "scale": 0.943,
+   "rot": 305.9,
+   "variant": 1,
+   "id": "fol_st_trees_0040",
+   "zone": "st_trees",
+   "src": "generated"
+  },
+  {
+   "species": "spruce",
+   "x": 326.19,
+   "y": 57.59,
+   "z": 660.6,
+   "scale": 1.11,
+   "rot": 276.1,
+   "variant": 0,
+   "id": "fol_st_trees_0041",
+   "zone": "st_trees",
+   "src": "generated"
+  },
+  {
+   "species": "fir",
+   "x": 426.34,
+   "y": 155.11,
+   "z": 658.91,
+   "scale": 1.156,
+   "rot": 121.1,
+   "variant": 1,
+   "id": "fol_st_trees_0042",
+   "zone": "st_trees",
+   "src": "generated"
+  },
+  {
+   "species": "fir",
+   "x": 489.54,
+   "y": 218.01,
+   "z": 656.24,
+   "scale": 0.914,
+   "rot": 172.0,
+   "variant": 0,
+   "id": "fol_st_trees_0043",
+   "zone": "st_trees",
+   "src": "generated"
+  },
+  {
+   "species": "fir",
+   "x": 333.79,
+   "y": 513.61,
+   "z": 638.5,
+   "scale": 1.022,
+   "rot": 95.6,
+   "variant": 1,
+   "id": "fol_st_trees_0044",
+   "zone": "st_trees",
+   "src": "generated"
+  },
+  {
+   "species": "fir",
+   "x": 53.67,
+   "y": 592.23,
+   "z": 625.74,
+   "scale": 0.911,
+   "rot": 81.7,
+   "variant": 1,
+   "id": "fol_st_trees_0045",
+   "zone": "st_trees",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 344.73,
+   "y": 453.72,
+   "z": 640.19,
+   "scale": 0.835,
+   "rot": 223.5,
+   "variant": 1,
+   "id": "fol_st_trees_0046",
+   "zone": "st_trees",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 45.41,
+   "y": 447.31,
+   "z": 636.96,
+   "scale": 0.856,
+   "rot": 151.6,
+   "variant": 0,
+   "id": "fol_st_trees_0047",
+   "zone": "st_trees",
+   "src": "generated"
+  },
+  {
+   "species": "scots_pine",
+   "x": 413.54,
+   "y": 584.93,
+   "z": 643.55,
+   "scale": 1.051,
+   "rot": 293.7,
+   "variant": 0,
+   "id": "fol_st_trees_0048",
+   "zone": "st_trees",
+   "src": "generated"
+  },
+  {
+   "species": "alder",
+   "x": 66.65,
+   "y": 582.25,
+   "z": 625.18,
+   "scale": 1.122,
+   "rot": 102.6,
+   "variant": 1,
+   "id": "fol_w_river_2_0007",
+   "zone": "w_river_2",
+   "src": "generated"
+  },
+  {
+   "species": "alder",
+   "x": 190.28,
+   "y": 598.75,
+   "z": 626.25,
+   "scale": 0.987,
+   "rot": 206.9,
+   "variant": 0,
+   "id": "fol_w_river_3_0005",
+   "zone": "w_river_3",
+   "src": "generated"
+  },
+  {
+   "species": "alder",
+   "x": 168.0,
+   "y": 576.96,
+   "z": 625.17,
+   "scale": 0.911,
+   "rot": 20.7,
+   "variant": 0,
+   "id": "fol_w_river_3_0007",
+   "zone": "w_river_3",
+   "src": "generated"
+  },
+  {
+   "species": "oak",
+   "x": 265.79,
+   "y": 105.48,
+   "z": 653.06,
+   "scale": 1.017,
+   "rot": 356.5,
+   "variant": 0,
+   "id": "fol_w_town_1_0009",
+   "zone": "w_town_1",
+   "src": "generated"
+  },
+  {
+   "species": "oak",
+   "x": 277.1,
+   "y": 129.08,
+   "z": 652.94,
+   "scale": 1.163,
+   "rot": 190.5,
+   "variant": 1,
+   "id": "fol_w_town_1_0010",
+   "zone": "w_town_1",
+   "src": "generated"
+  },
+  {
+   "species": "oak",
+   "x": 42.71,
+   "y": 421.46,
+   "z": 638.0,
+   "scale": 0.852,
+   "rot": 74.7,
+   "variant": 0,
+   "id": "fol_w_town_1_0011",
+   "zone": "w_town_1",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 437.79,
+   "y": 33.08,
+   "z": 664.11,
+   "scale": 1.128,
+   "rot": 240.5,
+   "variant": 1,
+   "id": "fol_w_town_1_0013",
+   "zone": "w_town_1",
+   "src": "generated"
+  },
+  {
+   "species": "birch",
+   "x": 110.7,
+   "y": 405.05,
+   "z": 632.63,
+   "scale": 0.991,
+   "rot": 234.8,
+   "variant": 0,
+   "id": "fol_w_town_1_0016",
+   "zone": "w_town_1",
+   "src": "generated"
+  },
+  {
+   "species": "rowan",
+   "x": 198.54,
+   "y": 358.74,
+   "z": 635.4,
+   "scale": 1.027,
+   "rot": 328.6,
+   "variant": 1,
+   "id": "fol_w_town_1_0019",
+   "zone": "w_town_1",
+   "src": "generated"
+  },
+  {
+   "species": "rowan",
+   "x": 294.41,
+   "y": 430.71,
+   "z": 637.27,
+   "scale": 0.983,
+   "rot": 181.0,
+   "variant": 0,
+   "id": "fol_w_town_1_0020",
+   "zone": "w_town_1",
+   "src": "generated"
+  },
+  {
+   "species": "rowan",
+   "x": 382.86,
+   "y": 353.34,
+   "z": 646.85,
+   "scale": 0.951,
+   "rot": 118.8,
+   "variant": 0,
+   "id": "fol_w_town_1_0021",
+   "zone": "w_town_1",
+   "src": "generated"
+  },
+  {
+   "species": "rowan",
+   "x": 93.36,
+   "y": 83.86,
+   "z": 647.95,
+   "scale": 0.968,
+   "rot": 182.5,
+   "variant": 1,
+   "id": "fol_w_town_1_0022",
+   "zone": "w_town_1",
+   "src": "generated"
+  },
+  {
+   "species": "maple",
+   "x": 91.09,
+   "y": 176.35,
+   "z": 644.92,
+   "scale": 1.123,
+   "rot": 2.4,
+   "variant": 0,
+   "id": "fol_w_town_1_0024",
+   "zone": "w_town_1",
+   "src": "generated"
+  },
+  {
+   "species": "maple",
+   "x": 72.1,
+   "y": 328.59,
+   "z": 641.13,
+   "scale": 1.036,
+   "rot": 92.4,
+   "variant": 0,
+   "id": "fol_w_town_1_0025",
+   "zone": "w_town_1",
+   "src": "generated"
+  }
+ ]
+}

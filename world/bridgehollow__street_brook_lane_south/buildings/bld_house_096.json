@@ -1,0 +1,47 @@
+{
+ "id": "bld_house_096",
+ "name": "House 96",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    113.0,
+    3.2
+   ],
+   [
+    112.1,
+    29.2
+   ],
+   [
+    125.2,
+    29.6
+   ],
+   [
+    126.1,
+    3.7
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 641.2,
+ "site_slope": 0.108,
+ "site_relief_ft": 2.6,
+ "style": "bh_inner_house_winter",
+ "region": {
+  "parent_id": "bld_house_096",
+  "clipped": false,
+  "edge": true,
+  "inside_frac": 0.751,
+  "in_region_frac": 0.751
+ }
+}

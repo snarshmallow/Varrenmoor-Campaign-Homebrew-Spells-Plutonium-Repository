@@ -1,0 +1,46 @@
+{
+ "id": "bld_house_086",
+ "name": "House 86",
+ "kind": "house",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    171.7,
+    373.0
+   ],
+   [
+    179.9,
+    365.1
+   ],
+   [
+    166.6,
+    351.1
+   ],
+   [
+    158.4,
+    359.0
+   ]
+  ]
+ },
+ "notes": "",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 1,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 650.5,
+ "site_slope": 0.073,
+ "site_relief_ft": 1.2,
+ "region": {
+  "parent_id": "bld_house_086",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

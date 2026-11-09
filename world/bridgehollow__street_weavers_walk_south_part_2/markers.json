@@ -1,0 +1,118 @@
+{
+ "region_outline": [
+  [
+   395.9,
+   5.5
+  ],
+  [
+   395.9,
+   559.1
+  ],
+  [
+   6.7,
+   559.1
+  ],
+  [
+   6.7,
+   5.5
+  ]
+ ],
+ "markers": [
+  {
+   "id": "mk_str_011_start",
+   "kind": "continues_off_map",
+   "street": "str_011",
+   "parent_street": "str_011",
+   "point": [
+    226.4,
+    5.5
+   ],
+   "dir": [
+    -0.857,
+    -0.514
+   ],
+   "width_ft": 20.7,
+   "label": "Cobbler Row continues"
+  },
+  {
+   "id": "mk_str_014_start",
+   "kind": "continues_off_map",
+   "street": "str_014",
+   "parent_street": "str_014",
+   "point": [
+    252.63,
+    5.5
+   ],
+   "dir": [
+    -0.15,
+    -0.989
+   ],
+   "width_ft": 24.0,
+   "label": "Warden Street continues"
+  },
+  {
+   "id": "mk_str_016_start",
+   "kind": "continues_off_map",
+   "street": "str_016",
+   "parent_street": "str_016",
+   "point": [
+    155.38,
+    5.5
+   ],
+   "dir": [
+    -0.61,
+    -0.792
+   ],
+   "width_ft": 18.0,
+   "label": "Dyers Walk continues"
+  },
+  {
+   "id": "mk_str_018_start",
+   "kind": "continues_off_map",
+   "street": "str_018",
+   "parent_street": "str_018",
+   "point": [
+    100.33,
+    5.5
+   ],
+   "dir": [
+    -0.394,
+    -0.919
+   ],
+   "width_ft": 18.0,
+   "label": "Alley 18 continues"
+  },
+  {
+   "id": "mk_str_019_end",
+   "kind": "continues_off_map",
+   "street": "str_019",
+   "parent_street": "str_019",
+   "point": [
+    299.69,
+    5.5
+   ],
+   "dir": [
+    0.885,
+    -0.466
+   ],
+   "width_ft": 20.4,
+   "label": "Potters Row continues"
+  },
+  {
+   "id": "mk_str_024_start",
+   "kind": "continues_off_map",
+   "street": "str_024",
+   "parent_street": "str_024",
+   "point": [
+    320.21,
+    5.5
+   ],
+   "dir": [
+    0.02,
+    -1.0
+   ],
+   "width_ft": 24.0,
+   "label": "Weavers Walk 2 continues"
+  }
+ ]
+}

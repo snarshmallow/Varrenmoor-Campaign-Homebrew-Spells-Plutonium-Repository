@@ -1,0 +1,47 @@
+{
+ "id": "bld_warden_hall",
+ "name": "Warden's Hall",
+ "kind": "civic",
+ "status": "proposed",
+ "geometry": {
+  "type": "polygon",
+  "points": [
+   [
+    243.8,
+    312.3
+   ],
+   [
+    275.0,
+    312.0
+   ],
+   [
+    274.8,
+    287.9
+   ],
+   [
+    243.6,
+    288.2
+   ]
+  ]
+ },
+ "notes": "Seat of the wardens, on the low rise. Layout proposed.",
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "floors": 2,
+ "rooms": [],
+ "doors": [],
+ "elevation_ft": 653.2,
+ "site_slope": 0.075,
+ "site_relief_ft": 2.8,
+ "style": "bh_warden_civic_winter",
+ "region": {
+  "parent_id": "bld_warden_hall",
+  "clipped": false,
+  "edge": false,
+  "inside_frac": 1.0,
+  "in_region_frac": 1.0
+ }
+}

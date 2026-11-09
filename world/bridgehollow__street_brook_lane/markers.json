@@ -1,0 +1,150 @@
+{
+ "region_outline": [
+  [
+   283.6,
+   1.8
+  ],
+  [
+   283.6,
+   524.8
+  ],
+  [
+   9.8,
+   524.8
+  ],
+  [
+   9.8,
+   1.8
+  ]
+ ],
+ "markers": [
+  {
+   "id": "mk_str_pilgrim_road_1_start",
+   "kind": "continues_off_map",
+   "street": "str_pilgrim_road_1",
+   "parent_street": "str_pilgrim_road_1",
+   "point": [
+    58.51,
+    524.8
+   ],
+   "dir": [
+    0.565,
+    0.825
+   ],
+   "width_ft": 30,
+   "label": "Pilgrim Road continues"
+  },
+  {
+   "id": "mk_str_pilgrim_road_1_end",
+   "kind": "continues_off_map",
+   "street": "str_pilgrim_road_1",
+   "parent_street": "str_pilgrim_road_1",
+   "point": [
+    9.8,
+    461.82
+   ],
+   "dir": [
+    -0.631,
+    -0.776
+   ],
+   "width_ft": 30,
+   "label": "Pilgrim Road continues"
+  },
+  {
+   "id": "mk_str_006_start",
+   "kind": "continues_off_map",
+   "street": "str_006",
+   "parent_street": "str_006",
+   "point": [
+    9.8,
+    290.92
+   ],
+   "dir": [
+    -0.85,
+    0.526
+   ],
+   "width_ft": 17.9,
+   "label": "Weavers Walk continues"
+  },
+  {
+   "id": "mk_str_010_start",
+   "kind": "continues_off_map",
+   "street": "str_010",
+   "parent_street": "str_010",
+   "point": [
+    9.8,
+    291.43
+   ],
+   "dir": [
+    -0.107,
+    0.994
+   ],
+   "width_ft": 21.0,
+   "label": "Chandler Row continues"
+  },
+  {
+   "id": "mk_str_010__p2_end",
+   "kind": "continues_off_map",
+   "street": "str_010__p2",
+   "parent_street": "str_010",
+   "point": [
+    9.8,
+    306.52
+   ],
+   "dir": [
+    -0.123,
+    -0.992
+   ],
+   "width_ft": 21.0,
+   "label": "Chandler Row continues"
+  },
+  {
+   "id": "mk_str_013_end",
+   "kind": "continues_off_map",
+   "street": "str_013",
+   "parent_street": "str_013",
+   "point": [
+    225.89,
+    524.8
+   ],
+   "dir": [
+    0.126,
+    0.992
+   ],
+   "width_ft": 18.0,
+   "label": "Thatchers Way continues"
+  },
+  {
+   "id": "mk_str_017_end",
+   "kind": "continues_off_map",
+   "street": "str_017",
+   "parent_street": "str_017",
+   "point": [
+    71.49,
+    524.8
+   ],
+   "dir": [
+    -0.864,
+    0.503
+   ],
+   "width_ft": 15.3,
+   "label": "Rope Walk continues"
+  },
+  {
+   "id": "mk_str_022_start",
+   "kind": "continues_off_map",
+   "street": "str_022",
+   "parent_street": "str_022",
+   "point": [
+    131.08,
+    524.8
+   ],
+   "dir": [
+    0.514,
+    0.858
+   ],
+   "width_ft": 21.0,
+   "label": "Tanners Row 2 continues"
+  }
+ ]
+}
