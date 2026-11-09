@@ -41,6 +41,17 @@ You get `world/<id>/` with:
 Limits: no terrain (a flat stub is written), no streets or water; walls are only as good as the scene's walls.
 `--dry-run` shows what would be made; use `--force` to overwrite.
 
+### 2b. Importing a plain base map image (no Foundry)
+
+Places tab -> *Import base map image* (image file / *Browse image*, place name, place id, *Feet per pixel*, optional *Rotate* and *Guide grid (ft)*; *Check image import (dry run)*, then *Import base map image*), or
+`python illustrator/generators/place_create.py import-image IMAGE --name "My base" --id my_base --ft-per-px 4.669 [--rotate DEG] [--grid-ft 100] [--dry-run] [--force]`
+(code: `foundry_import.import_image`, which feeds a synthetic one-image scene through the same importer as 2, so the result is laid out the same way). You get `world/<id>/` with:
+- `place.json` kind `basemap`, `bounds` = image pixels x feet per pixel, `import.source` = `image`, `import.ft_per_px`, `import.px_per_ft`, `links.foundry_scene` = null;
+- the image as `underlay/background.png` (plus `underlay/original_<name>`), placed locked on the layer UNDERLAY by *Open selected in Illustrator* / `place_render.py --job` exactly like a scene background;
+- a flat terrain stub (`terrain/`, height 0, `pipeline: flat_stub`; contours are skipped for it), empty `streets.json`, `districts.json`, `water.json`, `buildings/`, and `view_settings.json` whose town view covers the whole image (guide grid = *Guide grid*, default 100 ft).
+Orientation: origin = the image's top-left corner, x right, y down, **up in the picture = north**, feet; place (x, y) ft = image pixel (x, y) x feet per pixel (after the optional rotation, which grows the canvas). It refuses to overwrite an existing folder without `--force`. Nothing else is generated: trace roads and rivers yourself (PLUGIN_GUIDE.md, chapter "make a map from a 2D base map"). Oblique pictures must be rectified first (`generators/rectify_map.py`, PLUGIN_GUIDE.md 2.24).
+Example: `varrenmoor_base` = `illustrator/out/varrenmoor_overhead_map.png` at 4.6689 ft per pixel (2400 x 3428 px = 11205 x 16005 ft).
+
 ## 3. Creating a new place
 
 **From the Places tab (form).** Pick a template (coastal fishing village, river market town, mountain pass fort-town, walled hill town, farming hamlet)
@@ -60,7 +71,7 @@ Vocabulary: top of `place_text.py`.
 
 **From a Foundry scene**: section 2.
 
-Command line: `place_create.py create|validate|prompt-help|from-text|templates|regen|write-schema`; schema `world/schema/place-spec.schema.json`.
+Command line: `place_create.py create|validate|prompt-help|from-text|templates|regen|import-image|write-schema`; schema `world/schema/place-spec.schema.json`.
 Same spec + seed = same place. `create` refuses to overwrite an existing folder without `--force`.
 
 ### What a spec controls

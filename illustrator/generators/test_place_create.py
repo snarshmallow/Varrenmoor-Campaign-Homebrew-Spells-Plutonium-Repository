@@ -353,9 +353,53 @@ def test_import_scene_tiles_3d():
     print("ok import-scene tiles / regions / 3D flags / levels / hex warning / padding rounding (mock)")
 
 
+def test_import_image():
+    """A plain base-map image -> place: size = px x ft_per_px, origin top-left, flat stub terrain, underlay copied, rotate grows the canvas (no Foundry)."""
+    from PIL import Image
+    root = tempfile.mkdtemp(prefix="vb_img_")
+    try:
+        img = os.path.join(root, "base.png")
+        Image.new("RGB", (200, 400), (90, 120, 60)).save(img)
+        dry = fi.import_image(img, "ZZ Base", "zz_base", 5.0, dry_run=True, root=root)
+        assert dry["size_ft"] == [1000.0, 2000.0] and not os.path.exists(os.path.join(root, "zz_base")), dry
+        r = fi.import_image(img, "ZZ Base", "zz_base", 5.0, grid_ft=50, root=root)
+        d = os.path.join(root, "zz_base")
+        pj = json.load(open(os.path.join(d, "place.json"), encoding="utf-8"))
+        assert pj["bounds"] == {"width_ft": 1000.0, "height_ft": 2000.0} and pj["kind"] == "basemap" and pj["links"]["foundry_scene"] is None, pj
+        assert pj["import"]["underlay"] == "underlay/background.png" and pj["import"]["source"] == "image" and abs(pj["import"]["px_per_ft"] - 0.2) < 1e-9, pj["import"]
+        assert Image.open(os.path.join(d, "underlay", "background.png")).size == (200, 400)
+        hm = np.load(os.path.join(d, "terrain", "heightmap.npy"))
+        assert hm.max() == 0 and json.load(open(os.path.join(d, "terrain", "terrain_meta.json")))["pipeline"] == "flat_stub"
+        assert json.load(open(os.path.join(d, "view_settings.json")))["presets"]["town"]["grid_ft"] == 50
+        assert r["job"]["actions"][0]["layer"] == "UNDERLAY"
+        try:
+            fi.import_image(img, "ZZ Base", "zz_base", 5.0, root=root)
+            raise AssertionError("second import without force must refuse")
+        except ValueError:
+            pass
+        r90 = fi.import_image(img, "ZZ Rot", "zz_rot", 5.0, rotate=90, root=root)
+        assert r90["image_px"] == [400, 200] and r90["size_ft"] == [2000.0, 1000.0], r90
+        for bad in ({"ft_per_px": 0}, {"image": os.path.join(root, "nope.png")}):
+            a = dict(image=img, name="x", place_id="zz_x", ft_per_px=1.0, root=root)
+            a.update(bad)
+            try:
+                fi.import_image(**a)
+                raise AssertionError("bad input must raise")
+            except ValueError:
+                pass
+        # CLI end to end
+        import subprocess
+        out = subprocess.run([sys.executable, os.path.join(HERE, "place_create.py"), "import-image", img, "--name", "CLI", "--id", "zz_cli", "--ft-per-px", "2.5", "--dry-run"], capture_output=True, text=True)
+        res = json.loads(out.stdout.strip().splitlines()[-1])
+        assert res["ok"] and res["size_ft"] == [500.0, 1000.0], out.stdout + out.stderr
+    finally:
+        shutil.rmtree(root, ignore_errors=True)
+    print("ok import-image (size, origin, flat stub, underlay, rotate, refusals, CLI)")
+
+
 def main():
     quick = "--quick" in sys.argv
-    for t in (test_schema_and_validation, test_templates_valid, test_caps, test_from_text, test_terrain_recipes, test_elevation_adapt, test_naming_sets, test_import_scene, test_import_markers_render, test_import_scene_tiles_3d):
+    for t in (test_schema_and_validation, test_templates_valid, test_caps, test_from_text, test_terrain_recipes, test_elevation_adapt, test_naming_sets, test_import_scene, test_import_markers_render, test_import_scene_tiles_3d, test_import_image):
         t()
     if not quick:
         test_bridgehollow_regression()

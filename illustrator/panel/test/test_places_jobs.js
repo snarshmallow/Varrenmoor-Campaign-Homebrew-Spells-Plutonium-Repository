@@ -11,12 +11,14 @@ const check = (n, c, x) => { if (c) { ok++; console.log("PASS", n); } else { fai
 const STUB = {
   create: { ok: true, id: "ulfvik", dir: "x/world/ulfvik", report: { seconds: 1.5, draft: true, town: { counts: { buildings: 12, streets: 5 }, warnings: [] }, warnings: [] } },
   render: { ok: true, place: "ulfvik", png: "x/ulfvik_town.png", job_file: "x/jobs/ulfvik_town.json" },
+  image: { ok: true, place_id: "zz_base", size_ft: [1000, 2000], ft_per_px: 5, image_px: [200, 400], rotate_deg: 0, dry_run: false, underlay: { png: "underlay/background.png" } },
   import: { ok: true, place_id: "zz_scene", scene_uuid: "Scene.abc", size_ft: [310, 360], walls: 100, closed_loops: 25, dry_run: false, underlay: { png: "underlay/background.png" } }
 };
 const spawn = (py, args, o) => {
   const script = args.find(a => /\.py$/.test(a)) || "", sub = args[args.indexOf(script) + 1];
   let reply = null;
   if (/place_create\.py$/.test(script) && sub === "create") reply = STUB.create;
+  else if (/place_create\.py$/.test(script) && sub === "import-image") reply = STUB.image;
   else if (/place_render\.py$/.test(script)) reply = STUB.render;
   else if (/foundry_push\.py$/.test(script)) reply = STUB.import;
   if (reply) {
@@ -85,6 +87,18 @@ const runner = R.createRunner({ root: ROOT, jobsDir: tmp + "/jobs", fs, path, sp
   check("dry-run flag is snapshotted when the job is built", (calls[0] || []).includes("--dry-run") && (calls[0] || []).join(" ").includes("walls,tiles,regions,lights"), JSON.stringify(calls[0]));
   st.places.import.dry_run = false; job = VB.jobImportScene(st, d);
   check("a real import switches to the new place", job.newPlace === "zz_scene");
+  // import base map image (no Foundry)
+  calls.length = 0; st.places.image = { path: "", name: "ZZ Base", id: "", ft_per_px: "5", rotate: "", grid_ft: "" };
+  r = await runner.run(VB.jobImportImage(st, false));
+  check("image import needs a path", !r.ok && /path of the base map image/.test(r.error || ""), r.error);
+  st.places.image.path = "C:/maps/a.png"; st.places.image.ft_per_px = "";
+  r = await runner.run(VB.jobImportImage(st, false));
+  check("image import needs ft per pixel", !r.ok && /ft per pixel/.test(r.error || ""), r.error);
+  st.places.image.ft_per_px = "4.669"; st.places.image.rotate = "12"; st.places.image.grid_ft = "50"; calls.length = 0;
+  job = VB.jobImportImage(st, true); r = await runner.run(job); const ii = calls[0] || [];
+  check("image import args: import-image, path, --ft-per-px, --name, slug --id, --rotate, --grid-ft, --dry-run", r.ok && ii[1] === "import-image" && ii[2] === "C:/maps/a.png" && ii.includes("--ft-per-px") && ii.includes("4.669") && ii.includes("--name") && ii.includes("ZZ Base") && ii.includes("zz_base") && ii.includes("--rotate") && ii.includes("12") && ii.includes("--grid-ft") && ii.includes("50") && ii.includes("--dry-run"), JSON.stringify(ii));
+  check("image dry run has no place to switch to; a real one does", job.newPlace === null && VB.jobImportImage(st, false).newPlace === "zz_base");
+  check("image import result remembered", st.places.last.imported === "zz_base" && st.places.last.ft_per_px === 5);
   // import options: closed loops stay plain wall outlines by default; 'label rooms' sends buildings
   calls.length = 0; job = VB.jobImportScene(st, d); r = await runner.run(job);
   check("closed loops default to lines", (calls[0] || []).join(" ").includes("--closed-as lines"), JSON.stringify(calls[0]));

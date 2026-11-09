@@ -50,6 +50,11 @@ def main(argv=None):
             flat_import = json.load(open(os.path.join(REPO, "world", a.place, "terrain", "terrain_meta.json"), encoding="utf-8")).get("pipeline") == "flat_stub"
         except (OSError, ValueError):
             flat_import = False
+    try:                                 # a flat stub heightmap has nothing to contour (contouring a huge flat sheet takes minutes): skip contours for imports
+        if imp and json.load(open(os.path.join(REPO, "world", a.place, "terrain", "terrain_meta.json"), encoding="utf-8")).get("pipeline") == "flat_stub":
+            a.no_contours = True
+    except (OSError, ValueError):
+        pass
     shading = a.shading or ("none" if (underlay or flat_import) else dfl.get("shading_preset")) or "alpine_steep_calm"
     style = a.style or dfl.get("fills_style") or "full_map"
     prefix = a.name or f"{a.place}_{a.view}"

@@ -1,0 +1,72 @@
+{
+ "id": "varrenmoor_base",
+ "name": "Varrenmoor Base (overhead)",
+ "kind": "basemap",
+ "status": "base map",
+ "units": "feet",
+ "origin": "image top-left, x right, y down (up in the picture = north)",
+ "bounds": {
+  "width_ft": 11205.4,
+  "height_ft": 16005.0
+ },
+ "notes": "Base map from image D:\\Varrenmoor-Campaign-Homebrew-Spells-Plutonium-Repository\\illustrator\\out\\varrenmoor_overhead_map.png (2400x3428 px) at 4.6689 ft per pixel; rotate 0 deg clockwise. Place (x, y) ft = image pixel (x, y) * 4.6689. Trace roads / rivers over the UNDERLAY layer; nothing else is generated.",
+ "files": {
+  "districts": "districts.json",
+  "streets": "streets.json",
+  "water": "water.json",
+  "buildings": "buildings/",
+  "view_settings": "view_settings.json",
+  "terrain": "terrain/"
+ },
+ "view_focus": {
+  "town": [
+   5603,
+   8002
+  ]
+ },
+ "links": {
+  "foundry_scene": null,
+  "model3d": null,
+  "ai_layer": null
+ },
+ "generated_by": "foundry_import.py import-image",
+ "sea_level_ft": -1000.0,
+ "phase_elevation": "percentile",
+ "import": {
+  "scene_uuid": null,
+  "scene_name": "Varrenmoor Base (overhead)",
+  "scene_px": [
+   2400.0,
+   3428.0
+  ],
+  "scene_offset_px": [
+   0.0,
+   0.0
+  ],
+  "padding": 0.0,
+  "grid": {
+   "size": 21.41832123198184,
+   "distance": 100.0,
+   "units": "ft"
+  },
+  "px_per_ft": 0.21418321231981838,
+  "native_export_dpi": 428.37,
+  "background": "varrenmoor_overhead_map.png",
+  "underlay": "underlay/background.png",
+  "imported": "2026-11-09T13:50:08",
+  "scene_3d": null,
+  "warnings": [],
+  "counts": {
+   "tiles": 0,
+   "regions": 0,
+   "walls": 0,
+   "tokens": 0,
+   "lights": 0,
+   "notes": 0
+  },
+  "source": "image",
+  "source_image": "D:\\Varrenmoor-Campaign-Homebrew-Spells-Plutonium-Repository\\illustrator\\out\\varrenmoor_overhead_map.png",
+  "ft_per_px": 4.6689,
+  "rotate_deg": 0.0
+ }
+}

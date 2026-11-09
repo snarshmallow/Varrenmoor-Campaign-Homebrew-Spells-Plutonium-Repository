@@ -185,6 +185,9 @@ def fetch_asset(src, dest_dir, assets_root=None, base_url=None, log=print):
         urls = [src]
     else:
         urls = []
+        if os.path.isabs(src) and os.path.exists(src):     # a local file (import-image)
+            shutil.copyfile(src, dest)
+            return dest, "copied from a local file"
         rel = src.lstrip("/")
         local = None
         if assets_root and rel.startswith("assets/varrenmoor-3d/"):
@@ -357,6 +360,53 @@ def import_scene(sc, scene_uuid, place_id=None, include=("walls",), closed_as="l
     summary["dir"] = pdir
     summary["job"] = underlay_job(pid, underlay, pdir) if underlay and underlay.get("png") else None
     return summary
+
+
+def import_image(image, name, place_id=None, ft_per_px=1.0, rotate=0.0, grid_ft=100.0, force=False, dry_run=False, root=None, log=print):
+    """Create a place from a plain 2D base-map image (no Foundry needed). Reuses import_scene with a synthetic scene whose single background is the image:
+    1 image px = ft_per_px feet, origin = the image's top-left corner (x right, y down; up in the picture = north), flat terrain stub, image copied to
+    underlay/ and used as the UNDERLAY layer exactly like an imported scene. rotate = degrees clockwise applied to the image first (canvas grows, corners white-transparent)."""
+    from PIL import Image
+    image = os.path.abspath(image)
+    if not os.path.isfile(image):
+        raise ValueError(f"image not found: {image}")
+    if not ft_per_px or ft_per_px <= 0:
+        raise ValueError("ft_per_px must be > 0")
+    im = Image.open(image)
+    im.load()
+    w, h = im.size
+    tmp = None
+    if rotate and abs(rotate) % 360 > 1e-9:
+        im = im.convert("RGBA").rotate(-float(rotate), expand=True, resample=Image.BICUBIC)
+        w, h = im.size
+        import tempfile
+        tmp = os.path.join(tempfile.mkdtemp(prefix="vb_img_"), "rotated.png")
+        im.save(tmp)
+    src = tmp or image
+    nm = name or os.path.splitext(os.path.basename(image))[0]
+    # grid: grid_ft feet = grid_px pixels, so px_per_ft = grid_px / grid_ft = 1 / ft_per_px
+    sc = {"name": nm, "width": w, "height": h, "padding": 0, "grid": {"size": grid_ft / float(ft_per_px), "distance": grid_ft, "units": "ft", "type": 1}, "background": {"src": src.replace("\\", "/")}}
+    try:
+        res = import_scene(sc, "image:" + os.path.basename(image), place_id or slug(nm), (), "lines", False, force, dry_run, root=root, assets_root=None, log=log)
+    finally:
+        if tmp:
+            shutil.rmtree(os.path.dirname(tmp), ignore_errors=True)
+    res.update(source_image=image, ft_per_px=float(ft_per_px), rotate_deg=float(rotate or 0), image_px=[w, h])
+    if dry_run:
+        return res
+    pj_path = os.path.join(res["dir"], "place.json")
+    pj = json.load(open(pj_path, encoding="utf-8"))
+    pj.update({"kind": "basemap", "status": "base map", "origin": "image top-left, x right, y down (up in the picture = north)", "generated_by": "foundry_import.py import-image"})
+    pj["notes"] = (f"Base map from image {image} ({w}x{h} px) at {ft_per_px:g} ft per pixel; rotate {rotate or 0} deg clockwise. Place (x, y) ft = image pixel (x, y) * {ft_per_px:g}. "
+                   "Trace roads / rivers over the UNDERLAY layer; nothing else is generated.")
+    pj["links"]["foundry_scene"] = None
+    imp = pj["import"]
+    imp.update({"scene_uuid": None, "scene_name": nm, "source": "image", "source_image": image, "ft_per_px": float(ft_per_px), "rotate_deg": float(rotate or 0), "background": os.path.basename(image)})
+    imp.pop("levels", None)
+    imp["warnings"] = [x for x in imp.get("warnings", []) if "no background" not in x]
+    jsave(pj_path, pj)
+    res["place_json"] = pj_path
+    return res
 
 
 def underlay_job(pid, underlay, pdir):

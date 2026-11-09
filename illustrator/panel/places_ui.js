@@ -13,7 +13,7 @@
       fs.readdirSync(base).forEach(function (n) {
         var pj = ctx.readJson(base + "/" + n + "/place.json", null); if (!pj) return;
         out.push({ id: n, name: pj.name || n, kind: pj.kind || "", pop: pj.population_estimate || "", by: pj.generated_by || (pj.parent ? "region" : "hand"), scene: (pj.links || {}).foundry_scene || "",
-          size: pj.bounds ? Math.round(pj.bounds.width_ft) + " x " + Math.round(pj.bounds.height_ft) + " ft" : "", imported: !!pj.import });
+          size: pj.bounds ? Math.round(pj.bounds.width_ft) + " x " + Math.round(pj.bounds.height_ft) + " ft" : "", imported: !!pj.import, image: !!(pj.import && pj.import.source === "image") });
       });
     } catch (e) { /* no world folder */ }
     return out.sort(function (a, b) { return a.id < b.id ? -1 : 1; });
@@ -27,7 +27,7 @@
     if (!ctx || !$("plList")) return;
     var st = ctx.state(), L = listPlaces();
     $("plList").innerHTML = L.map(function (p) {
-      return '<tr data-pl="' + esc(p.id) + '"' + (p.id === sel ? ' class="sel"' : "") + "><td>" + esc(p.id) + "</td><td>" + esc(p.name) + "</td><td>" + esc(p.kind) + (p.pop ? " " + esc(p.pop) : "") + "</td><td>" + esc(p.size) + "</td><td>" + esc(p.by + (p.imported ? " (Foundry import)" : "")) + "</td><td>" + (p.scene ? "linked" : "") + "</td></tr>";
+      return '<tr data-pl="' + esc(p.id) + '"' + (p.id === sel ? ' class="sel"' : "") + "><td>" + esc(p.id) + "</td><td>" + esc(p.name) + "</td><td>" + esc(p.kind) + (p.pop ? " " + esc(p.pop) : "") + "</td><td>" + esc(p.size) + "</td><td>" + esc(p.by + (p.image ? " (base map image)" : p.imported ? " (Foundry import)" : "")) + "</td><td>" + (p.scene ? "linked" : "") + "</td></tr>";
     }).join("");
     Array.prototype.forEach.call($("plList").querySelectorAll("tr"), function (tr) { tr.addEventListener("click", function () { sel = tr.getAttribute("data-pl"); paint(); }); });
     if (!sel && L.length) sel = st.place;
@@ -76,6 +76,12 @@
     pl_open_ai: function () { if (!sel) return; return run(function () { return VB.jobPlaceRender(ctx.state(), sel, { draft: P().draft, job: true }); }); },
     pl_import_scene: function () { return run(function () { return VB.jobImportScene(ctx.state(), ctx.dirs()); }); },
     pl_import_check: function () { var I = P().import; var was = I.dry_run; I.dry_run = true; var r = run(function () { return VB.jobImportScene(ctx.state(), ctx.dirs()); }); I.dry_run = was; return r; },
+    pl_image_browse: function () {
+      try { var r = window.cep.fs.showOpenDialogEx(false, false, "Choose the base map image", "", ["png", "jpg", "jpeg", "webp", "tif", "tiff"]); if (r && r.data && r.data.length) { P().image.path = r.data[0].replace(/\\/g, "/"); ctx.save(); ctx.syncInputs(); } }
+      catch (e) { if (ctx.showError) ctx.showError("file dialog unavailable: type the path instead"); }
+    },
+    pl_image_check: function () { return run(function () { return VB.jobImportImage(ctx.state(), true); }); },
+    pl_image_import: function () { return run(function () { return VB.jobImportImage(ctx.state(), false); }); },
     pl_import_from_foundry_tab: function () {   // button in the Foundry tab: uses that tab's scene picker
       var f = ctx.state().foundry; P().import.scene_uuid = f.sceneUuid || P().import.scene_uuid; ctx.save(); ctx.syncInputs();
       return run(function () { return VB.jobImportScene(ctx.state(), ctx.dirs()); });

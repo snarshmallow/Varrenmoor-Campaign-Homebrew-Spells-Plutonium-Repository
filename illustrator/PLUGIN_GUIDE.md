@@ -4,7 +4,134 @@ Plain-language guide for the GM. No programming needed. It covers the Illustrato
 
 Everything here was checked against the panel's HTML, the generator code and the notes in `illustrator/out/`. Where I could not confirm a control or a number, the guide says **check in panel**. Things that were only tested offline are listed in section 8.
 
-Contents: 1 What it is and the daily workflow, 2 Tab-by-tab reference, 3 Foundry bridge, 4 After any models push, 5 Blender, 6 Performance, 7 Troubleshooting, 8 Not yet live-tested, 9 Private-use note.
+Contents: **Step-by-step: make a map from scratch** and **Step-by-step: make a map from a 2D base map (image or Foundry scene)** (both directly below), 1 What it is, install and the daily workflow, 2 Tab-by-tab reference (2.1 to 2.24), 3 Foundry bridge, 4 After any models push, 5 Blender, 6 Performance, 7 Troubleshooting, 8 Not yet live-tested and known limits, 9 Private-use note.
+
+## Step-by-step: make a map from scratch
+
+Read this first. It is the whole pipeline in order: each step names the tab and the exact button, then the matching command line (run from the repository root; the panel runs the same commands). Every button and flag below was checked against `panel/index.html`, the `*_ui.js` files and the CLIs (`--help`). Use a spare place id while learning.
+
+Conventions: **P** = your place id, **U** = the Foundry scene uuid (`Scene.xxxx`, listed after **Refresh from Foundry**). Do a dry run first for anything that writes to Foundry. One job runs at a time (**Cancel** in the top bar).
+
+### Phase 1: the place, scale and land (Illustrator PC)
+
+| # | Tab: what to press | Command line | Result |
+|---|---|---|---|
+| 1 | **Places**: pick a **Template** and **Load template into form** (or type words and **Fill form from words**), check the form (name, id, culture, population, layout, terrain, rivers, size), keep **Draft quality** ticked, **Validate**, **Generate place**. The panel switches to the new place. Or choose an existing one in the **Place** box at the top. | `python illustrator/generators/place_create.py create spec.json --id P --draft`, or `place_create.py from-text "walled coastal town of 800 people, Danish style, hilly" --out spec.json` then `create` | `world/P/` with terrain, water, streets, buildings, `place.json` |
+| 2 | **Scale**: choose a preset (town, bowl, street, room) or set Scale (ft per inch), Grid (ft), page; **Apply (regenerate guides)**. In Town, **Fit scale and centre** picks a nice scale. | (guides are drawn by `render_world.py --place P`) | Grid, scale bar, north arrow. Scale only changes the drawing, never the world |
+| 3a | **Terrain**: set Seed, Cell (ft), Base elevation, Ridge noise amp, Noise scale; **Generate base terrain** (red: rewrites the heightmap and replays the patches). | `terrain.py --place P [--spec F] [--seed N] [--cell 10]` | `world/P/terrain/` |
+| 3b | **Terrain**, patches: choose a type, **Capture polygon** (selected closed path), **Preview**, **Apply**; **Undo** / **Redo**. | `terrain_patch.py preview\|apply\|undo\|redo --place P --polygon "x,y;x,y;..." --params F` | Hills, valleys, trenches on top of the base |
+| 3c | **Terrain** > **Paint heightmap** (collapsible section at the bottom): pick a brush, drag on the canvas, then **Save edits** (or **Save + export world pack**). **Discard unsaved**, **Reset to generated terrain**. See 2.23. | `heightmap_paint.py apply-strokes --place P --strokes strokes.json`, then `heightmap_paint.py save --place P` | `heightmap_edits.npz/.json`; every later step sees the painted ground |
+| 4 | **Water**: **Derive rivers (analyze)**, **Carve rivers**; by hand: **Capture path** then **Add river**, **Capture polygon** then **Add lake**. **Regenerate river + terrain** rewrites the terrain (re-run Town after). | `water.py analyze --place P`, `water.py carve --place P`, `water.py add-river --place P --points "x,y;x,y" --width 10 --carve` | `water.json`, carved terrain |
+| 5 | **Town**: **Capture lasso** (or **Auto lasso from terrain**), **Fit scale and centre**, **Generate**, look, then **Accept** (or **Reject**). **Render map with fills** for the textured 2D map. | `town_gen.py --place P --params world/P/town_params.json --out-dir DIR`, then `panelio.py town-accept --place P` | Districts, streets, plazas, buildings, fields |
+
+After any terrain or water change the Contours, Shading and Town tabs show a yellow dot: re-run them (Layers tab, **Clear stale marks** removes the dots).
+
+### Phase 2: roads, buildings, regions, foliage, bridges
+
+| # | Tab: what to press | Command line |
+|---|---|---|
+| 6 | **Roads**, block "Road shape": **Redraw roads in Illustrator** (one open path per road on the layer **Road Centerlines**), move or add paths in Illustrator, then **Read roads from Illustrator** (reshapes roads whose path is named by their id, adds the rest) or **Add from Illustrator selection** / **Reshape from Illustrator selection**. Also **Simplify / smooth ticked**, **Split**, **Join two**, **Delete ticked roads** (tick "Yes, delete" first), **Undo last road change**. Per-road class, width, surface, kerb, grading: tick the field, **Apply edits** (**Reset overrides** undoes). Full rules: 2.18. | `object_edit.py add-road --place P --name N --kind lane --width 14 --points "x,y;x,y"`, `set-road-points`, `apply-paths --file paths.json --mode reshape\|add\|sync`, `split-road --ids a --at 3`, `join-roads --ids a,b`, `delete-road --ids a`, `restore-streets --place P` |
+| 7 | **Buildings**: pick a style in the gallery, choose **Apply to** (ticked, a kind, a district, all), **Apply style**; **Auto by kind + district** for a quick start; **Clear style**. One building: tick it, tick the fields to change (storeys, interior style, roof type, pitch, wall material, no windows, keep as its own model), **Apply edits**. | `building_styles.py assign ...` (see `-h`), `object_edit.py set-building --place P --ids bld_house_041 --set roof_type=hip` |
+| 8 | **Regions** (optional zoomed child map of a district): choose the region, **Preview extent**, **Create region map**; later **Refresh from parent**. | `region_extract.py extract --parent P --district dis_x --name "Ward"`, `region_extract.py refresh --child ID` |
+| 9 | **Foliage**: Mix preset, Density per hectare, Area (**Capture area**, **Use Town area**, or the whole place), **Scatter**; check **Counts** and **Preview render**; **Redraw 2D symbols**. | `foliage.py scatter --place P --params params.json`, `foliage.py stats --place P` |
+| 10 | **Padding**: pick Height preset and Texture preset, **Generate + preview** (the distant ground; it reaches Foundry in step 16). | `padding_heightmap.py generate --place P --preset bowl-ridge` |
+| 11 | **Bridges**: **Detect**; pick a style for each crossing and **Apply to selected**, or **Auto-fix all crossings**. An empty list is normal when no road crosses water or a gully. | `bridge_maker.py detect --place P`, `bridge_maker.py apply --place P` |
+
+### Phase 3: light, sky and lamps
+
+| # | Tab: what to press | Command line |
+|---|---|---|
+| 12 | **Lighting**, block "Sun, shadows and fog (Foundry 3D)": click a preset (dawn, morning, noon, afternoon, dusk, night, foggy morning, warm sunset, golden hour, overcast, high mountain, storm) and, if wanted, change the **Sky look**; the sun or moon in the sky picture and the 3D shadows use the same azimuth and elevation. **Check (dry run)**, then **Apply to scene** (needs the scene picked on the Foundry tab, so do it after step 16). | `foundry_push.py set-sun --scene-uuid U --place P --preset warm_sunset [--make-sky] [--apply]` |
+| 13 | **Lighting**, block "Foundry 3D lighting and light budget": Lighting mode, Max lights; **Check (dry run)**, **Apply to scene** (2.6.1). | `foundry_push.py set-lighting --scene-uuid U ...` |
+| 14 | **Skybox**: Preset, Image width, **Regenerate**. It reaches the scene after the models push (section 4): **Refresh scenes**, pick, untick Dry run, **Apply to scene**. | `skybox.py generate --place P --presets clear_day --width 2048`, `skybox.py set-flag --place P --scene-uuid U --preset clear_day --apply` |
+| 14b | **Streetlamps**: choose a style (`wrought_iron`, `wooden_oil`, `old_wooden_lantern`, `antique_gas_lantern` ...), Spacing, Side; **Preview (dry run)**, **Generate** (writes the lamp tile and lamp lights into the export), later **Push layer + lights** (2.21). Needs the pack from step 15 for its roads. | `streetlamps.py plan --place P`, `streetlamps.py apply --place P --pack world/P/export --enabled on --style wrought_iron --spacing 50 --side both` |
+
+### Phase 4: export, push and check
+
+| # | Tab: what to press | Command line |
+|---|---|---|
+| 15 | **Foundry** > "3D models": set Roads (3D), Roof mode and Home interior style if you need them, then **Export world pack (3D)**, **Export split models**, optionally **Merge/compress** (by layer; keep Compression on none while you use doors). Run step 14b **Generate** after each fresh export. | `worldpack.py export --place P`, `worldpack_split.py split --place P`, `worldpack_split.py merge --place P --preset layer` |
+| 16 | **Foundry**: confirm the bridge (section 3), **Refresh from Foundry**, choose **New scene** (give a name) or **Existing scene**. **Push models (dry run)**, then **Push models** (or **Publish (merge + push)**). Right after: Padding tab **Dry run push**, untick Dry run, **Push to Foundry scene**; Skybox tab **Apply to scene**; Foliage tab **Publish to Foundry**; Foundry tab **Push interior lights**. | `foundry_push.py push-models --place P --placements world/P/export/placements.json --scene-name "My map" [--dry-run]` (existing scene: `--scene-uuid U`), `padding_heightmap.py push --place P --scene-uuid U --dry-run`, `skybox.py set-flag ... --apply`, `foundry_push.py push-lights --place P --scene-uuid U` |
+| 16b | Instead of 16: **Tools** tab, **Push 3D scene (dry run)**, then **Push 3D scene** (models, foliage, padding, lights, skybox, collision in the right order; the Padding tab settings are used). The scene must already exist (create it with step 16 once). | `foundry_push.py push-scene-3d --place P --scene-uuid U --placements world/P/export/placements.json --with-lights [--sun-preset noon] --dry-run` (drop `--dry-run` to push) |
+| 17 | Foundry tab > More pack options > "Collision and walls (3D Canvas)": the defaults are right (collision on for ground, roads, buildings, fences, bridges; off for roofs, foliage, water); **Set collision (dry run)** / **Set collision on scene tiles** change an existing scene. **Install click macros** for Click mode (roofs, doors). | `foundry_push.py set-collision --scene-uuid U ...`, `foundry_push.py install-click-macros` |
+
+Post-push tests, in this order:
+
+1. **Ctrl+F5** in the GM tab (models are cached by path). Look from above and at street level: roads continuous, no black band at the edge, sky present, no missing tiles, clean console (F12).
+2. **Shadows for everybody:** every player AND the GM sets Configure Settings > 3D Canvas > **Shadow Quality = 4 (Medium)** once (Lighting tab, **Install the one-click macro** makes a "Set my shadow quality" macro each person runs once). At 0 nobody sees sun shadows. Keep ambient low (0.05 to 0.15).
+3. **Collision:** drag a token into a wall, a house and a fence: it must stop. Walk it along a road: it must pass. Roofs and trees do not block by default.
+4. **Doors:** run the hotbar macro "Click mode: roofs and doors (toggle)", click a door: it opens and closes; click a roof: it hides (Roof mode Per building for a single roof).
+5. **Lamps and lights:** lamps shine at flame height (pipeline lights carry `flags.levels.rangeTop` = their elevation, so 3D Canvas draws them at the real height, not half of it); interior hearth and window lights do not flicker (non-animated by default); street lamps flicker unless the style says `flicker: false` (`antique_gas_lantern`).
+6. **Padding and sky** still there? If not, run section 4 again (Padding push, Skybox apply).
+
+### Re-export, undo and tidy-up tips
+
+* Edited a building, road, style, bridge or the painted terrain? Foundry changes only after **Export world pack (3D)** and **Export split models** again, then **Push models**, then Padding push and Skybox apply (section 4), or just **Push 3D scene** again (idempotent: same input, same bytes).
+* Roads: **Undo last road change** (newest 30 backups in `world/P/streets_backups/`). Buildings: **Reset overrides**. Terrain patches: **Undo**. Painted terrain: Ctrl+Z, **Discard unsaved**, **Reset to generated terrain**. Everything the pipeline pushes is flagged, so pushing again updates in place.
+* Re-export one building only: Tools tab, **Re-export entities** (`worldpack_split.py reexport --place P --id bld_house_041`).
+* All panel settings of a place are in `world/P/panel_state.json`; keep it when you copy a place.
+
+### Troubleshooting (map making)
+
+| Symptom | Cause | Fix |
+|---|---|---|
+| New place missing from the Places list | List not refreshed | Places tab **Refresh**; check that `world/P/place.json` exists |
+| Roads or buildings sit at the old height after painting terrain | Pack not re-exported | **Export world pack (3D)** again (cached road, building and plaza heights follow the painted edits; the manifest records `height_edits`) |
+| **Read roads from Illustrator** reads nothing | No open path selected and none on Road Centerlines, or the paths are closed | Select open paths, or put them on the layer named exactly Road Centerlines |
+| Road edit refused: "points within 2000 ft of the place bounds" | Open document does not match the panel's Scale tab | Press **Apply (regenerate guides)** for the open document so page and scale match, redraw |
+| Buildings look unchanged in 3D | Style stored, not exported | Export world pack and split models, push |
+| Black table edge, dark rectangles, no sky after a push | Push models resets padding and sky flags | Section 4 |
+| No shadows in 3D | Client Shadow Quality is 0 | Everybody sets 4 (Medium) |
+| Frame rate drops on a big map | Too many point lights | Lighting tab light budget: **Performance mode**, Max lights, **Apply to scene** |
+| Lamps buried or floating | Old export or edited Height | Streetlamps **Generate** after a fresh export, **Push layer + lights** |
+| Door does not open | Compressed building GLB, or Click mode not running | Compression none; run Click mode |
+| Push refused: scene exists but was not made by the pipeline | New scene name equals one of your own scenes | Choose **Existing scene**, confirm once |
+| Wrong place edited | Place box | Check **Place** at the top before every export or push |
+
+## Step-by-step: make a map from a 2D base map (image or Foundry scene)
+
+Use this when the map already exists as a picture (a painted map, a screenshot, a Foundry scene background) and you want to trace roads and rivers over it and then export a 3D scene. The picture becomes a locked **UNDERLAY** layer. The place starts with a **flat terrain stub** and nothing else (no streets, buildings or water): you add what you want. The plugin does not detect roads or buildings from a picture.
+
+### A. Get the picture ready (outside the panel)
+
+1. It must be plan view (straight down). An oblique painted map has to be rectified first: see 2.24 (`rectify_map.py`, needs `pip install opencv-python`).
+2. Know the scale: feet per image pixel, the same in x and y: (feet the scale bar shows) divided by (pixels the bar is long). Check it against one distance you know.
+3. Up in the picture should be north. If not, enter a rotation below, or rotate the file yourself.
+
+### B. Create the place from the image (Places tab)
+
+Panel: Places tab, block **Import base map image**.
+
+1. **Image file**: type the path or press **Browse image** (png, jpg, webp, tif).
+2. **Place name** and **Place id** (the id is made from the name when empty).
+3. **Feet per pixel**: the scale from step A2 (example 4.669).
+4. **Rotate (deg clockwise, optional)** and **Guide grid (ft, optional)** (default 100 ft).
+5. **Check image import (dry run)** reports the size in feet and writes nothing. Then **Import base map image**. The panel switches to the new place.
+
+Command line (same code): `python illustrator/generators/place_create.py import-image IMAGE --name "My base" --id my_base --ft-per-px 4.669 [--rotate 0] [--grid-ft 100] [--dry-run] [--force]`. It refuses to overwrite an existing place unless you pass `--force`.
+
+What you get in `world/<id>/`: `place.json` (kind `basemap`; `bounds` = image pixels x feet per pixel; `import.ft_per_px`, `import.px_per_ft`, `import.source` = `image`), `underlay/background.png` plus the untouched original, `terrain/` (flat stub, height 0, `pipeline: flat_stub`), empty `streets.json`, `districts.json`, `water.json`, `buildings/`, and `view_settings.json` (page sized so the town view covers the whole image). Coordinates: origin = the image's top-left corner, x to the right, y down (up in the picture = north), in feet. Place (x, y) ft = image pixel (x, y) times feet per pixel, so anything you trace maps back to the picture by dividing by the scale. **Preview selected** in the Places list (headless PNG, no Illustrator) shows the picture with the grid.
+
+From a **Foundry scene** instead: Foundry tab, **Refresh from Foundry**; Places tab, **Import a Foundry scene as a place**: pick the scene (or paste its uuid), tick lights, tokens, notes if wanted, choose whether closed wall loops become building outlines, **Check (dry run)**, **Import scene as place**. The scale comes from the scene grid and the background image becomes the underlay. Command line: `foundry_push.py import-scene --scene-uuid U [--place-id ID] [--include walls,tiles,regions,lights,tokens,notes] [--closed-as lines|buildings] [--dry-run] [--force]`. Read-only on Foundry; the place remembers its scene, so **Push scene** goes back to it.
+
+### C. Open it in Illustrator and trace
+
+1. Places tab: select the place, **Open selected in Illustrator** (small places only; it writes a job that opens a new document with the underlay on a locked layer UNDERLAY, the guide grid above it and the guide layers). CLI: `place_render.py --place P --view town --job` (writes `illustrator/jobs/<name>.json`, which the panel picks up).
+2. Roads tab, block "Road shape": **Redraw roads in Illustrator** makes the layer **Road Centerlines** (empty on a new base map place; if no layer appears, create a layer named exactly Road Centerlines yourself).
+3. With the Pen tool draw each road as an OPEN path along its middle on that layer. Curves are flattened to short straight pieces, so fewer anchors is better (**Simplify / smooth ticked** later). Name a path to name the road (it becomes `str_<name>`); unnamed paths get automatic ids. Do not close a path.
+4. Fill the boxes (name, class road / street / lane / alley, width in ft), then **Add from Illustrator selection** (the selected paths) or **Read roads from Illustrator** (with nothing selected: every open path on Road Centerlines). New roads appear in the Roads list.
+5. To fix a road later: move its anchors in Illustrator (keep the path name), select it, **Reshape from Illustrator selection**. **Undo last road change** takes back one step.
+6. Rivers: draw an open path, Water tab **Capture path**, name, width, depth, **Add river** (then **Carve rivers** to cut a channel). Lakes: closed path, **Capture polygon**, **Add lake**. Buildings: there is no draw-a-building button. Generate a town around your roads (Town tab: **Capture lasso**, **Generate**, **Accept**; buildings are generated, not read from the picture) and restyle them in the Buildings tab, or edit `world/<id>/buildings/*.json` by hand.
+
+Command line for the same tracing (feet, y down): `object_edit.py add-road --place P --name "High road" --kind street --width 18 --points "x,y;x,y;x,y"`; many at once: `object_edit.py apply-paths --place P --file paths.json --mode add` with `{"paths": [{"name": "...", "points": [[x,y],...], "closed": false}]}`. Pixel to feet: ft = px x feet per pixel.
+
+Precision: at the default town view one page point is about 28 ft (2000 ft per inch) and a 15 ft road is about half a point wide. Zoom in Illustrator while tracing (the panel maps by the page, not by your zoom) and keep anchors on road centres. For finer work set a smaller Scale (ft per inch) with a larger page on the Scale tab and redraw; whether that redraw re-places the underlay was not tested, so re-open with **Open selected in Illustrator** after changing the scale.
+
+### D. Continue with the normal pipeline
+
+Follow the "from scratch" chapter from Phase 1 step 3 on, skipping what you do not need: terrain (a base-map place has no terrain spec, so **Generate base terrain** has nothing to start from; **Paint heightmap** on the flat stub is the practical route, untested on such places), water (4), town and buildings (5, 7), regions, foliage, padding, bridges (8 to 11), lighting, sky, lamps (12 to 14b), export (15), push (16 or 16b) and the post-push tests. Merge only for speed (`worldpack_split.py merge --place P --preset layer`). To push the picture itself as a flat 2D scene: Foundry tab **Export view**, **Push scene** (`foundry_push.py push-scene --place P --image PNG --scene-name N`).
+
+Worked example in this repository: the painted Varrenmoor map was rectified to `illustrator/out/varrenmoor_overhead_map.png` (2400 x 3428 px, 4.6689 ft per pixel, sidecar `illustrator/out/varrenmoor_overhead_map.json`) and imported as place `varrenmoor_base` ("Varrenmoor Base (overhead)", 11205 x 16005 ft) with `python illustrator/generators/place_create.py import-image illustrator/out/varrenmoor_overhead_map.png --name "Varrenmoor Base (overhead)" --id varrenmoor_base --ft-per-px 4.6689`. To map traced points back to the original painted screenshot: pixel = feet / 4.6689, then apply `H_out_to_src` from the sidecar (`p = H @ [px, py, 1]; src = p[:2] / p[2]`). `world/varrenmoor` was built by hand from the same map and is a separate place.
 
 ---
 
@@ -51,6 +178,14 @@ Steps 1 to 6 happen on the Illustrator PC in the panel. Steps 7 and 8 push to Fo
 9. **Check in Foundry.** In the GM tab press **Ctrl+F5** (the browser caches models by path), then look at the scene from above and at street level. Roads continuous, no black band at the edge, sky visible, no missing tiles, clean console (F12). In 3D, cast shadows only show when the Foundry client setting `shadowQuality` is above 0.
 10. **Tidy up.** Layers tab: lock guides, clear stale marks. Dry-run settings stay on by default for risky writes (skybox and padding), so nothing changes in Foundry until you untick the dry-run box.
 
+### 1.4 Install, update and reload
+
+* **Install** (once, on the Illustrator PC): `powershell -File illustrator\install.ps1` links `illustrator/panel/` into `%APPDATA%\Adobe\CEP\extensions\VarrenmoorBridge` (it copies if symlinks are not allowed; no registry changes). Read, then run once `powershell -File illustrator\enable-debug.ps1` (sets `PlayerDebugMode` for CSXS.11 and CSXS.12 so the unsigned panel loads). Restart Illustrator, then Window > Extensions > Varrenmoor Bridge.
+* **After pulling new code reload the panel.** The tabs, `host.jsx` and the panel scripts load only when the panel opens: close and reopen the panel (restart Illustrator after a `manifest.xml` change). If the panel comes up blank, a panel script has a syntax error: run `node illustrator/panel/test/test_panel_static.js`, which parses every panel script. Python generators need no reload: each button starts a fresh process.
+* **Python** is `python` from PATH (Scale tab, Python executable to change). Packages: numpy, scipy, Pillow, shapely; OpenCV (`opencv-python`) only for `rectify_map.py` (2.24).
+* **Checks** (no Illustrator needed): `node illustrator/panel/test/test_panel_static.js` (every panel script parses, no `window.confirm`), `node illustrator/panel/test/test_command_parity.js` (every CLI command and flag has a panel control or a written reason), plus the per-tab `panel/test/test_*_jobs.js` and `generators/test_*.py`.
+* **Foundry side:** the module on the Foundry PC is updated separately (section 3.6); the relay is started with `foundry-bridge\start.bat`.
+
 Quick rules of thumb:
 
 - Press **Preview** or **Dry run** first for anything that writes to Foundry.
@@ -63,7 +198,7 @@ Quick rules of thumb:
 
 ## 2. Tab-by-tab reference
 
-The panel has 18 tabs (Paint heightmap is a collapsible section at the bottom of Terrain, not a tab), in this order: Scale, Terrain, Contours, Labels, Shading, Lighting, Skybox, Water, Town, **Buildings** (added next to Town by `styles_ui.js`), **Roads** (added by `objects_ui.js`, single-road editor, see 2.18), Regions, Foliage, Padding, Bridges, Places, Layers, Foundry.
+The panel has **20 tabs** (Paint heightmap is a collapsible section at the bottom of Terrain, not a tab), in this order: Scale, Terrain, Contours, Labels, Shading, Lighting, Streetlamps, Skybox, Water, Town, **Buildings** (added next to Town by `styles_ui.js`), **Roads** (added by `objects_ui.js`, single-road editor, see 2.18), Regions, Foliage, Padding, Bridges, Places, Layers, Foundry, Tools. Sections 2.1 to 2.17 cover most of them; Buildings is 2.10, Roads 2.18, Tools 2.20, Streetlamps 2.21, Paint heightmap 2.23. Panel-wide: the **Place** and **View** boxes at the top, **Cancel**, **Log**, one job at a time.
 
 Ranges below come from the panel's own limits. Where a field has no stated sensible value I wrote **check in panel** (the control's tooltip often says more).
 
@@ -171,6 +306,8 @@ Buttons: **Performance mode** (hybrid, 12 lights, no windows, no light shadows),
 
 Defaults: mode Auto, no limit, scale 1, shadows and flags untouched. Auto keeps every light up to 64 lights (so small scenes are exactly as before), keeps the 16 most important between 65 and 150 and raises the ambient to at least 0.45 (hybrid), and uses ambient + sun only above 150 (ambient at least 0.55). Over-budget lights are hidden, not deleted: raise the budget or switch to Point lights and Apply to bring them back. **Push interior lights** and the Tools tab one-shot 3D scene push use the same mode and budget (lights over budget are not created, and pruned if present).
 
+Light height: every pipeline light (hearth, window, lamp, 2D point lights) is written with `flags.levels.rangeTop` equal to its elevation. 3D Canvas draws a light at (rangeTop, or else 1 + elevation) / 2, so without the flag a lamp at 35 ft was drawn at 18 ft, under the road it should light. Re-push the lights (**Push interior lights**, **Push layer + lights**, or **Push 3D scene**) to fix older scenes. Animation: interior hearth and window lights are non-animated (steady) by default; only street lamps flicker, and only styles that flicker (`antique_gas_lantern` is steady); `push-lights --light-animation` forces an animation on interior lights (Tools tab, Push options). `push-lights --layers <types>` upserts and prunes only the light types named and never touches other pipeline lights.
+
 Cost, limits, unverified: the cost number is a guide measured on one GPU. Light shadows need the Foundry client setting "3D Canvas shadow quality" above 0, which is per browser and cannot be set from here. There is no Foundry scene flag for shadow quality or a light cap; these are client settings.
 
 ### 2.7 Skybox
@@ -276,6 +413,8 @@ What it does: scatters trees, shrubs and ground cover, draws 2D symbols and prep
 
 Tree crowns and LOD (fix 2026-11): the far LOD 2 impostor cards used to cut off the tops (and sides) of crowns, because the painted tile ran past its edge and the card was only as tall as the nominal height while the real crown overshoots it. Impostor tiles now keep a margin and each card is sized from the LOD 0 crown bounds (test_foliage_crowns.py). Re-run `foliage.py merge` (or the pack export) to rewrite the atlas and chunk GLBs of an existing place.
 
+Palette and species (fixes 2026-11): the Varrenmoor moor palette recolours the grass, meadow, pasture, crop and forest-floor tiles to the campaign map's dark olive and brown (PLACES.md, "Varrenmoor ground palette") instead of bright green, and the `varrenmoor` places use it. **Varrenmoor options (command line only, no panel control):** `python illustrator/generators/varrenmoor_trees.py [--pine-density 1.5] [--hill-boost 0.6] [--max-trees 12000] [--dry-run]` scatters the Varrenmoor forest from the map's canopy: pines (scots_pine, spruce, fir) are multiplied by `--pine-density` (default 1.5; `--pine-density 1 --hill-boost 0` is the old scatter), more again at high ground by `--hill-boost`, and `--max-trees` caps the expected count so 3D Canvas stays usable. Other places use the normal Scatter below.
+
 Scatter rules:
 
 | Control | Meaning | Sensible value |
@@ -363,6 +502,8 @@ Important checkboxes: **Draft quality** (default on: coarse terrain, civic build
 Limits to remember: a "grid" town is grid-leaning, not a ruled lattice; on a narrow pass or very steep site the market square may not fit; the town wall appears in the 2D map and `walls.json` but is not in the 3D export unless you inject it (section 8); very large towns can take minutes.
 
 **Import a Foundry scene as a place** (read-only on Foundry): pick the scene or paste its uuid, choose whether closed wall loops become building outlines, tick the extras (lights, tokens, notes), **Check (dry run)** then **Import scene as place**. You get the scale from the scene grid, the background image as an underlay, walls as lines and building outlines. No terrain (a flat stub), streets or water. The place remembers its scene, so a later push goes back to it.
+
+**Import base map image** (a place from a plain picture, no Foundry needed; see the chapter "make a map from a 2D base map"): image path (**Browse image**), place name and id, **Feet per pixel**, optional **Rotate** (degrees clockwise) and **Guide grid (ft)**; **Check image import (dry run)**, **Import base map image**. CLI `place_create.py import-image IMAGE --name N --id ID --ft-per-px F [--rotate D] [--grid-ft G] [--dry-run] [--force]`. The result is `world/<id>/` of kind `basemap`: the picture as the locked UNDERLAY (origin top-left of the picture, y down, up = north, feet = pixels x feet per pixel), a flat terrain stub and empty streets, districts, water and buildings. In the Places list it is marked "(base map image)". Limits: no roads, buildings or terrain are generated or detected; the picture is used as is (rectify oblique pictures first, 2.24); only the 2400 x 3428 px Varrenmoor overhead map was tried, and only headless.
 
 ### 2.16 Layers
 
@@ -649,7 +790,14 @@ Open the Terrain tab and expand **Paint heightmap** at its bottom (there is no s
 * **Strokes are computed in python at full resolution** after each release (one round trip, a second or less on Dyers Walk); the canvas shows the new preview when it returns. Turn off **Apply on release** to draw several strokes and press **Apply drawn strokes**.
 * **After regenerating the terrain.** Saved edits are added as they are (a height change in feet). If the terrain size changed they are resampled and the loader sets `height_edits_warning`. To re-run the recipe instead (so Flatten / Set / River stay true on the new ground) use `apply-strokes --mode replay` and Save.
 * CLI (the panel runs the same code): `python illustrator/generators/heightmap_paint.py apply-strokes --place P --strokes strokes.json [--mode append|replace|replay|undo-last]`, `export-preview --place P --png out.png [--contour-ft 10] [--layer work|saved|base] [--show-delta]`, `stats`, `save`, `discard`, `reset [--layer work|saved|both]`. Stroke JSON schema is at the top of `generators/heightmap_paint.py`. `--world-root` and `--work-dir` point it at a scratch copy. Tests: `python -m unittest illustrator/generators/test_heightmap_paint.py`, `node illustrator/panel/test/test_heightpaint_jobs.js`.
-* Limits: the edit layer is one grid in the frame `load_terrain` returns (for a region child that is the padded parent frame). `heightmap_16.png` and the other files under `terrain/` are the generated ones and do not contain the edits; use the loader (or re-export the pack). Very large terrains (over about 4000 x 4000 nodes) make each stroke slow. Painting does not move roads, buildings or water that were built on the old ground: re-run those steps.
+* Limits: the edit layer is one grid in the frame `load_terrain` returns (for a region child that is the padded parent frame). `heightmap_16.png` and the other files under `terrain/` are the generated ones and do not contain the edits; use the loader (or re-export the pack). Very large terrains (over about 4000 x 4000 nodes) make each stroke slow. Edit layer semantics, exactly: the edits are a height DELTA added to whatever terrain the loader returns. The 3D export (`worldpack.py export`) uses the loader, so the terrain mesh, foliage and Foundry see the painted ground, and the cached per-vertex heights of roads, building floors and plazas are shifted by the same delta (the manifest records `height_edits` with a count and a hash). Roads and buildings therefore follow the edits after a re-export, but only by that shift: nothing re-grades a road for the new slope (use Roads (3D) Smoothing and Max grade, or edit the road), the town generator does not re-level buildings, and rivers and lakes are not re-carved (run **Carve rivers** if you painted a bed); the 2D drawings (contours, shading, town) change when you re-run them.
+
+### 2.24 Overhead map rectification (`generators/rectify_map.py`, command line only)
+Turns an oblique painted map (the Varrenmoor campaign map, seen from an angle) into a top-down plan view that can be a base map. There is no panel button: it is the prepare-the-picture step before **Import base map image** (see the base-map chapter).
+* Needs OpenCV: `pip install opencv-python` (the repository has no requirements file). Without it the tool prints that message and exits; its circle-fit test is skipped.
+* `python illustrator/generators/rectify_map.py fit` fits a pinhole camera (tilt from straight down, focal length, roll) so the five field rectangles come out right-angled with a shared orientation and the two circular features (churchyard wall, Hollow Oak green) come out round, and prints the residuals. `warp [--in X] [--out Y] [--tilt T --focal F --roll R | --h-matrix FILE] [--rotate D] [--width PX] [--crop-top PX]` writes the rectified PNG and a JSON sidecar; `--compare` writes a before-and-after picture with the checks drawn. The compass, scale bar and title cartouche are inpainted before the warp and a clean scale bar and north arrow are drawn on the result.
+* Outputs for Varrenmoor: `illustrator/out/varrenmoor_overhead_map.png` (2400 x 3428 px, clean: use this one for import), `varrenmoor_overhead_map_bounds.png` (the original image's outline drawn on it), `varrenmoor_overhead_map_compare.png`, and `varrenmoor_overhead_map.json` (homographies `H_src_to_out` and `H_out_to_src`, the camera fit, `ft_per_px` 4.6689 in both axes, quality figures, and recipes `new_px_to_map_px` and `new_px_to_feet`).
+* Limits: the fit comes from five fields and two circles on a painting, so field corner errors of about 7 to 29 degrees remain (`quality` in the sidecar); the scale assumes the painted 1000 ft scale bar is valid along its own image row (the sidecar also gives 4.955 ft per pixel for a bar valid at the image centre); the ground is assumed flat, so hills stay distorted. Treat the result as a base to trace, not a survey.
 
 ## 7. Troubleshooting
 
@@ -709,6 +857,13 @@ Highlights:
 - Lights in `placements.json` are not turned into Foundry light documents (house lights go through `push-lights`).
 - `tableTex` scaling, optimised GLBs with doors, cast-shadow look, and the player view of the padding were not tested live.
 - `world/bridgehollow_big` is a local scratch place (not committed); do not use it for 3D export.
+- Base map image import (Places tab, `place_create.py import-image`): covered by unit tests, panel job tests and a headless preview. Not tried in a live Illustrator: opening the place, the underlay at this size, tracing on Road Centerlines from an empty layer, Add / Read roads on it. Terrain generation, regions, town generation and export on such a place were not tried.
+- Painted heightmap in 3D: the export follows the edits (tested offline); roads are shifted by the edit, not re-graded; rivers are not re-carved. Not seen live in Foundry.
+- Roads add / reshape / delete / split / join / undo: tested with a mock Illustrator host only, not with a real Road Centerlines layer.
+- Streetlamp styles `old_wooden_lantern` and `antique_gas_lantern`, light `rangeTop`, steady interior lights and the shared sun / moon direction: tested offline (unit tests, previews); the post-push test list in the step-by-step chapter is the live test.
+- Sign maker, Click mode, door sync and collision were verified live on the Dyers scene in earlier sessions; other scenes untested. The Sign maker is GM only.
+- Varrenmoor pine density (`varrenmoor_trees.py`) is command line only; the frame rate of a full Varrenmoor forest in 3D Canvas is not measured.
+- Shadow quality 4 is a per-browser Foundry setting that no scene flag can force: every player must set it once.
 
 Rule for testers: never put credentials in notes; the Foundry GM tab must be signed in by you.
 
@@ -755,4 +910,4 @@ CLI: `python illustrator/generators/foundry_push.py set-sun --scene-uuid Scene.X
 **Skies and one shared light direction (dramatic skies).** The lighting presets now include golden_hour, overcast, high_mountain (deep blue, bright sun, snow-capped far ranges) and storm (dark cloud deck, pale tear where the sun sits) next to dawn, morning, noon, afternoon, dusk, night (moon, stars, faint Milky Way), foggy_morning and warm_sunset. The "Sky look" box picks another sky for the same light (clear_day, high_mountain, storm, golden_hour, dusk, overcast, foggy, winter, night). The sun (or the moon, for night skies) in the sky picture is drawn at the same compass bearing and elevation as the sun azimuth/elevation sliders, and the 3D Canvas flags `sunPosition` / `sunTilt` are computed from those same two numbers, so the shadows point away from the sun or moon you see; the preset JSON no longer carries a second `sky.sun_bearing/sun_alt`. Moonlight at night is the same sun rig with a cold colour and low strength. The preview image has a sky strip under the plan (compass 0..360, 5 below to 60 above the horizon) with the sun/moon circled. Fog ON replaces the sky with the flat fog colour in 3D Canvas, so storm, golden_hour, overcast and high_mountain ship with fog off; foggy_morning keeps it on.
 Sky images are named `sun_<preset>_<skylook>_az<N>_el<N>.webp` in world/<place>/export/skybox, so changing the azimuth/elevation builds a new image instead of reusing a stale one. Build them without touching Foundry: `python illustrator/generators/skybox.py generate --place P --presets "" --lighting-presets all [--width 2048]` (one image at a time, about 150 MB RAM each), then `set-sun ... --preset storm [--sky-preset golden_hour]` (add `--make-sky` to build on the spot) or `push-scene-3d --sun-preset storm` publishes it. The result of set-sun carries `direction` (sky body bearing/altitude, the light recovered from the flags, error in degrees, must be under 1).
 
-**Optional dependency: OpenCV.** `rectify_map.py` (and its test) needs `pip install opencv-python`; without it the tool exits with that message and the circle-fit test is skipped. The repo has no requirements file.
+

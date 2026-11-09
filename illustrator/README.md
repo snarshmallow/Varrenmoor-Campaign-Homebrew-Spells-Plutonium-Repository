@@ -86,6 +86,9 @@ Tested 2026-11-06 in Illustrator 28.2.0: ping and the full test_guide job succee
 
 replace_layer and lock_layers are written but not yet tested in Illustrator.
 
+## Manual
+The GM manual is `PLUGIN_GUIDE.md`: it opens with two step-by-step chapters, "make a map from scratch" and "make a map from a 2D base map (image or Foundry scene)", each naming the exact buttons per tab and the matching command lines, followed by the tab reference (20 tabs: Scale, Terrain, Contours, Labels, Shading, Lighting, Streetlamps, Skybox, Water, Town, Buildings, Roads, Regions, Foliage, Padding, Bridges, Places, Layers, Foundry, Tools; Paint heightmap is a section of Terrain). Places: `PLACES.md` (including "Importing a plain base map image", `place_create.py import-image`); 3D pack: `WORLD_PACK.md`. After pulling new panel code reopen the panel (tabs and `host.jsx` load at panel start). Overhead rectification of the painted Varrenmoor map: `generators/rectify_map.py` (needs `pip install opencv-python`), see `PLUGIN_GUIDE.md` 2.24. Checks: `node panel/test/test_panel_static.js`, `node panel/test/test_command_parity.js`.
+
 ## Panel GUI (tabs; plain HTML/CSS/JS, no build step, no CDN)
 Files: `panel/index.html`, `panel/main.js` (UI), `panel/lib/core.js` (state defaults, page<->feet maths, one builder per job), `panel/lib/runner.js` (job runner), `panel/jsx/host.jsx` (ExtendScript actions), `panel/test/run_mock.js` (job-flow test with a mock host). The manifest enables Node and mixed context (`--enable-nodejs --mixed-context`, plus `--allow-file-access*`); after changing the manifest restart Illustrator.
 

@@ -2072,6 +2072,133 @@
      "cli_only": "Output folder of write-sign-models, a developer option."
     }
    }
+  },
+  "place_create.py": {
+   "commands": {
+    "create": {
+     "controls": [
+      "act:pl_generate"
+     ]
+    },
+    "validate": {
+     "controls": [
+      "act:pl_validate"
+     ]
+    },
+    "prompt-help": {
+     "cli_only": "prints the schema and vocabulary for Claude to write a spec from; the panel has the form and Paste a spec box"
+    },
+    "write-schema": {
+     "cli_only": "developer step that rewrites world/schema/place-spec.schema.json from the schema in the code"
+    },
+    "from-text": {
+     "controls": [
+      "act:pl_from_text"
+     ]
+    },
+    "templates": {
+     "controls": [
+      "act:pl_load_template"
+     ]
+    },
+    "regen": {
+     "controls": [
+      "act:pl_regenerate"
+     ]
+    },
+    "import-image": {
+     "controls": [
+      "act:pl_image_import",
+      "act:pl_image_check"
+     ]
+    }
+   },
+   "flags": {
+    "--create": {
+     "cli_only": "from-text --create writes the place straight away; the panel fills the form first (Fill form from words) and Generate place creates it"
+    },
+    "--draft": {
+     "controls": [
+      "s:places.draft"
+     ]
+    },
+    "--dry-run": {
+     "controls": [
+      "act:pl_image_check"
+     ]
+    },
+    "--force": {
+     "controls": [
+      "act:pl_regenerate"
+     ]
+    },
+    "--ft-per-px": {
+     "controls": [
+      "s:places.image.ft_per_px"
+     ]
+    },
+    "--grid-ft": {
+     "controls": [
+      "s:places.image.grid_ft"
+     ]
+    },
+    "--id": {
+     "controls": [
+      "s:places.image.id"
+     ]
+    },
+    "--meander": {
+     "cli_only": "regen --meander is covered for every place by the Water tab Regenerate river + terrain"
+    },
+    "--meander-amplitude": {
+     "cli_only": "regen option, covered by the Water tab Regenerate river + terrain"
+    },
+    "--meander-seed": {
+     "cli_only": "regen option, covered by the Water tab Regenerate river + terrain"
+    },
+    "--meander-wavelength": {
+     "cli_only": "regen option, covered by the Water tab Regenerate river + terrain"
+    },
+    "--width-var": {
+     "cli_only": "regen option, covered by the Water tab Regenerate river + terrain"
+    },
+    "--no-bars": {
+     "cli_only": "regen option, covered by the Water tab Regenerate river + terrain"
+    },
+    "--name": {
+     "controls": [
+      "s:places.image.name"
+     ]
+    },
+    "--no-town": {
+     "cli_only": "terrain and water only; the panel always generates the town (Draft quality is the quick option)"
+    },
+    "--out": {
+     "cli_only": "from-text writes the spec JSON here; the panel reads it into the form"
+    },
+    "--out-root": {
+     "cli_only": "test override of the world folder; the panel uses the repository's world folder"
+    },
+    "--place": {
+     "cli_only": "regen target; the panel regenerates the selected place with Regenerate (overwrite)"
+    },
+    "--rotate": {
+     "controls": [
+      "s:places.image.rotate"
+     ]
+    },
+    "--seed": {
+     "controls": [
+      "s:places.form.seed"
+     ]
+    },
+    "--show": {
+     "cli_only": "templates --show prints one template; the panel loads it into the form (Load template into form)"
+    },
+    "--terrain": {
+     "cli_only": "regen --terrain flag; the panel regenerates through Regenerate (overwrite)"
+    }
+   }
   }
  },
  "other": {

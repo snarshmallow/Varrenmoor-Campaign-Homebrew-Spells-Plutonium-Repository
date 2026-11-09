@@ -6,6 +6,8 @@
   python illustrator/generators/place_create.py from-text "walled coastal town of 800 people with a big river, Danish style, hilly" [--out spec.json] [--create]
   python illustrator/generators/place_create.py templates [--show NAME]   # the presets/places/*.json starting points
   python illustrator/generators/place_create.py regen --place ID [--terrain] [--no-town] [--meander straight|gentle|lazy] [--draft]
+  python illustrator/generators/place_create.py import-image IMAGE --name "Base map" [--id ID] --ft-per-px 4.669 [--rotate DEG] [--grid-ft 100] [--force] [--dry-run]
+         # a place from a plain base-map image (no Foundry): flat stub terrain, the image as the UNDERLAY layer; origin = image top-left, up = north
   python illustrator/generators/place_create.py write-schema         # rewrite world/schema/place-spec.schema.json from the schema in this file
 
 Output (world/<id>/): place.json, terrain_spec.json, terrain/ (heightmap.npy, heightmap_16.png, terrain_meta.json), water.json, town_params.json,
@@ -730,6 +732,15 @@ def main(argv=None):
     v.add_argument("spec")
     sp.add_parser("prompt-help")
     sp.add_parser("write-schema")
+    ii = sp.add_parser("import-image")
+    ii.add_argument("image")
+    ii.add_argument("--name")
+    ii.add_argument("--id")
+    ii.add_argument("--ft-per-px", type=float, required=True, help="feet per image pixel")
+    ii.add_argument("--rotate", type=float, default=0.0, help="degrees clockwise, applied to the image first")
+    ii.add_argument("--grid-ft", type=float, default=100.0, help="guide grid spacing in feet")
+    ii.add_argument("--force", action="store_true")
+    ii.add_argument("--dry-run", action="store_true")
     ft = sp.add_parser("from-text")
     ft.add_argument("text")
     ft.add_argument("--out")
@@ -757,6 +768,16 @@ def main(argv=None):
     if a.cmd == "write-schema":
         jsave(SCHEMA_PATH, SPEC_SCHEMA)
         print("wrote", SCHEMA_PATH)
+        return 0
+    if a.cmd == "import-image":
+        import foundry_import as fi
+        try:
+            r = fi.import_image(a.image, a.name, a.id, a.ft_per_px, a.rotate, a.grid_ft, a.force, a.dry_run)
+        except ValueError as e:
+            print(json.dumps({"ok": False, "error": str(e)}))
+            return 2
+        r["ok"] = True
+        print(json.dumps(r))
         return 0
     if a.cmd == "templates":
         t = templates()

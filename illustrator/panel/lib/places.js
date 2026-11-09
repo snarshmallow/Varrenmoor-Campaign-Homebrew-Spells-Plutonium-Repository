@@ -15,6 +15,7 @@
       form: { name: "", id: "", culture: "fantasy_generic", population: 600, layout: "organic", recipe: "rolling", sea_side: "south", rivers: 1, lakes: 0, river_meander: "gentle",
         climate: "temperate", season: "summer", central_feature: "market", wall: false, seed: "", width_ft: "", height_ft: "", relief_ft: "" },
       import: { scene_uuid: "", place_id: "", walls: true, lights: false, tokens: false, notes: false, closed_as: "lines", dry_run: false },
+      image: { path: "", name: "", id: "", ft_per_px: "", rotate: "", grid_ft: "" },
       last: null, notes: [], estimate: null
     };
   };
@@ -128,6 +129,32 @@
         { t: "fn", label: "remember", fn: function (run) { var r = run.vars.imp; run.setState("places.last", { imported: r.place_id, scene_uuid: r.scene_uuid, size_ft: r.size_ft, walls: r.walls, closed_loops: r.closed_loops, underlay: r.underlay && (r.underlay.png || r.underlay.error), dry: !!r.dry_run, tiles: r.tiles, regions: r.regions, scene_3d: !!r.scene_3d, warnings: r.warnings, at: new Date().toISOString() });
           run.log((r.dry_run ? "would import " : "imported ") + r.place_id + ": " + r.size_ft.join(" x ") + " ft, " + r.walls + " walls, " + r.closed_loops + " closed loops, " + (r.tiles || 0) + " tiles" + (r.scene_3d ? ", 3D settings" : "") + (r.underlay ? ", underlay " + (r.underlay.png || r.underlay.error) : "")); } }],
       newPlace: dry ? null : (VB.PLACE_SLUG(snap.place_id) || null) };
+  };
+  // Import base map image: a place from a plain picture (no Foundry). python: place_create.py import-image (foundry_import.import_image).
+  VB.jobImportImage = function (st, dry) {
+    var I = st.places.image || {}, path = String(I.path || "").trim(), fpp = Number(I.ft_per_px), rot = String(I.rotate || "").trim(), grid = String(I.grid_ft || "").trim();
+    var name = String(I.name || "").trim(), id = VB.PLACE_SLUG(I.id || name);
+    var snap = { path: path, fpp: fpp, rot: rot, grid: grid, name: name, id: id, dry: !!dry };   // snapshot: steps run later
+    return { kind: "place_import_image", label: (dry ? "Check base map import" : "Import base map image as place"), params: { image: I },
+      steps: [{ t: "fn", label: "check", fn: function () {
+        if (!snap.path) throw new Error("give the path of the base map image first");
+        if (!(snap.fpp > 0)) throw new Error("ft per pixel must be a number above 0 (the map's scale: feet that one image pixel covers)");
+        if (snap.rot !== "" && !isFinite(Number(snap.rot))) throw new Error("rotate must be a number of degrees (clockwise) or empty");
+        if (snap.grid !== "" && !(Number(snap.grid) > 0)) throw new Error("grid ft must be a number above 0 or empty");
+      } },
+        py(GEN + "place_create.py", function () {
+          var a = ["import-image", snap.path, "--ft-per-px", String(snap.fpp)];
+          if (snap.name) a.push("--name", snap.name);
+          if (snap.id) a.push("--id", snap.id);
+          if (snap.rot !== "" && Number(snap.rot) !== 0) a.push("--rotate", String(Number(snap.rot)));
+          if (snap.grid !== "") a.push("--grid-ft", String(Number(snap.grid)));
+          if (VB.extraArgs) a = a.concat(VB.extraArgs(st, "import-image"));
+          if (snap.dry) a.push("--dry-run");
+          return a;
+        }, "place_create.py import-image", { json: "img" }),
+        { t: "fn", label: "remember", fn: function (run) { var r = run.vars.img; run.setState("places.last", { imported: r.place_id, source_image: r.source_image, size_ft: r.size_ft, ft_per_px: r.ft_per_px, image_px: r.image_px, rotate_deg: r.rotate_deg, underlay: r.underlay && (r.underlay.png || r.underlay.error), dry: !!r.dry_run, at: new Date().toISOString() });
+          run.log((r.dry_run ? "would import " : "imported ") + r.place_id + ": " + r.size_ft.join(" x ") + " ft from " + r.image_px.join(" x ") + " px at " + r.ft_per_px + " ft/px" + (r.underlay ? ", underlay " + (r.underlay.png || r.underlay.error) : "")); } }],
+      newPlace: dry ? null : (id || VB.PLACE_SLUG(name) || null) };
   };
   VB.jobPlaceRender = function (st, id, opts) {
     opts = opts || {};

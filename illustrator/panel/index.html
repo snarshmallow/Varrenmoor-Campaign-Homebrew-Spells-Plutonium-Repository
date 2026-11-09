@@ -906,6 +906,17 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
     <label class="chk"><input type="checkbox" data-s="places.import.notes"> notes</label>
   </div>
   <div class="btns"><button data-act="pl_import_check">Check (dry run)</button><button class="primary" data-act="pl_import_scene">Import scene as place</button></div>
+  <h4>Import base map image (a place from a plain picture, no Foundry)</h4>
+  <div class="grid">
+    <label>Image file (png, jpg, webp, tif) <input type="text" data-s="places.image.path" placeholder="C:/maps/overhead.png"></label>
+    <label>Place name <input type="text" data-s="places.image.name" placeholder="Varrenmoor Base (overhead)"></label>
+    <label>Place id <input type="text" data-s="places.image.id" placeholder="auto from the name"></label>
+    <label>Feet per pixel <input type="number" step="any" min="0" data-s="places.image.ft_per_px" placeholder="4.669" title="The map scale: how many feet one image pixel covers (both axes). place.json bounds = image px x this."></label>
+    <label>Rotate (deg clockwise, optional) <input type="number" step="any" data-s="places.image.rotate" placeholder="0" title="Rotates the picture before import (canvas grows). Leave empty when up is already north."></label>
+    <label>Guide grid (ft, optional) <input type="number" step="any" min="0" data-s="places.image.grid_ft" placeholder="100"></label>
+  </div>
+  <div class="btns"><button data-act="pl_image_browse">Browse image</button><button data-act="pl_image_check">Check image import (dry run)</button><button class="primary" data-act="pl_image_import">Import base map image</button></div>
+  <p class="note">Makes world/&lt;id&gt; with the image as the locked UNDERLAY (origin = image top-left, x right, y down, up in the picture = north; 1 px = Feet per pixel) and a flat terrain stub. No roads, buildings or terrain are generated: trace them yourself (Roads tab). The place then opens like any other (Preview selected, Open selected in Illustrator).</p>
   <pre id="plOut" class="note" style="white-space:pre-wrap"></pre>
   <p class="note">Generated places land in world/&lt;id&gt; and work with every other tab. Walls, gates and lakes follow the spec; a town wall is drawn in the map but not exported to the 3D pack. See illustrator/PLACES.md.</p>
 </section>
