@@ -682,33 +682,29 @@ def cmd_push_token(br, a):
 
 
 # ------------------------------------------------------------------ 3D models (world pack placements -> 3D Canvas tiles)
-def publish_glb(src, rel, set_name, place, root, dry=False):
-    """Copy a model into <root>/art/<place>/models/<set_name>/<rel with _vNNN>. A byte-identical newest version is reused (no clutter, Foundry caches by path).
-    The shared textures folder (models/textures) is copied next to it, so the GLB relative texture uris resolve. Returns the Foundry path."""
-    import shutil
-    base = os.path.join(root, "art", place, "models", set_name)
+def model_batch(root, place, set_name, dry=False):
+    """One publish_batch.Batch for a model set (manifest in art/<place>/models/<set_name>)."""
+    import publish_batch as pb
+    return pb.Batch(root, f"art/{place}/models/{set_name}", dry=dry, log=LOG)
+
+
+def publish_glb(src, rel, set_name, place, root, dry=False, batch=None):
+    """Plan a model into <root>/art/<place>/models/<set_name>/<rel with _vNNN>. A byte-identical newest version is reused (no clutter, Foundry caches by path).
+    The shared textures folder (models/textures) goes next to it (planned ONCE per batch, identical files skipped), so the GLB relative texture uris resolve.
+    With batch (model_batch) nothing is copied until batch.commit() (one batched copy for the whole push); without it the file is published at once.
+    Returns the Foundry path."""
+    own = batch is None
+    b = batch or model_batch(root, place, set_name, dry)
     stem, ext = os.path.splitext(rel)
-    d = os.path.join(base, os.path.dirname(rel))
-    bn = os.path.basename(stem)
-    pat = re.compile(re.escape(bn) + r"_v(\d+)" + re.escape(ext) + "$")
-    have = sorted((int(m.group(1)), f) for f in (os.listdir(d) if os.path.isdir(d) else []) for m in [pat.match(f)] if m)
-    with open(src, "rb") as f:
-        data = f.read()
-    with open(os.path.join(d, have[-1][1]), "rb") if have else io.BytesIO(b"") as f0:
-        same = bool(have) and f0.read() == data
-    if same:
-        name = have[-1][1]
-    else:
-        name = f"{bn}_v{(have[-1][0] if have else 0) + 1:03d}{ext}"
-        if not dry:
-            os.makedirs(d, exist_ok=True)
-            with open(os.path.join(d, name), "wb") as f:
-                f.write(data)
-    tex = os.path.join(os.path.dirname(os.path.abspath(src)), *([".."] * rel.count("/")), "textures")
-    if not dry and os.path.isdir(tex):
-        shutil.copytree(tex, os.path.join(base, "textures"), dirs_exist_ok=True)
     sub = os.path.dirname(rel)
-    return f"assets/varrenmoor-3d/art/{place}/models/{set_name}/" + (sub + "/" if sub else "") + name
+    base_rel = f"art/{place}/models/{set_name}"
+    out = b.add_versioned(src, base_rel + ("/" + sub if sub else ""), os.path.basename(stem), ext)
+    tex = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(src)), *([".."] * rel.count("/")), "textures"))
+    if os.path.isdir(tex):
+        b.add_tree(tex, base_rel + "/textures")        # planned once per batch
+    if own:
+        b.commit()
+    return ASSET_PREFIX + out
 
 
 def build_model_tiles(doc, scene_calib, a, publish=None):
@@ -783,12 +779,19 @@ def http_status(url, timeout=30):
         return None, str(e)
 
 
-def verify_models(paths, root, serve_url=None, allow_quantized=False, getter=None):
+_VERIFIED = {}          # (assets file, size, mtime_ns, allow_quantized) already validated in this process (push-scene-3d verifies the models twice)
+
+
+def verify_models(paths, root, serve_url=None, allow_quantized=False, getter=None, local_src=None, listing=None):
     """Every model path must exist in the shared assets folder (where Foundry serves it from), be a GLB 3D Canvas can load (glb_check) and, with serve_url
-    (e.g. http://10.0.0.15:30000), answer HTTP 200 with the same size. Returns a list of problem strings (empty = fine)."""
+    (e.g. http://10.0.0.15:30000), answer HTTP 200 with the same size. Returns a list of problem strings (empty = fine).
+    Existence comes from ONE listing per folder (no per-file stat over the share); local_src {foundry path: local file} validates a just-published GLB from
+    its byte-identical local source instead of reading it back; HTTP probes run in parallel."""
     import glb_check
+    import publish_batch as pb
     getter = getter or http_status
-    bad, seen = [], set()
+    lst = listing or pb.Listing()
+    bad, seen, probes = [], set(), []
     for p in paths:
         if not p or p in seen:
             continue
@@ -796,17 +799,29 @@ def verify_models(paths, root, serve_url=None, allow_quantized=False, getter=Non
         lp = local_asset_path(p, root)
         if lp is None:
             continue                                   # a module/world asset path we do not manage (baileywiki etc.)
-        if not os.path.isfile(lp):
+        got = lst.get(os.path.abspath(lp))
+        if got is None:
             bad.append(f"{p}: not found in the assets folder {root} (Foundry would log 'File format not supported or missing')")
             continue
         if p.lower().endswith((".glb", ".gltf")):
-            bad += glb_check.validate_glb(lp, allow_quantized)
+            key = (os.path.abspath(lp), got[0], got[1], bool(allow_quantized))
+            if key not in _VERIFIED:
+                src = (local_src or {}).get(p)
+                probs = glb_check.validate_glb(lp, allow_quantized, data_path=src if src and os.path.getsize(src) == got[0] else None, exists=lst.isfile)
+                bad += probs
+                if not probs:
+                    _VERIFIED[key] = True
         if serve_url:
-            st, size = getter(serve_url.rstrip("/") + "/" + p)
-            if st != 200:
-                bad.append(f"{p}: HTTP {st} from {serve_url} ({size if st is None else 'not served'})")
-            elif size != os.path.getsize(lp):
-                bad.append(f"{p}: served {size} bytes, file is {os.path.getsize(lp)}")
+            probes.append((len(bad), p, got[0]))
+    if probes:
+        from concurrent.futures import ThreadPoolExecutor
+        with ThreadPoolExecutor(max_workers=8) as ex:
+            res = list(ex.map(lambda x: getter(serve_url.rstrip("/") + "/" + x[1]), probes))
+        for (at, p, fsize), (st, size) in reversed(list(zip(probes, res))):      # insert in path order
+            msg = (f"{p}: HTTP {st} from {serve_url} ({size if st is None else 'not served'})" if st != 200
+                   else f"{p}: served {size} bytes, file is {fsize}" if size != fsize else None)
+            if msg:
+                bad.insert(at, msg)
     return bad
 
 
@@ -919,10 +934,20 @@ def cmd_push_models(br, a):
     ppf = float(a.px_per_ft or (calib or {}).get("ppf") or fr["px_per_ft"])
     c = {"ppf": ppf, "x0": (calib or {}).get("x0", 0.0), "y0": (calib or {}).get("y0", 0.0), "sceneX": (calib or {}).get("sceneX", 0), "sceneY": (calib or {}).get("sceneY", 0)}
     root = a.assets_dir or assets_dir()
-    pub = lambda e, rel: publish_glb(os.path.join(base, rel), rel[len("models/"):], set_name, place, root, a.dry_run)
+    batch = model_batch(root, place, set_name, a.dry_run)          # plan every model + the textures once, then ONE batched copy (publish_batch.py)
+    local_src = {}
+
+    def pub(e, rel):
+        src = os.path.join(base, rel)
+        p = publish_glb(src, rel[len("models/"):], set_name, place, root, a.dry_run, batch=batch)
+        local_src[p] = src
+        return p
     items = build_model_tiles(doc, c, a, pub)
-    LOG(f"{len(items)} model tiles for {len(doc['files'])} files at {ppf:g} px/ft ({'calibration of the scene' if calib else 'pack default'})")
-    result = {"ok": True, "tiles": len(items), "px_per_ft": ppf, "set": set_name, "dry_run": bool(a.dry_run), "sample": items[0] if items else None}
+    pst = batch.commit()
+    LOG(f"{len(items)} model tiles for {len(doc['files'])} files at {ppf:g} px/ft ({'calibration of the scene' if calib else 'pack default'}); "
+        f"assets: {pst['files_skipped']} unchanged, {pst['would_copy']} {'to copy' if a.dry_run else 'copied'} in {pst['copy_seconds']:.1f} s")
+    result = {"ok": True, "tiles": len(items), "px_per_ft": ppf, "set": set_name, "dry_run": bool(a.dry_run), "sample": items[0] if items else None,
+              "publish": pst, "copy_seconds": pst["copy_seconds"], "files_copied": pst["files_copied"], "files_skipped": pst["files_skipped"], "bytes": pst["bytes"]}
     import scene_audit as sa
     dup = sa.check_plan_unique(items)
     if dup:
@@ -961,7 +986,8 @@ def cmd_push_models(br, a):
     if a.scene_mode and not result.get("scene_mode"):        # explicit mode on an existing scene: merge only the mode keys
         br.call("update", uuid=uuid, data={"flags": scene_mode_flags(a.scene_mode, _tex_flags(a))})
         result["scene_mode"] = a.scene_mode
-    bad = verify_models([i["data"]["flags"][L3D]["model3d"] for i in items], root, getattr(a, "serve_url", None) or os.environ.get("FOUNDRY_URL"), getattr(a, "allow_quantized", False))
+    bad = verify_models([i["data"]["flags"][L3D]["model3d"] for i in items], root, getattr(a, "serve_url", None) or os.environ.get("FOUNDRY_URL"), getattr(a, "allow_quantized", False),
+                        local_src=local_src, listing=batch.listing)
     if bad:        # never create tiles Foundry cannot load: one failing tile breaks the 3D render loop of the whole scene
         raise PushError(f"{len(bad)} model problem(s), no tiles were written:\n  " + "\n  ".join(bad[:25]))
     if a.prune and not items:
@@ -1167,7 +1193,7 @@ def cmd_push_scene_3d(br, a):
         r = cmd_push_models(br, b)
         if not r.get("ok"):
             raise PushError(f"push-models failed: {r}")
-        return {"tiles": r["tiles"], "set": r["set"]}
+        return {"tiles": r["tiles"], "set": r["set"], "publish": r.get("publish")}
 
     steps = {}
     if a.lighting:
@@ -1479,11 +1505,12 @@ def main(argv=None, bridge=None):
         import foundry_collision
         return foundry_collision.main(_av, bridge)
     a = parser().parse_args(argv)
+    import publish_batch
     try:
         res = CMDS[a.cmd](bridge or PsBridge(), a)
     except NeedsModule as e:
         res = {"ok": False, "error": str(e), "needs_module": True}
-    except PushError as e:
+    except (PushError, publish_batch.PublishError) as e:
         res = {"ok": False, "error": str(e)}
     print(json.dumps(res), flush=True)
     return 0 if res.get("ok") or res.get("needs_confirm") else 1

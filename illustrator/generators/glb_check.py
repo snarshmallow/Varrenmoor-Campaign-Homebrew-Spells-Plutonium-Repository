@@ -49,9 +49,12 @@ def read_glb(path):
         raise ValueError(f"JSON chunk does not parse: {e}")
 
 
-def validate_glb(path, allow_quantized=False):
+def validate_glb(path, allow_quantized=False, data_path=None, exists=None):
+    """data_path: read the bytes from this byte-identical copy (a local source) instead of `path`; external uris still resolve next to `path`.
+    exists(p): file test for those uris (default os.path.isfile; foundry_push passes a cached directory listing of the share)."""
+    exists = exists or os.path.isfile
     try:
-        g, bn = read_glb(path)
+        g, bn = read_glb(data_path or path)
     except (OSError, ValueError) as e:
         return [f"{os.path.basename(path)}: {e}"]
     name, bad = os.path.basename(path), []
@@ -87,7 +90,7 @@ def validate_glb(path, allow_quantized=False):
             u = o.get("uri")
             if u and not u.startswith("data:"):
                 from urllib.parse import unquote
-                if not os.path.isfile(os.path.normpath(os.path.join(base, unquote(u)))):
+                if not exists(os.path.normpath(os.path.join(base, unquote(u)))):
                     bad.append(f"{name}: {kind[:-1]} {i} uri {u} not found next to the file")
     if not g.get("meshes"):
         bad.append(f"{name}: no meshes")
