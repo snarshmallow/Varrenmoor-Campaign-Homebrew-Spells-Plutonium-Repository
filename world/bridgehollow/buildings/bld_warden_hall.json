@@ -35,5 +35,6 @@
  "doors": [],
  "elevation_ft": 653.2,
  "site_slope": 0.075,
- "site_relief_ft": 2.8
+ "site_relief_ft": 2.8,
+ "style": "bh_warden_civic"
 }

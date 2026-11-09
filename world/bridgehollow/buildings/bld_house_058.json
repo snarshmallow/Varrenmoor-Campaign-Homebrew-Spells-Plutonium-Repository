@@ -35,5 +35,6 @@
  "doors": [],
  "elevation_ft": 655.3,
  "site_slope": 0.068,
- "site_relief_ft": 1.8
+ "site_relief_ft": 1.8,
+ "style": "bh_warden_house"
 }

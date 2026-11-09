@@ -35,5 +35,6 @@
  "doors": [],
  "elevation_ft": 658.0,
  "site_slope": 0.075,
- "site_relief_ft": 0.6
+ "site_relief_ft": 0.6,
+ "style": "bh_ring_outbuilding"
 }

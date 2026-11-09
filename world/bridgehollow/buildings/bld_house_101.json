@@ -35,5 +35,6 @@
  "doors": [],
  "elevation_ft": 644.1,
  "site_slope": 0.095,
- "site_relief_ft": 2.1
+ "site_relief_ft": 2.1,
+ "style": "bh_inner_house"
 }
