@@ -1032,9 +1032,57 @@
      "controls": [
       "act:obj_reset_r"
      ]
+    },
+    "delete-road": {
+     "controls": [
+      "act:obj_r_del"
+     ]
+    },
+    "add-road": {
+     "controls": [
+      "act:obj_r_add"
+     ]
+    },
+    "set-road-points": {
+     "controls": [
+      "act:obj_r_reshape",
+      "act:obj_r_shape"
+     ]
+    },
+    "split-road": {
+     "controls": [
+      "act:obj_r_split"
+     ]
+    },
+    "join-roads": {
+     "controls": [
+      "act:obj_r_join"
+     ]
+    },
+    "apply-paths": {
+     "controls": [
+      "act:obj_r_readall",
+      "act:obj_r_add",
+      "act:obj_r_reshape"
+     ]
+    },
+    "draw-roads": {
+     "controls": [
+      "act:obj_r_redraw"
+     ]
+    },
+    "restore-streets": {
+     "controls": [
+      "act:obj_r_undo"
+     ]
     }
    },
    "flags": {
+    "--at": {
+     "controls": [
+      "s:objects.nr.splitAt"
+     ]
+    },
     "--clear": {
      "controls": [
       "act:obj_apply_b",
@@ -1046,21 +1094,78 @@
       "s:tools.objdry"
      ]
     },
+    "--file": {
+     "cli_only": "the panel writes the converted Illustrator paths to out/panel/road_paths.json itself and passes this path"
+    },
+    "--id": {
+     "cli_only": "the panel lets the generator derive the new road id from the name (str_<name>); a fixed id is only for scripted use"
+    },
     "--ids": {
      "controls": [
       "act:obj_r_sel",
-      "act:obj_r_all"
+      "act:obj_r_all",
+      "act:obj_r_del",
+      "act:obj_r_shape",
+      "act:obj_r_split",
+      "act:obj_r_join"
      ]
+    },
+    "--join-tol": {
+     "cli_only": "the panel always uses the default 25 ft join tolerance; raise it on the command line for a larger gap"
+    },
+    "--kind": {
+     "controls": [
+      "s:objects.nr.kind"
+     ]
+    },
+    "--mode": {
+     "controls": [
+      "act:obj_r_add",
+      "act:obj_r_reshape",
+      "act:obj_r_readall"
+     ]
+    },
+    "--name": {
+     "controls": [
+      "s:objects.nr.name"
+     ]
+    },
+    "--out": {
+     "cli_only": "the panel writes the centreline drawing to out/panel/road_centerlines.svg itself"
     },
     "--place": {
      "controls": [
       "id:fPlace"
      ]
     },
+    "--points": {
+     "cli_only": "points come from the Illustrator selection (Add / Reshape buttons); typed coordinates are for scripts"
+    },
+    "--points-file": {
+     "cli_only": "points come from the Illustrator selection (Add / Reshape buttons); a points file is for scripts"
+    },
     "--set": {
      "controls": [
       "act:obj_apply_b",
       "act:obj_apply_r"
+     ]
+    },
+    "--simplify": {
+     "controls": [
+      "s:objects.nr.simplify"
+     ]
+    },
+    "--smooth": {
+     "controls": [
+      "s:objects.nr.smooth"
+     ]
+    },
+    "--view-file": {
+     "cli_only": "the panel writes the page to feet mapping (panelio view) to out/panel/road_view.json itself"
+    },
+    "--width": {
+     "controls": [
+      "s:objects.nr.width"
      ]
     },
     "--world-root": {
@@ -1603,6 +1708,11 @@
     "--sky": {
      "controls": [
       "s:lighting.sun3d.sky"
+     ]
+    },
+    "--sky-preset": {
+     "controls": [
+      "s:lighting.sun3d.skyPreset"
      ]
     },
     "--make-sky": {

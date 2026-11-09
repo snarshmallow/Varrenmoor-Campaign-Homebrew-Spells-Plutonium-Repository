@@ -31,6 +31,25 @@
     '<div class="btns"><button data-act="obj_r_sel" title="Select road lines in Illustrator first">Use Illustrator selection</button><button data-act="obj_r_all">Tick all</button><button data-act="obj_r_none">Tick none</button></div>' +
     '<label>Filter <input type="text" id="objRFilter" placeholder="id, name or class"></label>' +
     '<div style="max-height:200px;overflow:auto"><table id="objRTable"></table></div><div class="note" id="objRInfo"></div>' +
+    '<h4>Road shape: add, reshape, delete <span class="tag" id="objGTag"></span></h4>' +
+    '<p class="note">Roads are edited as centrelines. <b>Redraw roads</b> puts one open path per road (named by its id, e.g. str_oak_ring) on the Illustrator layer <code>Road Centerlines</code>; move its anchors or draw a new open path there ' +
+    '(any name), then press a button below. Every change keeps a backup: <b>Undo last road change</b> restores it. Bridges are not touched here (Bridges tab). Redraw replaces the layer, so read your edits first. ' +
+    'After changes: Foundry tab, Export world pack (3D); the town drawing (Roads layer outlines) updates with Generate town / redraw.</p>' +
+    '<div class="btns"><button data-act="obj_r_redraw" title="Draw every road centreline from streets.json onto the layer Road Centerlines (replaces that layer)">Redraw roads in Illustrator</button>' +
+    '<button class="primary" data-act="obj_r_readall" title="Read the selected open paths (or, with nothing selected, every open path on Road Centerlines): paths named like a road reshape it, others are added as new roads">Read roads from Illustrator</button>' +
+    '<button data-act="obj_r_undo" title="Restore streets.json from the newest backup (one step per press)">Undo last road change</button></div>' +
+    '<div class="btns"><label>New road name <input type="text" data-nr="name" data-s="objects.nr.name" placeholder="empty = the path name" title="Name of a road added from the selection (several paths get 1, 2 ...)"></label></div>' +
+    '<div class="btns"><label>Class <select data-nr="kind" data-s="objects.nr.kind" title="Class of a new road"><option>lane</option><option>road</option><option>street</option><option>alley</option></select></label>' +
+    '<label>Width (ft) <input type="number" data-nr="width" data-s="objects.nr.width" min="2" max="120" step="1" title="Width of a new road"></label></div>' +
+    '<div class="btns"><label>Simplify (ft) <input type="number" data-nr="simplify" data-s="objects.nr.simplify" min="0" max="200" step="0.5" title="Douglas-Peucker tolerance: drops points closer than this to the line. 0 = keep every point"></label>' +
+    '<label>Smooth passes <input type="number" data-nr="smooth" data-s="objects.nr.smooth" min="0" max="50" step="1" title="Smoothing iterations (endpoints stay)"></label></div>' +
+    '<div class="btns"><button data-act="obj_r_add" title="Select open paths in Illustrator, then add each as a new road (name, class and width above)">Add from Illustrator selection</button>' +
+    '<button data-act="obj_r_reshape" title="Select open paths named like roads (str_...) and replace the lines of those roads with the paths. Width, class and overrides stay">Reshape from Illustrator selection</button>' +
+    '<button data-act="obj_r_shape" title="Simplify and / or smooth the existing line of every ticked road (uses the two boxes above)">Simplify / smooth ticked</button></div>' +
+    '<div class="btns"><label>Split at vertex <input type="number" data-nr="splitAt" data-s="objects.nr.splitAt" min="1" step="1" title="Index of the vertex (first = 0) where the ticked road is cut in two"></label>' +
+    '<button data-act="obj_r_split" title="Cut the ticked road at that vertex into two roads">Split</button><button data-act="obj_r_join" title="Join the two ticked roads end to end (same class, ends within 25 ft)">Join two</button></div>' +
+    '<div class="btns"><label class="chk"><input type="checkbox" data-nr="confirmDelete" data-s="objects.nr.confirmDelete"> Yes, delete the ticked roads</label>' +
+    '<button data-act="obj_r_del" title="Delete the ticked roads from streets.json (backed up; refused for bridges and roads named in bridges.json)">Delete ticked roads</button></div>' +
     '<div id="objRFields"></div><div class="btns"><button class="primary" data-act="obj_apply_r" title="Write the ticked fields into the chosen roads">Apply edits</button>' +
     '<button data-act="obj_reset_r" title="Remove the edit block of the chosen roads (width stays)">Reset overrides</button><button data-act="obj_load_r" title="Fill the fields from the first chosen road">Load values of first chosen</button></div>';
 
@@ -109,7 +128,7 @@
       if ($("objBTag")) $("objBTag").textContent = ed + "/" + bl.length + " with overrides";
       if ($("objBInfo")) $("objBInfo").textContent = n + " building(s) chosen" + (o.last && /buildings/.test(o.last.kind) ? "   last: " + o.last.count + " changed" : "");
     }
-    paintFields("r");
+    paintFields("r"); paintGeo();
     var rl = roads(), f = (o.rfilter || "").toLowerCase(), tk = {}; (o.rids || []).forEach(function (i) { tk[i] = 1; });
     $("objRTable").innerHTML = "<tr><th></th><th>id</th><th>name</th><th>kind</th><th>ft</th><th>overrides</th></tr>" + rl.filter(function (r) { return !f || (r.id + " " + r.name + " " + r.kind + " " + summary(r.edit)).toLowerCase().indexOf(f) >= 0; }).map(function (r) {
       return '<tr><td><input type="checkbox" data-rid="' + esc(r.id) + '"' + (tk[r.id] ? " checked" : "") + (r.bridge ? " disabled" : "") + "></td><td>" + esc(r.id) + "</td><td>" + esc(r.name) + "</td><td>" + esc(r.kind) + "</td><td>" + (r.width == null ? "" : r.width) + "</td><td>" + esc(summary(r.edit)) + "</td></tr>";
@@ -143,10 +162,32 @@
     obj_apply_r: function () { return go(function () { return VB.jobObjectsEditRoads(ctx.state()); }); },
     obj_reset_r: function () { return go(function () { return VB.jobObjectsReset(ctx.state(), "road"); }); },
     obj_load_r: function () { load("r"); },
+    obj_r_del: function () { return go(function () { return VB.jobRoadsDelete(ctx.state()); }); },
+    obj_r_undo: function () { return go(function () { return VB.jobRoadsUndo(ctx.state()); }); },
+    obj_r_redraw: function () { return go(function () { return VB.jobRoadsRedraw(ctx.state(), ctx.dirs()); }); },
+    obj_r_add: function () { return go(function () { return VB.jobRoadsFromPaths(ctx.state(), ctx.dirs(), "add"); }); },
+    obj_r_reshape: function () { return go(function () { return VB.jobRoadsFromPaths(ctx.state(), ctx.dirs(), "reshape"); }); },
+    obj_r_readall: function () { return go(function () { return VB.jobRoadsFromPaths(ctx.state(), ctx.dirs(), "sync"); }); },
+    obj_r_shape: function () { return go(function () { return VB.jobRoadsShape(ctx.state()); }); },
+    obj_r_split: function () { return go(function () { return VB.jobRoadsSplit(ctx.state()); }); },
+    obj_r_join: function () { return go(function () { return VB.jobRoadsJoin(ctx.state()); }); },
     obj_r_sel: function () { return go(function () { return VB.jobRoadsFromSelection(ctx.state(), roads().filter(function (r) { return !r.bridge; }).map(function (r) { return r.id; })); }); },
     obj_r_all: function () { O().rids = roads().filter(function (r) { return !r.bridge; }).map(function (r) { return r.id; }); O().rids_src = "all ticked"; ctx.save(); paint(); },
     obj_r_none: function () { O().rids = []; O().rids_src = ""; ctx.save(); paint(); }
   };
+  function paintGeo() {
+    var nr = O() && O().nr, host = $("tab-roads"); if (!nr || !host) return;
+    Array.prototype.forEach.call(host.querySelectorAll("[data-nr]"), function (el) {
+      var k = el.getAttribute("data-nr"); if (document.activeElement === el) return;
+      if (el.type === "checkbox") el.checked = !!nr[k]; else el.value = nr[k] == null ? "" : nr[k];
+    });
+  }
+  function onGeo(ev) {
+    var el = ev.target.closest("[data-nr]"); if (!el || !O().nr) return;
+    var k = el.getAttribute("data-nr");
+    O().nr[k] = el.type === "checkbox" ? el.checked : (el.type === "number" ? (el.value === "" ? "" : +el.value) : el.value);
+    ctx.save();
+  }
   function onField(ev) {
     var el = ev.target.closest("[data-of]"); if (!el) return;
     var scope = el.getAttribute("data-of"), k = el.getAttribute("data-k"), p = el.getAttribute("data-p"), fl = O()[scope][k]; if (!fl) return;
@@ -157,6 +198,7 @@
     ctx = c;
     Object.keys(A).forEach(function (k) { if (ctx.acts) ctx.acts[k] = A[k]; });
     ["objBFields", "objRFields"].forEach(function (id) { var h = $(id); if (h) { h.addEventListener("input", onField); h.addEventListener("change", onField); } });
+    if ($("tab-roads")) { $("tab-roads").addEventListener("input", onGeo); $("tab-roads").addEventListener("change", onGeo); }
     if ($("objRFilter")) $("objRFilter").addEventListener("input", function () { O().rfilter = $("objRFilter").value; paint(); });
     if ($("objRTable")) $("objRTable").addEventListener("change", function (ev) {
       var cb = ev.target.closest("input[data-rid]"); if (!cb) return;

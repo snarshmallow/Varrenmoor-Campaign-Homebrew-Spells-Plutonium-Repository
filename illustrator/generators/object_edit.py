@@ -8,6 +8,14 @@
   object_edit.py set-road       --place P --ids a,b [--set key=value ...] [--clear key ...] [--dry]
   object_edit.py reset-building --place P --ids a,b       remove every per-object override (edit block, interior_style; style stays: use building_styles.py)
   object_edit.py reset-road     --place P --ids a,b       remove the edit block (width_ft stays as it is)
+Road geometry (logic in road_edit.py; every write first copies streets.json to world/<place>/streets_backups/; bridges are never touched):
+  object_edit.py delete-road    --place P --ids a,b [--dry]
+  object_edit.py add-road       --place P --name N --kind lane --width 14 (--points "x,y;x,y" | --points-file F) [--id str_x] [--simplify FT] [--smooth N] [--dry]
+  object_edit.py set-road-points --place P --ids a (--points ... | --points-file F | only --simplify / --smooth on the existing line) [--dry]
+  object_edit.py split-road     --place P --ids a --at VERTEX_INDEX      join-roads --place P --ids a,b [--join-tol 25]
+  object_edit.py apply-paths    --place P --file paths.json --mode reshape|add|sync [--kind --width --name --simplify --smooth]   (Illustrator paths in feet)
+  object_edit.py draw-roads     --place P --view-file view.json --out roads.svg     centrelines for the Illustrator layer "Road Centerlines"
+  object_edit.py restore-streets --place P                undo the last road change (pops the newest backup)
 
 Where it writes (nothing else is touched, only the listed files):
   buildings/<id>.json   floors, style, interior_style (top level, as before) and an `edit` block {roof_type, roof_pitch, roof_overhang_ft, roof_material,
@@ -33,6 +41,11 @@ ROAD_EDIT = {"class": "class", "surface": "texture", "kerb": "bool", "grade.smoo
              "grade.cross_deg": (0.0, 45.0), "grade.cutfill": "bool", "lamps.on": "bool", "lamps.style": "lampstyle", "lamps.spacing_ft": (8.0, 400.0)}
 ROAD_TOP = {"width_ft": (2.0, 120.0)}
 ROAD_CLASSES = ["road", "street", "lane", "alley"]          # "bridge" roads are made by the Bridges tab
+
+
+def _re():
+    import road_edit
+    return road_edit
 
 
 def _root():
@@ -282,6 +295,7 @@ def set_road(place, ids, sets=None, clears=None, dry=False):
     if missing:
         raise SystemExit("unknown road id(s): " + ", ".join(missing))
     if not dry:
+        _re().backup(_wdir(place))
         _jsave(p, doc, 1)
     return {"place": place, "changed": changed, "count": len(changed), "dry": dry, "set": vals}
 
@@ -307,8 +321,55 @@ def reset_road(place, ids, dry=False):
             s.pop("edit", None)
             changed.append(s["id"])
     if changed and not dry:
+        _re().backup(_wdir(place))
         _jsave(p, doc, 1)
     return {"place": place, "changed": changed, "count": len(changed), "dry": dry}
+
+
+def road_cmd(a, ids):
+    re_ = _re()
+    wd = _wdir(a.place)
+    if not os.path.isdir(wd):
+        raise SystemExit(f"unknown place {a.place!r}")
+    if a.cmd == "restore-streets":
+        out = re_.restore(wd)
+    elif a.cmd == "delete-road":
+        out = re_.op_delete(wd, ids, a.dry)
+    elif a.cmd == "add-road":
+        pts = _pts_arg(a)
+        if pts is None:
+            raise SystemExit("add-road needs --points or --points-file")
+        out = re_.op_add(wd, a.name, a.kind, a.width, pts, a.id, a.simplify, a.smooth, a.dry)
+    elif a.cmd == "set-road-points":
+        if len(ids) != 1:
+            raise SystemExit("set-road-points takes exactly one road id")
+        out = re_.op_set_points(wd, ids[0], _pts_arg(a), a.simplify, a.smooth, a.dry)
+    elif a.cmd == "split-road":
+        if len(ids) != 1:
+            raise SystemExit("split-road takes exactly one road id")
+        out = re_.op_split(wd, ids[0], a.at, a.dry)
+    elif a.cmd == "join-roads":
+        if len(ids) != 2:
+            raise SystemExit("join-roads takes exactly two road ids")
+        out = re_.op_join(wd, ids[0], ids[1], a.join_tol, a.dry)
+    elif a.cmd == "apply-paths":
+        d = _jload(a.file) if os.path.exists(a.file) else re_.fail(f"paths file not found: {a.file}")
+        out = re_.op_apply_paths(wd, d.get("paths") if isinstance(d, dict) else d, a.mode, a.kind, a.width, a.name, a.simplify, a.smooth, a.dry)
+    else:
+        out = re_.draw_svg(wd, _jload(a.view_file), a.out)
+    out["place"] = a.place
+    return out
+
+
+def _pts_arg(a):
+    re_ = _re()
+    if a.points and a.points_file:
+        raise SystemExit("give --points or --points-file, not both")
+    if a.points:
+        return re_.parse_points(a.points)
+    if a.points_file:
+        return re_.read_points_file(a.points_file)
+    return None
 
 
 def main(argv=None):
@@ -325,6 +386,35 @@ def main(argv=None):
         if n.startswith("set"):
             s.add_argument("--set", action="append", default=[], metavar="KEY=VALUE")
             s.add_argument("--clear", action="append", default=[], metavar="KEY")
+    sub.add_parser("restore-streets").add_argument("--place", required=True)
+    for n in ("delete-road", "add-road", "set-road-points", "split-road", "join-roads", "apply-paths", "draw-roads"):
+        s = sub.add_parser(n)
+        s.add_argument("--place", required=True)
+        s.add_argument("--dry", action="store_true")
+        if n in ("delete-road", "set-road-points", "split-road", "join-roads"):
+            s.add_argument("--ids", required=True)
+        if n in ("add-road", "set-road-points", "apply-paths"):
+            s.add_argument("--simplify", type=float, default=0.0, help="Douglas-Peucker tolerance in feet")
+            s.add_argument("--smooth", type=int, default=0, help="smoothing iterations")
+        if n in ("add-road", "set-road-points"):
+            s.add_argument("--points", help="x,y;x,y;... in feet")
+            s.add_argument("--points-file", help="json list of [x, y] (or {points: [...]})")
+        if n in ("add-road", "apply-paths"):
+            s.add_argument("--kind", default="lane")
+            s.add_argument("--width", type=float, default=14.0)
+            s.add_argument("--name")
+        if n == "add-road":
+            s.add_argument("--id")
+        if n == "split-road":
+            s.add_argument("--at", type=int, required=True, help="vertex index to split at (1..n-2)")
+        if n == "join-roads":
+            s.add_argument("--join-tol", type=float, default=25.0)
+        if n == "apply-paths":
+            s.add_argument("--file", required=True, help="json {paths:[{name, points, closed}]} in feet")
+            s.add_argument("--mode", default="sync", choices=["reshape", "add", "sync"])
+        if n == "draw-roads":
+            s.add_argument("--view-file", required=True, help="panelio.py view json")
+            s.add_argument("--out", required=True)
     a = ap.parse_args(argv)
     if a.world_root:
         os.environ["VB_WORLD_ROOT"] = a.world_root
@@ -341,8 +431,10 @@ def main(argv=None):
         out = set_road(a.place, ids, a.set, a.clear, a.dry)
     elif a.cmd == "reset-building":
         out = reset_building(a.place, ids, a.dry)
-    else:
+    elif a.cmd == "reset-road":
         out = reset_road(a.place, ids, a.dry)
+    else:
+        out = road_cmd(a, ids)
     print(json.dumps(out, ensure_ascii=False))
 
 

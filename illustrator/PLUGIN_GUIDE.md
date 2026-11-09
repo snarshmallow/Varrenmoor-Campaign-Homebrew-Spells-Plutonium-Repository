@@ -573,6 +573,28 @@ Stored as: `geometry.width_ft` (the street's normal width key, so the 2D map fol
 
 Command line (same thing the buttons run): `python illustrator/generators/object_edit.py set-building --place P --ids bld_house_041 --set roof_type=hip --set no_windows=true`, `set-road --ids str_008 --set kerb=true --set grade.cutfill=true`, `reset-building`, `reset-road`, `list-buildings`, `list-roads`, `choices`. Values outside the allowed range or unknown textures are refused with a message and nothing is written.
 
+**Road shape: add, reshape, delete, undo (Roads tab, block "Road shape")**
+
+Roads are edited as centrelines (`geometry.points`, feet, y down, the plan coordinates of `streets.json`). The town drawing's Roads layer holds street OUTLINES (closed rings named by the street id); those cannot be read back as a line, so a separate Illustrator layer **Road Centerlines** carries one open path per road, named by its street id (e.g. `str_oak_ring`).
+
+1. **Redraw roads in Illustrator** draws every non-bridge road onto the layer Road Centerlines (the layer is replaced; read your edits first). Page points and feet use the same `panelio.py view` mapping as every other capture (Terrain patch, lights ...), so the paths line up with the town drawing at the current scale and focus.
+2. In Illustrator move anchors of those paths, add or delete anchors, or draw new OPEN paths on that layer (any name). Curved segments are flattened to short straight pieces; use Simplify to thin them.
+3. Buttons (all keep a backup first; every refusal writes nothing):
+   * **Read roads from Illustrator**: the selected open paths, or with nothing selected every open path on Road Centerlines. A path named like a road id reshapes that road; any other path is added as a new road (name, class, width from the boxes).
+   * **Add from Illustrator selection**: each selected open path becomes a new road (id `str_<name>`, `_2` ... when taken; several paths get the name plus 1, 2 ...). A path that already carries a road id is refused (use Reshape).
+   * **Reshape from Illustrator selection**: selected open paths named by a road id replace that road's line; width, class and edit overrides stay. Unnamed paths, closed paths, bridges and a road selected twice are refused.
+   * **Simplify / smooth ticked**: Douglas-Peucker tolerance in feet and/or smoothing passes (endpoints fixed) on the existing line of every ticked road.
+   * **Split** (ticked road at a vertex index) and **Join two** (two ticked roads of the same class whose nearest ends are within 25 ft).
+   * **Delete ticked roads** (tick "Yes, delete" first). Bridges and roads named in `bridges.json` are refused.
+   * **Undo last road change**: restores `streets.json` from the newest backup in `world/<place>/streets_backups/` (one step per press, newest 30 kept). Set / Reset overrides also write a backup, so Undo covers them too.
+4. After changes: Foundry tab Export world pack (3D) and split models; redraw the town (Generate town / fills) to refresh the 2D outlines and street labels.
+
+Validation: at least 2 points, length at least 2 ft, finite numbers, points within 2000 ft of the place bounds (a wrong mapping is refused), class road/street/lane/alley, width 2..120 ft, simplify 0..200 ft, smooth 0..50. Changing a road's points deletes its cached per-vertex heights (`elevations_ft`, `elevation_ft`, `grade_max`, `grade_raw_max`, `cut_fill_ft`); the 3D export then samples the terrain along the new line (the road bed is re-derived by the road grading on export; other tools that wrote those heights, e.g. a terrain pass that carved a road bed, must be re-run). Bridges are never changed; a road that ends at a bridge keeps its old end point unless you move it.
+
+Command line: `object_edit.py delete-road --place P --ids a,b`, `add-road --place P --name N --kind lane --width 14 --points "x,y;x,y" [--simplify 1 --smooth 2] [--id str_x]` (or `--points-file F`), `set-road-points --place P --ids a --points ...` (or only `--simplify` / `--smooth` on the existing line), `split-road --ids a --at 3`, `join-roads --ids a,b [--join-tol 25]`, `apply-paths --place P --file paths.json --mode reshape|add|sync` (file `{"paths": [{"name", "points": [[x,y]...], "closed": false}]}` in feet), `draw-roads --place P --view-file view.json --out roads.svg`, `restore-streets --place P`. All take `--dry`. Code: `generators/road_edit.py`; tests `generators/test_object_edit.py` (RoadGeometry) and `panel/test/test_objects_jobs.js`.
+
+Limits: curves are stored as polylines (no Bezier); a road drawn on the Road Centerlines layer keeps its vertices only (handles are flattened); redraw replaces the whole layer; roads are not clipped or snapped to junctions, so draw ends on the road they join; labels, fills and the town outlines follow only after the town is redrawn; the interactive Illustrator round trip was tested with a mock host only.
+
 Not available (no generator support yet): door on/off per building (doors come from the Regions detail pass), per-building storey height (fixed 10 ft), road sidewalks. The full audit of generator features against panel controls is `illustrator/out/panel_coverage.md`.
 
 **More pack options (Foundry tab, 3D models, collapsible)**: split preset, merge compression (quant adds the needed `--allow-quantized` automatically), scene mode flat/3d, carve river beds, conform terrain to roads, prune stale tiles, create roof tiles hidden, **Push models (dry run)**, **Audit scene tiles** (read-only duplicate/stale tile finder), **Lights (dry run)** and **Push interior lights**. Roads (3D) also has Max cross slope and a Road grading on/off switch.

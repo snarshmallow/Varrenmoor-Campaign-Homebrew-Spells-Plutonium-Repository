@@ -239,5 +239,214 @@ class MergeKeepIndividual(unittest.TestCase):
             shutil.rmtree(tmp, ignore_errors=True)
 
 
+class RoadGeometry(unittest.TestCase):
+    """delete / add / reshape / split / join / apply-paths / draw / undo on a temp world (road_edit.py through object_edit.main)."""
+
+    def setUp(self):
+        self.tmp = tempfile.mkdtemp()
+        self.dir = make_world(self.tmp)
+        with open(os.path.join(self.dir, "place.json"), "w") as f:
+            json.dump({"id": "p", "bounds": {"width_ft": 1000, "height_ft": 800}}, f)
+        os.environ["VB_WORLD_ROOT"] = self.tmp
+        # a stale per-vertex height array must never survive a reshape
+        d = self.doc()
+        d["streets"][0]["elevations_ft"] = [1.0, 2.0]
+        d["streets"][0]["elevation_ft"] = 1.5
+        d["streets"].append({"id": "str_br", "kind": "bridge", "geometry": {"type": "polyline", "points": [[0, 50], [40, 50]], "width_ft": 10.0}})
+        self.save(d)
+
+    def tearDown(self):
+        os.environ.pop("VB_WORLD_ROOT", None)
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def doc(self):
+        with open(os.path.join(self.dir, "streets.json")) as f:
+            return json.load(f)
+
+    def save(self, d):
+        with open(os.path.join(self.dir, "streets.json"), "w") as f:
+            json.dump(d, f)
+
+    def raw(self):
+        with open(os.path.join(self.dir, "streets.json"), "rb") as f:
+            return f.read()
+
+    def ids(self):
+        return [s["id"] for s in self.doc()["streets"]]
+
+    def nbackups(self):
+        d = os.path.join(self.dir, "streets_backups")
+        return len(os.listdir(d)) if os.path.isdir(d) else 0
+
+    def run_cli(self, *a):
+        import io
+        import contextlib
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            oe.main(["--world-root", self.tmp] + list(a))
+        return json.loads(buf.getvalue())
+
+    def refuses(self, *a):
+        before, nb = self.raw(), self.nbackups()
+        with self.assertRaises(SystemExit) as cm:
+            self.run_cli(*a)
+        self.assertEqual(self.raw(), before, "a refusal must write nothing")
+        self.assertEqual(nb, self.nbackups(), "a refusal must not leave a backup")
+        return str(cm.exception)
+
+    def jfile(self, name, data):
+        p = os.path.join(self.tmp, name)
+        with open(p, "w") as f:
+            json.dump(data, f)
+        return p
+
+    def test_delete_and_undo(self):
+        before = self.raw()
+        r = self.run_cli("delete-road", "--place", "p", "--ids", "str_002")
+        self.assertEqual(r["deleted"], ["str_002"])
+        self.assertNotIn("str_002", self.ids())
+        r = self.run_cli("restore-streets", "--place", "p")
+        self.assertEqual(r["remaining"], 0)
+        self.assertEqual(self.raw(), before)
+        self.assertIn("nothing to restore", self.refuses("restore-streets", "--place", "p"))
+
+    def test_delete_refusals(self):
+        self.assertIn("unknown road", self.refuses("delete-road", "--place", "p", "--ids", "str_001,str_nope"))
+        self.assertIn("bridge", self.refuses("delete-road", "--place", "p", "--ids", "str_br"))
+        with open(os.path.join(self.dir, "bridges.json"), "w") as f:
+            json.dump({"bridges": [{"id": "brg1", "street": "str_002"}]}, f)
+        self.assertIn("bridges.json", self.refuses("delete-road", "--place", "p", "--ids", "str_002"))
+
+    def test_add_road(self):
+        r = self.run_cli("add-road", "--place", "p", "--name", "Mill Lane", "--kind", "lane", "--width", "12", "--points", "10,10;60,20;120,25")
+        self.assertEqual(r["added"], ["str_mill_lane"])
+        s = self.doc()["streets"][-1]
+        self.assertEqual((s["kind"], s["geometry"]["width_ft"], len(s["geometry"]["points"])), ("lane", 12.0, 3))
+        r = self.run_cli("add-road", "--place", "p", "--name", "Mill Lane", "--points", "10,10;60,20")
+        self.assertEqual(r["added"], ["str_mill_lane_2"])
+        self.run_cli("restore-streets", "--place", "p")
+        self.assertNotIn("str_mill_lane_2", self.ids())
+        self.assertIn("str_mill_lane", self.ids())
+
+    def test_add_refusals(self):
+        base = ["add-road", "--place", "p", "--name", "X"]
+        self.assertIn("at least 2", self.refuses(*base, "--points", "1,1"))
+        self.assertIn("same place", self.refuses(*base, "--points", "1,1;1,1"))
+        self.assertIn("bad point", self.refuses(*base, "--points", "1,1;a,b"))
+        self.assertIn("far outside", self.refuses(*base, "--points", "1,1;90000,1"))
+        self.assertIn("not one of", self.refuses(*base, "--kind", "bridge", "--points", "1,1;50,1"))
+        self.assertIn("outside", self.refuses(*base, "--width", "500", "--points", "1,1;50,1"))
+        self.assertIn("already exists", self.refuses(*base, "--id", "str_001", "--points", "1,1;50,1"))
+        self.assertIn("must look like", self.refuses(*base, "--id", "bad id", "--points", "1,1;50,1"))
+        self.assertIn("needs --points", self.refuses(*base))
+
+    def test_set_points_drops_stale_heights(self):
+        r = self.run_cli("set-road-points", "--place", "p", "--ids", "str_001", "--points", "0,20;25,30;50,20")
+        self.assertEqual(r["points_after"], 3)
+        s = self.doc()["streets"][0]
+        self.assertEqual(s["geometry"]["points"], [[0, 20], [25, 30], [50, 20]])
+        self.assertNotIn("elevations_ft", s)
+        self.assertNotIn("elevation_ft", s)
+        self.assertEqual(s["geometry"]["width_ft"], 16.0)
+
+    def test_simplify_and_smooth_existing(self):
+        d = self.doc()
+        d["streets"][0]["geometry"]["points"] = [[0, 20], [10, 20.2], [20, 19.9], [30, 20.1], [50, 20]]
+        self.save(d)
+        r = self.run_cli("set-road-points", "--place", "p", "--ids", "str_001", "--simplify", "1")
+        self.assertEqual(r["points_after"], 2)
+        d = self.doc()
+        d["streets"][0]["geometry"]["points"] = [[0, 0], [10, 40], [20, 0], [30, 40], [40, 0]]
+        self.save(d)
+        self.run_cli("set-road-points", "--place", "p", "--ids", "str_001", "--smooth", "3")
+        p = self.doc()["streets"][0]["geometry"]["points"]
+        self.assertEqual((p[0], p[-1], len(p)), ([0, 0], [40, 0], 5))
+        self.assertLess(p[1][1], 40)
+        self.assertIn("give --points", self.refuses("set-road-points", "--place", "p", "--ids", "str_001"))
+        self.assertIn("exactly one", self.refuses("set-road-points", "--place", "p", "--ids", "str_001,str_002", "--simplify", "1"))
+        self.assertIn("bridge", self.refuses("set-road-points", "--place", "p", "--ids", "str_br", "--points", "0,0;9,9"))
+
+    def test_split_and_join(self):
+        d = self.doc()
+        d["streets"][0]["geometry"]["points"] = [[0, 20], [10, 20], [20, 20], [30, 20], [50, 20]]
+        self.save(d)
+        r = self.run_cli("split-road", "--place", "p", "--ids", "str_001", "--at", "2")
+        self.assertEqual(r["added"], ["str_001_2"])
+        a, b = self.doc()["streets"][0], self.doc()["streets"][1]
+        self.assertEqual((len(a["geometry"]["points"]), len(b["geometry"]["points"])), (3, 3))
+        self.assertEqual(a["geometry"]["points"][-1], b["geometry"]["points"][0])
+        self.assertIn("--at", self.refuses("split-road", "--place", "p", "--ids", "str_001", "--at", "0"))
+        r = self.run_cli("join-roads", "--place", "p", "--ids", "str_001,str_001_2")
+        self.assertEqual(r["deleted"], ["str_001_2"])
+        self.assertEqual(len(self.doc()["streets"][0]["geometry"]["points"]), 5)
+        self.assertIn("a lane", self.refuses("join-roads", "--place", "p", "--ids", "str_001,str_002"))
+        d = self.doc()
+        d["streets"][1]["kind"] = "street"
+        self.save(d)
+        self.assertIn("apart", self.refuses("join-roads", "--place", "p", "--ids", "str_001,str_002", "--join-tol", "5"))
+        self.assertIn("exactly two", self.refuses("join-roads", "--place", "p", "--ids", "str_001"))
+
+    def test_apply_paths(self):
+        f = self.jfile("paths.json", {"paths": [{"name": "str_x5F_001", "points": [[0, 20], [20, 25], [50, 20]], "closed": False},
+                                                {"name": "Path 7", "points": [[100, 100], [150, 120]], "closed": False}]})
+        self.assertIn("not named", self.refuses("apply-paths", "--place", "p", "--file", f, "--mode", "reshape"))
+        r = self.run_cli("apply-paths", "--place", "p", "--file", f, "--mode", "sync", "--kind", "alley", "--width", "9", "--name", "Back Way")
+        self.assertEqual((r["changed"], r["added"]), (["str_001"], ["str_back_way"]))
+        s = self.doc()["streets"]
+        self.assertEqual(s[0]["geometry"]["points"][1], [20, 25])
+        self.assertEqual((s[-1]["kind"], s[-1]["geometry"]["width_ft"], s[-1]["name"]), ("alley", 9.0, "Back Way"))
+        self.assertEqual(self.nbackups(), 1)
+        self.run_cli("restore-streets", "--place", "p")
+        self.assertNotIn("str_back_way", self.ids())
+        self.assertEqual(self.doc()["streets"][0]["geometry"]["points"], [[0, 20], [50, 20]])
+
+    def test_apply_paths_refusals(self):
+        pts = [[0, 20], [50, 20]]
+
+        def ref(paths, mode):
+            return self.refuses("apply-paths", "--place", "p", "--file", self.jfile("pp.json", {"paths": paths}), "--mode", mode)
+        self.assertIn("closed path", ref([{"name": "str_001", "points": pts, "closed": True}], "sync"))
+        self.assertIn("already road", ref([{"name": "str_001", "points": pts}], "add"))
+        self.assertIn("twice", ref([{"name": "str_001", "points": pts}, {"name": "str_001_casing", "points": pts}], "reshape"))
+        self.assertIn("bridge", ref([{"name": "str_br", "points": pts}], "reshape"))
+        self.assertIn("at least 2", ref([{"name": "str_001", "points": [[1, 1]]}], "reshape"))
+        # a good path followed by a bad one: nothing is written (refuses() checks the file is byte-identical)
+        self.assertIn("at least 2", ref([{"name": "str_001", "points": pts}, {"name": "str_002", "points": [[1, 1]]}], "reshape"))
+        self.assertIn("no paths", ref([], "sync"))
+
+    def test_road_id_from_name(self):
+        import road_edit as re_
+        ids = {"str_oak", "str_oak_ring", "str_001"}
+        self.assertEqual(re_.road_id_from_name("str_x5F_oak_x5F_ring", ids), "str_oak_ring")
+        self.assertEqual(re_.road_id_from_name("str_oak_ring_casing", ids), "str_oak_ring")
+        self.assertEqual(re_.road_id_from_name("str_oak_lane", ids), "str_oak")
+        self.assertIsNone(re_.road_id_from_name("str_oakx", ids))
+        self.assertIsNone(re_.road_id_from_name("bld_house_001", ids))
+
+    def test_draw_svg_matches_view_mapping(self):
+        view = self.jfile("view.json", {"x0": 0.0, "y0": 0.0, "k": 2.0, "margin_in": 0.5, "page_in": [17, 11]})
+        out = os.path.join(self.tmp, "roads.svg")
+        r = self.run_cli("draw-roads", "--place", "p", "--view-file", view, "--out", out)
+        self.assertEqual(r["roads"], 2)                                  # the bridge is not drawn
+        txt = open(out, encoding="utf-8").read()
+        self.assertIn('id="Road Centerlines"', txt)
+        self.assertIn('id="str_x5F_001"', txt)
+        self.assertIn("M36.00,76.00 L136.00,76.00", txt)                 # (0,20) ft -> 36 + 0, 36 + 20 * 2
+        self.assertNotIn("str_x5F_br", txt)
+
+    def test_set_road_keeps_a_backup(self):
+        before = self.raw()
+        self.run_cli("set-road", "--place", "p", "--ids", "str_001", "--set", "kerb=true")
+        self.run_cli("restore-streets", "--place", "p")
+        self.assertEqual(self.raw(), before)
+
+    def test_dry_writes_nothing(self):
+        before = self.raw()
+        r = self.run_cli("delete-road", "--place", "p", "--ids", "str_001", "--dry")
+        self.assertTrue(r["dry"])
+        self.assertEqual(self.raw(), before)
+        self.assertEqual(self.nbackups(), 0)
+
+
 if __name__ == "__main__":
     unittest.main()
