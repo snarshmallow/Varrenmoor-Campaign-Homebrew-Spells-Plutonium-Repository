@@ -42,7 +42,7 @@ SQUARE = [[1000, 700], [1040, 700], [1040, 730], [1000, 730]]        # 40 x 30 f
 
 def setUpModule():
     src = os.path.join(REPO, "world", "bridgehollow")
-    shutil.copytree(src, os.path.join(WORLD, "bridgehollow"), ignore=shutil.ignore_patterns("panel_state.json", "patch_preview", "export"))
+    shutil.copytree(src, os.path.join(WORLD, "bridgehollow"), ignore=shutil.ignore_patterns("panel_state.json", "patch_preview", "export", "bridges.json"))   # bridges: test_bridge_maker.ExportKeepsBridgesTests
     b = os.path.join(WORLD, "bridgehollow", "buildings")
     d = {"id": "bld_test_40x30", "name": "Test 40x30", "kind": "house", "status": "proposed", "geometry": {"type": "polygon", "points": SQUARE}, "notes": "",
          "links": {"foundry_scene": None, "model3d": None, "ai_layer": None}, "floors": 2, "rooms": [{"id": "rm_a", "name": "A"}], "doors": [], "elevation_ft": 700.0,
