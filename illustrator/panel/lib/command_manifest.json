@@ -1428,6 +1428,96 @@
     }
    }
   },
+  "heightmap_paint.py": {
+   "commands": {
+    "apply-strokes": {
+     "controls": [
+      "act:hp_apply",
+      "act:hp_undo",
+      "act:hp_redo",
+      "id:hpCanvas"
+     ]
+    },
+    "reset": {
+     "controls": [
+      "act:hp_reset"
+     ]
+    },
+    "export-preview": {
+     "controls": [
+      "act:hp_refresh",
+      "s:hp.contour_ft"
+     ]
+    },
+    "stats": {
+     "controls": [
+      "act:hp_stats"
+     ]
+    },
+    "save": {
+     "controls": [
+      "act:hp_save",
+      "act:hp_save_pack"
+     ]
+    },
+    "discard": {
+     "controls": [
+      "act:hp_discard"
+     ]
+    }
+   },
+   "flags": {
+    "--place": {
+     "cli_only": "the panel always passes the open place"
+    },
+    "--world-root": {
+     "cli_only": "test / scratch override of the world folder; the panel uses the repository's world folder"
+    },
+    "--work-dir": {
+     "cli_only": "test override of the working edit-layer folder; the panel uses illustrator/out/panel/<place>/heightmap_paint"
+    },
+    "--strokes": {
+     "cli_only": "the panel writes its strokes to a file and passes it here (the canvas drag is the control)"
+    },
+    "--strokes-json": {
+     "cli_only": "inline form of --strokes for terminal use"
+    },
+    "--mode": {
+     "controls": [
+      "act:hp_undo",
+      "act:hp_redo"
+     ]
+    },
+    "--layer": {
+     "controls": [
+      "act:hp_discard",
+      "act:hp_reset"
+     ]
+    },
+    "--max-px": {
+     "controls": [
+      "s:hp.max_px"
+     ]
+    },
+    "--contour-ft": {
+     "controls": [
+      "s:hp.contour_ft"
+     ]
+    },
+    "--exag": {
+     "cli_only": "the panel draws the relief itself from the binary preview (View > Relief exaggeration); this flag only shapes the PNG written for terminal use"
+    },
+    "--png": {
+     "cli_only": "the panel reads the binary preview via --bin-dir and draws it on the canvas; a PNG is for terminal / docs use"
+    },
+    "--bin-dir": {
+     "cli_only": "internal hand-off of the downsampled height and edit grids to the canvas"
+    },
+    "--show-delta": {
+     "cli_only": "PNG tint of the edits; the canvas has its own tint checkbox (View)"
+    }
+   }
+  },
   "foundry_lightbudget.py": {
    "commands": {
     "set-lighting": {

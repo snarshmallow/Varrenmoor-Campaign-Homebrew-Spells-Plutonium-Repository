@@ -78,8 +78,9 @@ def resolve_source(place, source=None, root=None):
     return s
 
 
-def load_terrain(place, source=None, root=None):
-    """-> (heights float32 [ny,nx], meta dict). meta gains `source` (the file kind really used) and `sea_level_ft` (default 0)."""
+def load_terrain(place, source=None, root=None, edits=True):
+    """-> (heights float32 [ny,nx], meta dict). meta gains `source` (the file kind really used) and `sea_level_ft` (default 0).
+    edits=True adds the saved heightmap edit layer (world/<place>/heightmap_edits.*, heightmap_paint.py) on top of whatever source was chosen."""
     P = _paths(place, root)
     want = resolve_source(place, source, root)
     used, path = "base", P["base"]
@@ -114,6 +115,13 @@ def load_terrain(place, source=None, root=None):
         meta["size_ft"] = [(h.shape[1] - 1) * c, (h.shape[0] - 1) * c]
     meta["source"] = used
     meta["source_file"] = path
+    if edits:
+        import heightmap_paint        # the painted edit layer sits on top of every source (VB_HEIGHT_EDITS=0 switches it off)
+        h, meta = heightmap_paint.overlay(place, h, meta, root)
+        if used == "carved" and "height_edits" in meta:
+            ep = heightmap_paint.layer_paths(world_dir(place, root))[0]
+            if os.path.exists(ep) and os.path.getmtime(P["carved"]) < os.path.getmtime(ep):
+                meta["warning"] = "heightmap_carved.npy is older than the saved heightmap edits: run the carve again"
     import place_stats
     ad = place_stats.place_adapt(place, h, meta.get("sea_level_ft", 0.0), os.path.dirname(world_dir(place, root)))
     if ad:

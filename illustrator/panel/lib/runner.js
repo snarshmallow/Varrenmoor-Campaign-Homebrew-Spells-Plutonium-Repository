@@ -113,7 +113,7 @@
       }
       rec.ok = res.ok; rec.error = res.error; rec.warnings = warnings; rec.cancelled = !!res.cancelled; rec.finished = now().toISOString();
       try {
-        if (o.jobsDir) {
+        if (o.jobsDir && !job.noLog) {   // noLog: high-frequency quiet jobs (Paint tab strokes) are not written to the jobs folder
           var dd = path.join(o.jobsDir, "done"); fs.mkdirSync(dd, { recursive: true });
           var stamp = rec.started.replace(/[-:]/g, "").replace(/\..*$/, "").replace("T", "_");
           var file = path.join(dd, "panel_" + stamp + "_" + job.kind + ".json");
