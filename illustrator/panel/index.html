@@ -953,6 +953,8 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
     <h4>Export to Foundry <span class="note">(guided: tick, then run)</span></h4>
     <div class="note">Steps run in the verified order, one after another, and stop at the first error. The defaults are what a normal first export needs. Foundry is only written when Dry run is off and you confirm.</div>
     <div id="exList"></div>
+    <div class="exrow"><label><b>Roofs</b> <select id="exRoofMode" data-s="foundry.models.roofMode" title="Same setting as Roof mode under More pack options"><option value="per_building">Individual roofs: one hideable tile per building (look inside one house)</option><option value="per_scene">Merged roofs: one switch shows or hides every roof</option><option value="none">No separate roofs: roofs are part of each building (fewest tiles)</option></select></label>
+      <label class="chk"><input type="checkbox" data-s="foundry.models.roofsHidden" title="Create the roof tiles hidden (individual or merged roofs only)"> Create roof tiles hidden</label></div>
     <div id="exRoofHint" class="note"></div>
     <label class="chk"><input type="checkbox" data-s="exp.dry" id="exDry"> Dry run first: Foundry steps only show what they would do (default: on)</label>
     <div id="exArmRow" style="display:none"><label class="chk"><input type="checkbox" id="exArm"> I understand this writes to Foundry (scene tiles, flags, lights; cleared after each run)</label></div>
