@@ -1204,6 +1204,12 @@ def cmd_push_scene_3d(br, a):
     if flb.budget_requested(a):                         # global / hybrid raise the scene's ambient (global illumination) so the map is not dark without point lights
         eff = (getattr(a, "light_budget_info", None) or {}).get("mode") or ("lights" if a.lighting_mode == "auto" else a.lighting_mode)
         flags.update(flb.scene_flag_changes(a, eff))
+    if getattr(a, "sun_preset", None):                  # sun / shadows / fog / ambient from a lighting preset (foundry_sun.py); wins over --lighting
+        import foundry_sun as _fs
+        try:
+            flags.update(_fs.preset_flags(_fs.get_preset(a.sun_preset)))
+        except ValueError as e:
+            raise PushError(str(e))
     for o in a.scene_flag or []:
         k, _, v = o.partition("=")
         try:
@@ -1293,6 +1299,7 @@ def parser():
     ap.add_argument("--table-texture-path", dest="table_texture_path", help="bake-texture: tableTex value to record (default: the asset path)")
     ap.add_argument("--publish", action="store_true", help="bake-texture: copy the image into the shared assets folder Foundry serves (otherwise only written locally)")
     ap.add_argument("--lighting", help="place id (panel_state.json lighting) or lighting JSON: sun/ambient -> scene flags (push-models), 2D point lights -> AmbientLights (push-lights)")
+    ap.add_argument("--sun-preset", dest="sun_preset", help="push-scene-3d: lighting preset (dawn morning noon afternoon dusk night foggy_morning warm_sunset): sun, shadow bias, ambient, fog flags (see set-sun)")
     ap.add_argument("--light-animation", dest="light_animation", help="push-lights: Foundry light animation type for interior hints (default none; never torch/smoke particles)")
     ap.add_argument("--prune", action="store_true", help="push-models: delete pipeline model tiles (flags.varrenmoor.pipelineId model:<place>:*) that are not in this push; ignored on an empty push")
     ap.add_argument("--prune-lights", dest="prune_lights", action="store_true", help="push-lights/push-scene-3d: allow clearing the pipeline's lights when the plan has 0 lights (default: refuse, existing lights kept)")
@@ -1429,6 +1436,9 @@ def main(argv=None, bridge=None):
     if _av and _av[0] == "set-lighting":                          # light budget, lighting mode, time of day, ambient / global illumination (foundry_lightbudget.py)
         import foundry_lightbudget
         return foundry_lightbudget.main(_av, bridge)
+    if _av and _av[0] == "set-sun":                               # sun, shadows, fog, sky presets (foundry_sun.py)
+        import foundry_sun
+        return foundry_sun.main(_av, bridge)
     if _av and _av[0] in ("set-collision", "push-walls", "sync-doors", "install-door-sync"):       # collision flag per layer / sight+sound+light walls (foundry_collision.py)
         import foundry_collision
         return foundry_collision.main(_av, bridge)

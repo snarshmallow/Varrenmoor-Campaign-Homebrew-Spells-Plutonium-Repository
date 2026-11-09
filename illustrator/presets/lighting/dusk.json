@@ -1,0 +1,37 @@
+{
+ "id": "dusk",
+ "label": "Dusk",
+ "description": "Sun just above the western horizon, orange, long shadows, cool blue ambient.",
+ "swatch": [
+  "#ffa866",
+  "#ffcfa8",
+  "#26305e"
+ ],
+ "sun": {
+  "azimuth": 280,
+  "altitude": 8,
+  "color": "#ffa866",
+  "strength": 1.2
+ },
+ "ambient": {
+  "intensity": 0.1,
+  "color": "#b8c4ff"
+ },
+ "shadows": {
+  "on": true,
+  "quality": 4,
+  "bias": -0.0003,
+  "soft": false
+ },
+ "fog": {
+  "enabled": false,
+  "color": "#d98a6a",
+  "far_px": 24000
+ },
+ "sky": {
+  "preset": "dusk",
+  "sun_bearing": 280,
+  "sun_alt": 8
+ },
+ "hour": 19
+}

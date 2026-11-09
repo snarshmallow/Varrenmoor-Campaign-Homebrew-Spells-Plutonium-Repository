@@ -1,0 +1,37 @@
+{
+ "id": "afternoon",
+ "label": "Afternoon (sunny)",
+ "description": "Sun in the south-west at 38 degrees, warm light, clear shadows. The default for scenes.",
+ "swatch": [
+  "#fff0cf",
+  "#e8f0ff",
+  "#4a86d0"
+ ],
+ "sun": {
+  "azimuth": 235,
+  "altitude": 38,
+  "color": "#fff0cf",
+  "strength": 1.3
+ },
+ "ambient": {
+  "intensity": 0.08,
+  "color": "#e8f0ff"
+ },
+ "shadows": {
+  "on": true,
+  "quality": 4,
+  "bias": -0.0003,
+  "soft": false
+ },
+ "fog": {
+  "enabled": false,
+  "color": "#c9dcee",
+  "far_px": 30000
+ },
+ "sky": {
+  "preset": "clear_day",
+  "sun_bearing": 235,
+  "sun_alt": 38
+ },
+ "hour": 15
+}

@@ -38,7 +38,8 @@ const sources = {
   "worldpack.py": GEN + "/worldpack.py", "worldpack_split.py": GEN + "/worldpack_split.py", "object_edit.py": GEN + "/object_edit.py",
   "scene_audit.py": GEN + "/scene_audit.py", "textures_audit.py": GEN + "/textures_audit.py", "building_ground_audit.py": GEN + "/building_ground_audit.py",
   "road_height_audit.py": GEN + "/road_height_audit.py", "terrain_check.py": GEN + "/terrain_check.py", "tile_rotation_inspect.py": GEN + "/tile_rotation_inspect.py",
-  "padding_heightmap.py": GEN + "/padding_heightmap.py", "foundry_lightbudget.py": GEN + "/foundry_lightbudget.py"
+  "padding_heightmap.py": GEN + "/padding_heightmap.py", "foundry_lightbudget.py": GEN + "/foundry_lightbudget.py",
+  "foundry_sun.py": GEN + "/foundry_sun.py", "sun_preview.py": GEN + "/sun_preview.py"
 };
 const extracted = {};
 Object.keys(sources).forEach(k => { let s = ""; try { s = fs.readFileSync(sources[k], "utf8"); } catch (e) { return; } extracted[k] = { commands: commandsOf(s), flags: flagsOf(s) }; });

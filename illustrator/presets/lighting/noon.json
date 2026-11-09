@@ -1,0 +1,37 @@
+{
+ "id": "noon",
+ "label": "Noon",
+ "description": "High sun in the south, neutral white, short shadows straight under things.",
+ "swatch": [
+  "#fffbea",
+  "#eef4ff",
+  "#2f6fc4"
+ ],
+ "sun": {
+  "azimuth": 180,
+  "altitude": 65,
+  "color": "#fffbea",
+  "strength": 1.2
+ },
+ "ambient": {
+  "intensity": 0.1,
+  "color": "#eef4ff"
+ },
+ "shadows": {
+  "on": true,
+  "quality": 4,
+  "bias": -0.0003,
+  "soft": false
+ },
+ "fog": {
+  "enabled": false,
+  "color": "#c9dcee",
+  "far_px": 30000
+ },
+ "sky": {
+  "preset": "clear_day",
+  "sun_bearing": 180,
+  "sun_alt": 65
+ },
+ "hour": 12
+}

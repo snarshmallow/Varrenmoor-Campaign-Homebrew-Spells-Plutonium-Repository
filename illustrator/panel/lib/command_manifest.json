@@ -153,6 +153,12 @@
       "act:f3d_dry",
       "act:f3d_apply"
      ]
+    },
+    "set-sun": {
+     "controls": [
+      "act:sun_dry",
+      "act:sun_apply"
+     ]
     }
    },
    "flags": {
@@ -558,6 +564,11 @@
     "--sight": {
      "controls": [
       "s:foundry.models.sight.buildings"
+     ]
+    },
+    "--sun-preset": {
+     "controls": [
+      "s:lighting.sun3d.onPush"
      ]
     }
    }
@@ -1487,6 +1498,136 @@
      "controls": [
       "s:bridge.terminal"
      ]
+    }
+   }
+  },
+  "foundry_sun.py": {
+   "commands": {
+    "set-sun": {
+     "controls": [
+      "act:sun_dry",
+      "act:sun_apply"
+     ]
+    }
+   },
+   "flags": {
+    "--scene-uuid": {
+     "controls": [
+      "id:sunBlock"
+     ]
+    },
+    "--place": {
+     "cli_only": "the panel always passes the open place"
+    },
+    "--preset": {
+     "controls": [
+      "id:sunPresets"
+     ]
+    },
+    "--sun-azimuth": {
+     "controls": [
+      "s:lighting.sun3d.azimuth"
+     ]
+    },
+    "--sun-altitude": {
+     "controls": [
+      "s:lighting.sun3d.altitude"
+     ]
+    },
+    "--sun-strength": {
+     "controls": [
+      "s:lighting.sun3d.strength"
+     ]
+    },
+    "--sun-color": {
+     "controls": [
+      "s:lighting.sun3d.color"
+     ]
+    },
+    "--ambient": {
+     "controls": [
+      "s:lighting.sun3d.ambient"
+     ]
+    },
+    "--ambient-color": {
+     "controls": [
+      "s:lighting.sun3d.ambientColor"
+     ]
+    },
+    "--shadows": {
+     "controls": [
+      "s:lighting.sun3d.shadows"
+     ]
+    },
+    "--shadow-quality": {
+     "controls": [
+      "s:lighting.sun3d.shadowQuality"
+     ]
+    },
+    "--shadow-bias": {
+     "controls": [
+      "s:lighting.sun3d.bias"
+     ]
+    },
+    "--fog": {
+     "controls": [
+      "s:lighting.sun3d.fog"
+     ]
+    },
+    "--fog-color": {
+     "controls": [
+      "s:lighting.sun3d.fogColor"
+     ]
+    },
+    "--fog-far": {
+     "controls": [
+      "s:lighting.sun3d.fogFar"
+     ]
+    },
+    "--sky": {
+     "controls": [
+      "s:lighting.sun3d.sky"
+     ]
+    },
+    "--make-sky": {
+     "controls": [
+      "s:lighting.sun3d.makeSky"
+     ]
+    },
+    "--ground-cast": {
+     "controls": [
+      "s:lighting.sun3d.groundCast"
+     ]
+    },
+    "--restore": {
+     "controls": [
+      "act:sun_reset"
+     ]
+    },
+    "--apply": {
+     "controls": [
+      "act:sun_apply",
+      "act:sun_temp"
+     ]
+    },
+    "--dry-run": {
+     "controls": [
+      "act:sun_dry"
+     ]
+    }
+   }
+  },
+  "sun_preview.py": {
+   "commands": {
+    "render": {
+     "controls": [
+      "id:sunPrev"
+     ]
+    }
+   },
+   "flags": {
+    "--out": {
+     "cli_only": "the panel writes the preview to illustrator/out/sun_preview/live_<place>.png and shows it in the block"
     }
    }
   }

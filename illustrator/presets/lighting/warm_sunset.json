@@ -1,0 +1,36 @@
+{
+ "id": "warm_sunset",
+ "label": "Warm sunset",
+ "description": "Low warm-orange sun in the west, long shadows, warm ambient, golden haze.",
+ "swatch": [
+  "#ff9a4a",
+  "#ffb27a",
+  "#f5b985"
+ ],
+ "sun": {
+  "azimuth": 265,
+  "altitude": 7,
+  "color": "#ff9a4a",
+  "strength": 1.55
+ },
+ "ambient": {
+  "intensity": 0.17,
+  "color": "#ffb27a"
+ },
+ "shadows": {
+  "on": true,
+  "quality": 4,
+  "bias": -0.0004,
+  "soft": false
+ },
+ "fog": {
+  "enabled": true,
+  "color": "#f5b985",
+  "far_px": 26000
+ },
+ "sky": {
+  "preset": "dusk",
+  "sun_bearing": 265,
+  "sun_alt": 5
+ }
+}

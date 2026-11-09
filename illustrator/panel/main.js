@@ -450,7 +450,7 @@
     $("candTag").className = "tag" + (state.town.candidate ? " stale" : "");
     $("statePath").textContent = d.state;
   }
-  function refreshAll() { paintInputs(); if (window.VBRegionUI) VBRegionUI.paint(); if (window.VBLightUI) VBLightUI.paint(); if (window.VBStylesUI) VBStylesUI.paint(); if (window.VBObjectsUI) VBObjectsUI.paint(); if (window.VBFoliageUI) VBFoliageUI.paint(); if (window.VBPaddingUI) VBPaddingUI.paint(); if (window.VBSkyUI) VBSkyUI.paint(); if (window.VBWaterUI) VBWaterUI.paint(); if (window.VBBridgesUI) VBBridgesUI.paint(); if (window.VBPlacesUI) VBPlacesUI.paint(); if (window.VBToolsUI) VBToolsUI.paint(); paintTags(); paintStale(); paintPatchForm(); paintRings(); if (typeof fPaint === "function" && state) fPaint(); }
+  function refreshAll() { paintInputs(); if (window.VBRegionUI) VBRegionUI.paint(); if (window.VBLightUI) VBLightUI.paint(); if (window.VBSunUI) VBSunUI.paint(); if (window.VBStylesUI) VBStylesUI.paint(); if (window.VBObjectsUI) VBObjectsUI.paint(); if (window.VBFoliageUI) VBFoliageUI.paint(); if (window.VBPaddingUI) VBPaddingUI.paint(); if (window.VBSkyUI) VBSkyUI.paint(); if (window.VBWaterUI) VBWaterUI.paint(); if (window.VBBridgesUI) VBBridgesUI.paint(); if (window.VBPlacesUI) VBPlacesUI.paint(); if (window.VBToolsUI) VBToolsUI.paint(); paintTags(); paintStale(); paintPatchForm(); paintRings(); if (typeof fPaint === "function" && state) fPaint(); }
 
   function showCrossings() {
     var j = readJson(d.water + "/crossings.json", null), el = $("crossInfo");
@@ -799,6 +799,7 @@
     await switchPlace(cur);
     VBLightUI.init({ state: function () { return state; }, dirs: function () { return d; }, save: save, startJob: startJob, isBusy: function () { return runner.isBusy(); }, syncInputs: paintInputs,
       placeCentre: function () { var p = readJson(d.world + "/place.json", {}), b = p.bounds || {}; return [Math.round((b.width_ft || 0) / 2), Math.round((b.height_ft || 0) / 2)]; } });
+    if (window.VBSunUI) VBSunUI.init({ state: function () { return state; }, dirs: function () { return d; }, save: save, startJob: startJob, isBusy: function () { return runner.isBusy(); }, showError: showError }); // sun / shadows / fog block (Lighting tab)
     if (window.VBFoliageUI) VBFoliageUI.init({ state: function () { return state; }, dirs: function () { return d; }, save: save, startJob: startJob, syncInputs: paintInputs, readJson: readJson, fs: fs, path: path, root: root, acts: acts }); // foliage tab
     if (window.VBSkyUI) VBSkyUI.init({ state: function () { return state; }, dirs: function () { return d; }, save: save, startJob: startJob, syncInputs: paintInputs, readJson: readJson, fs: fs, path: path, root: root, acts: acts, refreshAll: refreshAll }); // SKYBOX tab (skybox_ui.js)
     if (window.VBWaterUI) VBWaterUI.init({ state: function () { return state; }, dirs: function () { return d; }, save: save, startJob: startJob, syncInputs: paintInputs, readJson: readJson, fs: fs, path: path, root: root, acts: acts, refreshAll: refreshAll }); // 3D water group of the Water tab (water_ui.js)

@@ -1,0 +1,37 @@
+{
+ "id": "night",
+ "label": "Night",
+ "description": "Moonlight: dim blue light from a high moon, deep-blue starry sky, no sun disc. Needs the night sky image.",
+ "swatch": [
+  "#9db4ff",
+  "#4a5f9a",
+  "#03060f"
+ ],
+ "sun": {
+  "azimuth": 120,
+  "altitude": 35,
+  "color": "#9db4ff",
+  "strength": 0.45
+ },
+ "ambient": {
+  "intensity": 0.06,
+  "color": "#4a5f9a"
+ },
+ "shadows": {
+  "on": true,
+  "quality": 2,
+  "bias": -0.0003,
+  "soft": false
+ },
+ "fog": {
+  "enabled": false,
+  "color": "#0a1020",
+  "far_px": 20000
+ },
+ "sky": {
+  "preset": "night",
+  "sun_bearing": 120,
+  "sun_alt": 35
+ },
+ "hour": 23.5
+}

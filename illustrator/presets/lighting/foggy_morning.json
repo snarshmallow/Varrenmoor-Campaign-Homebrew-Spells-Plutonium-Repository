@@ -1,0 +1,36 @@
+{
+ "id": "foggy_morning",
+ "label": "Foggy morning",
+ "description": "Low sun hidden in pale fog: dense light fog, soft grey ambient, weak desaturated light, faint shadows.",
+ "swatch": [
+  "#dfe5ea",
+  "#c8d0d8",
+  "#f0e6dc"
+ ],
+ "sun": {
+  "azimuth": 100,
+  "altitude": 12,
+  "color": "#f2e8dc",
+  "strength": 0.85
+ },
+ "ambient": {
+  "intensity": 0.22,
+  "color": "#dde3ea"
+ },
+ "shadows": {
+  "on": true,
+  "quality": 2,
+  "bias": -0.0003,
+  "soft": true
+ },
+ "fog": {
+  "enabled": true,
+  "color": "#dfe5ea",
+  "far_px": 7000
+ },
+ "sky": {
+  "preset": "overcast",
+  "sun_bearing": 100,
+  "sun_alt": 12
+ }
+}

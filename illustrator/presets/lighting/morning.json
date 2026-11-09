@@ -1,0 +1,37 @@
+{
+ "id": "morning",
+ "label": "Morning",
+ "description": "Sun in the south-east at 30 degrees, warm white, medium shadows.",
+ "swatch": [
+  "#fff1d6",
+  "#e8eefc",
+  "#8ab4e8"
+ ],
+ "sun": {
+  "azimuth": 120,
+  "altitude": 30,
+  "color": "#fff1d6",
+  "strength": 1.25
+ },
+ "ambient": {
+  "intensity": 0.1,
+  "color": "#e6eeff"
+ },
+ "shadows": {
+  "on": true,
+  "quality": 4,
+  "bias": -0.0003,
+  "soft": false
+ },
+ "fog": {
+  "enabled": false,
+  "color": "#c9dcee",
+  "far_px": 30000
+ },
+ "sky": {
+  "preset": "clear_day",
+  "sun_bearing": 120,
+  "sun_alt": 30
+ },
+ "hour": 9
+}

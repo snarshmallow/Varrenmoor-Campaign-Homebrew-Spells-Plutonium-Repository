@@ -1,0 +1,37 @@
+{
+ "id": "dawn",
+ "label": "Dawn",
+ "description": "Low sun in the east, pink-gold light, long soft shadows toward the west.",
+ "swatch": [
+  "#ffc79a",
+  "#ffd9c0",
+  "#7a8fc2"
+ ],
+ "sun": {
+  "azimuth": 90,
+  "altitude": 10,
+  "color": "#ffc79a",
+  "strength": 1.1
+ },
+ "ambient": {
+  "intensity": 0.12,
+  "color": "#ffd9c0"
+ },
+ "shadows": {
+  "on": true,
+  "quality": 4,
+  "bias": -0.0003,
+  "soft": false
+ },
+ "fog": {
+  "enabled": false,
+  "color": "#f2d9c8",
+  "far_px": 26000
+ },
+ "sky": {
+  "preset": "dusk",
+  "sun_bearing": 90,
+  "sun_alt": 10
+ },
+ "hour": 6
+}
