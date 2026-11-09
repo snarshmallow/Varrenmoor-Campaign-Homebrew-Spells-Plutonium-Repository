@@ -24,6 +24,8 @@ const svgIdsWith = (file, id) => { const t = fs.readFileSync(file, "utf8").repla
   // ---- defaults and step structure
   const nr = st.objects.nr;
   check("defaults: map refresh, labels and fills on", nr.map === true && nr.mapLabels === true && nr.mapFills === true);
+  check("default map mode is the fast item update (test_itemops.js covers it); this file tests the full redraw", nr.mapMode === "items");
+  nr.mapMode = "full";
   st.objects.rids = [GONE]; nr.confirmDelete = true;
   let j = VB.jobRoadsDelete(st, d);
   const rep = replaced(j);

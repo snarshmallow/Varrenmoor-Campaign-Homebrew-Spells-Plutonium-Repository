@@ -34,13 +34,16 @@
     '<h4>Road shape: add, reshape, delete <span class="tag" id="objGTag"></span></h4>' +
     '<p class="note">Roads are edited as centrelines. <b>Redraw roads</b> puts one open path per road (named by its id, e.g. str_oak_ring) on the Illustrator layer <code>Road Centerlines</code>; move its anchors or draw a new open path there ' +
     '(any name), then press a button below. Every change keeps a backup: <b>Undo last road change</b> restores it. Bridges are not touched here (Bridges tab). Redraw replaces the layer, so read your edits first. ' +
-    'With <b>Update the map layers too</b> ticked (default) every change below, Undo and Redraw roads also redraw the map from <code>streets.json</code>: the layers Roads, Blocks, Road Centerlines, ' +
-    'the labels (street names), the road fills and, on a region place, kerbs and off-map arrows (Details, Bounds), so a deleted road disappears from the drawing. Contours are not redrawn (marked stale: Contours tab). ' +
+    'With <b>Update the map layers too</b> ticked (default) every change below and Undo also update the drawing. <b>Update only the changed items (fast)</b> (default): the items of a deleted road (outline, centreline, street name, halo, leader, flat fill copy, kerbs, off-map arrows) are removed by name, and the outline + centreline of a changed / added road and of its neighbours are replaced in place: no render_world run, no layer replace. ' +
+    'Blocks, the street fill raster, contours and the names of changed roads are then stale (listed under the buttons): <b>Refresh blocks only</b> or <b>Redraw roads on the map (full)</b> makes them exact. <b>Full redraw</b> = the old way (render_world, then Roads, Blocks, Road Centerlines, labels, fills, Details, Bounds replaced). Contours: Contours tab. ' +
     'After changes: Foundry tab, Export world pack (3D).</p>' +
-    '<div class="btns"><label class="chk" title="After a road change: render_world, then replace Roads, Blocks, Road Centerlines (+ the options on the right). Off = only streets.json changes and the drawing keeps the old roads until you press Redraw roads on the map"><input type="checkbox" data-nr="map" data-s="objects.nr.map"> Update the map layers too (Roads, Blocks, fills, street labels)</label>' +
-    '<label class="chk" title="Replace the label layers too (street names come from the same declutter pass as the other labels). Contour height labels are kept"><input type="checkbox" data-nr="mapLabels" data-s="objects.nr.mapLabels"> labels</label>' +
+    '<div class="btns"><label class="chk" title="After a road change: render_world, then replace Roads, Blocks, Road Centerlines (+ the options on the right). Off = only streets.json changes and the drawing keeps the old roads until you press Redraw roads on the map"><input type="checkbox" data-nr="map" data-s="objects.nr.map"> Update the map layers too</label>' +
+    '<select data-nr="mapMode" data-s="objects.nr.mapMode" title="Only the changed items (fast): remove / replace just the changed roads\' items by name (no render_world, no layer replace; Blocks, fills, contours marked stale). Full redraw: render_world, then replace the road layers (slow on a big map)"><option value="items">Update only the changed items (fast)</option><option value="full">Full redraw (render_world + replace layers)</option></select>' +
+    '<label class="chk" title="Full redraw: replace the label layers too (street names come from the same declutter pass as the other labels). Contour height labels are kept"><input type="checkbox" data-nr="mapLabels" data-s="objects.nr.mapLabels"> labels</label>' +
     '<label class="chk" title="Redraw the road fills (textured map: the streets raster, or every fill when flat swatch copies are on; flat colours otherwise). Slowest part on a big place"><input type="checkbox" data-nr="mapFills" data-s="objects.nr.mapFills"> fills</label>' +
-    '<button data-act="obj_r_map" title="Redraw the road layers of the map from streets.json now, without changing any road (Roads, Blocks, Road Centerlines, labels, fills)">Redraw roads on the map</button></div>' +
+    '<button data-act="obj_r_map" title="Redraw the road layers of the map from streets.json now, without changing any road (Roads, Blocks, Road Centerlines, labels, fills)">Redraw roads on the map (full)</button>' +
+    '<button data-act="obj_r_blocks" title="render_world once, then replace only the Blocks layer (nothing else in the drawing is touched)">Refresh blocks only</button></div>' +
+    '<div class="note" id="objRStale"></div>' +
     '<div class="btns"><button data-act="obj_r_redraw" title="Draw every road centreline from streets.json onto the layer Road Centerlines (replaces that layer) and, with Update the map layers too ticked, redraw Roads, Blocks, labels and fills as well">Redraw roads in Illustrator</button>' +
     '<button class="primary" data-act="obj_r_readall" title="Read the selected open paths (or, with nothing selected, every open path on Road Centerlines): paths named like a road reshape it, others are added as new roads">Read roads from Illustrator</button>' +
     '<button data-act="obj_r_undo" title="Restore streets.json from the newest backup (one step per press)">Undo last road change</button></div>' +
@@ -172,6 +175,7 @@
     obj_r_undo: function () { return go(function () { return VB.jobRoadsUndo(ctx.state(), ctx.dirs()); }); },
     obj_r_redraw: function () { return go(function () { return VB.jobRoadsRedraw(ctx.state(), ctx.dirs()); }); },
     obj_r_map: function () { return go(function () { return VB.jobRoadsMap(ctx.state(), ctx.dirs()); }); },
+    obj_r_blocks: function () { return go(function () { return VB.jobRoadsBlocks(ctx.state(), ctx.dirs()); }); },
     obj_r_add: function () { return go(function () { return VB.jobRoadsFromPaths(ctx.state(), ctx.dirs(), "add"); }); },
     obj_r_reshape: function () { return go(function () { return VB.jobRoadsFromPaths(ctx.state(), ctx.dirs(), "reshape"); }); },
     obj_r_readall: function () { return go(function () { return VB.jobRoadsFromPaths(ctx.state(), ctx.dirs(), "sync"); }); },
@@ -186,8 +190,9 @@
     var nr = O() && O().nr, host = $("tab-roads"); if (!nr || !host) return;
     Array.prototype.forEach.call(host.querySelectorAll("[data-nr]"), function (el) {
       var k = el.getAttribute("data-nr"); if (document.activeElement === el) return;
-      if (el.type === "checkbox") el.checked = !!nr[k]; else el.value = nr[k] == null ? "" : nr[k];
+      if (el.type === "checkbox") el.checked = !!nr[k]; else el.value = nr[k] == null ? (k === "mapMode" ? "items" : "") : nr[k];
     });
+    var sn = $("objRStale"); if (sn) sn.textContent = nr.stale ? "Not redrawn by the fast update (stale on the map): " + nr.stale : "";
   }
   function onGeo(ev) {
     var el = ev.target.closest("[data-nr]"); if (!el || !O().nr) return;

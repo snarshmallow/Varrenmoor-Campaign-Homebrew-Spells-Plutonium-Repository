@@ -41,8 +41,9 @@
     var r = { "class": F("lane"), width_ft: F(16), surface: F(""), kerb: F("true"), "grade.smooth": F(0.5), "grade.max_grade_deg": F(14), "grade.cross_deg": F(10), "grade.cutfill": F("true"), "lamps.on": F("true"), "lamps.style": F(""), "lamps.spacing_ft": F(60) };
     // nr: Roads tab geometry block (Add / Reshape / Redraw): name, class and width for NEW roads, simplify tolerance and smoothing for reshape, split vertex
     // map / mapLabels / mapFills: Road shape block 'Update the map layers too' (after every road change, and on Redraw roads in Illustrator)
+    // mapMode: "items" (default) = only the changed roads' items are removed / replaced in the open drawing (lib/itemops.js); "full" = render_world + layer replace
     return { b: b, r: r, rids: [], rids_src: "", rfilter: "", last: null, nr: { name: "", kind: "lane", width: 14, simplify: 1, smooth: 0, splitAt: 1, confirmDelete: false,
-      map: true, mapLabels: true, mapFills: true } };
+      map: true, mapMode: "items", mapLabels: true, mapFills: true, stale: "" } };
   };
   var baseDefaults = VB.defaults;
   VB.defaults = function () { var s = baseDefaults(); s.objects = VB.objectsDefaults(); return s; };
@@ -177,9 +178,62 @@
         ". Contours are marked stale (their street gaps follow the old roads): re-render them on the Contours tab."); } });
     return steps;
   };
+  // ---- FAST map update (default, mapMode "items"): no render_world, no whole-layer replace. Wraps the edit steps:
+  //   0 snapshot streets.json (panel/streets_before.json)   [edit steps]   1 diff before / after -> gone, changed, added road ids
+  //   2 host delete_items: every item of the gone roads (outline, centreline, street name + halo / callout, leaders, flat fill copy, kerbs, off-map arrows)
+  //   3 render_items.py: outline + centreline of the changed / added roads and of their neighbours (junction cuts change) -> panel/roads_items.svg
+  //   4 host replace_items: those items replace the same-named items in place (new ones go on top of their layer)
+  //   5 when 2 or 4 fails (e.g. host.jsx not reloaded yet: 'unknown action'): the full refresh below runs instead (slow path, as before)
+  // Not item-wise, marked stale: Blocks, the street fill raster (ART - Fill Streets), contours; labels of changed / added / restored roads (old position / none).
+  var IO = root.VBItemOps || (typeof require !== "undefined" ? require("./itemops.js") : null);
+  VB.ROAD_ITEM_LAYERS = ["Roads", "Road Centerlines"];
+  VB.roadMapMode = function (st) { return st.objects.nr.mapMode === "full" ? "full" : "items"; };
+  VB.roadSnapshotStep = function (st, d) {
+    return { t: "fn", label: "map: note the roads before the edit", fn: async function (run) {
+      var b = run.readJson(d.world + "/streets.json", { streets: [] }); run.vars.streetsBefore = b; await run.writeJson(d.panel + "/streets_before.json", b); } };
+  };
+  VB.roadItemSteps = function (st, d) {
+    var svg = d.panel + "/roads_items.svg", before = d.panel + "/streets_before.json";
+    var any = function (run) { var x = run.vars.roadDiff || {}; return (x.changed || []).length + (x.added || []).length + (x.gone || []).length > 0; };
+    var failed = function (run) { return (run.vars.roadDel && run.vars.roadDel.ok === false) || (run.vars.roadRep && run.vars.roadRep.ok === false); };
+    var steps = [{ t: "fn", label: "map: which roads changed", fn: function (run) {
+        var x = IO.diffStreets(run.vars.streetsBefore || run.readJson(before, { streets: [] }), run.readJson(d.world + "/streets.json", { streets: [] }));
+        run.vars.roadDiff = x;
+        run.log("map: " + x.gone.length + " road(s) gone, " + x.changed.length + " changed, " + x.added.length + " added" + (any(run) ? "" : " (nothing to update on the map)")); } }]
+      .concat(IO.deleteItemsSteps(function (run) { return (run.vars.roadDiff || {}).gone || []; }, "road", { "var": "roadDel", label: "map: remove the deleted roads' items (delete_items)" }).map(function (s) { return Object.assign(s, { when: any }); }),
+        [VB.steps.py(GEN + "render_items.py", function (run) {
+          var x = run.vars.roadDiff;
+          return ["--place", st.place, "--ids", x.changed.concat(x.added).join(","), "--gone", x.gone.join(","), "--before-file", before, "--neighbours"]
+            .concat(VB.panelioViewFlags(st), ["--out", svg]); }, "map: draw the changed roads + neighbours (render_items)", { json: "roadItems", when: function (run) { return any(run) && !failed(run); } }),
+        IO.replaceItemsStep(svg, VB.ROAD_ITEM_LAYERS, { "var": "roadRep", label: "map: replace those roads' outline + centreline (replace_items)",
+          when: function (run) { return !failed(run) && ((run.vars.roadItems || {}).drawn || []).length > 0; } })]);
+    var full = VB.roadMapSteps(st, d).map(function (s) { var w = s.when; return Object.assign({}, s, { label: "fallback " + (s.label || ""), when: function (run) { return failed(run) && (!w || w(run)); } }); });
+    return steps.concat(full, [{ t: "fn", label: "map: report", fn: function (run) {
+      if (failed(run)) { run.setState("objects.nr.stale", ""); run.log("fast map update failed (" + ((run.vars.roadDel || {}).error || (run.vars.roadRep || {}).error) + "): the full refresh ran instead"); return; }
+      var x = run.vars.roadDiff || {}, del = run.vars.roadDel || {}, it = run.vars.roadItems || {}, rep = run.vars.roadRep || {};
+      if (!any(run)) return;
+      var labelsOld = x.changed.length + x.added.length;
+      var stale = "Blocks, street fills (raster), contours" + (labelsOld ? ", street names of changed / added roads" : "") + (x.added.length ? ", kerbs / off-map arrows of added / restored roads (region places)" : "");
+      run.setState("objects.nr.stale", stale);
+      run.log("map updated item by item: " + (del.removed || 0) + " item(s) removed for " + x.gone.length + " deleted road(s), " + ((rep.replaced || 0) + (rep.added || 0)) + " outline / centreline item(s) redrawn for " +
+        (it.drawn || []).length + " road(s) (" + (it.neighbours || []).length + " neighbour(s)). Stale (not redrawn): " + stale + ". 'Redraw roads on the map (full)' makes them exact; 'Refresh blocks only' redraws just Blocks."); } }]);
+  };
+  // 'Refresh blocks only': render_world, then replace just the Blocks layer (the other layers stay as they are)
+  VB.jobRoadsBlocks = function (st, d) {
+    var svg = d.panel + "/roads_blocks.svg";
+    return { kind: "roads_blocks", label: "Refresh blocks only", params: {},
+      steps: [VB.steps.py(GEN + "render_world.py", ["--place", st.place].concat(VB.viewFlags(st), ["--out", svg], VB.srcFlags(st), VB.labelFlags(st)), "render (render_world)")]
+        .concat(VB.replaceSteps(svg, ["Blocks"], "replace Blocks"), [{ t: "fn", label: "report", fn: function (run) { run.setState("objects.nr.stale", String(st.objects.nr.stale || "").replace(/^Blocks(, )?/, "")); run.log("Blocks layer redrawn"); } }]) };
+  };
   // append the map refresh to a road-changing job when 'Update the map layers too' is on (needs the place folders d)
   function withMap(job, st, d) {
     if (!VB.roadMapOn(st, d)) { job.steps.push({ t: "fn", label: "note", fn: function (run) { run.log("map layers NOT updated ('Update the map layers too' is off): press 'Redraw roads on the map' to remove the old roads from the drawing"); } }); return job; }
+    if (VB.roadMapMode(st) === "items" && IO) {
+      job.steps = [VB.roadSnapshotStep(st, d)].concat(job.steps, VB.roadItemSteps(st, d));
+      job.setStale = (job.setStale || []).concat(["contours"]);
+      job.params = Object.assign({}, job.params, { map: "items" });
+      return job;
+    }
     job.steps = job.steps.concat(VB.roadMapSteps(st, d));
     job.setStale = (job.setStale || []).concat(["contours"]);
     job.params = Object.assign({}, job.params, { map: true });
@@ -259,7 +313,7 @@
   };
   // 'Redraw roads on the map': the map refresh without any road edit (always, whatever the checkbox says)
   VB.jobRoadsMap = function (st, d) {
-    return { kind: "roads_map", label: "Redraw roads on the map", params: { labels: st.objects.nr.mapLabels !== false, fills: st.objects.nr.mapFills !== false },
-      steps: VB.roadMapSteps(st, d), setStale: ["contours"] };
+    return { kind: "roads_map", label: "Redraw roads on the map (full)", params: { labels: st.objects.nr.mapLabels !== false, fills: st.objects.nr.mapFills !== false },
+      steps: VB.roadMapSteps(st, d).concat([{ t: "fn", label: "clear stale note", fn: function (run) { run.setState("objects.nr.stale", ""); } }]), setStale: ["contours"] };
   };
 })(typeof window !== "undefined" ? window : globalThis);

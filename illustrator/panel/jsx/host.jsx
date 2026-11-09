@@ -527,6 +527,154 @@ function VB_hideHeavy(doc, targetNames) {
   return out;
 }
 function VB_restoreHeavy(list) { for (var i = 0; i < list.length; i++) { try { list[i].l.visible = list[i].v; } catch (e) {} } }
+// ---- surgical item edits (panel lib/itemops.js): delete / replace / rename the items of some entity ids, no render, no whole-layer replace ----------
+// Names: <id>, <id>_label(_halo|_box)(_tp), <id>_callout, <id>_leader(_casing|_dot), <id>_marker|_marknum, <id>_name(_halo), flat_<id>, <id>_kerb<n>,
+// mk_<id>_start|end, <id>_door<n>|_roof|_chimney|_lot|_fence<n>. Illustrator shows '_' of an SVG id as '_', '_x5F_' or (old imports) a space.
+// VB_itemRegex must build the same string as itemops.regexSource (test/test_itemops.js compares them).
+var VB_ITEM_FAMILY = "label(?:_halo|_box)?(?:_tp)?|callout|leader(?:_casing|_dot)?|marker|marknum|name(?:_halo)?(?:_tp)?|kerb\\d+|door\\d+|roof|chimney|lot|fence\\d+|start|end";
+function VB_escRe(s) { return String(s).replace(/[.*+?^${}()|[\]\\\/-]/g, "\\$&"); }
+function VB_itemRegex(ids, match) {
+  var a = [];
+  for (var i = 0; i < ids.length; i++) a.push(VB_escRe(ids[i]));
+  var alt = a.join("|");
+  if (!alt) return "^$.";
+  if (match === "exact") return "^(?:" + alt + ")$";
+  if (match === "prefix") return "^(?:" + alt + ")(?:[_ ].*)?$";
+  return "^(?:flat_|mk_)?(?:" + alt + ")(?:_(?:" + VB_ITEM_FAMILY + "))?$";
+}
+function VB_decName(n) { return String(n === null || n === undefined ? "" : n).replace(/_x5F_/g, "_").replace(/^\s+|\s+$/g, ""); }
+function VB_nameHit(n, res) {
+  var a = VB_decName(n), b = a.replace(/ /g, "_");
+  for (var i = 0; i < res.length; i++) { if (res[i].test(a) || (b !== a && res[i].test(b))) return true; }
+  return false;
+}
+// entity id of an item name (for the not_found report): the name itself when it is an id, else without flat_ / mk_ and the family suffix
+function VB_baseId(n, set) {
+  var a = VB_decName(n).replace(/ /g, "_");
+  if (set[a]) return a;
+  return a.replace(/^(?:flat_|mk_)/, "").replace(new RegExp("_(?:" + VB_ITEM_FAMILY + ")$"), "");
+}
+// make a layer editable: unlock it and its locked parents, show it and its hidden parents (Illustrator refuses edits on locked or hidden layers). -> undo
+function VB_layerOpen(l) {
+  var u = { locked: [], hidden: [] }, p = l;
+  while (p && p.typename === "Layer") {
+    try { if (p.locked) { p.locked = false; u.locked.push(p); } } catch (e) {}
+    try { if (!p.visible) { p.visible = true; u.hidden.push(p); } } catch (e2) {}
+    try { p = p.parent; } catch (e3) { break; }
+  }
+  return u;
+}
+function VB_layerClose(u) {
+  var i;
+  for (i = 0; i < u.hidden.length; i++) { try { u.hidden[i].visible = false; } catch (e) {} }
+  for (i = 0; i < u.locked.length; i++) { try { u.locked[i].locked = true; } catch (e2) {} }
+}
+function VB_removeItem(it) { try { it.locked = false; } catch (e) {} try { it.hidden = false; } catch (e2) {} it.remove(); }
+// first item called `name` (or its _x5F_ form) directly on the layer, via the collection's getByName (no walk over every item); null when absent
+function VB_named(lay, name) {
+  var forms = [name];
+  if (name.indexOf("_") >= 0) forms.push(name.replace(/_/g, "_x5F_"));
+  for (var i = 0; i < forms.length; i++) { try { var it = lay.pageItems.getByName(forms[i]); if (it) return it; } catch (e) {} }
+  return null;
+}
+function VB_allLayerNames(container, out) {
+  for (var i = 0; i < container.layers.length; i++) { var l = container.layers[i]; if (l.name !== VB_LASSO_LAYER) out.push(l.name); VB_allLayerNames(l, out); }
+  return out;
+}
+// a: {targets:[{layer, names:[exact], patterns:[regex src]}]} or {ids, layers, match}; max (item cap), budget_ms (default 80 % of timeout_ms)
+function VB_deleteItems(doc, a) {
+  var res = { removed: 0, per_layer: {}, not_found: [], skipped_locked: [], missing_layers: [], truncated: false }, ids = a.ids || [], set = {}, hit = {}, i, j, k;
+  for (i = 0; i < ids.length; i++) set[String(ids[i])] = true;
+  var max = a.max || 20000, t0 = new Date().getTime(), budget = a.budget_ms || Math.max(5000, (a.timeout_ms || 60000) * 0.8);
+  var targets = a.targets;
+  if (!targets) {
+    var src = VB_itemRegex(ids, a.match || "family"), ln = (a.layers && a.layers.length) ? a.layers : VB_allLayerNames(doc, []);
+    targets = [];
+    for (i = 0; i < ln.length; i++) targets.push({ layer: ln[i], names: [], patterns: [src] });
+  }
+  for (i = 0; i < targets.length && !res.truncated; i++) {
+    var t = targets[i], lay = VB_find(doc, t.layer), cnt = 0, undo = null, names = t.names || [], pats = t.patterns || [];
+    if (!lay) { res.missing_layers.push(t.layer); continue; }
+    try {
+      for (j = 0; j < names.length; j++) {
+        for (k = 0; k < 50; k++) {                     // more than one item of the same name (a double import) are all removed
+          var it = VB_named(lay, names[j]);
+          if (!it) break;
+          if (!undo) undo = VB_layerOpen(lay);
+          try { VB_removeItem(it); cnt++; hit[VB_baseId(names[j], set)] = true; } catch (e) { res.skipped_locked.push(t.layer + ": " + names[j]); break; }
+        }
+      }
+      if (pats.length) {
+        var rx = [];
+        for (j = 0; j < pats.length; j++) rx.push(new RegExp(pats[j]));
+        var items = VB_direct(lay);
+        for (j = items.length - 1; j >= 0; j--) {
+          if (cnt + res.removed >= max) { res.truncated = true; break; }
+          var nm = "";
+          try { nm = String(items[j].name); } catch (e4) { continue; }
+          if (!nm || !VB_nameHit(nm, rx)) continue;
+          if (!undo) undo = VB_layerOpen(lay);
+          try { VB_removeItem(items[j]); cnt++; hit[VB_baseId(nm, set)] = true; } catch (e5) { res.skipped_locked.push(t.layer + ": " + VB_decName(nm)); }
+        }
+      }
+    } finally { if (undo) VB_layerClose(undo); }
+    if (cnt) res.per_layer[t.layer] = (res.per_layer[t.layer] || 0) + cnt;
+    res.removed += cnt;
+    if (res.removed >= max || new Date().getTime() - t0 > budget) res.truncated = true;
+  }
+  for (i = 0; i < ids.length; i++) if (!hit[String(ids[i])]) res.not_found.push(String(ids[i]));
+  res.deleted = res.removed;
+  return res;
+}
+// copy every item of the named layers of an SVG into the active document: an item with the same name on the same layer is replaced in place (z-order kept),
+// a new name is added on top of its layer. Nothing else is touched (vs replace_layer, which empties the layer first).
+function VB_replaceItems(tdoc, sdoc, names, out) {
+  for (var i = 0; i < names.length; i++) {
+    var sl = VB_find(sdoc, names[i]);
+    if (!sl) { out.missing.push(names[i]); continue; }
+    var tl = VB_ensureLike(tdoc, sl), u = VB_layerOpen(tl);
+    try {
+      var src = VB_direct(sl);
+      for (var k = src.length - 1; k >= 0; k--) {
+        var nm = VB_decName(src[k].name), old = nm ? VB_named(tl, nm) : null, dup;
+        if (old) {
+          try { dup = src[k].duplicate(old, ElementPlacement.PLACEBEFORE); } catch (e) { dup = src[k].duplicate(tl, ElementPlacement.PLACEATBEGINNING); try { dup.move(old, ElementPlacement.PLACEBEFORE); } catch (e2) {} }
+          try { dup.name = "__vb_new__"; } catch (e3) {}
+          for (var g = 0; g < 50 && old; g++) { VB_removeItem(old); old = VB_named(tl, nm); }
+          out.replaced++;
+        } else { dup = src[k].duplicate(tl, ElementPlacement.PLACEATBEGINNING); out.added++; }
+        try { dup.name = nm; } catch (e4) {}
+      }
+    } finally { VB_layerClose(u); }
+  }
+}
+// rename the items of entity `from` to `to` (same family suffixes), optional new label text on <to>_label / <to>_label_halo text frames
+function VB_renameItems(doc, renames, layers, out) {
+  var ln = (layers && layers.length) ? layers : VB_allLayerNames(doc, []), rx = [], i, j, r;
+  for (i = 0; i < renames.length; i++) rx.push(new RegExp(VB_itemRegex([renames[i].from], "family")));
+  for (i = 0; i < ln.length; i++) {
+    var lay = VB_find(doc, ln[i]);
+    if (!lay) continue;
+    var items = VB_direct(lay), undo = null;
+    try {
+      for (j = 0; j < items.length; j++) {
+        var nm = VB_decName(items[j].name).replace(/ /g, "_");
+        for (r = 0; r < renames.length; r++) {
+          if (!rx[r].test(nm)) continue;
+          var f = String(renames[r].from), to = String(renames[r].to), pre = "";
+          if (nm.indexOf("flat_" + f) === 0 && nm !== f) pre = "flat_"; else if (nm.indexOf("mk_" + f) === 0 && nm !== f) pre = "mk_";
+          var nn = pre + to + nm.substr(pre.length + f.length);
+          if (!undo) undo = VB_layerOpen(lay);
+          try {
+            items[j].name = nn; out.renamed++;
+            if (renames[r].text !== undefined && renames[r].text !== null && items[j].typename === "TextFrame" && /_label(_halo)?$/.test(nn)) { items[j].contents = String(renames[r].text); out.texts++; }
+          } catch (e) { out.failed.push(ln[i] + ": " + nm); }
+          break;
+        }
+      }
+    } finally { if (undo) VB_layerClose(undo); }
+  }
+}
 // app.open with alerts off ("Text on Path will be Flattened", missing fonts ...): a modal dialog blocks the whole ExtendScript queue.
 function VB_openQuiet(f) {
   var old = app.userInteractionLevel;
@@ -1114,6 +1262,41 @@ function VB_runInner(json) {
         var kl = VB_find(app.activeDocument, "Leaders");
         if (kl) kl.locked = (a.locked !== false);
         out.locked = (a.locked !== false); out.found = !!kl; break;
+      }
+      case "delete_items": {
+        // remove only the items of some entity ids (roads / buildings deleted in the data): no render, no layer replace. See lib/itemops.js for the input.
+        if (app.documents.length === 0) throw new Error("no open document");
+        if (!a.targets && !(a.ids && a.ids.length)) throw new Error("delete_items needs ids or targets");
+        var dres = VB_deleteItems(app.activeDocument, a);
+        for (var dk in dres) if (dres.hasOwnProperty(dk)) out[dk] = dres[dk];
+        break;
+      }
+      case "replace_items": {
+        // items of the named layers of an SVG (render_items.py: a few roads / buildings) replace the same-named items of the open document, in place
+        if (!a.path) throw new Error("path required");
+        var qnames = a.layers || a.names || [];
+        if (!qnames.length) throw new Error("layers required");
+        for (var qx = 0; qx < qnames.length; qx++) if (VB_isArt(qnames[qx])) throw new Error("refusing to replace items on ART layer: " + qnames[qx]);
+        if (app.documents.length === 0) throw new Error("no open document");
+        var qf = new File(a.path);
+        if (!qf.exists) throw new Error("file not found: " + a.path);
+        var qdoc = app.activeDocument, qhid = VB_hideHeavy(qdoc, qnames), qsvg = null, qout = { replaced: 0, added: 0, missing: [] };
+        try {
+          qsvg = VB_openQuiet(qf);
+          VB_replaceItems(qdoc, qsvg, qnames, qout);
+        } finally {
+          if (qsvg) { try { qsvg.close(SaveOptions.DONOTSAVECHANGES); } catch (e) {} }
+          try { app.activeDocument = qdoc; } catch (e2) {}
+          VB_restoreHeavy(qhid);
+        }
+        out.replaced = qout.replaced; out.added = qout.added; out.missing = qout.missing; break;
+      }
+      case "rename_items": {
+        // a.renames [{from, to, text?}]: item names of `from` (and its label / leader / fill family) become `to`; a.layers limits the walk (default every layer)
+        if (app.documents.length === 0) throw new Error("no open document");
+        var rn = { renamed: 0, texts: 0, failed: [] };
+        VB_renameItems(app.activeDocument, a.renames || [], a.layers, rn);
+        out.renamed = rn.renamed; out.texts = rn.texts; out.failed = rn.failed; break;
       }
       default: throw new Error("unknown action: " + a.action);
     }
