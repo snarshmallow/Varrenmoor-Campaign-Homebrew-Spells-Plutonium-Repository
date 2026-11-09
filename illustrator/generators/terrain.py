@@ -225,6 +225,18 @@ def load_heightmap(place, root=None, source=None):
     return worldio.load_terrain(place, source=source, root=root)
 
 
+def generate(spec, cell_ft=None, seed=None, verbose=False):
+    """Dispatch: spec["natural"] present -> v2 natural pipeline, otherwise the original v1 pipeline."""
+    if "natural" in spec:
+        import terrain_natural
+        h, meta = terrain_natural.generate(spec, cell_ft, seed, verbose)
+    else:
+        h, meta = generate_v1(spec, cell_ft, seed, verbose)
+    if "sea_level_ft" in spec:
+        meta["sea_level_ft"] = float(spec["sea_level_ft"])
+    return h, meta
+
+
 # ---------------------------------------------------------------- preview
 def hillshade(h, cell, azimuth=315.0, altitude=40.0, exag=1.0):
     gy, gx = np.gradient(h * exag, cell)          # y down: gy is d/dy (south)
