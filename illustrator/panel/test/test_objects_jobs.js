@@ -83,6 +83,9 @@ const thrown = f => { try { f(); return ""; } catch (e) { return String(e.messag
   st3.foundry.models.wallLayers.trees = false; st3.foundry.models.wallLayers.water = false;
   const wd = VB.jobPushWalls(st3, false).steps[0].args.join(" ");
   check("push-walls layer boxes", /--wall-layers buildings,walls,fences( |$)/.test(wd) && !/--apply/.test(wd), wd);
+  st3.foundry.target = "existing";
+  const sd = VB.jobSyncDoors(st3, false).steps[0].args.join(" "), sa = VB.jobSyncDoors(st3, true).steps[0].args.join(" ");
+  check("sync-doors dry run vs apply + install job", /^sync-doors --scene-uuid Scene.abc$/.test(sd) && /--apply$/.test(sa) && VB.jobInstallDoorSync().steps[0].args[0] === "install-door-sync", sd + " | " + sa);
   st3.foundry.target = "new"; check("walls job needs an existing scene", thrown(() => VB.jobPushWalls(st3, true)).length > 0);
   const real = JSON.parse(fs.readFileSync(`${ROOT}/world/${place}/streets.json`, "utf8")).streets[0];
   check("real world untouched", !real.edit && real.geometry.width_ft === w0);

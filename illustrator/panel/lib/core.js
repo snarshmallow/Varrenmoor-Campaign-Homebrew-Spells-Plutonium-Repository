@@ -735,6 +735,14 @@
     var a = ["set-collision", "--scene-uuid", f.sceneUuid], cs = VB.collisionSpec(f.models); if (cs) a.push("--collision", cs); if (apply) a.push("--apply");
     return { kind: "set_collision", label: "Set collision on scene tiles" + (apply ? "" : " (dry run)"), params: { apply: !!apply }, steps: [py(VB.FOUNDRY_PY || "illustrator/generators/foundry_push.py", a, "set collision")] };
   };
+  VB.jobInstallDoorSync = function () {
+    return { kind: "door_sync_macro", label: "Install Door sync macro", params: {}, steps: [py(VB.FOUNDRY_PY || "illustrator/generators/foundry_push.py", ["install-door-sync"], "install door sync")] };
+  };
+  VB.jobSyncDoors = function (st, apply) {
+    var f = st.foundry; if (f.target !== "existing" || !f.sceneUuid) throw new Error("pick an existing scene (Refresh from Foundry first)");
+    var a = ["sync-doors", "--scene-uuid", f.sceneUuid]; if (apply) a.push("--apply");
+    return { kind: "sync_doors", label: "Sync wall doors with model doors" + (apply ? "" : " (dry run)"), params: { apply: !!apply }, steps: [py(VB.FOUNDRY_PY || "illustrator/generators/foundry_push.py", a, "sync doors")] };
+  };
   VB.jobPushWalls = function (st, apply) {
     var f = st.foundry; if (f.target !== "existing" || !f.sceneUuid) throw new Error("pick an existing scene (Refresh from Foundry first)");
     var a = ["push-walls", "--place", st.place, "--scene-uuid", f.sceneUuid, "--wall-layers", VB.wallLayers(f.models)]; if (apply) a.push("--apply");

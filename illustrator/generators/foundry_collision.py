@@ -441,9 +441,68 @@ def cmd_push_walls(br, a):
     return res
 
 
+def door_plan(scene):
+    """Reconcile wall doors with model doors. -> [("wall", wall uuid-id, ds)] / [("tile", tile id, doorId, "ds")]. The model state wins when the tile lists the door; a wall door
+    the model does not know yet (flag absent) is written to the model only when it is not closed."""
+    tiles = scene.get("tiles", [])
+    model = {}
+    for t in tiles:
+        for did, v in (((t.get("flags") or {}).get(L3D) or {}).get("modelDoors") or {}).items():
+            model[did] = (t, str((v or {}).get("ds", "0")))
+    plan = []
+    for w in scene.get("walls", []):
+        did = ((w.get("flags") or {}).get(FLAG) or {}).get("doorId")
+        if not did or not (w.get("door") or 0) > 0:
+            continue
+        cur = int(w.get("ds") or 0)
+        if did in model:
+            want = {"1": 1, "2": 2}.get(model[did][1], 0)
+            if want != cur:
+                plan.append(("wall", w.get("_id") or w.get("id"), did, want, cur))
+        elif cur != 0:
+            owner = next((t for t in tiles if any(did.startswith(str(i) + "_") for i in (((t.get("flags") or {}).get(FLAG) or {}).get("ids") or []))), None)
+            if owner is not None:
+                plan.append(("tile", owner.get("_id") or owner.get("id"), did, str(cur), None))
+    return plan
+
+
+def cmd_sync_doors(br, a):
+    fp = _bridge()
+    if not a.scene_uuid:
+        raise fp.PushError("give --scene-uuid")
+    sc = br.call("get", uuid=a.scene_uuid)
+    plan = door_plan(sc)
+    fp.LOG(f"{len(plan)} door(s) out of step")
+    res = {"ok": True, "applied": False, "changes": len(plan),
+           "plan": [{"set": k, "id": i, "door": d, "to": t, "was": w} for k, i, d, t, w in plan]}
+    if not a.apply or a.dry_run:
+        res["note"] = "dry run: nothing written, repeat with --apply"
+        return res
+    fp.require_module(br)
+    for k, i, d, t, _ in plan:
+        if k == "wall":
+            br.call("update", uuid=f"{a.scene_uuid}.Wall.{i}", data={"ds": t})
+        else:
+            br.call("update", uuid=f"{a.scene_uuid}.Tile.{i}", data={f"flags.{L3D}.modelDoors.{d}.ds": t})
+    res["applied"] = True
+    return res
+
+
+def cmd_install_door_sync(br, a):
+    """Create/update the 'Door sync' Script macro (id macro:door_sync) from foundry_macros/door_sync.js."""
+    fp = _bridge()
+    with open(os.path.join(os.path.dirname(HERE), "foundry_macros", "door_sync.js"), encoding="utf-8") as f:
+        data = {"name": "Door sync: wall doors <-> model doors (toggle)", "type": "script", "img": "icons/svg/door.svg", "scope": "global", "command": f.read()}
+    if a.dry_run:
+        return {"ok": True, "dry_run": True, "macros": ["macro:door_sync"]}
+    fp.require_module(br)
+    r = br.call("upsert_by_flag", documentName="Macro", id="macro:door_sync", data=data)
+    return {"ok": True, "macros": [r.get("uuid")]}
+
+
 def parser():
     ap = argparse.ArgumentParser(prog="foundry_push.py")
-    ap.add_argument("cmd", choices=["set-collision", "push-walls"])
+    ap.add_argument("cmd", choices=["set-collision", "push-walls", "sync-doors", "install-door-sync"])
     ap.add_argument("--scene-uuid")
     ap.add_argument("--place")
     ap.add_argument("--collision", help="set-collision: layers with collision on: default | all | none | a,b,c | +water,-terrain")
@@ -460,7 +519,7 @@ def main(argv=None, bridge=None):
     fp = _bridge()
     a = parser().parse_args(argv)
     try:
-        res = {"set-collision": cmd_set_collision, "push-walls": cmd_push_walls}[a.cmd](bridge or fp.PsBridge(), a)
+        res = {"set-collision": cmd_set_collision, "push-walls": cmd_push_walls, "sync-doors": cmd_sync_doors, "install-door-sync": cmd_install_door_sync}[a.cmd](bridge or fp.PsBridge(), a)
     except fp.NeedsModule as e:
         res = {"ok": False, "error": str(e), "needs_module": True}
     except fp.PushError as e:

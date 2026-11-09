@@ -1412,7 +1412,7 @@ def main(argv=None, bridge=None):
     if _av and _av[0] in ("install-water", "set-water"):       # 3D water shader on a scene's water tiles (foundry_water.py)
         import foundry_water
         return foundry_water.main(_av, bridge)
-    if _av and _av[0] in ("set-collision", "push-walls"):       # collision flag per layer / sight+sound+light walls (foundry_collision.py)
+    if _av and _av[0] in ("set-collision", "push-walls", "sync-doors", "install-door-sync"):       # collision flag per layer / sight+sound+light walls (foundry_collision.py)
         import foundry_collision
         return foundry_collision.main(_av, bridge)
     a = parser().parse_args(argv)

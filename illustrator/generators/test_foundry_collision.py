@@ -223,5 +223,39 @@ class PushWalls(unittest.TestCase):
         self.assertFalse(r["ok"])
 
 
+class DoorSync(unittest.TestCase):
+    def scene(self):
+        return Fake([{"_id": "T", "flags": {"varrenmoor": {"pipelineId": "model:t:b", "layer": "buildings", "ids": ["bld_1", "bld_2"]},
+                                            "levels-3d-preview": {"collision": True, "modelDoors": {"bld_1_door1": {"ds": "1"}}}}}],
+                    [{"_id": "W1", "door": 1, "ds": 0, "flags": {"varrenmoor": {"pipelineId": "wall3d:buildings:bld_1:1", "doorId": "bld_1_door1"}}},
+                     {"_id": "W2", "door": 1, "ds": 1, "flags": {"varrenmoor": {"pipelineId": "wall3d:buildings:bld_2:1", "doorId": "bld_2_door1"}}},
+                     {"_id": "W3", "door": 1, "ds": 0, "flags": {"varrenmoor": {"pipelineId": "wall3d:buildings:bld_3:1", "doorId": "bld_3_door1"}}},
+                     {"_id": "W4", "door": 0, "ds": 0, "flags": {"varrenmoor": {"pipelineId": "wall3d:buildings:bld_1:0"}}}])
+
+    def test_plan_model_wins_and_unknown_open_wall_opens_model(self):
+        plan = fc.door_plan(self.scene().scene)
+        self.assertEqual([(k, i, t) for k, i, d, t, w in plan], [("wall", "W1", 1), ("tile", "T", "1")])
+        self.assertEqual(plan[1][2], "bld_2_door1")
+
+    def test_command_dry_then_apply(self):
+        br = Fake()
+        br.scene = self.scene().scene
+        br.op_update = lambda uuid, data: br.writes.append((uuid, data))
+        r, _ = run(br, "sync-doors", "--scene-uuid", "Scene.S")
+        self.assertTrue(r["ok"] and not r["applied"] and r["changes"] == 2 and br.writes == [])
+        r, _ = run(br, "sync-doors", "--scene-uuid", "Scene.S", "--apply")
+        self.assertEqual(br.writes, [("Scene.S.Wall.W1", {"ds": 1}), ("Scene.S.Tile.T", {"flags.levels-3d-preview.modelDoors.bld_2_door1.ds": "1"})])
+
+    def test_install_macro_idempotent(self):
+        calls = []
+        class B:
+            def call(self, op, **k):
+                calls.append((op, k))
+                return {"module": "0.3.0", "protocol": 3} if op == "version" else {"uuid": "Macro.m"}
+        r, _ = run(B(), "install-door-sync")
+        up = [k for op, k in calls if op == "upsert_by_flag"][0]
+        self.assertTrue(r["ok"] and up["id"] == "macro:door_sync" and "__vbDoorSync" in up["data"]["command"])
+
+
 if __name__ == "__main__":
     unittest.main()

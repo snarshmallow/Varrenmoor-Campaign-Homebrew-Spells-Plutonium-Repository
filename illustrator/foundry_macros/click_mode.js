@@ -48,6 +48,7 @@ if (root[MODE_KEY]) {                                   // second run: switch of
 }
 if (!L0 || !L0.interactionManager || !L0.renderer) return ui.notifications.warn("Click mode needs a scene in 3D Canvas mode.");
 
+try { if (!root.__vbDoorSync) game.macros.find((m) => m.flags?.varrenmoor?.pipelineId === "macro:door_sync")?.execute({ mode: "on" }); } catch (e) { /* door sync macro not installed: wall doors stay as they are */ }   // keep wall doors in step with the model doors
 const dom = L0.renderer.domElement;
 const peeks = new Map();                                // per_scene local hides: node uuid -> {node, helper}
 let down = null;
