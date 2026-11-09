@@ -18,6 +18,68 @@
     } catch (e) { /* no world folder */ }
     return out.sort(function (a, b) { return a.id < b.id ? -1 : 1; });
   }
+  function listTrash() {   // world/.trash/<id>_<stamp>/ (place_manage.py trash); read directly so the list is there without running python
+    var out = [], base = ctx.root + "/world/.trash";
+    try {
+      ctx.fs.readdirSync(base).forEach(function (n) {
+        var info = ctx.readJson(base + "/" + n + "/.trash_info.json", null) || {}, pj = ctx.readJson(base + "/" + n + "/place.json", null) || {};
+        if (!info.place && !pj.id) return;
+        out.push({ entry: n, place: info.place || pj.id, name: pj.name || "", trashed: info.trashed || "" });
+      });
+    } catch (e) { /* no trash yet */ }
+    return out.sort(function (a, b) { return a.entry < b.entry ? -1 : 1; });
+  }
+  // two-click arming for destructive buttons (CEP breaks window.confirm): first click arms for 6 s and relabels the button, the second runs
+  var armed = { key: "", until: 0, timer: null };
+  function disarm() {
+    armed.key = ""; clearTimeout(armed.timer);
+    [["plTrashBtn", "Move selected place to trash"], ["plPurgeBtn", "Delete permanently"]].forEach(function (b) { var el = $(b[0]); if (el) el.textContent = b[1]; });
+  }
+  function armOrRun(key, btnId, armText, fn) {
+    if (armed.key === key && Date.now() < armed.until) { disarm(); return fn(); }
+    disarm(); armed.key = key; armed.until = Date.now() + 6000;
+    var el = $(btnId); if (el) el.textContent = armText;
+    armed.timer = setTimeout(disarm, 6000);
+    return null;
+  }
+  // keep the place pickers (top bar, Foundry tab) in step after rename / trash / restore / duplicate (main.js only fills them at startup)
+  function syncPlaceSelects(removeId, addId) {
+    ["place", "fPlace"].forEach(function (id) {
+      var el = $(id); if (!el) return;
+      Array.prototype.slice.call(el.options).forEach(function (o) { if (removeId && o.value === removeId) el.removeChild(o); });
+      if (addId && !Array.prototype.some.call(el.options, function (o) { return o.value === addId; }) && (id === "place" || el.options.length)) { var o = document.createElement("option"); o.value = addId; o.textContent = addId; el.appendChild(o); }
+    });
+  }
+  function manageOut(t) { var el = $("plManageOut"); if (el) el.textContent = t; }
+  function runManage(op, opts) {
+    opts = opts || {};
+    var st = ctx.state(), place = op === "restore" || op === "purge" || op === "trash_list" ? "" : sel;
+    try {
+      var job = VB.jobPlaceManage(st, op, place, { dry: !!opts.dry, existing: listPlaces().map(function (p) { return p.id; }) });
+      return ctx.startJob(job, function (res) {
+        if (res && res.ok && !opts.dry) {
+          var m = job.manage, last = P().last || {};
+          if (op === "rename") { syncPlaceSelects(m.place, m.newId); sel = m.newId; P().manage.new_id = ""; }
+          if (op === "trash") { syncPlaceSelects(m.place, null); sel = ""; }
+          if (op === "duplicate") { syncPlaceSelects(null, job.newPlace); sel = job.newPlace; P().manage.dup_id = ""; P().manage.dup_name = ""; }
+          if (op === "restore") { syncPlaceSelects(null, last.place); sel = last.place || sel; P().manage.trash_entry = ""; P().manage.restore_as = ""; }
+          if (op === "purge") { P().manage.trash_entry = ""; P().manage.purge_confirm = ""; }
+          ctx.save(); ctx.syncInputs && ctx.syncInputs();
+        }
+        manageOut(res && res.ok ? JSON.stringify(P().last, null, 1).slice(0, 2500) : "FAILED: " + ((res && res.error) || ""));
+        paint();
+      });
+    } catch (e) { manageOut("ERROR: " + (e.message || e)); ctx.showError && ctx.showError(String(e.message || e)); return null; }
+  }
+  function loadEditFields() {
+    if (!sel) { manageOut("select a place in the list first"); return; }
+    var pj = ctx.readJson(ctx.root + "/world/" + sel + "/place.json", {}) || {}, vs = ctx.readJson(ctx.root + "/world/" + sel + "/view_settings.json", {}) || {};
+    var t = ((vs.presets || {}).town) || {}, f = ((pj.view_focus || {}).town) || [];
+    var M = P().manage;
+    M.name = pj.name || ""; M.notes = pj.notes || ""; M.kind = pj.kind || ""; M.status = pj.status || ""; M.culture = pj.culture || ""; M.season = (pj.defaults || {}).season || "";
+    M.units = pj.units || ""; M.focus_x = f.length === 2 ? f[0] : ""; M.focus_y = f.length === 2 ? f[1] : ""; M.scale_ft_per_in = t.scale_ft_per_in || ""; M.grid_ft = t.grid_ft || ""; M.loaded_for = sel;
+    ctx.save(); ctx.syncInputs && ctx.syncInputs(); manageOut("loaded " + sel + ": change fields, then Check changes / Save changes"); paint();
+  }
   function templates() {
     var out = [], dir = ctx.root + "/illustrator/presets/places";
     try { ctx.fs.readdirSync(dir).forEach(function (f) { if (/\.json$/.test(f)) { var j = ctx.readJson(dir + "/" + f, null); if (j) out.push({ key: f.replace(/\.json$/, ""), note: j._note || "", spec: j }); } }); } catch (e) { /* none */ }
@@ -41,6 +103,12 @@
     var e = VB.placeEstimate(st); P().estimate = e;
     var el = $("plEstimate"); el.textContent = e.text + (e.problems.length ? "  PROBLEM: " + e.problems.join("; ") : ""); el.className = "note" + (e.level === "bad" ? " err" : e.level === "warn" ? " warn" : "");
     var notes = $("plNotes"); if (notes) notes.textContent = (P().notes || []).join("\n");
+    var tb = $("plTrash");
+    if (tb) {
+      var T2 = listTrash(), te = P().manage.trash_entry;
+      tb.innerHTML = T2.length ? T2.map(function (t) { return '<tr data-te="' + esc(t.entry) + '"' + (t.entry === te ? ' class="sel"' : "") + "><td>" + esc(t.entry) + "</td><td>" + esc(t.place) + "</td><td>" + esc(t.name || "") + "</td><td>" + esc(t.trashed || "") + "</td></tr>"; }).join("") : '<tr><td colspan="4" class="note">(trash is empty)</td></tr>';
+      Array.prototype.forEach.call(tb.querySelectorAll("tr[data-te]"), function (tr) { tr.addEventListener("click", function () { P().manage.trash_entry = tr.getAttribute("data-te"); disarm(); ctx.save(); paint(); }); });
+    }
     var l = P().last, out = $("plOut");
     if (out) out.textContent = l ? JSON.stringify(l, null, 1).slice(0, 1500) : "";
     var img = $("plPreview"); if (img) { if (P().preview_png) { img.hidden = false; img.src = "file:///" + String(P().preview_png).replace(/\\/g, "/") + "?" + Date.now(); } else img.hidden = true; }
@@ -82,6 +150,27 @@
     },
     pl_image_check: function () { return run(function () { return VB.jobImportImage(ctx.state(), true); }); },
     pl_image_import: function () { return run(function () { return VB.jobImportImage(ctx.state(), false); }); },
+    pl_blank_check: function () { return run(function () { return VB.jobPlaceBlank(ctx.state(), true); }); },
+    pl_blank_create: function () { return run(function () { return VB.jobPlaceBlank(ctx.state(), false); }); },
+    pl_edit_load: function () { loadEditFields(); },
+    pl_edit_check: function () { if (P().manage.loaded_for && P().manage.loaded_for !== sel) return manageOut("the fields were loaded from " + P().manage.loaded_for + ": select it again or Load fields for " + sel); return runManage("edit", { dry: true }); },
+    pl_edit_apply: function () { if (P().manage.loaded_for && P().manage.loaded_for !== sel) return manageOut("the fields were loaded from " + P().manage.loaded_for + ": select it again or Load fields for " + sel); return runManage("edit"); },
+    pl_rename_check: function () { return runManage("rename", { dry: true }); },
+    pl_rename: function () { return runManage("rename"); },
+    pl_dup_check: function () { return runManage("duplicate", { dry: true }); },
+    pl_duplicate: function () { return runManage("duplicate"); },
+    pl_trash: function () {
+      if (!sel) return manageOut("select a place in the list first");
+      if (sel === ctx.state().place) return manageOut(sel + " is the place open in the panel: switch to another place first");
+      var s = sel; return armOrRun("trash:" + s, "plTrashBtn", "Click again to move " + s + " to trash", function () { return runManage("trash"); });
+    },
+    pl_trash_refresh: function () { paint(); },
+    pl_restore: function () { return runManage("restore"); },
+    pl_purge: function () {
+      var M = P().manage; if (!M.trash_entry) return manageOut("pick a trash entry (click a row in the Trash table) first");
+      if (!String(M.purge_confirm || "").trim()) return manageOut("type the place id in the box to confirm the permanent delete");
+      return armOrRun("purge:" + M.trash_entry, "plPurgeBtn", "Click again: delete " + M.trash_entry + " for good", function () { return runManage("purge"); });
+    },
     pl_import_from_foundry_tab: function () {   // button in the Foundry tab: uses that tab's scene picker
       var f = ctx.state().foundry; P().import.scene_uuid = f.sceneUuid || P().import.scene_uuid; ctx.save(); ctx.syncInputs();
       return run(function () { return VB.jobImportScene(ctx.state(), ctx.dirs()); });

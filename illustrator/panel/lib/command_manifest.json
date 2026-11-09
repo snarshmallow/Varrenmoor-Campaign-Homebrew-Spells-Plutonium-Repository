@@ -2192,9 +2192,20 @@
       "act:pl_image_import",
       "act:pl_image_check"
      ]
+    },
+    "create-blank": {
+     "controls": [
+      "act:pl_blank_create",
+      "act:pl_blank_check"
+     ]
     }
    },
    "flags": {
+    "--cell-ft": {
+     "controls": [
+      "s:places.blank.cell_ft"
+     ]
+    },
     "--create": {
      "cli_only": "from-text --create writes the place straight away; the panel fills the form first (Fill form from words) and Generate place creates it"
     },
@@ -2205,12 +2216,14 @@
     },
     "--dry-run": {
      "controls": [
-      "act:pl_image_check"
+      "act:pl_image_check",
+      "act:pl_blank_check"
      ]
     },
     "--force": {
      "controls": [
-      "act:pl_regenerate"
+      "act:pl_regenerate",
+      "s:places.blank.force"
      ]
     },
     "--ft-per-px": {
@@ -2220,12 +2233,14 @@
     },
     "--grid-ft": {
      "controls": [
-      "s:places.image.grid_ft"
+      "s:places.image.grid_ft",
+      "s:places.blank.grid_ft"
      ]
     },
     "--id": {
      "controls": [
-      "s:places.image.id"
+      "s:places.image.id",
+      "s:places.blank.id"
      ]
     },
     "--meander": {
@@ -2242,7 +2257,8 @@
     },
     "--name": {
      "controls": [
-      "s:places.image.name"
+      "s:places.image.name",
+      "s:places.blank.name"
      ]
     },
     "--no-bars": {
@@ -2265,24 +2281,201 @@
     "--place": {
      "cli_only": "regen target; the panel regenerates the selected place with Regenerate (overwrite)"
     },
+    "--recipe": {
+     "controls": [
+      "s:places.blank.recipe"
+     ]
+    },
+    "--relief-ft": {
+     "controls": [
+      "s:places.blank.relief_ft"
+     ]
+    },
     "--rotate": {
      "controls": [
       "s:places.image.rotate"
      ]
     },
+    "--scale-ft-per-in": {
+     "controls": [
+      "s:places.blank.scale_ft_per_in"
+     ]
+    },
     "--seed": {
      "controls": [
-      "s:places.form.seed"
+      "s:places.form.seed",
+      "s:places.blank.seed"
      ]
     },
     "--show": {
      "cli_only": "templates --show prints one template; the panel loads it into the form (Load template into form)"
     },
+    "--size-ft": {
+     "controls": [
+      "s:places.blank.width_ft",
+      "s:places.blank.height_ft"
+     ]
+    },
     "--terrain": {
      "cli_only": "regen --terrain flag; the panel regenerates through Regenerate (overwrite)"
     },
+    "--underlay": {
+     "controls": [
+      "s:places.blank.underlay"
+     ]
+    },
     "--width-var": {
      "cli_only": "regen option, covered by the Water tab Regenerate river + terrain"
+    }
+   }
+  },
+  "place_manage.py": {
+   "commands": {
+    "check-id": {
+     "cli_only": "id check used by scripts; the panel checks the id itself before rename / duplicate (same rules as place_manage.ID_RE) and the python repeats it"
+    },
+    "edit": {
+     "controls": [
+      "act:pl_edit_apply",
+      "act:pl_edit_check",
+      "act:pl_edit_load"
+     ]
+    },
+    "rename": {
+     "controls": [
+      "act:pl_rename",
+      "act:pl_rename_check"
+     ]
+    },
+    "duplicate": {
+     "controls": [
+      "act:pl_duplicate",
+      "act:pl_dup_check"
+     ]
+    },
+    "trash": {
+     "controls": [
+      "act:pl_trash"
+     ]
+    },
+    "trash-list": {
+     "controls": [
+      "id:plTrash",
+      "act:pl_trash_refresh"
+     ]
+    },
+    "restore": {
+     "controls": [
+      "act:pl_restore"
+     ]
+    },
+    "purge": {
+     "controls": [
+      "act:pl_purge",
+      "s:places.manage.purge_confirm"
+     ]
+    }
+   },
+   "flags": {
+    "--allow-current": {
+     "cli_only": "the panel never renames or trashes the place it has open (it keeps saving that place's panel_state.json); switch to another place first"
+    },
+    "--as": {
+     "controls": [
+      "s:places.manage.restore_as"
+     ]
+    },
+    "--confirm": {
+     "controls": [
+      "s:places.manage.purge_confirm"
+     ]
+    },
+    "--culture": {
+     "controls": [
+      "s:places.manage.culture"
+     ]
+    },
+    "--dry-run": {
+     "controls": [
+      "act:pl_rename_check",
+      "act:pl_dup_check",
+      "act:pl_edit_check"
+     ]
+    },
+    "--entry": {
+     "controls": [
+      "id:plTrash"
+     ]
+    },
+    "--focus": {
+     "controls": [
+      "s:places.manage.focus_x",
+      "s:places.manage.focus_y"
+     ]
+    },
+    "--grid-ft": {
+     "controls": [
+      "s:places.manage.grid_ft"
+     ]
+    },
+    "--id": {
+     "cli_only": "check-id argument; the panel validates ids in place (Rename id, Duplicate place)"
+    },
+    "--include-export": {
+     "controls": [
+      "s:places.manage.include_export",
+      "s:places.manage.dup_include_export"
+     ]
+    },
+    "--kind": {
+     "controls": [
+      "s:places.manage.kind"
+     ]
+    },
+    "--name": {
+     "controls": [
+      "s:places.manage.name",
+      "s:places.manage.dup_name"
+     ]
+    },
+    "--new-id": {
+     "controls": [
+      "s:places.manage.new_id",
+      "s:places.manage.dup_id"
+     ]
+    },
+    "--notes": {
+     "controls": [
+      "s:places.manage.notes"
+     ]
+    },
+    "--place": {
+     "controls": [
+      "id:plList"
+     ]
+    },
+    "--scale-ft-per-in": {
+     "controls": [
+      "s:places.manage.scale_ft_per_in"
+     ]
+    },
+    "--season": {
+     "controls": [
+      "s:places.manage.season"
+     ]
+    },
+    "--status": {
+     "controls": [
+      "s:places.manage.status"
+     ]
+    },
+    "--units": {
+     "controls": [
+      "s:places.manage.units"
+     ]
+    },
+    "--world-root": {
+     "cli_only": "test override of the world folder; the panel uses the repository's world folder"
     }
    }
   }

@@ -885,6 +885,65 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
   <div class="note" id="plSel"></div>
   <div class="btns"><button data-act="pl_switch">Switch to selected</button><button data-act="pl_render" title="Headless PNG preview (no Illustrator): line art, shading, fills">Preview selected</button><button data-act="pl_open_ai" title="Writes an Illustrator job: opens the map as a new document (small places only)">Open selected in Illustrator</button><button data-act="pl_refresh">Refresh</button></div>
   <img id="plPreview" hidden alt="place preview" style="max-width:100%">
+  <details id="plManage"><summary>Manage the selected place (edit, rename id, duplicate, move to trash)</summary>
+    <p class="note">Works on the row selected in the list above. Rename and Move to trash refuse the place open in the panel: switch to another place first. Foundry is never changed: a linked scene, the Foundry asset folder art/&lt;id&gt;/ and an exported 3D pack keep the old name (each step lists them). Street, building and district names are edited per object in the Roads and Buildings tabs (Edit road / Edit building).</p>
+    <div class="btns"><button data-act="pl_edit_load" title="Fills the fields below from the selected place's place.json and view_settings.json">Load fields from the selected place</button></div>
+    <div class="grid">
+      <label>Name <input type="text" data-s="places.manage.name"></label>
+      <label>Kind <select data-s="places.manage.kind"><option value="">(keep)</option><option>town</option><option>city</option><option>village</option><option>hamlet</option><option>homestead</option><option>farmstead</option><option>wilderness</option><option>blank</option><option>building</option><option>dungeon</option><option>basemap</option><option>scene</option><option>region</option><option>other</option></select></label>
+      <label>Status <select data-s="places.manage.status"><option value="">(keep)</option><option>proposed</option><option>draft</option><option>canon</option><option>imported</option><option>base map</option><option>blank</option><option>archived</option></select></label>
+      <label>Culture (label) <input type="text" data-s="places.manage.culture" placeholder="keep"></label>
+      <label>Season <select data-s="places.manage.season"><option value="">(keep)</option><option>summer</option><option>autumn</option><option>winter</option></select></label>
+      <label>Units <input type="text" data-s="places.manage.units" placeholder="feet"></label>
+      <label>View focus x (ft) <input type="number" data-s="places.manage.focus_x" step="1"></label>
+      <label>View focus y (ft) <input type="number" data-s="places.manage.focus_y" step="1"></label>
+      <label>Town view scale (ft per inch) <input type="number" data-s="places.manage.scale_ft_per_in" min="0" step="any"></label>
+      <label>Grid (ft) <input type="number" data-s="places.manage.grid_ft" min="0" step="any"></label>
+    </div>
+    <label>Notes / description <textarea data-s="places.manage.notes" rows="2" style="width:100%"></textarea></label>
+    <div class="btns"><button data-act="pl_edit_check">Check changes (dry run)</button><button class="primary" data-act="pl_edit_apply">Save changes</button></div>
+    <div class="grid">
+      <label>New id <input type="text" data-s="places.manage.new_id" placeholder="lower_case_id"></label>
+      <label class="chk" title="Default off: the 3D pack is re-exported instead. On: rewrites world/&lt;id&gt;/export (manifest, pipeline ids, placements)"><input type="checkbox" data-s="places.manage.include_export"> also rewrite the exported 3D pack</label>
+    </div>
+    <div class="btns"><button data-act="pl_rename_check" title="Lists every file and folder that would change, and what stays behind">Check rename (dry run)</button><button data-act="pl_rename">Rename id</button></div>
+    <div class="grid">
+      <label>Copy id <input type="text" data-s="places.manage.dup_id" placeholder="new_place_id"></label>
+      <label>Copy name <input type="text" data-s="places.manage.dup_name" placeholder="&lt;name&gt; (copy)"></label>
+      <label class="chk"><input type="checkbox" data-s="places.manage.dup_include_export"> include export/ and caches</label>
+    </div>
+    <div class="btns"><button data-act="pl_dup_check">Check duplicate (dry run)</button><button data-act="pl_duplicate">Duplicate place</button></div>
+    <div class="btns"><button data-act="pl_trash" id="plTrashBtn" title="Click twice: moves world/&lt;id&gt; to world/.trash (restore below)">Move selected place to trash</button></div>
+    <h4>Trash</h4>
+    <table><thead><tr><th>entry</th><th>place</th><th>name</th><th>trashed</th></tr></thead><tbody id="plTrash"></tbody></table>
+    <div class="btns"><button data-act="pl_trash_refresh">Refresh trash</button></div>
+    <div class="grid">
+      <label>Restore as (blank = original id) <input type="text" data-s="places.manage.restore_as" placeholder="original id"></label>
+    </div>
+    <div class="btns"><button data-act="pl_restore">Restore selected trash entry</button></div>
+    <div class="grid">
+      <label>Type the place id to delete it for good <input type="text" data-s="places.manage.purge_confirm" placeholder="place id"></label>
+    </div>
+    <div class="btns"><button data-act="pl_purge" id="plPurgeBtn" class="danger" title="Click twice: deletes the selected trash entry permanently (cannot be undone)">Delete permanently</button></div>
+    <pre id="plManageOut" class="note" style="white-space:pre-wrap"></pre>
+  </details>
+  <h4>Blank place (from scratch)</h4>
+  <p class="note">An empty place: only the terrain (flat, or rolling hills / valley / highland ridge from the base-terrain generator), no streets, districts or buildings. Draw roads in the Roads tab, add buildings with the Buildings tools, paint the ground in Heightmap paint. Optional underlay image is stretched over the whole place.</p>
+  <div class="grid" id="plBlank">
+    <label>Name <input type="text" data-s="places.blank.name" placeholder="e.g. Ravens' Crossing"></label>
+    <label>Id (folder) <input type="text" data-s="places.blank.id" placeholder="auto from name"></label>
+    <label>Width (ft) <input type="number" data-s="places.blank.width_ft" min="100" max="18000" step="50"></label>
+    <label>Height (ft) <input type="number" data-s="places.blank.height_ft" min="100" max="18000" step="50"></label>
+    <label>Terrain <select data-s="places.blank.recipe"><option value="flat">flat</option><option value="rolling_hills">rolling hills</option><option value="valley">valley</option><option value="highland_ridge">highland ridge</option></select></label>
+    <label>Relief (ft, blank = auto) <input type="number" data-s="places.blank.relief_ft" min="0" step="10"></label>
+    <label>Cell size (ft, blank = auto) <input type="number" data-s="places.blank.cell_ft" min="2" max="40" step="any"></label>
+    <label>Seed (blank = from id) <input type="number" data-s="places.blank.seed" step="1"></label>
+    <label>Scale (ft per inch, blank = fit) <input type="number" data-s="places.blank.scale_ft_per_in" min="0" step="any"></label>
+    <label>Grid (ft, blank = from scale) <input type="number" data-s="places.blank.grid_ft" min="0" step="any"></label>
+    <label>Underlay image (optional) <input type="text" data-s="places.blank.underlay" placeholder="C:/maps/sketch.png"></label>
+    <label class="chk"><input type="checkbox" data-s="places.blank.force"> Overwrite an existing place with this id</label>
+  </div>
+  <div class="btns"><button data-act="pl_blank_check">Check blank place (dry run)</button><button class="primary" data-act="pl_blank_create">Create blank place</button></div>
   <h4>New place</h4>
   <div class="grid">
     <label>Template <select id="plTemplate"></select></label>
@@ -897,7 +956,8 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
     <label>Name <input type="text" data-s="places.form.name" placeholder="e.g. Ulfvik"></label>
     <label>Id (folder) <input type="text" data-s="places.form.id" placeholder="auto from name"></label>
     <label>Culture <select data-s="places.form.culture"><option value="fantasy_generic">Generic fantasy</option><option value="scandinavian">Scandinavian</option><option value="danish_german">Danish / North German</option><option value="english">English</option></select></label>
-    <label>Population <input type="number" data-s="places.form.population" min="20" max="12000" step="10"></label>
+    <label title="0 = no settlement (terrain only); 1-19 = a tiny settlement (farmstead, cabin, lodge, inn, hamlet); 20+ = a town">Population <input type="number" data-s="places.form.population" min="0" max="12000" step="1"></label>
+    <label title="Only for fewer than 20 people. Auto: 1-5 farmstead, 6-19 hamlet. Layout, wall and centre feature are not used then.">Tiny settlement (under 20 people) <select data-s="places.form.settlement"><option value="auto">auto (farmstead / hamlet)</option><option value="farmstead">farmstead (house, barn, well, fields)</option><option value="cabin">hunter's cabin (cabin + woodshed)</option><option value="lodge">hunter's lodge (lodge, stable, woodshed)</option><option value="inn">roadside inn (inn, stables, well, road)</option><option value="hamlet">hamlet (2-4 houses, barns, well, fields)</option></select></label>
     <label>Layout <select data-s="places.form.layout"><option>organic</option><option>radial</option><option>grid</option><option>linear</option><option>walled</option></select></label>
     <label>Centre feature <select data-s="places.form.central_feature"><option>market</option><option>green</option><option>temple</option><option>castle</option><option>none</option></select></label>
     <label>Terrain <select data-s="places.form.recipe"><option>flat</option><option>rolling</option><option>hills</option><option>valley</option><option>bowl</option><option>coastal</option><option>island</option><option>pass</option><option>fjord</option><option>mountain</option></select></label>
@@ -908,8 +968,8 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
     <label>Relief (ft, blank = recipe) <input type="number" data-s="places.form.relief_ft" min="0" step="10"></label>
     <label>Climate <select data-s="places.form.climate"><option>temperate</option><option>cold</option><option>dry</option><option>coastal</option></select></label>
     <label>Season <select data-s="places.form.season"><option>summer</option><option>autumn</option><option>winter</option></select></label>
-    <label>Width (ft, blank = auto) <input type="number" data-s="places.form.width_ft" min="800" max="12000" step="100"></label>
-    <label>Height (ft) <input type="number" data-s="places.form.height_ft" min="800" max="12000" step="100"></label>
+    <label>Width (ft, blank = auto) <input type="number" data-s="places.form.width_ft" min="200" max="12000" step="50"></label>
+    <label>Height (ft) <input type="number" data-s="places.form.height_ft" min="200" max="12000" step="50"></label>
     <label>Seed (blank = from id) <input type="number" data-s="places.form.seed" step="1"></label>
     <label class="chk"><input type="checkbox" data-s="places.form.wall"> Town wall and gates</label>
   </div>
