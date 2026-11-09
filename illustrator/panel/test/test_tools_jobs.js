@@ -92,6 +92,7 @@ const has = (a, ...x) => x.every(v => a.indexOf(v) >= 0);
   const s4 = VB.scene3dArgs(st, d, false);
   check("scene-3d switches", has(s4, "--no-padding", "--no-skybox", "--with-lights", "--prune-lights", "--foliage-placements", "f.json", "--layers", "terrain,roads") && s4.indexOf("--dry-run") < 0 && !s4.some(x => /padding-arg/.test(x)), s4.join(" "));
   st.foundry.target = "new"; check("scene-3d needs an existing scene", throws(() => VB.scene3dArgs(st, d, true)));
+  const sj = VB.jobInstallSignMaker(); check("Install Sign maker job runs install-sign-macro with no extra arguments", sj.kind === "sign_maker_macro" && sj.steps.length === 1 && sj.steps[0].args[0] === "install-sign-macro" && sj.steps[0].args.length === 1, JSON.stringify(sj.steps));
   console.log("\n" + ok + " passed, " + fail + " failed");
   process.exit(fail ? 1 : 0);
 })();

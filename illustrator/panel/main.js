@@ -530,6 +530,7 @@
     wp_collision_dry: function () { try { return startJob(VB.jobSetCollision(state, false)); } catch (e) { showError(String(e.message || e)); } },
     wp_collision_apply: function () { try { return startJob(VB.jobSetCollision(state, true)); } catch (e) { showError(String(e.message || e)); } },
     wp_door_sync_install: function () { return startJob(VB.jobInstallDoorSync()); },
+    wp_sign_macro_install: function () { return startJob(VB.jobInstallSignMaker()); },
     wp_doors_dry: function () { try { return startJob(VB.jobSyncDoors(state, false)); } catch (e) { showError(String(e.message || e)); } },
     wp_doors_apply: function () { try { return startJob(VB.jobSyncDoors(state, true)); } catch (e) { showError(String(e.message || e)); } },
     wp_walls_dry: function () { try { return startJob(VB.jobPushWalls(state, false)); } catch (e) { showError(String(e.message || e)); } },

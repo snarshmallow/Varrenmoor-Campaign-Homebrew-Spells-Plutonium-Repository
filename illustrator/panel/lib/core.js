@@ -748,6 +748,9 @@
   VB.jobInstallDoorSync = function () {
     return { kind: "door_sync_macro", label: "Install Door sync macro", params: {}, steps: [py(VB.FOUNDRY_PY || "illustrator/generators/foundry_push.py", ["install-door-sync"], "install door sync")] };
   };
+  VB.jobInstallSignMaker = function () {
+    return { kind: "sign_maker_macro", label: "Install Sign maker macro", params: {}, steps: [py(VB.FOUNDRY_PY || "illustrator/generators/foundry_push.py", ["install-sign-macro"], "install sign maker")] };
+  };
   VB.jobSyncDoors = function (st, apply) {
     var f = st.foundry; if (f.target !== "existing" || !f.sceneUuid) throw new Error("pick an existing scene (Refresh from Foundry first)");
     var a = ["sync-doors", "--scene-uuid", f.sceneUuid]; if (apply) a.push("--apply");

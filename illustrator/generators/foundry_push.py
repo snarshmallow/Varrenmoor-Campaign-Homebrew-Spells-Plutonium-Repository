@@ -1442,6 +1442,9 @@ def main(argv=None, bridge=None):
     if _av and _av[0] == "set-streetlamps":                       # hide / show the street lamp tile + lights of a scene, retune the lamp lights (streetlamps.py)
         import streetlamps_scene
         return streetlamps_scene.main(_av, bridge)
+    if _av and _av[0] in ("install-sign-macro", "write-sign-models"):    # Sign maker macro + sign models (signs.py)
+        import signs
+        return signs.main(_av, bridge)
     if _av and _av[0] == "set-sun":                               # sun, shadows, fog, sky presets (foundry_sun.py)
         import foundry_sun
         return foundry_sun.main(_av, bridge)

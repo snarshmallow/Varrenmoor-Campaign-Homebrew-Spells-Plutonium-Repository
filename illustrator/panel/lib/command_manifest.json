@@ -167,6 +167,14 @@
       "act:sl_scene_off",
       "act:sl_scene_lights"
      ]
+    },
+    "install-sign-macro": {
+     "controls": [
+      "act:wp_sign_macro_install"
+     ]
+    },
+    "write-sign-models": {
+     "cli_only": "Writes the sign glTF files into presets/signs/models for inspection and tests; the macro install always rebuilds them itself, so nothing in the panel needs it."
     }
    },
    "flags": {
@@ -1837,6 +1845,26 @@
      "controls": [
       "s:streetlamps.dry"
      ]
+    }
+   }
+  },
+  "signs.py": {
+   "commands": {
+    "install-sign-macro": {
+     "controls": [
+      "act:wp_sign_macro_install"
+     ]
+    },
+    "write-sign-models": {
+     "cli_only": "Writes the sign glTF files into presets/signs/models for inspection and tests; the macro install always rebuilds them itself, so nothing in the panel needs it."
+    }
+   },
+   "flags": {
+    "--dry-run": {
+     "cli_only": "Plans the install without writing the macro (panel button installs directly; same dry-run switch as the other install commands)."
+    },
+    "--out": {
+     "cli_only": "Output folder of write-sign-models, a developer option."
     }
    }
   }

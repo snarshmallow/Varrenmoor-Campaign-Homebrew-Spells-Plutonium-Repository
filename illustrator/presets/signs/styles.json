@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "note": "Data for the Sign maker macro (foundry_macros/sign_maker.js); install-sign-macro bakes it into the macro. Colours are CSS hex.",
+  "defaults": {
+    "street": {"lines": "High Street", "font": "Georgia", "scheme": "green", "finish": "painted", "weather": 0.45, "size": 1.0, "spacing": 0.04, "icon": "none", "iconPos": "none", "back": "same"},
+    "hanging": {"lines": "The Gilded Flagon", "font": "Georgia", "scheme": "cream", "finish": "painted", "weather": 0.5, "size": 1.0, "spacing": 0.03, "icon": "mug", "iconPos": "top", "back": "same"}
+  },
+  "schemes": {
+    "green": {"label": "Cream on dark green", "paint": "#254a33", "ink": "#e7dcb4", "trim": "#c9b56d"},
+    "black": {"label": "Cream on black", "paint": "#1a1713", "ink": "#e6d9ae", "trim": "#a88b3b"},
+    "cream": {"label": "Black on cream", "paint": "#d9c79b", "ink": "#2a1d10", "trim": "#7b2b1c"},
+    "red": {"label": "Cream on oxblood", "paint": "#6a1f1d", "ink": "#ecdcb0", "trim": "#c9a44a"},
+    "blue": {"label": "Cream on navy", "paint": "#1f3558", "ink": "#eadfb8", "trim": "#c9b56d"},
+    "gold": {"label": "Gold on black", "paint": "#16130f", "ink": "#c99a2e", "trim": "#8f6a1c"},
+    "white": {"label": "Black on whitewash", "paint": "#cfcab8", "ink": "#1b1610", "trim": "#44505a"},
+    "stain": {"label": "Bare stained wood, dark lettering", "paint": "", "ink": "#24170c", "trim": "#24170c"},
+    "custom": {"label": "Custom colours", "paint": "#254a33", "ink": "#e7dcb4", "trim": "#c9b56d"}
+  },
+  "fonts": [
+    {"name": "Old English Text MT", "note": "blackletter"},
+    {"name": "Blackadder ITC", "note": "calligraphic"},
+    {"name": "Palatino Linotype", "note": "classic roman"},
+    {"name": "Book Antiqua", "note": "classic roman"},
+    {"name": "Garamond", "note": "old style"},
+    {"name": "Georgia", "note": "sturdy serif"},
+    {"name": "Baskerville Old Face", "note": "roman"},
+    {"name": "Bookman Old Style", "note": "heavy serif"},
+    {"name": "Copperplate Gothic Bold", "note": "engraved caps"},
+    {"name": "Rockwell", "note": "slab"},
+    {"name": "Papyrus", "note": "rough"},
+    {"name": "Modesto Condensed", "note": "D&D condensed"},
+    {"name": "Amiri", "note": "Foundry"},
+    {"name": "Signika", "note": "Foundry sans"},
+    {"name": "Times New Roman", "note": "fallback"},
+    {"name": "serif", "note": "browser serif (always available)"}
+  ],
+  "icons": ["none", "mug", "anvil", "bread", "key", "boot", "barrel", "horseshoe", "bell", "flask", "sword", "fish", "sun"],
+  "limits": {"maxLines": 6, "maxText": 400, "sizeMin": 0.5, "sizeMax": 2.0, "weatherMax": 1.0}
+}
