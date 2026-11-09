@@ -8,6 +8,7 @@
   var cv = null, g = null, off = document.createElement("canvas"), loaded = { place: null, stamp: null }, H = null, D = null, meta = null;
   var hover = null, drag = null, pan = null, pending = [], queue = Promise.resolve(), spaceDown = false, renderTimer = null, dirtyImage = true;
   var resetArmed = false, resetTimer = null;
+  var feats = null, mapWin = null;   // map features (water, roads, bridges, buildings; preview_features.json) + the Illustrator map window (road_view.json), feet
   function disarmReset() {
     resetArmed = false; clearTimeout(resetTimer);
     var b = document.querySelector('[data-act="hp_reset"]'); if (b && b.dataset.label) b.textContent = b.dataset.label;
@@ -32,6 +33,7 @@
     } catch (e) { H = D = meta = null; return false; }
     if (H.length !== m.pw * m.ph) { H = D = meta = null; return false; }
     meta = m; loaded.place = st.place; loaded.stamp = P().stamp; dirtyImage = true;
+    feats = ctx.readJson(VB.hpFeaturesPath(d), null); mapWin = VB.hpMapWindow(ctx.readJson(VB.hpMapViewPath(d), null), st.place);
     if (visible()) { size(); ensureView(); }   // hidden: fit later, when the canvas has a real size (draw)
     return true;
   }
@@ -46,13 +48,36 @@
     if (!cv || !cv.parentNode.clientWidth) return; var w = Math.max(cv.parentNode.clientWidth - 2, 200);
     if (cv.width !== w) { cv.width = w; cv.height = Math.round(Math.min(w * 0.85, 520)); }
   }
-  function toScreen(x, y) { var v = P().view, q = VB.hpFeetToPx(meta, x, y); return [q[0] * v.zoom + v.ox, q[1] * v.zoom + v.oy]; }
+  function toScreen(x, y) { return VB.hpFeetToScreen(meta, P().view, x, y); }
+  // map features over the relief (same feet frame as the Illustrator map: x east, y south, north up) + the window the map page shows + a north mark
+  function drawOverlay() {
+    var line = function (pts, closed) { pts.forEach(function (q, i) { var s = toScreen(q[0], q[1]); if (i) g.lineTo(s[0], s[1]); else g.moveTo(s[0], s[1]); }); if (closed) g.closePath(); };
+    var v = P().view, s = meta.cell_ft * meta.factor;
+    if (feats && P().overlay !== false) {
+      g.lineJoin = "round";
+      (feats.water || []).forEach(function (w) { g.beginPath(); line(w.points, w.closed); if (w.closed) { g.fillStyle = "rgba(70,140,230,.45)"; g.fill(); } g.strokeStyle = "rgba(40,110,220,.95)"; g.lineWidth = 1.5; g.stroke(); });
+      (feats.roads || []).concat(feats.bridges || []).forEach(function (r) {
+        g.beginPath(); line(r.points, false); g.strokeStyle = "rgba(40,25,10,.8)"; g.lineWidth = Math.max((r.width_ft || 10) / s * v.zoom, 1.5) + 1.5; g.stroke();
+        g.strokeStyle = "rgba(225,200,150,.95)"; g.lineWidth = Math.max((r.width_ft || 10) / s * v.zoom, 1.5); g.stroke();
+      });
+      (feats.buildings || []).forEach(function (b) { g.beginPath(); line(b.polygon, true); g.fillStyle = "rgba(60,40,30,.85)"; g.fill(); g.strokeStyle = "#fff"; g.lineWidth = 0.75; g.stroke(); });
+    }
+    if (mapWin && P().overlay !== false) {
+      var a = toScreen(mapWin.x0, mapWin.y0), b = toScreen(mapWin.x1, mapWin.y1);
+      g.setLineDash([6, 4]); g.strokeStyle = "rgba(255,40,40,.95)"; g.lineWidth = 1.5; g.strokeRect(a[0], a[1], b[0] - a[0], b[1] - a[1]); g.setLineDash([]);
+      g.fillStyle = "rgba(255,60,60,.95)"; g.font = "10px sans-serif"; g.fillText("Illustrator map view", a[0] + 2, Math.max(a[1] - 3, 10));
+    }
+    g.fillStyle = "rgba(0,0,0,.55)"; g.fillRect(6, 6, 22, 30); g.fillStyle = "#fff"; g.font = "bold 11px sans-serif"; g.fillText("N", 12, 19);
+    g.beginPath(); g.moveTo(17, 22); g.lineTo(13, 32); g.lineTo(21, 32); g.closePath(); g.fill();
+  }
   function draw() {
     if (!cv || !visible()) return; size(); g = cv.getContext("2d"); g.fillStyle = "#202020"; g.fillRect(0, 0, cv.width, cv.height);
     if (!meta || !H) { g.fillStyle = "#aaa"; g.font = "12px sans-serif"; g.fillText("No heightmap loaded: press Load / refresh.", 10, 20); return; }
     ensureView(); if (dirtyImage) renderImage();
-    var v = P().view; g.imageSmoothingEnabled = v.zoom < 3; g.setTransform(v.zoom, 0, 0, v.zoom, v.ox, v.oy); g.drawImage(off, 0, 0); g.setTransform(1, 0, 0, 1, 0, 0);
-    g.strokeStyle = "#000"; g.lineWidth = 1; g.strokeRect(v.ox - 0.5, v.oy - 0.5, meta.pw * v.zoom + 1, meta.ph * v.zoom + 1);
+    // pixel (px, py) is centred on node (px, py): the image starts half a preview pixel up-left of node 0 (VB.hpImageRect)
+    var v = P().view; g.imageSmoothingEnabled = v.zoom < 3; g.setTransform(v.zoom, 0, 0, v.zoom, v.ox, v.oy); g.drawImage(off, -0.5, -0.5); g.setTransform(1, 0, 0, 1, 0, 0);
+    g.strokeStyle = "#000"; g.lineWidth = 1; g.strokeRect(v.ox - 0.5 * v.zoom - 0.5, v.oy - 0.5 * v.zoom - 0.5, meta.pw * v.zoom + 1, meta.ph * v.zoom + 1);
+    drawOverlay();
     var p = P(), rpx = (Number(p.radius_ft) || 30) / (meta.cell_ft * meta.factor) * v.zoom;
     var drawPath = function (pts, col) {
       if (!pts.length) return; g.strokeStyle = col; g.lineWidth = 2; g.beginPath();
@@ -182,6 +207,13 @@
     hp_tool_changed: function () { paintTools(); draw(); },
     hp_refresh: function () { return enqueue(VB.jobHpRefresh(ctx.state(), ctx.dirs())); },
     hp_fit: function () { if (!meta) return; P().view = Object.assign(VB.hpFit(meta, cv.width, cv.height), { fitFor: ctx.state().place }); ctx.save(); draw(); },
+    // zoom to the window the Illustrator map page shows (the town view is often only a few % of the place, so the whole-place relief looks unrelated)
+    hp_mapview: function () {
+      if (!meta) return; mapWin = VB.hpMapWindow(ctx.readJson(VB.hpMapViewPath(ctx.dirs()), null), ctx.state().place);
+      if (!mapWin) { ctx.showError("No map view known for this place yet: build or refresh the map (Roads / Map refresh) first.", "warn"); return; }
+      P().view = Object.assign(VB.hpFitRect(meta, mapWin, cv.width, cv.height), { fitFor: ctx.state().place }); ctx.save(); draw();
+    },
+    hp_overlay: function (on) { P().overlay = on === undefined ? P().overlay === false : !!on; ctx.save(); draw(); },
     hp_apply: function () { return commit(pending.slice()); },
     hp_undo: function () {
       var s = P().stats; if (!s || !(s.strokes > 0)) return;
@@ -231,6 +263,16 @@
     ctx = c; cv = $("hpCanvas"); if (!cv) return;
     Object.keys(A).forEach(function (k) { if (ctx.acts) ctx.acts[k] = A[k]; });
     bind(); cv.style.cursor = "crosshair"; cv.style.touchAction = "none";
+    if (!document.getElementById("hpViewBar") && cv.parentNode) {   // created here (not in index.html)     // small bar above the canvas: map overlay on / off, zoom to the Illustrator map view, whole place
+      var bar = document.createElement("div"); bar.id = "hpViewBar"; bar.style.cssText = "display:flex;gap:6px;align-items:center;margin:2px 0;font-size:11px";
+      var lab = document.createElement("label"), cb = document.createElement("input"); cb.type = "checkbox"; cb.id = "hpOverlay"; cb.checked = P().overlay !== false;
+      cb.addEventListener("change", function () { A.hp_overlay(cb.checked); }); lab.appendChild(cb); lab.appendChild(document.createTextNode(" Map overlay (water, roads, buildings, map view)"));
+      var mk = function (t, title, fn) { var b = document.createElement("button"); b.textContent = t; b.title = title; b.addEventListener("click", fn); return b; };
+      bar.appendChild(lab);
+      bar.appendChild(mk("Zoom to map view", "Show the window the Illustrator map page covers (red dashed frame); north is up, east is right, like the map", function () { A.hp_mapview(); }));
+      bar.appendChild(mk("Whole place", "Fit the whole heightmap", function () { A.hp_fit(); }));
+      cv.parentNode.insertBefore(bar, cv);
+    }
     ["hpContour", "hpExag", "hpShowDelta", "hpAz"].forEach(function (id) { var e = $(id); if (e) e.addEventListener("input", function () { schedule(true); }); });
     var det = $("hpDetails"); if (det) det.addEventListener("toggle", function () { if (det.open) shown(); else { spaceDown = false; disarmReset(); } });
     window.addEventListener("resize", function () { schedule(false); });

@@ -33,7 +33,7 @@ check("preview args", VB.hpPreviewArgs(st, d).join(" ") === "export-preview --pl
 // view maths
 const meta = { cell_ft: 2, factor: 3, pw: 100, ph: 80 };
 const fit = VB.hpFit(meta, 400, 300);
-check("fit centres the preview", fit.zoom > 0 && Math.abs(fit.ox - (400 - 100 * fit.zoom) / 2) < 1e-9);
+check("fit centres the preview (image drawn half a pixel up-left: pixels centred on nodes)", fit.zoom > 0 && Math.abs((fit.ox - 0.5 * fit.zoom) - (400 - 100 * fit.zoom) / 2) < 1e-9 && Math.abs((fit.oy - 0.5 * fit.zoom) - (300 - 80 * fit.zoom) / 2) < 1e-9, JSON.stringify(fit));
 const f1 = VB.hpScreenToFeet(meta, fit, fit.ox + 10 * fit.zoom, fit.oy + 5 * fit.zoom);
 check("screen -> feet uses cell x factor", Math.abs(f1[0] - 60) < 1e-6 && Math.abs(f1[1] - 30) < 1e-6, f1);
 const z = VB.hpZoomAt(fit, 150, 120, 2), a = VB.hpScreenToFeet(meta, fit, 150, 120), b = VB.hpScreenToFeet(meta, z, 150, 120);

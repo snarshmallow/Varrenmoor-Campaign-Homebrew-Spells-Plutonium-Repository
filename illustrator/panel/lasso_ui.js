@@ -110,7 +110,7 @@
         var H = VB.hpReadBin(fs.readFileSync(dir + "/preview_h.bin")); if (H.length !== m.pw * m.ph) return finish(null);
         var px = VB.hpRender(H, m.pw, m.ph, { cell_ft: m.cell_ft * m.factor, lo: m.elev_min, hi: m.elev_max, exag: 1, contour_ft: 0, delta: null, azimuth: 315 });
         var c = document.createElement("canvas"); c.width = m.pw; c.height = m.ph; c.getContext("2d").putImageData(new ImageData(new Uint8ClampedArray(px), m.pw, m.ph), 0, 0);
-        var s = m.cell_ft * m.factor; finish({ src: c, rect: { x0: 0, y0: 0, x1: m.pw * s, y1: m.ph * s }, label: "terrain relief" });
+        finish({ src: c, rect: VB.hpImageRect(m), label: "terrain relief" });   // pixels centred on the heightmap nodes (north up, east right, like the map)
       } catch (e) { finish(null); }
     };
     try {
@@ -122,6 +122,20 @@
     } catch (e) { /* fall through */ }
     tryRelief();
   }
+  // water / roads / buildings outlines (Paint preview's preview_features.json, world feet) so the map canvas lines up with the Illustrator map
+  var featCache = { key: null, f: null };
+  function wpFeatures(g, r, v) {
+    var d = ctx.dirs(), p = VB.hpFeaturesPath(d), fs = ctx.fs, key = null;
+    try { key = fs && fs.existsSync(p) ? p + ":" + fs.statSync(p).mtimeMs : null; } catch (e) { key = null; }
+    if (!key) return;
+    if (featCache.key !== key) featCache = { key: key, f: ctx.readJson(p, null) };
+    var f = featCache.f; if (!f) return;
+    var line = function (pts, closed) { g.beginPath(); pts.forEach(function (q, i) { var s = W.toScreen(r, v, q); if (i) g.lineTo(s[0], s[1]); else g.moveTo(s[0], s[1]); }); if (closed) g.closePath(); };
+    g.lineWidth = 1;
+    (f.water || []).forEach(function (w) { line(w.points, w.closed); g.strokeStyle = "rgba(70,150,255,.9)"; g.stroke(); });
+    (f.roads || []).concat(f.bridges || []).forEach(function (w) { line(w.points, false); g.strokeStyle = "rgba(235,205,150,.9)"; g.stroke(); });
+    (f.buildings || []).forEach(function (b) { line(b.polygon, true); g.fillStyle = "rgba(255,255,255,.55)"; g.fill(); });
+  }
   function wpEntry(act) { return wps[act] || (wps[act] = { wp: W.create(), view: null, rect: null, bg: null, el: {}, cursor: null, drag: null, pan: null }); }
   function wpDraw(act) {
     var e = wpEntry(act), cv = e.el.cv; if (!cv || !cv.clientWidth) return;
@@ -130,6 +144,7 @@
     var g = cv.getContext("2d"), v = e.view, r = e.rect, tl = W.toScreen(r, v, [r.x0, r.y0]), br = W.toScreen(r, v, [r.x1, r.y1]);
     g.fillStyle = "#202020"; g.fillRect(0, 0, cv.width, cv.height); g.fillStyle = "#2c3a2c"; g.fillRect(tl[0], tl[1], br[0] - tl[0], br[1] - tl[1]);
     if (e.bg && e.bg.src) { var a = W.toScreen(r, v, [e.bg.rect.x0, e.bg.rect.y0]), b = W.toScreen(r, v, [e.bg.rect.x1, e.bg.rect.y1]); g.imageSmoothingEnabled = true; try { g.drawImage(e.bg.src, a[0], a[1], b[0] - a[0], b[1] - a[1]); } catch (er) { /* bad image */ } }
+    wpFeatures(g, r, v);
     var step = v.zoom * 100 < 14 ? 500 : 100; g.strokeStyle = "rgba(255,255,255,.12)"; g.lineWidth = 1; g.beginPath();
     for (var x = Math.ceil(r.x0 / step) * step; x <= r.x1; x += step) { var sx = W.toScreen(r, v, [x, 0])[0]; g.moveTo(sx, tl[1]); g.lineTo(sx, br[1]); }
     for (var y = Math.ceil(r.y0 / step) * step; y <= r.y1; y += step) { var sy = W.toScreen(r, v, [0, y])[1]; g.moveTo(tl[0], sy); g.lineTo(br[0], sy); }

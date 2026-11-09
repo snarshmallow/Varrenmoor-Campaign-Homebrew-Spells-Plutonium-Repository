@@ -17,7 +17,7 @@
 
   VB.hpDefaults = function () {
     return { tool: "raise", radius_ft: 30, strength: 0.5, falloff: "smooth", hardness: 0.2, rate_ft: 2, height_ft: "", depth_ft: 6, bank_slope: 0.6, noise_scale_ft: "", seed: 7,
-      contour_ft: 0, exag: 1, light_az: 315, show_delta: true, max_px: 640, auto_apply: true, rebuild_pack: false,
+      contour_ft: 0, exag: 1, light_az: 315, show_delta: true, overlay: true, max_px: 640, auto_apply: true, rebuild_pack: false,
       view: { zoom: 1, ox: 0, oy: 0 }, meta: null, stats: null, strokes: 0, redo: [], unsaved: false, last: null,
       check: null, chk_delta_ft: 3, chk_cross_deg: 10, conform_extra_ft: 2, conform_falloff_ft: 12, conform_smooth_ft: 40 };
   };
@@ -119,9 +119,25 @@
   VB.hpFeetToPx = function (meta, x, y) { var s = meta.cell_ft * meta.factor; return [x / s, y / s]; };
   VB.hpPxToFeet = function (meta, px, py_) { var s = meta.cell_ft * meta.factor; return [px * s, py_ * s]; };
   VB.hpScreenToFeet = function (meta, view, sx, sy) { return VB.hpPxToFeet(meta, (sx - view.ox) / view.zoom, (sy - view.oy) / view.zoom); };
-  VB.hpFit = function (meta, w, h) {          // zoom + offset that centre the whole preview in a w x h canvas
-    var z = Math.min(w / meta.pw, h / meta.ph) * 0.96; return { zoom: z, ox: (w - meta.pw * z) / 2, oy: (h - meta.ph * z) / 2 };
+  VB.hpFeetToScreen = function (meta, view, x, y) { var q = VB.hpFeetToPx(meta, x, y); return [q[0] * view.zoom + view.ox, q[1] * view.zoom + view.oy]; };
+  // Orientation: world feet x east, y SOUTH (heightmap row i = y / cell, column j = x / cell), so preview pixel (column px, row py) is node
+  // (px * factor, py * factor): north is up and east is right, like the Illustrator map. Pixel px is CENTRED on its node, so the image covers
+  // px -0.5 .. pw-0.5: draw it at (-0.5, -0.5) preview px (hpImageRect in feet) or the cursor is off by half a preview pixel.
+  VB.hpImageRect = function (meta) { var s = meta.cell_ft * meta.factor; return { x0: -0.5 * s, y0: -0.5 * s, x1: (meta.pw - 0.5) * s, y1: (meta.ph - 0.5) * s }; };
+  VB.hpFitRect = function (meta, rect, w, h, pad) {   // zoom + offset that show the feet rect {x0,y0,x1,y1} centred in a w x h canvas
+    var s = meta.cell_ft * meta.factor, rw = Math.max((rect.x1 - rect.x0) / s, 1e-6), rh = Math.max((rect.y1 - rect.y0) / s, 1e-6);
+    var z = Math.min(w / rw, h / rh) * (pad || 0.96);
+    return { zoom: z, ox: w / 2 - ((rect.x0 + rect.x1) / 2 / s) * z, oy: h / 2 - ((rect.y0 + rect.y1) / 2 / s) * z };
   };
+  VB.hpFit = function (meta, w, h) { return VB.hpFitRect(meta, VB.hpImageRect(meta), w, h); };   // the whole preview, centred
+  // the window the Illustrator map shows (panel/<place>/road_view.json written with the map: x0, y0, x1, y1 feet), or null
+  VB.hpMapWindow = function (v, place) {
+    if (!v || (place && v.place && v.place !== place)) return null;
+    var r = { x0: Number(v.x0), y0: Number(v.y0), x1: Number(v.x1), y1: Number(v.y1) };
+    return [r.x0, r.y0, r.x1, r.y1].every(isFinite) && r.x1 > r.x0 && r.y1 > r.y0 ? r : null;
+  };
+  VB.hpMapViewPath = function (d) { return d.panel + "/road_view.json"; };
+  VB.hpFeaturesPath = function (d) { return VB.hpPreviewDir(d) + "/preview_features.json"; };
   // zoom about a screen point (wheel): the feet under the cursor stay under it
   VB.hpZoomAt = function (view, sx, sy, factor) {
     var z = Math.min(Math.max(view.zoom * factor, 0.05), 80), k = z / view.zoom;

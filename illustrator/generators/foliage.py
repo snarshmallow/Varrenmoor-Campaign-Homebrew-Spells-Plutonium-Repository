@@ -568,7 +568,9 @@ def draw_svg(doc, lib, out_svg, view, only_bounds=True):
     return n
 
 
-def preview_png(doc, lib, env, out_png, scale_px_per_ft=None, max_px=1500, zone=None):
+def preview_png(doc, lib, env, out_png, scale_px_per_ft=None, max_px=1500, zone=None, frame_ft=None):
+    """Top-down preview in the map frame: pixel row = y (south), column = x (east): north up, east right, like the Illustrator map.
+    frame_ft = [x0, y0, x1, y1]: outline the window the Illustrator map page shows (red), so the whole-place preview can be matched with it."""
     from PIL import Image, ImageDraw
     W, H = env.width, env.height
     s = scale_px_per_ft or min(max_px / W, max_px / H)
@@ -577,7 +579,9 @@ def preview_png(doc, lib, env, out_png, scale_px_per_ft=None, max_px=1500, zone=
     X, Y = xs / s, ys / s
     z = env.z(X, Y)
     gy, gx = np.gradient(z, 1.0 / s)
-    shade = np.clip(0.62 + 0.9 * (-(gx * 0.7) + (gy * 0.7)) / 2.0 * 0.5, 0.2, 1.0) if z.std() > 0 else np.full(z.shape, 0.7)
+    # light from the north-west like every other relief preview (Paint canvas, terrain / patch previews, map hillshade): slopes facing west (gx > 0) and
+    # north (gy > 0, y south) are lit (was lit from the north-east)
+    shade = np.clip(0.62 + 0.9 * ((gx * 0.7) + (gy * 0.7)) / 2.0 * 0.5, 0.2, 1.0) if z.std() > 0 else np.full(z.shape, 0.7)
     img = np.dstack([np.full(z.shape, 196.0), np.full(z.shape, 204.0), np.full(z.shape, 164.0)]) * shade[:, :, None]
     im = Image.fromarray(np.clip(img, 0, 255).astype("uint8"), "RGB")
     dr = ImageDraw.Draw(im)
@@ -601,6 +605,13 @@ def preview_png(doc, lib, env, out_png, scale_px_per_ft=None, max_px=1500, zone=
         col = tuple(int(c[k:k + 2], 16) for k in (1, 3, 5))
         x, y = i["x"] * s, i["y"] * s
         dr.ellipse([x - r, y - r, x + r, y + r], fill=col + (), outline=tuple(int(v * 0.6) for v in col))
+    if frame_ft:
+        x0, y0, x1, y1 = [float(v) * s for v in frame_ft]
+        dr.rectangle([x0, y0, x1, y1], outline=(220, 30, 30), width=max(2, int(round(min(w, h) / 500))))
+    k = max(1, int(round(min(w, h) / 300)))         # north mark, top-left
+    dr.rectangle([4 * k, 4 * k, 18 * k, 26 * k], fill=(0, 0, 0))
+    dr.polygon([(11 * k, 6 * k), (6 * k, 16 * k), (16 * k, 16 * k)], fill=(255, 255, 255))
+    dr.text((8 * k, 16 * k), "N", fill=(255, 255, 255))
     os.makedirs(os.path.dirname(os.path.abspath(out_png)), exist_ok=True)
     im.save(out_png)
     return out_png
@@ -1045,7 +1056,9 @@ def main(argv=None):
             out = {"scatter": p, "instances": n}
         elif a.cmd == "preview":
             env = Env.from_place(a.place)
-            png = preview_png(doc, lib, env, a.out or os.path.join(REPO, "illustrator", "out", "panel", a.place, "foliage_preview.png"), zone=a.zone)
+            mv = _jload(os.path.join(REPO, "illustrator", "out", "panel", a.place, "road_view.json"), {})   # the Illustrator map window (written with the map)
+            frame = [mv["x0"], mv["y0"], mv["x1"], mv["y1"]] if isinstance(mv, dict) and mv.get("place", a.place) == a.place and all(k in mv for k in ("x0", "y0", "x1", "y1")) else None
+            png = preview_png(doc, lib, env, a.out or os.path.join(REPO, "illustrator", "out", "panel", a.place, "foliage_preview.png"), zone=a.zone, frame_ft=frame)
             out = {"png": png, "items": len(doc.items)}
         elif a.cmd == "draw":
             import render_world as rw

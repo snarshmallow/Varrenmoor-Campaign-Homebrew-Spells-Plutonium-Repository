@@ -796,9 +796,45 @@ def export_preview(place, root=None, wdir=None, max_px=512, contour_ft=0.0, png=
         os.makedirs(bin_dir, exist_ok=True)
         hp.astype("<f4").tofile(os.path.join(bin_dir, "preview_h.bin"))
         dp.astype("<f4").tofile(os.path.join(bin_dir, "preview_d.bin"))
+        try:          # map features the Paint / waypoint canvases draw over the relief (orientation + scale reference against the Illustrator map)
+            _jsave(os.path.join(bin_dir, "preview_features.json"), preview_features(place, root))
+        except (OSError, ValueError, KeyError, TypeError):
+            pass
         _jsave(os.path.join(bin_dir, "preview.json"), out)
         out["bin_dir"] = bin_dir
     return out
+
+
+def _thin(pts, tol):
+    """Drop points closer than tol ft to the last kept one (overlay outlines only; keeps the file small)."""
+    out = []
+    for q in pts:
+        if not out or abs(q[0] - out[-1][0]) + abs(q[1] - out[-1][1]) >= tol:
+            out.append([round(float(q[0]), 1), round(float(q[1]), 1)])
+    if pts and out[-1] != [round(float(pts[-1][0]), 1), round(float(pts[-1][1]), 1)]:
+        out.append([round(float(pts[-1][0]), 1), round(float(pts[-1][1]), 1)])
+    return out
+
+
+def preview_features(place, root=None, tol_ft=2.0):
+    """Water polygons / lines, roads, bridges and building footprints in world feet (x east, y south, the heightmap frame): the panel draws them
+    over the shaded relief so it can be matched with the Illustrator map (the map's town window is often a few % of the place)."""
+    import worldio
+    f = load_features(place, root)
+    water = []
+    try:
+        ws = (_jload(worldio.water_path(place, root=root), {}) or {}).get("water", [])
+    except (OSError, ValueError):
+        ws = []
+    for w in ws:
+        g = w.get("geometry") or {}
+        pts = g.get("points") or []
+        if len(pts) >= 2:
+            water.append({"id": w.get("id"), "closed": g.get("type") == "polygon", "points": _thin(pts, tol_ft)})
+    return {"frame": "world feet: x east, y south (heightmap rows), origin north-west", "water": water,
+            "roads": [{"id": r["id"], "points": _thin(r["points"], tol_ft), "width_ft": r["width_ft"]} for r in f["roads"]],
+            "bridges": [{"id": b["id"], "points": b["points"], "width_ft": b["width_ft"]} for b in f["bridges"]],
+            "buildings": [{"id": b["id"], "polygon": _thin(b["polygon"], 0.5)} for b in f["buildings"]]}
 
 
 # ------------------------------------------------------------------ CLI
