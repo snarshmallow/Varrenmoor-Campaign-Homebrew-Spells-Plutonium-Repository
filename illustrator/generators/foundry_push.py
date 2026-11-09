@@ -1047,6 +1047,12 @@ def plan_lights(br, a, sc=None):
         items += pts
     if not _count_lights(doc):
         warns.append(f"{pp} carries no light entities (a layer set from worldpack_merge has none; pass --lights-placements <full pack placements.json>)")
+    import foundry_lightbudget as flb
+    if flb.budget_requested(a):                                                    # light budget / mode (--max-lights, --lighting-mode, ...): thin the plan, defaults change nothing
+        items, info = flb.limit_new_lights(items, mode=a.lighting_mode, max_lights=a.max_lights, exclude_types=tuple(x for x in (a.exclude_types or "").split(",") if x),
+                                           radius_scale=a.light_radius_scale, intensity_scale=a.light_intensity_scale)
+        a.light_budget_info = info
+        LOG(f"light budget: {info['kept']} of {info['planned']} lights kept ({info['reason']})")
     return items, warns, pp
 
 
@@ -1057,7 +1063,7 @@ def cmd_push_lights(br, a):
     LOG(f"{len(items)} lights from {pp}")
     for w in warns:
         LOG("WARNING: " + w)
-    prune = bool(getattr(a, "prune_lights", False))
+    prune = bool(getattr(a, "prune_lights", False)) or (getattr(a, "light_budget_info", None) or {}).get("mode") == "global"      # global mode = no point lights: clearing the pipeline lights is the point
     if not items and not prune:
         raise PushError("the plan has 0 lights, nothing written and the scene's existing lights are kept; " + "; ".join(warns) + "; use --prune-lights to really clear the pipeline lights")
     if a.dry_run:
@@ -1144,7 +1150,7 @@ def cmd_push_scene_3d(br, a):
         load_lighting_checked(a.lighting)            # fail before any write when the lighting preset name is wrong
     if a.with_lights:                                  # fail before any write when there is nothing to push (and never wipe existing lights)
         items0, warns0, pp0 = plan_lights(br, a)
-        if not items0 and not getattr(a, "prune_lights", False):
+        if not items0 and not getattr(a, "prune_lights", False) and (getattr(a, "light_budget_info", None) or {}).get("mode") != "global":
             raise PushError("--with-lights: the plan has 0 lights (" + "; ".join(warns0 or [f"no lights in {pp0}"]) + "); nothing was written. Pass --lights-placements <full pack placements.json> or drop --with-lights")
     if not a.no_padding and not a.dry_run:        # geometry first: padding moves the scene rect (sceneX/Y), and every tile position is computed from it
         import padding_heightmap as ph
@@ -1193,6 +1199,10 @@ def cmd_push_scene_3d(br, a):
     if a.lighting:
         import foundry_lighting as flt
         flags.update(flt.scene_light_flags(load_lighting_checked(a.lighting)))
+    import foundry_lightbudget as flb
+    if flb.budget_requested(a):                         # global / hybrid raise the scene's ambient (global illumination) so the map is not dark without point lights
+        eff = (getattr(a, "light_budget_info", None) or {}).get("mode") or ("lights" if a.lighting_mode == "auto" else a.lighting_mode)
+        flags.update(flb.scene_flag_changes(a, eff))
     for o in a.scene_flag or []:
         k, _, v = o.partition("=")
         try:
@@ -1295,6 +1305,8 @@ def parser():
     ap.add_argument("--no-skybox", action="store_true")
     ap.add_argument("--no-padding", action="store_true", help="push-scene-3d: skip the padding apron / table heightmap step")
     ap.add_argument("--padding-arg", dest="padding_args", action="append", default=[], help="push-scene-3d: extra argument for padding_heightmap push (repeatable, use --padding-arg=--preset --padding-arg=bowl-ridge)")
+    import foundry_lightbudget as _flb
+    _flb.add_light_args(ap)                           # --max-lights, --lighting-mode, --exclude-types, --light-radius-scale, --light-intensity-scale (see foundry_lightbudget.py)
     ap.add_argument("--with-lights", dest="with_lights", action="store_true", help="push-scene-3d: also push the interior point lights")
     # import-scene (foundry_import.py) and the place <-> scene link
     ap.add_argument("--place-id", help="import-scene: id of the new place (default: slug of the scene name)")
@@ -1412,6 +1424,9 @@ def main(argv=None, bridge=None):
     if _av and _av[0] in ("install-water", "set-water"):       # 3D water shader on a scene's water tiles (foundry_water.py)
         import foundry_water
         return foundry_water.main(_av, bridge)
+    if _av and _av[0] == "set-lighting":                          # light budget, lighting mode, time of day, ambient / global illumination (foundry_lightbudget.py)
+        import foundry_lightbudget
+        return foundry_lightbudget.main(_av, bridge)
     if _av and _av[0] in ("set-collision", "push-walls", "sync-doors", "install-door-sync"):       # collision flag per layer / sight+sound+light walls (foundry_collision.py)
         import foundry_collision
         return foundry_collision.main(_av, bridge)

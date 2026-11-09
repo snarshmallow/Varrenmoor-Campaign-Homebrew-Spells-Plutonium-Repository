@@ -149,7 +149,10 @@
      ]
     },
     "set-lighting": {
-     "pending": "Lighting controls are being added to the panel by the parallel lighting change; add the control ids here when that block lands."
+     "controls": [
+      "act:f3d_dry",
+      "act:f3d_apply"
+     ]
     }
    },
    "flags": {
@@ -1286,63 +1289,97 @@
   "foundry_lightbudget.py": {
    "commands": {
     "set-lighting": {
-     "pending": "Lighting controls are being added to the panel by the parallel lighting change; add the control ids here when that block lands."
+     "controls": [
+      "act:f3d_dry",
+      "act:f3d_apply"
+     ]
     }
    },
    "flags": {
     "--light-shadows": {
-     "pending": "Lighting controls are being added to the panel by the parallel lighting change; add the control ids here when that block lands."
+     "controls": [
+      "s:lighting.f3d.shadows"
+     ]
     },
     "--max-lights": {
-     "pending": "Lighting controls are being added to the panel by the parallel lighting change; add the control ids here when that block lands."
+     "controls": [
+      "s:lighting.f3d.maxLights"
+     ]
     },
     "--lighting-mode": {
-     "pending": "Lighting controls are being added to the panel by the parallel lighting change; add the control ids here when that block lands."
+     "controls": [
+      "s:lighting.f3d.mode"
+     ]
     },
     "--exclude-types": {
-     "pending": "Lighting controls are being added to the panel by the parallel lighting change; add the control ids here when that block lands."
+     "controls": [
+      "s:lighting.f3d.hearths",
+      "s:lighting.f3d.windows"
+     ]
     },
     "--light-radius-scale": {
-     "pending": "Lighting controls are being added to the panel by the parallel lighting change; add the control ids here when that block lands."
+     "controls": [
+      "s:lighting.f3d.radiusScale"
+     ]
     },
     "--light-intensity-scale": {
-     "pending": "Lighting controls are being added to the panel by the parallel lighting change; add the control ids here when that block lands."
+     "controls": [
+      "s:lighting.f3d.intensityScale"
+     ]
     },
     "--scene-uuid": {
-     "pending": "Lighting controls are being added to the panel by the parallel lighting change; add the control ids here when that block lands."
+     "controls": [
+      "id:f3dScene"
+     ]
     },
     "--place": {
-     "pending": "Lighting controls are being added to the panel by the parallel lighting change; add the control ids here when that block lands."
+     "cli_only": "the panel always passes the open place"
     },
     "--placements": {
-     "pending": "Lighting controls are being added to the panel by the parallel lighting change; add the control ids here when that block lands."
+     "cli_only": "the panel always passes the exported pack's placements.json (counts the pack's lights)"
     },
     "--lights-placements": {
-     "pending": "Lighting controls are being added to the panel by the parallel lighting change; add the control ids here when that block lands."
+     "cli_only": "only for a layer set that carries no lights; the Tools tab 3D scene block has the field"
     },
     "--time-of-day": {
-     "pending": "Lighting controls are being added to the panel by the parallel lighting change; add the control ids here when that block lands."
+     "controls": [
+      "s:lighting.f3d.timeOfDay"
+     ]
     },
     "--ambient": {
-     "pending": "Lighting controls are being added to the panel by the parallel lighting change; add the control ids here when that block lands."
+     "controls": [
+      "s:lighting.f3d.gi"
+     ]
     },
     "--ambient-color": {
-     "pending": "Lighting controls are being added to the panel by the parallel lighting change; add the control ids here when that block lands."
+     "controls": [
+      "s:lighting.f3d.giColor"
+     ]
     },
     "--sun-strength": {
-     "pending": "Lighting controls are being added to the panel by the parallel lighting change; add the control ids here when that block lands."
+     "controls": [
+      "s:lighting.f3d.sunStrength"
+     ]
     },
     "--sun-color": {
-     "pending": "Lighting controls are being added to the panel by the parallel lighting change; add the control ids here when that block lands."
+     "controls": [
+      "s:lighting.f3d.sunColor"
+     ]
     },
     "--render-scene-lights": {
-     "pending": "Lighting controls are being added to the panel by the parallel lighting change; add the control ids here when that block lands."
+     "controls": [
+      "s:lighting.f3d.renderLights"
+     ]
     },
     "--apply": {
-     "pending": "Lighting controls are being added to the panel by the parallel lighting change; add the control ids here when that block lands."
+     "controls": [
+      "act:f3d_apply"
+     ]
     },
     "--dry-run": {
-     "pending": "Lighting controls are being added to the panel by the parallel lighting change; add the control ids here when that block lands."
+     "controls": [
+      "act:f3d_dry"
+     ]
     }
    }
   },

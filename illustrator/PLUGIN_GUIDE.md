@@ -157,7 +157,21 @@ Buttons: **Preview (low dpi)**, **Render shadows**, **Remove images**.
 
 Tips: set the blend mode of ART - Shadows to Multiply and ART - Light Glow to Screen or Soft Light in Illustrator. Building heights come from `presets/building_heights.json`.
 
-Common mistake: expecting placed lights to become Foundry lights automatically from the map. House lights from interior layouts are pushed with `foundry_push.py push-lights` (command line). Lights listed in `placements.json` are not turned into Foundry light documents by the panel (check in panel / see section 8).
+Common mistake: expecting placed lights to become Foundry lights automatically from the map. House lights from interior layouts are pushed with **Push interior lights** (Foundry tab; `foundry_push.py push-lights`), and thinned or switched to ambient light with the block in 2.6.1. Lights listed in `placements.json` are not turned into Foundry light documents by the panel (check in panel / see section 8).
+
+#### 2.6.1 Foundry 3D lighting and light budget (Lighting tab, last block)
+
+What it does: controls how many lights the Foundry 3D scene has and how it is lit, so a large map does not drown the GPU. Works on the existing scene picked on the Foundry tab; the command is `foundry_push.py set-lighting` (dry run by default). Only the pipeline's own lights (flags.varrenmoor.pipelineId `light:*`) are touched; lights you placed by hand in Foundry are left alone.
+
+Why it matters (measured on the Dyers Walk test scene, 1858x937, see FOUNDRY_3D_CANVAS_NOTES.md section 11): every visible point light is evaluated for every pixel, so GPU time per frame went from about 6 ms (no point lights or up to about 16) to about 8 ms (36 lights) and about 14-15 ms (72 lights). A light that casts shadows is far worse (4 shadow lights halved the frame rate). Ambient light ("global illumination") and the sun cost the same at any light count.
+
+Key fields: **Lighting mode** (Auto by light count, Point lights all, Hybrid few lights + ambient, Global illumination only), **Max lights** (slider + number box, 0 = no limit; most important kept first: plazas, street lamps, doors, hearths, windows; the rest are thinned by distance so survivors are spread out), **Light radius** and **Light strength** multipliers (from the original values, never compounding), **Interior hearth lights** / **Window lights** checkboxes, **Light shadows** (leave, off, 4 or 8 most important, every kept light), **3D point lights** (scene flag renderSceneLights), and a tick box **Also set sun, ambient and time of day** that enables **Time of day** (dawn / noon / dusk / night), **Ambient (global illumination)** strength and colour, **Sun strength** and colour.
+
+Buttons: **Performance mode** (hybrid, 12 lights, no windows, no light shadows), **Reset to defaults**, **Check (dry run)** (reads the scene, writes nothing, fills the readout), **Apply to scene**. The readout shows the light count in the scene and in the pack by kind, the plan (how many on / off and why, for example "auto: 300 lights is more than 256, so global illumination is used instead of point lights"), the estimated relative cost (1.0 = a scene with only sun and ambient; low / medium / high / very high) and the result of the last check or apply.
+
+Defaults: mode Auto, no limit, scale 1, shadows and flags untouched. Auto keeps every light up to 64 lights (so small scenes are exactly as before), keeps the 16 most important between 65 and 256 and raises the ambient to at least 0.45 (hybrid), and uses ambient + sun only above 256 (ambient at least 0.55). Over-budget lights are hidden, not deleted: raise the budget or switch to Point lights and Apply to bring them back. **Push interior lights** and the Tools tab one-shot 3D scene push use the same mode and budget (lights over budget are not created, and pruned if present).
+
+Cost, limits, unverified: the cost number is a guide measured on one GPU. Light shadows need the Foundry client setting "3D Canvas shadow quality" above 0, which is per browser and cannot be set from here. There is no Foundry scene flag for shadow quality or a light cap; these are client settings.
 
 ### 2.7 Skybox
 

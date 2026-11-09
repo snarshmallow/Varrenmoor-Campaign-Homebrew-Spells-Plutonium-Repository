@@ -104,9 +104,110 @@
     ctx.save(); ctx.syncInputs(); paintDial(); paintLights(); schedule();
   }
 
+
+  // ---- Foundry 3D lighting block: light budget, lighting mode, sun / ambient (global illumination), cost hint. Logic: lib/lighting.js (VB.f3d*), python: foundry_lightbudget.py (set-lighting).
+  // Built here (not in index.html) and bound here: it saves state under lighting.f3d.* and never triggers the 2D shadow re-render.
+  var F = function () { return ctx.state().lighting.f3d; };
+  function sl(path, label, mn, mx, step, unit, tip) {
+    var a = " " + path + ' min="' + mn + '" max="' + mx + '" step="' + step + '"';
+    return '<div class="sl"><span title="' + esc(tip) + '">' + label + '</span><input type="range"' + a + ' title="' + esc(tip) + '"><span class="nb"><input type="number"' + a + ' title="' + esc(tip) + '">' + (unit ? '<span class="un">' + unit + "</span>" : "") + "</span></div>";
+  }
+  function opts(map) { return Object.keys(map).map(function (k) { return '<option value="' + esc(k) + '">' + esc(map[k]) + "</option>"; }).join(""); }
+  function f3dHtml() {
+    return '<details open id="f3dBlock"><summary><b>Foundry 3D lighting and light budget</b></summary>' +
+      '<p class="note">Applies to the Foundry scene picked on the Foundry tab. Dry run by default: Check shows what would change, Apply writes it. Only the pipeline\'s own lights are touched. Defaults leave small scenes unchanged.</p>' +
+      '<p class="note">Target scene: <b id="f3dScene">none</b></p>' +
+      '<div class="grid"><label title="lights = every light as a point light. hybrid = only the most important lights + ambient fill. global = no point lights, ambient + sun only. auto = lights up to 64, hybrid up to 256, global above.">Lighting mode <select data-s="lighting.f3d.mode" id="f3dMode">' +
+      opts({ auto: "Auto (by light count)", lights: "Point lights (all)", hybrid: "Hybrid (few lights + ambient)", global: "Global illumination only" }) + "</select></label>" +
+      '<label title="Light shadows are the most expensive light feature: every shadow-casting point light renders the scene 6 more times. They only show when the Foundry client setting 3D Canvas shadow quality is above 0.">Light shadows <select data-s="lighting.f3d.shadows" id="f3dShadows">' +
+      opts({ "": "leave as is", off: "off (cheapest)", "4": "4 most important", "8": "8 most important", on: "every kept light (slow)" }) + "</select></label>" +
+      '<label title="Scene flag renderSceneLights: off = Foundry lights are not drawn in 3D at all (no point lights, cheapest). Leave unless you want that.">3D point lights <select data-s="lighting.f3d.renderLights">' + opts({ "": "leave as is", on: "on", off: "off (none drawn in 3D)" }) + "</select></label>" +
+      '<label class="chk"><input type="checkbox" data-s="lighting.f3d.hearths"> Interior hearth lights</label><label class="chk"><input type="checkbox" data-s="lighting.f3d.windows"> Window lights</label></div>' +
+      sl('data-s="lighting.f3d.maxLights"', "Max lights", 0, 400, 1, "", "Light budget: keep at most this many lights, most important first (plazas, street lamps, doors, hearths, windows), thinned by distance so they spread out. 0 = no limit. In hybrid mode 0 means " + VB.F3D.HYBRID_MAX + ".") +
+      sl('data-s="lighting.f3d.radiusScale"', "Light radius", 0.25, 2, 0.05, "x", "Multiplies every pipeline light's radius (always from the original size, never compounds).") +
+      sl('data-s="lighting.f3d.intensityScale"', "Light strength", 0.25, 2, 0.05, "x", "Multiplies every pipeline light's strength (capped at full).") +
+      '<label class="chk" title="Also write the 3D scene flags below: time of day, ambient (global illumination), sun strength and colour."><input type="checkbox" data-s="lighting.f3d.applyFlags" id="f3dApplyFlags"> Also set sun, ambient and time of day on the scene</label>' +
+      '<div id="f3dFlags"><div class="grid"><label>Time of day <select data-s="lighting.f3d.timeOfDay">' + opts(VB.F3D_TIMES) + "</select></label>" +
+      '<label>Ambient colour <input type="color" data-s="lighting.f3d.giColor"></label><label>Sun colour <input type="color" data-s="lighting.f3d.sunColor"></label></div>' +
+      sl('data-s="lighting.f3d.gi"', "Ambient (global illumination)", 0, 1, 0.01, "", "Scene flag ambientLightIntensity: a flat light on everything. Constant cost, does not depend on the number of lights. Global mode raises it to at least " + VB.F3D.GLOBAL_AMBIENT + ", hybrid to at least " + VB.F3D.HYBRID_AMBIENT + ".") +
+      sl('data-s="lighting.f3d.sunStrength"', "Sun strength", 0, 3, 0.05, "", "Scene flag exposure: the strength of the sun light and the tone mapping exposure.") + "</div>" +
+      '<div class="btns"><button data-act="f3d_perf" title="Hybrid mode, 12 lights, no window lights, no light shadows: the cheap setup for big maps">Performance mode</button>' +
+      '<button data-act="f3d_reset" title="Back to the defaults (auto mode, no limit, scale 1, flags untouched)">Reset to defaults</button>' +
+      '<button data-act="f3d_dry" title="Reads the scene, shows what would change. Writes nothing.">Check (dry run)</button>' +
+      '<button class="primary" data-act="f3d_apply" title="Writes the light budget and flags to the scene. Over-budget lights are hidden, not deleted: raise the budget to bring them back.">Apply to scene</button></div>' +
+      '<div id="f3dReadout" class="note" style="white-space:pre-wrap"></div>' +
+      '<p class="note">Cost hint: every visible point light is evaluated for every pixel, so the cost grows with the light count (measured about 0.13 ms of GPU time per extra light at 1858x937 on the test GPU, flat below about 30 lights). A light that casts shadows costs far more (about 6 extra scene renders). Ambient and sun cost the same at any light count. Over-budget lights are switched off (hidden), not deleted.</p></details>';
+  }
+  function sceneInfo() {
+    var st = ctx.state(), fo = st.foundry || {};
+    if (fo.target !== "existing" || !fo.sceneUuid) return null;
+    var rows = ((fo.cache || {}).lists || {}).scenes || [], r = rows.filter(function (x) { return x.uuid === fo.sceneUuid; })[0];
+    return { uuid: fo.sceneUuid, name: r ? r.name : fo.sceneUuid };
+  }
+  function paintF3d() {
+    var host = $("f3dBlock"); if (!host) return;
+    var f = F(), si = sceneInfo();
+    $$("[data-s^='lighting.f3d.']", host).forEach(function (el) {
+      var v = VB.getPath(ctx.state(), el.getAttribute("data-s"));
+      if (el.type === "checkbox") el.checked = v !== false && !!v; else if (v !== undefined && v !== null && document.activeElement !== el) el.value = v;
+    });
+    $("f3dScene").textContent = si ? si.name + "  [" + si.uuid + "]" : "none: pick an existing scene on the Foundry tab (Refresh from Foundry)";
+    $("f3dFlags").style.opacity = f.applyFlags ? "1" : "0.45";
+    $$("input,select", $("f3dFlags")).forEach(function (e) { e.disabled = !f.applyFlags; });
+    var last = f.last, n = null, pack = (last && last.pack) || {};
+    if (last && last.pipeline != null) n = last.pipeline;
+    else if (Object.keys(pack).length) n = Object.keys(pack).reduce(function (a, k) { return a + pack[k]; }, 0);
+    var lines = [];
+    if (n == null) lines.push("Lights: not counted yet. Press Check (dry run) to count the lights in the scene and in the pack.");
+    else {
+      var n2 = n;
+      if (Object.keys(pack).length) VB.f3dExcluded(f).forEach(function (k) { n2 -= pack[k] || 0; });
+      var p = VB.f3dPlan(Math.max(0, n2), f);
+      lines.push("Lights: " + n + " in the pipeline" + (Object.keys(pack).length ? " (pack: " + Object.keys(pack).map(function (k) { return pack[k] + " " + k; }).join(", ") + ")" : "") + ".");
+      lines.push("Plan: " + p.on + " on, " + (n - p.on) + " off, mode " + p.mode + ". " + p.reason + ".");
+      lines.push("Estimated cost: " + p.relative + "x an empty scene (" + p.label + ")" + (last && last.cost_now ? "; the scene is at " + last.cost_now.relative + "x (" + last.cost_now.label + ") now" : "") + ".");
+    }
+    if (last) lines.push("Last " + (last.applied ? "apply" : "check") + " (" + String(last.at || "").replace("T", " ").slice(0, 19) + "): " + last.on + " of " + last.pipeline + " lights on, " + last.shadow + " casting shadows" +
+      (last.flags && Object.keys(last.flags).length ? "; scene flags " + Object.keys(last.flags).join(", ") : "") + ".");
+    $("f3dReadout").textContent = lines.join("\n");
+  }
+  function runF3d(apply) {
+    try { return ctx.startJob(VB.jobSetLighting(ctx.state(), ctx.dirs(), apply), function () { paintF3d(); }); }
+    catch (e) { if (ctx.showError) ctx.showError(String((e && e.message) || e)); else $("f3dReadout").textContent = String((e && e.message) || e); }
+  }
+  var f3dActs = {
+    f3d_perf: function () { VB.f3dPerformance(ctx.state()); ctx.save(); paintF3d(); },
+    f3d_reset: function () { var last = F().last; VB.f3dReset(ctx.state()); F().last = last; ctx.save(); paintF3d(); },
+    f3d_dry: function () { return runF3d(false); },
+    f3d_apply: function () { return runF3d(true); }
+  };
+  function initF3d() {
+    var sec = $("tab-lighting"); if (!sec || $("f3dBlock")) return;
+    if (VB.f3dWrapLate) VB.f3dWrapLate();
+    var wrap = document.createElement("div"); wrap.innerHTML = f3dHtml(); sec.appendChild(wrap.firstChild);
+    var host = $("f3dBlock");
+    var coerce = function (el) { return el.type === "checkbox" ? el.checked : (el.type === "number" || el.type === "range") ? (el.value === "" ? 0 : Number(el.value)) : el.value; };
+    var onChange = function (ev) {
+      var el = ev.target, p = el.getAttribute && el.getAttribute("data-s");
+      if (!p) return;
+      ev.stopPropagation();                       // do not trigger the 2D shadow re-render of this tab
+      VB.setPath(ctx.state(), p, coerce(el)); ctx.save();
+      $$('[data-s="' + p + '"]', host).forEach(function (o) { if (o !== el && o.type !== "checkbox") o.value = el.value; });
+      paintF3d();
+    };
+    host.addEventListener("input", onChange); host.addEventListener("change", onChange);
+    host.addEventListener("click", function (ev) {
+      var b = ev.target.closest("[data-act]"); if (!b) return;
+      ev.stopPropagation();
+      var f = f3dActs[b.getAttribute("data-act")]; if (f) f();
+    });
+    paintF3d();
+  }
+
   function init(c) {
     ctx = c;
     var sec = $("tab-lighting"); if (!sec) return;
+    initF3d();
     sec.addEventListener("input", function (ev) {
       var t = ev.target, lf = t.getAttribute && t.getAttribute("data-lf");
       if (lf) {
@@ -136,7 +237,7 @@
     bar.innerHTML = Object.keys(VB.LIGHTING_PRESETS).map(function (k) { return '<button data-light-preset="' + k + '">' + esc(VB.LIGHTING_PRESETS[k].label) + "</button>"; }).join("");
     paint();
   }
-  function paint() { if (!ctx) return; paintDial(); paintLights(); }
+  function paint() { if (!ctx) return; paintDial(); paintLights(); paintF3d(); }
 
-  window.VBLightUI = { init: init, paint: paint, actions: actions };
+  window.VBLightUI = { init: init, paint: paint, actions: actions, f3dActs: f3dActs };
 })();

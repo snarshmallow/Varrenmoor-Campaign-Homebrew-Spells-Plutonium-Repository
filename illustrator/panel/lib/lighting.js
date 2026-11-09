@@ -18,7 +18,8 @@
       ambient: 0.35, terrain_shade: 0.5, height_scale: 1, roof_pitch: true,
       shadow: { color: "#141a2e", opacity: 0.55, blur_ft: 0.4, max_length_ft: 300, terrain: true, buildings: true },
       glow: { enabled: true, opacity: 0.6 },
-      vector: false, auto: false, preview_dpi: 60, dpi: 150, embed: false, preset: "", capture: []
+      vector: false, auto: false, preview_dpi: 60, dpi: 150, embed: false, preset: "", capture: [],
+      f3d: VB.f3dDefaults()
     };
   };
   VB.newLight = function (kind, n) {
@@ -132,6 +133,80 @@
     return { kind: "lighting_clear", label: "Remove shadow and glow images", params: {}, steps: [
       VB.steps.host({ action: "remove_item", layer: VB.SHADOW_LAYER, name: "shadows_png" }, "remove shadows", true),
       VB.steps.host({ action: "remove_item", layer: VB.GLOW_LAYER, name: "light_glow_png" }, "remove glow", true)] };
+  };
+
+  // ---------------------------------------------------------------- Foundry 3D lighting: light budget, lighting mode, sun / ambient flags (generators/foundry_lightbudget.py, `set-lighting`)
+  // Constants mirror foundry_lightbudget.py (test_lighting_jobs.js checks both give the same numbers).
+  VB.F3D = { HYBRID_MAX: 16, AUTO_HYBRID_ABOVE: 64, AUTO_GLOBAL_ABOVE: 256, COST_PER_LIGHT: 0.02, COST_PER_SHADOW_LIGHT: 0.6, GLOBAL_AMBIENT: 0.55, HYBRID_AMBIENT: 0.45 };
+  VB.F3D_TIMES = { "": "keep the scene's time", dawn: "Dawn", noon: "Noon", dusk: "Dusk", night: "Night" };
+  VB.f3dDefaults = function () {
+    // defaults leave small scenes exactly as before: mode "auto" keeps every light up to 64 lights, no scale, no flag writes
+    return { mode: "auto", maxLights: 0, radiusScale: 1, intensityScale: 1, windows: true, hearths: true, shadows: "", renderLights: "", applyFlags: false, timeOfDay: "", gi: 0.35, giColor: "#ffffff", sunStrength: 1, sunColor: "#fff1d0", last: null };
+  };
+  // "Performance mode": few lights + ambient fill, no windows, no light shadows
+  VB.f3dPerformance = function (st) { var f = st.lighting.f3d; f.mode = "hybrid"; f.maxLights = 12; f.windows = false; f.shadows = "off"; f.radiusScale = 1; f.intensityScale = 1; return st; };
+  VB.f3dReset = function (st) { st.lighting.f3d = VB.f3dDefaults(); return st; };
+  VB.f3dExcluded = function (f) { var x = []; if (f.windows === false) x.push("window"); if (f.hearths === false) x.push("hearth"); return x; };
+  // light budget options (push-lights, push-scene-3d): the mode is always passed, the rest only when they differ from the do-nothing value
+  VB.f3dBudgetArgs = function (st) {
+    var f = (st.lighting && st.lighting.f3d) || VB.f3dDefaults(), a = ["--lighting-mode", f.mode || "auto"], n = function (v, d) { v = Number(v); return isFinite(v) ? v : d; };
+    if (n(f.maxLights, 0) > 0) a.push("--max-lights", String(Math.round(n(f.maxLights, 0))));
+    var ex = VB.f3dExcluded(f); if (ex.length) a.push("--exclude-types", ex.join(","));
+    if (n(f.radiusScale, 1) !== 1) a.push("--light-radius-scale", String(n(f.radiusScale, 1)));
+    if (n(f.intensityScale, 1) !== 1) a.push("--light-intensity-scale", String(n(f.intensityScale, 1)));
+    return a;
+  };
+  // set-lighting on the picked existing scene (dry run unless apply)
+  VB.f3dSetArgs = function (st, d, apply) {
+    var fo = st.foundry || {}; if (fo.target !== "existing" || !fo.sceneUuid) throw new Error("pick an existing scene on the Foundry tab first (Refresh from Foundry)");
+    var f = st.lighting.f3d, n = function (v, d0) { v = Number(v); return isFinite(v) ? v : d0; };
+    var a = ["set-lighting", "--scene-uuid", fo.sceneUuid, "--place", st.place, "--placements", VB.packDir(d) + "/placements.json"].concat(VB.f3dBudgetArgs(st));
+    if (f.shadows) a.push("--light-shadows", f.shadows);
+    if (f.renderLights) a.push("--render-scene-lights", f.renderLights);
+    if (f.applyFlags) {
+      if (f.timeOfDay) a.push("--time-of-day", f.timeOfDay);
+      a.push("--ambient", String(n(f.gi, 0.35)), "--ambient-color", f.giColor || "#ffffff", "--sun-strength", String(n(f.sunStrength, 1)), "--sun-color", f.sunColor || "#fff1d0");
+    }
+    if (apply) a.push("--apply");
+    return a;
+  };
+  // plain-language plan for n pipeline lights (same rules as foundry_lightbudget.resolve_mode / estimate_cost)
+  VB.f3dPlan = function (n, f) {
+    var K = VB.F3D, cap = Math.max(0, Math.round(Number(f.maxLights) || 0)), mode = f.mode || "auto", why, on;
+    if (mode === "auto") {
+      if (n > K.AUTO_GLOBAL_ABOVE) { mode = "global"; why = "auto: " + n + " lights is more than " + K.AUTO_GLOBAL_ABOVE + ", so global illumination is used instead of point lights"; }
+      else if (n > K.AUTO_HYBRID_ABOVE) { mode = "hybrid"; cap = cap || K.HYBRID_MAX; why = "auto: " + n + " lights is more than " + K.AUTO_HYBRID_ABOVE + ", so only the " + cap + " most important are kept and ambient light fills in"; }
+      else { mode = "lights"; why = "auto: " + n + " lights is at most " + K.AUTO_HYBRID_ABOVE + ", so every light is kept"; }
+    } else if (mode === "global") why = "global: no point lights, ambient + sun only";
+    else if (mode === "hybrid") { cap = cap || K.HYBRID_MAX; why = "hybrid: the " + cap + " most important lights + ambient"; }
+    else why = "lights: " + (cap ? "capped at " + cap : "every light kept");
+    on = mode === "global" ? 0 : (cap ? Math.min(cap, n) : n);
+    var sh = f.shadows === "on" ? on : (/^\d+$/.test(f.shadows || "") ? Math.min(on, +f.shadows) : 0);
+    var rel = 1 + K.COST_PER_LIGHT * on + K.COST_PER_SHADOW_LIGHT * sh;
+    return { mode: mode, on: on, off: n - on, reason: why, shadow: sh, relative: Math.round(rel * 100) / 100, label: rel <= 1.25 ? "low" : rel <= 2 ? "medium" : rel <= 4 ? "high" : "very high" };
+  };
+  VB.jobSetLighting = function (st, d, apply) {
+    var args = VB.f3dSetArgs(st, d, apply);
+    return { kind: "set_lighting", label: "Foundry lighting" + (apply ? " (apply)" : " (dry run)"), params: { apply: !!apply }, steps: [
+      VB.steps.py(VB.FOUNDRY_PY || (GEN + "foundry_push.py"), args, "set-lighting", { json: "sl" }),
+      { t: "fn", label: "store result", fn: function (run) {
+        var r = run.vars.sl; if (!r || r.ok === false) throw new Error((r && r.error) || "set-lighting gave no result");
+        run.setState("lighting.f3d.last", { at: new Date().toISOString(), applied: !!r.applied, scene: r.scene, mode: r.mode, reason: r.reason, pipeline: r.pipeline_lights, on: r.lights_on_after, off: r.lights_off_after,
+          kept: r.kept_by_kind, shadow: r.shadow_casters_after, flags: r.flag_changes, cost: r.cost_after, cost_now: r.cost_now, pack: r.pack_lights });
+        run.log((r.applied ? "applied: " : "dry run: ") + r.lights_on_after + " of " + r.pipeline_lights + " lights on (" + r.mode + "), cost " + r.cost_now.label + " -> " + r.cost_after.label + ". " + r.reason);
+      } }] };
+  };
+  // push-lights / push-scene-3d carry the same budget (core.js / tools.js build the base command; this appends the options)
+  if (VB.jobPushLights) {
+    var baseJPL = VB.jobPushLights;
+    VB.jobPushLights = function (st, d, dry) { var j = baseJPL(st, d, dry), s = j.steps[0]; if (Array.isArray(s.args)) s.args = s.args.concat(VB.f3dBudgetArgs(st)); return j; };
+  }
+  // tools.js loads after this file, so the one-shot 3D scene command is wrapped once at start-up (lighting_ui.js init calls this; tests call it too)
+  VB.f3dWrapLate = function () {
+    if (!VB.scene3dArgs || VB.scene3dArgs.f3d) return;
+    var baseS3 = VB.scene3dArgs;
+    VB.scene3dArgs = function (st, d, dry) { var a = baseS3(st, d, dry); return a.indexOf("--with-lights") >= 0 ? a.concat(VB.f3dBudgetArgs(st)) : a; };
+    VB.scene3dArgs.f3d = true;
   };
 
   // state defaults for older panel_state files
