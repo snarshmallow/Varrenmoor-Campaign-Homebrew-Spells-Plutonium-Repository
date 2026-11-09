@@ -270,5 +270,6 @@
   };
 
   L.ops = function () { return root.VBPolyOps || (typeof require !== "undefined" ? require("./polyops.js") : null); };   // lazy: polyops.js requires this file
-  if (typeof module !== "undefined" && module.exports) module.exports = L; else root.VBLasso = L;
+  if (typeof module !== "undefined" && module.exports) module.exports = L;
+  if (typeof window !== "undefined") window.VBLasso = L;      // CEP pages have Node's `module` too: always publish on window (an else-branch left the panel without VBLasso)
 })(typeof window !== "undefined" ? window : this);

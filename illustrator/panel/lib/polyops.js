@@ -196,5 +196,6 @@
     var k = P.keyhole(o.pts, poly); if (k.ok) k.warnings = (o.warnings || []).concat(k.warnings); return k;
   };
 
-  if (typeof module !== "undefined" && module.exports) module.exports = P; else root.VBPolyOps = P;
+  if (typeof module !== "undefined" && module.exports) module.exports = P;
+  if (typeof window !== "undefined") window.VBPolyOps = P;      // CEP pages have Node's `module` too: always publish on window (an else-branch left the panel without VBPolyOps)
 })(typeof window !== "undefined" ? window : this);

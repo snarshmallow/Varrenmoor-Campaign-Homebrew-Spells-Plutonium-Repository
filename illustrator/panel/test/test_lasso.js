@@ -179,6 +179,16 @@ const ROOT = path.resolve(__dirname, "../../..").split(path.sep).join("/"), plac
     hostLog = []; r = await runner.run(VB.jobCapture(st, { world: ROOT + "/world/" + place }, { what: "terrain polygon", layer: "TERRAIN AREA", closed: true, store: "terrain.patch.polygon", srcName: "terrain.patch.polygon_src" }));
     check("capture stores polygon, source text, and leaves a selection", r.ok && st.terrain.patch.polygon.length === 4 && /selection/.test(st.terrain.patch.polygon_src) && hostLog.some(a => a.action === "lasso_draw" && a.select), r.error);
   }
+  // CEP pages have BOTH window and Node's module: the libs must still publish on window (regression: an else-branch left window.VBLasso undefined and the lasso rows never appeared)
+  {
+    const vm = require("vm"), fs2 = require("fs");
+    for (const [file, name] of [["lib/polyops.js", "VBPolyOps"], ["lib/lasso.js", "VBLasso"]]) {
+      const win = {}; win.window = win; win.VBCore = require("../lib/core.js"); if (name === "VBLasso") win.VBPolyOps = require("../lib/polyops.js"); else win.VBLasso = require("../lib/lasso.js");
+      const ctxv = vm.createContext(Object.assign(win, { module: { exports: {} }, require: require }));
+      try { vm.runInContext(fs2.readFileSync(require("path").join(__dirname, "..", file), "utf8"), ctxv, { filename: file }); } catch (e) { console.log("load error " + file + ": " + e.message); }
+      check(file + " publishes window." + name + " when module also exists (CEP)", typeof win[name] === "object" || typeof win[name] === "function", typeof win[name]);
+    }
+  }
   console.log((fail ? "FAIL" : "PASS") + " test_lasso: " + pass + " passed, " + fail + " failed");
   process.exit(fail ? 1 : 0);
 })();

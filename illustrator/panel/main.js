@@ -453,7 +453,7 @@
     }
     if (force === "town" || !s.town.params_loaded) {
       var tp = readJson(d.world + "/town_params.json", null);
-      if (tp) VB.townFromParams(tp, s.town); else showError("town_params.json not found for " + s.place, "warn");
+      if (tp) VB.townFromParams(tp, s.town); else if (force === "town") showError("town_params.json not found for " + s.place, "warn");   // image-imported base maps have no town params: not an error on the normal loads (Reload spec etc.)
     }
     if (!s.shading.loaded) loadPreset(s.shading.preset);
     save();
