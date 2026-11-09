@@ -32,15 +32,21 @@ import dataclasses as _dc  # noqa: E402
 import label_curve as lcv  # noqa: E402
 import region_draw as rdraw  # noqa: E402
 import worldio  # noqa: E402
+import layer_order as lo  # noqa: E402
+import label_guard as lg  # noqa: E402
+import svg_sanity  # noqa: E402
 from xml.sax.saxutils import escape  # noqa: E402
 
 REPO = os.path.abspath(os.path.join(HERE, "..", ".."))
 PAGE_W_IN, PAGE_H_IN, MARGIN_IN = 17, 11, 0.5   # defaults; the active view_settings page/margin are used per render
 
+# LABELS sublayers come from layer_order.py (canonical stacking shared with presets/layer_order.json and the panel):
+# 'Label Backing' (halos / boxes) is the bottom sublayer = written first = painted under every label text layer.
+assert {ld.LAYER_LEGEND, ld.LAYER_MARKERS, lbo.LAYER_ANCHORS, lbo.LAYER_LEADERS, ld.LAYER_HIDDEN, ct.LAYER_LABELS, lst.LAYER_BACKING} <= set(lo.LABEL_LAYERS)
+assert lo.LABEL_LAYERS[-1] == lst.LAYER_BACKING
 SPEC = [
     ("NOTES", []),
-    ("LABELS", [ld.LAYER_LEGEND, ld.LAYER_MARKERS, lbo.LAYER_ANCHORS, lbo.LAYER_LEADERS, "Labels - Districts", "Labels - Streets", "Labels - Buildings",
-                "Labels - Rooms", ld.LAYER_HIDDEN, ct.LAYER_LABELS, lst.LAYER_BACKING]),
+    ("LABELS", list(lo.LABEL_LAYERS)),
     ("FOUNDRY MARKERS", []),
     ("ART - Top", []),
     ("ART - Fills", []),
@@ -426,8 +432,17 @@ def shading_luma(h, meta, phases="auto", ppf=0.4):
     return (img.astype(float) @ np.array([0.299, 0.587, 0.114])) / 255.0, ppf
 
 
-def render(model, view_arg, out_path, topts=None, cfg_over=None, lopts=None, lstyle=None, dopts=None):
+def _name(e):
+    """Display name of an entity; missing / blank names fall back to the id (never a crash on a hand-made or blank place)."""
+    n = e.get("name")
+    return str(n).strip() if n is not None and str(n).strip() else str(e.get("id", "?"))
+
+
+def render(model, view_arg, out_path, topts=None, cfg_over=None, lopts=None, lstyle=None, dopts=None, label_budget=lg.DEFAULT_BUDGET, svg_check="strict"):
+    """svg_check: strict = run svg_sanity on the written SVG and raise SvgCheckError on errors (hang risks in Illustrator), warn = print only, off."""
     place = model["place"]
+    for k_ in ("districts", "streets", "buildings", "water"):
+        model.setdefault(k_, [])
     bw, bh = place["bounds"]["width_ft"], place["bounds"]["height_ft"]
     streets = {s["id"]: s for s in model["streets"]}
     blds = {b["id"]: b for b in model["buildings"]}
@@ -437,7 +452,8 @@ def render(model, view_arg, out_path, topts=None, cfg_over=None, lopts=None, lst
     margin = cfg["margin_in"]
     W, H = pw * 72.0, ph * 72.0
     lf = min(max((100.0 / fpi) ** 0.5, 0.6), 1.6)     # label size factor follows the scale
-    ls = lambda base: round(base * lf, 1)
+    sheet_f = gt.size_factor(pw, ph)                    # ... and the sheet: a 34 x 22 in sheet gets 2x the default sizes (like the notes / scale bar)
+    ls = lambda base: round(base * lf * sheet_f, 1)
 
     lock_leaders = bool((lopts if lopts is not None else cfg.get("label_offset") or {}).get("lock_leaders", True))
     gtf = gt.size_factor(pw, ph)
@@ -655,9 +671,9 @@ def render(model, view_arg, out_path, topts=None, cfg_over=None, lopts=None, lst
     for e in model["districts"]:
         if e["kind"] == "district":
             if kind != "building":
-                lab("districts", "Labels - Districts", e, e["name"], ls(9), True)
+                lab("districts", "Labels - Districts", e, _name(e), ls(9), True)
         elif e["kind"] == "square":
-            lab("districts", "Labels - Districts", e, e["name"], ls(7), ratio=7 / 9)
+            lab("districts", "Labels - Districts", e, _name(e), ls(7), ratio=7 / 9)
     if kind in ("town", "street", "bowl"):
         sst = styles["streets"]
         for e in model["streets"]:
@@ -666,7 +682,7 @@ def render(model, view_arg, out_path, topts=None, cfg_over=None, lopts=None, lst
             tier, tc, pr = tier_info("streets", e)
             tf = (tc.get("size") or 1.0) if dc.get("enabled") else 1.0
             sz = round((sst.size * tf if sst.size else ls(6) * tf) * qf, 1)
-            txt = lst.apply_case(e["name"] + " *", sst)
+            txt = lst.apply_case(_name(e) + " *", sst)
             cands = street_label_cands(v, e, sz, fpi, txt)
             if not cands:
                 continue
@@ -695,10 +711,10 @@ def render(model, view_arg, out_path, topts=None, cfg_over=None, lopts=None, lst
     for e in model["buildings"]:
         if kind != "building" and e["kind"] in CIVIC_SKIP and fpi >= 40 and not dc.get("scale_visibility"):
             continue
-        lab("buildings", "Labels - Buildings", e, e["name"] + " *", ls(7) if kind != "building" else 10)
+        lab("buildings", "Labels - Buildings", e, _name(e) + " *", ls(7) if kind != "building" else round(10 * sheet_f, 1))
     if kind == "building":
         for r in blds[ident].get("rooms", []):
-            lab("rooms", "Labels - Rooms", r, r["name"], 8)
+            lab("rooms", "Labels - Rooms", r, _name(r), round(8 * sheet_f, 1))
 
     street_by_id = {e_['id']: e_ for e_ in model['streets']}
     results = placer.solve()
@@ -710,6 +726,7 @@ def render(model, view_arg, out_path, topts=None, cfg_over=None, lopts=None, lst
     numbered = []
     rows, manifest_labels = list(legacy_rows), {}
     n_off = n_hidden = n_pinned = 0
+    leader_items, river_recs = [], []
     for res in results:
         layer, sz, st, tier, txt, kd = meta[res.id]
         box_ = lbo.text_box(res.cx, res.cy, res.w, res.h, res.rot)
@@ -746,7 +763,7 @@ def render(model, view_arg, out_path, topts=None, cfg_over=None, lopts=None, lst
         if res.leader:
             n_off += 1
             for lay_, sv in lbo.leader_svg(res, lp, lst.text_color(stx)):
-                t.add(lay_, sv)
+                leader_items.append((f"{res.id}_label", lay_, sv))        # added after the label guard, only for labels it keeps
     # river name: text on the centreline (always along the water, at the longest visible stretch)
     if dc.get("river_label", True) and kind in ("town", "bowl") and fpi <= 250:
         rst = styles["streets"]
@@ -770,7 +787,7 @@ def render(model, view_arg, out_path, topts=None, cfg_over=None, lopts=None, lst
             cp_ = lcv.curved_path([tuple(p_[:2]) for p_ in cl_], best_, wid_, v, offset_ft=-0.3 * rsz / v.k, always=True)
             if cp_:
                 wst = _dc.replace(rst, italic=True, color="#1a4f8a", letter_spacing=max(rst.letter_spacing or 0, 1.5))
-                lst.emit(t, lst.Rec(f"{we['id']}_name", "Labels - Streets", [nm_], best_[0], best_[1], wid_, rsz, 0.0, rsz, wst, path=cp_[0]), backing)
+                river_recs.append(lst.Rec(f"{we['id']}_name", "Labels - Streets", [nm_], best_[0], best_[1], wid_, rsz, 0.0, rsz, wst, path=cp_[0]))
     # numbered callouts: marker circle on the map + a legend entry
     numbered.sort(key=lambda r_: (ld.tier_cfg(dc, r_[3])["priority"], round(r_[0].cy / 12), r_[0].cx))
     legend_entries = []
@@ -814,6 +831,22 @@ def render(model, view_arg, out_path, topts=None, cfg_over=None, lopts=None, lst
           with open(os.path.join(os.path.dirname(out_path) or ".", "label_manifest.json"), "w", encoding="utf-8") as f_:     # the panel's Pin step reads this one
               json.dump(manifest, f_, indent=1)
 
+    # label guard: no NaN / off-page / duplicated labels, curved baselines <= 40 points, coordinates rounded, label budget
+    # (Illustrator imports SVG with no progress or cancel: pathological label content must never reach it)
+    n_river = len(river_recs)
+    recs, grep_ = lg.guard(recs + river_recs, W, H, budget=int(label_budget or 0))
+    river_ids = {r_.id for r_ in river_recs}
+    river_recs = [r_ for r_ in recs if r_.id in river_ids]
+    recs = [r_ for r_ in recs if r_.id not in river_ids]
+    for w_ in lg.warnings(grep_):
+        print(w_)
+    kept_ = {r_.id for r_ in recs}
+    for id_, lay_, sv in leader_items:
+        if id_ in kept_:
+            t.add(lay_, sv)
+    print(f"labels: {len(recs) + len(river_recs)} in the SVG ({sum(1 for r_ in recs if r_.layer == ld.LAYER_HIDDEN)} hidden by scale/collision, "
+          f"{n_river} river name(s)), budget {int(label_budget or 0) or 'off'}")
+
     # knock-out: padded rounded boxes of the labels in mask mode (or with knockout on) cut the linework underneath
     from shapely.ops import unary_union
     cut = unary_union([lst.knock_geom(r) for r in recs if r.st.knock and r.layer != ct.LAYER_LABELS]) if any(
@@ -836,7 +869,7 @@ def render(model, view_arg, out_path, topts=None, cfg_over=None, lopts=None, lst
             t.add(layer, path(id_, v.d(polys), c))
     if n_l:
         print(f"label mask: {n_l} line paths cut under labels")
-    for rec in recs:
+    for rec in river_recs + recs:
         lst.emit(t, rec, None if rec.layer in (ct.LAYER_LABELS, ld.LAYER_HIDDEN) else backing)
 
     # FOUNDRY MARKERS: imported lights (yellow dot, optional dashed bright-radius ring: place.json import.light_rings) and tokens (small blue circle); locked layer
@@ -931,6 +964,17 @@ def render(model, view_arg, out_path, topts=None, cfg_over=None, lopts=None, lst
     elif os.path.exists(cj):
         os.remove(cj)
     print("wrote", out_path)
+    if svg_check != "off":
+        rep_ = svg_sanity.check(out_path)
+        print(svg_sanity.summary(rep_))
+        if rep_["errors"] and svg_check == "strict":
+            raise SvgCheckError("the SVG failed the Illustrator safety check (see ERROR lines above); not safe to import. "
+                                "Fix the cause, or rerun with --svg-check warn to import anyway.")
+    return out_path
+
+
+class SvgCheckError(RuntimeError):
+    pass
 
 
 if __name__ == "__main__":
@@ -991,6 +1035,10 @@ if __name__ == "__main__":
     ap.add_argument("--fit-margin", type=float, default=0.0, help="extra feet around the --fit bounds")
     ap.add_argument("--details", help="region details to DRAW: auto (default; no lots at <=20 ft/in) | all | none | comma list of doors,roofs,chimneys,lots,fences,kerbs,trees")
     ap.add_argument("--model-dir", help="read the town model from this folder instead of world/<place> (candidate)")
+    ap.add_argument("--label-budget", type=int, default=None, help=f"at most N labels in the SVG (default {lg.DEFAULT_BUDGET}, or declutter.label_budget; 0 = no budget): "
+                    "hidden, elevation, room, building labels are cut first, district names last")
+    ap.add_argument("--svg-check", choices=["strict", "warn", "off"], default="strict", help="Illustrator safety check of the written SVG (svg_sanity.py): "
+                    "strict = exit 3 on errors (NaN, broken coordinates, <textPath>, thousands of texts), warn = print only")
     a = ap.parse_args()
     worldio.set_source(a.terrain_source, a.water_source)
     topts = None
@@ -1023,6 +1071,11 @@ if __name__ == "__main__":
     lst.curved_begin(a.curved_text)
     model_ = load_place(a.place, a.model_dir)
     model_["_details_draw"] = a.details
-    render(model_, a.view, out, topts,
-           {"preset": a.preset, "scale": a.scale, "grid": a.grid, "page": a.page, "major_every": a.grid_major, "grid_extent": "page" if a.grid_full_page else None, "grid_show": False if (a.no_grid or a.grid == 0) else None, "fit": a.fit, "fit_margin": a.fit_margin}, lopts,
-           [pre.get("label_style"), lst.parse_cli(a.label_style), lst.decode_b64(a.label_style_b64)], dopts)
+    budget_ = a.label_budget if a.label_budget is not None else dopts.get("label_budget", lg.DEFAULT_BUDGET)
+    try:
+        render(model_, a.view, out, topts,
+               {"preset": a.preset, "scale": a.scale, "grid": a.grid, "page": a.page, "major_every": a.grid_major, "grid_extent": "page" if a.grid_full_page else None, "grid_show": False if (a.no_grid or a.grid == 0) else None, "fit": a.fit, "fit_margin": a.fit_margin}, lopts,
+               [pre.get("label_style"), lst.parse_cli(a.label_style), lst.decode_b64(a.label_style_b64)], dopts, label_budget=budget_, svg_check=a.svg_check)
+    except SvgCheckError as e_:
+        print("ERROR:", e_)
+        sys.exit(3)

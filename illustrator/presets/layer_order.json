@@ -1,0 +1,78 @@
+{
+ "_note": "Canonical layer stacking, TOP to BOTTOM as in Illustrator's Layers panel. Written by illustrator/generators/layer_order.py (do not edit by hand). 'Label Backing' (label halos / boxes) must be the bottom sublayer of LABELS, under every label text layer.",
+ "top": [
+  "NOTES",
+  "LABELS",
+  "FOUNDRY MARKERS",
+  "ART - Top",
+  "ART - Fills",
+  "ART - Textures",
+  "ART - Masks",
+  "LINES",
+  "GUIDES"
+ ],
+ "LABELS": [
+  "Legend",
+  "Callout Markers",
+  "Leader Anchors",
+  "Leaders",
+  "Labels - Hidden",
+  "Labels - Districts",
+  "Labels - Streets",
+  "Labels - Buildings",
+  "Labels - Rooms",
+  "Labels - Elevation",
+  "Label Backing"
+ ],
+ "LINES": [
+  "Walls",
+  "Buildings",
+  "Blocks",
+  "Roads",
+  "Water",
+  "Terrain",
+  "Fences",
+  "Details",
+  "DETAILS - Lots",
+  "DETAILS - Trees"
+ ],
+ "Terrain": [
+  "Contours - Minor",
+  "Contours - Index"
+ ],
+ "GUIDES": [
+  "Grid",
+  "Scale bar",
+  "North arrow",
+  "Bounds"
+ ],
+ "label_text_layers": [
+  "Labels - Districts",
+  "Labels - Streets",
+  "Labels - Buildings",
+  "Labels - Rooms",
+  "Labels - Elevation",
+  "Labels - Hidden"
+ ],
+ "backing": "Label Backing",
+ "order_groups": [
+  [
+   "Legend",
+   "Callout Markers",
+   "Leader Anchors",
+   "Leaders",
+   "Labels - Hidden",
+   "Labels - Districts",
+   "Labels - Streets",
+   "Labels - Buildings",
+   "Labels - Rooms",
+   "Labels - Elevation",
+   "Label Backing"
+  ],
+  [
+   "NOTES",
+   "LABELS",
+   "LINES"
+  ]
+ ]
+}
