@@ -902,13 +902,13 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
   <h4>3D models (world pack)</h4>
   <div class="grid">
     <label>Split (layer=entity|group|layer) <input type="text" data-s="foundry.models.split" placeholder="buildings=entity,roads=layer"></label>
-    <label>Merge preset <select data-s="foundry.models.preset"><option value="layer">merge by layer</option><option value="district">merge by district</option><option value="all">merge all</option><option value="individual">keep individual</option></select></label>
+    <label>Merge preset <select data-s="foundry.models.preset"><option value="layer">merge by layer</option><option value="district">merge by district</option><option value="doors">merge by layer, each building its own tile (cheap door toggles)</option><option value="all">merge all</option><option value="individual">keep individual</option></select></label>
     <label>Layers to push <input type="text" data-s="foundry.models.layers" placeholder="all (terrain,buildings,roads,...)"></label>
     <label>LOD <select data-s="foundry.models.lod"><option value="0">0 full</option><option value="1">1</option><option value="2">2</option></select></label>
     <label>Roof mode <select id="fRoofMode" data-s="foundry.models.roofMode"><option value="none">None: roofs merged into buildings (cheapest)</option><option value="per_building">Per building: hide each roof separately</option><option value="per_scene">Per scene: one switch for all roofs</option></select></label>
     <label>Home interior style <select id="fInteriorStyle" data-s="foundry.models.interiorStyle" title="Furnishing and finish of generated home interiors. Auto picks by building kind; a building JSON key interior_style overrides it. Export again + Push models to apply."><option value="auto">Auto: by building kind (houses rustic)</option><option value="rustic_cottage">Rustic cottage: plank floor, beams, hearth, rag rug</option><option value="farmhouse">Farmhouse: flagstone floor, lime-washed walls</option><option value="burgher_townhouse">Burgher townhouse: plastered, canopy bed</option><option value="poor_hovel">Poor hovel: earth floor, sparse</option><option value="plain">Plain: the original look</option></select></label>
   </div>
-  <details id="wpCollision"><summary class="note">Collision and walls (3D Canvas)</summary>
+  <details id="wpCollision"><summary class="note">Collision, sight and walls (3D Canvas)</summary>
   <div class="note">Collision: the tile blocks player movement through it and tokens stand on it (terrain, roads, floors); costs no render time. Applies to Push models and, with Set collision, to the scene's existing tiles.</div>
   <div class="grid">
     <label class="chk"><input type="checkbox" data-s="foundry.models.collision.terrain" title="Tokens stand on the ground relief"> Terrain</label>
@@ -928,17 +928,31 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
     <button data-act="wp_collision_dry" title="Lists which tiles of the picked existing scene would change collision. Writes nothing.">Set collision (dry run)</button>
     <button data-act="wp_collision_apply" title="Writes the collision flag of the picked scene's pipeline tiles to match the boxes above (idempotent)">Set collision on scene tiles</button>
   </div>
-  <div class="note">Walls (block sight, sound, light; the 3D model alone does not block token vision): Foundry walls from footprints, fences and tree stands. Re-running replaces the pipeline's 3D walls; unticked layers are removed.</div>
+  <div class="note">Sight (tile flag): the tile blocks token vision, fog exploration, light sources and sound radii, no wall documents needed (3D Canvas builds the polygons from the meshes; an open model door lets vision through). Costs worker time, not render time: buildings about 3 ms per light/vision polygon off the render thread, foliage about 1 ms; a door toggle re-sends its whole tile (20 ms on a merged 25-house tile, so merge buildings with the "doors" preset). Applies to Push models and, with Set collision, to existing tiles.</div>
   <div class="grid">
-    <label class="chk"><input type="checkbox" data-s="foundry.models.wallLayers.buildings" title="Buildings: full block, exterior doors are door walls"> Buildings</label>
-    <label class="chk"><input type="checkbox" data-s="foundry.models.wallLayers.walls" title="Town walls and gates: full block"> Walls</label>
-    <label class="chk"><input type="checkbox" data-s="foundry.models.wallLayers.fences" title="Fences: block movement only"> Fences</label>
-    <label class="chk"><input type="checkbox" data-s="foundry.models.wallLayers.trees" title="Tree stands: limited sight and sound, movement free"> Trees</label>
-    <label class="chk"><input type="checkbox" data-s="foundry.models.wallLayers.water" title="Water: limited sound"> Water</label>
+    <label class="chk"><input type="checkbox" data-s="foundry.models.sight.terrain" title="Off: ground"> Terrain</label>
+    <label class="chk"><input type="checkbox" data-s="foundry.models.sight.roads" title="roads: off"> Roads</label>
+    <label class="chk"><input type="checkbox" data-s="foundry.models.sight.plazas" title="plazas: off"> Plazas</label>
+    <label class="chk"><input type="checkbox" data-s="foundry.models.sight.fields" title="fields: off"> Fields</label>
+    <label class="chk"><input type="checkbox" data-s="foundry.models.sight.fences" title="Off: open fences"> Fences</label>
+    <label class="chk"><input type="checkbox" data-s="foundry.models.sight.walls" title="ON: town walls block like buildings"> Walls</label>
+    <label class="chk"><input type="checkbox" data-s="foundry.models.sight.bridges" title="bridges: off"> Bridges</label>
+    <label class="chk"><input type="checkbox" data-s="foundry.models.sight.buildings" title="ON: walls, floors and closed doors block vision, fog exploration, lights and sound; an open model door lets them through"> Buildings</label>
+    <label class="chk"><input type="checkbox" data-s="foundry.models.sight.props" title="props: off"> Props</label>
+    <label class="chk"><input type="checkbox" data-s="foundry.models.sight.roofs" title="Off: roofs are above eye height and the GM hides them"> Roofs</label>
+    <label class="chk"><input type="checkbox" data-s="foundry.models.sight.foliage" title="ON: trunks and hedges at eye height block vision, light and sound; tokens still walk through (collision off)"> Foliage</label>
+    <label class="chk"><input type="checkbox" data-s="foundry.models.sight.water" title="Off: you can see across water"> Water</label>
   </div>
   <div class="btns">
-    <button data-act="wp_walls_dry" title="Counts the walls that would be written to the picked existing scene. Writes nothing.">Walls (dry run)</button>
-    <button data-act="wp_walls_apply" title="Create/update the sight, sound and light walls on the picked existing scene (flagged, idempotent, stale ones removed)">Push walls (block sight/sound/light)</button>
+    <button data-act="wp_collision_dry" title="Lists which tiles would change collision and sight. Writes nothing.">Set collision and sight (dry run)</button>
+    <button data-act="wp_collision_apply" title="Writes collision and sight of the picked scene's pipeline tiles to match the boxes above (idempotent)">Set collision and sight on scene tiles</button>
+  </div>
+  <div class="grid">
+    <label class="chk"><input type="checkbox" data-s="foundry.models.alsoWalls" title="Advanced fallback: also write Foundry wall documents (buildings with door walls, town walls). They do not clip vision, light or sound in 3D scenes with multithreading (the default); they only help clients with multithreading off and the core movement test. Unticked, the buttons below REMOVE the pipeline's walls."> Also write Foundry walls (fallback)</label>
+  </div>
+  <div class="btns">
+    <button data-act="wp_walls_dry" title="Counts the walls that would be written (or removed) on the picked existing scene. Writes nothing.">Walls (dry run)</button>
+    <button data-act="wp_walls_apply" title="Ticked: write buildings + town-wall door walls (flagged, idempotent). Unticked: remove every pipeline wall of the scene.">Apply walls setting</button>
   </div>
   <div class="note">Door sync: wall doors and model doors follow each other while the "Door sync" macro runs in a GM tab (Click mode starts it). Install it once, run it from the Macro directory (or hotbar) after each GM page load. Sync now fixes doors that are already out of step.</div>
   <div class="btns">

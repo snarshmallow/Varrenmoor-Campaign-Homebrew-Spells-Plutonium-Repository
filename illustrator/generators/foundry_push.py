@@ -718,6 +718,7 @@ def build_model_tiles(doc, scene_calib, a, publish=None):
     want_i = set(a.ids.split(",")) if a.ids else None
     import foundry_collision as fcol
     col_on, col_lod = fcol.parse_collision(getattr(a, "collision", None)), fcol.parse_lod(getattr(a, "collision_lod", None))       # per-layer collision (default: fcol.COLLISION_DEFAULT)
+    sight_on = fcol.parse_sight(getattr(a, "sight", None))                                                                         # per-layer sight (vision/light/sound blocking, default: fcol.SIGHT_DEFAULT)
     items = []
     for e in doc["files"]:
         if want_l and not (set(e.get("layers", [e["layer"]])) & want_l):
@@ -732,7 +733,7 @@ def build_model_tiles(doc, scene_calib, a, publish=None):
         path = publish(e, rel) if publish else rel
         sz = e["size_ft"]
         rot0 = e["tile"]["rotation"] + e.get("rotation_deg", 0.0)
-        flags = lambda extra, ids=None: {"levels-3d-preview": {"model3d": path, "autoGround": True, "autoCenter": False, "collision": fcol.collision_for(e.get("layers", [e["layer"]]), col_on), "sight": False,
+        flags = lambda extra, ids=None: {"levels-3d-preview": {"model3d": path, "autoGround": True, "autoCenter": False, "collision": fcol.collision_for(e.get("layers", [e["layer"]]), col_on), "sight": fcol.collision_for(e.get("layers", [e["layer"]]), sight_on),
                                                        **({"sightMeshComplexity": col_lod[e["layer"]]} if e["layer"] in col_lod else {}), **extra},
                                FLAG: {"modelFile": e["file"], "sha256": e["sha256"], "layer": e["layer"],
                                       "ids": [("roof:" + i if e["layer"] == "roofs" else i) for i in (e["ids"] if ids is None else ids)[:400]],      # roofs are NOT the building's source id (scene_audit: one tile per source)
@@ -1301,6 +1302,7 @@ def parser():
     ap.add_argument("--foliage-placements", dest="foliage_placements", help="push-scene-3d: placements.json of a foliage merge (optimized/foliage_vNNN)")
     ap.add_argument("--skybox-preset", dest="skybox_preset", default="clear_day", help="push-scene-3d: world/<place>/export/skybox/<preset>.webp")
     ap.add_argument("--collision", help="push-models/push-scene-3d: layers whose tiles get collision (default | all | none | a,b | +water,-terrain; see foundry_collision.py)")
+    ap.add_argument("--sight", help="push-models/push-scene-3d: layers whose tiles block token vision, light and sound (tile flag sight; default buildings,walls,foliage | all | none | a,b | +water,-foliage)")
     ap.add_argument("--collision-lod", dest="collision_lod", help="push-models: simplified collision proxy per layer, e.g. terrain=0.5")
     ap.add_argument("--no-skybox", action="store_true")
     ap.add_argument("--no-padding", action="store_true", help="push-scene-3d: skip the padding apron / table heightmap step")

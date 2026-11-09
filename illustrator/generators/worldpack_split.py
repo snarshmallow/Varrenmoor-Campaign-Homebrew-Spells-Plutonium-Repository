@@ -309,7 +309,7 @@ def merge_export(pack_dir, preset="layer", out_dir=None, lods=(1, 2), compress="
         e = it[0]
         if preset == "individual" or it[3] == "roofs":      # roof tiles keep their own file whatever the preset: that is what the toggle hides
             k = e["file"][len("models/"):-4]
-        elif it[3] == "buildings" and it[1] in kept:        # per-building keep_individual flag (object_edit.py): own file whatever the preset
+        elif it[3] == "buildings" and (it[1] in kept or preset == "doors"):        # per-building keep_individual flag (object_edit.py), or preset "doors": own file whatever the preset (a door toggle then re-sends only that house to the vision worker)
             k = e["file"][len("models/"):-4] if e["file"].startswith("models/") else it[1]
             kept_keys.add(k)
         elif preset == "all":
@@ -451,7 +451,7 @@ def main(argv=None):
         if n == "reexport":
             s.add_argument("--id", required=True, help="entity id(s), comma separated")
         if n in ("merge", "publish"):
-            s.add_argument("--preset", choices=["all", "layer", "district", "individual"], default="layer")
+            s.add_argument("--preset", choices=["all", "layer", "district", "individual", "doors"], default="layer")
             s.add_argument("--compress", choices=["none", "quant", "meshopt", "meshopt-fallback"], default="none")
             s.add_argument("--no-hidden-removal", action="store_true")
             s.add_argument("--foliage", action="store_true", help="replace the per-tree foliage tiles with merged foliage chunks from world/<place>/foliage.json (foliage.py)")

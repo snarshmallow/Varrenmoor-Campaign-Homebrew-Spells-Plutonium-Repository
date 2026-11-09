@@ -106,7 +106,8 @@
         tileLayers: "Labels - Districts,Labels - Streets,Labels - Buildings", actorUuid: "", itemUuid: "", spec: "", image: "", at: "", itemName: "", itemDesc: "",
         models: { split: "", preset: "layer", layers: "", lod: 0, compress: "none", roofMode: "none", interiorStyle: "auto", splitPreset: "default", carve: true, conform: true, prune: false, roofsHidden: false, sceneMode: "",
           collision: { terrain: true, roads: true, plazas: true, fields: true, fences: true, walls: true, bridges: true, buildings: true, props: true, roofs: false, foliage: false, water: false },   // = foundry_collision.COLLISION_DEFAULT
-          wallLayers: { buildings: true, walls: true, fences: true, trees: true, water: true } }, sizeFt: 5, autoPush: false, filter: { actors: "", items: "" }, cache: { fetched: null, lists: {} }, last: null },
+          sight: { buildings: true, walls: true, foliage: true, terrain: false, roads: false, plazas: false, fields: false, fences: false, bridges: false, props: false, roofs: false, water: false },   // = foundry_collision.SIGHT_DEFAULT
+          alsoWalls: false }, sizeFt: 5, autoPush: false, filter: { actors: "", items: "" }, cache: { fetched: null, lists: {} }, last: null },
       roads: { smooth: 0.5, max_grade: 14, skirt: true, cutfill: false, cross_deg: 10, grade: true },   // ROAD GRADING (generators/road_grade.py), passed to worldpack_split.py split
       stale: { contours: false, shading: false, town: false },
       ui: { tab: "scale" }
@@ -718,6 +719,7 @@
     if (m.sceneMode === "flat" || m.sceneMode === "3d") a.push("--scene-mode", m.sceneMode);
     if (m.compress === "quant") a.push("--allow-quantized");
     var cs = VB.collisionSpec(m); if (cs) a.push("--collision", cs);
+    var ss = VB.sightSpec(m); if (ss) a.push("--sight", ss);
     a = a.concat((VB.extraArgs ? VB.extraArgs(st, "push-models") : []));   // TOOLS TAB: advanced push options
     if (o.dry) a.push("--dry-run");
     return a;
@@ -729,12 +731,18 @@
     if (VB.COLLISION_LAYERS.every(function (k) { return !!(m.collision || {})[k] === !!def[k]; })) return "";
     return on.length ? on.join(",") : "none";
   };
-  VB.WALL_LAYERS = ["buildings", "walls", "fences", "trees", "water"];
-  VB.wallLayers = function (m) { var w = m.wallLayers || {}, on = VB.WALL_LAYERS.filter(function (k) { return w[k]; }); return on.length ? on.join(",") : "none"; };
+  // Sight tile flag per layer (blocks token vision, light and sound polygons; foundry_collision.SIGHT_DEFAULT): "" = the tool default
+  VB.sightSpec = function (m) {
+    var s = m.sight || {}, def = VB.defaults().foundry.models.sight, on = VB.COLLISION_LAYERS.filter(function (k) { return s[k]; });
+    if (VB.COLLISION_LAYERS.every(function (k) { return !!s[k] === !!def[k]; })) return "";
+    return on.length ? on.join(",") : "none";
+  };
+  // Foundry wall documents are an opt-in fallback (clients with multithreading off, flat scenes): buildings + town walls when ticked, else none (removes the pipeline's walls)
+  VB.wallLayers = function (m) { return m.alsoWalls ? "buildings,walls" : "none"; };
   // set-collision / push-walls on the picked existing scene; apply = false gives the dry run (the commands write only with --apply)
   VB.jobSetCollision = function (st, apply) {
     var f = st.foundry; if (f.target !== "existing" || !f.sceneUuid) throw new Error("pick an existing scene (Refresh from Foundry first)");
-    var a = ["set-collision", "--scene-uuid", f.sceneUuid], cs = VB.collisionSpec(f.models); if (cs) a.push("--collision", cs); a = a.concat((VB.extraArgs ? VB.extraArgs(st, "set-collision") : [])); if (apply) a.push("--apply");
+    var a = ["set-collision", "--scene-uuid", f.sceneUuid], cs = VB.collisionSpec(f.models), ss = VB.sightSpec(f.models); if (cs) a.push("--collision", cs); if (ss) a.push("--sight", ss); a = a.concat((VB.extraArgs ? VB.extraArgs(st, "set-collision") : [])); if (apply) a.push("--apply");
     return { kind: "set_collision", label: "Set collision on scene tiles" + (apply ? "" : " (dry run)"), params: { apply: !!apply }, steps: [py(VB.FOUNDRY_PY || "illustrator/generators/foundry_push.py", a, "set collision")] };
   };
   VB.jobInstallDoorSync = function () {
@@ -748,7 +756,7 @@
   VB.jobPushWalls = function (st, apply) {
     var f = st.foundry; if (f.target !== "existing" || !f.sceneUuid) throw new Error("pick an existing scene (Refresh from Foundry first)");
     var a = ["push-walls", "--place", st.place, "--scene-uuid", f.sceneUuid, "--wall-layers", VB.wallLayers(f.models)].concat((VB.extraArgs ? VB.extraArgs(st, "push-walls") : [])); if (apply) a.push("--apply");
-    return { kind: "push_walls", label: "Push walls (block sight/sound/light)" + (apply ? "" : " (dry run)"), params: { apply: !!apply }, steps: [py(VB.FOUNDRY_PY || "illustrator/generators/foundry_push.py", a, "push walls")] };
+    return { kind: "push_walls", label: (st.foundry.models.alsoWalls ? "Push Foundry walls (fallback)" : "Remove Foundry walls") + (apply ? "" : " (dry run)"), params: { apply: !!apply }, steps: [py(VB.FOUNDRY_PY || "illustrator/generators/foundry_push.py", a, "push walls")] };
   };
   VB.jobWorldPush = function (st, d, o) {
     return { kind: "worldpack_push", label: "Push models", params: {}, steps: [py("illustrator/generators/foundry_push.py", VB.worldPushArgs(st, d, o), "push models")] };

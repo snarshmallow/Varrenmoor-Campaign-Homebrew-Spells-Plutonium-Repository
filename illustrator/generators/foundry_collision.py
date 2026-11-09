@@ -29,8 +29,13 @@ NONE, LIMITED, NORMAL = 0, 10, 20
 
 COLLISION_LAYERS = ("padding", "terrain", "water", "roads", "plazas", "fields", "fences", "walls", "bridges", "buildings", "roofs", "foliage", "props")
 COLLISION_DEFAULT = ("terrain", "roads", "plazas", "fields", "fences", "walls", "bridges", "buildings", "props")
+# `sight` tile flag = the mesh blocks token vision, fog exploration, AmbientLight and AmbientSound polygons (3D Canvas vision worker, see out/vision_walls_research.md).
+# Buildings (an open model door lets it through) and town walls block; tree/foliage chunks block at eye height (trunks, hedges) while tokens still walk through (collision off).
+# OFF: terrain/roads/plazas/fields/bridges/props/padding (ground), water, fences (open), roofs (the GM hides them, they sit above eye height, a hidden roof must not block).
+SIGHT_DEFAULT = ("buildings", "walls", "foliage")
 
 WALL_LAYERS = ("buildings", "walls", "fences", "trees", "water")
+WALL_DEFAULT = ("buildings", "walls")      # opt-in fallback (tile sight does the work in 3D scenes); fences/trees/water walls only when named with --wall-layers
 WALL_PROFILES = {
     "buildings": {"move": NORMAL, "sight": NORMAL, "light": NORMAL, "sound": NORMAL},
     "walls": {"move": NORMAL, "sight": NORMAL, "light": NORMAL, "sound": NORMAL},
@@ -47,9 +52,9 @@ DOOR_GAP_MIN_FT = 2.0
 
 
 # ------------------------------------------------------------------ collision
-def parse_collision(spec):
-    """None/''/'default' -> the default set. 'all' / 'none'. 'a,b,c' = exactly these layers. '+water,-terrain' (or 'default,+water') edits the default."""
-    on = set(COLLISION_DEFAULT)
+def parse_collision(spec, default=None):
+    """None/''/'default' -> the default set. 'all' / 'none'. 'a,b,c' = exactly these layers. '+water,-terrain' (or 'default,+water') edits the default (`default` = tuple to start from, collision's by default)."""
+    on = set(COLLISION_DEFAULT if default is None else default)
     if spec is None or str(spec).strip() in ("", "default"):
         return on
     toks = [t.strip() for t in str(spec).split(",") if t.strip()]
@@ -69,6 +74,11 @@ def parse_collision(spec):
             raise ValueError(f"unknown collision layer {name!r} (known: {', '.join(COLLISION_LAYERS)})")
         (on.discard if t[0] == "-" else on.add)(name)
     return on
+
+
+def parse_sight(spec):
+    """Same grammar as parse_collision, default SIGHT_DEFAULT."""
+    return parse_collision(spec, SIGHT_DEFAULT)
 
 
 def parse_lod(spec):
@@ -98,8 +108,9 @@ def tile_layer(tile):
     return l if l in COLLISION_LAYERS else None
 
 
-def collision_updates(scene, on, lod=None):
-    """[(tile uuid, name, layer, wanted, current)] for the pipeline tiles of a scene document that need a change; plus the skipped list."""
+def collision_updates(scene, on, lod=None, sight=None):
+    """[(tile uuid, name, layer, wanted collision, current collision, lod, wanted sight, current sight)] for the pipeline tiles of a scene document that need a change; plus the skipped list.
+    sight = set of layers whose tiles get sight true (None = leave the sight flag alone)."""
     ups, skipped, same = [], [], 0
     for t in scene.get("tiles", []):
         l = tile_layer(t)
@@ -109,15 +120,15 @@ def collision_updates(scene, on, lod=None):
         if l is None:
             skipped.append(pid)
             continue
-        want = l in on
-        cur = ((t.get("flags") or {}).get(L3D) or {}).get("collision")
-        lw = (lod or {}).get(l)
-        lc = ((t.get("flags") or {}).get(L3D) or {}).get("sightMeshComplexity")
-        if cur is want and (lw is None or lc == lw):
+        fl = (t.get("flags") or {}).get(L3D) or {}
+        want, cur = l in on, fl.get("collision")
+        lw, lc = (lod or {}).get(l), fl.get("sightMeshComplexity")
+        sw, sc_ = ((l in sight) if sight is not None else None), fl.get("sight")
+        if cur is want and (lw is None or lc == lw) and (sw is None or sc_ is sw):
             same += 1
             continue
         u = t.get("uuid") or f"{scene['uuid']}.Tile.{t.get('_id') or t.get('id')}"
-        ups.append((u, pid, l, want, cur, lw))
+        ups.append((u, pid, l, want, cur, lw, sw, sc_))
     return ups, skipped, same
 
 
@@ -387,20 +398,23 @@ def cmd_set_collision(br, a):
         raise fp.PushError("give --scene-uuid")
     try:
         on, lod = parse_collision(a.collision), parse_lod(a.collision_lod)
+        sight = None if a.sight == "keep" else parse_sight(a.sight)
     except ValueError as e:
         raise fp.PushError(str(e))
     sc = br.call("get", uuid=a.scene_uuid)
     sc.setdefault("uuid", a.scene_uuid)
-    ups, skipped, same = collision_updates(sc, on, lod)
-    fp.LOG(f"collision on for: {', '.join(sorted(on)) or 'nothing'}; {len(ups)} tile(s) to change, {same} already right, {len(skipped)} skipped (not a single-layer pipeline tile)")
-    res = {"ok": True, "applied": False, "layers_on": sorted(on), "changes": len(ups), "unchanged": same, "skipped": skipped,
-           "plan": [{"pipelineId": p, "layer": l, "collision": w, "was": c} for _, p, l, w, c, _ in ups]}
+    ups, skipped, same = collision_updates(sc, on, lod, sight)
+    fp.LOG(f"collision on for: {', '.join(sorted(on)) or 'nothing'}; sight on for: {', '.join(sorted(sight)) if sight is not None else '(unchanged)'}; {len(ups)} tile(s) to change, {same} already right, {len(skipped)} skipped (not a single-layer pipeline tile)")
+    res = {"ok": True, "applied": False, "layers_on": sorted(on), "sight_on": sorted(sight) if sight is not None else None, "changes": len(ups), "unchanged": same, "skipped": skipped,
+           "plan": [{"pipelineId": p, "layer": l, "collision": w, "was": c, "sight": sw, "sight_was": sc_} for _, p, l, w, c, _, sw, sc_ in ups]}
     if not a.apply or a.dry_run:
         res["note"] = "dry run: nothing written, repeat with --apply"
         return res
     fp.require_module(br)
-    for u, _, _, want, _, lw in ups:
+    for u, _, _, want, _, lw, sw, _s in ups:
         data = {f"flags.{L3D}.collision": want}
+        if sw is not None:
+            data[f"flags.{L3D}.sight"] = sw
         if lw is not None:
             data[f"flags.{L3D}.sightMeshComplexity"] = lw
         br.call("update", uuid=u, data=data)
@@ -412,7 +426,7 @@ def cmd_push_walls(br, a):
     fp = _bridge()
     if not a.scene_uuid:
         raise fp.PushError("give --scene-uuid")
-    layers = [x for x in (a.wall_layers or ",".join(WALL_LAYERS)).split(",") if x and x != "none"]
+    layers = [x for x in (a.wall_layers or ",".join(WALL_DEFAULT)).split(",") if x and x != "none"]
     bad = [x for x in layers if x not in WALL_LAYERS]
     if bad:
         raise fp.PushError(f"unknown wall layer(s) {bad} (known: {', '.join(WALL_LAYERS)}, none)")
@@ -506,8 +520,9 @@ def parser():
     ap.add_argument("--scene-uuid")
     ap.add_argument("--place")
     ap.add_argument("--collision", help="set-collision: layers with collision on: default | all | none | a,b,c | +water,-terrain")
+    ap.add_argument("--sight", default=None, help="set-collision: layers whose tiles block vision, light and sound: default (buildings,walls,foliage) | all | none | a,b | +water,-foliage | keep (leave the flag alone)")
     ap.add_argument("--collision-lod", dest="collision_lod", help="set-collision: simplified collision proxies, e.g. terrain=0.5 (3D Canvas sightMeshComplexity)")
-    ap.add_argument("--wall-layers", dest="wall_layers", help="push-walls: comma list of " + ",".join(WALL_LAYERS) + " (default all; 'none' removes every pipeline 3D wall)")
+    ap.add_argument("--wall-layers", dest="wall_layers", help="push-walls: comma list of " + ",".join(WALL_LAYERS) + " (default buildings,walls; 'none' removes every pipeline 3D wall)")
     ap.add_argument("--wall-profile", dest="wall_profile", action="append", default=[], help="push-walls: layer:key=val,... (values 0/10/20), e.g. water:sight=10")
     ap.add_argument("--foliage-json", dest="foliage_json", help="push-walls: foliage.json with the tree positions (default world/<place>/foliage.json, scatter/foliage.json or the pack entities)")
     ap.add_argument("--apply", action="store_true", help="really write (default is a dry run)")

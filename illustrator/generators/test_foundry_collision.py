@@ -105,8 +105,12 @@ class CollisionPolicy(unittest.TestCase):
         self.assertEqual({k: v["collision"] for k, v in items.items()}, {"terrain": True, "buildings": True, "roads": True, "foliage": False, "water": False, "roofs": False})
         self.assertEqual(items["terrain"]["sightMeshComplexity"], 0.5)
         self.assertNotIn("sightMeshComplexity", items["buildings"])
-        self.assertTrue(all(v["sight"] is False for v in items.values()))        # sight stays off: it feeds the vision worker
-        a.collision = "+water"
+        self.assertEqual({k: v["sight"] for k, v in items.items()}, {"terrain": False, "buildings": True, "roads": False, "foliage": True, "water": False, "roofs": False})   # sight: buildings, walls, foliage
+        a.sight = "none"
+        self.assertTrue(all(i["data"]["flags"]["levels-3d-preview"]["sight"] is False for i in fp.build_model_tiles(doc, c, a, None)))
+        a.sight = "+roofs"
+        self.assertTrue(next(i for i in fp.build_model_tiles(doc, c, a, None) if "roofs" in i["id"])["data"]["flags"]["levels-3d-preview"]["sight"])
+        a.sight, a.collision = None, "+water"
         self.assertTrue(next(i for i in fp.build_model_tiles(doc, c, a, None) if "water" in i["id"])["data"]["flags"]["levels-3d-preview"]["collision"])
 
 
@@ -116,18 +120,30 @@ class SetCollision(unittest.TestCase):
                         {"_id": "z", "flags": {}}])
 
     def test_dry_run_writes_nothing_then_apply_idempotent(self):
-        r, _ = run(self.br, "set-collision", "--scene-uuid", "Scene.S")
+        r, _ = run(self.br, "set-collision", "--scene-uuid", "Scene.S", "--sight", "keep")
         self.assertTrue(r["ok"] and not r["applied"])
         self.assertEqual(r["changes"], 3)                      # buildings on, terrain on, foliage off; roofs already right; mixed skipped; foreign tile ignored
         self.assertEqual(r["skipped"], ["model:t:e"])
         self.assertEqual(self.br.writes, [])
-        r, _ = run(self.br, "set-collision", "--scene-uuid", "Scene.S", "--apply")
+        r, _ = run(self.br, "set-collision", "--scene-uuid", "Scene.S", "--sight", "keep", "--apply")
         self.assertTrue(r["applied"])
         self.assertEqual(len(self.br.writes), 3)
         self.assertTrue(all(list(d)[0] == "flags.levels-3d-preview.collision" for _, d in self.br.writes))
-        r, _ = run(self.br, "set-collision", "--scene-uuid", "Scene.S", "--apply")
+        r, _ = run(self.br, "set-collision", "--scene-uuid", "Scene.S", "--sight", "keep", "--apply")
         self.assertEqual((r["changes"], r["unchanged"]), (0, 5 - 1))
         self.assertEqual(len(self.br.writes), 3)               # second run wrote nothing
+
+    def test_sight_defaults_written_and_idempotent(self):
+        r, _ = run(self.br, "set-collision", "--scene-uuid", "Scene.S", "--apply")
+        self.assertEqual(r["sight_on"], ["buildings", "foliage", "walls"])
+        got = {t["_id"]: t["flags"]["levels-3d-preview"]["sight"] for t in self.br.scene["tiles"] if t["_id"] in "abcd"}
+        self.assertEqual(got, {"a": True, "b": False, "c": True, "d": False})         # buildings, foliage on; terrain, roofs off
+        n = len(self.br.writes)
+        r, _ = run(self.br, "set-collision", "--scene-uuid", "Scene.S", "--apply")
+        self.assertEqual((r["changes"], len(self.br.writes)), (0, n))
+        r, _ = run(self.br, "set-collision", "--scene-uuid", "Scene.S", "--sight", "none", "--apply")
+        self.assertEqual(r["changes"], 2)
+        self.assertFalse(any(t["flags"]["levels-3d-preview"].get("sight") for t in self.br.scene["tiles"] if t["_id"] in "abcd"))
 
     def test_custom_layers_and_lod(self):
         r, _ = run(self.br, "set-collision", "--scene-uuid", "Scene.S", "--collision", "all", "--collision-lod", "terrain=0.4", "--apply")
@@ -203,14 +219,14 @@ class PushWalls(unittest.TestCase):
     def test_command_dry_run_apply_prune_idempotent(self):
         br = Fake()
         r, _ = run(br, "push-walls", "--scene-uuid", "Scene.S")
-        self.assertTrue(r["ok"] and not r["applied"] and r["walls"] == 16 and r["doors"] == 1)
+        self.assertTrue(r["ok"] and not r["applied"] and r["walls"] == 6 and r["doors"] == 1 and r["layers"] == ["buildings", "walls"])      # fallback default: buildings + town walls only, no trees/water/fences
         self.assertEqual(br.scene["walls"], [])
-        r, _ = run(br, "push-walls", "--scene-uuid", "Scene.S", "--apply")
+        r, _ = run(br, "push-walls", "--scene-uuid", "Scene.S", "--wall-layers", "buildings,walls,fences,trees,water", "--apply")
         self.assertEqual(r["wall_ops"]["created"], 16)
-        r, _ = run(br, "push-walls", "--scene-uuid", "Scene.S", "--apply")
+        r, _ = run(br, "push-walls", "--scene-uuid", "Scene.S", "--wall-layers", "buildings,walls,fences,trees,water", "--apply")
         self.assertEqual((r["wall_ops"]["created"], r["wall_ops"]["updated"], r["wall_ops"]["deleted"]), (0, 16, 0))
-        r, _ = run(br, "push-walls", "--scene-uuid", "Scene.S", "--wall-layers", "buildings", "--apply")
-        self.assertEqual((r["wall_ops"]["deleted"], len(br.scene["walls"])), (10, 6))       # unticked layers are pruned
+        r, _ = run(br, "push-walls", "--scene-uuid", "Scene.S", "--apply")
+        self.assertEqual((r["wall_ops"]["deleted"], len(br.scene["walls"])), (10, 6))       # layers not named are pruned
         # 2D push-scene walls (prefix wall:) are never touched
         br.scene["walls"].append({"_id": "w", "flags": {"varrenmoor": {"pipelineId": "wall:bld_x:0"}}})
         r, _ = run(br, "push-walls", "--scene-uuid", "Scene.S", "--wall-layers", "none", "--apply")

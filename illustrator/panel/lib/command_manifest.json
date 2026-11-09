@@ -554,6 +554,11 @@
      "controls": [
       "s:tools.push.yes"
      ]
+    },
+    "--sight": {
+     "controls": [
+      "s:foundry.models.sight.buildings"
+     ]
     }
    }
   },
@@ -625,12 +630,17 @@
     },
     "--wall-layers": {
      "controls": [
-      "s:foundry.models.wallLayers.buildings"
+      "s:foundry.models.alsoWalls"
      ]
     },
     "--wall-profile": {
      "controls": [
       "s:tools.walls.profile"
+     ]
+    },
+    "--sight": {
+     "controls": [
+      "s:foundry.models.sight.buildings"
      ]
     }
    }
