@@ -1110,6 +1110,80 @@
      "controls": [
       "act:obj_r_undo"
      ]
+    },
+    "building-info": {
+     "cli_only": "the Buildings tab reads the building json files directly for its list; building-info is the same data for scripts"
+    },
+    "delete-building": {
+     "controls": [
+      "act:be_del"
+     ]
+    },
+    "add-building": {
+     "controls": [
+      "act:be_add"
+     ]
+    },
+    "move-building": {
+     "controls": [
+      "act:be_move"
+     ]
+    },
+    "rotate-building": {
+     "controls": [
+      "act:be_rotate"
+     ]
+    },
+    "resize-building": {
+     "controls": [
+      "act:be_resize"
+     ]
+    },
+    "set-footprint": {
+     "cli_only": "the panel reshapes from Illustrator paths (apply-building-paths); typed footprints are for scripts"
+    },
+    "duplicate-building": {
+     "controls": [
+      "act:be_dup"
+     ]
+    },
+    "rename-building": {
+     "controls": [
+      "act:be_rename"
+     ]
+    },
+    "set-building-props": {
+     "controls": [
+      "act:be_props"
+     ]
+    },
+    "set-door": {
+     "controls": [
+      "act:be_door"
+     ]
+    },
+    "apply-building-paths": {
+     "controls": [
+      "act:be_read_all",
+      "act:be_add_sel",
+      "act:be_reshape_sel"
+     ]
+    },
+    "draw-buildings": {
+     "controls": [
+      "act:be_redraw_fp"
+     ]
+    },
+    "restore-buildings": {
+     "controls": [
+      "act:be_undo"
+     ]
+    },
+    "svg-absent": {
+     "controls": [
+      "act:be_del",
+      "s:bedit.map"
+     ]
     }
    },
    "flags": {
@@ -1118,19 +1192,75 @@
       "s:objects.nr.splitAt"
      ]
     },
+    "--center": {
+     "controls": [
+      "s:bedit.add.cx",
+      "s:bedit.add.cy"
+     ]
+    },
     "--clear": {
      "controls": [
       "act:obj_apply_b",
       "act:obj_apply_r"
      ]
     },
+    "--deg": {
+     "controls": [
+      "s:bedit.deg"
+     ]
+    },
+    "--depth": {
+     "controls": [
+      "s:bedit.add.depth",
+      "s:bedit.depth"
+     ]
+    },
+    "--description": {
+     "controls": [
+      "s:bedit.props.description"
+     ]
+    },
+    "--district": {
+     "controls": [
+      "s:bedit.props.district"
+     ]
+    },
+    "--door-width": {
+     "controls": [
+      "s:bedit.door.width"
+     ]
+    },
     "--dry": {
      "controls": [
-      "s:tools.objdry"
+      "s:tools.objdry",
+      "s:bedit.dry"
+     ]
+    },
+    "--dx": {
+     "controls": [
+      "s:bedit.dx",
+      "s:bedit.dupDx"
+     ]
+    },
+    "--dy": {
+     "controls": [
+      "s:bedit.dy",
+      "s:bedit.dupDy"
+     ]
+    },
+    "--edge": {
+     "controls": [
+      "s:bedit.door.edge"
      ]
     },
     "--file": {
      "cli_only": "the panel writes the converted Illustrator paths to out/panel/road_paths.json itself and passes this path"
+    },
+    "--floors": {
+     "controls": [
+      "s:bedit.add.floors",
+      "s:bedit.props.floors"
+     ]
     },
     "--id": {
      "cli_only": "the panel lets the generator derive the new road id from the name (str_<name>); a fixed id is only for scripted use"
@@ -1142,7 +1272,10 @@
       "act:obj_r_del",
       "act:obj_r_shape",
       "act:obj_r_split",
-      "act:obj_r_join"
+      "act:obj_r_join",
+      "act:be_del",
+      "act:be_move",
+      "act:be_props"
      ]
     },
     "--join-tol": {
@@ -1150,7 +1283,9 @@
     },
     "--kind": {
      "controls": [
-      "s:objects.nr.kind"
+      "s:objects.nr.kind",
+      "s:bedit.add.kind",
+      "s:bedit.props.kind"
      ]
     },
     "--mode": {
@@ -1162,11 +1297,29 @@
     },
     "--name": {
      "controls": [
-      "s:objects.nr.name"
+      "s:objects.nr.name",
+      "s:bedit.add.name",
+      "s:bedit.props.name",
+      "s:bedit.newName"
+     ]
+    },
+    "--new-id": {
+     "controls": [
+      "s:bedit.newId"
+     ]
+    },
+    "--notes": {
+     "controls": [
+      "s:bedit.props.notes"
      ]
     },
     "--out": {
      "cli_only": "the panel writes the centreline drawing to out/panel/road_centerlines.svg itself"
+    },
+    "--owner": {
+     "controls": [
+      "s:bedit.props.owner"
+     ]
     },
     "--place": {
      "controls": [
@@ -1178,6 +1331,21 @@
     },
     "--points-file": {
      "cli_only": "points come from the Illustrator selection (Add / Reshape buttons); a points file is for scripts"
+    },
+    "--pos": {
+     "controls": [
+      "s:bedit.door.pos"
+     ]
+    },
+    "--rotation": {
+     "controls": [
+      "s:bedit.add.rotation"
+     ]
+    },
+    "--scale": {
+     "controls": [
+      "s:bedit.scale"
+     ]
     },
     "--set": {
      "controls": [
@@ -1195,12 +1363,41 @@
       "s:objects.nr.smooth"
      ]
     },
+    "--status": {
+     "controls": [
+      "s:bedit.props.status"
+     ]
+    },
+    "--style": {
+     "cli_only": "new buildings get their style on the Building styles block of the same tab (Apply style / Auto)"
+    },
+    "--svg": {
+     "cli_only": "the panel passes the SVG it just rendered for the map refresh (out/panel/buildings_map.svg)"
+    },
+    "--tags": {
+     "controls": [
+      "s:bedit.props.tags"
+     ]
+    },
+    "--to": {
+     "controls": [
+      "s:bedit.toX",
+      "s:bedit.toY"
+     ]
+    },
     "--view-file": {
      "cli_only": "the panel writes the page to feet mapping (panelio view) to out/panel/road_view.json itself"
     },
     "--width": {
      "controls": [
-      "s:objects.nr.width"
+      "s:objects.nr.width",
+      "s:bedit.add.width",
+      "s:bedit.width"
+     ]
+    },
+    "--with-lot": {
+     "controls": [
+      "s:bedit.withLot"
      ]
     },
     "--world-root": {

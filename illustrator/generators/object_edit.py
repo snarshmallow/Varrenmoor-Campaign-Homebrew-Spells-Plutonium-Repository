@@ -16,6 +16,20 @@ Road geometry (logic in road_edit.py; every write first copies streets.json to w
   object_edit.py apply-paths    --place P --file paths.json --mode reshape|add|sync [--kind --width --name --simplify --smooth]   (Illustrator paths in feet)
   object_edit.py draw-roads     --place P --view-file view.json --out roads.svg     centrelines for the Illustrator layer "Road Centerlines"
   object_edit.py restore-streets --place P                undo the last road change (pops the newest backup)
+Building geometry and properties (logic in building_edit.py; every write first copies the touched files to world/<place>/buildings_backups/<stamp>/):
+  object_edit.py building-info      --place P            JSON: every building with name, kind, floors, district, size, centre, notes, tags; kinds; districts
+  object_edit.py delete-building    --place P --ids a,b [--dry]          (details.json doors/roofs/lots, label override, region id_map go too)
+  object_edit.py add-building       --place P [--name N] [--kind house] [--floors 1] (--center x,y --width W --depth D [--rotation DEG] | --points ...)
+                                    [--district ID] [--style S] [--notes T] [--id bld_x] [--dry]
+  object_edit.py move-building      --place P --ids a,b (--dx FT --dy FT | --to x,y) [--with-lot]     rotate-building --ids a --deg DEG [--with-lot]
+  object_edit.py resize-building    --place P --ids a (--width FT --depth FT | --scale K)           set-footprint --ids a (--points ... | --points-file F)
+  object_edit.py duplicate-building --place P --ids a [--dx 20 --dy 20]     rename-building --ids a [--new-id bld_new] [--name N]
+  object_edit.py set-building-props --place P --ids a,b [--name --kind --floors --district --notes --description --owner --tags a,b --status]
+  object_edit.py set-door           --place P --ids a --edge N [--pos 0.5] [--door-width FT]
+  object_edit.py apply-building-paths --place P --file paths.json --mode reshape|add|sync [--name --kind --floors]   (closed Illustrator paths in feet)
+  object_edit.py draw-buildings     --place P --view-file view.json --out f.svg    footprints for the Illustrator layer "Building Footprints"
+  object_edit.py restore-buildings  --place P            undo the last building change (one step per call)
+  object_edit.py svg-absent         --svg F --ids a,b    check a rendered map no longer contains these ids
 
 Where it writes (nothing else is touched, only the listed files):
   buildings/<id>.json   floors, style, interior_style (top level, as before) and an `edit` block {roof_type, roof_pitch, roof_overhang_ft, roof_material,
@@ -361,6 +375,135 @@ def road_cmd(a, ids):
     return out
 
 
+BUILDING_CMDS = ("delete-building", "add-building", "move-building", "rotate-building", "resize-building", "set-footprint", "duplicate-building",
+                 "rename-building", "set-building-props", "set-door", "apply-building-paths", "draw-buildings", "restore-buildings", "building-info", "svg-absent")
+PROP_FLAGS = ("name", "kind", "floors", "district", "notes", "description", "owner", "tags", "status")
+
+
+def _building_parsers(sub):
+    """Building geometry / property commands (logic in building_edit.py; every write backs the touched files up to world/<place>/buildings_backups/<stamp>/)."""
+    for n in ("delete-building", "add-building", "move-building", "rotate-building", "resize-building", "set-footprint", "duplicate-building",
+              "rename-building", "set-building-props", "set-door", "apply-building-paths", "draw-buildings", "restore-buildings", "building-info", "svg-absent"):
+        s = sub.add_parser(n)
+        if n != "svg-absent":
+            s.add_argument("--place", required=True)
+        if n not in ("building-info", "draw-buildings", "svg-absent"):
+            s.add_argument("--dry", action="store_true")
+        if n not in ("add-building", "apply-building-paths", "draw-buildings", "restore-buildings", "building-info"):
+            s.add_argument("--ids", required=True)
+        if n in ("add-building", "set-footprint"):
+            s.add_argument("--points", help="x,y;x,y;... footprint in feet")
+            s.add_argument("--points-file", help="json list of [x, y] (or {points: [...]})")
+        if n == "add-building":
+            s.add_argument("--center", help="x,y centre of a rectangle footprint (feet)")
+            s.add_argument("--width", type=float, help="rectangle width (ft, along the rotation)")
+            s.add_argument("--depth", type=float, help="rectangle depth (ft)")
+            s.add_argument("--rotation", type=float, default=0.0, help="rectangle rotation in degrees (clockwise on the map)")
+            s.add_argument("--style", help="building style preset id (building_styles)")
+            s.add_argument("--id", help="building id (default bld_<kind>_<next number>)")
+        if n in ("add-building", "set-building-props", "apply-building-paths"):
+            s.add_argument("--name")
+            s.add_argument("--kind")
+            s.add_argument("--floors")
+        if n in ("add-building", "set-building-props"):
+            s.add_argument("--district", help="district id; set-building-props: '' clears, auto = by containment")
+            s.add_argument("--notes")
+        if n == "set-building-props":
+            s.add_argument("--description")
+            s.add_argument("--owner")
+            s.add_argument("--tags", help="comma list ('' clears)")
+            s.add_argument("--status")
+        if n in ("move-building", "duplicate-building"):
+            s.add_argument("--dx", type=float, help="feet east (+x)")
+            s.add_argument("--dy", type=float, help="feet south (+y, map y is down)")
+        if n == "move-building":
+            s.add_argument("--to", help="x,y new centre (one building)")
+        if n in ("move-building", "rotate-building"):
+            s.add_argument("--with-lot", action="store_true", help="also move the lot and fences of details.json")
+        if n == "rotate-building":
+            s.add_argument("--deg", type=float, required=True, help="degrees about the footprint centre (clockwise on the map)")
+        if n == "resize-building":
+            s.add_argument("--width", type=float, help="new long side (ft)")
+            s.add_argument("--depth", type=float, help="new short side (ft)")
+            s.add_argument("--scale", type=float, help="scale factor 0.1..10 (both sides)")
+        if n == "rename-building":
+            s.add_argument("--new-id", help="new id bld_... (references updated)")
+            s.add_argument("--name")
+        if n == "set-door":
+            s.add_argument("--edge", type=int, required=True, help="footprint side index (0 = first point to second)")
+            s.add_argument("--pos", type=float, default=0.5, help="0..1 along the side")
+            s.add_argument("--door-width", type=float, help="ft (default 3.5, 6 for civic / inn / barn / stable / craft)")
+        if n == "apply-building-paths":
+            s.add_argument("--file", required=True, help="json {paths:[{name, points, closed}]} in feet")
+            s.add_argument("--mode", default="sync", choices=["reshape", "add", "sync"])
+        if n == "draw-buildings":
+            s.add_argument("--view-file", required=True, help="panelio.py view json")
+            s.add_argument("--out", required=True)
+        if n == "svg-absent":
+            s.add_argument("--svg", required=True, help="rendered SVG to check")
+
+
+def building_cmd(a, ids):
+    import building_edit as be
+    if a.cmd == "svg-absent":
+        return be.svg_absent(a.svg, ids)
+    wd = _wdir(a.place)
+    if not os.path.isdir(wd):
+        raise SystemExit(f"unknown place {a.place!r}")
+    one = lambda what: ids[0] if len(ids) == 1 else be.fail(f"{what} takes exactly one building id")
+    dry = getattr(a, "dry", False)
+    c = a.cmd
+    if c == "building-info":
+        out = {"buildings": be.info(wd), "kinds": sorted(set(be.KINDS) | {b.get("kind") for _p, b in be.load_all(wd).values() if b.get("kind")}),
+               "districts": be.district_ids(wd), "backups": len(be.list_backups(wd))}
+    elif c == "restore-buildings":
+        out = be.restore(wd, dry)
+    elif c == "delete-building":
+        out = be.op_delete(wd, ids, dry)
+    elif c == "add-building":
+        pts = _bpts(a, be)
+        ctr = be.parse_xy(a.center, "--center") if a.center else None
+        fp = be.footprint_from_args(ctr, a.width, a.depth, a.rotation, pts)
+        out = be.op_add(wd, a.name, a.kind or "house", fp, a.floors if a.floors is not None else 1, a.id, a.district, a.style, a.notes or "", dry)
+    elif c == "move-building":
+        out = be.op_move(wd, ids, a.dx, a.dy, be.parse_xy(a.to, "--to") if a.to else None, a.with_lot, dry)
+    elif c == "rotate-building":
+        out = be.op_rotate(wd, ids, a.deg, a.with_lot, dry)
+    elif c == "resize-building":
+        out = be.op_resize(wd, ids, a.width, a.depth, a.scale, dry)
+    elif c == "set-footprint":
+        pts = _bpts(a, be)
+        if pts is None:
+            be.fail("set-footprint needs --points or --points-file")
+        out = be.op_set_footprint(wd, one("set-footprint"), pts, dry)
+    elif c == "duplicate-building":
+        out = be.op_duplicate(wd, ids, 20.0 if a.dx is None else a.dx, 20.0 if a.dy is None else a.dy, dry)
+    elif c == "rename-building":
+        out = be.op_rename(wd, one("rename-building"), a.new_id, a.name, dry)
+    elif c == "set-building-props":
+        props = {k: getattr(a, k) for k in PROP_FLAGS if getattr(a, k) is not None}
+        out = be.op_set_props(wd, ids, props, dry)
+    elif c == "set-door":
+        out = be.op_set_door(wd, one("set-door"), a.edge, a.pos, a.door_width, dry)
+    elif c == "apply-building-paths":
+        d = _jload(a.file) if os.path.exists(a.file) else be.fail(f"paths file not found: {a.file}")
+        out = be.op_apply_paths(wd, d.get("paths") if isinstance(d, dict) else d, a.mode, a.name, a.kind or "house", a.floors or 1, dry)
+    else:
+        out = be.draw_svg(wd, _jload(a.view_file), a.out)
+    out["place"] = a.place
+    return out
+
+
+def _bpts(a, be):
+    if a.points and a.points_file:
+        be.fail("give --points or --points-file, not both")
+    if a.points:
+        return be.parse_points(a.points)
+    if a.points_file:
+        return be.read_points_file(a.points_file)
+    return None
+
+
 def _pts_arg(a):
     re_ = _re()
     if a.points and a.points_file:
@@ -387,6 +530,7 @@ def main(argv=None):
             s.add_argument("--set", action="append", default=[], metavar="KEY=VALUE")
             s.add_argument("--clear", action="append", default=[], metavar="KEY")
     sub.add_parser("restore-streets").add_argument("--place", required=True)
+    _building_parsers(sub)
     for n in ("delete-road", "add-road", "set-road-points", "split-road", "join-roads", "apply-paths", "draw-roads"):
         s = sub.add_parser(n)
         s.add_argument("--place", required=True)
@@ -433,6 +577,8 @@ def main(argv=None):
         out = reset_building(a.place, ids, a.dry)
     elif a.cmd == "reset-road":
         out = reset_road(a.place, ids, a.dry)
+    elif a.cmd in BUILDING_CMDS:
+        out = building_cmd(a, ids)
     else:
         out = road_cmd(a, ids)
     print(json.dumps(out, ensure_ascii=False))
