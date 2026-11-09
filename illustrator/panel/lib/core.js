@@ -297,7 +297,7 @@
   VB.viewFlags = function (st) {
     var sc = st.scale;
     return ["--view", st.settings.view || "town", "--preset", sc.preset, "--scale", String(sc.scale_ft_per_in), "--grid", String(sc.grid_ft),
-      "--grid-major", String(sc.grid_major_every), "--page", sc.page_w_in + "x" + sc.page_h_in].concat(sc.grid_full_page ? ["--grid-full-page"] : []);
+      "--grid-major", String(+sc.grid_major_every >= 1 ? Math.round(+sc.grid_major_every) : 5), "--page", sc.page_w_in + "x" + sc.page_h_in].concat(sc.grid_full_page ? ["--grid-full-page"] : []);
   };
   // panelio.py view takes --major instead of --grid-major
   VB.panelioViewFlags = function (st) {
