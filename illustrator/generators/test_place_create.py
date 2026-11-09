@@ -30,11 +30,13 @@ def test_schema_and_validation():
     assert on_disk == pc.SPEC_SCHEMA, "world/schema/place-spec.schema.json is stale: run place_create.py write-schema"
     e, w = pc.validate({"name": "Ok"})
     assert not e, e
-    e, _ = pc.validate({})
-    assert any("name" in x for x in e)
+    e, w = pc.validate({})
+    assert not e and any("name" in x for x in w), (e, w)            # an empty spec is allowed: a name is generated
     e, _ = pc.validate({"name": "x", "terrain": {"recipe": "volcano"}})
     assert e and "volcano" in e[0], e
     e, _ = pc.validate({"name": "x", "town": {"population": 5}})
+    assert not e, e                                                    # tiny settlements (0-19) are allowed now
+    e, _ = pc.validate({"name": "x", "town": {"population": -1}})
     assert e and "minimum" in e[0], e
     e, _ = pc.validate({"name": "x", "bogus": 1})
     assert e and "unknown field" in e[0], e

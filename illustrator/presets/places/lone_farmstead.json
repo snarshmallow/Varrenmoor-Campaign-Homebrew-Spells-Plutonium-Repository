@@ -1,0 +1,17 @@
+{
+ "_note": "Lone farmstead: 4 people, farmhouse, barn, shed, well, a yard and fenced fields on a track (about 600 x 450 ft). Seconds to generate.",
+ "name": "Ashby Farm",
+ "id": "lone_farmstead",
+ "culture": "english",
+ "seed": 411,
+ "terrain": {
+  "recipe": "rolling",
+  "rivers": 0
+ },
+ "town": {
+  "population": 4,
+  "settlement": "farmstead"
+ },
+ "climate": "temperate",
+ "season": "summer"
+}

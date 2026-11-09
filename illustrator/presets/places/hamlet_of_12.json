@@ -1,0 +1,17 @@
+{
+ "_note": "Hamlet of 12: three houses, a barn and a well round a small green on a lane, fenced fields (about 800 x 600 ft).",
+ "name": "Thornbeck",
+ "id": "hamlet_of_12",
+ "culture": "english",
+ "seed": 1212,
+ "terrain": {
+  "recipe": "rolling",
+  "rivers": 0
+ },
+ "town": {
+  "population": 12,
+  "settlement": "hamlet"
+ },
+ "climate": "temperate",
+ "season": "summer"
+}

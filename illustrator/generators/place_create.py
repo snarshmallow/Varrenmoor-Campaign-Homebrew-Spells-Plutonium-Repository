@@ -348,7 +348,7 @@ def normalise(spec, strict=True):
         if "size_ft" not in s:
             s["size_ft"] = town_tiny.default_size(pop, tw.get("settlement", "auto"))
         est = {"none": 0, "cabin": 2, "lodge": 3, "farmstead": 3 + (pop >= 3) + (pop >= 5), "inn": 4}.get(kind, min(6, max(2, round(pop / 5.0)) + (1 if pop < 12 else 2)) + 1)
-        s["_derived"] = {"category": category(pop), "settlement": kind, "target_area_ft2": area, "est_buildings": est}
+        s["_derived"] = {"category": kind if pop > 0 else category(pop), "settlement": kind, "target_area_ft2": area, "est_buildings": est}
         return s, warns
     area = max(pop * 1000.0, 60000.0)
     if "size_ft" not in s:

@@ -5,6 +5,10 @@ recognise is ignored (and listed in the notes it returns). For anything subtle (
 the spec JSON from `place_create.py prompt-help` instead.
 
 Vocabulary (case-insensitive, whole words):
+  tiny         (fewer than 20 people; town_tiny.py) "lone farmstead / a farmstead / single farm / homestead" -> 4 people farmstead; "homesteads / farmsteads /
+               hamlet cluster" -> 12 hamlet; "a single house / lone house / lone cottage" -> 3 cabin; "lone cabin / cabin / hut / woodcutter" -> 2 cabin;
+               "hunter's lodge / hunting lodge / lodge" -> 4 lodge; "roadside inn / wayside inn / coaching inn / an inn" -> 8 inn; "no town / no settlement /
+               uninhabited / wilderness / empty land" -> 0 (terrain only). A number ("hamlet of 12", "5 people", "a family of five") wins over these defaults.
   population   "800 people / souls / inhabitants / residents / folk", "population 800", "of 800", or a size word: hamlet 90, village 300, small town 450,
                town 900, large town 1800, big town 1800, city 4500, "tiny" x0.5, "small" x0.7, "big|large" x1.6, "huge" x2.2 (applied to the base word)
   layout       walled|fortified|fortress -> walled; grid|gridded|planned|chessboard -> grid; radial|circular|concentric|round|market town|market square|crossroads|spokes
@@ -37,7 +41,15 @@ TERR = [("island", r"island|isle"), ("fjord", r"fjord|fjordland"), ("pass", r"mo
         ("rolling", r"rolling|farmland|farming|pasture"), ("flat", r"\bflat\b|plain|marsh|\bfen\b|lowland|polder")]
 SIZE_WORDS = [(r"large town|big town", 1800), (r"small town", 450), (r"\bcity\b|metropolis", 4500), (r"\bmarket town\b|market-town|\bborough\b", 1000), (r"\btown\b", 900),
               (r"\bvillage\b", 300), (r"\bhamlet\b", 90)]
-NUM_WORDS = {"twenty": 20, "thirty": 30, "forty": 40, "fifty": 50, "sixty": 60, "seventy": 70, "eighty": 80, "ninety": 90, "one hundred": 100, "a hundred": 100, "two hundred": 200,
+TINY = [(r"no town|no settlement|no buildings|uninhabited|wilderness|empty land|untouched", 0, None),
+        (r"roadside inn|wayside inn|coaching inn|road ?house|\ban inn\b|\binn\b|tavern", 8, "inn"),
+        (r"hunter'?s lodge|hunting lodge|\blodge\b", 4, "lodge"),
+        (r"homesteads|farmsteads|hamlet cluster|cluster of (?:farms|houses)|few farms", 12, "hamlet"),
+        (r"lone farmstead|\bfarmstead\b|single farm|lone farm|\ba farm\b|homestead|\bcroft\b", 4, "farmstead"),
+        (r"single house|lone house|lone cottage|single cottage|\ba house\b|\bcottage\b", 3, "cabin"),
+        (r"lone cabin|\bcabin\b|\bhut\b|woodcutter|hermit", 2, "cabin")]
+NUM_WORDS = {"one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6, "seven": 7, "eight": 8, "nine": 9, "ten": 10, "eleven": 11, "twelve": 12, "thirteen": 13,
+             "fourteen": 14, "fifteen": 15, "sixteen": 16, "seventeen": 17, "eighteen": 18, "nineteen": 19, "twenty": 20, "thirty": 30, "forty": 40, "fifty": 50, "sixty": 60, "seventy": 70, "eighty": 80, "ninety": 90, "one hundred": 100, "a hundred": 100, "two hundred": 200,
              "three hundred": 300, "four hundred": 400, "five hundred": 500, "six hundred": 600, "seven hundred": 700, "eight hundred": 800, "nine hundred": 900, "a thousand": 1000,
              "one thousand": 1000, "two thousand": 2000, "three thousand": 3000, "four thousand": 4000, "five thousand": 5000}
 
@@ -109,15 +121,26 @@ def parse(text):
         spec["terrain"]["lakes"] = 2
     elif has(r"\blake\b|\bmere\b|\bpond\b|\bloch\b|\btarn\b"):
         spec["terrain"]["lakes"] = 1
+    # tiny settlements (checked before the size words: "a farmstead" is not a hamlet)
+    tiny = None
+    town_word = re.search(r"(?<!no )(?<!not a )\b(?:towns?|village|city|borough|metropolis)\b", t)      # "a town with an inn" is a town, not a roadside inn
+    for pat, tp, tk in ([] if town_word else TINY):
+        if has(pat):
+            tiny = (tp, tk)
+            break
     # population
     pop = None
+    mf = re.search(r"family of (\d+|" + "|".join(k for k in NUM_WORDS if " " not in k) + r")\b", t)
+    if mf:
+        pop = int(mf.group(1)) if mf.group(1).isdigit() else NUM_WORDS[mf.group(1)]
+        used.append(mf.group(0))
     m = re.search(r"(\d[\d,\.]*)\s*(?:people|souls|inhabitants|residents|folk|citizens|villagers|townsfolk|population)", t)
     m2 = re.search(r"population(?: of)?\s*(\d[\d,\.]*)", t)
     m3 = re.search(r"\bof\s+(\d[\d,]*)\b", t)
     mk = re.search(r"(\d+(?:\.\d+)?)\s*k\b", t)                                                                  # "1.2k people"
     mw = re.search(r"\b(" + "|".join(sorted(NUM_WORDS, key=len, reverse=True)) + r")\s+(?:people|souls|inhabitants|residents|folk|citizens|villagers|townsfolk)", t)
     for mm in (m, m2, mw, mk, m3):
-        if mm:
+        if mm and pop is None:
             if mm is mk:
                 pop = int(float(mm.group(1)) * 1000)
             elif mm is mw:
@@ -126,6 +149,9 @@ def parse(text):
                 pop = int(float(mm.group(1).replace(",", "")))
             used.append(mm.group(0).strip())
             break
+    if pop is None and tiny is not None:
+        pop = tiny[0]
+        notes.append(f"tiny settlement: {tiny[1] or 'none (terrain only)'}, {pop} people (default for the wording)")
     if pop is None:
         for pat, base in SIZE_WORDS:
             if has(pat):
@@ -143,9 +169,13 @@ def parse(text):
         else:
             pop = 600
             notes.append("population: 600 (default, no number or size word found)")
-    pop = max(20, min(pop, 12000))
+    pop = max(0, min(pop, 12000))
     spec["town"]["population"] = pop
     notes.append(f"population: {pop}")
+    if 0 < pop < 20:
+        spec["town"]["settlement"] = tiny[1] if tiny and tiny[1] else "auto"
+    if pop < 20:
+        notes.append("fewer than 20 people: " + ("no settlement, terrain only" if pop == 0 else f"tiny settlement ({spec['town']['settlement']}); layout, wall and centre feature are not used"))
     # layout
     lay = "organic"
     for l, pat in (("walled", r"walled|fortified|fortress town|palisade|stockade"), ("grid", r"\bgrid|gridded|planned|chessboard|bastide"),
@@ -155,12 +185,15 @@ def parse(text):
         if has(pat):
             lay = l
             break
-    spec["town"]["layout"] = lay
-    notes.append(f"layout: {lay}")
-    if lay == "walled":
-        spec["town"]["wall"] = True
+    if pop >= 20:
+        spec["town"]["layout"] = lay
+        notes.append(f"layout: {lay}")
+        if lay == "walled":
+            spec["town"]["wall"] = True
     # features
-    if has(r"church|temple|cathedral|minster|abbey|chapel|monaster"):
+    if pop < 20:
+        pass
+    elif has(r"church|temple|cathedral|minster|abbey|chapel|monaster"):
         spec["town"]["central_feature"] = "temple"
     elif has(r"castle|\bkeep\b|citadel|\bfort\b|fortress"):
         spec["town"]["central_feature"] = "castle"

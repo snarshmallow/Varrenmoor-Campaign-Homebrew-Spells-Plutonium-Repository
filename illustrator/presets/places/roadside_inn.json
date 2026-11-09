@@ -1,0 +1,17 @@
+{
+ "_note": "Roadside inn: 8 people, an inn, stables, shed and well round an inn yard beside a through road, one paddock (about 600 x 450 ft).",
+ "name": "The Wayfarer's Rest",
+ "id": "roadside_inn",
+ "culture": "fantasy_generic",
+ "seed": 2024,
+ "terrain": {
+  "recipe": "flat",
+  "rivers": 0
+ },
+ "town": {
+  "population": 8,
+  "settlement": "inn"
+ },
+ "climate": "temperate",
+ "season": "summer"
+}

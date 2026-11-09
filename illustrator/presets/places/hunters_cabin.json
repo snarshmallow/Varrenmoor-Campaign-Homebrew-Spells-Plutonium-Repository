@@ -1,0 +1,18 @@
+{
+ "_note": "Hunter's cabin: 2 people, a log cabin and a woodshed on a footpath in the hills, no fields (about 400 x 300 ft).",
+ "name": "Elkwater Cabin",
+ "id": "hunters_cabin",
+ "culture": "scandinavian",
+ "seed": 77,
+ "terrain": {
+  "recipe": "hills",
+  "relief_ft": 60,
+  "rivers": 0
+ },
+ "town": {
+  "population": 2,
+  "settlement": "cabin"
+ },
+ "climate": "cold",
+ "season": "autumn"
+}
