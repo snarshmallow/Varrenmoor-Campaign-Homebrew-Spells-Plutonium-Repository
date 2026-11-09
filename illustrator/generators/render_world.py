@@ -81,6 +81,9 @@ def load_place(name, model_dir=None):
     """model_dir: read place/districts/streets/buildings from this folder instead of world/<place> (panel town candidate).
     Water always comes from worldio.water_path (world file, or the panel's working water file when enabled)."""
     root = model_dir or os.path.join(REPO, "world", name)
+    _wr = os.environ.get("VB_WORLD_ROOT")                     # tests / object_edit --world-root: a temp copy of the place (used when it holds place.json)
+    if not model_dir and _wr and os.path.exists(os.path.join(_wr, name, "place.json")):
+        root = os.path.join(_wr, name)
     rd = lambda f: json.load(open(os.path.join(root, f), encoding="utf-8"))
     m = {"place": rd("place.json"), "districts": rd("districts.json")["districts"],
          "streets": rd("streets.json")["streets"],

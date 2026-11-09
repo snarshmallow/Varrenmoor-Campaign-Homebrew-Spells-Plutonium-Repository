@@ -5,6 +5,10 @@ apply-paths, draw-roads, restore-streets). Nothing here edits terrain or buildin
 
 Rules
   * Every writing call first copies streets.json to world/<place>/streets_backups/streets_<stamp>.json (newest 30 kept); restore-streets pops the newest.
+  * Deleting a road (delete-road, or join-roads dropping the second road) also removes what other place files hold for it: region kerbs (details.json),
+    off-map markers (markers.json) and pinned label positions (label_overrides.json). Those files are backed up in streets_<stamp>.side/ with the same
+    backup and restore-streets puts them back together with streets.json. Per-road caches (elevations_ft ...) and `edit` blocks live inside the street and go with it.
+    world/<place>/export (the 3D pack, roads.json) is only rebuilt by Export world pack.
   * Bridges (kind "bridge") are never edited, deleted, split or joined here (Bridges tab). A road that bridges.json names cannot be deleted.
   * Any validation failure raises RoadError before a single byte is written.
   * Changing a road's points drops its cached per-vertex heights (elevations_ft, elevation_ft, grade_max, grade_raw_max, cut_fill_ft): the exporter then samples the
@@ -70,21 +74,36 @@ def backups(wdir):
     return sorted(f for f in os.listdir(d) if f.startswith("streets_") and f.endswith(".json")) if os.path.isdir(d) else []
 
 
-def backup(wdir):
-    """Copy streets.json to the backup stack. Returns the backup file name."""
+def side_dir(wdir, name):
+    """Folder next to a streets backup holding the other place files that the same change rewrote (SIDE_FILES); restored together by restore()."""
+    return os.path.join(backup_dir(wdir), name[:-5] + ".side")
+
+
+def backup(wdir, side=()):
+    """Copy streets.json (and each existing file named in `side`) to the backup stack. Returns the backup file name."""
     d = backup_dir(wdir)
     os.makedirs(d, exist_ok=True)
     name = "streets_" + datetime.datetime.now().strftime("%Y%m%d_%H%M%S_%f") + ".json"
     shutil.copyfile(streets_path(wdir), os.path.join(d, name))
+    side = [f for f in side if os.path.exists(os.path.join(wdir, f))]
+    if side:
+        sd = side_dir(wdir, name)
+        os.makedirs(sd, exist_ok=True)
+        for f in side:
+            shutil.copyfile(os.path.join(wdir, f), os.path.join(sd, f))
     for old in backups(wdir)[:-KEEP_BACKUPS]:
         os.remove(os.path.join(d, old))
+        shutil.rmtree(side_dir(wdir, old), ignore_errors=True)
     return name
 
 
-def save(wdir, doc):
-    """Backup then write. Call only after every check passed."""
-    name = backup(wdir)
+def save(wdir, doc, extra=None):
+    """Backup then write. Call only after every check passed. extra = {file name in wdir: new json doc} written in the same step (backed up with it)."""
+    extra = extra or {}
+    name = backup(wdir, sorted(extra))
     _jsave(streets_path(wdir), doc)
+    for f, d in sorted(extra.items()):
+        _jsave(os.path.join(wdir, f), d)
     return name
 
 
@@ -95,12 +114,56 @@ def restore(wdir, dry=False):
     name = bl[-1]
     src = os.path.join(backup_dir(wdir), name)
     _jload(src)                                   # refuse a damaged backup before touching streets.json
+    sd = side_dir(wdir, name)
+    side = sorted(os.listdir(sd)) if os.path.isdir(sd) else []
+    for f in side:
+        _jload(os.path.join(sd, f))
     if not dry:
         tmp = streets_path(wdir) + ".tmp"
         shutil.copyfile(src, tmp)
         os.replace(tmp, streets_path(wdir))
+        for f in side:                            # details / markers / label overrides rewritten by the same change
+            tmp = os.path.join(wdir, f) + ".tmp"
+            shutil.copyfile(os.path.join(sd, f), tmp)
+            os.replace(tmp, os.path.join(wdir, f))
         os.remove(src)
-    return {"restored": name, "remaining": len(bl) - (0 if dry else 1), "dry": dry}
+        shutil.rmtree(sd, ignore_errors=True)
+    return {"restored": name, "restored_files": ["streets.json"] + side, "remaining": len(bl) - (0 if dry else 1), "dry": dry}
+
+
+# ------------------------------------------------------------------ other files that name a road
+SIDE_FILES = ("details.json", "markers.json", "label_overrides.json")
+
+
+def references(wdir, gone):
+    """Entries in the other place files that belong to the roads in `gone` (deleted): region kerbs (details.json kerbs[].street), off-map markers
+    (markers.json markers[].street / parent_street) and pinned label positions (label_overrides.json labels{<id>}). -> ({file: cleaned doc}, {file: n removed})"""
+    gone = set(gone)
+    out, counts = {}, {}
+    for f in SIDE_FILES:
+        p = os.path.join(wdir, f)
+        if not os.path.exists(p):
+            continue
+        try:
+            doc = _jload(p)
+        except (OSError, ValueError):
+            continue
+        n = 0
+        if f == "label_overrides.json":
+            labels = doc.get("labels") if isinstance(doc, dict) else None
+            if isinstance(labels, dict):
+                for k in [k for k in labels if k in gone]:
+                    del labels[k]
+                    n += 1
+        elif isinstance(doc, dict):
+            for k, v in doc.items():
+                if isinstance(v, list):
+                    keep = [x for x in v if not (isinstance(x, dict) and (x.get("street") in gone or x.get("parent_street") in gone))]
+                    n += len(v) - len(keep)
+                    doc[k] = keep
+        if n:
+            out[f], counts[f] = doc, n
+    return out, counts
 
 
 # ------------------------------------------------------------------ points
@@ -313,8 +376,9 @@ def op_delete(wdir, ids, dry=False):
             fail(f"{s['id']} is named in bridges.json; remove that bridge first (Bridges tab)")
     gone = {s["id"] for s in streets}
     doc["streets"] = [s for s in doc["streets"] if s["id"] not in gone]
-    bk = None if dry else save(wdir, doc)
-    return {"deleted": sorted(gone), "count": len(gone), "remaining": len(doc["streets"]), "backup": bk, "dry": dry}
+    extra, refs = references(wdir, gone)
+    bk = None if dry else save(wdir, doc, extra)
+    return {"deleted": sorted(gone), "count": len(gone), "remaining": len(doc["streets"]), "references_removed": refs, "backup": bk, "dry": dry}
 
 
 def op_add(wdir, name, kind, width, pts, wanted_id=None, simplify_ft=0.0, smooth_n=0, dry=False):
@@ -388,8 +452,9 @@ def op_join(wdir, a_id, b_id, tol=25.0, dry=False):
     a["geometry"]["points"] = clean_points(pts, bounds_of(wdir), a_id)
     drop_stale(a)
     doc["streets"] = [s for s in doc["streets"] if s["id"] != b_id]
-    bk = None if dry else save(wdir, doc)
-    return {"changed": [a_id], "deleted": [b_id], "count": 1, "gap_ft": round(d, 1), "backup": bk, "dry": dry}
+    extra, refs = references(wdir, [b_id])
+    bk = None if dry else save(wdir, doc, extra)
+    return {"changed": [a_id], "deleted": [b_id], "count": 1, "gap_ft": round(d, 1), "references_removed": refs, "backup": bk, "dry": dry}
 
 
 def road_id_from_name(name, ids):

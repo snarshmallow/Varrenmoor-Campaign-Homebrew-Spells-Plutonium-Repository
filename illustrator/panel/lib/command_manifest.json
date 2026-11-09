@@ -1102,7 +1102,8 @@
     },
     "draw-roads": {
      "controls": [
-      "act:obj_r_redraw"
+      "act:obj_r_redraw",
+      "act:obj_r_map"
      ]
     },
     "restore-streets": {

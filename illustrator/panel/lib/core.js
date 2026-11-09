@@ -673,6 +673,7 @@
     opts = opts || {}; var f = st.town.fills, out = d.panel + "/fills", style = f.style || "full_map";
     var args = ["--place", st.place].concat(VB.viewFlags(st), ["--out-dir", out, "--style", style, "--dpi", String(f.dpi || 200)], VB.srcFlags(st));
     if (opts.modelDir) args.push("--model-dir", opts.modelDir);
+    if (opts.only) args.push("--only", opts.only.join(","));   // e.g. ["streets"] (Roads tab map refresh); only meant with flat copies off (they are cleared per layer)
     return [
       py(GEN + "panelio.py", ["view", "--place", st.place].concat(VB.panelioViewFlags(st)), "page <-> feet mapping", { json: "view" }),
       py(GEN + "fills_raster.py", args, "fills_raster (" + style + ")"),

@@ -34,8 +34,14 @@
     '<h4>Road shape: add, reshape, delete <span class="tag" id="objGTag"></span></h4>' +
     '<p class="note">Roads are edited as centrelines. <b>Redraw roads</b> puts one open path per road (named by its id, e.g. str_oak_ring) on the Illustrator layer <code>Road Centerlines</code>; move its anchors or draw a new open path there ' +
     '(any name), then press a button below. Every change keeps a backup: <b>Undo last road change</b> restores it. Bridges are not touched here (Bridges tab). Redraw replaces the layer, so read your edits first. ' +
-    'After changes: Foundry tab, Export world pack (3D); the town drawing (Roads layer outlines) updates with Generate town / redraw.</p>' +
-    '<div class="btns"><button data-act="obj_r_redraw" title="Draw every road centreline from streets.json onto the layer Road Centerlines (replaces that layer)">Redraw roads in Illustrator</button>' +
+    'With <b>Update the map layers too</b> ticked (default) every change below, Undo and Redraw roads also redraw the map from <code>streets.json</code>: the layers Roads, Blocks, Road Centerlines, ' +
+    'the labels (street names), the road fills and, on a region place, kerbs and off-map arrows (Details, Bounds), so a deleted road disappears from the drawing. Contours are not redrawn (marked stale: Contours tab). ' +
+    'After changes: Foundry tab, Export world pack (3D).</p>' +
+    '<div class="btns"><label class="chk" title="After a road change: render_world, then replace Roads, Blocks, Road Centerlines (+ the options on the right). Off = only streets.json changes and the drawing keeps the old roads until you press Redraw roads on the map"><input type="checkbox" data-nr="map" data-s="objects.nr.map"> Update the map layers too (Roads, Blocks, fills, street labels)</label>' +
+    '<label class="chk" title="Replace the label layers too (street names come from the same declutter pass as the other labels). Contour height labels are kept"><input type="checkbox" data-nr="mapLabels" data-s="objects.nr.mapLabels"> labels</label>' +
+    '<label class="chk" title="Redraw the road fills (textured map: the streets raster, or every fill when flat swatch copies are on; flat colours otherwise). Slowest part on a big place"><input type="checkbox" data-nr="mapFills" data-s="objects.nr.mapFills"> fills</label>' +
+    '<button data-act="obj_r_map" title="Redraw the road layers of the map from streets.json now, without changing any road (Roads, Blocks, Road Centerlines, labels, fills)">Redraw roads on the map</button></div>' +
+    '<div class="btns"><button data-act="obj_r_redraw" title="Draw every road centreline from streets.json onto the layer Road Centerlines (replaces that layer) and, with Update the map layers too ticked, redraw Roads, Blocks, labels and fills as well">Redraw roads in Illustrator</button>' +
     '<button class="primary" data-act="obj_r_readall" title="Read the selected open paths (or, with nothing selected, every open path on Road Centerlines): paths named like a road reshape it, others are added as new roads">Read roads from Illustrator</button>' +
     '<button data-act="obj_r_undo" title="Restore streets.json from the newest backup (one step per press)">Undo last road change</button></div>' +
     '<div class="btns"><label>New road name <input type="text" data-nr="name" data-s="objects.nr.name" placeholder="empty = the path name" title="Name of a road added from the selection (several paths get 1, 2 ...)"></label></div>' +
@@ -159,18 +165,19 @@
     obj_apply_b: function () { return go(function () { return VB.jobObjectsEditBuildings(ctx.state()); }); },
     obj_reset_b: function () { return go(function () { return VB.jobObjectsReset(ctx.state(), "building"); }); },
     obj_load_b: function () { load("b"); },
-    obj_apply_r: function () { return go(function () { return VB.jobObjectsEditRoads(ctx.state()); }); },
+    obj_apply_r: function () { return go(function () { return VB.jobObjectsEditRoads(ctx.state(), ctx.dirs()); }); },
     obj_reset_r: function () { return go(function () { return VB.jobObjectsReset(ctx.state(), "road"); }); },
     obj_load_r: function () { load("r"); },
-    obj_r_del: function () { return go(function () { return VB.jobRoadsDelete(ctx.state()); }); },
-    obj_r_undo: function () { return go(function () { return VB.jobRoadsUndo(ctx.state()); }); },
+    obj_r_del: function () { return go(function () { return VB.jobRoadsDelete(ctx.state(), ctx.dirs()); }); },
+    obj_r_undo: function () { return go(function () { return VB.jobRoadsUndo(ctx.state(), ctx.dirs()); }); },
     obj_r_redraw: function () { return go(function () { return VB.jobRoadsRedraw(ctx.state(), ctx.dirs()); }); },
+    obj_r_map: function () { return go(function () { return VB.jobRoadsMap(ctx.state(), ctx.dirs()); }); },
     obj_r_add: function () { return go(function () { return VB.jobRoadsFromPaths(ctx.state(), ctx.dirs(), "add"); }); },
     obj_r_reshape: function () { return go(function () { return VB.jobRoadsFromPaths(ctx.state(), ctx.dirs(), "reshape"); }); },
     obj_r_readall: function () { return go(function () { return VB.jobRoadsFromPaths(ctx.state(), ctx.dirs(), "sync"); }); },
-    obj_r_shape: function () { return go(function () { return VB.jobRoadsShape(ctx.state()); }); },
-    obj_r_split: function () { return go(function () { return VB.jobRoadsSplit(ctx.state()); }); },
-    obj_r_join: function () { return go(function () { return VB.jobRoadsJoin(ctx.state()); }); },
+    obj_r_shape: function () { return go(function () { return VB.jobRoadsShape(ctx.state(), ctx.dirs()); }); },
+    obj_r_split: function () { return go(function () { return VB.jobRoadsSplit(ctx.state(), ctx.dirs()); }); },
+    obj_r_join: function () { return go(function () { return VB.jobRoadsJoin(ctx.state(), ctx.dirs()); }); },
     obj_r_sel: function () { return go(function () { return VB.jobRoadsFromSelection(ctx.state(), roads().filter(function (r) { return !r.bridge; }).map(function (r) { return r.id; })); }); },
     obj_r_all: function () { O().rids = roads().filter(function (r) { return !r.bridge; }).map(function (r) { return r.id; }); O().rids_src = "all ticked"; ctx.save(); paint(); },
     obj_r_none: function () { O().rids = []; O().rids_src = ""; ctx.save(); paint(); }

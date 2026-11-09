@@ -40,7 +40,9 @@
     var b = { floors: F(1), interior_style: F(""), roof_type: F("gable"), roof_pitch: F(0.6), roof_overhang_ft: F(1), roof_material: F(""), wall_material: F(""), no_windows: F("true"), keep_individual: F("true") };
     var r = { "class": F("lane"), width_ft: F(16), surface: F(""), kerb: F("true"), "grade.smooth": F(0.5), "grade.max_grade_deg": F(14), "grade.cross_deg": F(10), "grade.cutfill": F("true"), "lamps.on": F("true"), "lamps.style": F(""), "lamps.spacing_ft": F(60) };
     // nr: Roads tab geometry block (Add / Reshape / Redraw): name, class and width for NEW roads, simplify tolerance and smoothing for reshape, split vertex
-    return { b: b, r: r, rids: [], rids_src: "", rfilter: "", last: null, nr: { name: "", kind: "lane", width: 14, simplify: 1, smooth: 0, splitAt: 1, confirmDelete: false } };
+    // map / mapLabels / mapFills: Road shape block 'Update the map layers too' (after every road change, and on Redraw roads in Illustrator)
+    return { b: b, r: r, rids: [], rids_src: "", rfilter: "", last: null, nr: { name: "", kind: "lane", width: 14, simplify: 1, smooth: 0, splitAt: 1, confirmDelete: false,
+      map: true, mapLabels: true, mapFills: true } };
   };
   var baseDefaults = VB.defaults;
   VB.defaults = function () { var s = baseDefaults(); s.objects = VB.objectsDefaults(); return s; };
@@ -102,7 +104,9 @@
     };
   }
   VB.jobObjectsEditBuildings = editJob("objects_edit_buildings", "Edit selected buildings", VB.objectsBuildingArgs);
-  VB.jobObjectsEditRoads = editJob("objects_edit_roads", "Edit selected roads", VB.objectsRoadArgs);
+  var editRoads = editJob("objects_edit_roads", "Edit selected roads", VB.objectsRoadArgs);
+  // a width change moves the 2D road outlines: same map refresh as the Road shape buttons (other fields are 3D only)
+  VB.jobObjectsEditRoads = function (st, d) { var j = editRoads(st); return st.objects.r.width_ft && st.objects.r.width_ft.on ? withMap(j, st, d) : j; };
   VB.jobObjectsReset = function (st, which) {
     var ids = which === "road" ? st.objects.rids : st.styles.ids;
     return { kind: "objects_reset_" + which, label: "Reset " + which + " overrides", params: { ids: ids },
@@ -133,21 +137,69 @@
       var r = run.vars.edit || {}; run.setState("objects.last", { kind: kind, count: r.count || 0, at: new Date().toISOString() });
       run.log(kind + ": " + JSON.stringify({ changed: r.changed, added: r.added, deleted: r.deleted, backup: r.backup })); } };
   }
-  VB.jobRoadsDelete = function (st) {
+  // ---- map refresh: streets.json -> render_world -> the road-dependent layers of the open drawing. Without it only streets.json changes and the drawing keeps the
+  // old road outlines (Roads), fills, street names and centrelines. Same render_world arguments as 'Redraw all GEN layers' minus contours (the contour layers are not
+  // redrawn here: they are marked stale, re-render them on the Contours tab). Cheapest first, one Illustrator call per group, every host step optional (a failure
+  // is a warning, the rest still runs): 1 render, 2 Roads + Blocks, 3 region kerbs / off-map markers (Details, Bounds; region places only), 4 Road Centerlines,
+  // 5 labels (all label layers except contour heights, they come from one declutter pass), 6 street fills. replace_layer keeps each layer where it is in the
+  // stack and restores its lock (GUIDES parent unlocked / relocked around Bounds).
+  VB.ROAD_MAP_LAYERS = ["Roads", "Blocks"];
+  VB.ROAD_DETAIL_LAYERS = ["Details", "Bounds"];
+  VB.roadMapLabelLayers = function () { return VB.LABEL_LAYERS.filter(function (n) { return n !== "Labels - Elevation"; }); };
+  VB.roadMapOn = function (st, d) { return !!d && st.objects.nr.map !== false; };
+  VB.roadCenterlineSteps = function (st, d, tag) {
+    var svg = d.panel + "/road_centerlines.svg", view = d.panel + "/road_view.json";
+    return [VB.steps.py(GEN + "panelio.py", ["view", "--place", st.place].concat(VB.panelioViewFlags(st)), "page <-> feet mapping", { json: "view" }),
+      { t: "fn", label: "write view", fn: async function (run) { await run.writeJson(view, run.vars.view); } },
+      VB.steps.py(OE, ["draw-roads", "--place", st.place, "--view-file", view, "--out", svg], "draw-roads", { json: "drawn" })]
+      .concat(VB.replaceSteps(svg, [VB.ROAD_LAYER], tag || "draw centrelines"));
+  };
+  VB.roadMapSteps = function (st, d) {
+    var nr = st.objects.nr, svg = d.panel + "/roads_map.svg", labels = nr.mapLabels !== false, fills = nr.mapFills !== false && !!st.town.autofill;
+    var n = 4 + (labels ? 1 : 0) + (fills ? 1 : 0), k = 0, tag = function (s) { k++; return "map " + k + "/" + n + ": " + s; };
+    var region = function (run) { return run.exists(d.world + "/details.json") || run.exists(d.world + "/markers.json"); };
+    var args = ["--place", st.place].concat(VB.viewFlags(st), ["--out", svg], VB.srcFlags(st), VB.labelFlags(st));
+    var steps = [VB.steps.py(GEN + "render_world.py", args, tag("render roads, blocks and labels (render_world)"))]
+      .concat(VB.replaceSteps(svg, VB.ROAD_MAP_LAYERS, tag("replace Roads, Blocks")),
+        VB.replaceSteps(svg, VB.ROAD_DETAIL_LAYERS, tag("replace kerbs and off-map markers (Details, Bounds)")).map(function (s) { s.when = region; return s; }),
+        VB.roadCenterlineSteps(st, d, tag("replace Road Centerlines")));
+    if (labels) steps = steps.concat(VB.replaceSteps(svg, VB.roadMapLabelLayers(), tag("replace street names and the other labels")),
+      [VB.steps.host({ action: "set_visible", names: ["Labels - Hidden"], visible: false }, "hide the hidden-labels sublayer", true),
+        VB.steps.host({ action: "lock_leaders", locked: (st.label_offset || {}).lock_leaders !== false }, "leaders layer lock", true)]);
+    if (fills) {
+      var t = tag("road fills"), fs = VB.fillsOn(st) ? VB.fullFillSteps(st, d, st.town.fills.flat !== false ? {} : { only: ["streets"] })
+        : [{ t: "fn", label: "fills", fn: function (run) { return VB.fillStep(st, run); } }];
+      fs[0] = Object.assign({}, fs[0], { label: t + " (" + (fs[0].label || "fills") + ")" });
+      steps = steps.concat(fs);
+    }
+    steps.push({ t: "fn", label: "report", fn: function (run) {
+      run.log("map updated from streets.json: Roads, Blocks, Road Centerlines (" + ((run.vars.drawn || {}).roads || 0) + " roads)" + (labels ? ", labels" : "") + (fills ? ", road fills" : "") +
+        ". Contours are marked stale (their street gaps follow the old roads): re-render them on the Contours tab."); } });
+    return steps;
+  };
+  // append the map refresh to a road-changing job when 'Update the map layers too' is on (needs the place folders d)
+  function withMap(job, st, d) {
+    if (!VB.roadMapOn(st, d)) { job.steps.push({ t: "fn", label: "note", fn: function (run) { run.log("map layers NOT updated ('Update the map layers too' is off): press 'Redraw roads on the map' to remove the old roads from the drawing"); } }); return job; }
+    job.steps = job.steps.concat(VB.roadMapSteps(st, d));
+    job.setStale = (job.setStale || []).concat(["contours"]);
+    job.params = Object.assign({}, job.params, { map: true });
+    return job;
+  }
+  VB.jobRoadsDelete = function (st, d) {
     if (!st.objects.nr.confirmDelete) throw new Error("tick 'Yes, delete the ticked roads' first (Undo last road change restores them)");
     var ids = roadIds(st, 1, "Delete");
-    return { kind: "roads_delete", label: "Delete roads", params: { ids: ids },
+    return withMap({ kind: "roads_delete", label: "Delete roads", params: { ids: ids },
       steps: [VB.steps.py(OE, ["delete-road", "--place", st.place, "--ids", ids.join(",")], "delete-road", { json: "edit" }),
         { t: "fn", label: "untick", fn: function (run) { run.setState("objects.rids", []); run.setState("objects.nr.confirmDelete", false); } },
-        remember("roads_delete")] };
+        remember("roads_delete")] }, st, d);
   };
-  VB.jobRoadsUndo = function (st) {
-    return { kind: "roads_undo", label: "Undo last road change", params: {},
+  VB.jobRoadsUndo = function (st, d) {
+    return withMap({ kind: "roads_undo", label: "Undo last road change", params: {},
       steps: [VB.steps.py(OE, ["restore-streets", "--place", st.place], "restore-streets", { json: "edit" }),
-        { t: "fn", label: "report", fn: function (run) { var r = run.vars.edit || {}; run.log("restored " + r.restored + "; " + r.remaining + " older backup(s) left"); } }] };
+        { t: "fn", label: "report", fn: function (run) { var r = run.vars.edit || {}; run.log("restored " + r.restored + " (" + (r.restored_files || ["streets.json"]).join(", ") + "); " + r.remaining + " older backup(s) left"); } }] }, st, d);
   };
   // simplify / smooth the existing line of each ticked road
-  VB.jobRoadsShape = function (st) {
+  VB.jobRoadsShape = function (st, d) {
     var nr = st.objects.nr, ids = roadIds(st, 1, "Simplify / smooth");
     if (!(+nr.simplify > 0) && !(+nr.smooth > 0)) throw new Error("set a simplify tolerance (ft) and / or smoothing passes above 0");
     var steps = ids.map(function (id, i) {
@@ -159,20 +211,20 @@
     steps.push({ t: "fn", label: "report", fn: function (run) {
       run.log(ids.map(function (id, i) { var r = run.vars["edit" + i] || {}; return id + " " + r.points_before + " -> " + r.points_after + " pts"; }).join("; "));
       run.setState("objects.last", { kind: "roads_shape", count: ids.length, at: new Date().toISOString() }); } });
-    return { kind: "roads_shape", label: "Simplify / smooth roads", params: { nr: nr, ids: ids }, steps: steps };
+    return withMap({ kind: "roads_shape", label: "Simplify / smooth roads", params: { nr: nr, ids: ids }, steps: steps }, st, d);
   };
-  VB.jobRoadsSplit = function (st) {
+  VB.jobRoadsSplit = function (st, d) {
     var ids = roadIds(st, 1, "Split");
     if (ids.length !== 1) throw new Error("Split: tick exactly one road");
-    return { kind: "roads_split", label: "Split road", params: { at: st.objects.nr.splitAt },
-      steps: [VB.steps.py(OE, ["split-road", "--place", st.place, "--ids", ids[0], "--at", String(Math.round(+st.objects.nr.splitAt))], "split-road", { json: "edit" }), remember("roads_split")] };
+    return withMap({ kind: "roads_split", label: "Split road", params: { at: st.objects.nr.splitAt },
+      steps: [VB.steps.py(OE, ["split-road", "--place", st.place, "--ids", ids[0], "--at", String(Math.round(+st.objects.nr.splitAt))], "split-road", { json: "edit" }), remember("roads_split")] }, st, d);
   };
-  VB.jobRoadsJoin = function (st) {
+  VB.jobRoadsJoin = function (st, d) {
     var ids = roadIds(st, 1, "Join");
     if (ids.length !== 2) throw new Error("Join: tick exactly two roads");
-    return { kind: "roads_join", label: "Join two roads", params: { ids: ids },
+    return withMap({ kind: "roads_join", label: "Join two roads", params: { ids: ids },
       steps: [VB.steps.py(OE, ["join-roads", "--place", st.place, "--ids", ids.join(",")], "join-roads", { json: "edit" }),
-        { t: "fn", label: "untick", fn: function (run) { run.setState("objects.rids", []); } }, remember("roads_join")] };
+        { t: "fn", label: "untick", fn: function (run) { run.setState("objects.rids", []); } }, remember("roads_join")] }, st, d);
   };
   // Illustrator paths -> streets.json. mode: "add" (selected open paths become new roads), "reshape" (selected paths named by a road id replace that road's line),
   // "sync" (both; with nothing selected, every open path on the Road Centerlines layer). Page points -> feet with the same mapping as every other capture (panelio view).
@@ -184,7 +236,7 @@
     if (nr.name && String(nr.name).trim()) a.push("--name", String(nr.name).trim());
     if (+nr.simplify > 0) a.push("--simplify", String(+nr.simplify));
     if (+nr.smooth > 0) a.push("--smooth", String(Math.round(+nr.smooth)));
-    return { kind: "roads_from_paths_" + mode, label: ({ add: "Add roads from the Illustrator selection", reshape: "Reshape roads from the Illustrator selection", sync: "Read road centrelines from Illustrator" })[mode],
+    return withMap({ kind: "roads_from_paths_" + mode, label: ({ add: "Add roads from the Illustrator selection", reshape: "Reshape roads from the Illustrator selection", sync: "Read road centrelines from Illustrator" })[mode],
       params: { mode: mode, nr: nr },
       steps: [VB.steps.py(GEN + "panelio.py", ["view", "--place", st.place].concat(VB.panelioViewFlags(st)), "page <-> feet mapping", { json: "view" }),
         VB.steps.host({ action: "get_selection", layer: VB.ROAD_LAYER, open_only: true }, "read selection"),
@@ -194,16 +246,20 @@
           run.log(paths.length + " open path(s) from " + sel.source);
           await run.writeJson(file, { paths: paths }); } },
         VB.steps.py(OE, a, "apply-paths", { json: "edit" }),
-        remember("roads_" + mode)] };
+        remember("roads_" + mode)] }, st, d);
   };
-  // streets.json -> Illustrator layer "Road Centerlines" (replaces that layer; read first if you edited it)
+  // 'Redraw roads in Illustrator': streets.json -> the helper layer "Road Centerlines" (replaces that layer; read first if you edited it) and, with
+  // 'Update the map layers too' on (default), the whole map refresh above, so deleted roads also leave Roads, Blocks, labels and fills.
   VB.jobRoadsRedraw = function (st, d) {
-    var svg = d.panel + "/road_centerlines.svg", view = d.panel + "/road_view.json";
-    return { kind: "roads_redraw", label: "Redraw road centrelines", params: {},
-      steps: [VB.steps.py(GEN + "panelio.py", ["view", "--place", st.place].concat(VB.panelioViewFlags(st)), "page <-> feet mapping", { json: "view" }),
-        { t: "fn", label: "write view", fn: async function (run) { await run.writeJson(view, run.vars.view); } },
-        VB.steps.py(OE, ["draw-roads", "--place", st.place, "--view-file", view, "--out", svg], "draw-roads", { json: "drawn" })]
-        .concat(VB.replaceSteps(svg, [VB.ROAD_LAYER], "draw centrelines"),
-          [{ t: "fn", label: "report", fn: function (run) { run.log(((run.vars.drawn || {}).roads || 0) + " road centreline(s) drawn on layer '" + VB.ROAD_LAYER + "'"); } }]) };
+    var map = VB.roadMapOn(st, d);
+    return { kind: "roads_redraw", label: map ? "Redraw roads (centrelines + map layers)" : "Redraw road centrelines", params: { map: map },
+      steps: map ? VB.roadMapSteps(st, d) : VB.roadCenterlineSteps(st, d).concat([{ t: "fn", label: "report", fn: function (run) {
+        run.log(((run.vars.drawn || {}).roads || 0) + " road centreline(s) drawn on layer '" + VB.ROAD_LAYER + "'. The map layers (Roads, Blocks, labels, fills) were NOT updated: tick 'Update the map layers too' or press 'Redraw roads on the map'."); } }]),
+      setStale: map ? ["contours"] : [] };
+  };
+  // 'Redraw roads on the map': the map refresh without any road edit (always, whatever the checkbox says)
+  VB.jobRoadsMap = function (st, d) {
+    return { kind: "roads_map", label: "Redraw roads on the map", params: { labels: st.objects.nr.mapLabels !== false, fills: st.objects.nr.mapFills !== false },
+      steps: VB.roadMapSteps(st, d), setStale: ["contours"] };
   };
 })(typeof window !== "undefined" ? window : globalThis);
