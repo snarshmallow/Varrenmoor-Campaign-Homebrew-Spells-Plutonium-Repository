@@ -37,6 +37,20 @@ def sun_to_3d(azimuth, altitude):
     return {"sunPosition": hour_for_angle(t), "sunTilt": round(f / (math.pi / 2), 3)}
 
 
+def angle_for_hour(h):
+    """Inverse of hour_for_angle: the module's sun angle (radians) at `sunPosition` hours."""
+    h = float(h) % 24.0
+    i = min(int(h), 23)
+    return ANGLE_AT[i] + (h - i) * (ANGLE_AT[i + 1] - ANGLE_AT[i])
+
+
+def sun_from_3d(sun_position, sun_tilt):
+    """Inverse of sun_to_3d: (compass bearing 0..360, altitude deg) of the light that 3D Canvas casts for the flags sunPosition (hours) and sunTilt."""
+    t, f = angle_for_hour(sun_position), float(sun_tilt) * math.pi / 2
+    E, U, S = math.sin(t), -math.cos(t) * math.cos(f), -math.cos(t) * math.sin(f)
+    return (math.degrees(math.atan2(E, -S)) % 360.0, math.degrees(math.asin(max(-1.0, min(1.0, U)))))
+
+
 def sun_for_skybox(azimuth, altitude):
     """skybox.py convention: sun_az from east clockwise (image centre = east), sun_el degrees."""
     return {"sun_az": azimuth - 90.0, "sun_el": altitude}

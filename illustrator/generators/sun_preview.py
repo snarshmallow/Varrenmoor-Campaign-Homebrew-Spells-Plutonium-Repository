@@ -25,7 +25,9 @@ REPO = fs.REPO
 PX_PER_FT = 20.0               # 100 px per 5 ft grid square
 SKY_FILL = 0.28                # stand-in for the skybox image light that 3D Canvas adds to every surface
 MAX_SHADOW_FT = 260.0
-W, H = 640, 400
+W, H = 640, 520
+PLAN_H = 400                    # plan view area; the sky strip sits below it
+SKY_STRIP_H = 112
 
 
 def hex_rgb(s):
@@ -123,12 +125,36 @@ def shade(ter, alb, bh, step_ft, p):
     return col, float(shadow.mean())
 
 
+def sky_strip(p, w=W - 20, rows=SKY_STRIP_H):
+    """RGB strip of the sky the scene gets (skybox.sky_dome at the preset's sun/moon bearing + altitude), elevation -5..60 deg, azimuth 0..360 compass, with the
+    light body marked: shadows on the ground point away from this spot. Returns (image, (x, y) of the body in the strip or None)."""
+    import skybox
+    from PIL import Image
+    sp = (p.get("sky") or {}).get("preset")
+    if not sp or sp not in skybox.PRESETS:
+        return None, None
+    az, alt = float(p["sun"]["azimuth"]), float(p["sun"]["altitude"])
+    P = skybox.sky_params(sp, {"sun_az": az - 90.0, "sun_el": alt})
+    d = skybox.sky_dome(P, 720)
+    lin = d["sky"]
+    img = skybox.lin_to_srgb(lin / (1 + 0.15 * lin))
+    Hh = d["Hh"]
+    r0, r1 = int((90 - 60) / 180 * Hh), int((90 + 5) / 180 * Hh)
+    strip = img[r0:r1]
+    # columns: image centre = east (compass 90); roll so compass 0 (north) is the left edge
+    strip = np.roll(strip, -int(round((0.5 - 90 / 360.0) * 720)), axis=1)       # source column c has compass bearing (c/720 - 0.5)*360 + 90
+    pic = Image.fromarray((np.clip(strip * 1.06, 0, 1) * 255).astype(np.uint8)).resize((w, rows), Image.BILINEAR)
+    x = (az % 360) / 360.0 * w
+    y = (60 - max(-5.0, min(60.0, alt))) / 65.0 * rows
+    return pic, (x, y)
+
+
 def render(place, p, out, w=W, h=H):
     from PIL import Image, ImageDraw
     ter, alb, bh, step, (wft, hft) = load_pack(place)
     col, frac = shade(ter, alb, bh, step, p)
     img = Image.fromarray((np.clip(col, 0, 1) * 255).astype(np.uint8))
-    s = min((w - 20) / img.width, (h - 56) / img.height)
+    s = min((w - 20) / img.width, (PLAN_H - 56) / img.height)
     img = img.resize((int(img.width * s), int(img.height * s)), Image.BILINEAR)
     sun, fg = p["sun"], p.get("fog") or {}
     sky_top = hex_rgb((p.get("sky_preview") or {}).get("top", "#3a6fb5")) if False else None
@@ -147,8 +173,16 @@ def render(place, p, out, w=W, h=H):
     for i, (c, lab) in enumerate(((sun.get("color", "#fff"), "sun"), (p["ambient"].get("color", "#fff"), "ambient"), (fg.get("color", "#ccc"), "fog"))):
         d.rectangle([x0, 144 + i * 26, x0 + 30, 164 + i * 26], fill=c, outline=(90, 90, 100))
         d.text((x0 + 38, 148 + i * 26), lab, fill=(200, 200, 210))
-    d.text((10, h - 36), "plan view, north up, terrain + building roofs; trees are not drawn", fill=(150, 150, 160))
-    d.text((10, h - 22), f"{p.get('label', p.get('id', ''))}: shadows fall away from the sun", fill=(150, 150, 160))
+    d.text((10, PLAN_H - 36), "plan view, north up, terrain + building roofs; trees are not drawn", fill=(150, 150, 160))
+    d.text((10, PLAN_H - 22), f"{p.get('label', p.get('id', ''))}: shadows fall away from the sun", fill=(150, 150, 160))
+    strip, mark = sky_strip(p, w - 20)
+    if strip is not None:                                          # sky strip: where the sun / moon is drawn in the skybox (same bearing + altitude as the light)
+        d.text((10, PLAN_H - 4), "sky (compass 0..360 left to right, 5 below to 60 above the horizon); the light body is circled", fill=(150, 150, 160))
+        canvas.paste(strip, (10, PLAN_H + 10))
+        mx, my = 10 + mark[0], PLAN_H + 10 + mark[1]
+        d.ellipse([mx - 9, my - 9, mx + 9, my + 9], outline=(255, 80, 80), width=2)
+        for tx, lab in ((0, "N"), (0.25, "E"), (0.5, "S"), (0.75, "W")):
+            d.text((12 + tx * (w - 20), PLAN_H + 12), lab, fill=(255, 255, 255))
     os.makedirs(os.path.dirname(os.path.abspath(out)), exist_ok=True)
     canvas.save(out)
     return {"ok": True, "out": out, "shadow_fraction": round(frac, 3), "size": [w, h]}

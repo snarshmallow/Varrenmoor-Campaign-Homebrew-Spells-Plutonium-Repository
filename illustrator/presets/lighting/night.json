@@ -1,7 +1,7 @@
 {
  "id": "night",
  "label": "Night",
- "description": "Moonlight: dim blue light from a high moon, deep-blue starry sky, no sun disc. Needs the night sky image.",
+ "description": "Moonlight: dim blue light from a moon high in the south-east, starry sky with a faint Milky Way. The moon in the sky is at the same bearing and height as the light, so shadows point away from it.",
  "swatch": [
   "#9db4ff",
   "#4a5f9a",
@@ -29,9 +29,7 @@
   "far_px": 20000
  },
  "sky": {
-  "preset": "night",
-  "sun_bearing": 120,
-  "sun_alt": 35
+  "preset": "night"
  },
  "hour": 23.5
 }

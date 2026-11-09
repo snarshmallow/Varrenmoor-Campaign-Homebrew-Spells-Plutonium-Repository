@@ -60,7 +60,7 @@ def args(**kw):
 class T(unittest.TestCase):
     def test_presets(self):
         ps = fs.load_presets()
-        self.assertEqual(sorted(ps), sorted(["dawn", "morning", "noon", "afternoon", "dusk", "night", "foggy_morning", "warm_sunset"]))
+        self.assertEqual(sorted(ps), sorted(["dawn", "morning", "noon", "afternoon", "golden_hour", "dusk", "night", "foggy_morning", "warm_sunset", "overcast", "high_mountain", "storm"]))
         for p in ps.values():
             f = fs.preset_flags(p)
             self.assertEqual(f["timeSync"], "off")
@@ -156,7 +156,7 @@ class Preview(unittest.TestCase):
             lo = sp.render(place, fs.get_preset("noon"), os.path.join(t, "a.png"))
             hi = sp.render(place, fs.get_preset("warm_sunset"), os.path.join(t, "b.png"))
             self.assertGreater(os.path.getsize(os.path.join(t, "a.png")), 1000)
-            self.assertEqual(lo["size"], [640, 400])
+            self.assertEqual(lo["size"], [640, 520])
             self.assertGreater(hi["shadow_fraction"], lo["shadow_fraction"])
 
 

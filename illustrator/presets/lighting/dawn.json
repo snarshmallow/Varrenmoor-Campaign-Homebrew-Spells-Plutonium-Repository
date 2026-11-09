@@ -29,9 +29,7 @@
   "far_px": 26000
  },
  "sky": {
-  "preset": "dusk",
-  "sun_bearing": 90,
-  "sun_alt": 10
+  "preset": "dusk"
  },
  "hour": 6
 }

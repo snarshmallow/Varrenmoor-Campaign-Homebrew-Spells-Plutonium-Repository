@@ -53,7 +53,7 @@ def apply_overrides(p, a):
     p = json.loads(json.dumps(p))
     for key, grp, name in (("sun_azimuth", "sun", "azimuth"), ("sun_altitude", "sun", "altitude"), ("sun_strength", "sun", "strength"), ("sun_color", "sun", "color"),
                            ("ambient", "ambient", "intensity"), ("ambient_color", "ambient", "color"), ("shadow_bias", "shadows", "bias"),
-                           ("shadow_quality", "shadows", "quality"), ("fog_color", "fog", "color"), ("fog_far", "fog", "far_px")):
+                           ("shadow_quality", "shadows", "quality"), ("fog_color", "fog", "color"), ("fog_far", "fog", "far_px"), ("sky_preset", "sky", "preset")):
         if g(key) is not None:
             p.setdefault(grp, {})[name] = g(key)
     if g("shadows") in ("on", "off"):
@@ -87,19 +87,59 @@ def shadow_notes(p):
                             "Quality 0 shows NO shadows for that player." if on else "Shadows are off in this preset.")}
 
 
+def light_direction(p):
+    """THE direction of the light of a preset: compass bearing + altitude of the sun (or of the moon for night skies). Single source of truth: the sky image, the
+    3D Canvas sun flags (sunPosition / sunTilt) and the offline preview all derive from p["sun"]; `sky.sun_bearing` / `sky.sun_alt` in old preset files are ignored."""
+    s = p.get("sun", {})
+    return float(s.get("azimuth", 235)), float(s.get("altitude", 38))
+
+
+def sky_body(p):
+    """-> {"body": "sun"|"moon", "preset", "bearing", "altitude", "sky_az_from_east", "flags"}: what the sky image draws and the 3D flags that light the scene from there."""
+    import foundry_lighting as fl
+    import skybox
+    az, alt = light_direction(p)
+    sp = (p.get("sky") or {}).get("preset") or ""
+    if sp and sp not in skybox.PRESETS:
+        raise ValueError(f"sky preset {sp!r} is not one of {', '.join(skybox.PRESETS)}")
+    return {"body": "moon" if sp and skybox.PRESETS[sp].get("moon") else "sun", "preset": sp, "bearing": az, "altitude": alt,
+            "sky_az_from_east": fl.sun_for_skybox(az, alt)["sun_az"], "flags": fl.sun_to_3d(az, alt)}
+
+
+def direction_check(p):
+    """Angular error (degrees) between the body drawn in the sky and the light 3D Canvas casts for the preset's flags (must be ~0)."""
+    import math
+    import foundry_lighting as fl
+    b = sky_body(p)
+    f = preset_flags(p)
+    baz, balt = fl.sun_from_3d(f["sunPosition"], f["sunTilt"])
+    v = lambda az, al: (math.sin(math.radians(az)) * math.cos(math.radians(al)), -math.cos(math.radians(az)) * math.cos(math.radians(al)), math.sin(math.radians(al)))
+    a1, a2 = v(b["bearing"], max(b["altitude"], 0.5)), v(baz, balt)
+    err = math.degrees(math.acos(max(-1.0, min(1.0, sum(x * y for x, y in zip(a1, a2))))))
+    return {"body": b["body"], "sky_bearing": round(b["bearing"], 2), "sky_altitude": round(b["altitude"], 2), "light_bearing": round(baz, 2), "light_altitude": round(balt, 2),
+            "error_deg": round(err, 3), "agree": err < 1.0}
+
+
+def sky_name(p):
+    b = sky_body(p)
+    return f"sun_{p['id']}_{b['preset']}_az{int(round(b['bearing']))}_el{int(round(b['altitude']))}"
+
+
 def sky_flags(p, place, br_dry=True, make=False, fp=None):
-    """-> (flag dict, info) for the preset's sky image `sun_<id>.webp` in world/<place>/export/skybox. Does nothing unless the image exists (or make=True builds it)."""
+    """-> (flag dict, info) for the preset's sky image in world/<place>/export/skybox. The image is drawn with the sun (or moon) at the preset's sun bearing/altitude,
+    so the shadows 3D Canvas casts (same direction, from the sun flags) match it. Does nothing unless the image exists (or make=True builds it)."""
     sky = p.get("sky") or {}
     if not sky.get("preset"):
         return {}, {"sky": "none"}
-    name = "sun_" + p["id"]
+    b = sky_body(p)
+    name = sky_name(p)
     d = os.path.join(REPO, "world", place, "export", "skybox")
     src = os.path.join(d, name + ".webp")
-    info = {"sky_image": src, "sky_exists": os.path.exists(src)}
+    info = {"sky_image": src, "sky_exists": os.path.exists(src), "sky_preset": b["preset"], "sky_body": b["body"], "direction": direction_check(p)}
     if not os.path.exists(src) and make:
         import skybox
         h, cell = skybox.load_heights(place)
-        img, _ = skybox.render(place, sky["preset"], None, 2048, 0.0, h=h, cell=cell, sun={"sun_az": float(sky.get("sun_bearing", 235)) - 90.0, "sun_el": float(sky.get("sun_alt", 30))})
+        img, _ = skybox.render(place, sky["preset"], None, 2048, 0.0, h=h, cell=cell, sun={"sun_az": b["sky_az_from_east"], "sun_el": b["altitude"]})
         skybox.save(img, d, name, preview=True)
         info["sky_exists"] = True
         info["sky_built"] = True
@@ -162,7 +202,7 @@ def cmd_set_sun(br, a):
         flags.update(sf)
     changes = {k: v for k, v in flags.items() if cur.get(k) != v}
     res = {"ok": True, "applied": False, "scene": sc.get("name"), "preset": p["id"], "description": p.get("description", ""), "flags": flags, "flag_changes": changes,
-           "shadows": shadow_notes(p), "cost": estimate_cost(p), "sky": sky_info}
+           "shadows": shadow_notes(p), "cost": estimate_cost(p), "sky": sky_info, "direction": direction_check(p) if (p.get("sky") or {}).get("preset") else None}
     if flags.get("enableFog"):
         res["note_fog"] = "fog is on: 3D Canvas then shows the flat fog colour as the sky (the sky image still lights the scene); pick a fog colour equal to the sky horizon."
     # ground tiles: flat ground does not need to cast shadows (default is casting ON for every tile)
@@ -193,7 +233,7 @@ def cmd_set_sun(br, a):
 def add_sun_args(ap):
     ap.add_argument("--scene-uuid")
     ap.add_argument("--place", default="bridgehollow")
-    ap.add_argument("--preset", help="lighting preset id (illustrator/presets/lighting/*.json): dawn morning noon afternoon dusk night foggy_morning warm_sunset; default afternoon")
+    ap.add_argument("--preset", help="lighting preset id (illustrator/presets/lighting/*.json): dawn morning noon afternoon golden_hour dusk night foggy_morning warm_sunset overcast high_mountain storm; default afternoon")
     ap.add_argument("--sun-azimuth", dest="sun_azimuth", type=float, help="sun compass bearing, degrees (0 N, 90 E, 180 S, 270 W)")
     ap.add_argument("--sun-altitude", dest="sun_altitude", type=float, help="sun height above the horizon, degrees")
     ap.add_argument("--sun-strength", dest="sun_strength", type=float, help="sun strength (scene flag exposure, also the tone-mapping exposure)")
@@ -207,6 +247,7 @@ def add_sun_args(ap):
     ap.add_argument("--fog-color", dest="fog_color", help="fog colour #rrggbb (also the flat sky colour while fog is on)")
     ap.add_argument("--fog-far", dest="fog_far", type=int, help="fog far distance in scene px (fogDistance); fog starts at 1000 px, linear. 7000 = dense, 30000 = faint")
     ap.add_argument("--sky", choices=["preset", "off"], default="preset", help="write the preset's sky image (exr) if it exists; off = leave the sky alone")
+    ap.add_argument("--sky-preset", dest="sky_preset", help="sky look: clear_day overcast dusk winter night high_mountain storm golden_hour foggy (default: the lighting preset's). The sun / moon is drawn at the sun azimuth/altitude, so shadows match it")
     ap.add_argument("--make-sky", dest="make_sky", action="store_true", help="build the preset's sky image from skybox.py first (about 1 minute)")
     ap.add_argument("--ground-cast", dest="ground_cast", choices=["leave", "on", "off"], default="leave", help="castShadow flag of terrain / roads / plazas / padding tiles (default casting is on)")
     ap.add_argument("--restore", action="store_true", help="put the scene's sun/fog/sky flags back to what they were before the first set-sun --apply")

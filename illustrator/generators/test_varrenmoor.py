@@ -27,7 +27,7 @@ class TownStyle(unittest.TestCase):
         self.assertEqual(streets["bridge"]["texture"], "plank")
 
     def test_plaza_is_grass(self):
-        self.assertEqual(self.st["types"]["plazas"]["default"]["texture"], "grass")
+        self.assertEqual(self.st["types"]["plazas"]["default"]["texture"], "moor_grass")
 
     def test_textures_exist(self):
         for t in ("dirt", "grass", "plank"):
@@ -81,6 +81,23 @@ class KerbRule(unittest.TestCase):
         streets = [{"id": "e", "edit": {"kerb": True}}]
         out = wp.drop_unpaved_kerbs({"a", "b", "c", "d", "e"}, roads, streets)
         self.assertEqual(out, {"b", "e"})                  # paved keeps its kerb, an explicit kerb=true on a dirt road is honoured
+
+class MoorPalette(unittest.TestCase):
+    """Ground tiles match the map palette (dark olive / brown), not the bright stock green."""
+
+    def test_moor_tiles_not_bright_green(self):
+        import numpy as np
+        from PIL import Image
+        tex = os.path.join(os.path.dirname(HERE), "presets", "textures") if "HERE" in globals() else os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "presets", "textures")
+        for n in ("moor_grass", "moor_pasture", "moor_crop_green", "moor_wheat", "moor_tilled", "moor_farmland", "moor_forest_floor"):
+            m = np.asarray(Image.open(os.path.join(tex, n + ".png")).convert("RGB"), float).reshape(-1, 3).mean(0)
+            self.assertLess(m[1] - m[0], 12, n)                  # stock grass is G-R = 43; the map is ~ -11..0
+            self.assertLess(m.max(), 135, n)
+
+    def test_style_uses_moor_tiles(self):
+        txt = json.dumps(self.st if hasattr(self, "st") else json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "presets", "town_styles", "varrenmoor.json"))))
+        for bad in ('"grass"', '"pasture"', '"crop_green"', '"tilled"'):
+            self.assertNotIn('"texture": ' + bad, txt)
 
 
 if __name__ == "__main__":

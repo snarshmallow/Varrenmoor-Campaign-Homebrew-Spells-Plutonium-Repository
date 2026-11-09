@@ -21,7 +21,7 @@ const runner = R.createRunner({ root: ROOT, jobsDir: tmp + "/jobs", fs, path, sp
 (async () => {
   const presets = VB.sunLoadPresets(fs, d.presets + "/lighting");
   const ids = presets.map(p => p.id);
-  check("eight presets in order", ids.join(",") === "dawn,morning,noon,afternoon,dusk,night,foggy_morning,warm_sunset", ids.join(","));
+  check("twelve presets in order", ids.join(",") === "dawn,morning,noon,afternoon,golden_hour,dusk,night,foggy_morning,warm_sunset,overcast,high_mountain,storm", ids.join(","));
   check("every preset has sun, ambient, shadows, fog, sky, swatch, description", presets.every(p => p.sun && p.ambient && p.shadows && p.fog && p.sky && p.swatch && p.swatch.length === 3 && p.description));
   check("defaults = sunny afternoon, low ambient", st.lighting.sun3d.preset === "afternoon" && st.lighting.sun3d.ambient <= 0.1 && st.lighting.sun3d.fog === "off");
   check("older state gets sun3d", VB.normalize({ lighting: { ambient: 0.2 } }).lighting.sun3d.preset === "afternoon");
@@ -29,6 +29,8 @@ const runner = R.createRunner({ root: ROOT, jobsDir: tmp + "/jobs", fs, path, sp
   const s = st.lighting.sun3d;
   check("one click sets everything (warm sunset)", s.preset === "warm_sunset" && s.altitude <= 8 && s.fog === "on" && s.shadows === "on" && /^#ff/.test(s.color) && s.ambient > 0);
   const night = presets.filter(p => p.id === "night")[0];
+  check("dramatic skies present, sky look off by default", ["high_mountain", "storm", "golden_hour", "overcast"].every(i => ids.indexOf(i) >= 0) && st.lighting.sun3d.skyPreset === "");
+  check("no preset repeats a sun direction in its sky block", presets.every(p => p.sky && p.sky.sun_bearing === undefined && p.sky.sun_alt === undefined));
   check("night is dim with a night sky", night.sun.strength < 0.8 && night.sky.preset === "night");
   // time of day slider
   const noon = VB.sunFromHour(presets, 12), mid = VB.sunFromHour(presets, 13.5), late = VB.sunFromHour(presets, 1);
@@ -43,7 +45,8 @@ const runner = R.createRunner({ root: ROOT, jobsDir: tmp + "/jobs", fs, path, sp
   check("dry run args", /^set-sun --scene-uuid Scene\.abc --place bridgehollow --preset warm_sunset --sun-azimuth 265 --sun-altitude \d+ --sun-strength [\d.]+ --sun-color #ff9a4a .*--fog on --fog-color #f5b985 --fog-far \d+$/.test(a) && a.indexOf("--apply") < 0, a);
   s.makeSky = true; s.groundCast = "off"; s.sky = "preset";
   a = VB.sunSetArgs(st, d, true, false).join(" "); check("make-sky, ground-cast and apply args", /--make-sky --ground-cast off --apply$/.test(a), a);
-  s.sky = "off"; a = VB.sunSetArgs(st, d, false, false).join(" "); check("sky off", /--sky off/.test(a) && a.indexOf("--make-sky") < 0, a);
+  s.skyPreset = "storm"; a = VB.sunSetArgs(st, d, false, false).join(" "); check("sky look passed after the azimuth / altitude args, preview too", /--sun-azimuth 265 .*--sky-preset storm --make-sky/.test(a) && a.split("--sky-preset").length === 2 && VB.sunPreviewArgs(st, d).join(" ").indexOf("--sky-preset storm") > 0, a);
+  s.skyPreset = ""; s.makeSky = true; s.groundCast = "off"; s.sky = "off"; a = VB.sunSetArgs(st, d, false, false).join(" "); check("sky off", /--sky off/.test(a) && a.indexOf("--make-sky") < 0, a);
   a = VB.sunSetArgs(st, d, true, true).join(" "); check("restore args", a === "set-sun --scene-uuid Scene.abc --place bridgehollow --restore --apply", a);
   // jobs
   let r = await runner.run(VB.jobSetSun(st, d, false, false)); check("set-sun job ok", r.ok, r.error);
@@ -55,6 +58,7 @@ const runner = R.createRunner({ root: ROOT, jobsDir: tmp + "/jobs", fs, path, sp
   check("off by default on push", VB.scene3dArgs(st, d, false).join(" ") === "push-scene-3d --place x");
   s.onPush = true; check("--sun-preset on push when ticked", VB.scene3dArgs(st, d, false).join(" ") === "push-scene-3d --place x --sun-preset warm_sunset");
   check("2D lightingConfig ignores sun3d", !("sun3d" in VB.lightingConfig(st)));
+  VB.sunApplyPreset(st, presets.filter(p => p.id === "warm_sunset")[0]); check("applying a preset resets the sky look", st.lighting.sun3d.skyPreset === "");
   fs.rmSync(TMP, { recursive: true, force: true });
   console.log(ok + " passed, " + fail + " failed"); process.exit(fail ? 1 : 0);
 })();

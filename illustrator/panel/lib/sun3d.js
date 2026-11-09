@@ -9,11 +9,13 @@
   var py = VB.steps.py;
   var num = function (v, d) { v = Number(v); return isFinite(v) ? v : d; };
 
-  VB.SUN_FALLBACK_ORDER = ["dawn", "morning", "noon", "afternoon", "dusk", "night", "foggy_morning", "warm_sunset"];
+  VB.SUN_FALLBACK_ORDER = ["dawn", "morning", "noon", "afternoon", "golden_hour", "dusk", "night", "foggy_morning", "warm_sunset", "overcast", "high_mountain", "storm"];
+  // sky looks of skybox.py (the sun / moon in each is drawn at the sun azimuth + altitude of the block, so shadows and the picture agree); "" = the preset's own
+  VB.SKY_PRESETS = { "": "the preset's own sky", clear_day: "Clear day", high_mountain: "High mountain (deep blue, snow peaks)", storm: "Storm (dark cloud deck)", golden_hour: "Golden hour", dusk: "Dusk (orange)", overcast: "Overcast", foggy: "Foggy", winter: "Winter", night: "Night (moon, stars)" };
   VB.SHADOW_QUALITIES = { 0: "Off", 2: "Low (2048 map)", 4: "Medium (4096 map)", 8: "High (8192 map)" };
   VB.sunDefaults = function () {
     return { preset: "afternoon", hour: 15, azimuth: 235, altitude: 38, strength: 1.3, color: "#fff0cf", ambient: 0.08, ambientColor: "#e8f0ff",
-      shadows: "on", shadowQuality: 4, bias: -0.0003, fog: "off", fogColor: "#c9dcee", fogFar: 30000, sky: "preset", makeSky: false, groundCast: "leave", onPush: false, last: null, previewAt: "" };
+      shadows: "on", shadowQuality: 4, bias: -0.0003, fog: "off", fogColor: "#c9dcee", fogFar: 30000, sky: "preset", skyPreset: "", makeSky: false, groundCast: "leave", onPush: false, last: null, previewAt: "" };
   };
   // read every preset JSON in presets/lighting (fs = node fs, dir = d.presets + "/lighting") -> ordered list
   VB.sunLoadPresets = function (fs, dir) {
@@ -33,7 +35,7 @@
     s.azimuth = p.sun.azimuth; s.altitude = p.sun.altitude; s.strength = p.sun.strength; s.color = p.sun.color;
     s.ambient = p.ambient.intensity; s.ambientColor = p.ambient.color;
     s.shadows = (p.shadows || {}).on === false ? "off" : "on"; s.shadowQuality = (p.shadows || {}).quality != null ? p.shadows.quality : 4; s.bias = (p.shadows || {}).bias != null ? p.shadows.bias : -0.0003;
-    s.fog = (p.fog || {}).enabled ? "on" : "off"; s.fogColor = (p.fog || {}).color || "#c9dcee"; s.fogFar = (p.fog || {}).far_px || 30000;
+    s.skyPreset = ""; s.fog = (p.fog || {}).enabled ? "on" : "off"; s.fogColor = (p.fog || {}).color || "#c9dcee"; s.fogFar = (p.fog || {}).far_px || 30000;
     return st;
   };
   var hex = function (c) { c = String(c || "#ffffff").replace("#", ""); return [0, 2, 4].map(function (i) { return parseInt(c.substr(i, 2), 16) || 0; }); };
@@ -58,6 +60,7 @@
       "--sun-color", s.color || "#fff0cf", "--ambient", String(num(s.ambient, 0.08)), "--ambient-color", s.ambientColor || "#ffffff", "--shadows", s.shadows === "off" ? "off" : "on",
       "--shadow-quality", String(Math.round(num(s.shadowQuality, 4))), "--shadow-bias", String(num(s.bias, -0.0003)), "--fog", s.fog === "on" ? "on" : "off",
       "--fog-color", s.fogColor || "#c9dcee", "--fog-far", String(Math.round(num(s.fogFar, 30000)))];
+    if (s.skyPreset) a.push("--sky-preset", s.skyPreset);
     return a;
   };
   VB.sunSetArgs = function (st, d, apply, restore) {

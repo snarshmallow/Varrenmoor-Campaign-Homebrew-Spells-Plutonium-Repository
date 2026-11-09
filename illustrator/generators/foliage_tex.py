@@ -481,9 +481,9 @@ def paint_imp_broad(S, rng, season="summer", trunk=(78, 62, 48), leaf=(70, 112, 
     cols = [(70, 112, 44), (88, 128, 50), (58, 96, 38)] if season != "autumn" else [(176, 108, 34), (150, 70, 28), (196, 150, 40)]
     for i in range(520):
         ang = rng.uniform(0, 2 * math.pi)
-        rr = math.sqrt(rng.random()) * 0.46 * S
-        x, y = S / 2 + rr * math.cos(ang), S * 0.34 + rr * math.sin(ang) * 0.82
-        if (rr / (0.46 * S)) < 0.35 and rng.random() < 0.55:
+        rr = math.sqrt(rng.random()) * 0.36 * S              # crown kept inside the tile: leaves up to 22 px must not touch the edge (tops were clipped)
+        x, y = S / 2 + rr * math.cos(ang), S * 0.42 + rr * math.sin(ang) * 0.80
+        if (rr / (0.36 * S)) < 0.35 and rng.random() < 0.55:
             continue                                      # holes towards the middle
         if rng.random() > keep:
             continue
@@ -498,8 +498,8 @@ def paint_imp_conifer(S, rng, season="summer"):
     pt.poly([(S / 2 - 4, S - 1), (S / 2 + 4, S - 1), (S / 2 + 2, S * 0.5), (S / 2 - 2, S * 0.5)], (70, 54, 42))
     n = 9
     for t in range(n):
-        yb = S * 0.92 - t * S * 0.095
-        w = S * (0.42 - t * 0.043)
+        yb = S * 0.93 - t * S * 0.085
+        w = S * (0.40 - t * 0.041)
         shade = 0.7 + 0.35 * t / n
         pts = []
         for k in range(15):

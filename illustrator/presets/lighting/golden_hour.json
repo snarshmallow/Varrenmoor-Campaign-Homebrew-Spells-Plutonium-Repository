@@ -1,0 +1,35 @@
+{
+ "id": "golden_hour",
+ "label": "Golden hour",
+ "description": "Low gold sun in the west-south-west, long soft shadows, violet zenith fading to amber. Sun disc drawn in the sky where the shadows point away from.",
+ "swatch": [
+  "#ffd08a",
+  "#ffc178",
+  "#35579a"
+ ],
+ "sun": {
+  "azimuth": 255,
+  "altitude": 11,
+  "color": "#ffd08a",
+  "strength": 1.5
+ },
+ "ambient": {
+  "intensity": 0.12,
+  "color": "#ffd9b8"
+ },
+ "shadows": {
+  "on": true,
+  "quality": 4,
+  "bias": -0.0004,
+  "soft": false
+ },
+ "fog": {
+  "enabled": false,
+  "color": "#efb07a",
+  "far_px": 26000
+ },
+ "sky": {
+  "preset": "golden_hour"
+ },
+ "hour": 17.5
+}

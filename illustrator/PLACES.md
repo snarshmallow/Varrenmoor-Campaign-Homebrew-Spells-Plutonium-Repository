@@ -74,3 +74,7 @@ Town: population (hamlet < 150 < village < 450 < town < 2500 < city), layout (or
 - The town wall appears in the 2D map and `walls.json`, not in the 3D export.
 - Very large towns are slow and heavy on memory; Illustrator may take minutes to open their SVG. Start in draft.
 - Generated places are "proposed" drafts; edit them like Bridgehollow (Town tab, terrain patches, regions).
+
+## Varrenmoor ground palette (map colours)
+
+The campaign map's open ground averages RGB (90,79,55) and its canopy (50,46,33): dark olive and brown, not bright green. `generators/make_moor_textures.py` recolours the stock grass / meadow / pasture / crop / wheat / tilled / farmland / forest-floor tiles to those means (presets/textures/moor_*.png). The town style `varrenmoor` (plazas, fields, field border), the terrain phase file `presets/terrain_phases/varrenmoor_moor.json` (the shading of world/varrenmoor and world/varrenmoor__town_center) and the padding texture preset `varrenmoor_moor` use them; every other place and style keeps the stock tiles unless it opts in. Re-run the fills/terrain export of the place to see it.

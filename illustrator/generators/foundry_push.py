@@ -1209,7 +1209,12 @@ def cmd_push_scene_3d(br, a):
     if getattr(a, "sun_preset", None):                  # sun / shadows / fog / ambient from a lighting preset (foundry_sun.py); wins over --lighting
         import foundry_sun as _fs
         try:
-            flags.update(_fs.preset_flags(_fs.get_preset(a.sun_preset)))
+            _sp = _fs.get_preset(a.sun_preset)
+            flags.update(_fs.preset_flags(_sp))
+            if not a.no_skybox:                         # the sky drawn with the sun/moon at the preset's bearing/altitude (same direction as the sun flags), when it was built (set-sun --make-sky)
+                _sf, _si = _fs.sky_flags(_sp, a.place, br_dry=bool(a.dry_run), make=False, fp=sys.modules[__name__])
+                flags.update(_sf)
+                LOG(f"sun preset {a.sun_preset}: " + (_si.get("sky") or "no sky image of its own"))
         except ValueError as e:
             raise PushError(str(e))
     for o in a.scene_flag or []:

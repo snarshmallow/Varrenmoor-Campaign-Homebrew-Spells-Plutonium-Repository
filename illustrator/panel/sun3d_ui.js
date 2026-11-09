@@ -31,6 +31,7 @@
       '<label>Fog colour <input type="color" data-s="lighting.sun3d.fogColor"></label></div>' +
       sl('data-s="lighting.sun3d.fogFar"', "Fog far (scene px)", 4000, 60000, 500, "Scene flag fogDistance: fog starts at 1000 px and is full at this distance (linear). 7000 dense, 22000 haze, 30000+ faint. Also the camera far plane.") +
       '<div class="grid"><label title="Write the sky image of the preset (night = starry, dusk/sunset = orange) as the scene sky. Off leaves the sky alone.">Sky <select data-s="lighting.sun3d.sky">' + opts({ preset: "use the preset sky", off: "leave the sky alone" }) + "</select></label>" +
+      '<div class="grid"><label title="Sky look. The sun (or the moon for Night) is drawn in the sky at the sun azimuth and elevation set above, so the shadows 3D Canvas casts point away from it. Fog on replaces the sky with the flat fog colour.">Sky look <select data-s="lighting.sun3d.skyPreset">' + opts(VB.SKY_PRESETS) + "</select></label></div>" +
       '<label class="chk" title="Build the preset\'s sky image first with skybox.py (about 1 minute)"><input type="checkbox" data-s="lighting.sun3d.makeSky"> Build the sky image if missing</label>' +
       '<label title="Tile flag castShadow of terrain, roads, plazas and padding. Default is on for every tile.">Ground tiles cast shadows <select data-s="lighting.sun3d.groundCast">' + opts({ leave: "leave as is", on: "on", off: "off" }) + "</select></label></div>" +
       '<label class="chk" title="push-scene-3d (Tools tab) also writes this preset: sun direction, strength, ambient, shadow bias and fog flags"><input type="checkbox" data-s="lighting.sun3d.onPush"> Also write this preset when pushing a 3D scene</label>' +
@@ -39,7 +40,7 @@
       '<button data-act="sun_temp" title="Applies to the picked scene exactly like Apply. Use it on a test scene; Reset to saved puts the previous flags back. A screenshot cannot be taken from this panel.">Preview in Foundry (temporary)</button>' +
       '<button data-act="sun_reset" title="Puts the scene flags back to what they were before the first Apply (keys that did not exist are removed).">Reset to saved</button></div>' +
       '<div id="sunReadout" class="note" style="white-space:pre-wrap"></div>' +
-      '<div class="note"><b>Offline preview (approximation)</b>: plan view of the pack\'s terrain and building roofs, lit with the sun and fog above. Not Foundry\'s renderer, no trees.</div>' +
+      '<div class="note"><b>Offline preview (approximation)</b>: plan view of the pack\'s terrain and building roofs, lit with the sun and fog above. Not Foundry\'s renderer, no trees. The strip under it is the sky; the red circle is the sun / moon at the light direction.</div>' +
       '<img id="sunPrev" alt="approximate sun preview" style="max-width:100%;image-rendering:auto;background:#1c1e24;min-height:40px"><div id="sunPrevNote" class="note"></div>' +
       '<p class="note">Players: shadows only show when each player has 3D Canvas Settings > Shadow Quality above 0 (Medium = 4). It is a per-browser setting; no scene flag can force it.</p></details>';
   }

@@ -40,13 +40,21 @@ PRESETS = {
     "clear_day": dict(zenith="#2f6fc4", horizon="#b9d6ee", haze="#c6dcee", sun_el=42, sun_az=-40, sun_col="#fff4d8", sun_pow=1.0, cloud=0.48, cloud_col="#ffffff", cloud_shade="#aab8cc",
                       fog_ft=14000, snow_ft=1000, snow_all=False, light=1.0, ambient=0.42, tint="#ffffff", stars=0.0, moon=False),
     "overcast": dict(zenith="#7d8794", horizon="#b8bfc6", haze="#b4bbc2", sun_el=45, sun_az=-40, sun_col="#d8dde2", sun_pow=0.0, cloud=0.92, cloud_col="#c9ced4", cloud_shade="#6e7783",
-                     fog_ft=6000, snow_ft=1040, snow_all=False, light=0.55, ambient=0.62, tint="#dfe4ea", stars=0.0, moon=False),
+                     fog_ft=6000, snow_ft=1040, snow_all=False, light=0.55, ambient=0.62, tint="#dfe4ea", stars=0.0, moon=False, rift=0.45),
     "dusk": dict(zenith="#26305e", horizon="#f08a4b", haze="#d98a6a", sun_el=3, sun_az=-120, sun_col="#ffb061", sun_pow=1.0, cloud=0.45, cloud_col="#ffc38c", cloud_shade="#4a3a5e",
                  fog_ft=9000, snow_ft=1000, snow_all=False, light=0.8, ambient=0.28, tint="#ffd2b0", stars=0.15, moon=False),
     "winter": dict(zenith="#8fa6c0", horizon="#dfe6ee", haze="#d5dde7", sun_el=17, sun_az=-60, sun_col="#fff0dc", sun_pow=0.6, cloud=0.75, cloud_col="#eef2f6", cloud_shade="#9aa7b8",
                    fog_ft=5200, snow_ft=0, snow_all=True, light=0.8, ambient=0.55, tint="#eaf0f8", stars=0.0, moon=False),
+    "high_mountain": dict(zenith="#0d3585", horizon="#8fbbe6", haze="#a6c6e8", sun_el=50, sun_az=-30, sun_col="#fffbea", sun_pow=1.15, cloud=0.2, cloud_col="#ffffff", cloud_shade="#9db3d3",
+                          fog_ft=34000, snow_ft=520, snow_all=False, light=1.15, ambient=0.36, tint="#f2f7ff", stars=0.0, moon=False, far_boost=1.9),
+    "storm": dict(zenith="#161b21", horizon="#586169", haze="#4c555d", sun_el=16, sun_az=-60, sun_col="#e6d7b0", sun_pow=0.0, cloud=1.0, cloud_col="#5a636c", cloud_shade="#12161b",
+                  fog_ft=4300, snow_ft=1000, snow_all=False, light=0.32, ambient=0.48, tint="#a9b4bd", stars=0.0, moon=False, rift=0.6, far_boost=1.3),
+    "golden_hour": dict(zenith="#35579a", horizon="#ffc178", haze="#efb07a", sun_el=9, sun_az=-120, sun_col="#ffd08a", sun_pow=1.2, cloud=0.42, cloud_col="#ffd9a6", cloud_shade="#7b6788",
+                        fog_ft=13000, snow_ft=1000, snow_all=False, light=0.95, ambient=0.3, tint="#ffe0b8", stars=0.0, moon=False),
+    "foggy": dict(zenith="#a9b2ba", horizon="#cdd1d4", haze="#cdd1d4", sun_el=12, sun_az=-40, sun_col="#f3efe4", sun_pow=0.28, cloud=0.88, cloud_col="#d3d6d9", cloud_shade="#8d949b",
+                  fog_ft=2300, snow_ft=1000, snow_all=False, light=0.5, ambient=0.6, tint="#e4e7ea", stars=0.0, moon=False),
     "night": dict(zenith="#03060f", horizon="#16233a", haze="#16233a", sun_el=-30, sun_az=-40, sun_col="#bcd0ff", sun_pow=0.0, cloud=0.25, cloud_col="#2c3a55", cloud_shade="#0b1220",
-                  fog_ft=8000, snow_ft=1000, snow_all=False, light=0.18, ambient=0.16, tint="#7f97c8", stars=1.0, moon=True, moon_el=32, moon_az=-70),
+                  fog_ft=8000, snow_ft=1000, snow_all=False, light=0.18, ambient=0.16, tint="#7f97c8", stars=1.15, moon=True, moon_el=32, moon_az=-70, milky=1.0),
 }
 
 
@@ -124,18 +132,21 @@ def ridged_1d(W, seed, octaves=5, base_freq=3):
     return out / max(out.max(), 1e-9)
 
 
-def render(place, preset, viewer=None, W=2048, yaw_deg=0.0, seed=7, world_root=None, h=None, cell=None, sun=None):
+def sky_params(preset, sun=None):
+    """Preset dict with the sun/moon position override applied. `sun` = {"sun_az": from east clockwise (image centre = east), "sun_el": degrees}: the ONE direction of
+    the light. At night (moon presets) the moon is drawn exactly there, so the moon light, the 3D Canvas sun flags and the picture agree."""
     P = dict(PRESETS[preset], **(sun or {}))
-    if h is None:
-        h, cell = load_heights(place, world_root)
-    ny, nx = h.shape
-    size_x, size_y = (nx - 1) * cell, (ny - 1) * cell
-    import place_stats
-    ad = place_stats.place_adapt(place, h, 0.0, world_root)         # percentile-based snow / tree lines for places other than Bridgehollow
-    rm = (lambda v: place_stats.remap(v, ad)) if ad else (lambda v: v)
-    vx, vy = viewer or (size_x / 2, size_y / 2)
+    if P.get("moon"):
+        if not sun:
+            P["sun_az"], P["sun_el"] = P.get("moon_az", P["sun_az"]), P.get("moon_el", 32)
+        P["moon_az"], P["moon_el"] = P["sun_az"], P["sun_el"]
+    return P
+
+
+def sky_dome(P, W=2048, seed=7):
+    """Sky only (no terrain), linear RGB (W/2, W, 3), row 0 = zenith, column u = azimuth from east clockwise (centre column = east). Returns dict(sky, cosang, sundir, el, el_deg,
+    azc, Hh). The light body (sun, or the moon for moon presets) is centred on direction (sun_az, sun_el)."""
     Hh = W // 2
-    mc = march_columns(h, cell, vx, vy, W, yaw_deg)
     el_deg = 90 - (np.arange(Hh) + 0.5) / Hh * 180            # row 0 = zenith
     el = np.radians(el_deg)
     cs = lambda c: srgb_to_lin(hexrgb(c))
@@ -160,11 +171,14 @@ def render(place, preset, viewer=None, W=2048, yaw_deg=0.0, seed=7, world_root=N
         if P["sun_el"] < 12:                                            # dusk: warm band along the horizon on the sun's side
             band = np.exp(-(el_deg / 9.0) ** 2)[:, None] * (0.5 + 0.5 * cosang)
             sky += band[..., None] * cs(P["sun_col"]) * 0.5
-    if P.get("moon"):
-        md = np.array([math.cos(math.radians(P["moon_el"])) * math.cos(math.radians(P["moon_az"])), math.cos(math.radians(P["moon_el"])) * math.sin(math.radians(P["moon_az"])),
-                       math.sin(math.radians(P["moon_el"]))])
-        cm = np.clip(dirs @ md, -1, 1)
-        sky += (np.clip((cm - math.cos(math.radians(1.6))) * 2500, 0, 1) * 1.4 + np.exp((cm - 1) * 220) * 0.18)[..., None] * cs("#cfd8ff")[None, None, :]
+    if P.get("moon"):                                                  # the moon sits on the light direction (sundir): disc, halo, faint ring
+        cm = cosang
+        sky += (np.clip((cm - math.cos(math.radians(1.6))) * 2500, 0, 1) * 1.4 + np.exp((cm - 1) * 220) * 0.18 + np.exp((cm - 1) * 20) * 0.05
+                + np.exp(-((np.degrees(np.arccos(np.clip(cm, -1, 1))) - 22.0) / 1.2) ** 2) * 0.012)[..., None] * cs("#cfd8ff")[None, None, :]
+    if P.get("milky"):                                                 # faint galactic band + dust, tilted across the sky
+        lat = np.abs(dirs @ np.array([0.35, 0.25, 0.9]))
+        band = np.exp(-(lat / 0.16) ** 2) * (0.5 + pbr.fbm(0, seed + 21, 3.0, 5, shape=(Hh, W)))
+        sky += (band * 0.05 * np.clip(el_deg / 12.0, 0, 1)[:, None])[..., None] * np.array([0.75, 0.8, 1.0])[None, None, :] * P["milky"]
     if P["stars"] > 0:
         rng = np.random.RandomState(seed + 5)
         n = int(2600 * P["stars"])
@@ -174,6 +188,8 @@ def render(place, preset, viewer=None, W=2048, yaw_deg=0.0, seed=7, world_root=N
         for dy_, dx_ in ((0, 0), (0, 1), (1, 0)):
             np.add.at(sky, (np.clip(yy + dy_, 0, Hh - 1), (xx + dx_) % W), (0.15 + 1.2 * mag * (1 - 0.5 * (dy_ + dx_)))[:, None] * np.array([0.9, 0.95, 1.0]) * P["stars"])
     # ---- clouds (periodic in azimuth; compressed toward the horizon so they read as a layer)
+    if P.get("rift"):                                                  # storm: the light body glows through a tear in the cloud deck
+        sky += (np.exp((cosang - 1) * 70) * 0.9 * P["rift"])[..., None] * cs(P["sun_col"])[None, None, :]
     if P["cloud"] > 0:
         ys = np.clip(el_deg, 1.5, 90)
         n1 = pbr.fbm(0, seed + 1, 2.8, 2, shape=(Hh, W))
@@ -181,6 +197,8 @@ def render(place, preset, viewer=None, W=2048, yaw_deg=0.0, seed=7, world_root=N
         cl = 0.68 * n1 + 0.32 * n2
         thr = 1.0 - P["cloud"] * 0.62
         dens = np.clip((cl - thr + 0.12) / 0.22, 0, 1)
+        if P.get("rift"):
+            dens = dens * (1 - 0.8 * P["rift"] * np.exp((cosang - 1) * 25))
         dens *= np.clip(el_deg / 6.0, 0, 1)[:, None] * np.clip((70 - ys) / 40, 0.35, 1)[:, None]
         if P["cloud"] > 0.85:
             dens = np.clip(dens * 1.5 + 0.18, 0, 1) * np.clip(el_deg / 4.0, 0, 1)[:, None]
@@ -191,6 +209,24 @@ def render(place, preset, viewer=None, W=2048, yaw_deg=0.0, seed=7, world_root=N
         if P["stars"] > 0.5:
             ccol = ccol * 0.5
         sky = sky * (1 - dens[..., None] * 0.92) + ccol * dens[..., None] * 0.92
+    return dict(sky=sky, cosang=cosang, sundir=sundir, el=el, el_deg=el_deg, azc=azc, Hh=Hh)
+
+
+def render(place, preset, viewer=None, W=2048, yaw_deg=0.0, seed=7, world_root=None, h=None, cell=None, sun=None):
+    P = sky_params(preset, sun)
+    if h is None:
+        h, cell = load_heights(place, world_root)
+    ny, nx = h.shape
+    size_x, size_y = (nx - 1) * cell, (ny - 1) * cell
+    import place_stats
+    ad = place_stats.place_adapt(place, h, 0.0, world_root)         # percentile-based snow / tree lines for places other than Bridgehollow
+    rm = (lambda v: place_stats.remap(v, ad)) if ad else (lambda v: v)
+    vx, vy = viewer or (size_x / 2, size_y / 2)
+    mc = march_columns(h, cell, vx, vy, W, yaw_deg)
+    dome = sky_dome(P, W, seed)
+    Hh, el, el_deg, azc, sundir, cosang, sky = dome["Hh"], dome["el"], dome["el_deg"], dome["azc"], dome["sundir"], dome["cosang"], dome["sky"]
+    cs = lambda c: srgb_to_lin(hexrgb(c))
+    haze = cs(P["haze"])
     # ---- far ranges beyond the map rim (three layers, ridged noise)
     # place.json "skybox": {"rim_min_deg": 4 (floor of the far horizon; 0 = open sea / plain), "far_scale": 1 (0 = no far ranges)}; default = closed bowl
     sk = place_stats.place_json(place, world_root).get("skybox", {})
@@ -200,7 +236,7 @@ def render(place, preset, viewer=None, W=2048, yaw_deg=0.0, seed=7, world_root=N
     farmask = np.zeros((Hh, W))
     layers = [(0.085, 2.0, 0.30, 5), (0.150, 4.0, 0.50, 11), (0.235, 7.0, 0.68, 23)]       # (extra angle rad, 2nd amplitude deg, haze, seed) near -> far
     for li, (extra, _, hz, sd) in enumerate(reversed(layers) if far_scale > 0 else []):
-        extra = extra * far_scale
+        extra = extra * far_scale * float(P.get("far_boost", 1.0))
         prof = rim + extra * (0.30 + 0.70 * ridged_1d(W, seed + sd)) + math.radians(0.8) * li
         mask = el[:, None] < prof[None, :]
         depth = np.clip((prof[None, :] - el[:, None]) / max(extra * 0.9, 1e-3), 0, 1)       # 0 at the ridge line, 1 deep inside
@@ -282,7 +318,22 @@ def cmd_generate(a):
     viewer = (vx, vy) if vx is not None else None
     out_dir = a.out or os.path.join(REPO, "world", a.place, "export", "skybox")
     man = {"place": a.place, "format": "equirect 2:1", "width": a.width, "convention": "image centre = east, u clockwise from above; flag levels-3d-preview.exr", "skyboxes": {}}
-    for name in a.presets.split(","):
+    for lp in [x for x in (a.lighting_presets or "").split(",") if x]:   # sky image of lighting presets (presets/lighting/*.json): sun / moon at the preset's bearing + altitude
+        import foundry_sun as fsn
+        pl = fsn.load_presets()
+        for pid in (list(pl) if lp == "all" else [lp]):
+            p = fsn.get_preset(pid, None) if pid in pl else None
+            if p is None or not (p.get("sky") or {}).get("preset"):
+                print(f"{pid}: no such lighting preset or no sky", flush=True)
+                continue
+            b = fsn.sky_body(p)
+            img, info = render(a.place, b["preset"], viewer, a.width, a.yaw, h=h, cell=cell, sun={"sun_az": b["sky_az_from_east"], "sun_el": b["altitude"]})
+            nm = fsn.sky_name(p)
+            pth = save(img, out_dir, nm)
+            man["skyboxes"][nm] = {"file": os.path.basename(pth), "bytes": os.path.getsize(pth), "lighting_preset": pid, "body": b["body"], **info}
+            print(f"{pid}: {pth} ({os.path.getsize(pth) // 1024} KB), {b['body']} at bearing {b['bearing']:.0f} altitude {b['altitude']:.0f}", flush=True)
+            del img
+    for name in [x for x in a.presets.split(",") if x]:
         sun = None
         if a.lighting:                                              # sun from the Illustrator lighting config (same sun as the 2D shadows and the 3D scene)
             import foundry_lighting as fl
@@ -292,7 +343,14 @@ def cmd_generate(a):
         p = save(img, out_dir, name)
         man["skyboxes"][name] = {"file": os.path.basename(p), "bytes": os.path.getsize(p), **info}
         print(f"{name}: {p} ({os.path.getsize(p) // 1024} KB), horizon max {info['horizon_max_deg']:.1f} deg", flush=True)
-    json.dump(man, open(os.path.join(out_dir, "skybox_manifest.json"), "w"), indent=1)
+    mp = os.path.join(out_dir, "skybox_manifest.json")
+    try:
+        old_m = json.load(open(mp))
+        old_m.setdefault("skyboxes", {}).update(man["skyboxes"])
+        man = {**man, "skyboxes": old_m["skyboxes"]}
+    except (OSError, ValueError):
+        pass
+    json.dump(man, open(mp, "w"), indent=1)
     print(json.dumps({"ok": True, "place": a.place, "out_dir": out_dir, "skyboxes": {n: {"file": v["file"], "preview": n + "_preview.png"} for n, v in man["skyboxes"].items()}}))
     return 0
 
@@ -455,7 +513,8 @@ def main(argv=None):
     sp = ap.add_subparsers(dest="cmd", required=True)
     g = sp.add_parser("generate")
     g.add_argument("--place", default="bridgehollow")
-    g.add_argument("--presets", default=",".join(PRESETS))
+    g.add_argument("--presets", default=",".join(PRESETS), help="sky presets to build (default all); use --presets \"\" with --lighting-presets to build only those")
+    g.add_argument("--lighting-presets", dest="lighting_presets", help="comma list of lighting preset ids or \"all\": builds world/<place>/export/skybox/sun_<id>_<sky>_az<N>_el<N>.webp, the names set-sun --make-sky and push-scene-3d --sun-preset use")
     g.add_argument("--viewer", help="X,Y feet in the place's frame (default: middle of the map)")
     g.add_argument("--width", type=int, default=2048)
     g.add_argument("--yaw", type=float, default=0.0)

@@ -1,0 +1,34 @@
+{
+ "id": "overcast",
+ "label": "Overcast",
+ "description": "Flat grey day: thick cloud, soft low-contrast light (sun strength low), cool ambient. The sun is a faint glow behind the cloud at the light direction.",
+ "swatch": [
+  "#d8dde2",
+  "#b8bfc6",
+  "#7d8794"
+ ],
+ "sun": {
+  "azimuth": 200,
+  "altitude": 40,
+  "color": "#d8dde2",
+  "strength": 0.8
+ },
+ "ambient": {
+  "intensity": 0.2,
+  "color": "#dfe4ea"
+ },
+ "shadows": {
+  "on": true,
+  "quality": 4,
+  "bias": -0.0003,
+  "soft": false
+ },
+ "fog": {
+  "enabled": false,
+  "color": "#b4bbc2",
+  "far_px": 18000
+ },
+ "sky": {
+  "preset": "overcast"
+ }
+}

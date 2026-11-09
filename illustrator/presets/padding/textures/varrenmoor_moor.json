@@ -1,0 +1,22 @@
+{
+ "meadow": "#58502f",
+ "meadow2": "#6b5e38",
+ "forest": "#322f21",
+ "rock": "#6e6a60",
+ "rock2": "#4e4b44",
+ "soil": "#4a3a28",
+ "snow": "#f3f6fa",
+ "treeline_ft": 1200,
+ "snowline_ft": 1500,
+ "snow_all": false,
+ "forest_cover": 0.5,
+ "tint": "#ffffff",
+ "shade": 1.0,
+ "haze": "#a9a89a",
+ "fog_ft": 14000,
+ "fog": true,
+ "sun_light": 0.85,
+ "tile_kind": "meadow",
+ "name": "varrenmoor_moor",
+ "description": "Varrenmoor palette: dark olive / brown moorland ground and dark conifer canopy (matches the campaign map)"
+}

@@ -29,8 +29,6 @@
   "far_px": 5000
  },
  "sky": {
-  "preset": "overcast",
-  "sun_bearing": 100,
-  "sun_alt": 12
+  "preset": "foggy"
  }
 }

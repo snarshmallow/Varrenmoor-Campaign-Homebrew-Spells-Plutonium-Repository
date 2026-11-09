@@ -1,6 +1,6 @@
 {
  "name": "Varrenmoor (dirt roads, grass ground)",
- "description": "Unpaved village: every road, lane and path is a dirt track (no cobbles, gravel or kerbs), the green and every open square is grass, roofs are shingle / thatch / timber. Use for Varrenmoor and other poor upland hamlets.",
+ "description": "Unpaved village in the map palette (dark olive / brown moorland ground, not bright green): every road, lane and path is a dirt track (no cobbles, gravel or kerbs), the green and every open square is grass, roofs are shingle / thatch / timber. Use for Varrenmoor and other poor upland hamlets.",
  "full_map": true,
  "seed": 208,
  "raster": {
@@ -59,7 +59,7 @@
   },
   "plazas": {
    "default": {
-    "texture": "grass",
+    "texture": "moor_grass",
     "tile_ft": 18,
     "warp": 0.2,
     "tint": 0.06
@@ -212,28 +212,28 @@
    ],
    "crops": {
     "tilled": {
-     "texture": "tilled",
+     "texture": "moor_tilled",
      "tile_ft": 40,
      "tint": 0.07
     },
     "wheat": {
-     "texture": "wheat",
+     "texture": "moor_wheat",
      "tile_ft": 40,
      "tint": 0.06
     },
     "pasture": {
-     "texture": "pasture",
+     "texture": "moor_pasture",
      "tile_ft": 60,
      "tint": 0.06
     },
     "crop_green": {
-     "texture": "crop_green",
+     "texture": "moor_crop_green",
      "tile_ft": 40,
      "tint": 0.06
     }
    },
    "border": {
-    "color": "#4d6b30",
+    "color": "#4a4a2a",
     "ft": 2.5,
     "alpha": 0.55
    }

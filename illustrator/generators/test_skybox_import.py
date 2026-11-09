@@ -43,7 +43,7 @@ class ImportSky(unittest.TestCase):
         sb.import_scene_sky(SCENE, "Scene.abc123", "p", name="Night Sky", world_root=self.tmp, resolver=self.resolver)
         _, rows = sb.list_skies("p", self.tmp)
         names = [x["name"] for x in rows]
-        self.assertEqual(names[:5], list(sb.PRESETS))
+        self.assertEqual(names[:len(sb.PRESETS)], list(sb.PRESETS))
         self.assertIn("night_sky", names)
         row = [x for x in rows if x["name"] == "night_sky"][0]
         self.assertTrue(row["exists"] and row["preview"] and not row["builtin"] and row["lighting_flags"]["sunPosition"] == 9)

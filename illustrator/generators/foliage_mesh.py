@@ -490,6 +490,30 @@ def _build_cards(sp, g, rng, b, lod, h):
 
 
 # ------------------------------------------------------------------ species -> mesh
+_IMP_BBOX = {}
+_L0_BOUNDS = {}
+
+
+def impostor_bbox(tile):
+    """(col0, col1, row0, row1) of the opaque part of an impostor tile as painted (fixed seed; cached)."""
+    if tile not in _IMP_BBOX:
+        fn = ft.paint_imp_conifer if tile == "imp_conifer" else ft.paint_imp_broad
+        al = fn(TILE_PX, np.random.default_rng(11))[..., 3] > 127
+        rows, cols = np.where(al.any(1))[0], np.where(al.any(0))[0]
+        _IMP_BBOX[tile] = (int(cols.min()), int(cols.max()), int(rows.min()), int(rows.max()))
+    return _IMP_BBOX[tile]
+
+
+def lib_bounds(sp, variant=0):
+    """Horizontal radius and top height of the LOD0 mesh (the crown often overshoots the nominal height)."""
+    key = (sp["id"], variant)
+    if key not in _L0_BOUNDS:
+        m = build_species_mesh(sp, variant, 0)
+        V = np.asarray(m.V, float).reshape(-1, 3)
+        _L0_BOUNDS[key] = {"r": float(np.abs(V[:, :2]).max()), "zmax": float(V[:, 2].max())} if len(V) else {"r": 0.4, "zmax": 0.4}
+    return _L0_BOUNDS[key]
+
+
 def build_species_mesh(sp, variant=0, lod=0):
     """Mesh of one species at its nominal height (mid of height_ft), LOD 0/1/2. Deterministic in (species, variant)."""
     import zlib
@@ -507,12 +531,21 @@ def build_species_mesh(sp, variant=0, lod=0):
         if sp["kind"] in ("ground", "prop", "rock"):
             return wm.Mesh(np.zeros((0, 3)), np.zeros((0, 2)), {}, True)
         tile = "imp_conifer" if kind == "conifer" else "imp_broad"
-        w = max(2 * r, 0.8) * (1.0 if tile == "imp_broad" else 1.1)
+        # size the card from the LOD0 crown bounds and the painted silhouette bounds, so the crown (not the tile) is the right size and nothing is cut off
+        L0 = lib_bounds(sp, variant)
+        c0, c1, r0, r1 = impostor_bbox(tile)
+        S = TILE_PX
+        sx = max(L0["r"], 0.4) * 2 / (c1 - c0 + 1)
+        sz = max(L0["zmax"], 0.4) / (r1 - r0 + 1)
+        cmid = (c0 + c1 + 1) / 2
+        xl, xr = (0 - cmid) * sx, (S - cmid) * sx
+        zt, zb = (r1 + 1) * sz, (r1 + 1 - S) * sz
+        zb = max(zb, 0.0) if r1 + 1 >= S else zb
         for i in range(2):
             a = math.pi * i / 2
             ca, sa = math.cos(a), math.sin(a)
             ids = []
-            for (x, u, v, z) in ((-w / 2, 1, 1, 0), (w / 2, 0, 1, 0), (w / 2, 0, 0, h), (-w / 2, 1, 0, h)):
+            for (x, u, v, z) in ((xl, 1, 1, zb), (xr, 0, 1, zb), (xr, 0, 0, zt), (xl, 1, 0, zt)):
                 ids.append(b.vert((x * ca, x * sa, z), tile_uv(tile, 1 - u, v), (0, 0, 1), (0.9, 0.9, 0.9)))
             b.quad("leaf", *ids)
         return b.build()
