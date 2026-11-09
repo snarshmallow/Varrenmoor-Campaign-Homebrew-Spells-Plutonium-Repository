@@ -26,6 +26,8 @@
     f.lights = f.packExists && X.readPackLights ? X.readPackLights(fs, VB.packDir(d) + "/placements.json") : null;   // lights precheck (cached by mtime)
     var c = $("fConn"), t = c ? String(c.textContent || "") : "";
     f.connected = /^connected/.test(t) ? true : /offline/.test(t) ? false : null;
+    var lc = window.VBLimitsUI && window.VBLimitsUI.check ? window.VBLimitsUI.check() : null;   // size and performance check (lib/limits.js): notes only, never blocks
+    f.limits = lc ? lc.list : null;
     return f;
   }
   function armed() { var a = $("exArm"); return !!(a && a.checked); }
@@ -59,7 +61,9 @@
     var run = $(g.run); run.disabled = running || !!block;
     run.textContent = (key === "push" ? "Push selected" : "Run selected steps") + (dry ? " (dry run for Foundry)" : " (writes to Foundry)");
     run.className = dry ? "primary" : "primary danger";
-    $(g.block).textContent = running ? "Running..." : block;
+    var sizeNote = "";   // real push with size warnings: shown before the run; the "I understand this writes to Foundry" tick is the confirmation (not blocking)
+    if (!block && !dry && wr.length && window.VBLimits) { var ln = window.VBLimits.notes((facts() || {}).limits); if (ln.length) sizeNote = ln.join(" ") + " The confirmation tick above covers this; the push is not blocked."; }
+    $(g.block).textContent = running ? "Running..." : (block || sizeNote);
     $(g.dryAll).disabled = running || !X.runList(g.plan(true, false), "").run.length;
     var rs = $(g.resume); rs.hidden = !failed || running; rs.textContent = failed ? "Resume from here: " + failed.label : ""; rs.setAttribute("data-from", failed ? failed.id : "");
     $(g.sum).textContent = msgs[key];

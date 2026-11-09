@@ -225,6 +225,8 @@
     if (facts.buildingCount && VB.roofMode(st) === "per_building" && facts.buildingCount > X.ROOF_PER_BUILDING_MAX) w.push("Roof mode per building adds one tile per building (" + facts.buildingCount + "): consider Per scene (recommended above " + X.ROOF_PER_BUILDING_MAX + ").");
     if (facts.buildingCount >= X.HEAVY_BUILDINGS) w.push("Big place (" + facts.buildingCount + " buildings): split and merge need a lot of RAM and minutes; this PC may stall. Running them on Vega is a manual choice, never automatic.");
     if (facts.connected === null && !dry) w.push("The bridge connection has not been checked: press Check connection first.");
+    var LM = (typeof window !== "undefined" && window.VBLimits) || null;   // size and performance check (lib/limits.js): warn/danger lines only
+    if (facts.limits && LM) LM.notes(facts.limits).forEach(function (x) { w.push(x); });
     if ((st.foundry || {}).target === "new" && !dry) w.push("New scene: padding, skybox and lights are not part of this push. Run again with Existing scene after Refresh from Foundry.");
     return w;
   };

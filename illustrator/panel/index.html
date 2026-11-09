@@ -133,6 +133,10 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
     <button data-act="scale_reload" title="Re-read view_settings.json">Reload</button>
   </div>
   <p class="note">Feet are the model unit; scale only changes the drawing. Guides are regenerated, your ART layers are never touched.</p>
+  <!-- SIZE AND PERFORMANCE CHECK (limits_ui.js, lib/limits.js) -->
+  <style>.limtab{border-collapse:collapse;font-size:10px}.limtab th,.limtab td{border:1px solid var(--line);padding:1px 3px;text-align:right}.limtab td:first-child{text-align:left}</style>
+  <h4 title="Compares this place with the recommended and hard maximum sizes for the Foundry scene scale the panel would push (Foundry tab dpi and grid). Warnings only: nothing is blocked.">Size and performance check</h4>
+  <div id="limBox" class="note">(open a place)</div>
   <h4>Settings</h4>
   <div class="grid">
     <label>Python executable <input type="text" data-s="settings.python"></label>
@@ -956,6 +960,7 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
   <div id="exBox">
     <h4>Export to Foundry <span class="note">(guided: tick, then run)</span></h4>
     <div class="note">Steps run in the verified order, one after another, and stop at the first error. The defaults are what a normal first export needs. Foundry is only written when Dry run is off and you confirm.</div>
+    <div id="exLimits" class="note" title="Size and performance check (Scale tab): map size, scale, lights, tiles against the recommended limits. A warning does not block the push."></div>
     <div id="exList"></div>
     <div class="exrow"><label><b>Roofs</b> <select id="exRoofMode" data-s="foundry.models.roofMode" title="Same setting as Roof mode under More pack options"><option value="per_building">Individual roofs: one hideable tile per building (look inside one house)</option><option value="per_scene">Merged roofs: one switch shows or hides every roof</option><option value="none">No separate roofs: roofs are part of each building (fewest tiles)</option></select></label>
       <label class="chk"><input type="checkbox" data-s="foundry.models.roofsHidden" title="Create the roof tiles hidden (individual or merged roofs only)"> Create roof tiles hidden</label></div>
@@ -1050,6 +1055,7 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
     <label class="chk"><input type="checkbox" data-s="foundry.drawWater"> Water drawings</label>
     <label>Overlay tile layers <input type="text" data-s="foundry.tileLayers"></label>
   </div>
+  <div id="fScaleHint" class="note" title="Foundry scene scale: the scene this panel would push (dpi, grid). 3D Canvas draws a 1x1 token one grid square wide, so big squares make tokens look wrong. Full check: Scale tab, Size and performance check."></div>
   <div class="btns">
     <button data-act="f_export">Export view</button>
     <button data-act="f_plan_scene" title="Dry run: exports the view and prints grid, size and wall counts. Writes NOTHING to Foundry.">Plan (dry run)</button>
@@ -1471,8 +1477,10 @@ td,th{border:1px solid var(--line);padding:1px 4px;text-align:left}
   "lib/waypoint.js",
   "lasso_ui.js",
   "lib/profiles.js",
+  "lib/limits.js",
   "lib/exportplan.js",
   "export_ui.js",
+  "limits_ui.js",
   "profiles_ui.js",
   "lib/places.js",
   "places_ui.js",

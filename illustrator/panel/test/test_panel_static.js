@@ -58,6 +58,11 @@ check("profile indicator sits in the header next to the version label", html.ind
 check("Profiles manager lives in the Tools tab (still 18 static tab buttons; Buildings and Roads are added by script: 20 tabs)", html.indexOf('id="pfBox"') > html.indexOf('id="tab-tools"') && (html.match(/role="tab" data-tab=/g) || []).length === 18);
 check("main.js wires VBProfilesUI (before first place) and VBExportUI, default profile for fresh places", /VBProfilesUI\.init\(/.test(mj) && /VBExportUI\.init\(/.test(mj) && /applyDefaultToNew/.test(mj) && mj.indexOf("VBProfilesUI.init(") < mj.indexOf("await switchPlace(cur)") && /VBExportUI\.paint\(\)/.test(mj));
 check("real Foundry writes need an explicit arm (checkbox), default dry run", /id="exDry"/.test(html) && /data-s="exp\.dry"/.test(html) && !/id="exArm"[^>]*checked/.test(html));
+// Size and performance check (lib/limits.js, limits_ui.js): loaded before main.js, publishes on window under CEP, its targets exist, main.js wires it
+check("lib/limits.js before exportplan.js and limits_ui.js before main.js in the loader", srcs.indexOf("lib/limits.js") > srcs.indexOf("lib/core.js") && srcs.indexOf("lib/limits.js") < srcs.indexOf("lib/exportplan.js") && srcs.indexOf("limits_ui.js") > srcs.indexOf("lib/limits.js") && srcs.indexOf("limits_ui.js") < srcs.indexOf("main.js"));
+check("limits.js publishes window.VBLimits even when module exists (CEP), limits_ui.js publishes window.VBLimitsUI", /window\.VBLimits = L/.test(fs.readFileSync(P + "/lib/limits.js", "utf8")) && /window\.VBLimitsUI = /.test(fs.readFileSync(P + "/limits_ui.js", "utf8")));
+check("size check ids exist: limBox in the Scale tab, exLimits in the Export box, fScaleHint in the Foundry tab", ["limBox", "exLimits", "fScaleHint"].every(i => ids.includes(i)) && html.indexOf('id="limBox"') > html.indexOf('id="tab-scale"') && html.indexOf('id="limBox"') < html.indexOf("</section>", html.indexOf('id="tab-scale"')) && html.indexOf('id="exLimits"') > html.indexOf('id="exBox"'));
+check("main.js wires VBLimitsUI init and paint", /VBLimitsUI\.init\(/.test(mj) && /VBLimitsUI\.paint\(\)/.test(mj));
 // defaults audit (what a normal export wants on by default)
 {
   const VBc = require("../lib/core.js");

@@ -720,6 +720,30 @@ Measure in Foundry (the module has a `perf_sample` op for frame rate while you m
 - Foundry needs internet for Draco-compressed models, which the pipeline does not produce.
 - Foliage and unmerged building tiles can mean thousands of objects. If a scene stutters, merge first, then lower the foliage triangle cap.
 
+### 6.5 Recommended maximum map sizes
+
+The panel checks the current place against these numbers: **Scale tab > Size and performance check** (status, advice, the table below with tooltips), a badge at the top of **Export to Foundry**, notes in **What will happen**, a note before a real push (the "I understand this writes to Foundry" tick confirms it; nothing is blocked) and a scene-scale hint under the Foundry tab's dpi / grid fields. Numbers and rules: `illustrator/panel/lib/limits.js`; tests: `panel/test/test_limits.js`.
+
+| Scale (grid square) | px/ft | 2D max (hard) | 3D max (hard) | Lights in view rec / hard | 5 ft token |
+|---|---|---|---|---|---|
+| 5 ft, 100 px (pack default) | 20 | 409 ft = 8,192 px (819 ft) | 409 ft (819) | 64 / 150 | whole square |
+| 5 ft, 50 px | 10 | 819 ft (1,638) | 650 ft (1,000) | 64 / 150 | whole square |
+| 10 ft, 50 px | 5 | 1,638 ft (3,276) | 650 ft (1,000) | 64 / 150 | half a square |
+| 25 ft, 50 px | 2 | 4,096 ft (8,192) | 650 ft (1,000) | 64 / 150 | 20%: warning |
+| 50 ft, 50 px | 1 | 8,192 ft (16,384) | 650 ft (1,000) | 16 / 150 | 10%: overview only |
+| 100 ft, 150 px (Bridgehollow overview) | 1.5 | 5,461 ft (10,922) | 650 ft (1,000) | 16 / 150 | 5%: overview only |
+
+Same at every scale: buildings 80 / 150, model tiles 150 / 400, triangles 600k / 5 M, foliage items 3,000 / 10,000.
+
+Where the numbers come from:
+- **Lights (measured, 3D Canvas 9.0.29, Dyers test scene):** 72 lights = 2.5x the GPU time of an empty scene; 156 visible lights still ran (54-57 fps); 206 ran at 33 fps with materials failing; 306 drew nothing (shader limit). 64 = the light budget's auto threshold. Overview maps: 16 (hybrid) is enough.
+- **Scene pixels (source + repo):** 8,192 px is push-scene's `--max-px` default and the texture size of mid-range GPUs; 16,384 px is the usual GPU texture limit. Above 4,096 px Foundry draws fog of war at a lower resolution (Foundry source: the visibility texture is capped at 4,096). Foundry 14 refuses grid squares under 20 px; the pipeline's push-scene refuses under 50 px. Foundry has no maximum scene width or height.
+- **3D size (estimate):** a generated town carries about 514 lights on 2,400 x 1,500 ft (Bridgehollow); about 650 ft square reaches 64 lights and about 1,000 ft square reaches 150. A dense street reaches them sooner.
+- **Token scale (source):** 3D Canvas draws a 1x1 token one grid square wide, so on a 100 ft grid a token is 100 ft wide next to true-size buildings. Above 25 ft per square the map is an overview: play on a street scene at 5 ft per square (Regions tab: extract a region).
+- **Triangles (measured):** 0.5 M per frame ran at 59 fps; 5.6 M dropped to 30 fps. **Buildings 150** = the per-building roof limit (repo rule); **80 buildings, tiles, foliage 10,000** are estimates (not measured).
+
+Bridgehollow as pushed (2,400 x 1,500 ft, 100 ft grid at 1.5 px/ft, 514 lights, 148 buildings) shows "too big": overview-map token warning, over the 3D hard size, and the light count. For play, split it into street scenes of about 650 ft at 5 ft per square and keep the light budget on (Lighting tab: auto or hybrid).
+
 ---
 
 ### 2.17b Click mode (Foundry tab: Install click macros)
