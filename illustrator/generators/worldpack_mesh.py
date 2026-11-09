@@ -359,9 +359,10 @@ def build_road(cx, e):
     return b.build()
 
 
-KERB_H_FT = 0.5
-KERB_SINK_FT = 1.0      # the kerb base is buried this far below the lower of road surface and terrain, so it never hovers over the skirt/ground
-KERB_GROUND_PROBE_FT = 2.0   # terrain is also probed this far around every kerb vertex (8 directions) and the lowest height wins: the kerb skirt cannot be bridged by coarser terrain
+KERB_H_FT = 0.33      # kerb top above the road surface (about 4 inches)
+KERB_SINK_FT = 0.5      # the kerb body reaches the terrain and is buried this far below the lower of road surface and terrain (no gap, no tall wall beyond that)
+KERB_STEP_FT = 1.25          # kerb vertex spacing: half the 2.5 ft terrain cell, so linear base interpolation stays under the terrain between samples
+KERB_GROUND_PROBE_FT = 1.25   # terrain is also probed this far around every kerb vertex (8 directions) and the lowest height wins: the kerb skirt cannot be bridged by coarser terrain
 
 
 def kerb_rings(e):
@@ -441,7 +442,7 @@ def kerb_heights(cx, e, ring):
 
 
 def _add_kerbs(cx, b, e):
-    """Raised stone kerb bands (e['kerbs'] rings in feet): top at road surface + 0.5 ft, vertical sides. Heights follow the graded road surface including
+    """Raised stone kerb bands (e["kerbs"] rings in feet): top at road surface + KERB_H_FT (0.33 ft), vertical sides. Heights follow the graded road surface including
     its cross-slope; the base is buried KERB_SINK_FT below the lower of surface and terrain (no hovering kerb, no grass gap under it)."""
     mat, tile = "mat_kerb", 4.0
     z0 = cx.fr.z_origin_ft
@@ -451,7 +452,7 @@ def _add_kerbs(cx, b, e):
         D = []
         for i, p in enumerate(P):
             q = P[(i + 1) % len(P)]
-            n = max(1, int(math.dist(p, q) / 3.0))
+            n = max(1, int(math.dist(p, q) / KERB_STEP_FT))
             D += [(p[0] + (q[0] - p[0]) * k / n, p[1] + (q[1] - p[1]) * k / n) for k in range(n)]
         Bp = [(x, cx.fr.height_ft - y) for x, y in D]
         surf, ground = kerb_heights(cx, e, D)
@@ -529,7 +530,8 @@ def build_building(cx, e):
         b.face(mat, pts, world_uv(pts, tile, off, v0, anchor_v))
     for i in range(len(P)):
         p, q = P[i], P[(i + 1) % len(P)]
-        F(wm_, [(p[0], p[1], z0), (q[0], q[1], z0), (q[0], q[1], zt), (p[0], p[1], zt)], wt, zf)
+        F("mat_wall_stone", [(p[0], p[1], z0), (q[0], q[1], z0), (q[0], q[1], zf), (p[0], p[1], zf)], pbr.tile_ft("mat_wall_stone", 7.0), zf)   # buried foundation skirt: stone, not the wall finish
+        F(wm_, [(p[0], p[1], zf), (q[0], q[1], zf), (q[0], q[1], zt), (p[0], p[1], zt)], wt, zf)
     cap = [b.vert((p[0], p[1], zt - WALL_CAP_DROP_M), (p[0] / FT / wt, -p[1] / FT / wt)) for p in P]
     for t in earclip(P):
         b.tri(wm_, *[cap[i] for i in t])

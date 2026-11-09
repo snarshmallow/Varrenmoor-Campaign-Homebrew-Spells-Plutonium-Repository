@@ -326,6 +326,9 @@ class KerbSkirt(unittest.TestCase):
         wm._add_kerbs(cx, b, e)
         return h, pk, runs["c"], e, b.build()
 
+    def test_kerb_height_is_four_inches(self):
+        self.assertAlmostEqual(wm.KERB_H_FT, 0.33, places=2)
+
     def test_annulus_has_no_lid_over_the_road(self):
         h, pk, run, e, m = self._build([(30, 60, 100.0), (300, 140, 100.0)])
         V = m.V[m.subs["mat_kerb"]]
@@ -363,7 +366,7 @@ class KerbSkirt(unittest.TestCase):
                     worst = max(worst, q[2] / FT + ZO - g)
                     n += 1
             self.assertGreater(n, 100)
-            self.assertLess(worst, -0.4, f"a kerb base sits {worst:.2f} ft relative to terrain (must stay below)")
+            self.assertLess(worst, -0.1, f"a kerb base sits {worst:.2f} ft relative to terrain (must stay below)")
 
 
 if __name__ == "__main__":
