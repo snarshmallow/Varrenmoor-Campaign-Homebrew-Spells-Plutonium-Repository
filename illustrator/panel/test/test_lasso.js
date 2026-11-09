@@ -151,6 +151,13 @@ check("host never leaves a lasso action unguarded by try", (host.match(/lasso_(s
 for (const f of ["lib/lasso.js", "lib/polyops.js", "lasso_ui.js"]) { check(f + " is ES5 safe (no arrow/let/const)", !/=>|(^|[^\w.$])(let|const)\s+[\w$]/m.test(strip(src(f)))); }
 const html = src("index.html");
 check("loader lists lasso.js, polyops.js, lasso_ui.js before main.js", ["lib/lasso.js", "lib/polyops.js", "lasso_ui.js"].every(s => html.indexOf('"' + s + '"') > 0 && html.indexOf('"' + s + '"') < html.indexOf('"main.js"')));
+check("loader lists waypoint.js before lasso_ui.js", html.indexOf('"lib/waypoint.js"') > 0 && html.indexOf('"lib/waypoint.js"') < html.indexOf('"lasso_ui.js"'));
+check("lib/waypoint.js is ES5 safe", !/=>|(^|[^\w.$])(let|const)\s+[\w$]/m.test(strip(src("lib/waypoint.js"))));
+{ const lo = host.slice(host.indexOf('case "lasso_start"'), host.indexOf('case "place_image"'));
+  check("lasso_start only calls app.selectTool when opted in (a.select_tool === true)", /a\.select_tool === true/.test(lo) && (lo.match(/selectTool\(/g) || []).length === 1);
+  check("lasso host calls run quiet (alerts off, $.level 0) and restore in finally", (lo.match(/VB_quietBegin\(\)/g) || []).length === 4 && (lo.match(/VB_quietEnd\(/g) || []).length === 4 && /\$\.level = 0/.test(host));
+  check("lasso_clear removes the layer only when asked (a.remove_layer === true)", /a\.remove_layer === true/.test(lo)); }
+check("lasso_ui.js: Pen auto-select is an opt-in checkbox and buttons are gated on pending host calls", /autoTool/.test(src("lasso_ui.js")) && /hostPending/.test(src("lasso_ui.js")) && /needsHost/.test(src("lasso_ui.js")));
 check("main.js wires VBLassoUI", /VBLassoUI\.init\(/.test(src("main.js")));
 // ---- jobs through the runner with a mock host (python panelio view is needed: skipped when python/place missing)
 const cp = require("child_process"), os = require("os"), R = require("../lib/runner.js");
@@ -166,7 +173,10 @@ const ROOT = path.resolve(__dirname, "../../..").split(path.sep).join("/"), plac
       return { ok: true, selected: 2, scanned: 10, layers: [{ name: "Roads", count: 2 }], tool: "Adobe Pencil Tool" }; } });
   hostLog = [];
   let r = await runner.run(L.jobStart()); check("jobStart ok + calls lasso_start", r.ok && hostLog[0].action === "lasso_start", r.error);
-  r = await runner.run(L.jobClear()); check("jobClear ok", r.ok && hostLog.some(a => a.action === "lasso_clear"));
+  check("jobStart does not ask for a tool switch by default", hostLog[0].select_tool === false && hostLog[0].timeout_ms > 0);
+  hostLog = []; r = await runner.run(L.jobStart({ selectTool: true })); check("jobStart opt-in passes select_tool", hostLog[0].select_tool === true);
+  hostLog = []; r = await runner.run(L.jobClear()); check("jobClear ok and keeps the layer by default", r.ok && hostLog[0].action === "lasso_clear" && hostLog[0].remove_layer === false);
+  hostLog = []; r = await runner.run(L.jobClear({ removeLayer: true })); check("jobClear removeLayer passes remove_layer", hostLog[0].remove_layer === true);
   const poly = [[100, 100], [300, 100], [300, 300], [100, 300]];
   hostLog = []; r = await runner.run(L.jobDraw(st, {}, { core: poly, feather: 20 }));
   if (!r.ok && /python|panelio|ENOENT/i.test(r.error || "")) console.log("SKIP job tests needing python panelio: " + r.error);

@@ -232,13 +232,17 @@
   // ---- jobs (panel actions). All host calls are defensive on the host side and return clear errors.
   var GEN = "illustrator/generators/";
   var viewStep = function (st) { return VB.steps.py(GEN + "panelio.py", ["view", "--place", st.place].concat(VB.panelioViewFlags(st)), "page <-> feet mapping", { json: "view" }); };
-  L.jobStart = function () {
-    return { kind: "lasso_start", label: "Draw lasso", params: {}, steps: [VB.steps.host({ action: "lasso_start" }, "prepare VB LASSO layer"),
+  var HOST_MS = 30000;   // a lasso host call that takes longer than this ends the job (the runner then refuses new calls until Illustrator answers)
+  L.POLY_HINT = "Pen tool (P): click each waypoint, click the first point to close; straight segments (clicks only, no dragging)";
+  L.jobStart = function (o) {
+    o = o || {};
+    return { kind: "lasso_start", label: "Draw lasso", params: { select_tool: !!o.selectTool }, steps: [VB.steps.host({ action: "lasso_start", select_tool: !!o.selectTool, timeout_ms: HOST_MS }, "prepare VB LASSO layer"),
       { t: "fn", label: "tool hint", fn: function (run) { var r = run.last || {};
-        run.log(r.tool && r.tool !== "none" ? "Layer " + L.LAYER + " is active and the " + r.tool.replace("Adobe ", "") + " is selected: draw around the area, then press Capture polygon."
-          : "Layer " + L.LAYER + " is active. Choose the Pencil or Pen tool and draw around the area (close the shape), then press Capture polygon."); if (r.warn) run.log("note: " + r.warn); } }] };
+        run.log("Layer " + L.LAYER + " is active" + (r.tool && r.tool !== "none" ? " and the " + r.tool.replace("Adobe ", "") + " is selected" : "") + ". " + L.POLY_HINT + ", then press Capture polygon.");
+        if (r.warn) run.log("note: " + r.warn); } }] };
   };
-  L.jobClear = function () { return { kind: "lasso_clear", label: "Clear lasso", params: {}, steps: [VB.steps.host({ action: "lasso_clear" }, "remove VB LASSO layer")] }; };
+  // default: remove the helper items only; o.removeLayer deletes the layer as well
+  L.jobClear = function (o) { o = o || {}; return { kind: "lasso_clear", label: "Clear lasso", params: { remove_layer: !!o.removeLayer }, steps: [VB.steps.host({ action: "lasso_clear", remove_layer: !!o.removeLayer, timeout_ms: HOST_MS }, o.removeLayer ? "remove VB LASSO layer" : "clear VB LASSO items")] }; };
   // draw the working polygon + feather rings (preview) and select the core. o: {core, feather}
   L.jobDraw = function (st, d, o) {
     return { kind: "lasso_draw", label: "Show lasso", params: { feather: o.feather || 0 }, steps: [viewStep(st),
@@ -250,8 +254,14 @@
           if (f.outer) rings.push({ role: "outer", pts: f.outer.map(function (p) { return L.ftToDoc(view, ab, p); }) });
           if (f.inner) rings.push({ role: "inner", pts: f.inner.map(function (p) { return L.ftToDoc(view, ab, p); }) });
           f.warnings.forEach(function (w) { run.log("note: " + w); }); }
-        run.vars.rings = rings; } },
-      { t: "host", label: "draw on VB LASSO", action: function (run) { return { action: "lasso_draw", rings: run.vars.rings, select: true }; } }] };
+        run.vars.rings = rings; run.vars.dots = (o.dots || []).slice(0, 200).map(function (p) { return L.ftToDoc(view, ab, p); }); } },
+      { t: "host", label: "draw on VB LASSO", action: function (run) { return { action: "lasso_draw", rings: run.vars.rings, dots: run.vars.dots, select: true, timeout_ms: HOST_MS }; } }] };
+  };
+  // the single selected anchor point as a feet waypoint into o.out.pt (waypoint list mode: 'Add waypoint from selected anchor'); one cheap get_selection call
+  L.jobAnchor = function (st, d, o) {
+    return { kind: "lasso_anchor", label: "Waypoint from selected anchor", params: {}, steps: [viewStep(st), VB.steps.host({ action: "get_selection", lasso: true, timeout_ms: HOST_MS }, "read selected anchor"),
+      { t: "fn", label: "map anchor", fn: function (run) { var sel = run.last, W = root.VBWaypoint || (typeof require !== "undefined" ? require("./waypoint.js") : null);
+        var r = W.anchorFromSelection(sel, function (q) { return L.docToFt(run.vars.view, sel.artboard, q); }); if (!r.ok) throw new Error(r.error); o.out.pt = r.pt; run.log("waypoint " + r.pt[0] + ", " + r.pt[1] + " ft"); } }] };
   };
   // read the current Illustrator selection / lasso as a polygon into o.out.pts (for Add / Subtract / Intersect)
   L.jobRead = function (st, d, o) {
@@ -264,7 +274,7 @@
     return { kind: "lasso_select", label: "Select objects inside the lasso", params: { mode: o.mode, filter: o.filter }, steps: [viewStep(st), VB.steps.host({ action: "get_doc_info" }, "read artboard"),
       { t: "fn", label: "map polygon", fn: function (run) { var ab = run.last && run.last.artboard; if (!ab) throw new Error("artboard unknown: is a document open?");
         run.vars.polyDoc = o.poly.map(function (p) { return L.ftToDoc(run.vars.view, ab, p); }); } },
-      { t: "host", label: "select inside", action: function (run) { return { action: "lasso_select", poly: run.vars.polyDoc, mode: o.mode || "center", filter: o.filter || null, max: 5000 }; } },
+      { t: "host", label: "select inside", action: function (run) { return { action: "lasso_select", timeout_ms: HOST_MS, poly: run.vars.polyDoc, mode: o.mode || "center", filter: o.filter || null, max: 5000 }; } },
       { t: "fn", label: "report", fn: function (run) { var r = run.last || {};
         run.log("selected " + r.selected + " object(s) inside the lasso (" + r.scanned + " scanned" + (r.truncated ? ", limit reached: narrow the layers" : "") + ")" + (r.layers && r.layers.length ? ": " + r.layers.map(function (l) { return l.name + " " + l.count; }).join(", ") : "")); } }] };
   };
