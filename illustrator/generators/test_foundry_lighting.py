@@ -37,15 +37,24 @@ class Lighting(unittest.TestCase):
         items = fp.build_light_docs(doc, {"ppf": 20, "x0": 0, "y0": 0, "sceneX": 0, "sceneY": 0})
         d = items[0]["data"]
         self.assertFalse(d["flags"]["levels-3d-preview"].get("enableParticle"))
-        # the per-light "animation" field is Foundry's own flicker (lamps use it), not a particle preset: it is honoured; a hint without one stays plain
-        self.assertEqual(d["config"]["animation"]["type"], "torch")
-        plain = fp.build_light_docs({**doc, "files": [{"lights": [{k: v for k, v in doc["files"][0]["lights"][0].items() if k != "animation"}]}]}, {"ppf": 20, "x0": 0, "y0": 0, "sceneX": 0, "sceneY": 0})
-        self.assertIsNone(plain[0]["data"]["config"]["animation"]["type"])
+        # interior (hearth/window) lights stay non-animated even if the hint carries "torch"; only lamps honour the hint, or an explicit --light-animation
+        self.assertIsNone(d["config"]["animation"]["type"])
+        forced = fp.build_light_docs(doc, {"ppf": 20, "x0": 0, "y0": 0, "sceneX": 0, "sceneY": 0}, animation="pulse")
+        self.assertEqual(forced[0]["data"]["config"]["animation"]["type"], "pulse")
         self.assertEqual((d["x"], d["y"], d["elevation"]), (200, 400, 5.0))
         c = fl.load_lighting({"sun": {}, "lights": [{"id": "a", "x": 740, "y": 720, "radius": 40, "height": 8}]})
         p = fl.point_light_docs(c, [730, 710], 20)[0]["data"]
         self.assertEqual((p["x"], p["y"]), (200, 200))
         self.assertFalse(p["flags"]["levels-3d-preview"]["enableParticle"])
+
+    def test_hearth_null_lamp_torch(self):
+        cc = {"ppf": 20, "x0": 0, "y0": 0, "sceneX": 0, "sceneY": 0}
+        lights = [{"id": "h", "type": "hearth", "point": [1, 2], "animation": "torch"},
+                  {"id": "w", "type": "window", "point": [1, 2], "animation": "torch"},
+                  {"id": "l", "type": "lamp", "point": [1, 2], "animation": "torch"}]
+        items = fp.build_light_docs({"place": "p", "frame": {"z_origin_ft": 0}, "lights": lights}, cc)
+        got = {i["data"]["flags"]["varrenmoor"]["type"]: i["data"]["config"]["animation"]["type"] for i in items}
+        self.assertEqual(got, {"hearth": None, "window": None, "lamp": "torch"})
 
     def test_light_height_is_rangetop(self):
         """3D Canvas renders a light at (flags.levels.rangeTop ?? 1 + elevation) / 2; without rangeTop a lamp at 35 ft sat at 18 ft, under the road."""

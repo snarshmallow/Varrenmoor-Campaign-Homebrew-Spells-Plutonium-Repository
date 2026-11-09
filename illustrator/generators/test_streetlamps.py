@@ -234,8 +234,15 @@ class Meshes(unittest.TestCase):
 class PackApply(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.mkdtemp(prefix="vblamps-")
-        shutil.copy(os.path.join(PACK, "placements.json"), self.tmp)
         self.pp = os.path.join(self.tmp, "placements.json")
+        with open(os.path.join(PACK, "placements.json"), encoding="utf-8") as f:
+            d = json.load(f)
+        # lamp-free baseline whatever state the real pack is in
+        d["files"] = [e for e in d["files"] if e.get("layer") != "streetlamps"]
+        d["lights"] = [l for l in d.get("lights", []) if l.get("type") != "lamp"]
+        d.pop("streetlamps", None)
+        with open(self.pp, "w", encoding="utf-8") as f:
+            json.dump(d, f, indent=1)
 
     def tearDown(self):
         shutil.rmtree(self.tmp, ignore_errors=True)
