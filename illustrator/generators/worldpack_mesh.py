@@ -341,6 +341,9 @@ def build_road(cx, e):
             z0 = cx.fr.z_origin_ft
             _ribbon(b, e["surface"]["material"], [cx.B(x, y) for x, y in zip(run.x, run.y)], [e["width_ft"] * FT] * len(run.x), [(v - z0) * FT for v in run.z],
                     e["surface"]["tile_ft"], 0.0, 0.0, 2.0, [(v - z0) * FT for v in run.zl], [(v - z0) * FT for v in run.zr], sk)
+        covers = [fp for run in e["_grade"]["runs"] for fp in getattr(run, "cover", [])]
+        if covers:
+            _drop_covered(cx, b, e["surface"]["material"], covers)
         if e.get("kerbs"):
             _add_kerbs(cx, b, e)
         return b.build()
@@ -357,6 +360,20 @@ def build_road(cx, e):
     if e.get("kerbs"):
         _add_kerbs(cx, b, e)
     return b.build()
+
+
+def _drop_covered(cx, b, mat, covers):
+    """Junction clean cut: remove the minor road's deck triangles whose centroid lies inside the major road's footprint (pack feet, road_grade.footprint),
+    where the two decks are at the same height and would overlap / z-fight."""
+    from shapely.geometry import Point
+    keep = []
+    for t in b.subs.get(mat, []):
+        xs = [b.V[i][0] / FT for i in t]
+        ys = [cx.fr.height_ft - b.V[i][1] / FT for i in t]
+        c = Point(sum(xs) / 3.0, sum(ys) / 3.0)
+        if not any(fp.buffer(-0.05).contains(c) for fp in covers):
+            keep.append(t)
+    b.subs[mat] = keep
 
 
 KERB_H_FT = 0.33      # kerb top above the road surface (about 4 inches)
@@ -418,7 +435,7 @@ def kerb_heights(cx, e, ring):
                 if d2[i] < best_d[k]:
                     lat = (px - X[i]) * -ty[i] + (py - Y[i]) * tx[i]
                     u = float(np.clip(lat / hw[i], -1.0, 1.0))
-                    zs[k] = r.z[i] + (r.zl[i] - r.zr[i]) / 2 * u
+                    zs[k] = r.z[i] + (r.zr[i] - r.zl[i]) / 2 * u      # pack frame is y-down: the ribbon's left (zl) side is lat < 0 here
                     best_d[k] = d2[i]
         surf = zs
     else:

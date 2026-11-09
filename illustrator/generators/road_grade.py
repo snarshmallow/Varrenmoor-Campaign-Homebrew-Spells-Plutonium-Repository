@@ -193,6 +193,62 @@ def _blend_at(z, s, s0, target, blend_ft, end=None):
     return z + (target - float(np.interp(s0, s, z))) * _win(s, s0, blend_ft)
 
 
+
+
+def surface_at(run, x, y):
+    """Road surface height at (x, y) from the nearest station of `run` with its cross tilt (same rule as worldpack_mesh.kerb_heights)."""
+    X, Y = np.asarray(run.x, float), np.asarray(run.y, float)
+    i = int(np.argmin((X - x) ** 2 + (Y - y) ** 2))
+    nx, ny = np.gradient(X)[i], np.gradient(Y)[i]
+    nl = max(math.hypot(nx, ny), 1e-9)
+    lat = (x - X[i]) * (-ny / nl) + (y - Y[i]) * (nx / nl)
+    u = float(np.clip(lat / max(float(run.hw[i]), 1e-6), -1.0, 1.0))
+    return float(run.z[i] + (run.zr[i] - run.zl[i]) / 2 * u)       # pack frame is y-down: the ribbon's left side (zl) is lat < 0 in this formula
+
+
+def footprint(run):
+    from shapely.geometry import Polygon
+    nx, ny = np.gradient(run.x), np.gradient(run.y)
+    nl = np.maximum(np.hypot(nx, ny), 1e-9)
+    lx, ly = -ny / nl, nx / nl
+    L = np.stack([run.x + lx * run.hw, run.y + ly * run.hw], 1)
+    R = np.stack([run.x - lx * run.hw, run.y - ly * run.hw], 1)
+    return Polygon(np.concatenate([L, R[::-1]])).buffer(0)
+
+
+def _ground_max(h, cell, x, y, r=2.5):
+    """Highest terrain mesh height within r ft of (x, y): the floor under a welded vertex (the mesh audit samples inside the triangles)."""
+    a = np.linspace(0, 2 * math.pi, 8, endpoint=False)
+    return float(np.max(mesh_height(h, cell, np.concatenate([[x], x + r * np.cos(a)]), np.concatenate([[y], y + r * np.sin(a)]))))
+
+
+def weld_junctions(pairs, h=None, cell=2.5, lift=0.0):
+    """Clean T joins: for every (minor, major) Run pair, every minor surface vertex (centre, left, right edge of each station) inside the major road's
+    footprint is set to exactly the major surface height (no step, no gap at the mouth) and the footprint is remembered on the minor Run (`cover`);
+    worldpack_mesh.build_road then leaves out every minor deck triangle that lies inside the major road, so nothing overlaps or z-fights there.
+    Returns the number of stations changed."""
+    from shapely.geometry import Point
+    changed = 0
+    for A, B in pairs:
+        fp = footprint(B)
+        A.cover = list(getattr(A, "cover", [])) + [fp]
+        nx, ny = np.gradient(A.x), np.gradient(A.y)
+        nl = np.maximum(np.hypot(nx, ny), 1e-9)
+        lx, ly = -ny / nl, nx / nl
+        for i in range(len(A.x)):
+            hit = False
+            for name, sgn in (("zl", 1.0), ("z", 0.0), ("zr", -1.0)):
+                px, py = A.x[i] + sgn * lx[i] * A.hw[i], A.y[i] + sgn * ly[i] * A.hw[i]
+                pt = Point(px, py)
+                arr = getattr(A, name)
+                if fp.contains(pt):
+                    zb = surface_at(B, px, py)
+                    arr[i] = zb                                                 # exactly the major surface: no step, no gap
+                    hit = True
+            changed += hit
+    return changed
+
+
 def grade_roads(pack, h, p=None):
     """Grade every non-bridge road of the pack against terrain heights h (the raster the terrain mesh is built from).
     Returns (runs: {road_id: [Run]}, report: {warnings, stats, params}). Settings p: see DEFAULTS."""
@@ -232,6 +288,7 @@ def grade_roads(pack, h, p=None):
     tol = 4.0
     jpairs = []
     stats_par = [0]
+    joins = []                                                          # (minor work index, major work index): a road ending on the body of another road
     stretches = []                                                      # (road a, stations of a, road b, matching stations of b): parallel runs
     pins = []                                                           # (work index, station index, target z, one-sided end or None)
     for wi, w in enumerate(work):
@@ -283,8 +340,10 @@ def grade_roads(pack, h, p=None):
                 b_end = ib in (0, len(Bw["x"]) - 1)
                 if a_end and not b_end:
                     pins.append((ai, ia, float(zb), None))
+                    joins.append((ai, bi))
                 elif b_end and not a_end:
                     pins.append((bi, ib, float(za), None))
+                    joins.append((bi, ai))
                 else:
                     m = 0.5 * (za + zb)
                     pins.append((ai, ia, float(m), None))
@@ -374,7 +433,11 @@ def grade_roads(pack, h, p=None):
         if gx.size and gx.max() > w["max_grade"] + 0.05:
             warns.append(f"{rid}: grade limit could not be met, max {gx.max():.1f} deg")
         zl, zr = z + delta, z - delta
-        runs.setdefault(w["id"], []).append(Run(w["id"], x, y, z, zl, zr, hw, s, w["gap_ends"]))
+        run_ = Run(w["id"], x, y, z, zl, zr, hw, s, w["gap_ends"])
+        w["run"] = run_
+        runs.setdefault(w["id"], []).append(run_)
+    n_weld = weld_junctions([(work[a]["run"], work[b]["run"]) for a, b in joins if "run" in work[a] and "run" in work[b]], h, cell, lift)
+    stats["junction_welds"] = n_weld
     overridden = sorted({r["id"] for r in roads if isinstance(r.get("grade_override"), dict) and not P.get("ignore_road_overrides")})
     return runs, {"cutfill_ids": sorted(cutfill_ids), "overridden": overridden, "warnings": warns, "stats": {k: (round(v, 2) if isinstance(v, float) else v) for k, v in stats.items()}, "params": {k: P[k] for k in ("smooth", "max_grade_deg", "skirt", "cutfill", "cross_deg", "smooth_window_ft", "cutfill_falloff_ft")}}
 
